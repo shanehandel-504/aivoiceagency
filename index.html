@@ -3,19 +3,62 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Voice Agency — Answer every call. Capture revenue.</title>
+
+<!-- SEO META TAGS (UPDATE #6) -->
+<title>AI Voice Agency — Never Miss a Call. Never Lose a Lead.</title>
+<meta name="description" content="AI Voice Agency installs custom AI voice agents that answer every call, book appointments, qualify leads, and escalate to you when it matters. Built by a 30-year operator. Done for you." />
+<meta name="keywords" content="AI voice agent, AI phone answering, automated call answering, AI receptionist, voice AI for business, never miss a call, AI appointment booking" />
+<link rel="canonical" href="https://aivoiceagency.ai/" />
+<meta name="robots" content="index, follow" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://aivoiceagency.ai/" />
+<meta property="og:title" content="AI Voice Agency — Never Miss a Call. Never Lose a Lead." />
+<meta property="og:description" content="Custom AI voice agents that answer every call, book appointments, and capture revenue 24/7. Done for you by a 30-year operator." />
+<meta property="og:image" content="https://aivoiceagency.ai/og-image.png" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@shanehandel" />
+<meta name="twitter:title" content="AI Voice Agency — Never Miss a Call. Never Lose a Lead." />
+<meta name="twitter:description" content="Custom AI voice agents that answer every call, book appointments, and capture revenue 24/7." />
+<meta name="twitter:image" content="https://aivoiceagency.ai/og-image.png" />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "AI Voice Agency",
+  "url": "https://aivoiceagency.ai",
+  "telephone": "+17869371218",
+  "email": "shane@aivoiceagency.ai",
+  "description": "Custom AI voice agents for businesses that cannot afford to miss a call.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressRegion": "WI",
+    "addressCountry": "US"
+  },
+  "founder": {
+    "@type": "Person",
+    "name": "Shane Handel"
+  }
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0A0A0B;--card:#111118;--green:#00FF88;--green-dark:#00CC6A;
-  --teal:#00E5FF;--body:#C8CCD4;--bright:#F1F5F9;--muted:#6B7280;
-  --border:#1E293B;--border-bright:#2A3A50;--warning:#F59E0B;
-  --font-display:'Space Grotesk',sans-serif;
-  --font-body:'DM Sans',sans-serif;
-  --font-mono:'JetBrains Mono',monospace;
+--bg:#0A0A0B;--card:#111118;--green:#00FF88;--green-dark:#00CC6A;
+--teal:#00E5FF;--body:#C8CCD4;--bright:#F1F5F9;--muted:#6B7280;
+--border:#1E293B;--border-bright:#2A3A50;--warning:#F59E0B;
+--font-display:'Space Grotesk',sans-serif;
+--font-body:'DM Sans',sans-serif;
+--font-mono:'JetBrains Mono',monospace;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--body);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden;cursor:default}
@@ -45,6 +88,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,10,11,0.
 .agent-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse-dot 2s infinite}
 @keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,255,136,.4)}50%{opacity:.8;box-shadow:0 0 0 4px rgba(0,255,136,0)}}
 
+/* HAMBURGER (UPDATE #4) */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;z-index:1002}
+.hamburger span{display:block;width:22px;height:2px;background:var(--bright);border-radius:2px;transition:all .3s ease}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* MOBILE NAV */
+.mobile-nav{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(10,10,11,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:1.5rem 2rem;flex-direction:column;gap:1rem;z-index:999;transform:translateY(-100%);opacity:0;transition:transform .35s ease,opacity .3s ease}
+.mobile-nav.open{transform:translateY(0);opacity:1}
+.mobile-nav a{font-size:1rem;color:var(--muted);transition:color .2s;font-weight:500;padding:8px 0;display:block}
+.mobile-nav a:hover{color:var(--bright)}
+.mobile-nav .btn-primary{text-align:center;justify-content:center;margin-top:.5rem;width:100%}
+
 /* BUTTONS */
 .btn-primary{background:var(--green);color:#0A0A0B;font-family:var(--font-display);font-weight:700;font-size:.8rem;letter-spacing:.03em;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,transform .15s;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
 .btn-primary:hover{background:var(--green-dark);transform:translateY(-1px);color:#0A0A0B}
@@ -58,37 +115,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,10,11,0.
 .hero-kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:.72rem;color:var(--green);letter-spacing:.1em;text-transform:uppercase;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);padding:6px 12px;border-radius:100px;margin-bottom:1.5rem}
 .hero-kicker-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse-dot 1.5s infinite}
 
-/* ═══ HEARTBEAT HEADLINE ═══ */
+/* HEARTBEAT HEADLINE */
 .hero-headline{font-family:var(--font-display);font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;line-height:1.08;margin-bottom:1.5rem;letter-spacing:-.02em}
-/* Ghost words: start nearly invisible, pulse into full brightness on a heartbeat rhythm */
 .hero-headline .ghost{color:#192730;animation:headline-heartbeat 4.4s ease-in-out infinite;display:inline}
 @keyframes headline-heartbeat{
-  0%{color:#192730;text-shadow:none}
-  /* flat line */
-  26%{color:#192730;text-shadow:none}
-  /* first small beat */
-  31%{color:#456070;text-shadow:0 0 10px rgba(0,255,136,.18)}
-  36%{color:#192730;text-shadow:none}
-  /* brief gap */
-  43%{color:#192730;text-shadow:none}
-  /* big beat — fully readable */
-  49%{color:var(--bright);text-shadow:0 0 20px rgba(0,255,136,.38),0 0 55px rgba(0,255,136,.12)}
-  /* decay back to dark */
-  63%{color:#192730;text-shadow:none}
-  100%{color:#192730;text-shadow:none}
+0%{color:#192730;text-shadow:none}
+26%{color:#192730;text-shadow:none}
+31%{color:#456070;text-shadow:0 0 10px rgba(0,255,136,.18)}
+36%{color:#192730;text-shadow:none}
+43%{color:#192730;text-shadow:none}
+49%{color:var(--bright);text-shadow:0 0 20px rgba(0,255,136,.38),0 0 55px rgba(0,255,136,.12)}
+63%{color:#192730;text-shadow:none}
+100%{color:#192730;text-shadow:none}
 }
-/* Accent "every call" stays lit, softly breathes in sync */
 .hero-headline .accent{color:var(--green);display:inline;text-shadow:0 0 22px rgba(0,255,136,.45);animation:accent-breathe 4.4s ease-in-out infinite}
 @keyframes accent-breathe{
-  0%,100%{text-shadow:0 0 22px rgba(0,255,136,.45)}
-  49%{text-shadow:0 0 38px rgba(0,255,136,.8),0 0 80px rgba(0,255,136,.24)}
+0%,100%{text-shadow:0 0 22px rgba(0,255,136,.45)}
+49%{text-shadow:0 0 38px rgba(0,255,136,.8),0 0 80px rgba(0,255,136,.24)}
 }
-
 .hero-subtext{font-size:1.05rem;color:var(--body);line-height:1.7;max-width:480px;margin-bottom:2rem}
 .hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2rem}
 .chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:.7rem;padding:5px 12px;border-radius:100px;border:1px solid var(--border-bright);color:var(--body);letter-spacing:.04em}
 .chip-green{border-color:rgba(0,255,136,.3);color:var(--green);background:rgba(0,255,136,.05)}
 .hero-ctas{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+
+/* HERO CALL PROOF (UPDATE #8) */
 .hero-call-proof{margin-top:1.5rem;padding:14px 18px;background:rgba(17,17,24,.8);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;gap:12px;max-width:420px}
 .hero-call-proof-icon{width:36px;height:36px;background:rgba(0,255,136,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .hero-call-proof p{font-size:.8rem;color:var(--muted);line-height:1.4}
@@ -123,7 +174,7 @@ section{padding:6rem 2rem;max-width:1200px;margin:0 auto;width:100%}
 @keyframes wave-anim{from{height:4px}to{height:var(--h)}}
 .waveform-duration{font-family:var(--font-mono);font-size:.65rem;color:var(--muted);flex-shrink:0}
 
-/* TRANSCRIPT — live drop-in */
+/* TRANSCRIPT */
 .transcript{padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem;min-height:300px}
 .transcript-line{display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}
 .transcript-line.live{opacity:1;transform:none}
@@ -155,12 +206,15 @@ section{padding:6rem 2rem;max-width:1200px;margin:0 auto;width:100%}
 .booking-text p{font-size:.8rem;color:var(--green);font-weight:600;font-family:var(--font-display)}
 .booking-text span{font-family:var(--font-mono);font-size:.68rem;color:var(--muted)}
 
-/* Replay */
-.demo-replay{display:flex;justify-content:center;padding:1rem 1.5rem;border-top:1px solid var(--border);background:rgba(0,0,0,.2)}
+/* DEMO FOOTER (UPDATE #7) */
+.demo-footer{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;border-top:1px solid var(--border);background:rgba(0,0,0,.2)}
+.demo-footer-cta{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:.72rem;color:var(--teal);letter-spacing:.04em;text-decoration:none;transition:color .2s}
+.demo-footer-cta:hover{color:var(--green)}
+.demo-footer-cta svg{width:14px;height:14px;flex-shrink:0}
 .demo-replay-btn{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);background:none;border:1px solid var(--border);border-radius:100px;padding:6px 16px;cursor:pointer;letter-spacing:.06em;transition:all .2s;display:flex;align-items:center;gap:6px}
 .demo-replay-btn:hover{border-color:var(--green);color:var(--green)}
 
-/* MODEL */
+/* MODEL (UPDATE #10) */
 #model{padding:6rem 2rem;max-width:1200px;margin:0 auto}
 .model-header{text-align:center;margin-bottom:4rem}
 .model-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
@@ -173,7 +227,7 @@ section{padding:6rem 2rem;max-width:1200px;margin:0 auto;width:100%}
 .model-percent{font-family:var(--font-display);font-size:3.5rem;font-weight:800;color:var(--green);letter-spacing:-.03em;line-height:1;margin-bottom:.5rem}
 .model-card.secondary .model-percent{color:var(--teal);opacity:.8}
 .model-card.tertiary .model-percent{color:var(--muted)}
-.model-label{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--bright);margin-bottom:.75rem}
+.model-label{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--bright);margin-bottom:.75rem;letter-spacing:-0.01em}
 .model-desc{font-size:.875rem;color:var(--muted);line-height:1.6}
 
 /* HOW IT WORKS */
@@ -263,7 +317,7 @@ section{padding:6rem 2rem;max-width:1200px;margin:0 auto;width:100%}
 .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .cta-note{margin-top:1.5rem;font-size:.78rem;color:var(--muted);font-family:var(--font-mono);letter-spacing:.04em}
 
-/* FOOTER */
+/* FOOTER (UPDATE #11) */
 footer{border-top:1px solid var(--border);padding:3rem 2rem}
 .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:3rem;align-items:start}
 .footer-tagline{font-size:.875rem;color:var(--muted);margin-top:.75rem;line-height:1.6}
@@ -272,35 +326,41 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem}
 .footer-links{list-style:none;display:flex;flex-direction:column;gap:8px}
 .footer-links a{font-size:.875rem;color:var(--muted);transition:color .2s}
 .footer-links a:hover{color:var(--green)}
-.footer-bottom{max-width:1200px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.footer-copy{font-family:var(--font-mono);font-size:.65rem;color:var(--muted);letter-spacing:.04em}
-.footer-voicebrain{font-family:var(--font-mono);font-size:.6rem;color:#2A3A50;letter-spacing:.06em}
+.footer-bottom{max-width:1200px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.footer-copy{font-family:var(--font-mono);font-size:.65rem;color:var(--muted);letter-spacing:.04em;text-align:center}
 .social-links{display:flex;gap:10px;margin-top:1rem}
 .social-link{width:34px;height:34px;background:var(--card);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .2s}
 .social-link:hover{border-color:rgba(0,255,136,.3);color:var(--green);background:rgba(0,255,136,.06)}
 .social-link svg{width:15px;height:15px}
 
-/* RESPONSIVE */
+/* RESPONSIVE (UPDATES #4, #5) */
 @media(max-width:900px){
-  .hero-content{grid-template-columns:1fr;text-align:center;gap:2rem}
-  .hero-subtext{max-width:100%}
-  .hero-chips{justify-content:center}
-  .hero-ctas{justify-content:center}
-  .hero-call-proof{margin:0 auto}
-  .hero-left{order:2}
-  .hero-orb-wrap{order:1}
-  .model-grid{grid-template-columns:1fr}
-  .use-cases-grid{grid-template-columns:1fr}
-  .escalation-wrap{grid-template-columns:1fr;gap:2rem}
-  .cred-grid{grid-template-columns:1fr;gap:2rem}
-  .buying-grid{grid-template-columns:1fr}
-  .footer-inner{grid-template-columns:1fr;gap:2rem}
-  .nav-links{display:none}
+.hero-content{grid-template-columns:1fr;text-align:center;gap:2rem}
+.hero-subtext{max-width:100%}
+.hero-chips{justify-content:center}
+.hero-ctas{justify-content:center;flex-direction:column;align-items:stretch}
+.hero-ctas .btn-primary,.hero-ctas .btn-ghost{width:100%;justify-content:center;min-height:48px;font-size:.9rem}
+.hero-call-proof{margin:0 auto}
+.hero-left{order:2}
+.hero-orb-wrap{order:1}
+.model-grid{grid-template-columns:1fr}
+.use-cases-grid{grid-template-columns:1fr}
+.escalation-wrap{grid-template-columns:1fr;gap:2rem}
+.cred-grid{grid-template-columns:1fr;gap:2rem}
+.buying-grid{grid-template-columns:1fr}
+.footer-inner{grid-template-columns:1fr;gap:2rem}
+.nav-links{display:none}
+.hamburger{display:flex}
+.mobile-nav{display:flex}
+.cta-btns{flex-direction:column;align-items:stretch}
+.cta-btns .btn-primary,.cta-btns .btn-ghost{width:100%;justify-content:center;min-height:48px;font-size:.9rem}
 }
 @media(max-width:600px){
-  section{padding:4rem 1.25rem}
-  .footer-bottom{flex-direction:column;gap:.5rem;text-align:center}
+section{padding:4rem 1.25rem}
+.footer-bottom{flex-direction:column;gap:.5rem;text-align:center}
 }
+
+/* NOISE OVERLAY */
 body::before{content:'';position:fixed;inset:0;z-index:-1;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");pointer-events:none}
 </style>
 </head>
@@ -311,329 +371,350 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;opacity:.025;backgroun
 
 <!-- NAV -->
 <nav id="mainNav">
-  <div class="nav-logo">
-    <div class="nav-logo-icon">
-      <svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3" fill="#0A0A0B"/><path d="M9 2C5.134 2 2 5.134 2 9s3.134 7 7 7 7-3.134 7-7-3.134-7-7-7z" stroke="#0A0A0B" stroke-width="1.5" fill="none"/><path d="M9 5v4l2.5 2.5" stroke="#0A0A0B" stroke-width="1.5" stroke-linecap="round"/></svg>
-    </div>
-    <div>AI VOICE AGENCY<span class="nav-logo-sub">Answer every call. Capture revenue.</span></div>
-  </div>
-  <ul class="nav-links">
-    <li><a href="#demo">Demo</a></li>
-    <li><a href="#how">How It Works</a></li>
-    <li><a href="#model">The Model</a></li>
-    <li><a href="#solutions">Solutions</a></li>
-    <li><a href="#faq">FAQ</a></li>
-  </ul>
-  <div class="nav-right">
-    <div class="agent-status"><div class="agent-dot"></div>Agent Online</div>
-    <a href="#cta" class="btn-primary">Book a Call →</a>
-  </div>
+<div class="nav-logo">
+<div class="nav-logo-icon">
+<svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3" fill="#0A0A0B"/><path d="M9 2C5.134 2 2 5.134 2 9s3.134 7 7 7 7-3.134 7-7-3.134-7-7-7z" stroke="#0A0A0B" stroke-width="1.5" fill="none"/><path d="M9 5v4l2.5 2.5" stroke="#0A0A0B" stroke-width="1.5" stroke-linecap="round"/></svg>
+</div>
+<div>AI VOICE AGENCY<span class="nav-logo-sub">Answer every call. Capture revenue.</span></div>
+</div>
+<ul class="nav-links">
+<li><a href="#demo">Demo</a></li>
+<li><a href="#how">How It Works</a></li>
+<li><a href="#model">The Model</a></li>
+<li><a href="#solutions">Solutions</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ul>
+<div class="nav-right">
+<div class="agent-status"><div class="agent-dot"></div>Agent Online</div>
+<a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener" class="btn-primary">Book a Call →</a>
+<button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+<span></span><span></span><span></span>
+</button>
+</div>
 </nav>
+
+<!-- MOBILE NAV (UPDATE #4) -->
+<div class="mobile-nav" id="mobileNav">
+<a href="#demo">Demo</a>
+<a href="#how">How It Works</a>
+<a href="#model">The Model</a>
+<a href="#solutions">Solutions</a>
+<a href="#faq">FAQ</a>
+<a href="tel:+17869371218">Call (786) 937-1218</a>
+<a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener" class="btn-primary">Book a Call →</a>
+</div>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-grid-bg"></div>
-  <div class="hero-content">
-    <div class="hero-left reveal">
-      <div class="hero-kicker"><span class="hero-kicker-dot"></span>Live — Built for business owners</div>
-
-      <h1 class="hero-headline">
-        <span class="ghost">We answer </span><span class="accent">every call</span><span class="ghost"> so you can run the business.</span>
-      </h1>
-
-      <p class="hero-subtext">Your phone rings. You're busy. The call goes to voicemail. That's lost revenue. We install a custom AI voice agent that picks up instantly, books appointments, handles support, qualifies leads, and escalates to you when it matters.</p>
-      <div class="hero-chips">
-        <span class="chip chip-green">● 24/7 coverage</span>
-        <span class="chip chip-green">● 0 missed calls (by design)</span>
-        <span class="chip">human quality checks</span>
-        <span class="chip">your rules + calendar</span>
-      </div>
-      <div class="hero-ctas">
-        <a href="#cta" class="btn-primary">Book a Discovery Call →</a>
-        <a href="#demo" class="btn-ghost">Watch the Demo</a>
-      </div>
-      <div class="hero-call-proof">
-        <div class="hero-call-proof-icon">
-          <svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" stroke="#00FF88" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-        <p>Don't just take our word for it.<br/><strong>555-0199</strong> — call and hear the agent now.</p>
-      </div>
-    </div>
-    <div class="hero-orb-wrap reveal reveal-delay-2">
-      <canvas id="heroCanvas" width="360" height="360"></canvas>
-      <div class="orb-status">Voice engine active<br/><span>breathing</span> · <span style="animation-delay:.4s">listening</span> · <span style="animation-delay:.8s">ready</span></div>
-    </div>
-  </div>
+<div class="hero-grid-bg"></div>
+<div class="hero-content">
+<div class="hero-left reveal">
+<div class="hero-kicker"><span class="hero-kicker-dot"></span>Live — Built for business owners</div>
+<h1 class="hero-headline">
+<span class="ghost">We answer </span><span class="accent">every call</span><span class="ghost"> so you can run the business.</span>
+</h1>
+<p class="hero-subtext">Your phone rings. You're busy. The call goes to voicemail. That's lost revenue. We install a custom AI voice agent that picks up instantly, books appointments, handles support, qualifies leads, and escalates to you when it matters.</p>
+<div class="hero-chips">
+<span class="chip chip-green">● 24/7 coverage</span>
+<span class="chip chip-green">● 0 missed calls (by design)</span>
+<span class="chip">human quality checks</span>
+<span class="chip">your rules + calendar</span>
+</div>
+<div class="hero-ctas">
+<a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener" class="btn-primary">Book a Discovery Call →</a>
+<a href="#demo" class="btn-ghost">Watch the Demo</a>
+</div>
+<!-- UPDATE #8: Call proof box -->
+<div class="hero-call-proof">
+<div class="hero-call-proof-icon">
+<svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" stroke="#00FF88" stroke-width="1.5" stroke-linecap="round"/></svg>
+</div>
+<p>Hear Ava live.<br/><strong>(786) 937-1218</strong> — call now and talk to the agent.</p>
+</div>
+</div>
+<div class="hero-orb-wrap reveal reveal-delay-2">
+<canvas id="heroCanvas" width="360" height="360"></canvas>
+<div class="orb-status">Voice engine active<br/><span>online</span> · <span style="animation-delay:.4s">processing</span> · <span style="animation-delay:.8s">ready</span></div>
+</div>
+</div>
 </section>
 
 <div class="section-divider"></div>
 
 <!-- DEMO -->
 <section id="demo">
-  <div class="demo-header reveal">
-    <div class="section-kicker">DEMO</div>
-    <h2 class="section-headline">Watch a call turn into booked work.</h2>
-    <p class="section-subtext" style="margin:0 auto;text-align:center">A real inbound call. Watch each message drop in as it happens — first ring to confirmed booking.</p>
-  </div>
-  <div class="demo-container reveal reveal-delay-2">
-    <div class="demo-topbar">
-      <span class="demo-topbar-title">Inbound Call Transcript — Live Agent</span>
-      <div style="display:flex;align-items:center;gap:12px">
-        <span class="demo-timer" id="demoTimer">0:00</span>
-        <span class="demo-live-badge"><span class="agent-dot" style="width:5px;height:5px"></span> LIVE</span>
-      </div>
-    </div>
-    <div class="waveform-bar">
-      <span class="waveform-label">AUDIO SIGNAL</span>
-      <div class="waveform" id="waveform"></div>
-      <span class="waveform-duration" id="waveformDuration">0:00</span>
-    </div>
-    <div class="transcript" id="demoTranscript"></div>
-    <div class="demo-replay">
-      <button class="demo-replay-btn" id="demoReplayBtn">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:10px;height:10px"><path d="M10 6A4 4 0 116 2"/><path d="M8.5 2H10V.5"/></svg>
-        Replay call
-      </button>
-    </div>
-  </div>
+<div class="demo-header reveal">
+<div class="section-kicker">DEMO</div>
+<h2 class="section-headline">Watch a call turn into booked work.</h2>
+<p class="section-subtext" style="margin:0 auto;text-align:center">A real inbound call. Watch each message drop in as it happens — first ring to confirmed booking.</p>
+</div>
+<div class="demo-container reveal reveal-delay-2">
+<div class="demo-topbar">
+<span class="demo-topbar-title">Inbound Call Transcript — Live Agent</span>
+<div style="display:flex;align-items:center;gap:12px">
+<span class="demo-timer" id="demoTimer">0:00</span>
+<span class="demo-live-badge"><span class="agent-dot" style="width:5px;height:5px"></span> LIVE</span>
+</div>
+</div>
+<div class="waveform-bar">
+<span class="waveform-label">AUDIO SIGNAL</span>
+<div class="waveform" id="waveform"></div>
+<span class="waveform-duration" id="waveformDuration">0:00</span>
+</div>
+<div class="transcript" id="demoTranscript"></div>
+<!-- UPDATE #7: Demo footer with live agent CTA -->
+<div class="demo-footer">
+<a href="tel:+17869371218" class="demo-footer-cta">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+Hear the real agent — call (786) 937-1218
+</a>
+<button class="demo-replay-btn" id="demoReplayBtn">
+<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:10px;height:10px"><path d="M10 6A4 4 0 116 2"/><path d="M8.5 2H10V.5"/></svg>
+Replay call
+</button>
+</div>
+</div>
 </section>
 
 <div class="section-divider"></div>
 
 <!-- MODEL -->
 <section id="model">
-  <div class="model-header reveal">
-    <div class="section-kicker">THE MODEL</div>
-    <h2 class="section-headline">Not fully automated. Not fully manual.</h2>
-    <p class="section-subtext" style="margin:0 auto;text-align:center">A hybrid system that handles the volume, keeps a human in the loop, and puts you in control of the decisions that matter.</p>
-  </div>
-  <div class="model-grid">
-    <div class="model-card primary reveal reveal-delay-1">
-      <div class="model-percent">80%</div>
-      <div class="model-label">AI Automation</div>
-      <p class="model-desc">Every standard call — bookings, FAQs, lead capture, after-hours coverage. Handled instantly without you lifting a finger.</p>
-    </div>
-    <div class="model-card secondary reveal reveal-delay-2">
-      <div class="model-percent">15%</div>
-      <div class="model-label">Human Quality Control</div>
-      <p class="model-desc">We review calls, catch edge cases, update the agent, and improve the system continuously. You never have to manage it.</p>
-    </div>
-    <div class="model-card tertiary reveal reveal-delay-3">
-      <div class="model-percent">5%</div>
-      <div class="model-label">Your Strategic Oversight</div>
-      <p class="model-desc">You define the rules, review summaries, and get escalated when something needs your judgment. No more, no less.</p>
-    </div>
-  </div>
+<div class="model-header reveal">
+<div class="section-kicker">THE MODEL</div>
+<h2 class="section-headline">Not fully automated. Not fully manual.</h2>
+<p class="section-subtext" style="margin:0 auto;text-align:center">A hybrid system that handles the volume, keeps a human in the loop, and puts you in control of the decisions that matter.</p>
+</div>
+<div class="model-grid">
+<div class="model-card primary reveal reveal-delay-1">
+<div class="model-percent">80%</div>
+<div class="model-label">AI Automation</div>
+<p class="model-desc">Every standard call — bookings, FAQs, lead capture, after-hours coverage. Handled instantly without you lifting a finger.</p>
+</div>
+<div class="model-card secondary reveal reveal-delay-2">
+<div class="model-percent">15%</div>
+<div class="model-label">Human Quality Control</div>
+<p class="model-desc">We review calls, catch edge cases, update the agent, and improve the system continuously. You never have to manage it.</p>
+</div>
+<div class="model-card tertiary reveal reveal-delay-3">
+<div class="model-percent">5%</div>
+<div class="model-label">Your Strategic Oversight</div>
+<p class="model-desc">You define the rules, review summaries, and get escalated when something needs your judgment. No more, no less.</p>
+</div>
+</div>
 </section>
 
 <div class="section-divider"></div>
 
 <!-- HOW IT WORKS -->
 <section id="how">
-  <div class="reveal">
-    <div class="section-kicker">HOW IT WORKS</div>
-    <h2 class="section-headline">From ring to resolution in under 30 seconds.</h2>
-    <p class="section-subtext">Four steps. Every call. Without you having to do a thing.</p>
-  </div>
-  <div class="timeline">
-    <div class="timeline-item reveal">
-      <div class="timeline-node">01</div>
-      <div class="timeline-content">
-        <div class="timeline-step-label">Step 1</div>
-        <div class="timeline-title">Phone Rings</div>
-        <p class="timeline-desc">Customer calls your number. The AI agent answers in under a second — with your business name, your tone, and your trained responses.</p>
-        <span class="timeline-time">⚡ &lt; 1 second</span>
-      </div>
-    </div>
-    <div class="timeline-item reveal reveal-delay-1">
-      <div class="timeline-node">02</div>
-      <div class="timeline-content">
-        <div class="timeline-step-label">Step 2</div>
-        <div class="timeline-title">Natural Conversation</div>
-        <p class="timeline-desc">The agent qualifies the caller, answers questions, checks your calendar, and captures what it needs — all in plain, natural conversation.</p>
-        <span class="timeline-time">⚡ 15–60 seconds</span>
-      </div>
-    </div>
-    <div class="timeline-item reveal reveal-delay-2">
-      <div class="timeline-node">03</div>
-      <div class="timeline-content">
-        <div class="timeline-step-label">Step 3</div>
-        <div class="timeline-title">Action Taken</div>
-        <p class="timeline-desc">Appointment booked, lead logged, support ticket created, or caller transferred — whatever your business requires, the agent executes it.</p>
-        <span class="timeline-time">⚡ Instant</span>
-      </div>
-    </div>
-    <div class="timeline-item reveal reveal-delay-3">
-      <div class="timeline-node">04</div>
-      <div class="timeline-content">
-        <div class="timeline-step-label">Step 4</div>
-        <div class="timeline-title">Summary Delivered</div>
-        <p class="timeline-desc">You get a call summary with what was said, what was done, and any flags that need your attention. Full visibility, zero time on the phone.</p>
-        <span class="timeline-time">⚡ Within seconds</span>
-      </div>
-    </div>
-  </div>
+<div class="reveal">
+<div class="section-kicker">HOW IT WORKS</div>
+<h2 class="section-headline">From ring to resolution in under 30 seconds.</h2>
+<p class="section-subtext">Four steps. Every call. Without you having to do a thing.</p>
+</div>
+<div class="timeline">
+<div class="timeline-item reveal">
+<div class="timeline-node">01</div>
+<div class="timeline-content">
+<div class="timeline-step-label">Step 1</div>
+<div class="timeline-title">Phone Rings</div>
+<p class="timeline-desc">Customer calls your number. The AI agent answers in under a second — with your business name, your tone, and your trained responses.</p>
+<span class="timeline-time">⚡ < 1 second</span>
+</div>
+</div>
+<div class="timeline-item reveal reveal-delay-1">
+<div class="timeline-node">02</div>
+<div class="timeline-content">
+<div class="timeline-step-label">Step 2</div>
+<div class="timeline-title">Natural Conversation</div>
+<p class="timeline-desc">The agent qualifies the caller, answers questions, checks your calendar, and captures what it needs — all in plain, natural conversation.</p>
+<span class="timeline-time">⚡ 15–60 seconds</span>
+</div>
+</div>
+<div class="timeline-item reveal reveal-delay-2">
+<div class="timeline-node">03</div>
+<div class="timeline-content">
+<div class="timeline-step-label">Step 3</div>
+<div class="timeline-title">Action Taken</div>
+<p class="timeline-desc">Appointment booked, lead logged, support ticket created, or caller transferred — whatever your business requires, the agent executes it.</p>
+<span class="timeline-time">⚡ Instant</span>
+</div>
+</div>
+<div class="timeline-item reveal reveal-delay-3">
+<div class="timeline-node">04</div>
+<div class="timeline-content">
+<div class="timeline-step-label">Step 4</div>
+<div class="timeline-title">Summary Delivered</div>
+<p class="timeline-desc">You get a call summary with what was said, what was done, and any flags that need your attention. Full visibility, zero time on the phone.</p>
+<span class="timeline-time">⚡ Within seconds</span>
+</div>
+</div>
+</div>
 </section>
 
 <div class="section-divider"></div>
 
 <!-- SOLUTIONS -->
 <section id="solutions">
-  <div class="reveal">
-    <div class="section-kicker">SOLUTIONS</div>
-    <h2 class="section-headline">Four ways this pays for itself.</h2>
-    <p class="section-subtext">Every agent is custom-built for your use case. Here's where we typically start.</p>
-  </div>
-  <div class="use-cases-grid">
-    <div class="use-case-card reveal reveal-delay-1">
-      <div class="use-case-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-      <div class="use-case-title">Appointment Booking</div>
-      <p class="use-case-desc">The agent checks your calendar in real time, confirms available slots, and books the appointment — complete with automated reminders. No more phone tag.</p>
-    </div>
-    <div class="use-case-card reveal reveal-delay-2">
-      <div class="use-case-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-      <div class="use-case-title">Inbound Support</div>
-      <p class="use-case-desc">Handle hours, pricing, directions, and common questions automatically. Escalate the calls that need you. Your team handles exceptions, not volume.</p>
-    </div>
-    <div class="use-case-card reveal reveal-delay-1">
-      <div class="use-case-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
-      <div class="use-case-title">Lead Qualification</div>
-      <p class="use-case-desc">The agent asks your qualifier questions, scores the lead, and routes hot prospects directly to you. Cold leads get nurtured. Your sales time goes to the right people.</p>
-    </div>
-    <div class="use-case-card reveal reveal-delay-2">
-      <div class="use-case-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.5 2 2 0 015.11 7.25h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 14a16 16 0 006.09 6.09l.45-.45a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
-      <div class="use-case-title">Outbound Follow-Up</div>
-      <p class="use-case-desc">Reactivate old leads, confirm upcoming appointments, collect feedback, or run outbound sequences. The agent makes the calls so you don't have to.</p>
-    </div>
-  </div>
+<div class="reveal">
+<div class="section-kicker">SOLUTIONS</div>
+<h2 class="section-headline">Four ways this pays for itself.</h2>
+<p class="section-subtext">Every agent is custom-built for your use case. Here's where we typically start.</p>
+</div>
+<div class="use-cases-grid">
+<div class="use-case-card reveal reveal-delay-1">
+<div class="use-case-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+<div class="use-case-title">Appointment Booking</div>
+<p class="use-case-desc">The agent checks your calendar in real time, confirms available slots, and books the appointment — complete with automated reminders. No more phone tag.</p>
+</div>
+<div class="use-case-card reveal reveal-delay-2">
+<div class="use-case-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+<div class="use-case-title">Inbound Support</div>
+<p class="use-case-desc">Handle hours, pricing, directions, and common questions automatically. Escalate the calls that need you. Your team handles exceptions, not volume.</p>
+</div>
+<div class="use-case-card reveal reveal-delay-1">
+<div class="use-case-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+<div class="use-case-title">Lead Qualification</div>
+<p class="use-case-desc">The agent asks your qualifier questions, scores the lead, and routes hot prospects directly to you. Cold leads get nurtured. Your sales time goes to the right people.</p>
+</div>
+<div class="use-case-card reveal reveal-delay-2">
+<div class="use-case-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.5 2 2 0 015.11 7.25h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 14a16 16 0 006.09 6.09l.45-.45a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+<div class="use-case-title">Outbound Follow-Up</div>
+<p class="use-case-desc">Reactivate old leads, confirm upcoming appointments, collect feedback, or run outbound sequences. The agent makes the calls so you don't have to.</p>
+</div>
+</div>
 </section>
 
 <div class="section-divider"></div>
 
 <!-- ESCALATION -->
 <section id="escalation">
-  <div class="escalation-wrap">
-    <div class="escalation-flow reveal">
-      <div class="esc-node">
-        <div class="esc-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" style="width:20px;height:20px"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
-        <div class="esc-content"><div class="esc-title">AI Agent Active</div><div class="esc-detail">Handles the call, follows your script, works within your rules</div></div>
-      </div>
-      <div class="esc-connector"><div class="esc-connector-line"></div><div class="esc-connector-label">real-time analysis</div></div>
-      <div class="esc-node">
-        <div class="esc-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" style="width:20px;height:20px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-        <div class="esc-content"><div class="esc-title">Issue Detected</div><div class="esc-detail">Caller frustrated · complex request · outside normal scope</div></div>
-      </div>
-      <div class="esc-connector"><div class="esc-connector-line" style="background:linear-gradient(to bottom,var(--warning),transparent)"></div><div class="esc-connector-label">instant escalation</div></div>
-      <div class="esc-node" style="border-color:rgba(245,158,11,.3)">
-        <div class="esc-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="1.5" stroke-linecap="round" style="width:20px;height:20px"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div>
-        <div class="esc-content"><div class="esc-title" style="color:var(--warning)">Your Phone Rings</div><div class="esc-detail">Warm transfer with full call context — you pick up knowing exactly what's happening</div></div>
-      </div>
-    </div>
-    <div class="reveal reveal-delay-2">
-      <div class="section-kicker">ESCALATION</div>
-      <h2 class="section-headline">When the caller gets heated, you get the call.</h2>
-      <p style="color:var(--muted);font-size:.95rem;line-height:1.7;margin-top:1rem">The agent handles the volume. But it knows its limits. When a conversation goes sideways — frustrated caller, unusual request, anything outside scope — it escalates immediately.</p>
-      <div class="escalation-warning">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <p>You don't get every call — only the ones <strong>that actually need you</strong>. Everything else is handled before it ever reaches your phone.</p>
-      </div>
-    </div>
-  </div>
+<div class="escalation-wrap">
+<div class="escalation-flow reveal">
+<div class="esc-node">
+<div class="esc-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" style="width:20px;height:20px"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+<div class="esc-content"><div class="esc-title">AI Agent Active</div><div class="esc-detail">Handles the call, follows your script, works within your rules</div></div>
+</div>
+<div class="esc-connector"><div class="esc-connector-line"></div><div class="esc-connector-label">real-time analysis</div></div>
+<div class="esc-node">
+<div class="esc-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" style="width:20px;height:20px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+<div class="esc-content"><div class="esc-title">Issue Detected</div><div class="esc-detail">Caller frustrated · complex request · outside normal scope</div></div>
+</div>
+<div class="esc-connector"><div class="esc-connector-line" style="background:linear-gradient(to bottom,var(--warning),transparent)"></div><div class="esc-connector-label">instant escalation</div></div>
+<div class="esc-node" style="border-color:rgba(245,158,11,.3)">
+<div class="esc-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="1.5" stroke-linecap="round" style="width:20px;height:20px"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div>
+<div class="esc-content"><div class="esc-title" style="color:var(--warning)">Your Phone Rings</div><div class="esc-detail">Warm transfer with full call context — you pick up knowing exactly what's happening</div></div>
+</div>
+</div>
+<div class="reveal reveal-delay-2">
+<div class="section-kicker">ESCALATION</div>
+<h2 class="section-headline">When the caller gets heated, you get the call.</h2>
+<p style="color:var(--muted);font-size:.95rem;line-height:1.7;margin-top:1rem">The agent handles the volume. But it knows its limits. When a conversation goes sideways — frustrated caller, unusual request, anything outside scope — it escalates immediately.</p>
+<div class="escalation-warning">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+<p>You don't get every call — only the ones <strong>that actually need you</strong>. Everything else is handled before it ever reaches your phone.</p>
+</div>
+</div>
+</div>
 </section>
 
 <div class="section-divider"></div>
 
 <!-- CREDIBILITY -->
 <section id="credibility">
-  <div class="reveal">
-    <div class="section-kicker">CREDIBILITY</div>
-    <h2 class="section-headline">Built by someone who's signed the paychecks and felt the missed-call pain himself.</h2>
-  </div>
-  <div class="cred-grid">
-    <div class="cred-bio reveal reveal-delay-1">
-      <p>This isn't a software product built by engineers who've never run a business. AI Voice Agency was built by an operator with 30 years of running companies — limousine services, solar, logistics, entertainment — who got tired of watching calls go to voicemail and revenue walk out the door.</p>
-      <p>When we build your agent, we're building it the way someone who's been on both sides of the phone would build it. We know what callers actually want. We know what business owners actually need.</p>
-      <p>The technology is world-class. The thinking behind it is practical. That's the difference.</p>
-    </div>
-    <div class="cred-stats reveal reveal-delay-2">
-      <div class="cred-stat"><div class="cred-stat-val">30+</div><div class="cred-stat-lbl">Years building and running real businesses</div></div>
-      <div class="cred-stat"><div class="cred-stat-val">5</div><div class="cred-stat-lbl">Successful business exits across multiple industries</div></div>
-      <div class="cred-stat"><div class="cred-stat-val">24/7</div><div class="cred-stat-lbl">Coverage from day one — no days off, no sick days</div></div>
-      <div class="cred-stat"><div class="cred-stat-val">100%</div><div class="cred-stat-lbl">Custom-built agents — no shared templates, no shortcuts</div></div>
-    </div>
-  </div>
+<div class="reveal">
+<div class="section-kicker">CREDIBILITY</div>
+<h2 class="section-headline">Built by someone who's signed the paychecks and felt the missed-call pain himself.</h2>
+</div>
+<div class="cred-grid">
+<div class="cred-bio reveal reveal-delay-1">
+<p>This isn't a software product built by engineers who've never run a business. AI Voice Agency was built by an operator with 30 years of running companies — limousine services, solar, logistics, entertainment — who got tired of watching calls go to voicemail and revenue walk out the door.</p>
+<p>When we build your agent, we're building it the way someone who's been on both sides of the phone would build it. We know what callers actually want. We know what business owners actually need.</p>
+<p>The technology is world-class. The thinking behind it is practical. That's the difference.</p>
+</div>
+<div class="cred-stats reveal reveal-delay-2">
+<div class="cred-stat"><div class="cred-stat-val">30+</div><div class="cred-stat-lbl">Years building and running real businesses</div></div>
+<div class="cred-stat"><div class="cred-stat-val">5</div><div class="cred-stat-lbl">Successful business exits across multiple industries</div></div>
+<div class="cred-stat"><div class="cred-stat-val">24/7</div><div class="cred-stat-lbl">Coverage from day one — no days off, no sick days</div></div>
+<div class="cred-stat"><div class="cred-stat-val">100%</div><div class="cred-stat-lbl">Custom-built agents — no shared templates, no shortcuts</div></div>
+</div>
+</div>
 </section>
 
 <div class="section-divider"></div>
 
 <!-- BUYING -->
 <section id="buying">
-  <div class="reveal" style="text-align:center">
-    <div class="section-kicker">WHAT YOU'RE ACTUALLY BUYING</div>
-    <h2 class="section-headline" style="text-align:center">A phone system that behaves like your best employee on their best day.</h2>
-    <p class="section-subtext" style="margin:0 auto;text-align:center">Every single call. No mood swings. No sick days. No "let me call you back."</p>
-  </div>
-  <div class="buying-grid">
-    <div class="buying-card reveal reveal-delay-1"><div class="buying-num">01 —</div><div class="buying-title">Captured Revenue</div><p class="buying-desc">Every call that used to go to voicemail now gets answered, qualified, and converted. Revenue you were leaving on the table every single day starts coming in.</p></div>
-    <div class="buying-card reveal reveal-delay-2"><div class="buying-num">02 —</div><div class="buying-title">Lower Overhead</div><p class="buying-desc">A full-time receptionist costs real money. An AI agent handles the same volume at a fraction of the cost — without vacation days, turnover, or training time.</p></div>
-    <div class="buying-card reveal reveal-delay-3"><div class="buying-num">03 —</div><div class="buying-title">Risk Containment</div><p class="buying-desc">Every call is logged, every action is tracked, and you get full visibility. No more hoping your team handled it right. You'll know exactly what happened.</p></div>
-  </div>
+<div class="reveal" style="text-align:center">
+<div class="section-kicker">WHAT YOU'RE ACTUALLY BUYING</div>
+<h2 class="section-headline" style="text-align:center">A phone system that behaves like your best employee on their best day.</h2>
+<p class="section-subtext" style="margin:0 auto;text-align:center">Every single call. No mood swings. No sick days. No "let me call you back."</p>
+</div>
+<div class="buying-grid">
+<div class="buying-card reveal reveal-delay-1"><div class="buying-num">01 —</div><div class="buying-title">Captured Revenue</div><p class="buying-desc">Every call that used to go to voicemail now gets answered, qualified, and converted. Revenue you were leaving on the table every single day starts coming in.</p></div>
+<div class="buying-card reveal reveal-delay-2"><div class="buying-num">02 —</div><div class="buying-title">Lower Overhead</div><p class="buying-desc">A full-time receptionist costs real money. An AI agent handles the same volume at a fraction of the cost — without vacation days, turnover, or training time.</p></div>
+<div class="buying-card reveal reveal-delay-3"><div class="buying-num">03 —</div><div class="buying-title">Risk Containment</div><p class="buying-desc">Every call is logged, every action is tracked, and you get full visibility. No more hoping your team handled it right. You'll know exactly what happened.</p></div>
+</div>
 </section>
 
 <div class="section-divider"></div>
 
 <!-- FAQ -->
 <section id="faq">
-  <div class="faq-header reveal"><div class="section-kicker">FAQ</div><h2 class="section-headline">Questions we actually get asked.</h2></div>
-  <div class="faq-list reveal reveal-delay-1">
-    <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)"><span class="faq-q-text">How long does it take to get set up?</span><div class="faq-arrow"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:12px;height:12px"><path d="M2 4l4 4 4-4"/></svg></div></div><div class="faq-answer"><div class="faq-answer-inner">A standard voice agent can be live quickly. A fully trained agent with your pricing, rules, and booking logic typically takes seven to ten business days. We handle the entire technical side — you answer a few questions about your business and we build it from there.</div></div></div>
-    <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)"><span class="faq-q-text">Will callers know it's AI?</span><div class="faq-arrow"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:12px;height:12px"><path d="M2 4l4 4 4-4"/></svg></div></div><div class="faq-answer"><div class="faq-answer-inner">The agent sounds natural, uses your business name, and follows your tone. Most callers don't notice. And if they ask, the system can be transparent about it — that's entirely your call. We set it up the way you want.</div></div></div>
-    <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)"><span class="faq-q-text">What if I already have a receptionist?</span><div class="faq-arrow"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:12px;height:12px"><path d="M2 4l4 4 4-4"/></svg></div></div><div class="faq-answer"><div class="faq-answer-inner">The agent handles overflow, after-hours, and high-volume periods. It doesn't replace your team — it makes sure nothing falls through the cracks. Your receptionist focuses on conversations that need a human. The agent covers the rest.</div></div></div>
-    <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)"><span class="faq-q-text">How much does it cost?</span><div class="faq-arrow"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:12px;height:12px"><path d="M2 4l4 4 4-4"/></svg></div></div><div class="faq-answer"><div class="faq-answer-inner">Every install is custom, so we don't publish fixed pricing. Book a discovery call and we'll scope it based on your call volume and needs. Month to month — no long-term contracts. If it's not working for you, you're not locked in.</div></div></div>
-    <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)"><span class="faq-q-text">What happens when something goes wrong?</span><div class="faq-arrow"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:12px;height:12px"><path d="M2 4l4 4 4-4"/></svg></div></div><div class="faq-answer"><div class="faq-answer-inner">Human quality control is built into the system. We monitor calls, review edge cases, and update the agent continuously. If something needs your attention, it escalates to you immediately. You're never flying blind.</div></div></div>
-  </div>
+<div class="faq-header reveal"><div class="section-kicker">FAQ</div><h2 class="section-headline">Questions we actually get asked.</h2></div>
+<div class="faq-list reveal reveal-delay-1">
+<div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)"><span class="faq-q-text">How long does it take to get set up?</span><div class="faq-arrow"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:12px;height:12px"><path d="M2 4l4 4 4-4"/></svg></div></div><div class="faq-answer"><div class="faq-answer-inner">A standard voice agent can be live quickly. A fully trained agent with your pricing, rules, and booking logic typically takes seven to ten business days. We handle the entire technical side — you answer a few questions about your business and we build it from there.</div></div></div>
+<div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)"><span class="faq-q-text">Will callers know it's AI?</span><div class="faq-arrow"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:12px;height:12px"><path d="M2 4l4 4 4-4"/></svg></div></div><div class="faq-answer"><div class="faq-answer-inner">The agent sounds natural, uses your business name, and follows your tone. Most callers don't notice. And if they ask, the system can be transparent about it — that's entirely your call. We set it up the way you want.</div></div></div>
+<div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)"><span class="faq-q-text">What if I already have a receptionist?</span><div class="faq-arrow"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:12px;height:12px"><path d="M2 4l4 4 4-4"/></svg></div></div><div class="faq-answer"><div class="faq-answer-inner">The agent handles overflow, after-hours, and high-volume periods. It doesn't replace your team — it makes sure nothing falls through the cracks. Your receptionist focuses on conversations that need a human. The agent covers the rest.</div></div></div>
+<div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)"><span class="faq-q-text">How much does it cost?</span><div class="faq-arrow"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:12px;height:12px"><path d="M2 4l4 4 4-4"/></svg></div></div><div class="faq-answer"><div class="faq-answer-inner">Every install is custom, so we don't publish fixed pricing. Book a discovery call and we'll scope it based on your call volume and needs. Month to month — no long-term contracts. If it's not working for you, you're not locked in.</div></div></div>
+<div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)"><span class="faq-q-text">What happens when something goes wrong?</span><div class="faq-arrow"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:12px;height:12px"><path d="M2 4l4 4 4-4"/></svg></div></div><div class="faq-answer"><div class="faq-answer-inner">Human quality control is built into the system. We monitor calls, review edge cases, and update the agent continuously. If something needs your attention, it escalates to you immediately. You're never flying blind.</div></div></div>
+</div>
 </section>
 
 <div class="section-divider"></div>
 
 <!-- CTA -->
 <section id="cta">
-  <div class="cta-kicker reveal">Ready when you are</div>
-  <h2 class="cta-headline reveal reveal-delay-1">Let's build the agent that answers your phone.</h2>
-  <p class="cta-sub reveal reveal-delay-2">Thirty-minute discovery call. We'll scope the build, answer your questions, and tell you exactly what's possible for your business.</p>
-  <div class="cta-btns reveal reveal-delay-3">
-    <a href="#" class="btn-primary" style="font-size:.875rem;padding:14px 28px">Book a Discovery Call →</a>
-    <a href="tel:5550199" class="btn-ghost" style="padding:14px 28px">Call 555-0199</a>
-  </div>
-  <div class="cta-note reveal reveal-delay-4">No demos. No pitches. Just a straight conversation about your business.</div>
+<div class="cta-kicker reveal">Ready when you are</div>
+<h2 class="cta-headline reveal reveal-delay-1">Let's build the agent that answers your phone.</h2>
+<p class="cta-sub reveal reveal-delay-2">Twenty-minute strategy call. We'll scope the build, answer your questions, and tell you exactly what's possible for your business.</p>
+<div class="cta-btns reveal reveal-delay-3">
+<a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener" class="btn-primary" style="font-size:.875rem;padding:14px 28px">Book a Strategy Call →</a>
+<a href="tel:+17869371218" class="btn-ghost" style="padding:14px 28px">Call (786) 937-1218</a>
+</div>
+<div class="cta-note reveal reveal-delay-4">No demos. No pitches. Just a straight conversation about your business.</div>
 </section>
 
-<!-- FOOTER -->
+<!-- FOOTER (UPDATE #11) -->
 <footer>
-  <div class="footer-inner">
-    <div>
-      <div class="nav-logo"><div class="nav-logo-icon"><svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3" fill="#0A0A0B"/><path d="M9 2C5.134 2 2 5.134 2 9s3.134 7 7 7 7-3.134 7-7-3.134-7-7-7z" stroke="#0A0A0B" stroke-width="1.5" fill="none"/><path d="M9 5v4l2.5 2.5" stroke="#0A0A0B" stroke-width="1.5" stroke-linecap="round"/></svg></div><div>AI VOICE AGENCY<span class="nav-logo-sub">Answer every call. Capture revenue.</span></div></div>
-      <p class="footer-tagline">Custom AI voice agents for businesses that can't afford to miss a call. Built in Wisconsin by an operator, not a software company.</p>
-      <div class="footer-email">hello@aivoiceagency.ai</div>
-      <div class="social-links">
-        <a href="#" class="social-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
-        <a href="#" class="social-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-      </div>
-    </div>
-    <div>
-      <div class="footer-links-title">Navigate</div>
-      <ul class="footer-links"><li><a href="#demo">Demo</a></li><li><a href="#how">How It Works</a></li><li><a href="#model">The Model</a></li><li><a href="#solutions">Solutions</a></li><li><a href="#faq">FAQ</a></li></ul>
-    </div>
-    <div>
-      <div class="footer-links-title">Get Started</div>
-      <ul class="footer-links"><li><a href="#cta">Book a Discovery Call</a></li><li><a href="tel:5550199">Call 555-0199</a></li><li><a href="mailto:hello@aivoiceagency.ai">hello@aivoiceagency.ai</a></li></ul>
-      <div style="margin-top:1.5rem"><a href="#cta" class="btn-primary" style="font-size:.75rem">Book a Call →</a></div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <div class="footer-copy">© 2026 AI Voice Agency — Custom built. Not a template. Built in Wisconsin.</div>
-    <div class="footer-voicebrain">Powered by VoiceBrain</div>
-  </div>
+<div class="footer-inner">
+<div>
+<div class="nav-logo"><div class="nav-logo-icon"><svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3" fill="#0A0A0B"/><path d="M9 2C5.134 2 2 5.134 2 9s3.134 7 7 7 7-3.134 7-7-3.134-7-7-7z" stroke="#0A0A0B" stroke-width="1.5" fill="none"/><path d="M9 5v4l2.5 2.5" stroke="#0A0A0B" stroke-width="1.5" stroke-linecap="round"/></svg></div><div>AI VOICE AGENCY<span class="nav-logo-sub">Answer every call. Capture revenue.</span></div></div>
+<p class="footer-tagline">Custom AI voice agents for businesses that can't afford to miss a call. Built in Wisconsin by an operator, not a software company.</p>
+<div class="footer-email"><a href="mailto:shane@aivoiceagency.ai" style="color:var(--teal)">shane@aivoiceagency.ai</a></div>
+<div class="social-links">
+<a href="https://linkedin.com/in/shanehandel" target="_blank" rel="noopener" class="social-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+<a href="https://x.com/shanehandel" target="_blank" rel="noopener" class="social-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+</div>
+</div>
+<div>
+<div class="footer-links-title">Navigate</div>
+<ul class="footer-links"><li><a href="#demo">Demo</a></li><li><a href="#how">How It Works</a></li><li><a href="#model">The Model</a></li><li><a href="#solutions">Solutions</a></li><li><a href="#faq">FAQ</a></li></ul>
+</div>
+<div>
+<div class="footer-links-title">Get Started</div>
+<ul class="footer-links">
+<li><a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener">Book a Strategy Call</a></li>
+<li><a href="tel:+17869371218">Call (786) 937-1218</a></li>
+<li><a href="mailto:shane@aivoiceagency.ai">shane@aivoiceagency.ai</a></li>
+</ul>
+<div style="margin-top:1.5rem"><a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener" class="btn-primary" style="font-size:.75rem">Book a Call →</a></div>
+</div>
+</div>
+<div class="footer-bottom">
+<div class="footer-copy">© 2026 AI Voice Agency — Custom built. Not a template. Built in Wisconsin.</div>
+</div>
 </footer>
 
 <script>
@@ -643,131 +724,143 @@ let mx=-100,my=-100,rx=-100,ry=-100;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
 (function tick(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick)})();
 document.querySelectorAll('a,button,.faq-question').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{ring.style.width='44px';ring.style.height='44px';ring.style.borderColor='rgba(0,255,136,.7)'});
-  el.addEventListener('mouseleave',()=>{ring.style.width='28px';ring.style.height='28px';ring.style.borderColor='rgba(0,255,136,.4)'});
+el.addEventListener('mouseenter',()=>{ring.style.width='44px';ring.style.height='44px';ring.style.borderColor='rgba(0,255,136,.7)'});
+el.addEventListener('mouseleave',()=>{ring.style.width='28px';ring.style.height='28px';ring.style.borderColor='rgba(0,255,136,.4)'});
 });
 
-/* ORB */
+/* HAMBURGER MENU (UPDATE #4) */
+const hamburger=document.getElementById('hamburgerBtn');
+const mobileNav=document.getElementById('mobileNav');
+hamburger.addEventListener('click',()=>{
+hamburger.classList.toggle('open');
+mobileNav.classList.toggle('open');
+});
+mobileNav.querySelectorAll('a').forEach(link=>{
+link.addEventListener('click',()=>{
+hamburger.classList.remove('open');
+mobileNav.classList.remove('open');
+});
+});
+
+/* ORB (UPDATE #9: mobile optimization) */
 (function(){
-  const canvas=document.getElementById('heroCanvas'),ctx=canvas.getContext('2d');
-  let mouseX=180,mouseY=180,spiked=false,spikeAmt=0,t=0;
-  const orbits=[
-    {r:90,speed:.004,count:8,size:2.5,alpha:.5,color:'0,255,136'},
-    {r:120,speed:-.003,count:12,size:2,alpha:.35,color:'0,255,136'},
-    {r:150,speed:.002,count:6,size:1.8,alpha:.25,color:'0,229,255'},
-  ];
-  orbits.forEach(o=>{o.particles=Array.from({length:o.count},(_,i)=>({angle:(i/o.count)*Math.PI*2,phase:Math.random()*Math.PI*2}));o.currentAngle=0});
-  canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mouseX=e.clientX-r.left;mouseY=e.clientY-r.top});
-  canvas.addEventListener('mouseleave',()=>{mouseX=canvas.width/2;mouseY=canvas.height/2});
-  canvas.addEventListener('click',()=>{spiked=true;spikeAmt=1});
-  canvas.addEventListener('touchmove',e=>{e.preventDefault();const r=canvas.getBoundingClientRect();mouseX=e.touches[0].clientX-r.left;mouseY=e.touches[0].clientY-r.top},{passive:false});
-  canvas.addEventListener('touchend',()=>{mouseX=canvas.width/2;mouseY=canvas.height/2});
-  function draw(){
-    const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2;
-    ctx.clearRect(0,0,W,H);t+=.016;
-    const lx=(mouseX-cx)*.04,ly=(mouseY-cy)*.04;
-    const prox=Math.max(0,1-Math.sqrt((mouseX-cx)**2+(mouseY-cy)**2)/(W/2));
-    if(spiked){spikeAmt*=.92;if(spikeAmt<.01){spiked=false;spikeAmt=0}}
-    const breath=Math.sin(t*1.2)*.5+.5,scale=1+breath*.06+spikeAmt*.25;
-    const ox=cx+lx,oy=cy+ly,gr=80*scale+prox*20+spikeAmt*40;
-    const g=ctx.createRadialGradient(ox,oy,0,ox,oy,gr);
-    g.addColorStop(0,`rgba(0,255,136,${.18+spikeAmt*.2+prox*.1})`);
-    g.addColorStop(.4,`rgba(0,255,136,${.06+spikeAmt*.08})`);
-    g.addColorStop(1,'rgba(0,255,136,0)');
-    ctx.fillStyle=g;ctx.beginPath();ctx.arc(ox,oy,gr,0,Math.PI*2);ctx.fill();
-    const cr=38*scale;
-    const cg=ctx.createRadialGradient(ox-cr*.2,oy-cr*.2,0,ox,oy,cr);
-    cg.addColorStop(0,`rgba(0,255,136,${.9+spikeAmt*.1})`);
-    cg.addColorStop(.5,'rgba(0,220,120,.7)');
-    cg.addColorStop(1,'rgba(0,180,100,.3)');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(ox,oy,cr,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle=`rgba(200,255,230,${.3+spikeAmt*.2})`;ctx.beginPath();ctx.arc(ox-cr*.25,oy-cr*.25,cr*.35,0,Math.PI*2);ctx.fill();
-    orbits.forEach((o,oi)=>{
-      o.currentAngle+=o.speed;
-      ctx.strokeStyle=`rgba(${o.color},.08)`;ctx.lineWidth=.5;ctx.beginPath();ctx.arc(ox,oy,o.r*scale*.95,0,Math.PI*2);ctx.stroke();
-      o.particles.forEach(p=>{
-        const a=p.angle+o.currentAngle,px=ox+Math.cos(a)*o.r*scale*.95,py=oy+Math.sin(a)*o.r*scale*.95;
-        const pa=o.alpha*(.7+Math.sin(t*2+p.phase)*.3)+spikeAmt*.3;
-        ctx.fillStyle=`rgba(${o.color},${pa})`;ctx.beginPath();ctx.arc(px,py,o.size*scale,0,Math.PI*2);ctx.fill();
-      });
-    });
-    if(spikeAmt>.05)for(let i=0;i<6;i++){const a=(i/6)*Math.PI*2+t,len=cr+30+spikeAmt*50;ctx.strokeStyle=`rgba(0,255,136,${spikeAmt*.6})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(ox+Math.cos(a)*cr,oy+Math.sin(a)*cr);ctx.lineTo(ox+Math.cos(a)*len,oy+Math.sin(a)*len);ctx.stroke()}
-    requestAnimationFrame(draw);
-  }
-  draw();
-  function resize(){if(window.innerWidth<600){canvas.width=280;canvas.height=280}else if(window.innerWidth<900){canvas.width=300;canvas.height=300}else{canvas.width=360;canvas.height=360}}
-  resize();window.addEventListener('resize',resize);
+const canvas=document.getElementById('heroCanvas'),ctx=canvas.getContext('2d');
+let mouseX=180,mouseY=180,spiked=false,spikeAmt=0,t=0;
+const isMobile=window.innerWidth<520;
+const dpr=isMobile?Math.min(window.devicePixelRatio||1,1.5):window.devicePixelRatio||1;
+const baseCount=isMobile?0.6:1;
+const orbits=[
+{r:90,speed:.004,count:Math.round(8*baseCount),size:2.5,alpha:.5,color:'0,255,136'},
+{r:120,speed:-.003,count:Math.round(12*baseCount),size:2,alpha:.35,color:'0,255,136'},
+{r:150,speed:.002,count:Math.round(6*baseCount),size:1.8,alpha:.25,color:'0,229,255'},
+];
+orbits.forEach(o=>{o.particles=Array.from({length:o.count},(_,i)=>({angle:(i/o.count)*Math.PI*2,phase:Math.random()*Math.PI*2}));o.currentAngle=0});
+canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mouseX=e.clientX-r.left;mouseY=e.clientY-r.top});
+canvas.addEventListener('mouseleave',()=>{mouseX=canvas.width/2;mouseY=canvas.height/2});
+canvas.addEventListener('click',()=>{spiked=true;spikeAmt=1});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();const r=canvas.getBoundingClientRect();mouseX=e.touches[0].clientX-r.left;mouseY=e.touches[0].clientY-r.top},{passive:false});
+canvas.addEventListener('touchend',()=>{mouseX=canvas.width/2;mouseY=canvas.height/2});
+function draw(){
+const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2;
+ctx.clearRect(0,0,W,H);t+=.016;
+const lx=(mouseX-cx)*.04,ly=(mouseY-cy)*.04;
+const prox=Math.max(0,1-Math.sqrt((mouseX-cx)**2+(mouseY-cy)**2)/(W/2));
+if(spiked){spikeAmt*=.92;if(spikeAmt<.01){spiked=false;spikeAmt=0}}
+const breath=Math.sin(t*1.2)*.5+.5,scale=1+breath*.06+spikeAmt*.25;
+const ox=cx+lx,oy=cy+ly,gr=80*scale+prox*20+spikeAmt*40;
+const g=ctx.createRadialGradient(ox,oy,0,ox,oy,gr);
+g.addColorStop(0,`rgba(0,255,136,${.18+spikeAmt*.2+prox*.1})`);
+g.addColorStop(.4,`rgba(0,255,136,${.06+spikeAmt*.08})`);
+g.addColorStop(1,'rgba(0,255,136,0)');
+ctx.fillStyle=g;ctx.beginPath();ctx.arc(ox,oy,gr,0,Math.PI*2);ctx.fill();
+const cr=38*scale;
+const cg=ctx.createRadialGradient(ox-cr*.2,oy-cr*.2,0,ox,oy,cr);
+cg.addColorStop(0,`rgba(0,255,136,${.9+spikeAmt*.1})`);
+cg.addColorStop(.5,'rgba(0,220,120,.7)');
+cg.addColorStop(1,'rgba(0,180,100,.3)');
+ctx.fillStyle=cg;ctx.beginPath();ctx.arc(ox,oy,cr,0,Math.PI*2);ctx.fill();
+ctx.fillStyle=`rgba(200,255,230,${.3+spikeAmt*.2})`;ctx.beginPath();ctx.arc(ox-cr*.25,oy-cr*.25,cr*.35,0,Math.PI*2);ctx.fill();
+orbits.forEach(o=>{
+o.currentAngle+=o.speed;
+ctx.strokeStyle=`rgba(${o.color},.08)`;ctx.lineWidth=.5;ctx.beginPath();ctx.arc(ox,oy,o.r*scale*.95,0,Math.PI*2);ctx.stroke();
+o.particles.forEach(p=>{
+const a=p.angle+o.currentAngle,px=ox+Math.cos(a)*o.r*scale*.95,py=oy+Math.sin(a)*o.r*scale*.95;
+const pa=o.alpha*(.7+Math.sin(t*2+p.phase)*.3)+spikeAmt*.3;
+ctx.fillStyle=`rgba(${o.color},${pa})`;ctx.beginPath();ctx.arc(px,py,o.size*scale,0,Math.PI*2);ctx.fill();
+});
+});
+if(spikeAmt>.05)for(let i=0;i<6;i++){const a=(i/6)*Math.PI*2+t,len=cr+30+spikeAmt*50;ctx.strokeStyle=`rgba(0,255,136,${spikeAmt*.6})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(ox+Math.cos(a)*cr,oy+Math.sin(a)*cr);ctx.lineTo(ox+Math.cos(a)*len,oy+Math.sin(a)*len);ctx.stroke()}
+requestAnimationFrame(draw);
+}
+draw();
+function resize(){if(window.innerWidth<600){canvas.width=280;canvas.height=280}else if(window.innerWidth<900){canvas.width=300;canvas.height=300}else{canvas.width=360;canvas.height=360}}
+resize();window.addEventListener('resize',resize);
 })();
 
 /* WAVEFORM */
 (function(){
-  const wf=document.getElementById('waveform');
-  for(let i=0;i<48;i++){const b=document.createElement('div');b.className='wave-bar';const h=Math.floor(Math.random()*20+4);b.style.setProperty('--h',h+'px');b.style.setProperty('--dur',(0.4+Math.random()*.8)+'s');b.style.animationDelay=(i*.04)+'s';wf.appendChild(b)}
+const wf=document.getElementById('waveform');
+for(let i=0;i<48;i++){const b=document.createElement('div');b.className='wave-bar';const h=Math.floor(Math.random()*20+4);b.style.setProperty('--h',h+'px');b.style.setProperty('--dur',(0.4+Math.random()*.8)+'s');b.style.animationDelay=(i*.04)+'s';wf.appendChild(b)}
 })();
 
 /* LIVE TRANSCRIPT */
 const SCRIPT=[
-  {role:'agent',text:'Thanks for calling Summit Roofing. This is Alex — how can I help you today?',meta:'Agent · Answered in <1s',delay:700},
-  {role:'caller',text:'Hi yeah — we had some hail damage last week. Need someone to come take a look at the roof.',meta:'Caller · 0:04',delay:3000},
-  {role:'agent',text:"Absolutely, we can get you scheduled for a damage assessment. Can I get your address and a couple times that work for you this week?",meta:'Agent · 0:08',delay:3200},
-  {role:'caller',text:'1842 Elm Street. Thursday afternoon or Friday morning both work.',meta:'Caller · 0:15',delay:3000},
-  {role:'agent',text:"Perfect. I've got Thursday at 2pm available. I'll lock you in for that, send a confirmation text, and have the crew ready. Anything else I can help with?",meta:'Agent · 0:19',delay:3400},
-  {role:'caller',text:"No, that's great. Thank you.",meta:'Caller · 0:24',delay:2600},
-  {role:'confirm',delay:1000}
+{role:'agent',text:'Thanks for calling Summit Roofing. This is Alex — how can I help you today?',meta:'Agent · Answered in <1s',delay:700},
+{role:'caller',text:'Hi yeah — we had some hail damage last week. Need someone to come take a look at the roof.',meta:'Caller · 0:04',delay:3000},
+{role:'agent',text:"Absolutely, we can get you scheduled for a damage assessment. Can I get your address and a couple times that work for you this week?",meta:'Agent · 0:08',delay:3200},
+{role:'caller',text:'1842 Elm Street. Thursday afternoon or Friday morning both work.',meta:'Caller · 0:15',delay:3000},
+{role:'agent',text:"Perfect. I've got Thursday at 2pm available. I'll lock you in for that, send a confirmation text, and have the crew ready. Anything else I can help with?",meta:'Agent · 0:19',delay:3400},
+{role:'caller',text:"No, that's great. Thank you.",meta:'Caller · 0:24',delay:2600},
+{role:'confirm',delay:1000}
 ];
-
 let running=false,tos=[],elapsed=0,tmr=null;
-
 function clearAll(){tos.forEach(t=>clearTimeout(t));tos=[];clearInterval(tmr)}
-
 function startDemo(){
-  if(running)return;
-  running=true;
-  clearAll();
-  const tr=document.getElementById('demoTranscript');
-  const timerEl=document.getElementById('demoTimer');
-  const durEl=document.getElementById('waveformDuration');
-  tr.innerHTML='';elapsed=0;timerEl.textContent='0:00';durEl.textContent='0:00';
-  tmr=setInterval(()=>{elapsed++;const m=Math.floor(elapsed/60),s=elapsed%60,ts=m+':'+(s<10?'0':'')+s;timerEl.textContent=ts;durEl.textContent=ts},1000);
-
-  let cum=0;
-  SCRIPT.forEach(line=>{
-    cum+=line.delay;
-    if(line.role==='confirm'){
-      tos.push(setTimeout(()=>{
-        const ty=tr.querySelector('.typing-indicator');if(ty)tr.removeChild(ty);
-        const c=document.createElement('div');c.className='transcript-booking-confirm';
-        c.innerHTML='<div class="booking-check"><svg viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3 6-5.5" stroke="#0A0A0B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="booking-text"><p>Appointment Confirmed</p><span>Thursday · 2:00 PM · 1842 Elm Street · SMS reminder queued</span></div>';
-        tr.appendChild(c);tr.scrollTop=tr.scrollHeight;
-        requestAnimationFrame(()=>setTimeout(()=>c.classList.add('live'),20));
-        clearInterval(tmr);running=false;
-      },cum));
-      return;
-    }
-    if(line.role==='agent'){
-      tos.push(setTimeout(()=>{
-        const ex=tr.querySelector('.typing-indicator');if(ex)tr.removeChild(ex);
-        const ti=document.createElement('div');ti.className='typing-indicator';
-        ti.innerHTML='<div class="transcript-avatar" style="background:rgba(0,255,136,.15);color:var(--green);border:1px solid rgba(0,255,136,.3);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.6rem;font-weight:600;flex-shrink:0">AI</div><div class="typing-dots"><span></span><span></span><span></span></div>';
-        tr.appendChild(ti);tr.scrollTop=tr.scrollHeight;
-        requestAnimationFrame(()=>setTimeout(()=>ti.classList.add('show'),20));
-      },cum-Math.min(1600,line.delay*.55)));
-    }
-    tos.push(setTimeout(()=>{
-      const ty=tr.querySelector('.typing-indicator');if(ty)tr.removeChild(ty);
-      const el=document.createElement('div');el.className=`transcript-line ${line.role}`;
-      const av=line.role==='agent'?'AI':'C';
-      el.innerHTML=`<div class="transcript-avatar">${av}</div><div><div class="transcript-bubble">${line.text}</div><div class="transcript-meta">${line.meta}</div></div>`;
-      tr.appendChild(el);tr.scrollTop=tr.scrollHeight;
-      requestAnimationFrame(()=>setTimeout(()=>el.classList.add('live'),20));
-    },cum));
-  });
+if(running)return;
+running=true;
+clearAll();
+const tr=document.getElementById('demoTranscript');
+const timerEl=document.getElementById('demoTimer');
+const durEl=document.getElementById('waveformDuration');
+tr.innerHTML='';elapsed=0;timerEl.textContent='0:00';durEl.textContent='0:00';
+tmr=setInterval(()=>{elapsed++;const m=Math.floor(elapsed/60),s=elapsed%60,ts=m+':'+(s<10?'0':'')+s;timerEl.textContent=ts;durEl.textContent=ts},1000);
+let cum=0;
+SCRIPT.forEach(line=>{
+cum+=line.delay;
+if(line.role==='confirm'){
+tos.push(setTimeout(()=>{
+const ty=tr.querySelector('.typing-indicator');if(ty)tr.removeChild(ty);
+const c=document.createElement('div');c.className='transcript-booking-confirm';
+c.innerHTML='<div class="booking-check"><svg viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3 6-5.5" stroke="#0A0A0B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="booking-text"><p>Appointment Confirmed</p><span>Thursday · 2:00 PM · 1842 Elm Street · SMS reminder queued</span></div>';
+tr.appendChild(c);tr.scrollTop=tr.scrollHeight;
+requestAnimationFrame(()=>setTimeout(()=>c.classList.add('live'),20));
+clearInterval(tmr);running=false;
+},cum));
+return;
+}
+if(line.role==='agent'){
+tos.push(setTimeout(()=>{
+const ex=tr.querySelector('.typing-indicator');if(ex)tr.removeChild(ex);
+const ti=document.createElement('div');ti.className='typing-indicator';
+ti.innerHTML='<div class="transcript-avatar" style="background:rgba(0,255,136,.15);color:var(--green);border:1px solid rgba(0,255,136,.3);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.6rem;font-weight:600;flex-shrink:0">AI</div><div class="typing-dots"><span></span><span></span><span></span></div>';
+tr.appendChild(ti);tr.scrollTop=tr.scrollHeight;
+requestAnimationFrame(()=>setTimeout(()=>ti.classList.add('show'),20));
+},cum-Math.min(1600,line.delay*.55)));
+}
+tos.push(setTimeout(()=>{
+const ty=tr.querySelector('.typing-indicator');if(ty)tr.removeChild(ty);
+const el=document.createElement('div');el.className=`transcript-line ${line.role}`;
+const av=line.role==='agent'?'AI':'C';
+el.innerHTML=`<div class="transcript-avatar">${av}</div><div><div class="transcript-bubble">${line.text}</div><div class="transcript-meta">${line.meta}</div></div>`;
+tr.appendChild(el);tr.scrollTop=tr.scrollHeight;
+requestAnimationFrame(()=>setTimeout(()=>el.classList.add('live'),20));
+},cum));
+});
 }
 
-/* Auto-trigger when scrolled into view */
+/* Auto-trigger */
 const demoSection=document.getElementById('demo');
 new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting&&!running){setTimeout(startDemo,500);demoSection._observed=true}})},{threshold:.25}).observe(demoSection);
-
 document.getElementById('demoReplayBtn').addEventListener('click',()=>{clearAll();running=false;startDemo()});
 
 /* SCROLL REVEAL */
@@ -776,9 +869,9 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
 /* FAQ */
 function toggleFAQ(el){
-  const a=el.nextElementSibling,open=el.classList.contains('open');
-  document.querySelectorAll('.faq-question').forEach(q=>{q.classList.remove('open');q.nextElementSibling.classList.remove('open')});
-  if(!open){el.classList.add('open');a.classList.add('open')}
+const a=el.nextElementSibling,open=el.classList.contains('open');
+document.querySelectorAll('.faq-question').forEach(q=>{q.classList.remove('open');q.nextElementSibling.classList.remove('open')});
+if(!open){el.classList.add('open');a.classList.add('open')}
 }
 
 /* NAV */
