@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>AVA Signal V5 | AI Voice Agency</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0A0A0F;font-family:'JetBrains Mono','SF Mono','Fira Code',monospace;-webkit-tap-highlight-color:transparent;touch-action:none}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+#entry-canvas{z-index:2;pointer-events:none;transition:opacity 0.8s ease-out}
+#signal-canvas{z-index:1;cursor:crosshair;opacity:0;transform:scale(0.8);transition:opacity 2s cubic-bezier(0.22,1,0.36,1),transform 3s cubic-bezier(0.34,1.56,0.64,1)}
+#signal-canvas.active{opacity:1;transform:scale(1)}
+#hud-state{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);z-index:10;font-size:11px;letter-spacing:0.2em;color:#EEF0F4;opacity:0.6;text-transform:uppercase;pointer-events:none;transition:color 0.3s}
+#hud-meter{position:fixed;bottom:32px;right:24px;z-index:10;display:flex;align-items:flex-end;gap:3px;pointer-events:none}
+.meter-bar{width:3px;border-radius:1px;transition:background 0.15s}
+#whisper{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;font-family:'Inter','Helvetica Neue',sans-serif;font-size:18px;opacity:0;pointer-events:none;animation:whisperPulse 3s ease-in-out infinite;text-shadow:0 0 40px rgba(0,212,255,0.25)}
+#whisper.show{opacity:0.7}
+#haptic-tip{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:15;font-family:'Inter',sans-serif;font-size:13px;color:#EEF0F4;background:rgba(10,10,15,0.85);padding:8px 16px;border-radius:8px;border:1px solid rgba(0,212,255,0.2);backdrop-filter:blur(8px);display:none;align-items:center;gap:10px}
+#haptic-tip button{border-radius:4px;padding:2px 10px;font-size:11px;cursor:pointer;border:1px solid #00D4FF}
+#haptic-btn{background:#00D4FF;color:#0A0A0F}
+#haptic-close{background:none;border:none;color:#EEF0F4;opacity:0.4;cursor:pointer;font-size:14px;padding:0}
+@keyframes whisperPulse{0%,100%{opacity:0;transform:translate(-50%,-50%) scale(0.95)}30%{opacity:0.7;transform:translate(-50%,-50%) scale(1)}70%{opacity:0.5;transform:translate(-50%,-50%) scale(1.02)}}
+</style>
+</head>
+<body>
+<canvas id="entry-canvas"></canvas>
+<canvas id="signal-canvas"></canvas>
+<div id="hud-state">IDLE</div>
+<div id="hud-meter"></div>
+<div id="whisper"></div>
+<div id="haptic-tip"><span style="opacity:0.7">Like that? Keep vibes on</span><button id="haptic-btn" onclick="toggleHaptic()">ON</button><button id="haptic-close" onclick="closeHapticTip()">&#10005;</button></div>
+<script>
+// ════════════════════════════════════════════════
+// AVA SIGNAL V5 FINAL — ALL 5 AIs MERGED
+// Shane Handel | CIRCULANT Systems
+// Stack: Raw WebGL + Web Audio API + Vibration API
+// Zero dependencies. Ships to aivoiceagency.ai
+// ════════════════════════════════════════════════
+
+var THEMES = {
+ava:         { primary: [0.0, 0.831, 1.0],   hex: “#00D4FF” },
+resumeready: { primary: [1.0, 0.722, 0.0],   hex: “#FFB800” },
+ai100x:      { primary: [1.0, 1.0, 1.0],     hex: “#FFFFFF”, prismatic: true },
+seeblinds:   { primary: [1.0, 0.722, 0.286], hex: “#FFB849” }
+};
+
+var CONFIG = {
+PARTICLE_COUNT: 50000,
+DUST_COUNT: 64,
+TOTAL: 50064,
+STATES: [“IDLE”,“BREATHING”,“LISTENING”,“SPEAKING”,“ACTIVATED”,“CELEBRATION”,“SCREENSAVER”],
+STATE_DURATION: 3000,
+TAP_THRESHOLD: 280,
+IDLE_TIMEOUT: 75000,
+HAPTIC_COOLDOWN: 80
+};
+
+var theme = THEMES.ava;
+var canvas, gl, program, entryCanvas, eGl, eProg;
+var state = 0, transition = 0, timeMs = 0;
+var pointer = { x: 0, y: 0, active: false };
+var audio = { bass: 0, mid: 0, treble: 0, amplitude: 0 };
+var burst = { active: false, progress: 0 };
+var tap = { last: 0, timer: null };
+var stateTimer = 0, frameCount = 0;
+var entryStart = 0, entryDone = false;
+var idleTimer = null, whisperShown = false;
+var hapticEnabled = true, interactionCount = 0;
+var analyser = null, micAnalyser = null, freqBuf = null;
+var lastHapticTime = 0;
+var lastTime = 0;
+var raf = null;
+var buffers = [];
+
+// ─── VERTEX SHADER (Claude base + Gemini snoise + ChatGPT dual-source) ───
+var VERT = [
+“precision highp float;”,
+“attribute vec3 aPosition;”,
+“attribute vec3 aIdleTarget;”,
+“attribute vec3 aListenTarget;”,
+“attribute vec3 aSpeechTarget;”,
+“attribute float aDepth;”,
+“attribute float aPhase;”,
+“attribute float aIsDust;”,
+“uniform float uTime;”,
+“uniform float uState;”,
+“uniform float uTransition;”,
+“uniform float uBass;”,
+“uniform float uMid;”,
+“uniform float uTreble;”,
+“uniform float uAmplitude;”,
+“uniform float uBurstProgress;”,
+“uniform vec2 uPointer;”,
+“uniform float uPointerActive;”,
+“uniform float uAspect;”,
+“uniform float uListenBias;”,
+“uniform float uSpeakBias;”,
+“varying float vDepth;”,
+“varying float vGlow;”,
+“varying float vHue;”,
+“varying float vIsDust;”,
+“varying float vStateColor;”,
+// Gemini: Simplex noise
+“vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}”,
+“vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}”,
+“vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}”,
+“vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}”,
+“float snoise(vec3 v){”,
+“  const vec2 C=vec2(1.0/6.0,1.0/3.0);”,
+“  const vec4 D=vec4(0.0,0.5,1.0,2.0);”,
+“  vec3 i=floor(v+dot(v,C.yyy));”,
+“  vec3 x0=v-i+dot(i,C.xxx);”,
+“  vec3 g=step(x0.yzx,x0.xyz);”,
+“  vec3 l=1.0-g;”,
+“  vec3 i1=min(g.xyz,l.zxy);”,
+“  vec3 i2=max(g.xyz,l.zxy);”,
+“  vec3 x1=x0-i1+C.xxx;”,
+“  vec3 x2=x0-i2+C.yyy;”,
+“  vec3 x3=x0-D.yyy;”,
+“  i=mod289(i);”,
+“  vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));”,
+“  float n_=0.142857142857;”,
+“  vec3 ns=n_*D.wyz-D.xzx;”,
+“  vec4 j=p-49.0*floor(p*ns.z*ns.z);”,
+“  vec4 x_=floor(j*ns.z);”,
+“  vec4 y_=floor(j-7.0*x_);”,
+“  vec4 x=x_*ns.x+ns.yyyy;”,
+“  vec4 y=y_*ns.x+ns.yyyy;”,
+“  vec4 h=1.0-abs(x)-abs(y);”,
+“  vec4 b0=vec4(x.xy,y.xy);”,
+“  vec4 b1=vec4(x.zw,y.zw);”,
+“  vec4 s0=floor(b0)*2.0+1.0;”,
+“  vec4 s1=floor(b1)*2.0+1.0;”,
+“  vec4 sh=-step(h,vec4(0.0));”,
+“  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;”,
+“  vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;”,
+“  vec3 p0=vec3(a0.xy,h.x);”,
+“  vec3 p1=vec3(a0.zw,h.y);”,
+“  vec3 p2=vec3(a1.xy,h.z);”,
+“  vec3 p3=vec3(a1.zw,h.w);”,
+“  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));”,
+“  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;”,
+“  vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);”,
+“  m=m*m;”,
+“  return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));”,
+“}”,
+“void main(){”,
+“  float s=uState;”,
+“  float t=uTransition;”,
+“  vec3 idle=aIdleTarget;”,
+“  vec3 listen=aListenTarget;”,
+“  vec3 speech=aSpeechTarget;”,
+“  vec3 pos;”,
+“  float noiseTime=uTime*0.2+aPhase*2.0;”,
+“  float curl=snoise(idle*0.5+vec3(0.0,0.0,noiseTime));”,
+// IDLE: curl noise drift (Gemini)
+“  if(s<0.5){”,
+“    pos=idle;”,
+“    pos.x+=cos(curl*3.14)*0.1;”,
+“    pos.y+=sin(curl*3.14)*0.1;”,
+// BREATHING: sonar ring + curl (Claude + Gemini)
+“  }else if(s<1.5){”,
+“    float breath=sin(uTime*1.5708)*0.5+0.5;”,
+“    float scale=1.0+breath*0.25;”,
+“    pos=idle*scale;”,
+“    pos.xy+=vec2(cos(curl),sin(curl))*breath*0.15;”,
+“    float ring=smoothstep(0.85,1.0,breath)*smoothstep(1.0,0.85,breath);”,
+“    float dist=length(idle.xy);”,
+“    float ringWave=smoothstep(0.3,0.35,dist)*smoothstep(0.45,0.4,dist);”,
+“    pos.xy+=normalize(idle.xy+0.001)*ring*ringWave*0.3;”,
+// LISTENING: contraction + orbital curl (ChatGPT dual-source + Gemini)
+“  }else if(s<2.5){”,
+“    pos=mix(idle,listen,t);”,
+“    float orbitSpeed=uTime*2.0+aPhase*10.0;”,
+“    mat2 rot=mat2(cos(orbitSpeed),-sin(orbitSpeed),sin(orbitSpeed),cos(orbitSpeed));”,
+“    pos.xy=rot*pos.xy;”,
+“    float contraction=1.0-uListenBias*0.3;”,
+“    pos.xy*=contraction;”,
+“    pos.xy+=normalize(listen.xy+0.001)*uBass*0.5;”,
+“    pos.z+=curl*uMid*0.4;”,
+// SPEAKING: expansion + propagation (ChatGPT dual-source + Claude)
+“  }else if(s<3.5){”,
+“    pos=mix(idle,speech,t);”,
+“    float dist=length(speech.xy);”,
+“    float propDelay=dist*0.1;”,
+“    float propPhase=clamp(uTime*3.0-propDelay,0.0,1.0);”,
+“    float expansion=1.0+uSpeakBias*0.4;”,
+“    pos*=expansion+propPhase*0.3;”,
+“    pos.xyz+=vec3(snoise(pos+uTime),snoise(pos-uTime),snoise(pos*2.0))*uTreble*0.25;”,
+// ACTIVATED: burst
+“  }else if(s<4.5){”,
+“    float b=uBurstProgress;”,
+“    vec3 burstDir=normalize(idle+0.001);”,
+“    float burstDist=b*3.0*(0.5+aDepth);”,
+“    float reassemble=smoothstep(0.3,1.0,b);”,
+“    pos=mix(idle+burstDir*burstDist,idle,reassemble*reassemble);”,
+// CELEBRATION: bigger burst
+“  }else if(s<5.5){”,
+“    float b=uBurstProgress;”,
+“    vec3 burstDir=normalize(idle+0.001);”,
+“    float burstDist=b*5.0*(0.3+fract(aPhase*100.0)*0.7);”,
+“    float reassemble=smoothstep(0.2,1.0,b);”,
+“    pos=mix(idle+burstDir*burstDist,idle,reassemble);”,
+// SCREENSAVER: wide drift, low alpha
+“  }else{”,
+“    pos=idle*1.4;”,
+“    pos.x+=sin(uTime*0.15+aPhase*4.0)*0.3;”,
+“    pos.y+=cos(uTime*0.12+aPhase*3.0)*0.25;”,
+“  }”,
+// Dark void center (Claude)
+“  float centerDist=length(pos.xy);”,
+“  float voidPush=smoothstep(0.0,0.2,centerDist);”,
+“  pos.xy*=mix(3.0,1.0,voidPush);”,
+// Asymmetric field (Claude)
+“  pos.z*=0.6;”,
+“  pos.y*=0.92;”,
+// Pointer interaction
+“  if(uPointerActive>0.5){”,
+“    vec2 diff=pos.xy-uPointer;”,
+“    float pDist=length(diff);”,
+“    float force=s<1.5?-0.2:0.3;”,
+“    float falloff=1.0/(1.0+pDist*pDist*10.0);”,
+“    pos.xy+=normalize(diff+0.001)*force*falloff;”,
+“  }”,
+“  pos.xy=clamp(pos.xy,vec2(-2.0),vec2(2.0));”,
+// Depth hierarchy (Claude)
+“  float baseSize=aIsDust>0.5?1.0:mix(5.0,1.5,aDepth);”,
+“  float sizeBoost=1.0+uAmplitude*0.8;”,
+“  if(s>3.5)sizeBoost+=uBurstProgress*3.0;”,
+“  if(s>5.5)sizeBoost*=0.6;”,
+“  gl_PointSize=baseSize*sizeBoost;”,
+“  vec2 corrected=pos.xy;”,
+“  corrected.x/=uAspect;”,
+“  gl_Position=vec4(corrected,pos.z*0.1,1.0);”,
+“  vDepth=aDepth;”,
+“  vIsDust=aIsDust;”,
+“  vGlow=mod(aPhase*50000.0,10.0)<1.0?1.0:0.0;”,
+“  vHue=fract(aPhase+uTime*0.2);”,
+“  vStateColor=s>0.5?1.0:0.0;”,
+“  if(s>4.5&&s<5.5)vStateColor=uBurstProgress>0.7?2.0:1.0;”,
+“  if(s>5.5)vStateColor=2.0;”,
+“}”
+].join(”\n”);
+
+// ─── FRAGMENT SHADER (Claude base + Gemini YIQ + chromatic aberration) ───
+var FRAG = [
+“precision highp float;”,
+“varying float vDepth;”,
+“varying float vGlow;”,
+“varying float vHue;”,
+“varying float vIsDust;”,
+“varying float vStateColor;”,
+“uniform vec3 uPrimaryColor;”,
+“uniform float uPrismatic;”,
+“uniform float uState;”,
+“uniform float uAmplitude;”,
+“uniform float uBass;”,
+“uniform float uBurstProgress;”,
+// Gemini: YIQ color space
+“vec3 rgb2yiq(vec3 c){return vec3(dot(c,vec3(0.299,0.587,0.114)),dot(c,vec3(0.596,-0.274,-0.322)),dot(c,vec3(0.211,-0.523,0.312)));}”,
+“vec3 yiq2rgb(vec3 c){return vec3(dot(c,vec3(1.0,0.956,0.621)),dot(c,vec3(1.0,-0.272,-0.647)),dot(c,vec3(1.0,-1.106,1.703)));}”,
+“vec3 hueShiftYIQ(vec3 color,float shift){”,
+“  vec3 yiq=rgb2yiq(color);”,
+“  float angle=shift*6.2831853;”,
+“  float s=sin(angle);float c=cos(angle);”,
+“  return yiq2rgb(vec3(yiq.x,yiq.y*c-yiq.z*s,yiq.y*s+yiq.z*c));”,
+“}”,
+“void main(){”,
+“  vec2 coord=gl_PointCoord*2.0-1.0;”,
+“  float dist=length(coord);”,
+“  if(dist>1.0)discard;”,
+“  float sharpness=mix(4.0,1.0,vDepth);”,
+“  float alpha=pow(1.0-dist,sharpness);”,
+“  float brightness=mix(1.2,0.2,vDepth);”,
+“  vec3 white=vec3(0.933,0.941,0.957);”,
+“  vec3 gold=vec3(1.0,0.722,0.0);”,
+“  vec3 color;”,
+“  if(vStateColor<0.5){”,
+“    color=white;”,
+“  }else if(vStateColor<1.5){”,
+“    color=mix(white,uPrimaryColor,0.7+uAmplitude*0.3);”,
+“    if(uPrismatic>0.5){”,
+“      color=hueShiftYIQ(uPrimaryColor,vHue);”,
+“    }”,
+“  }else{”,
+“    color=gold;”,
+“  }”,
+// Gemini: chromatic aberration on bass
+“  if(uState>1.5&&uState<4.5&&uBass>0.3){”,
+“    float abr=uBass*0.15;”,
+“    color.r=hueShiftYIQ(color,-abr).r;”,
+“    color.b=hueShiftYIQ(color,abr).b;”,
+“  }”,
+“  if(vGlow>0.5){alpha*=2.0;brightness*=1.5;}”,
+“  if(vIsDust>0.5){alpha*=0.3;brightness*=0.5;}”,
+“  if(uState>3.5&&uState<6.0){brightness*=1.0+((1.0-uBurstProgress)*3.0);}”,
+“  if(uState>5.5){alpha*=0.4;brightness*=0.5;}”,
+“  gl_FragColor=vec4(clamp(color*brightness,0.0,1.0),clamp(alpha*brightness,0.0,1.0));”,
+“}”
+].join(”\n”);
+
+// ─── CIRCULANT ENTRY SHADERS ───
+var ENTRY_VERT = “precision highp float;attribute vec2 aPos;varying vec2 vPos;void main(){vPos=aPos;gl_Position=vec4(aPos,0.0,1.0);}”;
+var ENTRY_FRAG = [
+“precision highp float;”,
+“varying vec2 vPos;”,
+“uniform float uProgress;”,
+“uniform float uFade;”,
+“uniform vec3 uColor;”,
+“uniform vec2 uResolution;”,
+“void main(){”,
+“  vec2 uv=vPos*0.5+0.5;”,
+“  vec2 pixel=uv*uResolution;”,
+“  float dL=pixel.x;float dR=uResolution.x-pixel.x;”,
+“  float dT=pixel.y;float dB=uResolution.y-pixel.y;”,
+“  float edgeDist=min(min(dL,dR),min(dT,dB));”,
+“  float edgeGlow=exp(-edgeDist*edgeDist*0.001);”,
+“  float perim=2.0*(uResolution.x+uResolution.y);”,
+“  float perimPos;”,
+“  if(dT<=min(min(dL,dR),dB)){perimPos=pixel.x/perim;}”,
+“  else if(dR<=min(dL,dB)){perimPos=(uResolution.x+pixel.y)/perim;}”,
+“  else if(dB<=dL){perimPos=(uResolution.x+uResolution.y+(uResolution.x-pixel.x))/perim;}”,
+“  else{perimPos=(2.0*uResolution.x+uResolution.y+(uResolution.y-pixel.y))/perim;}”,
+“  float d=abs(perimPos-uProgress);”,
+“  d=min(d,1.0-d);”,
+“  float pulse=exp(-d*d*800.0);”,
+“  float trail=exp(-d*d*200.0)*0.4;”,
+“  float intensity=(pulse+trail)*edgeGlow;”,
+“  float convergeDist=length(vPos);”,
+“  float converge=exp(-convergeDist*convergeDist*2.0)*uFade;”,
+“  intensity=intensity*(1.0-uFade*0.8)+converge*0.6;”,
+“  gl_FragColor=vec4(uColor*intensity,intensity*0.9);”,
+“}”
+].join(”\n”);
+
+// ─── HELPERS ───
+function mkShader(g,type,src){
+var s=g.createShader(type);
+g.shaderSource(s,src);g.compileShader(s);
+if(!g.getShaderParameter(s,g.COMPILE_STATUS)){console.error(“Shader:”,g.getShaderInfoLog(s));g.deleteShader(s);return null;}
+return s;
+}
+function mkProgram(g,vs,fs){
+var p=g.createProgram();g.attachShader(p,vs);g.attachShader(p,fs);g.linkProgram(p);
+if(!g.getProgramParameter(p,g.LINK_STATUS)){console.error(“Link:”,g.getProgramInfoLog(p));g.deleteProgram(p);return null;}
+return p;
+}
+
+function genParticles(count,dust){
+var total=count+dust;
+var d={position:new Float32Array(total*3),idleTarget:new Float32Array(total*3),listenTarget:new Float32Array(total*3),speechTarget:new Float32Array(total*3),depth:new Float32Array(total),phase:new Float32Array(total),isDust:new Float32Array(total)};
+for(var i=0;i<total;i++){
+var isDust=i>=count;var i3=i*3;
+var theta=Math.random()*Math.PI*2;
+var phi=Math.acos(2*Math.random()-1);
+var depth=Math.random();
+if(isDust){
+var r=1+Math.random()*8;
+d.idleTarget[i3]=r*(Math.random()-0.5)*2;d.idleTarget[i3+1]=r*(Math.random()-0.5)*2;d.idleTarget[i3+2]=r*(Math.random()-0.5);
+d.listenTarget[i3]=d.idleTarget[i3]*0.5;d.listenTarget[i3+1]=d.idleTarget[i3+1]*0.5;d.listenTarget[i3+2]=d.idleTarget[i3+2]*0.5;
+d.speechTarget[i3]=d.idleTarget[i3]*1.5;d.speechTarget[i3+1]=d.idleTarget[i3+1]*1.5;d.speechTarget[i3+2]=d.idleTarget[i3+2]*1.5;
+}else{
+var idleR=2+Math.random()*4;
+d.idleTarget[i3]=idleR*Math.sin(phi)*Math.cos(theta);d.idleTarget[i3+1]=idleR*Math.sin(phi)*Math.sin(theta)*0.92;d.idleTarget[i3+2]=idleR*Math.cos(phi)*0.6;
+var listenR=1.5+Math.random()*0.5;
+d.listenTarget[i3]=listenR*Math.sin(phi)*Math.cos(theta)*(0.8+0.4*Math.random());d.listenTarget[i3+1]=listenR*Math.sin(phi)*Math.sin(theta)*0.85;d.listenTarget[i3+2]=listenR*Math.cos(phi)*0.5;
+var speechR=4+Math.random()*4;
+d.speechTarget[i3]=speechR*Math.sin(phi)*Math.cos(theta)*(0.7+0.6*Math.random());d.speechTarget[i3+1]=speechR*Math.sin(phi)*Math.sin(theta)*0.88;d.speechTarget[i3+2]=speechR*Math.cos(phi)*0.55;
+}
+d.position[i3]=d.idleTarget[i3];d.position[i3+1]=d.idleTarget[i3+1];d.position[i3+2]=d.idleTarget[i3+2];
+d.depth[i]=depth;d.phase[i]=Math.random();d.isDust[i]=isDust?1:0;
+}
+return d;
+}
+
+// ─── AUDIO (Perplexity: frozen buffer + ChatGPT: dual source) ───
+function readBands(an){
+if(!an)return null;
+if(!freqBuf||freqBuf.length!==an.frequencyBinCount)freqBuf=new Uint8Array(an.frequencyBinCount);
+an.getByteFrequencyData(freqBuf);
+var n=freqBuf.length,bEnd=Math.floor(n*0.15),mEnd=Math.floor(n*0.5);
+var bass=0,mid=0,treble=0;
+for(var i=0;i<n;i++){var v=freqBuf[i]/255;if(i<bEnd)bass+=v;else if(i<mEnd)mid+=v;else treble+=v;}
+bass/=bEnd||1;mid/=(mEnd-bEnd)||1;treble/=(n-mEnd)||1;
+return{bass:bass,mid:mid,treble:treble,amplitude:(bass+mid+treble)/3};
+}
+
+function simAudio(t,s){
+var tt=t*0.001;var bass=0.05,mid=0.03,treble=0.02;
+if(s===2){bass=0.4+Math.sin(tt*2.1)*0.3;mid=0.3+Math.sin(tt*3.7)*0.25;treble=0.2+Math.sin(tt*8.2)*0.15;}
+else if(s===3){bass=0.5+Math.sin(tt*1.8)*0.25;mid=0.6+Math.sin(tt*4.3)*0.2;treble=0.35+Math.sin(tt*7.1)*0.2;}
+return{bass:Math.max(0,bass),mid:Math.max(0,mid),treble:Math.max(0,treble),amplitude:Math.max(0,(bass+mid+treble)/3)};
+}
+
+// ─── HAPTICS (Grok: no render-loop haptics, edge-triggered only) ───
+function vibrate(pattern){
+if(!hapticEnabled||!navigator.vibrate)return;
+var now=performance.now();
+if(now-lastHapticTime<CONFIG.HAPTIC_COOLDOWN)return;
+lastHapticTime=now;
+try{navigator.vibrate(pattern);}catch(e){}
+}
+function toggleHaptic(){hapticEnabled=!hapticEnabled;document.getElementById(“haptic-btn”).textContent=hapticEnabled?“ON”:“OFF”;document.getElementById(“haptic-btn”).style.background=hapticEnabled?”#00D4FF”:“transparent”;document.getElementById(“haptic-btn”).style.color=hapticEnabled?”#0A0A0F”:”#EEF0F4”;}
+function closeHapticTip(){document.getElementById(“haptic-tip”).style.display=“none”;}
+
+// ─── WHISPER (Grok: real SpeechSynthesis) ───
+function triggerWhisper(){
+if(whisperShown)return;
+whisperShown=true;
+state=6;transition=0;
+var el=document.getElementById(“whisper”);
+el.textContent=“Shane… are you there?”;
+el.style.color=theme.hex;
+el.classList.add(“show”);
+try{
+var u=new SpeechSynthesisUtterance(“Shane… are you there?”);
+u.volume=0.35;u.rate=0.88;u.pitch=1.05;
+speechSynthesis.speak(u);
+}catch(e){}
+}
+
+function resetIdleTimer(){
+whisperShown=false;
+document.getElementById(“whisper”).classList.remove(“show”);
+if(state===6){state=0;transition=0;}
+clearTimeout(idleTimer);
+idleTimer=setTimeout(triggerWhisper,CONFIG.IDLE_TIMEOUT);
+}
+
+// ─── MIC (Perplexity: shared AudioContext) ───
+var audioCtx=null;
+function enableMic(){
+if(micAnalyser)return;
+try{
+audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();
+navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+var source=audioCtx.createMediaStreamSource(stream);
+var an=audioCtx.createAnalyser();
+an.fftSize=1024;an.smoothingTimeConstant=0.72;
+source.connect(an);
+micAnalyser=an;
+}).catch(function(e){console.warn(“Mic denied:”,e);});
+}catch(e){console.warn(“Audio context failed:”,e);}
+}
+
+// ─── INIT ───
+function init(){
+canvas=document.getElementById(“signal-canvas”);
+entryCanvas=document.getElementById(“entry-canvas”);
+gl=canvas.getContext(“webgl”,{alpha:true,antialias:false,premultipliedAlpha:false});
+if(!gl){console.error(“No WebGL”);return;}
+
+var vs=mkShader(gl,gl.VERTEX_SHADER,VERT);
+var fs=mkShader(gl,gl.FRAGMENT_SHADER,FRAG);
+if(!vs||!fs)return;
+program=mkProgram(gl,vs,fs);
+if(!program)return;
+
+var particles=genParticles(CONFIG.PARTICLE_COUNT,CONFIG.DUST_COUNT);
+
+function mkBuf(data){var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);buffers.push(b);return b;}
+
+var bufs={pos:mkBuf(particles.position),idle:mkBuf(particles.idleTarget),listen:mkBuf(particles.listenTarget),speech:mkBuf(particles.speechTarget),depth:mkBuf(particles.depth),phase:mkBuf(particles.phase),dust:mkBuf(particles.isDust)};
+
+var attrs={};
+[“aPosition”,“aIdleTarget”,“aListenTarget”,“aSpeechTarget”,“aDepth”,“aPhase”,“aIsDust”].forEach(function(n){attrs[n]=gl.getAttribLocation(program,n);});
+
+var unis={};
+[“uTime”,“uState”,“uTransition”,“uBass”,“uMid”,“uTreble”,“uAmplitude”,“uBurstProgress”,“uPointer”,“uPointerActive”,“uAspect”,“uPrimaryColor”,“uPrismatic”,“uListenBias”,“uSpeakBias”].forEach(function(n){unis[n]=gl.getUniformLocation(program,n);});
+
+gl.useProgram(program);
+gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);gl.disable(gl.DEPTH_TEST);
+
+function bind(buf,loc,size){gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,size,gl.FLOAT,false,0,0);}
+bind(bufs.pos,attrs.aPosition,3);bind(bufs.idle,attrs.aIdleTarget,3);bind(bufs.listen,attrs.aListenTarget,3);bind(bufs.speech,attrs.aSpeechTarget,3);bind(bufs.depth,attrs.aDepth,1);bind(bufs.phase,attrs.aPhase,1);bind(bufs.dust,attrs.aIsDust,1);
+
+// Entry canvas
+eGl=entryCanvas.getContext(“webgl”,{alpha:true,premultipliedAlpha:false});
+var eBuf=null;
+if(eGl){
+var evs=mkShader(eGl,eGl.VERTEX_SHADER,ENTRY_VERT);
+var efs=mkShader(eGl,eGl.FRAGMENT_SHADER,ENTRY_FRAG);
+if(evs&&efs){
+eProg=mkProgram(eGl,evs,efs);
+eBuf=eGl.createBuffer();
+eGl.bindBuffer(eGl.ARRAY_BUFFER,eBuf);
+eGl.bufferData(eGl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),eGl.STATIC_DRAW);
+eGl.enable(eGl.BLEND);eGl.blendFunc(eGl.SRC_ALPHA,eGl.ONE);
+}
+}
+
+// Resize
+function resize(){
+var dpr=Math.min(window.devicePixelRatio||1,2);
+var w=window.innerWidth,h=window.innerHeight;
+canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+“px”;canvas.style.height=h+“px”;
+gl.viewport(0,0,canvas.width,canvas.height);
+if(entryCanvas&&eGl){entryCanvas.width=w*dpr;entryCanvas.height=h*dpr;entryCanvas.style.width=w+“px”;entryCanvas.style.height=h+“px”;eGl.viewport(0,0,entryCanvas.width,entryCanvas.height);}
+}
+resize();window.addEventListener(“resize”,resize);
+
+// HUD meter bars
+var meterEl=document.getElementById(“hud-meter”);
+for(var i=0;i<5;i++){var bar=document.createElement(“div”);bar.className=“meter-bar”;bar.style.width=“3px”;bar.style.height=(8+i*4)+“px”;bar.style.borderRadius=“1px”;meterEl.appendChild(bar);}
+
+// Pointer events
+function toGL(e){
+var r=canvas.getBoundingClientRect();
+var cx=e.clientX||(e.touches&&e.touches[0]?e.touches[0].clientX:0);
+var cy=e.clientY||(e.touches&&e.touches[0]?e.touches[0].clientY:0);
+return{x:(cx/r.width)*2-1,y:-((cy/r.height)*2-1)};
+}
+function onMove(e){var p=toGL(e);pointer.x=p.x;pointer.y=p.y;pointer.active=true;resetIdleTimer();}
+function onDown(e){
+resetIdleTimer();enableMic();
+var now=performance.now();
+if(now-tap.last<CONFIG.TAP_THRESHOLD){
+if(tap.timer)clearTimeout(tap.timer);
+state=5;burst={active:true,progress:0};vibrate([12,18,12,18,28]);
+tap={last:0,timer:null};
+interactionCount++;if(interactionCount>=3&&interactionCount<=4)document.getElementById(“haptic-tip”).style.display=“flex”;
+}else{
+tap.last=now;
+tap.timer=setTimeout(function(){
+state=4;burst={active:true,progress:0};vibrate([18,28,32]);
+tap.timer=null;
+interactionCount++;if(interactionCount>=3&&interactionCount<=4)document.getElementById(“haptic-tip”).style.display=“flex”;
+},CONFIG.TAP_THRESHOLD);
+}
+}
+function onLeave(){pointer.active=false;}
+function onTouchMove(e){e.preventDefault();onMove(e);}
+function onTouchStart(e){e.preventDefault();onDown(e);}
+
+canvas.addEventListener(“pointermove”,onMove);
+canvas.addEventListener(“pointerdown”,onDown);
+canvas.addEventListener(“pointerleave”,onLeave);
+canvas.addEventListener(“touchmove”,onTouchMove,{passive:false});
+canvas.addEventListener(“touchstart”,onTouchStart,{passive:false});
+
+entryStart=performance.now();
+lastTime=performance.now();
+resetIdleTimer();
+
+// Orb fade-in after entry
+setTimeout(function(){canvas.classList.add(“active”);},1500);
+
+// ─── RENDER ───
+function render(now){
+raf=requestAnimationFrame(render);
+var dt=Math.min(now-lastTime,50);lastTime=now;timeMs+=dt;frameCount++;
+
+```
+// CIRCULANT entry
+if(!entryDone&&eGl&&eProg){
+  var elapsed=now-entryStart;
+  eGl.useProgram(eProg);
+  var aPos=eGl.getAttribLocation(eProg,"aPos");
+  eGl.bindBuffer(eGl.ARRAY_BUFFER,eBuf);eGl.enableVertexAttribArray(aPos);eGl.vertexAttribPointer(aPos,2,eGl.FLOAT,false,0,0);
+  var progress=Math.min(elapsed/2200,1);
+  var fade=elapsed>2200?Math.min((elapsed-2200)/800,1):0;
+  eGl.uniform1f(eGl.getUniformLocation(eProg,"uProgress"),progress);
+  eGl.uniform1f(eGl.getUniformLocation(eProg,"uFade"),fade);
+  eGl.uniform3fv(eGl.getUniformLocation(eProg,"uColor"),theme.primary);
+  eGl.uniform2f(eGl.getUniformLocation(eProg,"uResolution"),entryCanvas.width,entryCanvas.height);
+  eGl.clearColor(0,0,0,0);eGl.clear(eGl.COLOR_BUFFER_BIT);eGl.drawArrays(eGl.TRIANGLES,0,6);
+  if(elapsed>3000){entryDone=true;entryCanvas.style.opacity="0";}
+}
+
+// Auto demo state cycling
+if(!burst.active&&state<6){
+  var hasReal=!!(analyser||micAnalyser);
+  if(!hasReal){
+    stateTimer+=dt;
+    if(stateTimer>CONFIG.STATE_DURATION){stateTimer=0;state=(state+1)%4;transition=0;}
+    transition=Math.min(transition+dt*0.003,1);
+  }
+}
+
+// Burst
+if(burst.active){
+  burst.progress=Math.min(burst.progress+dt*0.001,1);
+  if(burst.progress>=1){burst.active=false;burst.progress=0;state=0;transition=0;}
+}
+
+// Audio
+var micData=readBands(micAnalyser);
+var agentData=readBands(analyser);
+var hasReal=!!(micData||agentData);
+var raw=hasReal?(micData&&agentData?{bass:Math.max(micData.bass,agentData.bass),mid:Math.max(micData.mid,agentData.mid),treble:Math.max(micData.treble,agentData.treble),amplitude:Math.max(micData.amplitude,agentData.amplitude)}:(micData||agentData)):simAudio(timeMs,state);
+
+var atk=0.22,rel=0.08;
+audio.bass+=(raw.bass>audio.bass?atk:rel)*(raw.bass-audio.bass);
+audio.mid+=(raw.mid>audio.mid?atk:rel)*(raw.mid-audio.mid);
+audio.treble+=(raw.treble>audio.treble?atk:rel)*(raw.treble-audio.treble);
+audio.amplitude+=(raw.amplitude>audio.amplitude?atk:rel)*(raw.amplitude-audio.amplitude);
+
+// ChatGPT dual-source biases
+var micAmp=micData?micData.amplitude:0;
+var agentAmp=agentData?agentData.amplitude:0;
+var listenBias=micAmp*0.7;
+var speakBias=agentAmp*0.85;
+
+// Draw
+gl.viewport(0,0,canvas.width,canvas.height);
+gl.clearColor(0.039,0.039,0.059,1);gl.clear(gl.COLOR_BUFFER_BIT);
+gl.useProgram(program);
+
+gl.uniform1f(unis.uTime,timeMs*0.001);
+gl.uniform1f(unis.uState,state);
+gl.uniform1f(unis.uTransition,transition);
+gl.uniform1f(unis.uBass,audio.bass);
+gl.uniform1f(unis.uMid,audio.mid);
+gl.uniform1f(unis.uTreble,audio.treble);
+gl.uniform1f(unis.uAmplitude,audio.amplitude);
+gl.uniform1f(unis.uBurstProgress,burst.progress);
+gl.uniform2f(unis.uPointer,pointer.x,pointer.y);
+gl.uniform1f(unis.uPointerActive,pointer.active?1:0);
+gl.uniform1f(unis.uAspect,canvas.width/canvas.height);
+gl.uniform3fv(unis.uPrimaryColor,theme.primary);
+gl.uniform1f(unis.uPrismatic,theme.prismatic?1:0);
+gl.uniform1f(unis.uListenBias,listenBias);
+gl.uniform1f(unis.uSpeakBias,speakBias);
+
+gl.drawArrays(gl.POINTS,0,CONFIG.TOTAL);
+
+// HUD
+if(frameCount%6===0){
+  var name=CONFIG.STATES[state]||"IDLE";
+  var hudEl=document.getElementById("hud-state");
+  hudEl.textContent=name;
+  var colors={IDLE:"#EEF0F4",BREATHING:theme.hex,LISTENING:theme.hex,SPEAKING:"#FFFFFF",ACTIVATED:"#FFFFFF",CELEBRATION:"#FFB800",SCREENSAVER:theme.hex};
+  hudEl.style.color=colors[name]||"#EEF0F4";
+  var bars=document.querySelectorAll(".meter-bar");
+  for(var b=0;b<bars.length;b++){bars[b].style.background=audio.amplitude>b*0.18?(colors[name]||"#EEF0F4"):"rgba(255,255,255,0.08)";}
+}
+```
+
+}
+
+raf=requestAnimationFrame(render);
+}
+
+window.addEventListener(“DOMContentLoaded”,init);
+</script>
+
+</body>
+</html>
