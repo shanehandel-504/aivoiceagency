@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>AVA Signal V6 | AI Voice Agency</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body,html{width:100%;height:100%;background:#0A0A0F;overflow:hidden;font-family:'Space Grotesk',system-ui,sans-serif}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block}
+
+/* CIRCULANT LIVING PULSE — Gemini edge heartbeat */
+#c-wrap{position:fixed;inset:0;z-index:0}
+#c-wrap::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 12px rgba(0,212,255,.3);
+  animation:heartbeat-edge 1.66s infinite ease-in-out;
+  z-index:2;
+}
+@keyframes heartbeat-edge{
+  0%,100%{box-shadow:inset 0 0 12px rgba(0,212,255,.2)}
+  15%    {box-shadow:inset 0 0 28px rgba(0,212,255,.85)}
+  30%    {box-shadow:inset 0 0 12px rgba(0,212,255,.3)}
+  45%    {box-shadow:inset 0 0 22px rgba(0,212,255,.7)}
+}
+
+/* HUD */
+#hud{position:fixed;top:1.2rem;left:1.4rem;z-index:20;color:#00D4FF;font-family:monospace;font-size:.68rem;letter-spacing:.18em;pointer-events:none;opacity:.6}
+#state-lbl{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:20;color:rgba(0,212,255,.5);font-family:monospace;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;pointer-events:none;transition:color .4s}
+#state-lbl.live{color:#00D4FF}
+#fps{position:fixed;top:1.2rem;right:1.4rem;z-index:20;color:rgba(0,212,255,.35);font-family:monospace;font-size:.6rem;letter-spacing:.1em;pointer-events:none}
+
+/* WHISPER overlay */
+#whisper{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 1.8s ease;
+}
+#whisper.show{opacity:1}
+#whisper span{
+  color:rgba(0,212,255,.55);font-family:monospace;
+  font-size:1.1rem;letter-spacing:.28em;text-transform:uppercase;
+  text-shadow:0 0 20px rgba(0,212,255,.4);
+}
+
+/* ── UI FOREGROUND LAYER ──────────────────────────────────────── */
+#ui-layer{position:absolute;inset:0;z-index:10;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;color:#EEF0F4;}
+
+/* ── GOD RAYS (Text as Light Mask) ───────────────────────────── */
+.god-ray-text{font-size:clamp(3rem,8vw,5rem);font-weight:700;letter-spacing:-0.04em;line-height:1.1;color:transparent;-webkit-text-stroke:1px rgba(238,240,244,0.2);background:radial-gradient(circle,rgba(0,212,255,1) 0%,rgba(238,240,244,0.8) 100%);-webkit-background-clip:text;background-clip:text;text-shadow:0 0 20px rgba(0,212,255,0.4),0 0 50px rgba(0,212,255,0.2);}
+
+/* ── GLASS REFRACTION CARDS ───────────────────────────────────── */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;padding:4rem 2rem;max-width:1200px;margin:0 auto;}
+.glass-pane{background:rgba(26,26,46,0.2);backdrop-filter:blur(16px) brightness(1.2);-webkit-backdrop-filter:blur(16px) brightness(1.2);border:1px solid rgba(238,240,244,0.1);padding:3rem 2rem;position:relative;overflow:hidden;isolation:isolate;transition:transform 0.4s cubic-bezier(0.19,1,0.22,1),border-color 0.4s;cursor:pointer;}
+.glass-pane:hover{transform:translateY(-5px);border-color:rgba(0,212,255,0.5);}
+/* X-axis only specular — light source at top, tracks mouse X */
+.glass-pane::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 0.4s;background:radial-gradient(600px circle at var(--mouse-x,50%) -10%,rgba(255,255,255,0.18),rgba(0,212,255,0.10) 22%,transparent 52%);}
+.glass-pane:hover::before{opacity:1;}
+/* Lift card content above specular layer */
+.glass-pane > *{position:relative;z-index:1;}
+.glass-pane.pro-tier{border-color:rgba(0,212,255,0.4);background:rgba(0,212,255,0.03);}
+.btn-cyan{display:inline-block;background:#00D4FF;color:#0A0A0F;padding:1rem 2.5rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;text-decoration:none;margin-top:2rem;transition:all 0.2s;box-shadow:0 0 15px rgba(0,212,255,0.2);font-family:'Space Grotesk',system-ui,sans-serif;}
+.btn-cyan:hover{background:#00E5FF;box-shadow:0 0 30px rgba(0,212,255,0.5);}
+.btn-cyan:active{transform:scale(0.95);box-shadow:0 0 30px rgba(0,212,255,0.6);}
+/* Section base */
+.ui-section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:2rem;max-width:1200px;margin:0 auto;}
+
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+<div id="c-wrap">
+  <canvas id="c"></canvas>
+</div>
+<div id="hud">AVA SIGNAL V6 // 250K // GPU PARTICLES // M=MIC</div>
+<div id="state-lbl">IDLE</div>
+<div id="fps">60 FPS</div>
+
+<main id="ui-layer">
+
+  <!-- HERO -->
+  <section class="ui-section">
+    <h1 class="god-ray-text">WE BUILT<br>THE VOICE</h1>
+    <p style="font-size:1.25rem;max-width:600px;margin-top:1.5rem;opacity:0.8;line-height:1.6;color:#EEF0F4;">
+      The AI receptionist that books, qualifies, and follows up — while you run the business.
+    </p>
+    <div style="margin-top:3rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+      <a href="#" class="btn-cyan" onclick="window.startAvaCall(); return false;">Talk to Ava</a>
+      <a href="tel:7869371218" style="color:#EEF0F4;text-decoration:none;font-weight:700;letter-spacing:0.05em;border-bottom:1px solid rgba(238,240,244,0.3);padding-bottom:0.2rem;">Call 786-937-1218</a>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section style="min-height:100vh;padding-top:10vh;">
+    <div style="text-align:center;margin-bottom:4rem;padding:0 2rem;">
+      <h2 style="font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-0.04em;">Choose the level of automation<br>your business actually needs.</h2>
+    </div>
+    <div class="pricing-grid">
+      <div class="glass-pane">
+        <h3 style="color:rgba(238,240,244,0.6);text-transform:uppercase;letter-spacing:0.1em;font-size:0.85rem;">Basic</h3>
+        <div style="font-size:3rem;font-weight:700;color:#00D4FF;margin:1rem 0;">$200<span style="font-size:1rem;color:rgba(238,240,244,0.6);">/mo</span></div>
+        <p style="opacity:0.8;height:3rem;line-height:1.5;">Never miss the call.</p>
+        <div style="font-size:0.85rem;opacity:0.6;margin-bottom:1rem;">$500 setup</div>
+        <a href="https://cal.com/shane-handel/strategy-call" class="btn-cyan" style="margin-top:1rem;">Start</a>
+      </div>
+      <div class="glass-pane pro-tier">
+        <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);background:#00D4FF;color:#0A0A0F;padding:0.2rem 1rem;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Most Popular</div>
+        <h3 style="color:rgba(238,240,244,0.6);text-transform:uppercase;letter-spacing:0.1em;font-size:0.85rem;margin-top:1rem;">Pro</h3>
+        <div style="font-size:3rem;font-weight:700;color:#00D4FF;margin:1rem 0;">$500<span style="font-size:1rem;color:rgba(238,240,244,0.6);">/mo</span></div>
+        <p style="opacity:0.8;height:3rem;line-height:1.5;">Turn calls into bookings.</p>
+        <div style="font-size:0.85rem;opacity:0.6;margin-bottom:1rem;">$500 setup</div>
+        <a href="https://cal.com/shane-handel/strategy-call" class="btn-cyan" style="margin-top:1rem;">Start</a>
+      </div>
+      <div class="glass-pane">
+        <h3 style="color:rgba(238,240,244,0.6);text-transform:uppercase;letter-spacing:0.1em;font-size:0.85rem;">Enterprise</h3>
+        <div style="font-size:3rem;font-weight:700;color:#00D4FF;margin:1rem 0;">$1,500<span style="font-size:1rem;color:rgba(238,240,244,0.6);">/mo</span></div>
+        <p style="opacity:0.8;height:3rem;line-height:1.5;">Full revenue engine.</p>
+        <div style="font-size:0.85rem;opacity:0.6;margin-bottom:1rem;">$1,500 setup</div>
+        <a href="https://cal.com/shane-handel/strategy-call" class="btn-cyan" style="margin-top:1rem;">Contact</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="padding:4rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255,0.06);">
+    <p style="opacity:0.5;font-size:0.85rem;letter-spacing:0.05em;">WE DEPLOY AI BUSINESS OPERATIONS SYSTEMS THAT HAPPEN TO ANSWER THE PHONE.</p>
+    <p style="opacity:0.3;font-size:0.75rem;margin-top:1rem;">© 2026 AI Voice Agency · <a href="https://cal.com/shane-handel/strategy-call" style="color:#00D4FF;text-decoration:none;">Book a Call</a> · 786-937-1218</p>
+  </footer>
+
+</main>
+
+<div id="whisper"><span id="whisper-txt">Shane... are you there?</span></div>
+
+<script>
+'use strict';
+/* ═══════════════════════════════════════════════════════════════
+   AVA SIGNAL V6
+   Architecture: Claude (CEO/Architect)
+   Fog shader: Gemini AI Studio (FBM domain warp + WebGL2 + light dir)
+   Particle engine: THREE.js GPU vertex shader + cube root sphere fix
+   States: 7 (IDLE/BREATHING/LISTENING/SPEAKING/ACTIVATED/CELEBRATION/SCREENSAVER)
+   Target: 250K @ 60fps · FPS guard: drops to 150K/75K if needed
+   Stack: Vanilla HTML · THREE.js CDN (r128) · WebGL2
+   Deploy: aivoiceagency.ai/signal.html via GitHub Pages
+═══════════════════════════════════════════════════════════════ */
+
+/* ── STATE MACHINE ────────────────────────────────────────────── */
+const ST = {IDLE:0,BREATHING:1,LISTENING:2,SPEAKING:3,ACTIVATED:4,CELEBRATION:5,SCREENSAVER:6};
+const ST_NAMES = ['IDLE','BREATHING','LISTENING','SPEAKING','ACTIVATED','CELEBRATION','SCREENSAVER'];
+
+/* Cube root sphere distribution — fills volume not shell */
+function gaussR(maxR) {
+  return maxR * Math.cbrt(Math.random());
+}
+
+/* State visual params — all tuned for filled sphere */
+const SP = {
+  [ST.IDLE]:       {spread:1.8, chaos:0.05, speed:0.06,  glow:0.15, audio:0, color:'cool',  desc:'dormant · barely breathing'},
+  [ST.BREATHING]:  {spread:2.1, chaos:0.12, speed:0.09,  glow:0.28, audio:0, color:'cool',  desc:'waiting · soft pulse'},
+  [ST.LISTENING]:  {spread:2.6, chaos:0.22, speed:0.16,  glow:0.48, audio:0, color:'cool',  desc:'alert · expanded field'},
+  [ST.SPEAKING]:   {spread:2.3, chaos:0.38, speed:0.30,  glow:0.85, audio:1, color:'white', desc:'transmitting · burst energy'},
+  [ST.ACTIVATED]:  {spread:2.4, chaos:0.28, speed:0.22,  glow:0.75, audio:1, color:'cool',  desc:'connected · synchronized'},
+  [ST.CELEBRATION]:{spread:3.2, chaos:0.75, speed:0.70,  glow:1.00, audio:1, color:'white', desc:'complete · explosion'},
+  [ST.SCREENSAVER]:{spread:2.9, chaos:0.06, speed:0.025, glow:0.10, audio:0, color:'teal',  desc:'ambient · galaxy drift'},
+};
+
+/* ── THREE.JS SETUP ───────────────────────────────────────────── */
+const W = window.innerWidth, H = window.innerHeight;
+/* ── MOBILE FALLBACK ──────────────────────────────────────── */
+const IS_MOBILE = window.innerWidth < 768 ||
+  window.matchMedia('(pointer:coarse)').matches ||
+  window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+if(IS_MOBILE) {
+  /* Kill WebGL, show CSS gradient background */
+  document.getElementById('c-wrap').style.display = 'none';
+  document.body.style.background =
+    'radial-gradient(ellipse at 30% 50%, rgba(0,212,255,0.08) 0%, transparent 60%),' +
+    'radial-gradient(ellipse at 70% 80%, rgba(0,212,255,0.05) 0%, transparent 50%),' +
+    'linear-gradient(180deg, #0A0A0F 0%, #0d1117 100%)';
+  document.body.style.backgroundAttachment = 'fixed';
+  /* Still run state machine for Retell wiring — just no GPU */
+  window.AVA_SIGNAL = {
+    setState:()=>{}, ST:{IDLE:0,BREATHING:1,LISTENING:2,SPEAKING:3,ACTIVATED:4,CELEBRATION:5,SCREENSAVER:6},
+    onRetellConnected:()=>{}, onAVASpeakingStart:()=>{}, onAVASpeakingEnd:()=>{}, onCallEnded:()=>{}, toggleMic:()=>{}
+  };
+  // Still init audio bridge for voice reactivity (low cost)
+} else {
+
+const scene  = new THREE.Scene();
+scene.background = new THREE.Color(0x0A0A0F);
+const camera = new THREE.PerspectiveCamera(60, W/H, 0.1, 1000);
+camera.position.z = 5.5;
+
+const renderer = new THREE.WebGLRenderer({
+  canvas: document.getElementById('c'),
+  antialias: false,
+  alpha: false,
+  powerPreference: 'high-performance'
+});
+renderer.setSize(W, H);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+/* ── PARTICLE COUNT + FPS GUARD ──────────────────────────────── */
+let N = 250000;
+let fpsGuardDone = false;
+let fpsHistory = [];
+let lastFPSTime = performance.now();
+let frameCount = 0;
+const FPS_EL = document.getElementById('fps');
+
+/* ── VERTEX SHADER ────────────────────────────────────────────── */
+const VERT = `
+  precision highp float;
+  uniform float uTime;
+  uniform float uAudio;
+  uniform float uChaos;
+  uniform float uSpread;
+  uniform float uGlow;
+  uniform vec2  uMouse;
+
+  attribute float aPhase;
+  attribute float aSize;
+  attribute float aTier;   /* 0=core 1=mid 2=outer */
+
+  varying float vAlpha;
+  varying vec3  vColor;
+  varying float vDist;
+
+  /* 3D simplex noise */
+  vec3 mod289_3(vec3 x){return x-floor(x*(1./289.))*289.;}
+  vec4 mod289_4(vec4 x){return x-floor(x*(1./289.))*289.;}
+  vec4 permute4(vec4 x){return mod289_4(((x*34.)+1.)*x);}
+  vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+  float snoise3(vec3 v){
+    const vec2 C=vec2(1./6.,1./3.);
+    const vec4 D=vec4(0.,.5,1.,2.);
+    vec3 i=floor(v+dot(v,C.yyy));
+    vec3 x0=v-i+dot(i,C.xxx);
+    vec3 g=step(x0.yzx,x0.xyz);
+    vec3 l=1.-g;
+    vec3 i1=min(g.xyz,l.zxy);
+    vec3 i2=max(g.xyz,l.zxy);
+    vec3 x1=x0-i1+C.xxx;
+    vec3 x2=x0-i2+C.yyy;
+    vec3 x3=x0-D.yyy;
+    i=mod289_3(i);
+    vec4 p=permute4(permute4(permute4(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+    float n_=.142857142857;
+    vec3 ns=n_*D.wyz-D.xzx;
+    vec4 j=p-49.*floor(p*ns.z*ns.z);
+    vec4 x_=floor(j*ns.z);
+    vec4 y_=floor(j-7.*x_);
+    vec4 x=x_*ns.x+ns.yyyy;
+    vec4 y=y_*ns.x+ns.yyyy;
+    vec4 h=1.-abs(x)-abs(y);
+    vec4 b0=vec4(x.xy,y.xy);
+    vec4 b1=vec4(x.zw,y.zw);
+    vec4 s0=floor(b0)*2.+1.;
+    vec4 s1=floor(b1)*2.+1.;
+    vec4 sh=-step(h,vec4(0.));
+    vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;
+    vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+    vec3 p0=vec3(a0.xy,h.x);
+    vec3 p1=vec3(a0.zw,h.y);
+    vec3 p2=vec3(a1.xy,h.z);
+    vec3 p3=vec3(a1.zw,h.w);
+    vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+    p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+    vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);
+    m=m*m;
+    return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+  }
+
+  void main(){
+    vec3 pos = position;
+    float r = length(pos);
+    vec3 n = normalize(pos);
+
+    /* Noise displacement */
+    float noise = snoise3(pos*1.4 + uTime*0.18 + aPhase);
+    float disp  = noise * uChaos * (1. + uAudio*2.8);
+    pos += n * disp;
+
+    /* Target spread — lerp toward uSpread */
+    float targetR = uSpread * (0.7 + 0.3*aTier);
+    pos = normalize(pos) * mix(r, targetR, 0.04);
+
+    /* Breathing pulse */
+    float breath = 1. + sin(uTime*1.6 + aPhase)*0.04*(1.-uAudio*0.5);
+    pos *= breath;
+
+    /* Mouse gravity */
+    vec2 mp = uMouse * 6.;
+    float dm = length(pos.xy - mp);
+    float pull = smoothstep(2.5, 0., dm) * 0.35;
+    pos.xy += normalize(mp - pos.xy + 0.001)*pull;
+
+    vec4 mv = modelViewMatrix * vec4(pos,1.);
+    gl_Position = projectionMatrix * mv;
+    gl_PointSize = aSize * (6./(-mv.z)) * (1.+uAudio*1.4) * (0.7+uGlow*0.5);
+
+    /* Alpha — core brighter, outer dimmer */
+    float depthFade = clamp((pos.z + 3.)/6., 0., 1.);
+    vAlpha = (0.25 + uGlow*0.55) * depthFade * (0.6 + 0.4*aTier*(1.-aTier*0.3)) * (0.55+uAudio*.55);
+
+    /* Color */
+    vec3 cyan  = vec3(0., 0.83, 1.0);
+    vec3 white = vec3(1., 1., 1.);
+    vec3 teal  = vec3(0., 0.6, 0.75);
+    float t = uAudio * noise*0.5+0.5;
+    vColor = mix(cyan, white, t * uAudio);
+    vDist  = r;
+  }
+`;
+
+const FRAG_PARTICLE = `
+  precision highp float;
+  varying float vAlpha;
+  varying vec3  vColor;
+  varying float vDist;
+  void main(){
+    vec2 uv   = gl_PointCoord*2.-1.;
+    float d   = length(uv);
+    if(d>1.) discard;
+    float glow = exp(-d*2.8);
+    gl_FragColor = vec4(vColor*glow, vAlpha*glow);
+  }
+`;
+
+/* ── BUILD GEOMETRY ───────────────────────────────────────────── */
+function buildGeometry(count) {
+  const geo = new THREE.BufferGeometry();
+  const pos   = new Float32Array(count*3);
+  const phase = new Float32Array(count);
+  const sizes = new Float32Array(count);
+  const tier  = new Float32Array(count);
+
+  for(let i=0;i<count;i++){
+    const i3    = i*3;
+    const phi   = Math.acos(1-2*(i+0.5)/count);
+    const theta = Math.PI*(1+Math.sqrt(5))*i;
+    /* CUBE ROOT DISTRIBUTION — fills sphere volume not shell */
+    const r     = gaussR(2.2);
+
+    pos[i3]   = r*Math.sin(phi)*Math.cos(theta);
+    pos[i3+1] = r*Math.sin(phi)*Math.sin(theta);
+    pos[i3+2] = r*Math.cos(phi);
+
+    phase[i] = Math.random()*Math.PI*2;
+    sizes[i] = Math.random()*2.0+0.5;
+    tier[i]  = Math.floor(Math.random()*3)/2; // 0, 0.5, 1
+  }
+
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('aPhase',   new THREE.BufferAttribute(phase,1));
+  geo.setAttribute('aSize',    new THREE.BufferAttribute(sizes,1));
+  geo.setAttribute('aTier',    new THREE.BufferAttribute(tier,1));
+  return geo;
+}
+
+let geo = buildGeometry(N);
+
+const mat = new THREE.ShaderMaterial({
+  vertexShader:   VERT,
+  fragmentShader: FRAG_PARTICLE,
+  uniforms: {
+    uTime:   {value:0},
+    uAudio:  {value:0},
+    uChaos:  {value:0.1},
+    uSpread: {value:1.8},
+    uGlow:   {value:0.15},
+    uMouse:  {value: new THREE.Vector2(0,0)},
+  },
+  transparent: true,
+  blending:    THREE.AdditiveBlending,
+  depthWrite:  false,
+});
+
+const points = new THREE.Points(geo, mat);
+scene.add(points);
+
+/* ── STATE MACHINE ────────────────────────────────────────────── */
+let state       = ST.IDLE;
+let curParams   = {...SP[ST.IDLE]};
+let targetParams= {...SP[ST.IDLE]};
+
+function setState(s) {
+  if(state===s) return;
+  state = s;
+  targetParams = {...SP[s]};
+  const lbl = document.getElementById('state-lbl');
+  if(lbl){ lbl.textContent='AVA '+ST_NAMES[s]; lbl.className=s>0?'live':''; }
+  /* Auto-return from celebration */
+  if(s===ST.CELEBRATION) setTimeout(()=>setState(ST.BREATHING),3500);
+}
+
+function lerpP(a,b,t){
+  return {
+    spread: a.spread+(b.spread-a.spread)*t,
+    chaos:  a.chaos +(b.chaos -a.chaos )*t,
+    speed:  a.speed +(b.speed -a.speed )*t,
+    glow:   a.glow  +(b.glow  -a.glow  )*t,
+    audio:  a.audio +(b.audio -a.audio )*t,
+  };
+}
+
+/* ── MOUSE ────────────────────────────────────────────────────── */
+const mouse = new THREE.Vector2(0,0);
+const tMouse= new THREE.Vector2(0,0);
+window.addEventListener('mousemove',e=>{
+  tMouse.x=(e.clientX/window.innerWidth)*2-1;
+  tMouse.y=-(e.clientY/window.innerHeight)*2+1;
+},{passive:true});
+window.addEventListener('touchmove',e=>{
+  if(!e.touches.length)return;
+  tMouse.x=(e.touches[0].clientX/window.innerWidth)*2-1;
+  tMouse.y=-(e.touches[0].clientY/window.innerHeight)*2+1;
+},{passive:true});
+
+/* ── WHISPER WAKE-UP ──────────────────────────────────────────── */
+let idleTimer = null;
+const WHISPER_EL  = document.getElementById('whisper');
+const WHISPER_TXT = document.getElementById('whisper-txt');
+const WHISPER_MSGS= [
+  'Shane... are you there?',
+  'Still with me?',
+  'Voice engine standing by...',
+  'Whenever you\'re ready.'
+];
+let whisperIdx = 0;
+let whisperActive = false;
+
+function resetIdleTimer(){
+  if(whisperActive){ hideWhisper(); }
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(showWhisper, 75000); // 75 seconds
+}
+function showWhisper(){
+  whisperActive = true;
+  WHISPER_TXT.textContent = WHISPER_MSGS[whisperIdx%WHISPER_MSGS.length];
+  whisperIdx++;
+  WHISPER_EL.classList.add('show');
+  setState(ST.SCREENSAVER);
+  idleTimer = setTimeout(hideWhisper, 6000);
+}
+function hideWhisper(){
+  whisperActive = false;
+  WHISPER_EL.classList.remove('show');
+  if(state===ST.SCREENSAVER) setState(ST.BREATHING);
+  resetIdleTimer();
+}
+['mousemove','keydown','touchstart','click'].forEach(e=>{
+  window.addEventListener(e,resetIdleTimer,{passive:true});
+});
+resetIdleTimer();
+
+/* Global click removed — state changes only via Retell events
+   or explicit AVA CTA. Prevents pricing/footer clicks hijacking orb. */
+
+/* ── DEBUG KEYS ───────────────────────────────────────────────── */
+const keyMap = {
+  'm':  ()=>audioBridge.toggleMic(),
+  'l':  ()=>setState(ST.LISTENING),
+  'a':  ()=>setState(ST.ACTIVATED),
+  'c':  ()=>setState(ST.CELEBRATION),
+  'b':  ()=>setState(ST.BREATHING),
+  'i':  ()=>setState(ST.IDLE),
+  's':  ()=>setState(ST.SCREENSAVER),
+  'w':  ()=>showWhisper(),
+  ' ':  ()=>{ mat.uniforms.uAudio.value=Math.min(1,mat.uniforms.uAudio.value+0.4); },
+};
+window.addEventListener('keydown',e=>{
+  if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
+  const fn=keyMap[e.key?.toLowerCase()];
+  if(fn){e.preventDefault();fn();}
+},{passive:false});
+
+/* ── FPS GUARD ────────────────────────────────────────────────── */
+function measureFPS(now){
+  frameCount++;
+  const delta = now - lastFPSTime;
+  if(delta >= 1000){
+    const fps = Math.round(frameCount*1000/delta);
+    FPS_EL.textContent = fps+' FPS';
+    fpsHistory.push(fps);
+    frameCount=0; lastFPSTime=now;
+
+    if(!fpsGuardDone && fpsHistory.length>=3){
+      const avg = fpsHistory.reduce((a,b)=>a+b,0)/fpsHistory.length;
+      if(avg<30 && N>75000){
+        N=75000; rebuildParticles();
+        console.log('[AVA Signal] FPS guard: dropped to 75K');
+      } else if(avg<45 && N>150000){
+        N=150000; rebuildParticles();
+        console.log('[AVA Signal] FPS guard: dropped to 150K');
+      } else if(avg>=55){
+        fpsGuardDone=true;
+        console.log('[AVA Signal] FPS guard: stable at',N,'particles @',avg,'fps');
+      }
+    }
+  }
+}
+
+function rebuildParticles(){
+  scene.remove(points);
+  geo.dispose();
+  geo = buildGeometry(N);
+  points.geometry = geo;
+  scene.add(points);
+  document.getElementById('hud').textContent='AVA SIGNAL V6 // '+Math.round(N/1000)+'K // GPU PARTICLES';
+}
+
+/* ── AVA AUDIO BRIDGE v2 — Gemini power curve + Claude state machine */
+/* Surgical voice isolation 200Hz-3000Hz. Math.pow(1.5) curve.       */
+class AvaAudioBridge {
+  constructor(uniforms) {
+    this.uniforms        = uniforms;
+    this.audioCtx        = null;
+    this.analyser        = null;
+    this.dataArray       = null;
+    this.source          = null;
+    this.isActive        = false;
+    this.stateMultiplier = 1.0;
+  }
+  async toggleMic() {
+    if(this.isActive){ this.stop(); return; }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio:{echoCancellation:true,noiseSuppression:true},video:false
+      });
+      this.connectExternalStream(stream);
+    } catch(e){ console.error('[AVA Signal] Mic denied',e); }
+  }
+  connectExternalStream(stream) {
+    this.stream = stream; /* store for cleanup */
+    if(!this.audioCtx)
+      this.audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    if(this.audioCtx.state==='suspended') this.audioCtx.resume();
+    this.analyser = this.audioCtx.createAnalyser();
+    this.analyser.fftSize = 256;
+    this.analyser.smoothingTimeConstant = 0.5;
+    this.source = this.audioCtx.createMediaStreamSource(stream);
+    this.source.connect(this.analyser);
+    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+    this.isActive = true;
+    this._analyze();
+    console.log('[AVA Signal] Audio bridge connected');
+  }
+  _analyze() {
+    if(!this.isActive) return;
+    requestAnimationFrame(()=>this._analyze());
+    this.analyser.getByteFrequencyData(this.dataArray);
+    /* Surgical voice band: bins 3-25 = 200Hz-3000Hz */
+    let sum=0;
+    for(let i=3;i<=25;i++) sum+=this.dataArray[i];
+    const normalized = (sum/23)/255;
+    /* Power curve: whispers subtle, loud speech detonates */
+    const raw   = Math.pow(normalized, 1.5);
+    const final = raw * this.stateMultiplier;
+    /* 0.18 lerp: aggressive attack, smooth decay */
+    this.uniforms.uAudio.value += (final - this.uniforms.uAudio.value)*0.18;
+  }
+  setStateMultiplier(speaking){ this.stateMultiplier = speaking ? 1.4 : 1.0; }
+  stop() {
+    this.isActive = false;
+    if(this.source){ this.source.disconnect(); this.source=null; }
+    /* Stop actual mic tracks — prevents browser mic indicator staying on */
+    if(this.stream){ this.stream.getTracks().forEach(t=>t.stop()); this.stream=null; }
+    this.uniforms.uAudio.value = 0;
+    console.log('[AVA Signal] Audio bridge stopped');
+  }
+}
+
+/* ── RENDER LOOP — proper RAF id + stop/start ─────────────────── */
+const clock = new THREE.Clock();
+let audioLevel = 0;
+let rafId = 0;
+let isRunning = false;
+
+function animate(){
+  if(!isRunning) return;
+  rafId = requestAnimationFrame(animate);
+  const t   = clock.getElapsedTime();
+  const now = performance.now();
+  measureFPS(now);
+
+  curParams = lerpP(curParams, targetParams, 0.035);
+
+  if(!audioBridge || !audioBridge.isActive){
+    audioLevel += (curParams.audio - audioLevel)*0.12;
+    mat.uniforms.uAudio.value = audioLevel;
+  }
+
+  mouse.lerp(tMouse, 0.06);
+
+  mat.uniforms.uTime.value   = t;
+  mat.uniforms.uChaos.value  = curParams.chaos;
+  mat.uniforms.uSpread.value = curParams.spread;
+  mat.uniforms.uGlow.value   = curParams.glow;
+  mat.uniforms.uMouse.value.copy(mouse);
+
+  points.rotation.y = t*0.065*(state===ST.SCREENSAVER?0.4:1);
+  points.rotation.x = Math.sin(t*0.04)*0.06;
+
+  renderer.render(scene, camera);
+}
+
+function startLoop(){
+  if(isRunning) return;
+  isRunning = true;
+  animate();
+}
+
+function stopLoop(){
+  isRunning = false;
+  if(rafId){ cancelAnimationFrame(rafId); rafId=0; }
+}
+
+/* ── RESIZE ───────────────────────────────────────────────────── */
+function onResize(){
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+window.addEventListener('resize', onResize, {passive:true});
+
+/* ── VISIBILITY PAUSE — RAF id prevents loop duplication ──────── */
+document.addEventListener('visibilitychange',()=>{
+  document.hidden ? stopLoop() : startLoop();
+});
+
+/* ── BOOT ─────────────────────────────────────────────────────── */
+const audioBridge = new AvaAudioBridge(mat.uniforms);
+setTimeout(()=>setState(ST.BREATHING), 1200);
+startLoop();
+
+/* ── PUBLIC API — defined INSIDE desktop block so setState/audioBridge are in scope */
+window.AVA_SIGNAL = {
+  ST,
+  setState,
+  onRetellConnected: (stream)=>{
+    setState(ST.ACTIVATED);
+    if(stream) audioBridge.connectExternalStream(stream);
+  },
+  onAVASpeakingStart: ()=>{ setState(ST.SPEAKING);   audioBridge.setStateMultiplier(true);  },
+  onAVASpeakingEnd:   ()=>{ setState(ST.ACTIVATED);  audioBridge.setStateMultiplier(false); },
+  onCallEnded:        ()=>{ setState(ST.CELEBRATION); audioBridge.stop(); },
+  toggleMic:          ()=>audioBridge.toggleMic(),
+};
+
+} /* end !IS_MOBILE */
+
+/* ── PUBLIC API — mobile stub only; desktop version set inside desktop block */
+if(IS_MOBILE){
+  /* Mobile: CSS bg only, but state label stays live for Retell wiring */
+  const _lbl = document.getElementById('state-lbl');
+  const _names = ['IDLE','BREATHING','LISTENING','SPEAKING','ACTIVATED','CELEBRATION','SCREENSAVER'];
+  window.AVA_SIGNAL = {
+    ST,
+    setState:(s)=>{ if(_lbl){ _lbl.textContent='AVA '+(_names[s]||''); _lbl.className=s>0?'live':''; } },
+    onRetellConnected:  ()=>{},
+    onAVASpeakingStart: ()=>{},
+    onAVASpeakingEnd:   ()=>{},
+    onCallEnded:        ()=>{},
+    toggleMic:          ()=>{},
+  };
+}
+
+/* ── GLASS REFRACTION HIGHLIGHT TRACKING ─ Gemini ───────────── */
+document.querySelectorAll('.glass-pane').forEach(pane => {
+  pane.addEventListener('mousemove', e => {
+    const rect = pane.getBoundingClientRect();
+    /* X-axis only — specular light source at top of card */
+    pane.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+  });
+});
+
+</script>
+
+<script type="module">
+import { RetellWebClient } from "https://esm.sh/retell-client-js-sdk";
+const retellClient = new RetellWebClient();
+
+/* Wire the 4 AVA_SIGNAL event hooks */
+/* call_started: set ACTIVATED only — no second mic request */
+retellClient.on('call_started', () => window.AVA_SIGNAL.setState(window.AVA_SIGNAL.ST.ACTIVATED));
+retellClient.on('agent_start_talking',() => window.AVA_SIGNAL.onAVASpeakingStart());
+retellClient.on('agent_stop_talking', () => window.AVA_SIGNAL.onAVASpeakingEnd());
+retellClient.on('call_ended',         () => window.AVA_SIGNAL.onCallEnded());
+retellClient.on('error', err => {
+  console.error('[AVA] Retell error', err);
+  window.AVA_SIGNAL.onCallEnded();
+});
+
+window.startAvaCall = async () => {
+  window.AVA_SIGNAL.setState(window.AVA_SIGNAL.ST.LISTENING);
+  try {
+    /* 🔴 REPLACE: paste your Cloudflare Worker URL and Retell Agent ID */
+    const RETELL_TOKEN_ENDPOINT = 'YOUR_CLOUDFLARE_WORKER_URL';
+    const RETELL_AGENT_ID       = 'YOUR_RETELL_AGENT_ID';
+    const res  = await fetch(RETELL_TOKEN_ENDPOINT, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ agent_id: RETELL_AGENT_ID })
+    });
+    if(!res.ok) throw new Error(`Token endpoint failed: ${res.status}`);
+    const data = await res.json();
+    if(!data?.access_token) throw new Error('Missing access_token from token endpoint');
+    await retellClient.startCall({ accessToken: data.access_token });
+  } catch(err) {
+    console.error('[AVA] Call init failed', err);
+    window.AVA_SIGNAL.setState(window.AVA_SIGNAL.ST.BREATHING);
+  }
+};
+</script>
+
+</body>
+</html>
