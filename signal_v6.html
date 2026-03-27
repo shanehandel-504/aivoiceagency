@@ -151,9 +151,9 @@ body,html{width:100%;height:100%;background:#0A0A0F;overflow:hidden;font-family:
 <div id="c-wrap">
   <canvas id="c"></canvas>
 </div>
-<div id="hud">AVA SIGNAL V6 // 250K // GPU PARTICLES // M=MIC</div>
-<div id="state-lbl">IDLE</div>
-<div id="fps">60 FPS</div>
+<div id="hud" style="display:none"></div>
+<div id="state-lbl" style="display:none"></div>
+<div id="fps" style="display:none"></div>
 
 <main id="ui-layer">
 
@@ -290,7 +290,7 @@ renderer.setSize(W, H);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, IS_MOBILE ? 1.5 : 2));
 
 /* ── PARTICLE COUNT + FPS GUARD ──────────────────────────────── */
-let N = IS_MOBILE ? 300 : 250000;
+let N = IS_MOBILE ? 30000 : 250000;
 let fpsGuardDone = false;
 let fpsHistory = [];
 let lastFPSTime = performance.now();
