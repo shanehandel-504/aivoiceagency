@@ -258,8 +258,8 @@ function gaussR(maxR) {
 
 /* State visual params — all tuned for filled sphere */
 const SP = {
-  [ST.IDLE]:       {spread:1.8, chaos:0.05, speed:0.06,  glow:0.15, audio:0, color:'cool',  desc:'dormant · barely breathing'},
-  [ST.BREATHING]:  {spread:2.1, chaos:0.12, speed:0.09,  glow:0.28, audio:0, color:'cool',  desc:'waiting · soft pulse'},
+  [ST.IDLE]:       {spread:1.8, chaos:0.05, speed:0.06,  glow:0.50, audio:0, color:'cool',  desc:'dormant · barely breathing'},
+  [ST.BREATHING]:  {spread:2.1, chaos:0.12, speed:0.09,  glow:0.60, audio:0, color:'cool',  desc:'waiting · soft pulse'},
   [ST.LISTENING]:  {spread:2.6, chaos:0.22, speed:0.16,  glow:0.48, audio:0, color:'cool',  desc:'alert · expanded field'},
   [ST.SPEAKING]:   {spread:2.3, chaos:0.38, speed:0.30,  glow:0.85, audio:1, color:'white', desc:'transmitting · burst energy'},
   [ST.ACTIVATED]:  {spread:2.4, chaos:0.28, speed:0.22,  glow:0.75, audio:1, color:'cool',  desc:'connected · synchronized'},
@@ -386,11 +386,11 @@ const VERT = `
 
     vec4 mv = modelViewMatrix * vec4(pos,1.);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = aSize * (6./(-mv.z)) * (1.+uAudio*1.4) * (0.7+uGlow*0.5);
+    gl_PointSize = aSize * (8./(-mv.z)) * (1.+uAudio*1.4) * (0.8+uGlow*0.5);
 
     /* Alpha — core brighter, outer dimmer */
     float depthFade = clamp((pos.z + 3.)/6., 0., 1.);
-    vAlpha = (0.25 + uGlow*0.55) * depthFade * (0.6 + 0.4*aTier*(1.-aTier*0.3)) * (0.55+uAudio*.55);
+    vAlpha = (0.35 + uGlow*0.65) * depthFade * (0.6 + 0.4*aTier*(1.-aTier*0.3)) * (0.85+uAudio*.15);
 
     /* Color */
     vec3 cyan  = vec3(0., 0.83, 1.0);
@@ -411,7 +411,7 @@ const FRAG_PARTICLE = `
     vec2 uv   = gl_PointCoord*2.-1.;
     float d   = length(uv);
     if(d>1.) discard;
-    float glow = exp(-d*2.8);
+    float glow = exp(-d*1.8);
     gl_FragColor = vec4(vColor*glow, vAlpha*glow);
   }
 `;
