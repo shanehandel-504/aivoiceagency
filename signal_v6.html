@@ -89,10 +89,7 @@ body,html{width:100%;height:100%;background:#0A0A0F;overflow:hidden;font-family:
 }
 
 /* HUD */
-#hud{position:fixed;top:1.2rem;left:1.4rem;z-index:20;color:#00D4FF;font-family:monospace;font-size:.68rem;letter-spacing:.18em;pointer-events:none;opacity:.6}
-#state-lbl{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:20;color:rgba(0,212,255,.5);font-family:monospace;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;pointer-events:none;transition:color .4s}
-#state-lbl.live{color:#00D4FF}
-#fps{position:fixed;top:1.2rem;right:1.4rem;z-index:20;color:rgba(0,212,255,.35);font-family:monospace;font-size:.6rem;letter-spacing:.1em;pointer-events:none}
+#hud,#state-lbl,#fps{display:none}
 
 /* WHISPER overlay */
 #whisper{
@@ -272,26 +269,11 @@ const SP = {
 
 /* ── THREE.JS SETUP ───────────────────────────────────────────── */
 const W = window.innerWidth, H = window.innerHeight;
-/* ── MOBILE FALLBACK ──────────────────────────────────────── */
+/* ── MOBILE DETECTION ──────────────────────────────────────── */
 const IS_MOBILE = window.innerWidth < 768 ||
-  window.matchMedia('(pointer:coarse)').matches ||
-  window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  window.matchMedia('(pointer:coarse)').matches;
 
-if(IS_MOBILE) {
-  /* Kill WebGL, show CSS gradient background */
-  document.getElementById('c-wrap').style.display = 'none';
-  document.body.style.background =
-    'radial-gradient(ellipse at 30% 50%, rgba(0,212,255,0.08) 0%, transparent 60%),' +
-    'radial-gradient(ellipse at 70% 80%, rgba(0,212,255,0.05) 0%, transparent 50%),' +
-    'linear-gradient(180deg, #0A0A0F 0%, #0d1117 100%)';
-  document.body.style.backgroundAttachment = 'fixed';
-  /* Still run state machine for Retell wiring — just no GPU */
-  window.AVA_SIGNAL = {
-    setState:()=>{}, ST:{IDLE:0,BREATHING:1,LISTENING:2,SPEAKING:3,ACTIVATED:4,CELEBRATION:5,SCREENSAVER:6},
-    onRetellConnected:()=>{}, onAVASpeakingStart:()=>{}, onAVASpeakingEnd:()=>{}, onCallEnded:()=>{}, toggleMic:()=>{}
-  };
-  // Still init audio bridge for voice reactivity (low cost)
-} else {
+{
 
 const scene  = new THREE.Scene();
 scene.background = new THREE.Color(0x0A0A0F);
@@ -305,10 +287,10 @@ const renderer = new THREE.WebGLRenderer({
   powerPreference: 'high-performance'
 });
 renderer.setSize(W, H);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, IS_MOBILE ? 1.5 : 2));
 
 /* ── PARTICLE COUNT + FPS GUARD ──────────────────────────────── */
-let N = 250000;
+let N = IS_MOBILE ? 300 : 250000;
 let fpsGuardDone = false;
 let fpsHistory = [];
 let lastFPSTime = performance.now();
@@ -755,23 +737,7 @@ window.AVA_SIGNAL = {
   toggleMic:          ()=>audioBridge.toggleMic(),
 };
 
-} /* end !IS_MOBILE */
-
-/* ── PUBLIC API — mobile stub only; desktop version set inside desktop block */
-if(IS_MOBILE){
-  /* Mobile: CSS bg only, but state label stays live for Retell wiring */
-  const _lbl = document.getElementById('state-lbl');
-  const _names = ['IDLE','BREATHING','LISTENING','SPEAKING','ACTIVATED','CELEBRATION','SCREENSAVER'];
-  window.AVA_SIGNAL = {
-    ST,
-    setState:(s)=>{ if(_lbl){ _lbl.textContent='AVA '+(_names[s]||''); _lbl.className=s>0?'live':''; } },
-    onRetellConnected:  ()=>{},
-    onAVASpeakingStart: ()=>{},
-    onAVASpeakingEnd:   ()=>{},
-    onCallEnded:        ()=>{},
-    toggleMic:          ()=>{},
-  };
-}
+} /* end WebGL block */
 
 /* ── GLASS REFRACTION HIGHLIGHT TRACKING ─ Gemini ───────────── */
 document.querySelectorAll('.glass-pane').forEach(pane => {
