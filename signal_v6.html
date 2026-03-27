@@ -2,8 +2,72 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>AVA Signal V6 | AI Voice Agency</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Voice Agency — Your AI Business Operations System</title>
+<meta name="description" content="AVA answers every call, qualifies every lead, books every job. 24/7. No hold times. No missed revenue. AI voice agents for any business.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="AI Voice Agency — Your AI Business Operations System">
+<meta property="og:description" content="AVA answers every call, qualifies every lead, books every job. 24/7. No hold times. No missed revenue. AI voice agents for any business.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.aivoiceagency.ai/">
+
+<!-- JSON-LD: Organization -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "AI Voice Agency",
+  "url": "https://www.aivoiceagency.ai",
+  "telephone": "+17869371218",
+  "description": "AVA answers every call, qualifies every lead, books every job. 24/7. No hold times. No missed revenue."
+}
+</script>
+
+<!-- JSON-LD: WebSite -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AI Voice Agency",
+  "url": "https://www.aivoiceagency.ai"
+}
+</script>
+
+<!-- JSON-LD: FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How long does it take to get an AI voice agent set up?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A fully trained AI voice agent with your pricing, rules, and booking logic typically goes live in seven to ten business days."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will callers know they are talking to an AI voice agent?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The agent sounds natural, uses your business name, and follows your tone. Most callers don't notice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if I already have a receptionist?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The AI voice agent handles overflow, after-hours, and high-volume periods. It doesn't replace your team — it makes sure nothing falls through the cracks."
+      }
+    }
+  ]
+}
+</script>
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body,html{width:100%;height:100%;background:#0A0A0F;overflow:hidden;font-family:'Space Grotesk',system-ui,sans-serif}
@@ -51,7 +115,9 @@ body,html{width:100%;height:100%;background:#0A0A0F;overflow:hidden;font-family:
 .god-ray-text{font-size:clamp(3rem,8vw,5rem);font-weight:700;letter-spacing:-0.04em;line-height:1.1;color:transparent;-webkit-text-stroke:1px rgba(238,240,244,0.2);background:radial-gradient(circle,rgba(0,212,255,1) 0%,rgba(238,240,244,0.8) 100%);-webkit-background-clip:text;background-clip:text;text-shadow:0 0 20px rgba(0,212,255,0.4),0 0 50px rgba(0,212,255,0.2);}
 
 /* ── GLASS REFRACTION CARDS ───────────────────────────────────── */
-.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;padding:4rem 2rem;max-width:1200px;margin:0 auto;}
+.pricing-grid{display:grid;grid-template-columns:1fr;gap:2rem;padding:4rem 2rem;max-width:1200px;margin:0 auto;}
+@media(min-width:768px){.pricing-grid{grid-template-columns:1fr 1fr;}}
+@media(min-width:1024px){.pricing-grid{grid-template-columns:repeat(4,1fr);}.glass-pane.pro-tier{transform:scale(1.05);}}
 .glass-pane{background:rgba(26,26,46,0.2);backdrop-filter:blur(16px) brightness(1.2);-webkit-backdrop-filter:blur(16px) brightness(1.2);border:1px solid rgba(238,240,244,0.1);padding:3rem 2rem;position:relative;overflow:hidden;isolation:isolate;transition:transform 0.4s cubic-bezier(0.19,1,0.22,1),border-color 0.4s;cursor:pointer;}
 .glass-pane:hover{transform:translateY(-5px);border-color:rgba(0,212,255,0.5);}
 /* X-axis only specular — light source at top, tracks mouse X */
@@ -60,11 +126,23 @@ body,html{width:100%;height:100%;background:#0A0A0F;overflow:hidden;font-family:
 /* Lift card content above specular layer */
 .glass-pane > *{position:relative;z-index:1;}
 .glass-pane.pro-tier{border-color:rgba(0,212,255,0.4);background:rgba(0,212,255,0.03);}
-.btn-cyan{display:inline-block;background:#00D4FF;color:#0A0A0F;padding:1rem 2.5rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;text-decoration:none;margin-top:2rem;transition:all 0.2s;box-shadow:0 0 15px rgba(0,212,255,0.2);font-family:'Space Grotesk',system-ui,sans-serif;}
+.btn-cyan{display:inline-block;background:#00D4FF;color:#0A0A0F;padding:1rem 2.5rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;text-decoration:none;margin-top:2rem;transition:all 0.2s;box-shadow:0 0 15px rgba(0,212,255,0.2);font-family:'Space Grotesk',system-ui,sans-serif;border-radius:50px;}
 .btn-cyan:hover{background:#00E5FF;box-shadow:0 0 30px rgba(0,212,255,0.5);}
 .btn-cyan:active{transform:scale(0.95);box-shadow:0 0 30px rgba(0,212,255,0.6);}
 /* Section base */
 .ui-section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:2rem;max-width:1200px;margin:0 auto;}
+
+/* Mobile sticky bar */
+.mobile-sticky-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);border-top:1px solid rgba(0,212,255,0.15);padding:10px 1rem;gap:10px;align-items:center;justify-content:center;}
+.mobile-sticky-bar .btn-call{flex:6;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:#00D4FF;color:#0A0A0F;padding:12px 16px;font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:0.04em;text-decoration:none;border-radius:50px;font-family:'Space Grotesk',system-ui,sans-serif;}
+.mobile-sticky-bar .btn-listen{flex:4;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:transparent;color:#EEF0F4;padding:12px 16px;font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:0.04em;text-decoration:none;border-radius:50px;border:1px solid rgba(238,240,244,0.2);font-family:'Space Grotesk',system-ui,sans-serif;}
+@media(max-width:767px){.mobile-sticky-bar{display:flex;}}
+
+/* Accessibility: prefers-reduced-motion */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}}
+
+/* Accessibility: focus-visible */
+*:focus-visible{outline:2px solid #00D4FF;outline-offset:4px;}
 
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -101,26 +179,43 @@ body,html{width:100%;height:100%;background:#0A0A0F;overflow:hidden;font-family:
     </div>
     <div class="pricing-grid">
       <div class="glass-pane">
-        <h3 style="color:rgba(238,240,244,0.6);text-transform:uppercase;letter-spacing:0.1em;font-size:0.85rem;">Basic</h3>
-        <div style="font-size:3rem;font-weight:700;color:#00D4FF;margin:1rem 0;">$200<span style="font-size:1rem;color:rgba(238,240,244,0.6);">/mo</span></div>
-        <p style="opacity:0.8;height:3rem;line-height:1.5;">Never miss the call.</p>
-        <div style="font-size:0.85rem;opacity:0.6;margin-bottom:1rem;">$500 setup</div>
-        <a href="https://cal.com/shane-handel/strategy-call" class="btn-cyan" style="margin-top:1rem;">Start</a>
+        <h3 style="color:rgba(238,240,244,0.6);text-transform:uppercase;letter-spacing:0.1em;font-size:0.85rem;">Starter</h3>
+        <div style="font-size:3rem;font-weight:700;color:#00D4FF;margin:1rem 0;">$497<span style="font-size:1rem;color:rgba(238,240,244,0.6);">/mo</span></div>
+        <p style="opacity:0.8;line-height:1.5;">Never miss the call.</p>
+        <p style="font-size:0.8rem;color:rgba(238,240,244,0.5);margin-top:0.5rem;"><strong>Best for:</strong> Small businesses that need reliable 24/7 call coverage.</p>
+        <a href="tel:7869371218" class="btn-cyan" style="margin-top:1rem;">Start Your AVA Setup</a>
       </div>
       <div class="glass-pane pro-tier">
         <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);background:#00D4FF;color:#0A0A0F;padding:0.2rem 1rem;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Most Popular</div>
         <h3 style="color:rgba(238,240,244,0.6);text-transform:uppercase;letter-spacing:0.1em;font-size:0.85rem;margin-top:1rem;">Pro</h3>
-        <div style="font-size:3rem;font-weight:700;color:#00D4FF;margin:1rem 0;">$500<span style="font-size:1rem;color:rgba(238,240,244,0.6);">/mo</span></div>
-        <p style="opacity:0.8;height:3rem;line-height:1.5;">Turn calls into bookings.</p>
-        <div style="font-size:0.85rem;opacity:0.6;margin-bottom:1rem;">$500 setup</div>
-        <a href="https://cal.com/shane-handel/strategy-call" class="btn-cyan" style="margin-top:1rem;">Start</a>
+        <div style="font-size:3rem;font-weight:700;color:#00D4FF;margin:1rem 0;">$997<span style="font-size:1rem;color:rgba(238,240,244,0.6);">/mo</span></div>
+        <p style="opacity:0.8;line-height:1.5;">Turn calls into bookings.</p>
+        <p style="font-size:0.8rem;color:rgba(238,240,244,0.5);margin-top:0.5rem;"><strong>Best for:</strong> Growing businesses that want automated booking and lead qualification.</p>
+        <a href="tel:7869371218" class="btn-cyan" style="margin-top:1rem;">Start Your AVA Setup</a>
       </div>
       <div class="glass-pane">
         <h3 style="color:rgba(238,240,244,0.6);text-transform:uppercase;letter-spacing:0.1em;font-size:0.85rem;">Enterprise</h3>
-        <div style="font-size:3rem;font-weight:700;color:#00D4FF;margin:1rem 0;">$1,500<span style="font-size:1rem;color:rgba(238,240,244,0.6);">/mo</span></div>
-        <p style="opacity:0.8;height:3rem;line-height:1.5;">Full revenue engine.</p>
-        <div style="font-size:0.85rem;opacity:0.6;margin-bottom:1rem;">$1,500 setup</div>
-        <a href="https://cal.com/shane-handel/strategy-call" class="btn-cyan" style="margin-top:1rem;">Contact</a>
+        <div style="font-size:3rem;font-weight:700;color:#00D4FF;margin:1rem 0;">$1,997<span style="font-size:1rem;color:rgba(238,240,244,0.6);">/mo</span></div>
+        <p style="opacity:0.8;line-height:1.5;">Full revenue engine.</p>
+        <p style="font-size:0.8rem;color:rgba(238,240,244,0.5);margin-top:0.5rem;"><strong>Best for:</strong> Multi-location businesses that need full-stack AI voice operations.</p>
+        <a href="tel:7869371218" class="btn-cyan" style="margin-top:1rem;">Start Your AVA Setup</a>
+      </div>
+      <div class="glass-pane">
+        <h3 style="color:rgba(238,240,244,0.6);text-transform:uppercase;letter-spacing:0.1em;font-size:0.85rem;">White Glove</h3>
+        <p style="opacity:0.8;line-height:1.5;">Fully managed. We build it, run it, optimize it.</p>
+        <p style="font-size:0.8rem;color:rgba(238,240,244,0.5);margin-top:0.5rem;"><strong>Best for:</strong> Enterprises that want a done-for-you AI voice operation with dedicated support.</p>
+        <a href="https://cal.com/shane-handel/strategy-call" class="btn-cyan" style="margin-top:1rem;">Apply</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="ui-section" style="min-height:auto;padding:4rem 2rem;">
+    <h2 style="font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-0.04em;text-align:center;margin-bottom:3rem;">Frequently Asked Questions</h2>
+    <div style="max-width:800px;margin:0 auto;">
+      <div style="border-bottom:1px solid rgba(238,240,244,0.1);padding:1.5rem 0;">
+        <p style="font-weight:700;font-size:1rem;color:#EEF0F4;">Want to hear AVA in action?</p>
+        <p style="opacity:0.7;margin-top:0.75rem;line-height:1.6;">Listen to a live demo by calling 786-937-1218.</p>
       </div>
     </div>
   </section>
@@ -129,9 +224,16 @@ body,html{width:100%;height:100%;background:#0A0A0F;overflow:hidden;font-family:
   <footer style="padding:4rem 2rem;text-align:center;border-top:1px solid rgba(255,255,255,0.06);">
     <p style="opacity:0.5;font-size:0.85rem;letter-spacing:0.05em;">WE DEPLOY AI BUSINESS OPERATIONS SYSTEMS THAT HAPPEN TO ANSWER THE PHONE.</p>
     <p style="opacity:0.3;font-size:0.75rem;margin-top:1rem;">© 2026 AI Voice Agency · <a href="https://cal.com/shane-handel/strategy-call" style="color:#00D4FF;text-decoration:none;">Book a Call</a> · 786-937-1218</p>
+    <p style="opacity:0.4;font-size:0.72rem;margin-top:0.5rem;letter-spacing:0.03em;">Wisconsin-built. National coverage.</p>
   </footer>
 
 </main>
+
+<!-- Mobile Sticky Bar -->
+<div class="mobile-sticky-bar">
+  <a href="tel:7869371218" class="btn-call">Call AVA</a>
+  <a href="tel:7869371218" class="btn-listen">Listen</a>
+</div>
 
 <div id="whisper"><span id="whisper-txt">Shane... are you there?</span></div>
 
