@@ -164,7 +164,7 @@ body,html{width:100%;height:100%;background:#0A0A0F;overflow:hidden;font-family:
       AVA answers every call. Qualifies every lead. Books every job. 24/7. No hold times. No missed revenue.
     </p>
     <div style="margin-top:3rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
-      <a href="#" class="btn-cyan" onclick="window.startAvaCall(); return false;">Call AVA Now</a>
+      <a href="tel:7869371218" class="btn-cyan">Call AVA Now</a>
       <a href="tel:7869371218" style="color:#EEF0F4;text-decoration:none;font-weight:700;letter-spacing:0.05em;border-bottom:1px solid rgba(238,240,244,0.3);padding-bottom:0.2rem;">Call 786-937-1218</a>
     </div>
   </section>
@@ -258,13 +258,13 @@ function gaussR(maxR) {
 
 /* State visual params — all tuned for filled sphere */
 const SP = {
-  [ST.IDLE]:       {spread:1.4, chaos:0.05, speed:0.06,  glow:0.50, audio:0, color:'cool',  desc:'dormant · barely breathing'},
-  [ST.BREATHING]:  {spread:1.6, chaos:0.12, speed:0.09,  glow:0.60, audio:0, color:'cool',  desc:'waiting · soft pulse'},
-  [ST.LISTENING]:  {spread:2.0, chaos:0.22, speed:0.16,  glow:0.48, audio:0, color:'cool',  desc:'alert · expanded field'},
-  [ST.SPEAKING]:   {spread:1.8, chaos:0.38, speed:0.30,  glow:0.85, audio:1, color:'white', desc:'transmitting · burst energy'},
-  [ST.ACTIVATED]:  {spread:1.9, chaos:0.28, speed:0.22,  glow:0.75, audio:1, color:'cool',  desc:'connected · synchronized'},
-  [ST.CELEBRATION]:{spread:2.5, chaos:0.75, speed:0.70,  glow:1.00, audio:1, color:'white', desc:'complete · explosion'},
-  [ST.SCREENSAVER]:{spread:2.2, chaos:0.06, speed:0.025, glow:0.10, audio:0, color:'teal',  desc:'ambient · galaxy drift'},
+  [ST.IDLE]:       {spread:1.0, chaos:0.05, speed:0.06,  glow:0.70, audio:0, color:'cool',  desc:'dormant · barely breathing'},
+  [ST.BREATHING]:  {spread:1.1, chaos:0.12, speed:0.09,  glow:0.80, audio:0, color:'cool',  desc:'waiting · soft pulse'},
+  [ST.LISTENING]:  {spread:1.4, chaos:0.22, speed:0.16,  glow:0.70, audio:0, color:'cool',  desc:'alert · expanded field'},
+  [ST.SPEAKING]:   {spread:1.3, chaos:0.38, speed:0.30,  glow:1.00, audio:1, color:'white', desc:'transmitting · burst energy'},
+  [ST.ACTIVATED]:  {spread:1.3, chaos:0.28, speed:0.22,  glow:0.90, audio:1, color:'cool',  desc:'connected · synchronized'},
+  [ST.CELEBRATION]:{spread:1.8, chaos:0.75, speed:0.70,  glow:1.00, audio:1, color:'white', desc:'complete · explosion'},
+  [ST.SCREENSAVER]:{spread:1.5, chaos:0.06, speed:0.025, glow:0.30, audio:0, color:'teal',  desc:'ambient · galaxy drift'},
 };
 
 /* ── THREE.JS SETUP ───────────────────────────────────────────── */
@@ -388,9 +388,9 @@ const VERT = `
     gl_Position = projectionMatrix * mv;
     gl_PointSize = aSize * (8./(-mv.z)) * (1.+uAudio*1.4) * (0.8+uGlow*0.5);
 
-    /* Alpha — core brighter, outer dimmer */
-    float depthFade = clamp((pos.z + 3.)/6., 0., 1.);
-    vAlpha = (0.35 + uGlow*0.65) * depthFade * (0.6 + 0.4*aTier*(1.-aTier*0.3)) * (0.85+uAudio*.15);
+    /* Alpha — bright dense core, outer still visible */
+    float depthFade = clamp((pos.z + 3.)/6., 0.3, 1.);
+    vAlpha = (0.60 + uGlow*0.40) * depthFade * (0.7 + 0.3*aTier*(1.-aTier*0.2)) * (0.90+uAudio*.10);
 
     /* Color */
     vec3 cyan  = vec3(0., 0.83, 1.0);
@@ -411,8 +411,9 @@ const FRAG_PARTICLE = `
     vec2 uv   = gl_PointCoord*2.-1.;
     float d   = length(uv);
     if(d>1.) discard;
-    float glow = exp(-d*1.8);
-    gl_FragColor = vec4(vColor*glow, vAlpha*glow);
+    float glow = exp(-d*1.2);
+    float bloom = exp(-d*0.5)*0.3;
+    gl_FragColor = vec4(vColor*(glow+bloom), vAlpha*glow + bloom*0.4);
   }
 `;
 
@@ -428,8 +429,8 @@ function buildGeometry(count) {
     const i3    = i*3;
     const phi   = Math.acos(1-2*(i+0.5)/count);
     const theta = Math.PI*(1+Math.sqrt(5))*i;
-    /* CUBE ROOT DISTRIBUTION — fills sphere volume not shell */
-    const r     = gaussR(1.6);
+    /* CUBE ROOT DISTRIBUTION — tight dense sphere */
+    const r     = gaussR(1.0);
 
     pos[i3]   = r*Math.sin(phi)*Math.cos(theta);
     pos[i3+1] = r*Math.sin(phi)*Math.sin(theta);
@@ -456,8 +457,8 @@ const mat = new THREE.ShaderMaterial({
     uTime:   {value:0},
     uAudio:  {value:0},
     uChaos:  {value:0.1},
-    uSpread: {value:1.8},
-    uGlow:   {value:0.15},
+    uSpread: {value:1.1},
+    uGlow:   {value:0.70},
     uMouse:  {value: new THREE.Vector2(0,0)},
   },
   transparent: true,
