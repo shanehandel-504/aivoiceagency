@@ -59,23 +59,8 @@ a{color:var(--cyan);text-decoration:none;transition:color .2s}
 a:hover{color:var(--cyan-hot)}
 ::selection{background:rgba(0,212,255,.25);color:#fff}
 
-/* ENTRY ANIMATION */
-.entry-overlay{position:fixed;inset:0;z-index:9999;background:var(--void);display:flex;align-items:center;justify-content:center;transition:opacity .6s ease;pointer-events:all}
-.entry-overlay.done{opacity:0;pointer-events:none}
-.entry-ring{position:absolute;border-radius:50%;border:1px solid rgba(0,229,255,.3);opacity:0}
-.entry-core{width:8px;height:8px;background:var(--cyan);border-radius:50%;box-shadow:0 0 30px var(--cyan),0 0 60px rgba(0,229,255,.4);opacity:0;transform:scale(0)}
-.entry-flash{position:absolute;inset:0;background:radial-gradient(circle at center,rgba(0,229,255,.2),transparent 70%);opacity:0}
-.entry-text{position:absolute;font-family:var(--font-display);font-size:.75rem;letter-spacing:.25em;color:var(--cyan);opacity:0;text-transform:uppercase;font-weight:700}
-
-/* EDGE PULSE */
-.edge-pulse{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0;transition:opacity 1s}
-.edge-pulse.active{opacity:1;box-shadow:inset 0 0 80px rgba(0,229,255,.06);animation:edgePulse 4s ease-in-out infinite}
-@keyframes edgePulse{0%,100%{box-shadow:inset 0 0 80px rgba(0,229,255,.06)}50%{box-shadow:inset 0 0 140px rgba(0,229,255,.12)}}
-
-
 /* UI LAYER */
-.ui{position:relative;z-index:5;min-height:100vh;opacity:0;transition:opacity .8s ease .2s}
-.ui.loaded{opacity:1}
+.ui{position:relative;z-index:5;min-height:100vh}
 .wrap{max-width:1200px;margin:0 auto;padding:0 2rem}
 
 /* GLASS CARDS */
@@ -125,10 +110,10 @@ nav.visible{transform:none}
 .hero-inner{max-width:800px;margin:0 auto;padding:1rem 0}
 .hero-kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:.62rem;color:var(--cyan);letter-spacing:.12em;text-transform:uppercase;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);padding:6px 12px;border-radius:100px;margin-bottom:1.25rem}
 .hero-kicker-dot{width:5px;height:5px;background:var(--cyan);border-radius:50%;animation:pulse 1.5s infinite}
-.hero h1{font-family:var(--font-display);font-size:clamp(2.2rem,5vw,4.4rem);font-weight:800;line-height:1.02;letter-spacing:-.045em;color:var(--ink);margin-bottom:1rem}
-.hero h1 .accent{color:var(--cyan);text-shadow:0 0 60px rgba(0,229,255,.5),0 0 120px rgba(0,229,255,.12)}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.2rem,5vw,4.4rem);font-weight:700;line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin-bottom:1rem}
+.hero h1 .accent{color:var(--cyan)}
 .hero-sub{font-size:.95rem;color:var(--muted);max-width:520px;margin:0 auto 1.75rem;line-height:1.7}
-.hero-phone{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:clamp(1.3rem,2.8vw,1.8rem);color:var(--cyan);font-weight:700;letter-spacing:-.01em;text-shadow:0 0 40px rgba(0,229,255,.4);margin-bottom:1.25rem;padding:12px 24px;border:1px solid rgba(0,229,255,.2);border-radius:12px;background:rgba(0,212,255,.03);transition:all .25s;animation:phoneGlow 3s ease-in-out infinite}
+.hero-phone{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:clamp(1.5rem,3.2vw,2.2rem);color:var(--cyan);font-weight:600;letter-spacing:-.01em;margin-bottom:1.25rem;padding:12px 24px;border:1px solid rgba(0,229,255,.2);border-radius:12px;background:rgba(0,212,255,.03);transition:all .25s;animation:phoneGlow 3s ease-in-out infinite}
 .hero-phone:hover{background:rgba(0,212,255,.07);border-color:rgba(0,229,255,.4);color:var(--cyan-hot);transform:translateY(-2px)}
 .hero-phone svg{width:20px;height:20px;flex-shrink:0;opacity:.7}
 .hero-ctas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:1rem}
@@ -137,7 +122,7 @@ nav.visible{transform:none}
 /* SECTION COMMON */
 .section{padding:5rem 0;background:var(--void)}
 .section-kicker{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:.75rem;padding-left:16px;border-left:2px solid var(--cyan);display:inline-block}
-.section-title{font-family:var(--font-display);font-size:clamp(1.6rem,3.2vw,2.8rem);font-weight:700;color:var(--ink);letter-spacing:-.025em;line-height:1.1;margin-bottom:.75rem}
+.section-title{font-family:var(--font-display);font-size:clamp(1.6rem,3.2vw,2.8rem);font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1.08;margin-bottom:.75rem}
 .section-sub{font-size:.92rem;color:var(--muted);max-width:520px;line-height:1.7}
 .section-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.15),transparent);max-width:1200px;margin:0 auto}
 
@@ -218,7 +203,7 @@ nav.visible{transform:none}
 /* MID-PAGE CTA */
 .mid-cta{padding:4.5rem 0;text-align:center;position:relative;background:var(--void)}
 .mid-cta h2{font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,3rem);font-weight:800;color:var(--ink);line-height:1.08;letter-spacing:-.02em;margin-bottom:1.25rem}
-.mid-cta-phone{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2.4rem);color:var(--cyan);font-weight:700;letter-spacing:-.01em;text-shadow:0 0 50px rgba(0,229,255,.4);animation:phoneGlow 3s ease-in-out infinite;padding:14px 28px;border:1px solid rgba(0,229,255,.2);border-radius:14px;background:rgba(0,212,255,.03);transition:all .25s}
+.mid-cta-phone{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2.4rem);color:var(--cyan);font-weight:700;letter-spacing:-.01em;animation:phoneGlow 3s ease-in-out infinite;padding:14px 28px;border:1px solid rgba(0,229,255,.2);border-radius:14px;background:rgba(0,212,255,.03);transition:all .25s}
 .mid-cta-phone:hover{background:rgba(0,212,255,.07);border-color:rgba(0,229,255,.4);transform:translateY(-2px)}
 .mid-cta-phone svg{width:24px;height:24px;flex-shrink:0;opacity:.7}
 .mid-cta-alt{margin-top:1rem;font-family:var(--font-mono);font-size:.68rem;color:var(--muted)}
@@ -262,7 +247,7 @@ nav.visible{transform:none}
 /* FINAL CTA */
 .final-cta{padding:5rem 0;text-align:center;position:relative;background:var(--void)}
 .final-cta h2{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.4rem);font-weight:800;color:var(--ink);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.25rem}
-.final-cta-phone{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:clamp(1.3rem,2.8vw,2rem);color:var(--cyan);font-weight:700;letter-spacing:-.01em;text-shadow:0 0 40px rgba(0,229,255,.4);animation:phoneGlow 3s ease-in-out infinite;padding:14px 28px;border:1px solid rgba(0,229,255,.2);border-radius:12px;background:rgba(0,212,255,.03);margin-bottom:1.25rem;transition:all .25s}
+.final-cta-phone{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:clamp(1.3rem,2.8vw,2rem);color:var(--cyan);font-weight:700;letter-spacing:-.01em;animation:phoneGlow 3s ease-in-out infinite;padding:14px 28px;border:1px solid rgba(0,229,255,.2);border-radius:12px;background:rgba(0,212,255,.03);margin-bottom:1.25rem;transition:all .25s}
 .final-cta-phone:hover{background:rgba(0,212,255,.07);border-color:rgba(0,229,255,.4);transform:translateY(-2px)}
 .final-cta-phone svg{width:20px;height:20px;flex-shrink:0;opacity:.7}
 .final-cta-alt{margin-top:1rem}
@@ -337,18 +322,6 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
 </style>
 </head>
 <body>
-
-<!-- ENTRY ANIMATION -->
-<div class="entry-overlay" id="entryOverlay">
-  <div class="entry-core" id="entryCore"></div>
-  <div class="entry-ring" id="ring1"></div>
-  <div class="entry-ring" id="ring2"></div>
-  <div class="entry-ring" id="ring3"></div>
-  <div class="entry-flash" id="entryFlash"></div>
-  <div class="entry-text" id="entryText">AI VOICE AGENCY</div>
-</div>
-
-<div class="edge-pulse" id="edgePulse"></div>
 
 <!-- NAV -->
 <nav id="mainNav">
@@ -703,43 +676,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 /* ============================================================ */
 
-/* ENTRY ANIMATION */
-(function(){
-  const ov=document.getElementById('entryOverlay'),core=document.getElementById('entryCore'),
-        r1=document.getElementById('ring1'),r2=document.getElementById('ring2'),r3=document.getElementById('ring3'),
-        fl=document.getElementById('entryFlash'),tx=document.getElementById('entryText'),
-        ep=document.getElementById('edgePulse'),ui=document.getElementById('uiLayer'),nv=document.getElementById('mainNav');
-  core.style.transition='opacity .3s,transform .6s cubic-bezier(.2,.8,.2,1)';
-  core.style.opacity='1';core.style.transform='scale(1)';
-  [r1,r2,r3].forEach((r,i)=>{
-    const s=200+i*120;
-    r.style.width=s+'px';r.style.height=s+'px';r.style.left='50%';r.style.top='50%';
-    r.style.transform='translate(-50%,-50%) scale(2)';r.style.opacity='0';
-    r.style.transition='transform .7s cubic-bezier(.4,0,.2,1) '+(i*.1)+'s, opacity .5s '+(i*.08)+'s';
-    requestAnimationFrame(()=>{r.style.transform='translate(-50%,-50%) scale(.3)';r.style.opacity='.6'});
-  });
-  setTimeout(()=>{
-    core.style.transition='transform .4s cubic-bezier(.4,0,.2,1),box-shadow .4s';
-    core.style.transform='scale(.2)';
-    core.style.boxShadow='0 0 60px var(--cyan),0 0 120px rgba(0,229,255,.6)';
-    [r1,r2,r3].forEach(r=>{r.style.transition='transform .3s,opacity .3s';r.style.transform='translate(-50%,-50%) scale(0)';r.style.opacity='0'});
-  },750);
-  setTimeout(()=>{
-    core.style.transition='transform .5s cubic-bezier(.2,.8,.2,1),opacity .8s';
-    core.style.transform='scale(40)';core.style.opacity='0';
-    fl.style.transition='opacity .4s';fl.style.opacity='1';
-    ep.classList.add('active');
-    setTimeout(()=>{fl.style.transition='opacity .6s';fl.style.opacity='0'},400);
-  },1250);
-  setTimeout(()=>{
-    tx.style.transition='opacity .5s,letter-spacing .6s';tx.style.opacity='1';tx.style.letterSpacing='.5em';
-  },2000);
-  setTimeout(()=>{
-    tx.style.transition='opacity .4s';tx.style.opacity='0';
-    ov.classList.add('done');ui.classList.add('loaded');nv.classList.add('visible');
-    setTimeout(()=>ov.style.display='none',600);
-  },3000);
-})();
+/* Show UI + nav immediately (no loader) */
+document.getElementById('mainNav').classList.add('visible');
 
 /* PROOF LINE */
 (function(){
@@ -843,18 +781,46 @@ document.querySelectorAll('.glass').forEach(card=>{
 });
 </script>
 
+<style>
+.copy-toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);font-family:var(--font-mono);font-size:.78rem;color:var(--void);background:var(--cyan);padding:10px 20px;border-radius:10px;opacity:0;pointer-events:none;z-index:9999;transition:opacity .3s,transform .3s;white-space:nowrap}
+.copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<div class="copy-toast" id="copyToast"></div>
 <script>
-/* Desktop CTA routing — redirect big call buttons to booking on non-touch devices */
+/* Desktop CTA: phone links copy to clipboard + toast; CTA buttons route to GHL booking */
 (function() {
   var isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (!isDesktop) return;
   var GHL = 'https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg';
-  var phoneDigits = /\d{3}[\s.\-()]*\d{3}[\s.\-()]*\d{4}/;
+  var phoneNum = '(305) 315-6562';
+  var toast = document.getElementById('copyToast');
+  var toastTimer;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { toast.classList.remove('show'); }, 2600);
+  }
+  /* Separate phone-display links from CTA buttons */
+  var ctaButtons = new Set();
   document.querySelectorAll('a.btn[href^="tel:"]').forEach(function(btn) {
-    if (phoneDigits.test(btn.textContent)) return; // skip buttons showing a phone number
-    btn.href = GHL;
-    btn.target = '_blank';
-    btn.rel = 'noopener noreferrer';
+    var hasDigits = /\d{3}[\s.\-()]*\d{3}[\s.\-()]*\d{4}/.test(btn.textContent);
+    if (!hasDigits) {
+      btn.href = GHL;
+      btn.target = '_blank';
+      btn.rel = 'noopener noreferrer';
+      ctaButtons.add(btn);
+    }
+  });
+  /* Phone number links → copy to clipboard (skip CTA buttons already routed to GHL) */
+  document.querySelectorAll('a[href^="tel:"]').forEach(function(el) {
+    if (ctaButtons.has(el)) return;
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      navigator.clipboard.writeText(phoneNum).then(function() {
+        showToast('Phone number copied: ' + phoneNum);
+      });
+    });
   });
 })();
 </script>
