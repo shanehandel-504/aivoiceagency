@@ -72,12 +72,6 @@ a:hover{color:var(--cyan-hot)}
 .edge-pulse.active{opacity:1;box-shadow:inset 0 0 80px rgba(0,229,255,.06);animation:edgePulse 4s ease-in-out infinite}
 @keyframes edgePulse{0%,100%{box-shadow:inset 0 0 80px rgba(0,229,255,.06)}50%{box-shadow:inset 0 0 140px rgba(0,229,255,.12)}}
 
-/* SIGNAL HERO */
-.signal-hero-wrap{position:relative;width:clamp(260px,50vmin,420px);height:clamp(260px,50vmin,420px);margin:0 auto}
-.signal-hero-canvas{width:100%;height:100%;border-radius:50%}
-.signal-corner{position:fixed;bottom:24px;right:24px;width:64px;height:64px;z-index:50;opacity:0;pointer-events:none;transition:opacity .6s ease;border-radius:50%;overflow:hidden}
-.signal-corner.visible{opacity:1}
-.signal-corner canvas{width:100%;height:100%}
 
 /* UI LAYER */
 .ui{position:relative;z-index:5;min-height:100vh;opacity:0;transition:opacity .8s ease .2s}
@@ -139,17 +133,16 @@ nav.visible{transform:none}
 .hero-phone svg{width:20px;height:20px;flex-shrink:0;opacity:.7}
 .hero-ctas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:1rem}
 .hero-note{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);letter-spacing:.04em}
-.signal-status{font-family:var(--font-mono);font-size:.58rem;color:var(--cyan);opacity:.45;letter-spacing:.1em;margin-top:.5rem}
 
 /* SECTION COMMON */
-.section{padding:5rem 0}
+.section{padding:5rem 0;background:var(--void)}
 .section-kicker{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:.75rem;padding-left:16px;border-left:2px solid var(--cyan);display:inline-block}
 .section-title{font-family:var(--font-display);font-size:clamp(1.6rem,3.2vw,2.8rem);font-weight:700;color:var(--ink);letter-spacing:-.025em;line-height:1.1;margin-bottom:.75rem}
 .section-sub{font-size:.92rem;color:var(--muted);max-width:520px;line-height:1.7}
 .section-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.15),transparent);max-width:1200px;margin:0 auto}
 
 /* PROOF LINE */
-.proof-line{padding:1.5rem 0}
+.proof-line{padding:1.5rem 0;background:var(--void)}
 .proof-bar{display:flex;align-items:center;justify-content:center;gap:0;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:16px;overflow:hidden;max-width:900px;margin:0 auto}
 .proof-stat{flex:1;text-align:center;padding:1.1rem .75rem;position:relative;transition:background .4s}
 .proof-stat:not(:last-child)::after{content:'';position:absolute;right:0;top:25%;height:50%;width:1px;background:rgba(0,229,255,.1)}
@@ -223,8 +216,7 @@ nav.visible{transform:none}
 .tl-badge{display:inline-flex;margin-top:8px;align-items:center;gap:4px;font-family:var(--font-mono);font-size:.62rem;color:var(--cyan);background:rgba(0,212,255,.06);border:1px solid rgba(0,229,255,.18);padding:3px 10px;border-radius:100px}
 
 /* MID-PAGE CTA */
-.mid-cta{padding:4.5rem 0;text-align:center;position:relative}
-.mid-cta-signal{width:clamp(140px,25vmin,240px);height:clamp(140px,25vmin,240px);margin:0 auto 1.5rem;position:relative}
+.mid-cta{padding:4.5rem 0;text-align:center;position:relative;background:var(--void)}
 .mid-cta h2{font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,3rem);font-weight:800;color:var(--ink);line-height:1.08;letter-spacing:-.02em;margin-bottom:1.25rem}
 .mid-cta-phone{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2.4rem);color:var(--cyan);font-weight:700;letter-spacing:-.01em;text-shadow:0 0 50px rgba(0,229,255,.4);animation:phoneGlow 3s ease-in-out infinite;padding:14px 28px;border:1px solid rgba(0,229,255,.2);border-radius:14px;background:rgba(0,212,255,.03);transition:all .25s}
 .mid-cta-phone:hover{background:rgba(0,212,255,.07);border-color:rgba(0,229,255,.4);transform:translateY(-2px)}
@@ -268,8 +260,7 @@ nav.visible{transform:none}
 .faq-a-inner{padding:1.25rem 1.5rem;font-size:.85rem;color:var(--muted);line-height:1.8;border-top:1px solid var(--glass-border)}
 
 /* FINAL CTA */
-.final-cta{padding:5rem 0;text-align:center;position:relative}
-.final-signal{width:clamp(160px,32vmin,300px);height:clamp(160px,32vmin,300px);margin:0 auto 2rem;position:relative}
+.final-cta{padding:5rem 0;text-align:center;position:relative;background:var(--void)}
 .final-cta h2{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.4rem);font-weight:800;color:var(--ink);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.25rem}
 .final-cta-phone{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:clamp(1.3rem,2.8vw,2rem);color:var(--cyan);font-weight:700;letter-spacing:-.01em;text-shadow:0 0 40px rgba(0,229,255,.4);animation:phoneGlow 3s ease-in-out infinite;padding:14px 28px;border:1px solid rgba(0,229,255,.2);border-radius:12px;background:rgba(0,212,255,.03);margin-bottom:1.25rem;transition:all .25s}
 .final-cta-phone:hover{background:rgba(0,212,255,.07);border-color:rgba(0,229,255,.4);transform:translateY(-2px)}
@@ -307,7 +298,6 @@ nav{padding:0 1.25rem}
 .nav-links,.nav-status{display:none}
 .hamburger{display:flex}
 .mobile-bottom{display:flex}
-.signal-hero-wrap{width:200px;height:200px}
 .hero-inner{padding:1rem 0}
 .hero h1{margin-bottom:1rem}
 .hero-kicker{margin-bottom:1rem}
@@ -323,11 +313,8 @@ nav{padding:0 1.25rem}
 .section{padding:3.5rem 0}
 .wrap{padding:0 1.25rem}
 body{padding-bottom:56px}
-.signal-corner{bottom:66px;right:12px;width:44px;height:44px}
 .mid-cta{padding:4rem 0}
-.mid-cta-signal{width:160px;height:160px;margin-bottom:1.5rem}
 .final-cta{padding:5rem 0}
-.final-signal{width:180px;height:180px;margin-bottom:1.5rem}
 .section-title{margin-bottom:.75rem}
 .demo-container{margin-top:2rem}
 .timeline{margin-top:2rem}
@@ -339,7 +326,6 @@ body{padding-bottom:56px}
 .hero-phone{font-size:1.15rem;padding:10px 18px}
 .mid-cta-phone{font-size:1.2rem;padding:10px 20px}
 .footer-bottom{flex-direction:column;gap:.5rem;text-align:center}
-.signal-hero-wrap{width:180px;height:180px}
 .section{padding:3rem 0}
 .mid-cta{padding:3rem 0}
 .final-cta{padding:4rem 0}
@@ -363,10 +349,6 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
 </div>
 
 <div class="edge-pulse" id="edgePulse"></div>
-
-<div class="signal-corner" id="signalCorner">
-  <canvas id="cornerCanvas" width="128" height="128"></canvas>
-</div>
 
 <!-- NAV -->
 <nav id="mainNav">
@@ -412,10 +394,6 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
   <div class="wrap">
     <div class="hero-inner">
       <div class="hero-kicker"><span class="hero-kicker-dot"></span>Done-for-you AI voice agents — live in 24 hours</div>
-      <div class="signal-hero-wrap reveal">
-        <canvas class="signal-hero-canvas" id="signalHeroCanvas"></canvas>
-      </div>
-      <div class="signal-status">voice engine active · broadcast · ready</div>
       <h1 class="reveal rd1">Your phones are ringing.<br><span class="accent">Is anyone picking up?</span></h1>
       <p class="hero-sub reveal rd2">AVA answers every call. Qualifies every lead. Books every job. 24/7. No hold times. No missed revenue.</p>
       <a href="tel:+13053156562" class="hero-phone reveal rd3">
@@ -517,9 +495,6 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
 <!-- MID-PAGE CTA -->
 <section class="mid-cta" id="midCta">
   <div class="wrap">
-    <div class="mid-cta-signal reveal">
-      <canvas id="midSignalCanvas" width="560" height="560"></canvas>
-    </div>
     <h2 class="reveal rd1">Hear AVA handle a real call.<br>Right now.</h2>
     <a href="tel:+13053156562" class="mid-cta-phone reveal rd2">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
@@ -620,9 +595,6 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
 <!-- FINAL CTA -->
 <section class="final-cta" id="finalCta">
   <div class="wrap">
-    <div class="final-signal reveal">
-      <canvas id="finalSignalCanvas" width="720" height="720"></canvas>
-    </div>
     <h2 class="reveal rd1">Your phones are ringing.<br><span style="color:var(--cyan)">Is anyone picking up?</span></h2>
     <a href="tel:+13053156562" class="final-cta-phone reveal rd2">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
@@ -768,55 +740,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(()=>ov.style.display='none',600);
   },3000);
 })();
-
-/* SIGNAL RENDERER */
-function createSignal(canvas,opts){
-  const ctx=canvas.getContext('2d');
-  const dpr=window.devicePixelRatio||1;
-  function resize(){
-    const r=canvas.parentElement?canvas.parentElement.getBoundingClientRect():{width:canvas.width,height:canvas.height};
-    canvas.width=r.width*dpr;canvas.height=r.height*dpr;
-    ctx.scale(dpr,dpr);
-    canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';
-  }
-  if(canvas.parentElement)resize();
-  const N=opts.lines||350;const lines=[];
-  for(let i=0;i<N;i++){lines.push({a:(i/N)*Math.PI*2+(Math.random()-.5)*.015,len:(opts.minLen||25)+Math.random()*(opts.maxLen||80),spd:.15+Math.random()*.5,ph:Math.random()*Math.PI*2,al:.05+Math.random()*.2,w:.3+Math.random()*.7,dr:(Math.random()-.5)*.0006})}
-  let t=0,raf;
-  function draw(){
-    const W=canvas.width/dpr,H=canvas.height/dpr,cx=W/2,cy=H/2;
-    ctx.clearRect(0,0,W,H);t+=.008;
-    const br=Math.sin(t*1.2)*.5+.5;const vr=(opts.coreR||10)+br*3;
-    const vg=ctx.createRadialGradient(cx,cy,0,cx,cy,vr*5);
-    vg.addColorStop(0,'rgba(0,229,255,.14)');vg.addColorStop(.3,'rgba(0,229,255,.05)');vg.addColorStop(1,'rgba(0,212,255,0)');
-    ctx.fillStyle=vg;ctx.beginPath();ctx.arc(cx,cy,vr*5,0,Math.PI*2);ctx.fill();
-    lines.forEach(l=>{
-      l.a+=l.dr;const bm=Math.sin(t*l.spd+l.ph);const len=l.len*(1+bm*.35);const ir=vr*.7;
-      const dx=Math.cos(l.a),dy=Math.sin(l.a);
-      const x1=cx+dx*ir,y1=cy+dy*ir,x2=cx+dx*(ir+len),y2=cy+dy*(ir+len);
-      const al=l.al*(.45+bm*.55);
-      const g=ctx.createLinearGradient(x1,y1,x2,y2);
-      g.addColorStop(0,'rgba(0,229,255,'+al*.9+')');g.addColorStop(.5,'rgba(0,229,255,'+al*.4+')');g.addColorStop(1,'rgba(0,229,255,0)');
-      ctx.strokeStyle=g;ctx.lineWidth=l.w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
-    });
-    raf=requestAnimationFrame(draw);
-  }
-  draw();
-  return{resize,destroy:()=>cancelAnimationFrame(raf)};
-}
-const heroSig=createSignal(document.getElementById('signalHeroCanvas'),{lines:400,minLen:30,maxLen:100,coreR:14});
-const cornerSig=createSignal(document.getElementById('cornerCanvas'),{lines:120,minLen:8,maxLen:25,coreR:4});
-const midSig=createSignal(document.getElementById('midSignalCanvas'),{lines:300,minLen:20,maxLen:70,coreR:10});
-const finalSig=createSignal(document.getElementById('finalSignalCanvas'),{lines:350,minLen:25,maxLen:90,coreR:12});
-window.addEventListener('resize',()=>{heroSig.resize();midSig.resize();finalSig.resize()});
-
-/* SCROLL: Signal corner */
-const heroSection=document.getElementById('heroSection');
-const signalCorner=document.getElementById('signalCorner');
-window.addEventListener('scroll',()=>{
-  const rect=heroSection.getBoundingClientRect();
-  signalCorner.classList.toggle('visible',rect.bottom<0);
-},{passive:true});
 
 /* PROOF LINE */
 (function(){
