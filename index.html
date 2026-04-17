@@ -101,7 +101,7 @@ nav.visible{transform:none}
 .mobile-nav{position:fixed;inset:0;background:rgba(5,5,8,.97);backdrop-filter:blur(24px);z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;pointer-events:none;transition:opacity .3s}
 .mobile-nav.open{opacity:1;pointer-events:all}
 .mobile-nav a{font-family:var(--font-display);font-size:1.4rem;color:var(--ink);font-weight:600}
-.mobile-bottom{display:none;position:fixed;bottom:0;left:0;right:0;z-index:98;background:rgba(5,5,8,.94);backdrop-filter:blur(16px);border-top:1px solid var(--glass-border);padding:10px 1.25rem;gap:10px;align-items:center}
+.mobile-bottom{display:none;position:fixed;bottom:0;left:0;right:0;z-index:98;background:rgba(5,5,8,.94);backdrop-filter:blur(16px);border-top:1px solid var(--glass-border);padding:10px 1.25rem max(10px,env(safe-area-inset-bottom));gap:10px;align-items:center}
 .mobile-bottom .btn-cyan{flex:1;justify-content:center;font-size:.72rem;padding:12px}
 .mobile-bottom .call-link{font-family:var(--font-mono);font-size:.7rem;color:var(--cyan);letter-spacing:.04em;white-space:nowrap}
 
@@ -317,6 +317,9 @@ body{padding-bottom:56px}
 .hero-ctas .btn{font-size:.68rem;padding:8px 16px}
 }
 
+/* CHAT WIDGET — prevent overlap with mobile sticky CTA */
+@media(max-width:900px){#chat-widget-container{bottom:70px!important}}
+
 /* NOISE TEXTURE */
 body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 </style>
@@ -366,18 +369,18 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
 <section class="hero" id="heroSection">
   <div class="wrap">
     <div class="hero-inner">
-      <div class="hero-kicker"><span class="hero-kicker-dot"></span>Done-for-you AI voice agents — live in 24 hours</div>
+      <div class="hero-kicker"><span class="hero-kicker-dot"></span>Done-for-you AI voice agents</div>
       <h1 class="reveal rd1">Your phones are ringing.<br><span class="accent">Is anyone picking up?</span></h1>
-      <p class="hero-sub reveal rd2">AVA answers every call. Qualifies every lead. Books every job. 24/7. No hold times. No missed revenue.</p>
+      <p class="hero-sub reveal rd2">AVA answers, qualifies, books, and routes calls using your business rules — without forcing you to become a software operator.</p>
       <a href="tel:+13053156562" class="hero-phone reveal rd3">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
         (305) 315-6562
       </a>
       <div class="hero-ctas reveal rd3">
         <a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" data-cta="primary" class="btn btn-ghost">Book a Strategy Call</a>
-        <a href="#demo" class="btn btn-ghost">Watch a Real Call ↓</a>
+        <a href="#demo" class="btn btn-ghost">Hear AVA Live ↓</a>
       </div>
-      <p class="hero-note reveal rd4">Hear AVA answer. Right now. Tap the number.</p>
+      <p class="hero-note reveal rd4">Call the public line and hear AVA answer live.</p>
     </div>
   </div>
 </section>
@@ -386,10 +389,10 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
 <section class="proof-line" id="proofLine">
   <div class="wrap">
     <div class="proof-bar reveal">
-      <div class="proof-stat" data-lit="0"><div class="val">24/7</div><div class="lbl">Always on</div></div>
-      <div class="proof-stat" data-lit="1"><div class="val">&lt; 1 sec</div><div class="lbl">Response time</div></div>
-      <div class="proof-stat" data-lit="2"><div class="val">Zero</div><div class="lbl">Missed calls</div></div>
-      <div class="proof-stat" data-lit="3"><div class="val">24 hrs</div><div class="lbl">To go live</div></div>
+      <div class="proof-stat" data-lit="0"><div class="val">24/7</div><div class="lbl">Coverage</div></div>
+      <div class="proof-stat" data-lit="1"><div class="val">&lt; 1 sec</div><div class="lbl">Pickup time</div></div>
+      <div class="proof-stat" data-lit="2"><div class="val">No</div><div class="lbl">Calls to voicemail</div></div>
+      <div class="proof-stat" data-lit="3"><div class="val">24 hrs</div><div class="lbl">To deployment</div></div>
     </div>
   </div>
 </section>
@@ -418,7 +421,7 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
       </div>
       <div class="transcript" id="transcript"></div>
       <div class="demo-replay"><button class="demo-replay-btn" id="replayBtn"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:10px;height:10px"><path d="M1 1v4h4"/><path d="M1 5A5 5 0 1 1 2.5 9"/></svg>Replay</button></div>
-      <a href="tel:+13053156562" class="demo-call">📞 Now call (305) 315-6562 — hear AVA handle your call live</a>
+      <a href="tel:+13053156562" class="demo-call">Call (305) 315-6562 — hear AVA answer live</a>
     </div>
 
     <div class="industry-wrap reveal rd3">
@@ -451,14 +454,14 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
   <div class="wrap">
     <div class="reveal">
       <div class="section-kicker">HOW IT WORKS</div>
-      <h2 class="section-title">How our AI voice agent handles every call in under 30 seconds.</h2>
+      <h2 class="section-title">How AVA handles a call from answer to outcome.</h2>
       <p class="section-sub">Four steps. Every call. Without you touching a thing.</p>
     </div>
     <div class="timeline">
-      <div class="tl-item reveal"><div class="tl-node">01</div><div class="tl-content"><div class="tl-title">Rings. Answered in under a second.</div><p class="tl-desc">Customer calls your number. The AI agent answers instantly — with your business name, your tone, and your trained responses.</p><span class="tl-badge">⚡ &lt; 1 second</span></div></div>
-      <div class="tl-item reveal rd1"><div class="tl-node">02</div><div class="tl-content"><div class="tl-title">Natural Conversation</div><p class="tl-desc">The agent qualifies the caller, answers questions, checks your calendar, and captures what it needs — all in plain, natural conversation.</p><span class="tl-badge">⚡ 15–60 seconds</span></div></div>
-      <div class="tl-item reveal rd2"><div class="tl-node">03</div><div class="tl-content"><div class="tl-title">Action Taken</div><p class="tl-desc">Appointment booked, lead logged, support ticket created, or caller transferred — whatever your business requires, the agent executes it.</p><span class="tl-badge">⚡ Instant</span></div></div>
-      <div class="tl-item reveal rd3"><div class="tl-node">04</div><div class="tl-content"><div class="tl-title">You Get the Recap</div><p class="tl-desc">Call summary with what was said, what was done, and any flags that need your attention. Full visibility, zero time on the phone.</p><span class="tl-badge">⚡ Within seconds</span></div></div>
+      <div class="tl-item reveal"><div class="tl-node">01</div><div class="tl-content"><div class="tl-title">Call comes in. AVA answers immediately.</div><p class="tl-desc">Customer calls your number. The AI agent answers instantly — with your business name, your tone, and your trained responses.</p><span class="tl-badge">⚡ Fast response</span></div></div>
+      <div class="tl-item reveal rd1"><div class="tl-node">02</div><div class="tl-content"><div class="tl-title">Natural Conversation</div><p class="tl-desc">The agent qualifies the caller, answers questions, checks your calendar, and captures what it needs — all in plain, natural conversation.</p><span class="tl-badge">⚡ Natural conversation</span></div></div>
+      <div class="tl-item reveal rd2"><div class="tl-node">03</div><div class="tl-content"><div class="tl-title">Action Taken</div><p class="tl-desc">Appointment booked, lead logged, support ticket created, or caller transferred — whatever your business requires, the agent executes it.</p><span class="tl-badge">⚡ Action taken</span></div></div>
+      <div class="tl-item reveal rd3"><div class="tl-node">04</div><div class="tl-content"><div class="tl-title">You Get the Recap</div><p class="tl-desc">Call summary with what was said, what was done, and any flags that need your attention. Full visibility, zero time on the phone.</p><span class="tl-badge">⚡ Full recap</span></div></div>
     </div>
   </div>
 </section>
@@ -473,7 +476,7 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
       (305) 315-6562
     </a>
-    <div class="mid-cta-alt reveal rd3">Or <a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" data-cta="primary">book a strategy call</a> — we'll scope your build in 20 minutes.</div>
+    <div class="mid-cta-alt reveal rd3">Or <a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" data-cta="primary">Book a Strategy Call</a> — we'll scope your build in 20 minutes.</div>
   </div>
 </section>
 
@@ -511,7 +514,7 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
         <div class="price-amount">$1,997<span>/mo</span></div>
         <div class="price-setup">+ $2,500 one-time setup</div>
         <p class="price-desc">Everything in Pro plus: outbound reactivation, review requests, renewal workflows, advanced routing, multi-step follow-up.</p>
-        <a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" data-cta="primary" class="btn btn-ghost">Get Started</a>
+        <a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" data-cta="primary" class="btn btn-ghost">Scope Your Build</a>
       </div>
       <div class="glass price-card reveal rd4">
         <div class="price-tag">White Glove</div>
@@ -531,7 +534,7 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
 <section class="section" id="faq">
   <div class="wrap">
     <div class="reveal">
-      <div class="section-kicker">CREDIBILITY</div>
+      <div class="section-kicker">WHO BUILT THIS</div>
       <h2 class="section-title">Built by a 30-year operator who's watched revenue walk out the door on voicemail.</h2>
     </div>
     <div class="authority-grid">
@@ -543,9 +546,8 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
       </div>
       <div class="auth-stats reveal rd2">
         <div class="glass auth-stat"><div class="auth-val">30+</div><div class="auth-lbl">Years building and running real businesses</div></div>
-        <div class="glass auth-stat"><div class="auth-val">5</div><div class="auth-lbl">Successful business exits across multiple industries</div></div>
         <div class="glass auth-stat"><div class="auth-val">24/7</div><div class="auth-lbl">Coverage from day one — no days off, no sick days</div></div>
-        <div class="glass auth-stat"><div class="auth-val">100%</div><div class="auth-lbl">Custom-built agents — no shared templates, no shortcuts</div></div>
+        <div class="glass auth-stat"><div class="auth-val">0</div><div class="auth-lbl">Shared templates — every agent built from scratch for your business</div></div>
       </div>
     </div>
 
@@ -574,7 +576,7 @@ body::after{content:'';position:fixed;inset:0;z-index:2;opacity:.022;pointer-eve
       (305) 315-6562
     </a>
     <div class="final-cta-alt reveal rd3"><a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" data-cta="primary" class="btn btn-ghost" style="padding:14px 28px">Or Book a Strategy Call →</a></div>
-    <div class="final-cta-note reveal rd4">Month-to-month. No long-term contracts. Cancel if it's not working.</div>
+    <div class="final-cta-note reveal rd4">Month-to-month. No long-term contracts. You own the outcome.</div>
   </div>
 </section>
 
@@ -824,6 +826,16 @@ document.querySelectorAll('.glass').forEach(card=>{
   });
 })();
 </script>
-<script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="69e07f5f25604df4700d4c91"></script>
+<script>
+(function(){
+  if(window.matchMedia('(min-width:901px)').matches){
+    var s=document.createElement('script');
+    s.src='https://widgets.leadconnectorhq.com/loader.js';
+    s.setAttribute('data-resources-url','https://widgets.leadconnectorhq.com/chat-widget/loader.js');
+    s.setAttribute('data-widget-id','69e07f5f25604df4700d4c91');
+    document.body.appendChild(s);
+  }
+})();
+</script>
 </body>
 </html>
