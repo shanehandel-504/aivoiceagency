@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIChauffeur — AI Dispatch Intake for Transportation Operators</title>
+  <meta name="description" content="AIChauffeur answers inbound calls, captures trip details, estimates rides, and writes requests into your dispatch workflow. Built for limo, black car, and shuttle operators.">
+  <link rel="canonical" href="https://www.aivoiceagency.ai/chauffeur/">
+  <meta property="og:title" content="AIChauffeur — AI Dispatch Intake for Transportation Operators">
+  <meta property="og:description" content="AIChauffeur answers inbound calls, captures trip details, estimates rides, and writes requests into your dispatch workflow. Built for limo, black car, and shuttle operators.">
+  <meta property="og:url" content="https://www.aivoiceagency.ai/chauffeur/">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is this an answering service?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. AIChauffeur is dispatch intake software powered by AI voice. It captures ride requests, organizes trip details, estimates the quote range, and routes the request into your workflow."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it replace my dispatcher?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. It handles the first layer of intake so your dispatcher is not buried by missed calls, repeated questions, after-hours requests, and basic confirmation work."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can it quote rides?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, when your rate rules are configured. The page demo uses illustrative quote ranges only. Live setup requires your real rate rules, service area, vehicle types, and dispatch process."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it work with my CRM or dispatch software?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It is designed to write ride requests into your CRM or dispatch workflow. The exact connection depends on your current system, forms, APIs, and handoff rules."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens when a human needs to step in?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "AIChauffeur routes the call or request to the right human with the trip context attached, so your team is not starting from zero."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long does setup take?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Setup depends on call flow, rate rules, vehicle types, service area, and workflow complexity. Local implementation starts with mapping your real intake and dispatch process."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "AIChauffeur Dispatch Intake",
+    "provider": {
+      "@type": "Organization",
+      "name": "AI Voice Agency",
+      "url": "https://www.aivoiceagency.ai/"
+    },
+    "areaServed": "United States",
+    "serviceType": "AI dispatch intake and booking assistant for transportation operators",
+    "offers": {
+      "@type": "Offer",
+      "price": "497",
+      "priceCurrency": "USD",
+      "description": "Starting at $497/mo + setup"
+    }
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #1A1A1F;
+      --panel:        #111114;
+      --ivory:        #F5F0E8;
+      --ivory-muted:  #BEB7AA;
+      --brass:        #B8965A;
+      --brass-border: rgba(184,150,90,0.28);
+      --green:        #3DDC84;
+      --warning:      #D8B66A;
+      --error:        #D95C5C;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ivory);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* Layout */
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section { padding: 80px 0; }
+
+    /* Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(17,17,20,0.96);
+      border-bottom: 1px solid var(--brass-border);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      gap: 16px;
+    }
+
+    .nav-logo {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ivory);
+      flex-shrink: 0;
+    }
+
+    .nav-logo span { color: var(--brass); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      color: var(--ivory-muted);
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--ivory); }
+
+    .btn-nav {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--brass-border);
+      color: var(--brass);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-nav:hover {
+      background: rgba(184,150,90,0.1);
+      border-color: var(--brass);
+    }
+
+    @media (max-width: 768px) { .nav-links { display: none; } }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-block;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 14px 28px;
+      background: var(--brass);
+      color: #0D0D0D;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      text-align: center;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+
+    .btn-ghost {
+      display: inline-block;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 14px 28px;
+      background: transparent;
+      color: var(--ivory);
+      border: 1px solid rgba(245,240,232,0.22);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      text-align: center;
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(245,240,232,0.45);
+      background: rgba(245,240,232,0.04);
+    }
+
+    /* Hero */
+    .hero { padding: 96px 0 80px; }
+
+    .kicker {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brass);
+      border: 1px solid var(--brass-border);
+      padding: 5px 12px;
+      border-radius: 2px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      max-width: 680px;
+      margin-bottom: 24px;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--ivory-muted);
+      max-width: 560px;
+      line-height: 1.75;
+      margin-bottom: 40px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 64px;
+    }
+
+    /* Console preview */
+    .console {
+      background: var(--panel);
+      border: 1px solid var(--brass-border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .console-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .dots { display: flex; gap: 5px; }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(245,240,232,0.1);
+    }
+
+    .console-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ivory-muted);
+      flex: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 3px;
+    }
+
+    .badge-green {
+      background: rgba(61,220,132,0.1);
+      color: var(--green);
+      border: 1px solid rgba(61,220,132,0.22);
+    }
+
+    .badge-brass {
+      background: rgba(184,150,90,0.1);
+      color: var(--brass);
+      border: 1px solid var(--brass-border);
+    }
+
+    .badge-muted {
+      background: rgba(255,255,255,0.04);
+      color: var(--ivory-muted);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .console-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 560px) { .console-grid { grid-template-columns: 1fr; } }
+
+    .c-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 5px;
+      padding: 12px 14px;
+    }
+
+    .c-card-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--ivory-muted);
+      margin-bottom: 5px;
+    }
+
+    .c-card-main {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--ivory);
+    }
+
+    .c-card-sub {
+      font-size: 0.75rem;
+      color: var(--ivory-muted);
+      margin-top: 2px;
+    }
+
+    .c-record {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 5px;
+      padding: 12px 14px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .c-field { flex: 1; min-width: 80px; }
+
+    /* Section headings */
+    .sec-kicker {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 12px;
+    }
+
+    .sec-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .sec-sub {
+      font-size: 1rem;
+      color: var(--ivory-muted);
+      line-height: 1.75;
+      max-width: 600px;
+    }
+
+    /* Demo */
+    #demo {
+      background: var(--panel);
+      border-top: 1px solid var(--brass-border);
+      border-bottom: 1px solid var(--brass-border);
+    }
+
+    .demo-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 32px 0 28px;
+    }
+
+    .scn-btn {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--ivory-muted);
+      border-radius: 3px;
+      cursor: pointer;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
+      letter-spacing: 0.02em;
+    }
+
+    .scn-btn:hover {
+      border-color: var(--brass-border);
+      color: var(--ivory);
+    }
+
+    .scn-btn.active {
+      border-color: var(--brass);
+      color: var(--brass);
+      background: rgba(184,150,90,0.07);
+    }
+
+    .demo-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) { .demo-layout { grid-template-columns: 1fr; } }
+
+    /* Call log */
+    .call-log {
+      background: #0D0D10;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      padding: 16px;
+      min-height: 300px;
+    }
+
+    .log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .log-title {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ivory-muted);
+    }
+
+    #call-status {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ivory-muted);
+      transition: color 0.2s;
+    }
+
+    #call-status.s-active   { color: var(--green); }
+    #call-status.s-complete { color: var(--brass); }
+
+    .transcript-lines { display: flex; flex-direction: column; gap: 9px; }
+
+    .t-line {
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--ivory-muted);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .t-line.visible { opacity: 1; transform: none; }
+
+    .t-prefix {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-right: 6px;
+    }
+
+    .p-caller { color: var(--warning); }
+    .p-ai     { color: var(--brass); }
+    .p-system { color: var(--ivory-muted); opacity: 0.7; }
+
+    /* Dispatch card */
+    .dispatch-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--brass-border);
+      border-radius: 6px;
+      padding: 16px;
+    }
+
+    .dc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .dc-title {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ivory-muted);
+    }
+
+    .dc-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+
+    .dc-field {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .f-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ivory-muted);
+    }
+
+    .f-val {
+      font-size: 0.85rem;
+      color: var(--ivory);
+      min-height: 1.1em;
+      transition: color 0.15s;
+    }
+
+    .f-val.filling { color: var(--brass); }
+
+    .dc-quote {
+      background: rgba(184,150,90,0.05);
+      border: 1px solid var(--brass-border);
+      border-radius: 4px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .q-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--brass);
+    }
+
+    .q-val {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--brass);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .q-val.visible { opacity: 1; }
+
+    .dc-confirmations {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .conf-box {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 4px;
+      padding: 8px 10px;
+    }
+
+    .conf-label {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ivory-muted);
+      margin-bottom: 4px;
+    }
+
+    .conf-val {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--ivory-muted);
+      transition: color 0.25s;
+    }
+
+    .conf-val.sent      { color: var(--green); }
+    .conf-val.requested { color: var(--warning); }
+
+    .demo-note {
+      margin-top: 18px;
+      font-size: 0.72rem;
+      color: var(--ivory-muted);
+      font-style: italic;
+      opacity: 0.65;
+    }
+
+    /* How it works */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    .step-card {
+      background: var(--panel);
+      border: 1px solid var(--brass-border);
+      border-radius: 6px;
+      padding: 24px 20px;
+    }
+
+    .step-num {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 12px;
+    }
+
+    .step-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ivory);
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 0.85rem;
+      color: var(--ivory-muted);
+      line-height: 1.65;
+    }
+
+    /* Pain */
+    #pain {
+      background: var(--panel);
+      border-top: 1px solid var(--brass-border);
+      border-bottom: 1px solid var(--brass-border);
+    }
+
+    .pain-lines {
+      margin-top: 40px;
+      max-width: 660px;
+    }
+
+    .pain-line {
+      font-size: 1.05rem;
+      color: var(--ivory-muted);
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      line-height: 1.5;
+    }
+
+    .pain-line:last-child {
+      border-bottom: none;
+      color: var(--ivory);
+      font-weight: 500;
+      padding-top: 24px;
+    }
+
+    /* Features */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    .feat-card {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-top: 2px solid var(--brass-border);
+      border-radius: 6px;
+      padding: 28px 22px;
+    }
+
+    .feat-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ivory);
+      margin-bottom: 10px;
+    }
+
+    .feat-desc {
+      font-size: 0.875rem;
+      color: var(--ivory-muted);
+      line-height: 1.65;
+    }
+
+    /* Crush */
+    #crush {
+      background: #13131A;
+      border-top: 1px solid var(--brass-border);
+      border-bottom: 1px solid var(--brass-border);
+    }
+
+    .crush-copy {
+      font-size: 1.05rem;
+      color: var(--ivory-muted);
+      line-height: 1.8;
+      margin-top: 20px;
+      max-width: 680px;
+    }
+
+    /* Local implementation */
+    .impl-box {
+      background: var(--panel);
+      border: 1px solid var(--brass-border);
+      border-radius: 8px;
+      padding: 48px;
+      max-width: 720px;
+    }
+
+    @media (max-width: 600px) { .impl-box { padding: 32px 24px; } }
+
+    .impl-price {
+      font-size: 0.9rem;
+      color: var(--brass);
+      font-weight: 600;
+      margin: 24px 0 32px;
+    }
+
+    /* FAQ */
+    #faq {
+      background: var(--panel);
+      border-top: 1px solid var(--brass-border);
+    }
+
+    .faq-list {
+      margin-top: 48px;
+      max-width: 720px;
+    }
+
+    .faq-item { border-bottom: 1px solid rgba(255,255,255,0.07); }
+
+    .faq-q {
+      font-size: 0.975rem;
+      font-weight: 600;
+      color: var(--ivory);
+      padding: 20px 0;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      user-select: none;
+      list-style: none;
+    }
+
+    .faq-icon {
+      font-size: 1.1rem;
+      color: var(--brass);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+      line-height: 1;
+    }
+
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    .faq-a {
+      font-size: 0.9rem;
+      color: var(--ivory-muted);
+      line-height: 1.75;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding-bottom 0.3s;
+    }
+
+    .faq-item.open .faq-a {
+      max-height: 300px;
+      padding-bottom: 20px;
+    }
+
+    /* Footer */
+    footer {
+      background: #0D0D10;
+      border-top: 1px solid var(--brass-border);
+      padding: 48px 0 36px;
+    }
+
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: start;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+
+    .footer-brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .footer-powered {
+      font-size: 0.8rem;
+      color: var(--ivory-muted);
+      margin-bottom: 14px;
+    }
+
+    .footer-powered a { color: var(--brass); }
+    .footer-powered a:hover { text-decoration: underline; }
+
+    .footer-phone {
+      font-size: 0.875rem;
+      color: var(--ivory-muted);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--ivory-muted);
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--ivory); }
+
+    .footer-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    @media (max-width: 600px) { .footer-cta { align-items: flex-start; } }
+
+    .footer-copy {
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.72rem;
+      color: var(--ivory-muted);
+      opacity: 0.55;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/chauffeur/" class="nav-logo">AI<span>Chauffeur</span></a>
+        <ul class="nav-links">
+          <li><a href="#demo">Demo</a></li>
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener" class="btn-nav">Request local setup</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <span class="kicker">AI Dispatch Intake for Transportation Operators</span>
+      <h1>Book the ride before they call someone else.</h1>
+      <p class="hero-sub">AIChauffeur answers inbound calls, captures trip details, estimates the ride, writes the request into your CRM or dispatch workflow, and helps confirm passengers and drivers.</p>
+      <div class="hero-ctas">
+        <a href="#demo" class="btn-ghost">See the booking flow</a>
+        <a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener" class="btn-primary">Request local setup</a>
+      </div>
+
+      <!-- Dispatch console preview -->
+      <div class="console">
+        <div class="console-bar">
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <span class="console-label">Dispatch Console</span>
+          <span class="badge badge-green"><span class="badge-dot"></span>Ready for dispatch</span>
+        </div>
+        <div class="console-grid">
+          <div class="c-card">
+            <div class="c-card-label">Inbound caller</div>
+            <div class="c-card-main">James R.</div>
+            <div class="c-card-sub">+1 (414) 555-0182 &middot; Inbound</div>
+          </div>
+          <div class="c-card">
+            <div class="c-card-label">Route + quote</div>
+            <div class="c-card-main">Downtown MKE Hotel &rarr; MKE Airport T-C</div>
+            <div class="c-card-sub">18.4 mi &middot; $65&ndash;$85 est.</div>
+          </div>
+        </div>
+        <div class="c-record">
+          <div class="c-field">
+            <div class="c-card-label">Vehicle</div>
+            <div class="c-card-main">Executive Sedan</div>
+          </div>
+          <div class="c-field">
+            <div class="c-card-label">Pickup</div>
+            <div class="c-card-main">5:45 AM</div>
+          </div>
+          <div class="c-field">
+            <div class="c-card-label">Passengers</div>
+            <div class="c-card-main">1</div>
+          </div>
+        </div>
+        <div class="console-grid">
+          <div class="c-card">
+            <div class="c-card-label">Passenger</div>
+            <div><span class="badge badge-green"><span class="badge-dot"></span>Confirmation sent</span></div>
+          </div>
+          <div class="c-card">
+            <div class="c-card-label">Driver</div>
+            <div><span class="badge badge-brass"><span class="badge-dot"></span>Driver requested</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section id="demo">
+    <div class="container">
+      <div class="sec-kicker">Interactive demo</div>
+      <h2 class="sec-title">From phone call to dispatch record in under a minute.</h2>
+
+      <div class="demo-controls">
+        <button class="scn-btn active" data-scenario="airport">Airport Pickup</button>
+        <button class="scn-btn" data-scenario="corporate">Corporate Black Car</button>
+        <button class="scn-btn" data-scenario="wedding">Wedding Limo</button>
+        <button class="scn-btn" data-scenario="shuttle">Shuttle Group</button>
+      </div>
+
+      <div class="demo-layout">
+        <div class="call-log">
+          <div class="log-header">
+            <span class="log-title">Call log</span>
+            <span id="call-status">STANDBY</span>
+          </div>
+          <div class="transcript-lines" id="transcript-lines"></div>
+        </div>
+
+        <div class="dispatch-card">
+          <div class="dc-header">
+            <span class="dc-title">Dispatch request</span>
+            <span id="dispatch-status" class="badge badge-muted">&mdash;</span>
+          </div>
+          <div class="dc-fields">
+            <div class="dc-field"><span class="f-label">Caller</span><span class="f-val" id="f-caller"></span></div>
+            <div class="dc-field"><span class="f-label">Pickup</span><span class="f-val" id="f-pickup"></span></div>
+            <div class="dc-field"><span class="f-label">Dropoff</span><span class="f-val" id="f-dropoff"></span></div>
+            <div class="dc-field"><span class="f-label">Time</span><span class="f-val" id="f-time"></span></div>
+            <div class="dc-field"><span class="f-label">Vehicle</span><span class="f-val" id="f-vehicle"></span></div>
+            <div class="dc-field"><span class="f-label">Passengers</span><span class="f-val" id="f-passengers"></span></div>
+          </div>
+          <div class="dc-quote">
+            <span class="q-label">Quote range</span>
+            <span class="q-val" id="f-quote"></span>
+          </div>
+          <div class="dc-confirmations">
+            <div class="conf-box">
+              <div class="conf-label">Passenger</div>
+              <div class="conf-val" id="c-passenger">&mdash;</div>
+            </div>
+            <div class="conf-box">
+              <div class="conf-label">Driver</div>
+              <div class="conf-val" id="c-driver">&mdash;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="demo-note">Demo estimate shown for workflow illustration. Final pricing follows your rate rules.</p>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="container">
+      <div class="sec-kicker">How it works</div>
+      <h2 class="sec-title">How it works</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">Step 01</div>
+          <div class="step-title">Call comes in</div>
+          <p class="step-desc">AIChauffeur answers inbound calls and begins capturing trip details immediately, whether it is peak hours or after close.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 02</div>
+          <div class="step-title">Trip details captured</div>
+          <p class="step-desc">Pickup, dropoff, time, vehicle type, and passenger count are recorded and organized into a clean intake record.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 03</div>
+          <div class="step-title">Quote estimated</div>
+          <p class="step-desc">A quote range is calculated based on your rate rules and service area, then communicated to the caller.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 04</div>
+          <div class="step-title">Dispatch record created</div>
+          <p class="step-desc">The full request is written into your CRM, dispatch workflow, or intake system with all trip context attached.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAIN -->
+  <section id="pain">
+    <div class="container">
+      <h2 class="sec-title" style="max-width:660px;">Most missed rides do not look dramatic. They look like normal dispatch chaos.</h2>
+      <div class="pain-lines">
+        <p class="pain-line">A dispatcher is already on a call.</p>
+        <p class="pain-line">An airport quote comes in after hours.</p>
+        <p class="pain-line">A driver needs confirmation.</p>
+        <p class="pain-line">A passenger changes pickup time.</p>
+        <p class="pain-line">The owner becomes backup dispatch again.</p>
+        <p class="pain-line">AIChauffeur handles the first layer of intake so every ride request gets captured, organized, and routed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <div class="sec-kicker">Capabilities</div>
+      <h2 class="sec-title">What AIChauffeur does</h2>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-title">Answers calls</div>
+          <p class="feat-desc">Picks up inbound calls and begins intake immediately, even when your team is on another line or unavailable after hours.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-title">Captures and quotes ride requests</div>
+          <p class="feat-desc">Records trip details and estimates a quote range based on your configured rate rules, vehicle types, and service area.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-title">Writes into your system</div>
+          <p class="feat-desc">Routes the completed request into your CRM, dispatch software, or intake workflow so nothing falls through the cracks.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-title">Confirms passengers and drivers</div>
+          <p class="feat-desc">Sends confirmation to passengers and requests driver availability, closing the loop on both sides of the booking.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRUSH -->
+  <section id="crush">
+    <div class="container">
+      <div class="sec-kicker">Peak capacity</div>
+      <h2 class="sec-title">Built for The Crush. Useful every day.</h2>
+      <p class="crush-copy">The Crush is when three calls hit at once, dispatch is already buried, and the next booking goes to whoever answers first. AIChauffeur helps absorb those moments, but the everyday value is cleaner intake, quoting, confirmations, and follow-through.</p>
+    </div>
+  </section>
+
+  <!-- LOCAL IMPLEMENTATION -->
+  <section id="local-setup">
+    <div class="container">
+      <div class="impl-box">
+        <div class="sec-kicker">Wisconsin operators</div>
+        <h2 class="sec-title">Limited local implementation slots.</h2>
+        <p class="sec-sub">We are opening a small number of local implementation slots for Wisconsin transportation operators who want AI dispatch intake configured around their real call flow, rate rules, and dispatch process.</p>
+        <p class="impl-price">Starting at $497/mo + setup</p>
+        <a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener" class="btn-primary">Request local setup</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <div class="sec-kicker">FAQ</div>
+      <h2 class="sec-title">Common questions</h2>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <div class="faq-q">Is this an answering service? <span class="faq-icon">+</span></div>
+          <div class="faq-a">No. AIChauffeur is dispatch intake software powered by AI voice. It captures ride requests, organizes trip details, estimates the quote range, and routes the request into your workflow.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Does it replace my dispatcher? <span class="faq-icon">+</span></div>
+          <div class="faq-a">No. It handles the first layer of intake so your dispatcher is not buried by missed calls, repeated questions, after-hours requests, and basic confirmation work.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Can it quote rides? <span class="faq-icon">+</span></div>
+          <div class="faq-a">Yes, when your rate rules are configured. The page demo uses illustrative quote ranges only. Live setup requires your real rate rules, service area, vehicle types, and dispatch process.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Does it work with my CRM or dispatch software? <span class="faq-icon">+</span></div>
+          <div class="faq-a">It is designed to write ride requests into your CRM or dispatch workflow. The exact connection depends on your current system, forms, APIs, and handoff rules.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">What happens when a human needs to step in? <span class="faq-icon">+</span></div>
+          <div class="faq-a">AIChauffeur routes the call or request to the right human with the trip context attached, so your team is not starting from zero.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">How long does setup take? <span class="faq-icon">+</span></div>
+          <div class="faq-a">Setup depends on call flow, rate rules, vehicle types, service area, and workflow complexity. Local implementation starts with mapping your real intake and dispatch process.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-brand">AIChauffeur</div>
+          <div class="footer-powered">Powered by <a href="https://www.aivoiceagency.ai/" target="_blank" rel="noopener">AI Voice Agency</a></div>
+          <div class="footer-phone">305-315-6562</div>
+          <div class="footer-links">
+            <a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener">Request local setup</a>
+            <a href="https://www.aivoiceagency.ai/" target="_blank" rel="noopener">AI Voice Agency</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/terms.html">Terms</a>
+          </div>
+        </div>
+        <div class="footer-cta">
+          <a href="https://cal.com/shane-handel/strategy-call" target="_blank" rel="noopener" class="btn-primary">Request local setup</a>
+        </div>
+      </div>
+      <div class="footer-copy">&copy; 2026 AIChauffeur. Powered by AI Voice Agency.</div>
+    </div>
+  </footer>
+
+  <script>
+    const scenarios = {
+      airport: {
+        caller: 'James R.',
+        pickup: 'Downtown Milwaukee Hotel',
+        dropoff: 'MKE Airport, Terminal C',
+        time: '5:45 AM',
+        vehicle: 'Executive Sedan',
+        passengers: '1',
+        quote: '$65\u2013$85',
+        transcript: [
+          { type: 'CALLER', text: 'Needs a sedan to MKE Airport, departing 5:45 AM' },
+          { type: 'AI',     text: 'Confirms pickup at Downtown Milwaukee Hotel, Terminal C, 5:45 AM' },
+          { type: 'SYSTEM', text: 'Route captured \u2014 18.4 mi, Milwaukee to MKE Airport' },
+          { type: 'SYSTEM', text: 'Quote range estimated \u2014 $65\u2013$85 (illustrative)' },
+          { type: 'SYSTEM', text: 'Dispatch request created \u2014 ID #4821' },
+          { type: 'SYSTEM', text: 'Passenger confirmation sent / Driver confirmation requested' }
+        ]
+      },
+      corporate: {
+        caller: 'Meridian Group (front desk)',
+        pickup: 'Business Center, Milwaukee WI',
+        dropoff: 'Chicago O\'Hare Area',
+        time: '7:30 AM',
+        vehicle: 'Black Car SUV',
+        passengers: '2',
+        quote: '$285\u2013$340',
+        transcript: [
+          { type: 'CALLER', text: 'Black car SUV needed for executive transfer, 7:30 AM' },
+          { type: 'AI',     text: 'Confirms pickup, dropoff, vehicle type, and passenger count' },
+          { type: 'SYSTEM', text: 'Route captured \u2014 92 mi, Milwaukee to Chicago O\'Hare area' },
+          { type: 'SYSTEM', text: 'Quote range estimated \u2014 $285\u2013$340 (illustrative)' },
+          { type: 'SYSTEM', text: 'Dispatch request created \u2014 ID #4822' },
+          { type: 'SYSTEM', text: 'Passenger confirmation sent / Driver confirmation requested' }
+        ]
+      },
+      wedding: {
+        caller: 'Harlow Event Planning',
+        pickup: 'Lakefront Ceremony Venue, Milwaukee',
+        dropoff: 'Grand Ballroom, Brookfield WI',
+        time: '4:00 PM',
+        vehicle: 'Stretch Limousine',
+        passengers: '8',
+        quote: '$475\u2013$560',
+        transcript: [
+          { type: 'CALLER', text: 'Stretch limo for wedding party, ceremony to reception, 4:00 PM' },
+          { type: 'AI',     text: 'Confirms pickup venue, dropoff venue, time, and party size' },
+          { type: 'SYSTEM', text: 'Route captured \u2014 14 mi, Milwaukee Lakefront to Brookfield' },
+          { type: 'SYSTEM', text: 'Quote range estimated \u2014 $475\u2013$560 (illustrative)' },
+          { type: 'SYSTEM', text: 'Dispatch request created \u2014 ID #4823' },
+          { type: 'SYSTEM', text: 'Passenger confirmation sent / Driver confirmation requested' }
+        ]
+      },
+      shuttle: {
+        caller: 'Northpoint Conference Center',
+        pickup: 'Northpoint Conference Center, Waukesha',
+        dropoff: 'Multiple hotel drops, Downtown Milwaukee',
+        time: '6:00 PM',
+        vehicle: 'Shuttle Van (14-passenger)',
+        passengers: '12',
+        quote: '$195\u2013$240',
+        transcript: [
+          { type: 'CALLER', text: 'Group shuttle from conference center to downtown hotels, 6:00 PM' },
+          { type: 'AI',     text: 'Confirms pickup, multi-drop route, vehicle type, and headcount' },
+          { type: 'SYSTEM', text: 'Route captured \u2014 multi-stop, Waukesha to Downtown Milwaukee' },
+          { type: 'SYSTEM', text: 'Quote range estimated \u2014 $195\u2013$240 (illustrative)' },
+          { type: 'SYSTEM', text: 'Dispatch request created \u2014 ID #4824' },
+          { type: 'SYSTEM', text: 'Passenger confirmation sent / Driver confirmation requested' }
+        ]
+      }
+    };
+
+    let runId = 0;
+
+    function sleep(ms) {
+      return new Promise(function(resolve) { setTimeout(resolve, ms); });
+    }
+
+    async function runDemo(key) {
+      var myId = ++runId;
+      var alive = function() { return myId === runId; };
+      var data = scenarios[key];
+
+      // Reset DOM
+      var callStatus   = document.getElementById('call-status');
+      var transcriptEl = document.getElementById('transcript-lines');
+      var dispStatus   = document.getElementById('dispatch-status');
+      var quoteEl      = document.getElementById('f-quote');
+
+      callStatus.textContent = 'STANDBY';
+      callStatus.className   = '';
+      transcriptEl.innerHTML = '';
+      dispStatus.textContent = '\u2014';
+      dispStatus.className   = 'badge badge-muted';
+
+      ['caller','pickup','dropoff','time','vehicle','passengers'].forEach(function(id) {
+        var el = document.getElementById('f-' + id);
+        el.textContent = '';
+        el.className = 'f-val';
+      });
+
+      quoteEl.textContent = '';
+      quoteEl.className = 'q-val';
+
+      document.getElementById('c-passenger').textContent = '\u2014';
+      document.getElementById('c-passenger').className = 'conf-val';
+      document.getElementById('c-driver').textContent = '\u2014';
+      document.getElementById('c-driver').className = 'conf-val';
+
+      // CALL ACTIVE
+      callStatus.textContent = 'CALL ACTIVE';
+      callStatus.className   = 's-active';
+
+      // Transcript lines — one per interval
+      for (var i = 0; i < data.transcript.length; i++) {
+        await sleep(420);
+        if (!alive()) return;
+
+        var line = data.transcript[i];
+        var div  = document.createElement('div');
+        div.className = 't-line';
+
+        var prefixClass = 'p-system';
+        var prefixText  = 'SYSTEM';
+        if (line.type === 'CALLER') { prefixClass = 'p-caller'; prefixText = 'CALLER'; }
+        if (line.type === 'AI')     { prefixClass = 'p-ai';     prefixText = 'AICHAUFFEUR'; }
+
+        div.innerHTML = '<span class="t-prefix ' + prefixClass + '">' + prefixText + '</span>' + line.text;
+        transcriptEl.appendChild(div);
+        requestAnimationFrame(function(d) {
+          return function() { requestAnimationFrame(function() { d.classList.add('visible'); }); };
+        }(div));
+      }
+
+      // Fill dispatch fields
+      var fields = [
+        ['caller','pickup','dropoff','time','vehicle','passengers'],
+        [data.caller, data.pickup, data.dropoff, data.time, data.vehicle, data.passengers]
+      ];
+
+      for (var j = 0; j < fields[0].length; j++) {
+        await sleep(270);
+        if (!alive()) return;
+        var el = document.getElementById('f-' + fields[0][j]);
+        el.textContent = fields[1][j];
+        el.classList.add('filling');
+        await sleep(110);
+        if (!alive()) return;
+        el.classList.remove('filling');
+      }
+
+      // Quote
+      await sleep(340);
+      if (!alive()) return;
+      quoteEl.textContent = data.quote;
+      quoteEl.classList.add('visible');
+
+      // Dispatch status — CREATED
+      await sleep(380);
+      if (!alive()) return;
+      dispStatus.textContent = 'CREATED';
+      dispStatus.className   = 'badge badge-brass';
+
+      // Passenger — SENT
+      await sleep(380);
+      if (!alive()) return;
+      var paxEl = document.getElementById('c-passenger');
+      paxEl.textContent = 'SENT';
+      paxEl.className   = 'conf-val sent';
+
+      // Driver — REQUESTED
+      await sleep(380);
+      if (!alive()) return;
+      var drvEl = document.getElementById('c-driver');
+      drvEl.textContent = 'REQUESTED';
+      drvEl.className   = 'conf-val requested';
+
+      // Final — READY FOR DISPATCH
+      await sleep(480);
+      if (!alive()) return;
+      callStatus.textContent = 'READY FOR DISPATCH';
+      callStatus.className   = 's-complete';
+      dispStatus.textContent = 'READY';
+      dispStatus.className   = 'badge badge-green';
+    }
+
+    // Scenario buttons
+    document.querySelectorAll('.scn-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.scn-btn').forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        runDemo(this.dataset.scenario);
+      });
+    });
+
+    // Run Airport Pickup on load
+    runDemo('airport');
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(function(q) {
+      q.addEventListener('click', function() {
+        var item    = this.parentElement;
+        var wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+  </script>
+
+</body>
+</html>
