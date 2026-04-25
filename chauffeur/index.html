@@ -108,7 +108,7 @@
       --error:        #D95C5C;
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 
     body {
       font-family: 'Space Grotesk', system-ui, sans-serif;
@@ -213,6 +213,7 @@
     }
 
     .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:active { opacity: 0.72; }
 
     .btn-ghost {
       display: inline-block;
@@ -232,6 +233,10 @@
     .btn-ghost:hover {
       border-color: rgba(245,240,232,0.45);
       background: rgba(245,240,232,0.04);
+    }
+    .btn-ghost:active {
+      border-color: rgba(245,240,232,0.55);
+      background: rgba(245,240,232,0.08);
     }
 
     /* Hero */
@@ -898,6 +903,28 @@
       color: var(--ivory-muted);
       opacity: 0.55;
     }
+
+    .console-meta {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--ivory-muted);
+      opacity: 0.4;
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding: 64px 0 48px; }
+      .hero-ctas { margin-bottom: 40px; }
+      .btn-primary, .btn-ghost { min-height: 48px; touch-action: manipulation; }
+    }
+
+    @media (max-width: 600px) {
+      .hero-ctas { flex-direction: column; align-items: stretch; }
+      .hero-ctas .btn-primary { order: -1; }
+    }
   </style>
 </head>
 <body>
@@ -971,6 +998,7 @@
             <div><span class="badge badge-brass"><span class="badge-dot"></span>Driver requested</span></div>
           </div>
         </div>
+        <div class="console-meta">CALL RECEIVED &middot; 05:45 AM &middot; INTAKE COMPLETE</div>
       </div>
     </div>
   </section>
