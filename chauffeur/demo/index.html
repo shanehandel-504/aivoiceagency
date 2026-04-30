@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>AIChauffeur · Glass Dispatcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.0/dist/livekit-client.umd.min.js"></script>
+<style>
+  :root {
+    --void: #000000;
+    --void-2: #06080F;
+    --line: rgba(82, 130, 255, 0.10);
+    --line-2: rgba(82, 130, 255, 0.22);
+    --blue: #3B82F6;
+    --blue-bright: #60A5FA;
+    --blue-dim: rgba(82, 130, 255, 0.55);
+    --blue-glow: rgba(82, 130, 255, 0.35);
+    --ink: #EEF2FA;
+    --ink-2: rgba(238, 242, 250, 0.62);
+    --ink-3: rgba(238, 242, 250, 0.34);
+    --red: #FF6B6B;
+    --red-dim: rgba(255, 107, 107, 0.6);
+    --display: 'Instrument Serif', Georgia, serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { background: var(--void); color: var(--ink); font-family: var(--mono); font-size: 14px; line-height: 1.5; overflow-x: hidden; min-height: 100vh; }
+  body {
+    background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(82, 130, 255, 0.08), transparent 55%), radial-gradient(ellipse 70% 50% at 50% 110%, rgba(82, 130, 255, 0.03), transparent 55%), var(--void);
+    background-attachment: fixed;
+  }
+  body::after { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); opacity: 0.05; pointer-events: none; z-index: 1; mix-blend-mode: overlay; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 3px); pointer-events: none; z-index: 1; }
+  .app { position: relative; z-index: 2; max-width: 480px; margin: 0 auto; padding: 22px 18px 120px; min-height: 100vh; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 8px 0 28px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+  .brand { font-family: var(--display); font-size: 24px; font-weight: 400; letter-spacing: -0.01em; color: var(--ink); }
+  .brand span { color: var(--blue); font-style: italic; text-shadow: 0 0 14px var(--blue-glow); }
+  .status { display: flex; align-items: center; gap: 8px; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+  .status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); transition: all 0.4s ease; }
+  .status.live .dot { background: var(--blue); box-shadow: 0 0 0 4px rgba(82, 130, 255, 0.18), 0 0 14px var(--blue); animation: pulse-dot 1.2s ease-in-out infinite; }
+  .status.live { color: var(--blue); text-shadow: 0 0 8px var(--blue-glow); }
+  .status.connecting .dot { background: var(--blue-dim); animation: pulse-dot 0.8s ease-in-out infinite; }
+  .status.connecting { color: var(--blue-dim); }
+  .status.error .dot { background: var(--red); }
+  .status.error { color: var(--red); }
+  @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(82, 130, 255, 0.4), 0 0 8px var(--blue); } 50% { box-shadow: 0 0 0 10px rgba(82, 130, 255, 0), 0 0 18px var(--blue); } }
+  .hero { margin-bottom: 32px; }
+  .eyebrow { font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--blue-dim); margin-bottom: 18px; text-shadow: 0 0 6px rgba(82, 130, 255, 0.2); }
+  .hero h1 { font-family: var(--display); font-weight: 400; font-size: 40px; line-height: 1.05; letter-spacing: -0.015em; color: var(--ink); margin-bottom: 18px; }
+  .hero h1 em { font-style: italic; color: var(--blue); font-weight: 400; text-shadow: 0 0 18px var(--blue-glow); }
+  .hero p { font-size: 13px; line-height: 1.65; color: var(--ink-2); max-width: 38ch; }
+  .mode-toggle { display: flex; gap: 6px; margin-bottom: 16px; padding: 4px; background: rgba(82, 130, 255, 0.04); border: 1px solid var(--line); border-radius: 4px; }
+  .mode-btn { flex: 1; padding: 8px 10px; background: transparent; border: none; color: var(--ink-3); font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 3px; cursor: pointer; transition: all 0.3s ease; }
+  .mode-btn.active { background: rgba(82, 130, 255, 0.12); color: var(--blue); }
+  .scenarios { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
+  .scenarios.hidden { display: none; }
+  .pill { flex: 1; min-width: 110px; padding: 11px 12px; background: rgba(82, 130, 255, 0.02); border: 1px solid var(--line-2); color: var(--ink-2); font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(8px); }
+  .pill:hover, .pill.active { background: rgba(82, 130, 255, 0.10); border-color: var(--blue-dim); color: var(--blue-bright); text-shadow: 0 0 6px var(--blue-glow); box-shadow: 0 0 0 1px rgba(82, 130, 255, 0.25); }
+  .pill:disabled { opacity: 0.4; cursor: not-allowed; }
+  .cta-wrap { position: relative; margin: 0 0 26px; }
+  .cta { width: 100%; background: var(--blue); color: #fff; border: none; padding: 22px 24px; font-family: var(--display); font-size: 20px; font-weight: 500; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 0 0 1px var(--blue), 0 0 36px rgba(82, 130, 255, 0.4); }
+  .cta:active { transform: scale(0.98); }
+  .cta:disabled { opacity: 0.5; cursor: wait; }
+  .cta::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); transform: translateX(-100%); }
+  .cta:hover::before { animation: shine 0.8s ease; }
+  @keyframes shine { to { transform: translateX(100%); } }
+  .cta.running { background: rgba(82, 130, 255, 0.06); color: var(--blue-bright); border: 1px solid var(--blue-dim); text-shadow: 0 0 8px var(--blue-glow); box-shadow: 0 0 0 1px var(--blue-dim), 0 0 28px rgba(82, 130, 255, 0.25); }
+  .cta.running .cta-text::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); margin-right: 10px; vertical-align: middle; animation: pulse-dot 1.2s ease-in-out infinite; box-shadow: 0 0 12px var(--blue); }
+  .cta-sub { text-align: center; margin-top: 14px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3); }
+  .board { background: linear-gradient(180deg, rgba(11, 14, 26, 0.65) 0%, rgba(6, 8, 15, 0.4) 100%); border: 1px solid var(--line); border-radius: 6px; margin-bottom: 26px; overflow: hidden; position: relative; backdrop-filter: blur(12px) saturate(120%); }
+  .board::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--blue) 50%, transparent); opacity: 0; transition: opacity 0.6s ease; }
+  .board.active::before { opacity: 1; box-shadow: 0 0 14px var(--blue); }
+  .board-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); background: rgba(82, 130, 255, 0.03); }
+  .board-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--blue); text-shadow: 0 0 6px var(--blue-glow); }
+  .board-id { font-size: 10px; letter-spacing: 0.15em; color: var(--ink-3); }
+  .field { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; min-height: 58px; justify-content: center; position: relative; transition: background 0.4s ease; }
+  .field:last-child { border-bottom: none; }
+  .field.filling { background: rgba(82, 130, 255, 0.05); }
+  .field.filling::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--blue); box-shadow: 0 0 10px var(--blue); animation: fill-line 0.5s ease; }
+  @keyframes fill-line { from { transform: scaleY(0); transform-origin: top; } to { transform: scaleY(1); transform-origin: top; } }
+  .field-label { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-3); }
+  .field-value { font-family: var(--display); font-size: 18px; font-weight: 400; color: var(--ink); letter-spacing: -0.005em; min-height: 24px; }
+  .field-value.empty { color: var(--ink-3); font-style: italic; font-size: 13px; font-family: var(--mono); }
+  .field-value.empty::before { content: '> '; color: var(--blue-dim); }
+  .field-value .struck { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 1px; margin-right: 8px; opacity: 0.55; }
+  .field-value .new { color: var(--blue-bright); text-shadow: 0 0 16px var(--blue-glow), 0 0 4px rgba(82, 130, 255, 0.5); animation: new-in 0.5s ease; }
+  @keyframes new-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .think-flag { position: absolute; top: 10px; right: 14px; font-size: 8px; letter-spacing: 0.22em; color: var(--red); text-shadow: 0 0 6px rgba(255, 107, 107, 0.5); opacity: 0; transform: translateY(-4px); transition: all 0.3s ease; }
+  .think-flag.show { opacity: 1; transform: translateY(0); animation: flag-pulse 1.6s ease; }
+  @keyframes flag-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+  .ticker { background: rgba(0,0,0,0.55); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; margin-bottom: 26px; min-height: 96px; max-height: 170px; overflow-y: auto; font-size: 12px; line-height: 1.7; backdrop-filter: blur(8px); }
+  .ticker-empty { color: var(--ink-3); font-style: italic; text-align: center; padding: 16px 0; }
+  .ticker-empty::before { content: '> '; color: var(--blue-dim); font-style: normal; }
+  .line { margin-bottom: 8px; opacity: 0; animation: line-in 0.4s ease forwards; }
+  @keyframes line-in { to { opacity: 1; transform: translateY(0); } }
+  .line .who { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; margin-right: 10px; }
+  .line.caller .who { color: var(--ink-3); }
+  .line.ava .who { color: var(--blue); text-shadow: 0 0 6px var(--blue-glow); }
+  .line.system .who { color: var(--red); text-shadow: 0 0 6px rgba(255, 107, 107, 0.4); }
+  .line .what { color: var(--ink); }
+  .line.system .what { color: var(--ink-2); font-style: italic; font-size: 11px; }
+  .operator { margin-top: 32px; border: 1px solid var(--blue-dim); border-radius: 6px; background: linear-gradient(180deg, rgba(82, 130, 255, 0.05), rgba(0,0,0,0.4)); overflow: hidden; transform: translateY(20px); opacity: 0; transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; backdrop-filter: blur(12px); box-shadow: 0 0 32px rgba(82, 130, 255, 0.1); }
+  .operator.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .operator-head { padding: 18px; border-bottom: 1px solid var(--line-2); background: rgba(82, 130, 255, 0.07); }
+  .operator-head .label { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--blue); text-shadow: 0 0 6px var(--blue-glow); margin-bottom: 8px; }
+  .operator-head h3 { font-family: var(--display); font-size: 20px; font-weight: 400; color: var(--ink); line-height: 1.3; }
+  .operator-head em { color: var(--blue-bright); font-style: italic; text-shadow: 0 0 14px var(--blue-glow); }
+  .ticket { padding: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; border-bottom: 1px solid var(--line); }
+  .ticket-item { display: flex; flex-direction: column; gap: 5px; }
+  .ticket-item.full { grid-column: 1 / -1; }
+  .ticket-item .l { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3); }
+  .ticket-item .v { font-family: var(--display); font-size: 16px; color: var(--ink); line-height: 1.3; }
+  .ticket-foot { padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; }
+  .ticket-foot .left { color: var(--blue); text-shadow: 0 0 6px var(--blue-glow); }
+  .ticket-foot .left::before { content: '● '; animation: pulse-dot 1.2s ease-in-out infinite; }
+  .ticket-foot .right { color: var(--ink-3); }
+  .reset { text-align: center; margin-top: 28px; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3); cursor: pointer; padding: 12px; transition: color 0.3s ease; }
+  .reset:hover { color: var(--blue); text-shadow: 0 0 6px var(--blue-glow); }
+  .error-banner { background: rgba(255, 107, 107, 0.1); border: 1px solid var(--red-dim); color: var(--red); padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; font-size: 11px; line-height: 1.5; display: none; }
+  .error-banner.show { display: block; }
+  footer { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 10px; letter-spacing: 0.14em; color: var(--ink-3); line-height: 1.7; text-align: center; }
+  footer em { color: var(--blue-dim); font-style: italic; }
+  .ticker::-webkit-scrollbar { width: 4px; }
+  .ticker::-webkit-scrollbar-track { background: transparent; }
+  .ticker::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">AI<span>Chauffeur</span></div>
+    <div class="status" id="status"><span class="dot"></span><span id="statusText">STANDBY</span></div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">// LIVE DEMO · GLASS DISPATCHER</div>
+    <h1>Watch every word become <em>a clean dispatch ticket.</em></h1>
+    <p>Tap below. A premium AI dispatcher walks through a real ride request. The board on this page builds itself as the call happens — every detail captured, corrections handled, ready for your team.</p>
+  </section>
+
+  <div class="mode-toggle" id="modeToggle">
+    <button class="mode-btn active" data-mode="live">🎤 LIVE CALL</button>
+    <button class="mode-btn" data-mode="mock">▶ DEMO REPLAY</button>
+  </div>
+
+  <div class="error-banner" id="errorBanner"></div>
+
+  <div class="scenarios hidden" id="scenarios">
+    <button class="pill active" data-scenario="yankees">Yankees Run</button>
+    <button class="pill" data-scenario="ohare">O'Hare Switch</button>
+    <button class="pill" data-scenario="derby">Derby Party</button>
+  </div>
+
+  <div class="cta-wrap">
+    <button class="cta" id="callBtn"><span class="cta-text">Start Demo Call</span></button>
+    <div class="cta-sub" id="ctaSub">// Tap to talk · Microphone permission required</div>
+  </div>
+
+  <div class="board" id="board">
+    <div class="board-head">
+      <span class="board-label">Dispatch Ticket</span>
+      <span class="board-id" id="ticketId">—</span>
+    </div>
+    <div class="field" data-field="caller"><span class="think-flag">THINK FAST · REVISED</span><span class="field-label">Caller</span><span class="field-value empty">awaiting</span></div>
+    <div class="field" data-field="event"><span class="think-flag">THINK FAST · REVISED</span><span class="field-label">Context</span><span class="field-value empty">awaiting</span></div>
+    <div class="field" data-field="pickup"><span class="think-flag">THINK FAST · REVISED</span><span class="field-label">Pickup</span><span class="field-value empty">awaiting</span></div>
+    <div class="field" data-field="dropoff"><span class="think-flag">THINK FAST · REVISED</span><span class="field-label">Drop-off</span><span class="field-value empty">awaiting</span></div>
+    <div class="field" data-field="datetime"><span class="think-flag">THINK FAST · REVISED</span><span class="field-label">Date · Time</span><span class="field-value empty">awaiting</span></div>
+    <div class="field" data-field="vehicle"><span class="think-flag">THINK FAST · REVISED</span><span class="field-label">Vehicle</span><span class="field-value empty">awaiting</span></div>
+    <div class="field" data-field="passengers"><span class="think-flag">THINK FAST · REVISED</span><span class="field-label">Passengers · Bags</span><span class="field-value empty">awaiting</span></div>
+    <div class="field" data-field="quote"><span class="think-flag">THINK FAST · REVISED</span><span class="field-label">Estimated Quote</span><span class="field-value empty">awaiting</span></div>
+  </div>
+
+  <div class="ticker" id="ticker"><div class="ticker-empty">live transcript will appear here</div></div>
+
+  <div class="operator" id="operator">
+    <div class="operator-head">
+      <div class="label">// Operator View · The "Holy Shit" Moment</div>
+      <h3>This is what hits your dispatch team's inbox <em>while you sleep.</em></h3>
+    </div>
+    <div class="ticket" id="opTicket"></div>
+    <div class="ticket-foot">
+      <span class="left">ROUTED TO DISPATCH</span>
+      <span class="right" id="opTime">—</span>
+    </div>
+  </div>
+
+  <div class="reset" id="resetBtn">↻ RESET DEMO</div>
+
+  <footer>
+    <em>AIChauffeur</em> · AI dispatch intake for transportation operators<br>
+    Demo intake only. Live setup routes to your operator's confirmation team.
+  </footer>
+</div>
+
+<script>
+// ═════════════════════════════════════════════════════════════
+// CONFIG — REPLACE WHEN CLOUDFLARE WORKER IS DEPLOYED
+// ═════════════════════════════════════════════════════════════
+const TOKEN_ENDPOINT = "https://aichauffeur-token.YOURACCOUNT.workers.dev";
+// ═════════════════════════════════════════════════════════════
+
+let activeScenario = 'yankees';
+let timeouts = [];
+let isRunning = false;
+let mode = 'live';
+let lkRoom = null;
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+const callBtn = $('#callBtn'), ctaSub = $('#ctaSub'), board = $('#board'), ticker = $('#ticker');
+const operator = $('#operator'), opTicket = $('#opTicket'), opTime = $('#opTime');
+const ticketIdEl = $('#ticketId'), statusEl = $('#status'), statusText = $('#statusText');
+const resetBtn = $('#resetBtn'), errorBanner = $('#errorBanner'), scenariosEl = $('#scenarios');
+
+// MODE TOGGLE
+$$('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (isRunning) return;
+    $$('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    mode = btn.dataset.mode;
+    if (mode === 'mock') {
+      scenariosEl.classList.remove('hidden');
+      ctaSub.textContent = '// Simulated voice flow · No mic needed';
+      callBtn.querySelector('.cta-text').textContent = 'Run Demo Replay';
+    } else {
+      scenariosEl.classList.add('hidden');
+      ctaSub.textContent = '// Tap to talk · Microphone permission required';
+      callBtn.querySelector('.cta-text').textContent = 'Start Demo Call';
+    }
+    resetDemo();
+  });
+});
+
+$$('.pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    if (isRunning) return;
+    $$('.pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    activeScenario = pill.dataset.scenario;
+    resetDemo();
+  });
+});
+
+// LIVE MODE
+async function startLiveCall() {
+  if (isRunning) return;
+  resetDemo();
+  isRunning = true;
+  hideError();
+  callBtn.disabled = true;
+  setStatus('connecting', 'CONNECTING...');
+  ctaSub.textContent = '// Requesting microphone permission';
+
+  try {
+    const res = await fetch(TOKEN_ENDPOINT);
+    if (!res.ok) throw new Error(`Token endpoint returned ${res.status}`);
+    const { token, url, roomName } = await res.json();
+    if (!token || !url) throw new Error('Token endpoint did not return token + url');
+
+    ticketIdEl.textContent = roomName.toUpperCase();
+    board.classList.add('active');
+
+    lkRoom = new LivekitClient.Room({
+      adaptiveStream: true,
+      dynacast: true,
+      audioCaptureDefaults: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+    });
+
+    lkRoom.on(LivekitClient.RoomEvent.DataReceived, handleAgentData);
+    lkRoom.on(LivekitClient.RoomEvent.TranscriptionReceived, handleTranscription);
+    lkRoom.on(LivekitClient.RoomEvent.Disconnected, () => endCall());
+
+    await lkRoom.connect(url, token);
+    await lkRoom.localParticipant.setMicrophoneEnabled(true);
+
+    setStatus('live', 'CALL LIVE');
+    callBtn.classList.add('running');
+    callBtn.querySelector('.cta-text').textContent = 'End Call';
+    callBtn.disabled = false;
+    ctaSub.textContent = '// AVA is on the line · Watch the board build';
+
+    const empty = ticker.querySelector('.ticker-empty');
+    if (empty) empty.remove();
+  } catch (err) {
+    console.error('LiveKit connection failed:', err);
+    showError(`Connection failed: ${err.message}. Try Demo Replay mode instead.`);
+    callBtn.disabled = false;
+    isRunning = false;
+    setStatus('error', 'CONNECTION FAILED');
+    callBtn.querySelector('.cta-text').textContent = 'Try Again';
+  }
+}
+
+async function endCall() {
+  if (lkRoom) {
+    await lkRoom.disconnect();
+    lkRoom = null;
+  }
+  callBtn.classList.remove('running');
+  callBtn.querySelector('.cta-text').textContent = 'Run Again';
+  setStatus('', 'CALL ENDED');
+  ctaSub.textContent = '// Tap to talk · Microphone permission required';
+  isRunning = false;
+}
+
+function handleAgentData(payload, participant, kind, topic) {
+  if (topic !== 'dispatch_ui') return;
+  try {
+    const decoder = new TextDecoder();
+    const message = JSON.parse(decoder.decode(payload));
+    console.log('Agent UI event:', message);
+    switch (message.type) {
+      case 'session_start':
+        if (message.data.ticket_id) ticketIdEl.textContent = message.data.ticket_id;
+        break;
+      case 'field_update':
+        fillField(message.data.field, message.data.value);
+        break;
+      case 'field_revision':
+        reviseField(message.data.field, message.data.previous_value, message.data.value);
+        break;
+      case 'ticket_finalized':
+        const t = message.data.ticket;
+        revealOperator({
+          caller: t.caller || '—',
+          datetime: t.datetime || '—',
+          route: `${t.pickup || '—'} → ${t.dropoff || '—'}`,
+          vehicle: t.vehicle || '—',
+          pax: t.passengers || '—',
+          quote: t.quote || '—',
+          notes: t.notes || '—',
+        });
+        break;
+    }
+  } catch (err) {
+    console.error('Failed to parse agent data:', err);
+  }
+}
+
+function handleTranscription(segments, participant) {
+  segments.forEach(seg => {
+    if (!seg.final) return;
+    const isAgent = participant && participant.identity && participant.identity.includes('agent');
+    addTickerLine(isAgent ? 'ava' : 'caller', seg.text);
+  });
+}
+
+// MOCK MODE
+const SCENARIOS = {
+  yankees: {
+    ticketId: 'TKT-AC-0481',
+    sequence: [
+      { delay: 600, type: 'ava', text: 'AIChauffeur dispatch. How can I help with your ride?' },
+      { delay: 2400, type: 'caller', text: "Yeah hi, I need a black SUV for the Yankees vs Brewers game on May 9th." },
+      { delay: 800, type: 'fill', field: 'event', value: 'Brewers vs Yankees · 7:10 PM' },
+      { delay: 200, type: 'fill', field: 'datetime', value: 'Saturday, May 9 · 5:30 PM pickup' },
+      { delay: 1400, type: 'ava', text: 'Got it — Brewers home game at American Family Field, first pitch 7:10. How many in your party?' },
+      { delay: 2200, type: 'caller', text: "It's me and four colleagues. Picking us up at the Pfister." },
+      { delay: 700, type: 'fill', field: 'pickup', value: 'The Pfister Hotel · Milwaukee' },
+      { delay: 200, type: 'fill', field: 'dropoff', value: 'American Family Field' },
+      { delay: 200, type: 'fill', field: 'passengers', value: '5 passengers · light bags' },
+      { delay: 1300, type: 'ava', text: "Five passengers — I'd recommend the Executive SUV or upgrade to a Sprinter for the return trip when it's busy. Your call." },
+      { delay: 2400, type: 'caller', text: "Executive SUV is fine. Name's James Reynolds." },
+      { delay: 600, type: 'fill', field: 'caller', value: 'James Reynolds' },
+      { delay: 200, type: 'fill', field: 'vehicle', value: 'Executive SUV · Class 2' },
+      { delay: 200, type: 'fill', field: 'quote', value: '$240 – $290 estimated' },
+      { delay: 1600, type: 'ava', text: 'Captured. Pfister to American Family Field, May 9th, 5:30 PM pickup, Executive SUV for five. Estimated $240 to $290. Demo intake — your dispatcher will confirm. Sound right?' },
+      { delay: 2400, type: 'caller', text: 'Perfect. Thanks.' },
+      { delay: 800, type: 'system', text: 'Dispatch ticket created · routed to operator queue' },
+      { delay: 600, type: 'reveal' }
+    ],
+    operator: { caller: 'James Reynolds', route: 'Pfister Hotel → American Family Field', datetime: 'Sat May 9 · 5:30 PM', vehicle: 'Executive SUV', pax: '5 pax · light bags', quote: '$240 – $290', notes: 'Brewers vs Yankees · 7:10 PM first pitch · likely return ride needed ~10:30 PM' }
+  },
+  ohare: {
+    ticketId: 'TKT-AC-0492',
+    sequence: [
+      { delay: 600, type: 'ava', text: 'AIChauffeur dispatch. How can I help with your ride?' },
+      { delay: 2400, type: 'caller', text: "I need a ride tomorrow morning, 5:45 AM, downtown Milwaukee to Mitchell Airport." },
+      { delay: 700, type: 'fill', field: 'datetime', value: 'Tomorrow · 5:45 AM pickup' },
+      { delay: 200, type: 'fill', field: 'pickup', value: 'Downtown Milwaukee' },
+      { delay: 200, type: 'fill', field: 'dropoff', value: 'Mitchell Airport (MKE)' },
+      { delay: 1400, type: 'ava', text: "5:45 AM, downtown to MKE. What's your exact pickup address and how many travelers?" },
+      { delay: 2200, type: 'caller', text: "It's the Saint Kate hotel. Just me, one bag. Wait — actually, change that. Make it O'Hare instead of Mitchell." },
+      { delay: 600, type: 'fill', field: 'pickup', value: 'Saint Kate Hotel · Milwaukee' },
+      { delay: 100, type: 'revise', field: 'dropoff', from: 'Mitchell Airport (MKE)', to: "Chicago O'Hare (ORD)" },
+      { delay: 200, type: 'fill', field: 'passengers', value: '1 passenger · 1 bag' },
+      { delay: 1400, type: 'ava', text: "Caught that — switching to O'Hare. That changes the route to about 92 miles. Same 5:45 AM pickup?" },
+      { delay: 2200, type: 'caller', text: "Yeah, same time. Need to be there by 8." },
+      { delay: 700, type: 'revise', field: 'datetime', from: 'Tomorrow · 5:45 AM pickup', to: 'Tomorrow · 5:45 AM · ORD by 8 AM' },
+      { delay: 1400, type: 'ava', text: "92 miles, 5:45 to 8 AM is tight but doable. I'd recommend Executive Sedan or SUV. And your name?" },
+      { delay: 2200, type: 'caller', text: "Sedan's fine. Marcus Hale." },
+      { delay: 600, type: 'fill', field: 'caller', value: 'Marcus Hale' },
+      { delay: 200, type: 'fill', field: 'vehicle', value: 'Executive Sedan · Class 1' },
+      { delay: 200, type: 'fill', field: 'quote', value: '$285 – $340 estimated' },
+      { delay: 200, type: 'fill', field: 'event', value: 'Airport transfer · ORD by 8 AM' },
+      { delay: 1600, type: 'ava', text: "Locked. Saint Kate to O'Hare, tomorrow 5:45 AM, Executive Sedan, $285 to $340. Demo intake — your dispatcher will confirm. Anything else?" },
+      { delay: 2200, type: 'caller', text: "That's it. Thanks." },
+      { delay: 800, type: 'system', text: 'Dispatch ticket created · routed to operator queue' },
+      { delay: 600, type: 'reveal' }
+    ],
+    operator: { caller: 'Marcus Hale', route: "Saint Kate Hotel → Chicago O'Hare", datetime: 'Tomorrow · 5:45 AM (ORD by 8 AM)', vehicle: 'Executive Sedan', pax: '1 pax · 1 bag', quote: '$285 – $340', notes: 'Mid-call revision: caller switched MKE to ORD · 92mi route · tight ETA window' }
+  },
+  derby: {
+    ticketId: 'TKT-AC-0473',
+    sequence: [
+      { delay: 600, type: 'ava', text: 'AIChauffeur dispatch. How can I help with your ride?' },
+      { delay: 2400, type: 'caller', text: "Hi, looking for a ride from West Bend to Saint Kate Saturday for the Derby party." },
+      { delay: 700, type: 'fill', field: 'event', value: 'Kentucky Derby Party · Saint Kate' },
+      { delay: 200, type: 'fill', field: 'pickup', value: 'West Bend' },
+      { delay: 200, type: 'fill', field: 'dropoff', value: 'Saint Kate Hotel · Milwaukee' },
+      { delay: 200, type: 'fill', field: 'datetime', value: 'Saturday May 2' },
+      { delay: 1400, type: 'ava', text: 'Derby party at Saint Kate — got it. What time would you like pickup, and how many guests?' },
+      { delay: 2400, type: 'caller', text: "Pickup at 4:30, dressed up, six of us. And we'll need a ride back around midnight." },
+      { delay: 700, type: 'revise', field: 'datetime', from: 'Saturday May 2', to: 'Sat May 2 · 4:30 PM out · ~midnight return' },
+      { delay: 200, type: 'fill', field: 'passengers', value: '6 passengers · formal attire' },
+      { delay: 1400, type: 'ava', text: "Six in formal attire — I'd recommend the Stretch Limo or an Executive Sprinter for comfort. Round trip with a midnight return." },
+      { delay: 2400, type: 'caller', text: "Stretch Limo, definitely. Name's Eleanor Vance." },
+      { delay: 600, type: 'fill', field: 'caller', value: 'Eleanor Vance' },
+      { delay: 200, type: 'fill', field: 'vehicle', value: 'Stretch Limousine · Round Trip' },
+      { delay: 200, type: 'fill', field: 'quote', value: '$540 – $620 estimated' },
+      { delay: 1600, type: 'ava', text: 'Captured. West Bend to Saint Kate and back, May 2nd, 4:30 PM out and midnight return, Stretch Limo for six. Estimated $540 to $620. Demo intake — your team will confirm. Sound good?' },
+      { delay: 2400, type: 'caller', text: 'Yes, perfect.' },
+      { delay: 800, type: 'system', text: 'Dispatch ticket created · routed to operator queue' },
+      { delay: 600, type: 'reveal' }
+    ],
+    operator: { caller: 'Eleanor Vance', route: 'West Bend ↔ Saint Kate Hotel', datetime: 'Sat May 2 · 4:30 PM out / 12 AM return', vehicle: 'Stretch Limousine · RT', pax: '6 pax · formal', quote: '$540 – $620', notes: 'Kentucky Derby party · round trip · driver should be in suit' }
+  }
+};
+
+function runMockDemo() {
+  if (isRunning) return;
+  resetDemo();
+  isRunning = true;
+  callBtn.classList.add('running');
+  callBtn.querySelector('.cta-text').textContent = 'Call Active · Listening';
+  ctaSub.textContent = '// AVA is on the line · Watch the board build';
+  setStatus('live', 'CALL LIVE');
+  $$('.pill').forEach(p => p.disabled = true);
+  const scenario = SCENARIOS[activeScenario];
+  ticketIdEl.textContent = scenario.ticketId;
+  board.classList.add('active');
+  const empty = ticker.querySelector('.ticker-empty');
+  if (empty) empty.remove();
+  let elapsed = 0;
+  scenario.sequence.forEach((step) => {
+    elapsed += step.delay;
+    timeouts.push(setTimeout(() => executeStep(step, scenario), elapsed));
+  });
+  timeouts.push(setTimeout(() => {
+    callBtn.classList.remove('running');
+    callBtn.querySelector('.cta-text').textContent = 'Run Again';
+    ctaSub.textContent = '// Pick a different scenario or run again';
+    setStatus('', 'TICKET CREATED');
+    $$('.pill').forEach(p => p.disabled = false);
+    isRunning = false;
+  }, elapsed + 800));
+}
+
+function executeStep(step, scenario) {
+  if (step.type === 'fill') fillField(step.field, step.value);
+  else if (step.type === 'revise') reviseField(step.field, step.from, step.to);
+  else if (step.type === 'ava' || step.type === 'caller' || step.type === 'system') addTickerLine(step.type, step.text);
+  else if (step.type === 'reveal') revealOperator(scenario.operator);
+}
+
+// SHARED HELPERS
+function fillField(fieldName, value) {
+  const field = document.querySelector(`.field[data-field="${fieldName}"]`);
+  if (!field) return;
+  const valueEl = field.querySelector('.field-value');
+  field.classList.add('filling');
+  valueEl.classList.remove('empty');
+  valueEl.innerHTML = `<span class="new">${escapeHtml(value)}</span>`;
+  setTimeout(() => field.classList.remove('filling'), 600);
+}
+
+function reviseField(fieldName, fromVal, toVal) {
+  const field = document.querySelector(`.field[data-field="${fieldName}"]`);
+  if (!field) return;
+  const valueEl = field.querySelector('.field-value');
+  const flag = field.querySelector('.think-flag');
+  valueEl.classList.remove('empty');
+  valueEl.innerHTML = `<span class="struck">${escapeHtml(fromVal || '')}</span><span class="new">${escapeHtml(toVal)}</span>`;
+  flag.classList.add('show');
+  field.classList.add('filling');
+  setTimeout(() => { field.classList.remove('filling'); flag.classList.remove('show'); }, 1800);
+}
+
+function addTickerLine(who, text) {
+  const empty = ticker.querySelector('.ticker-empty');
+  if (empty) empty.remove();
+  const line = document.createElement('div');
+  line.className = `line ${who}`;
+  const label = who === 'ava' ? 'AVA' : who === 'caller' ? 'CALLER' : 'SYSTEM';
+  line.innerHTML = `<span class="who">${label}</span><span class="what">${escapeHtml(text)}</span>`;
+  ticker.appendChild(line);
+  ticker.scrollTop = ticker.scrollHeight;
+}
+
+function revealOperator(data) {
+  opTicket.innerHTML = `
+    <div class="ticket-item"><span class="l">Caller</span><span class="v">${escapeHtml(data.caller)}</span></div>
+    <div class="ticket-item"><span class="l">When</span><span class="v">${escapeHtml(data.datetime)}</span></div>
+    <div class="ticket-item full"><span class="l">Route</span><span class="v">${escapeHtml(data.route)}</span></div>
+    <div class="ticket-item"><span class="l">Vehicle</span><span class="v">${escapeHtml(data.vehicle)}</span></div>
+    <div class="ticket-item"><span class="l">Party</span><span class="v">${escapeHtml(data.pax)}</span></div>
+    <div class="ticket-item"><span class="l">Quote</span><span class="v">${escapeHtml(data.quote)}</span></div>
+    <div class="ticket-item full"><span class="l">Driver Notes</span><span class="v">${escapeHtml(data.notes)}</span></div>
+  `;
+  const now = new Date();
+  opTime.textContent = `RECEIVED · ${now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+  operator.classList.add('show');
+  setTimeout(() => operator.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+}
+
+function setStatus(cls, text) {
+  statusEl.classList.remove('live', 'connecting', 'error');
+  if (cls) statusEl.classList.add(cls);
+  statusText.textContent = text;
+}
+
+function showError(msg) { errorBanner.textContent = msg; errorBanner.classList.add('show'); }
+function hideError() { errorBanner.classList.remove('show'); }
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function resetDemo() {
+  timeouts.forEach(t => clearTimeout(t));
+  timeouts = [];
+  isRunning = false;
+  if (lkRoom) { lkRoom.disconnect().catch(() => {}); lkRoom = null; }
+  callBtn.classList.remove('running');
+  callBtn.disabled = false;
+  if (mode === 'live') {
+    callBtn.querySelector('.cta-text').textContent = 'Start Demo Call';
+    ctaSub.textContent = '// Tap to talk · Microphone permission required';
+  } else {
+    callBtn.querySelector('.cta-text').textContent = 'Run Demo Replay';
+    ctaSub.textContent = '// Simulated voice flow · No mic needed';
+  }
+  setStatus('', 'STANDBY');
+  ticketIdEl.textContent = '—';
+  board.classList.remove('active');
+  hideError();
+  $$('.field').forEach(f => {
+    f.classList.remove('filling');
+    const v = f.querySelector('.field-value');
+    v.classList.add('empty');
+    v.innerHTML = 'awaiting';
+    f.querySelector('.think-flag').classList.remove('show');
+  });
+  ticker.innerHTML = '<div class="ticker-empty">live transcript will appear here</div>';
+  operator.classList.remove('show');
+  opTicket.innerHTML = '';
+  $$('.pill').forEach(p => p.disabled = false);
+}
+
+callBtn.addEventListener('click', () => {
+  if (mode === 'live') {
+    if (isRunning && lkRoom) endCall();
+    else startLiveCall();
+  } else {
+    runMockDemo();
+  }
+});
+
+resetBtn.addEventListener('click', resetDemo);
+</script>
+</body>
+</html>
