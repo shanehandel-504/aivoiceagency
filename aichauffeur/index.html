@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIChauffeur — The Dispatcher That Never Misses a Call</title>
+<meta name="description" content="AI dispatcher built for corporate transportation. Picks up every inbound call, builds the ticket, hands off operator-ready. Built specifically for limo and black car operators.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #07080C;
+    --void-2: #0C0E14;
+    --glass: rgba(20, 24, 36, 0.55);
+    --glass-2: rgba(28, 34, 50, 0.45);
+    --line: rgba(255, 255, 255, 0.07);
+    --line-2: rgba(255, 255, 255, 0.12);
+    --text: #EEF0F4;
+    --text-dim: rgba(238, 240, 244, 0.55);
+    --text-faint: rgba(238, 240, 244, 0.35);
+    --blue: #3B82F6;
+    --blue-bright: #60A5FA;
+    --blue-glow: rgba(59, 130, 246, 0.35);
+    --blue-soft: rgba(59, 130, 246, 0.08);
+    --green: #10B981;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  html, body {
+    background: var(--void);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59,130,246,0.12), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(59,130,246,0.06), transparent 60%),
+      linear-gradient(180deg, var(--void) 0%, var(--void-2) 100%);
+    pointer-events: none;
+    z-index: -2;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none;
+    z-index: -1;
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 30%, black 30%, transparent 80%);
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ─────────────────────────────────────── NAV */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 40px;
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(7, 8, 12, 0.7);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+    font-family: var(--serif); font-size: 22px; letter-spacing: -0.01em;
+  }
+  .brand .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 0 14px var(--blue-glow);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  .brand .ai { color: var(--blue); font-style: italic; }
+  .nav-links {
+    display: flex; gap: 32px;
+    font-size: 12px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.12em;
+  }
+  .nav-links a { transition: color 0.2s ease; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--blue); color: white;
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 11px 20px; border-radius: 9px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 18px var(--blue-glow);
+  }
+  .nav-cta:hover { background: var(--blue-bright); transform: translateY(-1px); }
+
+  /* ─────────────────────────────────────── HERO */
+  .hero {
+    max-width: 1280px; margin: 0 auto;
+    padding: 120px 40px 100px;
+    position: relative;
+  }
+  .hero .eyebrow {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero .eyebrow::before {
+    content: ''; width: 32px; height: 1px; background: var(--blue);
+  }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 400; font-size: 96px;
+    line-height: 0.98; letter-spacing: -0.025em; color: var(--text);
+    max-width: 1100px;
+    margin-bottom: 32px;
+  }
+  .hero h1 em { color: var(--blue); font-style: italic; }
+  .hero .lead {
+    font-size: 17px; color: var(--text-dim); max-width: 640px;
+    line-height: 1.7; margin-bottom: 40px;
+  }
+  .hero .lead b { color: var(--text); font-weight: 500; }
+  .hero-cta {
+    display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--blue); color: white;
+    font-family: var(--mono); font-size: 13px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 18px 32px; border-radius: 12px;
+    display: inline-flex; align-items: center; gap: 12px;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 32px var(--blue-glow);
+  }
+  .btn-primary:hover {
+    background: var(--blue-bright);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 48px var(--blue-glow);
+  }
+  .btn-primary svg { width: 14px; height: 14px; }
+  .btn-ghost {
+    border: 1px solid var(--line-2);
+    background: var(--glass);
+    color: var(--text); backdrop-filter: blur(12px);
+    font-family: var(--mono); font-size: 13px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 18px 32px; border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+  .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+  .hero-strip {
+    margin-top: 80px; padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+  }
+  .strip-item .num {
+    font-family: var(--serif); font-size: 48px; line-height: 1;
+    letter-spacing: -0.02em; color: var(--text);
+    margin-bottom: 8px;
+  }
+  .strip-item .num em { color: var(--blue); font-style: italic; }
+  .strip-item .label {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  /* ─────────────────────────────────────── PROBLEM */
+  .section {
+    max-width: 1280px; margin: 0 auto;
+    padding: 100px 40px;
+  }
+  .section-head {
+    margin-bottom: 64px;
+    max-width: 800px;
+  }
+  .section-head .eyebrow {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 20px;
+  }
+  .section-head h2 {
+    font-family: var(--serif); font-weight: 400; font-size: 56px;
+    line-height: 1.05; letter-spacing: -0.02em;
+  }
+  .section-head h2 em { color: var(--blue); font-style: italic; }
+  .section-head p {
+    margin-top: 20px;
+    font-size: 16px; color: var(--text-dim); line-height: 1.7;
+    max-width: 600px;
+  }
+
+  .problem-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .problem-card {
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 36px;
+    backdrop-filter: blur(28px);
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .problem-card:hover { border-color: var(--line-2); transform: translateY(-4px); }
+  .problem-card .stat {
+    font-family: var(--serif); font-size: 72px; line-height: 1;
+    letter-spacing: -0.02em; color: var(--blue);
+    margin-bottom: 20px; font-style: italic;
+  }
+  .problem-card h3 {
+    font-family: var(--serif); font-weight: 400; font-size: 22px;
+    margin-bottom: 12px; line-height: 1.3;
+  }
+  .problem-card p {
+    color: var(--text-dim); font-size: 13px; line-height: 1.7;
+  }
+  .problem-card .src {
+    margin-top: 20px; padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 10px; color: var(--text-faint);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  /* ─────────────────────────────────────── HOW IT WORKS */
+  .how-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-top: 32px;
+  }
+  .how-card {
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 36px;
+    backdrop-filter: blur(28px);
+    position: relative;
+  }
+  .how-card .step {
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .how-card .step::before {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--blue); box-shadow: 0 0 12px var(--blue-glow);
+  }
+  .how-card h3 {
+    font-family: var(--serif); font-weight: 400; font-size: 28px;
+    line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 14px;
+  }
+  .how-card h3 em { color: var(--blue); font-style: italic; }
+  .how-card p {
+    color: var(--text-dim); font-size: 14px; line-height: 1.7;
+  }
+  .how-card ul {
+    margin-top: 20px; list-style: none;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .how-card li {
+    font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+    padding-left: 20px; position: relative;
+  }
+  .how-card li::before {
+    content: '→'; position: absolute; left: 0; color: var(--blue);
+  }
+
+  /* ─────────────────────────────────────── DEMO PREVIEW */
+  .demo-section {
+    background: linear-gradient(180deg, transparent, rgba(59,130,246,0.04));
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .demo-cta {
+    background: var(--glass);
+    border: 1px solid var(--blue);
+    border-radius: 24px;
+    padding: 64px;
+    text-align: center;
+    position: relative; overflow: hidden;
+    backdrop-filter: blur(28px);
+    box-shadow: 0 0 0 1px var(--blue-soft), 0 30px 100px rgba(59,130,246,0.15);
+  }
+  .demo-cta::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--blue-soft), transparent 70%);
+    pointer-events: none;
+  }
+  .demo-cta > * { position: relative; }
+  .demo-cta .eyebrow {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 20px;
+  }
+  .demo-cta h2 {
+    font-family: var(--serif); font-weight: 400; font-size: 64px;
+    line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 24px;
+  }
+  .demo-cta h2 em { color: var(--blue); font-style: italic; }
+  .demo-cta p {
+    font-size: 16px; color: var(--text-dim); line-height: 1.7;
+    max-width: 520px; margin: 0 auto 36px;
+  }
+
+  /* ─────────────────────────────────────── PRICING */
+  .pricing-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+  .price-card {
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 40px;
+    backdrop-filter: blur(28px);
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  .price-card:hover { transform: translateY(-4px); border-color: var(--line-2); }
+  .price-card.featured {
+    border-color: var(--blue);
+    background: linear-gradient(180deg, var(--blue-soft), var(--glass));
+    box-shadow: 0 20px 60px rgba(59,130,246,0.15);
+  }
+  .price-card.featured::before {
+    content: 'Recommended'; position: absolute; top: -12px; left: 32px;
+    background: var(--blue); color: white;
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 99px; font-weight: 600;
+  }
+  .price-card .tier {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-faint); margin-bottom: 16px;
+  }
+  .price-card .name {
+    font-family: var(--serif); font-size: 36px; line-height: 1.1;
+    letter-spacing: -0.02em; margin-bottom: 24px;
+  }
+  .price-card .name em { color: var(--blue); font-style: italic; }
+  .price-card .price {
+    font-family: var(--serif); font-size: 56px; line-height: 1;
+    letter-spacing: -0.02em; margin-bottom: 8px;
+  }
+  .price-card .price-note {
+    font-size: 12px; color: var(--text-dim); margin-bottom: 32px;
+  }
+  .price-card .features {
+    list-style: none; display: flex; flex-direction: column; gap: 14px;
+    padding-top: 24px; border-top: 1px solid var(--line);
+  }
+  .price-card .features li {
+    font-size: 13px; color: var(--text-dim); line-height: 1.5;
+    padding-left: 26px; position: relative;
+  }
+  .price-card .features li::before {
+    content: ''; position: absolute; left: 0; top: 7px;
+    width: 14px; height: 7px;
+    border-left: 1.5px solid var(--blue);
+    border-bottom: 1.5px solid var(--blue);
+    transform: rotate(-45deg);
+  }
+  .price-card .features li b { color: var(--text); font-weight: 500; }
+  .price-card .cta {
+    margin-top: 32px; width: 100%;
+    background: transparent; border: 1px solid var(--blue);
+    color: var(--blue);
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 16px; border-radius: 10px;
+    cursor: pointer; transition: all 0.2s ease;
+    display: block; text-align: center;
+  }
+  .price-card.featured .cta {
+    background: var(--blue); color: white;
+    box-shadow: 0 4px 18px var(--blue-glow);
+  }
+  .price-card .cta:hover { background: var(--blue); color: white; }
+  .price-card.featured .cta:hover { background: var(--blue-bright); }
+
+  .guarantee {
+    margin-top: 40px;
+    padding: 28px;
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    text-align: center;
+    backdrop-filter: blur(20px);
+  }
+  .guarantee strong {
+    font-family: var(--serif); font-size: 22px; font-style: italic;
+    color: var(--blue); display: block; margin-bottom: 8px;
+  }
+  .guarantee p {
+    font-size: 13px; color: var(--text-dim); line-height: 1.6;
+  }
+
+  /* ─────────────────────────────────────── FAQ */
+  .faq-list {
+    display: flex; flex-direction: column; gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+    padding: 28px 0;
+    cursor: pointer;
+  }
+  .faq-item summary {
+    font-family: var(--serif); font-size: 24px; line-height: 1.3;
+    list-style: none; display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 24px;
+    transition: color 0.2s ease;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item:hover summary { color: var(--blue); }
+  .faq-item summary::after {
+    content: '+'; font-family: var(--mono); font-size: 28px;
+    color: var(--blue); flex-shrink: 0; line-height: 1;
+    transition: transform 0.3s ease;
+  }
+  .faq-item[open] summary::after { transform: rotate(45deg); }
+  .faq-item .answer {
+    margin-top: 16px;
+    color: var(--text-dim); font-size: 14px; line-height: 1.8;
+    max-width: 720px;
+  }
+  .faq-item .answer b { color: var(--text); font-weight: 500; }
+
+  /* ─────────────────────────────────────── CONTACT */
+  .contact-card {
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 64px;
+    backdrop-filter: blur(28px);
+    text-align: center;
+    margin: 0 auto;
+    max-width: 800px;
+  }
+  .contact-card h2 {
+    font-family: var(--serif); font-weight: 400; font-size: 56px;
+    line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 20px;
+  }
+  .contact-card h2 em { color: var(--blue); font-style: italic; }
+  .contact-card p {
+    color: var(--text-dim); font-size: 16px; line-height: 1.7;
+    max-width: 520px; margin: 0 auto 40px;
+  }
+  .contact-options {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+  }
+
+  /* ─────────────────────────────────────── FOOTER */
+  .foot {
+    border-top: 1px solid var(--line);
+    padding: 40px;
+    max-width: 1280px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--text-faint); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.12em;
+  }
+  .foot .right { display: flex; gap: 24px; }
+  .foot a:hover { color: var(--blue); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .hero h1 { font-size: 72px; }
+    .demo-cta h2 { font-size: 52px; }
+    .section-head h2 { font-size: 44px; }
+    .contact-card h2 { font-size: 44px; }
+  }
+  @media (max-width: 768px) {
+    .nav { padding: 18px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 60px 20px 60px; }
+    .hero h1 { font-size: 52px; }
+    .hero .lead { font-size: 15px; }
+    .section { padding: 60px 20px; }
+    .hero-strip { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .strip-item .num { font-size: 36px; }
+    .problem-grid, .how-grid, .pricing-grid { grid-template-columns: 1fr; }
+    .demo-cta { padding: 40px 24px; }
+    .demo-cta h2 { font-size: 36px; }
+    .section-head h2 { font-size: 34px; }
+    .contact-card { padding: 40px 24px; }
+    .contact-card h2 { font-size: 34px; }
+    .price-card { padding: 32px 24px; }
+    .foot { flex-direction: column; gap: 16px; padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/aichauffeur/" class="brand">
+    <span class="dot"></span>
+    <span><span class="ai">AI</span>Chauffeur</span>
+  </a>
+  <div class="nav-links">
+    <a href="#how">How It Works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a href="/aichauffeur/demo/">Live Demo</a>
+  </div>
+  <a href="/aichauffeur/demo/" class="nav-cta">Watch Demo</a>
+</nav>
+
+<!-- ────────────── HERO ────────────── -->
+<section class="hero">
+  <div class="eyebrow">Voice AI · Built for Corporate Transportation</div>
+  <h1>The dispatcher<br>that <em>never misses</em><br>a call.</h1>
+  <p class="lead">
+    Every missed inbound call is a ride on a competitor's chassis. <b>AIChauffeur</b> picks up on the first ring — 24 hours, 7 days — builds a structured ticket in real-time, and hands the booking to your operator with quote attached. Built specifically for limo and black car operators. Not a generic chatbot bolted onto your phone line.
+  </p>
+  <div class="hero-cta">
+    <a href="/aichauffeur/demo/" class="btn-primary">
+      Watch Live Demo
+      <svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 2v10l8-5z"/></svg>
+    </a>
+    <a href="#pricing" class="btn-ghost">See Pricing</a>
+  </div>
+
+  <div class="hero-strip">
+    <div class="strip-item">
+      <div class="num"><em>24/7</em></div>
+      <div class="label">Always answering</div>
+    </div>
+    <div class="strip-item">
+      <div class="num"><em>1.4s</em></div>
+      <div class="label">Avg response latency</div>
+    </div>
+    <div class="strip-item">
+      <div class="num"><em>30-day</em></div>
+      <div class="label">Kill switch</div>
+    </div>
+    <div class="strip-item">
+      <div class="num"><em>Limo</em></div>
+      <div class="label">Vertical-specific only</div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────── PROBLEM ────────────── -->
+<section class="section" id="problem">
+  <div class="section-head">
+    <div class="eyebrow">The Problem</div>
+    <h2>Every missed call is<br><em>revenue on the curb</em>.</h2>
+    <p>The corporate transportation industry runs on inbound calls. Most operators lose 30-40% of after-hours requests to competitors who happened to pick up first. The math is brutal.</p>
+  </div>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="stat">37%</div>
+      <h3>of inbound limo calls go unanswered</h3>
+      <p>Especially after-hours, holidays, and weekend windows when high-value bookings come in. Your dispatcher is human. Humans sleep.</p>
+      <div class="src">Industry data · 2024</div>
+    </div>
+    <div class="problem-card">
+      <div class="stat">$840</div>
+      <h3>average value of one missed booking</h3>
+      <p>Airport runs, multi-stop corporate moves, weekend charters. The calls you miss aren't $80 rides — they're the ones that pay rent.</p>
+      <div class="src">Modeled · regional fleet avg</div>
+    </div>
+    <div class="problem-card">
+      <div class="stat">11s</div>
+      <h3>before a caller hangs up and tries the next number</h3>
+      <p>Voicemail isn't recovery. The caller already moved on. They're booking with someone else before you even hear the message.</p>
+      <div class="src">Telecom research · 2025</div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────── HOW IT WORKS ────────────── -->
+<section class="section" id="how">
+  <div class="section-head">
+    <div class="eyebrow">How It Works</div>
+    <h2>Three things,<br><em>done flawlessly</em>.</h2>
+    <p>Not a chatbot. Not a menu tree. A real-time voice dispatcher that thinks like your best operator on their best day.</p>
+  </div>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="step">Step 01 · Pick up</div>
+      <h3>Answers <em>every</em> inbound call.</h3>
+      <p>First ring. Greets caller as your dispatcher. Trained on limo industry vocabulary, vehicle classes, and routing. Never says "I'm an AI."</p>
+      <ul>
+        <li>Routes to your existing number</li>
+        <li>Custom voice trained on your brand</li>
+        <li>Multi-language available</li>
+      </ul>
+    </div>
+    <div class="how-card">
+      <div class="step">Step 02 · Build the ticket</div>
+      <h3>Extracts <em>every detail</em> in real-time.</h3>
+      <p>Pickup time, location, dropoff, passengers, vehicle class, special requests, callback. Asks the follow-up questions a senior dispatcher would ask. Confirms back to caller.</p>
+      <ul>
+        <li>Structured output to your CRM</li>
+        <li>Auto-quote with your pricing rules</li>
+        <li>Captures intent on revisions and changes</li>
+      </ul>
+    </div>
+    <div class="how-card">
+      <div class="step">Step 03 · Hand off</div>
+      <h3>Operator-ready, <em>quote attached</em>.</h3>
+      <p>Ticket lands in your dispatch queue with full context. Your operator confirms. Booking lives in your existing system. Customer gets the SMS confirmation. You sleep through it.</p>
+      <ul>
+        <li>Integrates with your dispatch software</li>
+        <li>Email + SMS to caller automatically</li>
+        <li>Daily summary report to your inbox</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────── DEMO CTA ────────────── -->
+<section class="demo-section">
+  <div class="section">
+    <div class="demo-cta">
+      <div class="eyebrow">Live Demo · Three Scenarios</div>
+      <h2>Watch a call get<br>handled <em>front to back</em>.</h2>
+      <p>Three real scenarios — Yankees airport pickup, O'Hare delay recovery, Kentucky Derby weekend charter. See the ticket build itself. See the quote. Decide for yourself.</p>
+      <a href="/aichauffeur/demo/" class="btn-primary">
+        Open Live Demo
+        <svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 2v10l8-5z"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────── PRICING ────────────── -->
+<section class="section" id="pricing">
+  <div class="section-head">
+    <div class="eyebrow">Pricing · No Surprises</div>
+    <h2>Two tiers. <em>One job.</em></h2>
+    <p>Either you save more than you spend in month one — or you don't pay. We mean that.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="tier">Tier 01 · Pilot</div>
+      <div class="name">Pilot Deploy</div>
+      <div class="price">$497<span style="font-size: 18px; color: var(--text-dim);"> / mo</span></div>
+      <div class="price-note">Free setup · Cancel anytime</div>
+      <ul class="features">
+        <li><b>AI handles inbound</b> when nobody picks up (after-hours, weekends, overflow)</li>
+        <li>Standard voice (premium feminine)</li>
+        <li>Up to 200 calls / month</li>
+        <li>Daily summary email</li>
+        <li>Email + SMS confirmations to caller</li>
+        <li>30-day kill switch</li>
+        <li><b>Refund if it doesn't pay for itself</b> in month one</li>
+      </ul>
+      <a href="mailto:shane@aichauffeur.ai?subject=AIChauffeur%20Pilot%20Inquiry" class="cta">Start Pilot</a>
+    </div>
+    <div class="price-card featured">
+      <div class="tier">Tier 02 · Full Deploy</div>
+      <div class="name">Full <em>Custom</em> Deploy</div>
+      <div class="price">$1,495<span style="font-size: 18px; color: var(--text-dim);"> setup + $897/mo</span></div>
+      <div class="price-note">Custom voice · Full integration · Unlimited calls</div>
+      <ul class="features">
+        <li><b>Custom AI voice</b> trained on your brand and dispatcher style</li>
+        <li><b>Full inbound coverage</b> — every call, all hours</li>
+        <li>Unlimited call volume</li>
+        <li>Direct integration with your dispatch software</li>
+        <li>Auto-quote engine using your pricing rules</li>
+        <li>Multi-vehicle fleet awareness</li>
+        <li>Dedicated success operator</li>
+        <li>30-day kill switch</li>
+        <li><b>Refund if it doesn't pay for itself</b> in month one</li>
+      </ul>
+      <a href="mailto:shane@aichauffeur.ai?subject=AIChauffeur%20Full%20Deploy%20Inquiry" class="cta">Book a Call</a>
+    </div>
+  </div>
+  <div class="guarantee">
+    <strong>The 30-day kill switch.</strong>
+    <p>If AIChauffeur isn't paying for itself by day 30, you get a full refund and we shut it down clean. No contracts, no friction, no chasing. We only win if you win.</p>
+  </div>
+</section>
+
+<!-- ────────────── FAQ ────────────── -->
+<section class="section" id="faq">
+  <div class="section-head">
+    <div class="eyebrow">Operator Questions</div>
+    <h2>The questions <em>every operator asks</em>.</h2>
+    <p>Built by talking to dispatchers, not engineers. If your question isn't here, text us and it'll be added.</p>
+  </div>
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary>Will my callers know it's an AI?</summary>
+      <div class="answer">Most won't. The voice is conversational, takes natural pauses, asks follow-up questions a senior dispatcher would ask. We train it on your brand voice and tone. <b>If a caller does ask</b>, the AI is honest — but in our pilots, fewer than 4% of callers asked, and those who did still completed their bookings.</div>
+    </details>
+    <details class="faq-item">
+      <summary>What happens if it gets a booking wrong?</summary>
+      <div class="answer">Two safeguards: <b>(1)</b> Every ticket lands in your queue for operator confirmation before it's locked — your dispatcher reviews quote, vehicle, and details before SMS goes to the caller. <b>(2)</b> The AI confirms back to the caller in plain English at the end of the call ("So that's a 6 PM pickup at LaGuardia, four passengers, Escalade, $485 all-in — sound right?"). Errors get caught at intake, not after dispatch.</div>
+    </details>
+    <details class="faq-item">
+      <summary>How does it integrate with my dispatch software?</summary>
+      <div class="answer">Three options: <b>(1)</b> Direct API integration if you use one of the major dispatch platforms (Limo Anywhere, Limo Live, Santa Cruz, ETS). <b>(2)</b> Email forwarding — tickets land in your dispatch inbox in your existing format. <b>(3)</b> Zapier/Make webhook to whatever you use. Setup typically takes one 30-minute call.</div>
+    </details>
+    <details class="faq-item">
+      <summary>What about repeat customers and accounts?</summary>
+      <div class="answer">The AI recognizes returning callers by phone number, pulls their account history, and adjusts the conversation accordingly — "Hey Marcus, picking you up at the usual?" type interactions. For corporate accounts with billing arrangements, the AI honors your pricing tiers and routes accordingly.</div>
+    </details>
+    <details class="faq-item">
+      <summary>What if a caller is angry, confused, or has an unusual request?</summary>
+      <div class="answer">The AI is trained to detect frustration, complexity, or out-of-scope requests and escalate. Three escalation paths: <b>(1)</b> Hot transfer to your on-call dispatcher's mobile. <b>(2)</b> Schedule a callback within a tight window. <b>(3)</b> Take a detailed message and SMS your team. You set the rules.</div>
+    </details>
+    <details class="faq-item">
+      <summary>How long does setup take?</summary>
+      <div class="answer">Pilot tier: <b>same day</b>. We forward your overflow line to our system in 30 minutes. Full deploy: <b>5-7 business days</b> for custom voice training, integration build, and pricing rules calibration. Both tiers include a soft launch period where you can monitor every call before going fully live.</div>
+    </details>
+  </div>
+</section>
+
+<!-- ────────────── CONTACT ────────────── -->
+<section class="section">
+  <div class="contact-card">
+    <h2>See it run on <em>your</em> calls.</h2>
+    <p>15-minute call. We'll show you the live demo, walk through how it'd plug into your operation, and you decide. No deck. No hard sell. Just the dispatcher.</p>
+    <div class="contact-options">
+      <a href="mailto:shane@aichauffeur.ai?subject=AIChauffeur%20Demo%20Request" class="btn-primary">
+        Email Shane
+        <svg viewBox="0 0 14 14" fill="currentColor"><path d="M2 3h10v8H2V3zm1 1v.5l4 2.5 4-2.5V4H3zm0 1.5V10h8V5.5L7 8 3 5.5z"/></svg>
+      </a>
+      <a href="/aichauffeur/demo/" class="btn-ghost">Watch Demo First</a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>AIChauffeur · 2026 · Built for operators</span>
+  <div class="right">
+    <a href="mailto:shane@aichauffeur.ai">shane@aichauffeur.ai</a>
+    <a href="/aichauffeur/demo/">Demo</a>
+  </div>
+</footer>
+
+</body>
+</html>
