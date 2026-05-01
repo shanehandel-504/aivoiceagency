@@ -113,8 +113,9 @@
     .sec-sub{font-size:1.08rem;color:var(--ink-soft);max-width:62ch;line-height:1.6;margin-bottom:2.5rem}
 
     .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
-    .step{background:var(--void-card);border:1px solid var(--line);border-radius:14px;padding:1.6rem;position:relative;transition:border-color .2s,transform .2s}
-    .step:hover{border-color:var(--line-hot);transform:translateY(-3px)}
+    .step{background:var(--void-card);border:1px solid var(--line);border-radius:14px;padding:1.6rem;position:relative;transition:border-color .25s,transform .25s,box-shadow .25s;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);overflow:hidden}
+    .step::before{content:'';position:absolute;top:0;left:0;width:60%;height:1px;background:linear-gradient(90deg,var(--blue-bright),transparent);opacity:.4}
+    .step:hover{border-color:var(--line-hot);transform:translateY(-4px);box-shadow:0 16px 48px rgba(59,130,246,.12),0 0 0 1px rgba(96,165,250,.2)}
     .step-num{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-bright);margin-bottom:1rem}
     .step-h{font-family:var(--serif);font-size:1.6rem;color:var(--ink);font-weight:400;margin-bottom:.6rem;line-height:1.15}
     .step-p{font-size:.95rem;color:var(--ink-mute);line-height:1.55}
@@ -127,19 +128,22 @@
     .pain-p{font-size:.9rem;color:var(--ink-mute);line-height:1.5}
 
     .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
-    .feat{background:var(--void-card);border:1px solid var(--line);border-radius:14px;padding:1.5rem;transition:border-color .2s,transform .2s}
-    .feat:hover{border-color:var(--line-hot);transform:translateY(-3px)}
+    .feat{background:var(--void-card);border:1px solid var(--line);border-radius:14px;padding:1.5rem;transition:border-color .25s,transform .25s,box-shadow .25s;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative;overflow:hidden}
+    .feat::before{content:'';position:absolute;top:0;left:0;width:40%;height:1px;background:linear-gradient(90deg,var(--blue-bright),transparent);opacity:.4}
+    .feat:hover{border-color:var(--line-hot);transform:translateY(-4px);box-shadow:0 16px 48px rgba(59,130,246,.12),0 0 0 1px rgba(96,165,250,.2)}
     .feat-h{color:var(--ink);font-weight:600;font-size:1.1rem;margin-bottom:.6rem}
     .feat-p{font-size:.95rem;color:var(--ink-mute);line-height:1.55}
 
-    .crush{background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(96,165,250,.02));border:1px solid var(--line-hot);border-radius:18px;padding:3rem 2rem;text-align:center;position:relative;overflow:hidden}
-    .crush::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--blue-glow),transparent 60%);opacity:.3;pointer-events:none}
+    .crush{background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(96,165,250,.03));border:1px solid var(--line-hot);border-radius:18px;padding:3rem 2rem;text-align:center;position:relative;overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 20px 60px rgba(0,0,0,.3),0 0 0 1px rgba(96,165,250,.08)}
+    .crush::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--blue-glow),transparent 60%);opacity:.4;pointer-events:none}
+    .crush::after{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,var(--blue-bright),transparent);opacity:.7}
     .crush-h{font-family:var(--serif);font-size:clamp(1.8rem,3.6vw,2.8rem);color:var(--ink);font-weight:400;margin-bottom:1rem;line-height:1.1;position:relative}
     .crush-h em{font-style:italic;color:var(--blue-bright)}
     .crush-p{font-size:1.05rem;color:var(--ink-soft);max-width:62ch;margin:0 auto 2rem;line-height:1.6;position:relative}
     .crush .btn-primary{position:relative}
 
-    .setup-card{background:var(--void-card);border:1px solid var(--line-hot);border-radius:18px;padding:2.5rem 2rem;display:grid;gap:1.5rem;align-items:center}
+    .setup-card{background:var(--void-card);border:1px solid var(--line-hot);border-radius:18px;padding:2.5rem 2rem;display:grid;gap:1.5rem;align-items:center;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:relative;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.25),0 0 0 1px rgba(96,165,250,.08)}
+    .setup-card::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,var(--blue-bright),transparent);opacity:.5}
     @media(min-width:760px){.setup-card{grid-template-columns:1.5fr 1fr;padding:3rem}}
     .setup-h{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.4rem);color:var(--ink);font-weight:400;line-height:1.1;margin-bottom:.75rem}
     .setup-p{font-size:1rem;color:var(--ink-soft);line-height:1.55}
@@ -206,11 +210,11 @@
     <p class="hero-sub">AIChauffeur answers inbound calls, captures trip details, estimates the ride, writes the request into your dispatch workflow, and helps confirm passengers and drivers — without burying your team.</p>
 
     <div class="ctas">
-      <a href="https://api.leadconnectorhq.com/widget/bookings/aichauffeur-local-setup-call" target="_blank" rel="noopener" class="btn btn-primary">
-        Request local setup
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      <a href="/demo/" class="btn btn-primary">
+        Try the live demo
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </a>
-      <a href="/demo/" class="btn btn-ghost">Try the live demo</a>
+      <a href="https://api.leadconnectorhq.com/widget/bookings/aichauffeur-local-setup-call" target="_blank" rel="noopener" class="btn btn-ghost">Request local setup</a>
     </div>
 
     <div class="console">

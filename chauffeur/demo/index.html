@@ -368,6 +368,14 @@ function runScenario() {
     transcript.innerHTML = '';
     $$('.scenario').forEach(s => s.disabled = true);
 
+    // Auto-scroll console into view so user sees the action
+    const consoleEl = document.querySelector('.console');
+    if (consoleEl) {
+      const rect = consoleEl.getBoundingClientRect();
+      const targetY = window.scrollY + rect.top - 80;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+
     sc.steps.forEach(step => {
       timeouts.push(setTimeout(() => executeStep(step), step.at));
     });
@@ -407,6 +415,12 @@ function executeStep(step) {
     startBtn.classList.remove('running');
     startText.textContent = 'Run again';
     $$('.scenario').forEach(s => s.disabled = false);
+    // Scroll to complete banner so user sees the outcome and book CTA
+    setTimeout(() => {
+      const rect = completeBanner.getBoundingClientRect();
+      const targetY = window.scrollY + rect.top - 80;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }, 300);
   }
 }
 
