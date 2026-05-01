@@ -601,6 +601,30 @@ async function startLiveCall() {
     await liveRoom.connect(url, token);
     await liveRoom.localParticipant.setMicrophoneEnabled(true);
 
+    // Register RPC methods that Agent Builder client tools can call
+    try {
+      liveRoom.localParticipant.registerRpcMethod('update_dispatch_field', async (data) => {
+        try {
+          const args = JSON.parse(data.payload);
+          handleAgentEvent({ type: 'field_update', key: args.field_key, main: args.main_value, sub: args.sub_value || '' });
+          return JSON.stringify({ ok: true });
+        } catch (e) {
+          return JSON.stringify({ ok: false, error: e.message });
+        }
+      });
+      liveRoom.localParticipant.registerRpcMethod('finalize_ticket', async (data) => {
+        try {
+          const args = JSON.parse(data.payload);
+          handleAgentEvent({ type: 'ticket_complete', ticket_id: args.ticket_id, summary: args.summary });
+          return JSON.stringify({ ok: true });
+        } catch (e) {
+          return JSON.stringify({ ok: false, error: e.message });
+        }
+      });
+    } catch (e) {
+      console.warn('RPC register skipped:', e.message);
+    }
+
     // 4. UI in-call state
     isInCall = true;
     btnLive.disabled = false;
