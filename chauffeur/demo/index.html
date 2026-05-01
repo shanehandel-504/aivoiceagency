@@ -12,6 +12,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.0/dist/livekit-client.umd.min.js"></script>
+
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -132,6 +134,33 @@ h1.demo-h em{font-style:italic;color:var(--blue-bright);text-shadow:0 0 24px var
   .start-row{flex-direction:column;align-items:stretch}
   .btn-reset{width:100%}
 }
+
+.mode-toggle{display:flex;gap:.4rem;margin-bottom:1.5rem;background:var(--void-card);border:1px solid var(--line);border-radius:12px;padding:.35rem;backdrop-filter:blur(12px)}
+.mode-btn{flex:1;padding:.7rem 1rem;border-radius:9px;border:none;background:transparent;color:var(--ink-mute);font-family:var(--mono);font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.mode-btn:hover:not(.active):not(:disabled){color:var(--ink)}
+.mode-btn.active{background:var(--blue);color:#000;box-shadow:0 4px 16px var(--blue-glow)}
+.mode-btn.active.live{background:#22C55E;color:#000;box-shadow:0 4px 16px rgba(34,197,94,.35)}
+.mode-btn:disabled{opacity:.4;cursor:not-allowed}
+.mode-btn-label{display:block;font-size:.7rem;letter-spacing:.12em}
+.mode-btn-sub{display:block;font-size:.55rem;opacity:.8;margin-top:.15rem;letter-spacing:.08em;font-weight:400}
+
+.live-panel{display:none;background:linear-gradient(135deg,rgba(34,197,94,.06),rgba(96,165,250,.02));border:1px solid rgba(34,197,94,.3);border-radius:14px;padding:1.6rem;margin-bottom:1.4rem;text-align:center}
+.live-panel.show{display:block}
+.live-panel-h{font-family:var(--serif);font-size:1.4rem;color:var(--ink);font-weight:400;margin-bottom:.4rem}
+.live-panel-h em{color:#4ADE80;font-style:italic}
+.live-panel-p{font-size:.92rem;color:var(--ink-mute);max-width:48ch;margin:0 auto 1.2rem;line-height:1.5}
+.btn-live{display:inline-flex;align-items:center;gap:.6rem;padding:1.1rem 2rem;border-radius:12px;font-family:var(--mono);font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:#22C55E;color:#000;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 0 0 1px #4ADE80,0 8px 32px rgba(34,197,94,.35)}
+.btn-live:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 0 1px #4ADE80,0 12px 40px rgba(34,197,94,.45)}
+.btn-live:disabled{opacity:.5;cursor:not-allowed}
+.btn-live.in-call{background:#EF4444;box-shadow:0 0 0 1px #FCA5A5,0 8px 32px rgba(239,68,68,.35)}
+.btn-live svg{width:14px;height:14px}
+
+.mic-indicator{display:none;align-items:center;justify-content:center;gap:.8rem;padding:1rem;background:rgba(6,8,15,.6);border:1px solid rgba(34,197,94,.4);border-radius:10px;margin-top:1rem;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;color:#4ADE80}
+.mic-indicator.show{display:flex}
+.mic-dot{width:10px;height:10px;border-radius:50%;background:#22C55E;box-shadow:0 0 12px #22C55E;animation:pulse 1.2s ease-in-out infinite}
+
+.live-error{display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:1rem 1.2rem;margin-top:1rem;color:#FCA5A5;font-size:.85rem;line-height:1.5}
+.live-error.show{display:block}
 </style>
 </head>
 <body>
@@ -152,14 +181,39 @@ h1.demo-h em{font-style:italic;color:var(--blue-bright);text-shadow:0 0 24px var
 
 <section class="head">
   <div class="wrap">
-    <span class="kicker">Live dispatch demo · Mock replay</span>
+    <span class="kicker">Live dispatch demo · Mock + Live modes</span>
     <h1 class="demo-h">Watch a ride get <em>captured.</em></h1>
-    <p class="demo-sub">Pick a scenario. Hit start. The dispatch ticket builds itself in real time as the AI captures the call.</p>
+    <p class="demo-sub">Pick a scenario or talk to AVA directly. The dispatch ticket builds itself in real time as the AI captures the call.</p>
   </div>
 </section>
 
 <section class="controls">
   <div class="wrap">
+
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeMock">
+        <span class="mode-btn-label">Mock Replay</span>
+        <span class="mode-btn-sub">Watch a scripted call</span>
+      </button>
+      <button class="mode-btn live" id="modeLive">
+        <span class="mode-btn-label">Talk to AVA Live</span>
+        <span class="mode-btn-sub">Real voice · early access</span>
+      </button>
+    </div>
+
+    <div class="live-panel" id="livePanel">
+      <div class="live-panel-h">Talk to <em>AVA</em> directly.</div>
+      <p class="live-panel-p">Click below, grant microphone access, and speak naturally. AVA captures your trip details live and the dispatch ticket builds itself.</p>
+      <button class="btn-live" id="btnLive">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        <span id="btnLiveText">Start live call</span>
+      </button>
+      <div class="mic-indicator" id="micIndicator">
+        <span class="mic-dot"></span>
+        <span id="micStatus">Listening...</span>
+      </div>
+      <div class="live-error" id="liveError"></div>
+    </div>
 
     <div class="scenarios" id="scenarios">
       <button class="scenario active" data-scenario="airport">
@@ -246,7 +300,7 @@ h1.demo-h em{font-style:italic;color:var(--blue-bright);text-shadow:0 0 24px var
       </a>
     </div>
 
-    <p class="note">Mock replay mode · Live voice connection in development · No real ride is booked through this demo</p>
+    <p class="note">Mock Replay = scripted demo · Live = real voice through xAI Grok via LiveKit · No real ride is booked through this demo</p>
 
   </div>
 </section>
@@ -445,6 +499,179 @@ function executeStep(step) {
 $$('.scenario').forEach(s => s.addEventListener('click', () => setScenario(s.dataset.scenario)));
 startBtn.addEventListener('click', runScenario);
 resetBtn.addEventListener('click', reset);
+
+// ════════════════════════════════════════════
+// LIVE VOICE MODE — LiveKit + Grok
+// ════════════════════════════════════════════
+
+const TOKEN_ENDPOINT = 'https://aichauffeur-token.shanehandel.workers.dev/';
+const modeMockBtn = $('#modeMock'), modeLiveBtn = $('#modeLive');
+const livePanel = $('#livePanel'), btnLive = $('#btnLive'), btnLiveText = $('#btnLiveText');
+const micIndicator = $('#micIndicator'), micStatus = $('#micStatus'), liveError = $('#liveError');
+const scenariosEl = $('#scenarios'), startRow = document.querySelector('.start-row');
+
+let liveRoom = null, isInCall = false;
+
+function setMode(mode) {
+  if (isInCall || isRunning) return;
+  if (mode === 'live') {
+    modeLiveBtn.classList.add('active');
+    modeMockBtn.classList.remove('active');
+    livePanel.classList.add('show');
+    scenariosEl.style.display = 'none';
+    startRow.style.display = 'none';
+    reset();
+  } else {
+    modeMockBtn.classList.add('active');
+    modeLiveBtn.classList.remove('active');
+    livePanel.classList.remove('show');
+    scenariosEl.style.display = '';
+    startRow.style.display = '';
+    cleanupLiveCall();
+  }
+}
+
+modeMockBtn.addEventListener('click', () => setMode('mock'));
+modeLiveBtn.addEventListener('click', () => setMode('live'));
+
+function showLiveError(msg) {
+  liveError.textContent = msg;
+  liveError.classList.add('show');
+}
+
+function clearLiveError() {
+  liveError.classList.remove('show');
+  liveError.textContent = '';
+}
+
+async function startLiveCall() {
+  clearLiveError();
+  btnLive.disabled = true;
+  btnLiveText.textContent = 'Connecting...';
+
+  try {
+    // 1. Get token from Cloudflare Worker
+    const tokenRes = await fetch(TOKEN_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    });
+    if (!tokenRes.ok) throw new Error('Token request failed: ' + tokenRes.status);
+    const { token, url, room } = await tokenRes.json();
+    if (!token || !url) throw new Error('Invalid token response');
+
+    // 2. Reset UI for live call
+    reset();
+    ticketIdEl.textContent = 'AC-LIVE-' + Math.random().toString(36).slice(2,6).toUpperCase();
+    statusTag.textContent = 'Connecting';
+    liveBadge.textContent = 'Connecting';
+
+    // 3. Connect to LiveKit
+    if (!window.LivekitClient) throw new Error('LiveKit SDK not loaded');
+    const { Room, RoomEvent, Track } = window.LivekitClient;
+
+    liveRoom = new Room({
+      adaptiveStream: true,
+      dynacast: true,
+      audioCaptureDefaults: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+    });
+
+    // Listen for AVA's audio
+    liveRoom.on(RoomEvent.TrackSubscribed, (track, pub, participant) => {
+      if (track.kind === Track.Kind.Audio) {
+        const audioEl = track.attach();
+        audioEl.style.display = 'none';
+        document.body.appendChild(audioEl);
+      }
+    });
+
+    // Listen for dispatch_ui data channel events from agent
+    liveRoom.on(RoomEvent.DataReceived, (payload, participant, kind, topic) => {
+      if (topic !== 'dispatch_ui') return;
+      try {
+        const msg = JSON.parse(new TextDecoder().decode(payload));
+        handleAgentEvent(msg);
+      } catch (e) { console.warn('Bad data event', e); }
+    });
+
+    liveRoom.on(RoomEvent.Disconnected, () => {
+      cleanupLiveCall();
+    });
+
+    await liveRoom.connect(url, token);
+    await liveRoom.localParticipant.setMicrophoneEnabled(true);
+
+    // 4. UI in-call state
+    isInCall = true;
+    btnLive.disabled = false;
+    btnLive.classList.add('in-call');
+    btnLiveText.textContent = 'End call';
+    micIndicator.classList.add('show');
+    micStatus.textContent = 'Connected · listening...';
+    statusTag.textContent = 'Live call';
+    statusTag.classList.remove('complete');
+    liveBadge.textContent = 'Live call';
+    liveBadge.classList.add('live');
+
+  } catch (err) {
+    console.error('Live call error:', err);
+    showLiveError('Could not start live call: ' + (err.message || 'unknown') + '. The agent may not be deployed yet — try Mock Replay mode.');
+    btnLive.disabled = false;
+    btnLiveText.textContent = 'Start live call';
+    cleanupLiveCall();
+  }
+}
+
+function handleAgentEvent(msg) {
+  if (msg.type === 'field_update') {
+    const f = document.querySelector(`.field[data-key="${msg.key}"]`);
+    if (!f) return;
+    f.classList.add('flash');
+    const v = f.querySelector('.f-value');
+    v.classList.add('has');
+    v.innerHTML = msg.main + (msg.sub ? `<span class="sub">${msg.sub}</span>` : '');
+    setTimeout(() => {
+      f.classList.remove('flash');
+      f.classList.add('fill');
+    }, 600);
+  } else if (msg.type === 'ticket_complete') {
+    statusTag.textContent = 'Ticket captured';
+    statusTag.classList.add('complete');
+    liveBadge.textContent = 'Captured';
+    if (msg.ticket_id) ticketIdEl.textContent = msg.ticket_id;
+    completeBanner.classList.add('show');
+    setTimeout(() => {
+      const rect = completeBanner.getBoundingClientRect();
+      window.scrollTo({ top: window.scrollY + rect.top - 80, behavior: 'smooth' });
+    }, 300);
+  }
+}
+
+function cleanupLiveCall() {
+  if (liveRoom) {
+    try { liveRoom.disconnect(); } catch (e) {}
+    liveRoom = null;
+  }
+  isInCall = false;
+  btnLive.classList.remove('in-call');
+  btnLiveText.textContent = 'Start live call';
+  micIndicator.classList.remove('show');
+  liveBadge.classList.remove('live');
+  if (statusTag.textContent === 'Live call' || statusTag.textContent === 'Connecting') {
+    statusTag.textContent = 'Standby';
+    liveBadge.textContent = 'Standby';
+  }
+  // Clean up any orphan audio elements
+  document.querySelectorAll('audio[autoplay]').forEach(a => a.remove());
+}
+
+btnLive.addEventListener('click', () => {
+  if (isInCall) {
+    cleanupLiveCall();
+  } else {
+    startLiveCall();
+  }
+});
 
 </script>
 </body>
