@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#06080F">
 <title>AIChauffeur — Live Dispatch Demo</title>
-<meta name="description" content="Watch AIChauffeur capture a ride request live. Pick a scenario, hit start, see the dispatch ticket build itself.">
+<meta name="description" content="Watch AIChauffeur capture a ride request live. Pick a scenario, hit start, see the reservation build itself.">
 <meta name="robots" content="noindex">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -110,7 +110,7 @@ h1.demo-h em{font-style:italic;color:var(--blue-bright);text-shadow:0 0 24px var
 .tr-caller{color:var(--ink-soft)}
 .tr-caller::before{content:'CALLER · ';color:var(--amber);font-weight:600;letter-spacing:.06em}
 .tr-ai{color:var(--blue-bright)}
-.tr-ai::before{content:'AVA · ';color:var(--blue);font-weight:600;letter-spacing:.06em;text-shadow:0 0 6px var(--blue-glow)}
+.tr-ai::before{content:'AI · ';color:var(--blue);font-weight:600;letter-spacing:.06em;text-shadow:0 0 6px var(--blue-glow)}
 
 .status-row{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;margin-top:1rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);flex-wrap:wrap;gap:.5rem}
 .status-row .ticket{color:var(--blue-bright);text-shadow:0 0 6px var(--blue-glow)}
@@ -183,7 +183,7 @@ h1.demo-h em{font-style:italic;color:var(--blue-bright);text-shadow:0 0 24px var
   <div class="wrap">
     <span class="kicker">Live dispatch demo · Mock + Live modes</span>
     <h1 class="demo-h">Watch a ride get <em>captured.</em></h1>
-    <p class="demo-sub">Pick a scenario or talk to AVA directly. The dispatch ticket builds itself in real time as the AI captures the call.</p>
+    <p class="demo-sub">Pick a scenario or talk to the AI dispatcher directly. The reservation builds itself in real time as the AI captures the call.</p>
   </div>
 </section>
 
@@ -196,14 +196,14 @@ h1.demo-h em{font-style:italic;color:var(--blue-bright);text-shadow:0 0 24px var
         <span class="mode-btn-sub">Watch a scripted call</span>
       </button>
       <button class="mode-btn live" id="modeLive">
-        <span class="mode-btn-label">Talk to AVA Live</span>
+        <span class="mode-btn-label">Talk to AI Live</span>
         <span class="mode-btn-sub">Real voice · early access</span>
       </button>
     </div>
 
     <div class="live-panel" id="livePanel">
-      <div class="live-panel-h">Talk to <em>AVA</em> directly.</div>
-      <p class="live-panel-p">Click below, grant microphone access, and speak naturally. AVA captures your trip details live and the dispatch ticket builds itself.</p>
+      <div class="live-panel-h">Talk to the <em>AI dispatcher.</em></div>
+      <p class="live-panel-p">Click below, grant microphone access, and speak naturally. The AI captures your reservation details live and the dispatch board builds itself.</p>
       <button class="btn-live" id="btnLive">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
         <span id="btnLiveText">Start live call</span>
@@ -286,13 +286,13 @@ h1.demo-h em{font-style:italic;color:var(--blue-bright);text-shadow:0 0 24px var
       </div>
 
       <div class="status-row">
-        <span>Ticket <span class="ticket" id="ticketId">—</span></span>
+        <span>RES <span class="ticket" id="ticketId">—</span></span>
         <span class="status-tag" id="statusTag">Standby</span>
       </div>
     </div>
 
     <div class="complete-banner" id="completeBanner">
-      <div class="complete-h">Ticket captured · <em>routed to dispatch.</em></div>
+      <div class="complete-h">Reservation captured · <em>routed to dispatch.</em></div>
       <div class="complete-p">A real call would land in your CRM, dispatch software, or shared inbox. Your dispatcher confirms instead of starting from scratch.</div>
       <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn-book">
         Request local setup
@@ -478,7 +478,7 @@ function executeStep(step) {
       }, 400);
     }, 220);
   } else if (step.type === 'complete') {
-    statusTag.textContent = 'Ticket captured';
+    statusTag.textContent = 'RES captured';
     statusTag.classList.add('complete');
     liveBadge.textContent = 'Captured';
     completeBanner.classList.add('show');
@@ -659,7 +659,7 @@ function handleAgentEvent(msg) {
       f.classList.add('fill');
     }, 600);
   } else if (msg.type === 'ticket_complete') {
-    statusTag.textContent = 'Ticket captured';
+    statusTag.textContent = 'RES captured';
     statusTag.classList.add('complete');
     liveBadge.textContent = 'Captured';
     if (msg.ticket_id) ticketIdEl.textContent = msg.ticket_id;
