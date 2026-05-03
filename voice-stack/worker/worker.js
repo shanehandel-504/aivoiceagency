@@ -54,6 +54,13 @@ async function signLiveKitToken({ apiKey, apiSecret, identity, room, ttlSeconds 
       canSubscribe: true,
       canPublishData: true,
     },
+    roomConfig: {
+      agents: [
+        {
+          agentName: 'aichauffeur-dispatcher',
+        },
+      ],
+    },
   };
 
   const headerB64 = b64urlString(JSON.stringify(header));
