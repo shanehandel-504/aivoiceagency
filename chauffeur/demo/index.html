@@ -511,7 +511,6 @@ const micIndicator = $('#micIndicator'), micStatus = $('#micStatus'), liveError 
 const scenariosEl = $('#scenarios'), startRow = document.querySelector('.start-row');
 
 let liveRoom = null, isInCall = false;
-let recognition = null, capturedFields = {};
 
 function setMode(mode) {
   if (isInCall || isRunning) return;
@@ -602,9 +601,6 @@ async function startLiveCall() {
     await liveRoom.connect(url, token);
     await liveRoom.localParticipant.setMicrophoneEnabled(true);
 
-    // Browser-side speech capture (fills board from caller speech)
-    startSpeechCapture();
-
     // Register RPC methods that Agent Builder client tools can call
     try {
       liveRoom.localParticipant.registerRpcMethod('update_dispatch_field', async (data) => {
@@ -650,158 +646,6 @@ async function startLiveCall() {
   }
 }
 
-function parseTranscriptForFields(text) {
-  if (!text) return;
-  const lower = text.toLowerCase().trim();
-  if (!lower) return;
-
-  // Filter likely agent speech (recognizer picks up speaker output too)
-  if (lower.includes('aichauffeur') || lower.includes('dispatcher will confirm') ||
-      lower.includes('dispatch will confirm') || lower.startsWith('i captured') ||
-      lower.includes("i'm the ai dispatcher") || lower.includes('i am the ai dispatcher') ||
-      lower.includes('quote range')) {
-    return;
-  }
-
-  const updates = {};
-  const title = s => s.replace(/\b\w/g, c => c.toUpperCase());
-
-  // CALLER
-  let m = lower.match(/(?:my name is|this is|it'?s)\s+([a-z][a-z'-]+(?:\s+[a-z][a-z'-]+)?)/);
-  if (m) {
-    const stop = ['calling','here','and','but','so','at','from','to','going','a','an','the'];
-    const parts = m[1].split(/\s+/).filter(p => !stop.includes(p));
-    if (parts.length) updates.caller = parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
-  }
-
-  // PICKUP
-  let pickup = null, dropoff = null;
-  m = lower.match(/(?:pickup at|picking up at|pick up at|pick me up at)\s+([a-z0-9][a-z0-9\s'.-]{2,40}?)(?=[.,!?]|\s+(?:to|going|then|and|at|on)\b|$)/);
-  if (m) pickup = m[1].trim();
-  else {
-    m = lower.match(/\bfrom\s+([a-z0-9][a-z0-9\s'.-]{2,40}?)(?=[.,!?]|\s+(?:to|going|then|and)\b|$)/);
-    if (m) pickup = m[1].trim();
-  }
-
-  // DROPOFF
-  m = lower.match(/(?:going to|drop off at|dropoff at|headed to|heading to)\s+([a-z0-9][a-z0-9\s'.-]{2,40}?)(?=[.,!?]|\s+(?:at|by|on|then|and)\b|$)/);
-  if (m) dropoff = m[1].trim();
-  else {
-    m = lower.match(/\bto\s+(?:the\s+)?([a-z0-9][a-z0-9\s'.-]{2,40}?)(?=[.,!?]|\s+(?:at|by|on|then|and)\b|$)/);
-    if (m) dropoff = m[1].trim();
-  }
-
-  // Airport shortcut overrides
-  m = lower.match(/(?:at|from)\s+([a-z]+)\s+airport/);
-  if (m) pickup = m[1] + ' airport';
-  m = lower.match(/(?:to|going to|headed to)\s+([a-z]+)\s+airport/);
-  if (m) dropoff = m[1] + ' airport';
-
-  if (pickup) capturedFields._pickup = capturedFields._pickup || pickup;
-  if (dropoff) capturedFields._dropoff = capturedFields._dropoff || dropoff;
-  const p = capturedFields._pickup, d = capturedFields._dropoff;
-  if (p && d) updates.route = `${title(p)} → ${title(d)}`;
-  else if (p) updates.route = `From: ${title(p)}`;
-  else if (d) updates.route = `To: ${title(d)}`;
-
-  // TIME
-  let time = '';
-  m = lower.match(/\b(tomorrow|today|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/);
-  if (m) time = m[1].charAt(0).toUpperCase() + m[1].slice(1);
-  m = lower.match(/\b(\d{1,2}(?::\d{2})?\s*(?:a\.?m\.?|p\.?m\.?))\b/);
-  if (m) time = (time ? time + ' at ' : '') + m[1].toUpperCase().replace(/\./g,'');
-  if (time) updates.time = time;
-
-  // VEHICLE
-  const vehicles = [
-    ['sprinter','Sprinter'],['limousine','Limousine'],['limo','Limo'],
-    ['shuttle','Shuttle'],['sedan','Sedan'],['suv','SUV'],
-    ['black car','Black Car'],['van','Van'],['bus','Bus']
-  ];
-  for (const [k,v] of vehicles) {
-    if (new RegExp('\\b' + k + '\\b').test(lower)) { updates.vehicle = v; break; }
-  }
-
-  // PAX
-  const numWord = { one:'1', two:'2', three:'3', four:'4', five:'5', six:'6', seven:'7', eight:'8', nine:'9', ten:'10' };
-  m = lower.match(/\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(?:people|passengers|of us|pax)\b/);
-  if (m) {
-    const n = numWord[m[1]] || m[1];
-    updates.pax = n + ' passengers';
-  } else if (/\bjust me\b/.test(lower)) {
-    updates.pax = '1 passenger';
-  }
-
-  // TRIP
-  if (/\bone[\s-]way\b/.test(lower)) updates.trip = 'One way';
-  else if (/\bround[\s-]?trip\b/.test(lower)) updates.trip = 'Round trip';
-  else if (/\bhourly\b/.test(lower)) updates.trip = 'Hourly charter';
-  else if (/\bairport\b/.test(lower)) updates.trip = 'Airport transfer';
-  else if (/\btransfer\b/.test(lower)) updates.trip = 'Transfer';
-  else if (/\bpickup\b/.test(lower)) updates.trip = 'Pickup';
-
-  // Apply: only set if not yet captured OR new value is longer/more specific
-  for (const [key, value] of Object.entries(updates)) {
-    if (key.startsWith('_')) continue;
-    const existing = capturedFields[key];
-    if (!existing || (value.length > existing.length && existing.length < 50)) {
-      capturedFields[key] = value;
-      console.log('[CAPTURE] Parsed field:', key, '=', value);
-      handleAgentEvent({ type: 'field_update', key: key, main: value, sub: '' });
-    }
-  }
-}
-
-function startSpeechCapture() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    console.log('[CAPTURE] Speech recognition not supported in this browser');
-    micStatus.textContent = 'Live call active — board capture unavailable in this browser';
-    return;
-  }
-  capturedFields = {};
-  try {
-    recognition = new SR();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = 'en-US';
-    recognition.onresult = (event) => {
-      const result = event.results[event.results.length - 1];
-      if (!result) return;
-      const transcript = result[0].transcript;
-      console.log('[CAPTURE] Transcript:', transcript);
-      if (result.isFinal) parseTranscriptForFields(transcript);
-    };
-    recognition.onerror = (event) => {
-      console.log('[CAPTURE] Recognition error:', event.error);
-    };
-    recognition.onend = () => {
-      // Recognizer stops on silence — restart while call is active
-      if (isInCall && recognition) {
-        try { recognition.start(); } catch (e) { /* already started */ }
-      }
-    };
-    recognition.start();
-    console.log('[CAPTURE] Speech recognition started');
-  } catch (e) {
-    console.log('[CAPTURE] Speech recognition failed to start:', e.message);
-  }
-}
-
-function stopSpeechCapture() {
-  if (recognition) {
-    try {
-      recognition.onend = null;
-      recognition.onresult = null;
-      recognition.onerror = null;
-      recognition.stop();
-    } catch (e) {}
-    recognition = null;
-    console.log('[CAPTURE] Speech recognition stopped');
-  }
-  capturedFields = {};
-}
-
 function handleAgentEvent(msg) {
   if (msg.type === 'field_update') {
     const f = document.querySelector(`.field[data-key="${msg.key}"]`);
@@ -828,7 +672,6 @@ function handleAgentEvent(msg) {
 }
 
 function cleanupLiveCall() {
-  stopSpeechCapture();
   if (liveRoom) {
     try { liveRoom.disconnect(); } catch (e) {}
     liveRoom = null;
