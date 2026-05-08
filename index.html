@@ -91,7 +91,8 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 
 .section-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); margin-bottom: 32px; }
 .section-title { font-family: var(--font-display); font-weight: 600; font-size: clamp(40px, 6vw, 64px); line-height: 1.05; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 64px; text-transform: uppercase; }
-.section-divider { height: 1px; background: var(--cyan); opacity: 0.25; margin: 0 32px; }
+.section-divider { height: 1px; background: rgba(0,212,255,0.25); margin: 0 32px; position: relative; overflow: hidden; }
+.section-divider::after { content: ''; position: absolute; height: 100%; width: 30%; top: 0; left: 0; background: linear-gradient(90deg, transparent, rgba(0,212,255,0.9), transparent); animation: scanlineSweep 4s linear infinite; }
 @media (max-width: 768px) { .section-divider { margin: 0 16px; } }
 
 /* 01. HERO */
@@ -178,6 +179,48 @@ footer.main-footer { border-top: 1px solid var(--line); padding: 32px; text-alig
 footer.main-footer a { color: var(--ink-mute); transition: color 0.15s; }
 footer.main-footer a:hover { color: var(--cyan); }
 
+/* POLISH PASS — authority cues */
+.nav-left { display: flex; align-items: center; }
+.nav-signal-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #00D4FF; margin-right: 10px; vertical-align: middle; animation: navPulse 2.4s ease-in-out infinite; }
+.nav-signal-label { color: #6B7280; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; margin-right: 16px; }
+@media (max-width: 768px) { .nav-signal-label { display: none; } }
+
+@keyframes navPulse {
+  0%, 100% { opacity: 0.45; box-shadow: 0 0 0 0 rgba(0,212,255,0.5); }
+  50% { opacity: 1; box-shadow: 0 0 0 6px rgba(0,212,255,0); }
+}
+
+@keyframes scanlineSweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+nav.main-nav::after { content: ''; position: absolute; left: 0; bottom: -1px; height: 1px; width: 30%; background: linear-gradient(90deg, transparent, rgba(0,212,255,0.9), transparent); animation: scanlineSweep 4s linear infinite; pointer-events: none; }
+
+.hero-line { display: block; }
+body.hero-animate .hero-line {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: heroLineRise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+body.hero-animate .hero-line:nth-child(1) { animation-delay: 0ms; }
+body.hero-animate .hero-line:nth-child(2) { animation-delay: 80ms; }
+body.hero-animate .hero-line:nth-child(3) { animation-delay: 160ms; }
+body.hero-animate .hero-line:nth-child(4) { animation-delay: 240ms; }
+
+@keyframes heroLineRise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body.hero-animate .hero-line-cyan.flicker {
+  animation: cyanFlicker 0.5s ease-in-out 2;
+}
+
+@keyframes cyanFlicker {
+  0%, 100% { color: #00D4FF; text-shadow: none; }
+  50% { color: #00E5FF; text-shadow: 0 0 14px rgba(0,229,255,0.65); }
+}
+
 /* ACCESSIBILITY */
 *:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
@@ -186,7 +229,11 @@ footer.main-footer a:hover { color: var(--cyan); }
 <body>
 
 <nav class="main-nav">
-  <a href="/" class="logo">AI VOICE <span class="accent">AGENCY</span></a>
+  <div class="nav-left">
+    <span class="nav-signal-dot" aria-hidden="true"></span>
+    <span class="nav-signal-label" aria-hidden="true">// SIGNAL</span>
+    <a href="/" class="logo">AI VOICE <span class="accent">AGENCY</span></a>
+  </div>
   <ul id="navLinks">
     <li><a href="#system">01 System</a></li>
     <li><a href="#pricing">02 Pricing</a></li>
@@ -201,7 +248,7 @@ footer.main-footer a:hover { color: var(--cyan); }
 <section class="hero" id="hero">
   <div class="hero-content">
     <div class="section-label">// 01 ── PROPOSITION</div>
-    <h1>Answer every call<br>without adding<br><span class="accent">another desk.</span></h1>
+    <h1><span class="hero-line">Answer</span><span class="hero-line">every call</span><span class="hero-line">without</span><span class="hero-line"><span class="accent hero-line-cyan">another hire.</span></span></h1>
     <p class="hero-sub">AVA answers, qualifies, and routes inbound calls when your team is busy, after hours, or already buried.</p>
     <div class="hero-founder-line">// Built by a 30-year operator ─ not a software desk</div>
     <div class="hero-local-trust-line">Wisconsin-built for local operators who still win or lose customers on the phone.</div>
@@ -372,6 +419,18 @@ if (menuToggle && navLinks) {
     });
   });
 }
+</script>
+
+<script>
+  (function() {
+    if (sessionStorage.getItem('avaHeroAnimated')) return;
+    document.body.classList.add('hero-animate');
+    setTimeout(function() {
+      var cyan = document.querySelector('.hero-line-cyan');
+      if (cyan) cyan.classList.add('flicker');
+    }, 700);
+    sessionStorage.setItem('avaHeroAnimated', '1');
+  })();
 </script>
 
 </body>
