@@ -221,6 +221,34 @@ body.hero-animate .hero-line-cyan.flicker {
   50% { color: #00E5FF; text-shadow: 0 0 14px rgba(0,229,255,0.65); }
 }
 
+/* FLAIR PASS 2028 */
+.cta-primary {
+  position: relative;
+  overflow: visible;
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-opacity: 0;
+}
+.cta-primary::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle at var(--glow-x) var(--glow-y), rgba(0,212,255,calc(0.25 * var(--glow-opacity))), transparent 70%);
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.system-status { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: #6B7280; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; animation: statusPulse 2s ease-in-out infinite; flex-shrink: 0; }
+@keyframes statusPulse {
+  0%, 100% { opacity: 0.5; box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+  50% { opacity: 1; box-shadow: 0 0 0 4px rgba(16,185,129,0); }
+}
+
+.stat-number { font-variant-numeric: tabular-nums; }
+
 /* ACCESSIBILITY */
 *:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
@@ -253,7 +281,7 @@ body.hero-animate .hero-line-cyan.flicker {
     <div class="hero-founder-line">// Built by a 30-year operator ─ not a software desk</div>
     <div class="hero-local-trust-line">Wisconsin-built for local operators who still win or lose customers on the phone.</div>
     <div class="hero-ctas">
-      <a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" target="_blank" rel="noopener" class="btn-primary">→ Scope My Setup</a>
+      <a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" target="_blank" rel="noopener" class="btn-primary cta-primary">→ Scope My Setup</a>
       <a href="#pricing" class="btn-secondary">See Pricing →</a>
     </div>
   </div>
@@ -364,11 +392,11 @@ body.hero-animate .hero-line-cyan.flicker {
     <div class="operator-stats">
       <div class="stat-block">
         <div class="stat-label">// Years in business</div>
-        <div class="stat-value">30</div>
+        <div class="stat-value stat-number" data-target="30">30</div>
       </div>
       <div class="stat-block">
         <div class="stat-label">// Transportation years</div>
-        <div class="stat-value">17</div>
+        <div class="stat-value stat-number" data-target="17">17</div>
       </div>
       <div class="stat-block">
         <div class="stat-label">// Based in</div>
@@ -389,11 +417,15 @@ body.hero-animate .hero-line-cyan.flicker {
       <div class="contact-block-label">// Call</div>
       <a href="tel:+13053156562" class="contact-phone">(305) 315-6562</a>
       <p class="contact-text">Direct line. Mon–Fri 8a–5p CDT.</p>
+      <div class="system-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span class="status-text">// SYSTEM ONLINE — RESPONDING IN &lt;30 SEC</span>
+      </div>
     </div>
     <div class="contact-block">
       <div class="contact-block-label">// Book</div>
       <p class="contact-text">20-minute strategy call. Schedule yourself.</p>
-      <a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" target="_blank" rel="noopener" class="contact-cta-btn">Open Calendar →</a>
+      <a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" target="_blank" rel="noopener" class="contact-cta-btn cta-primary">Open Calendar →</a>
     </div>
   </div>
 </section>
@@ -430,6 +462,69 @@ if (menuToggle && navLinks) {
       if (cyan) cyan.classList.add('flicker');
     }, 700);
     sessionStorage.setItem('avaHeroAnimated', '1');
+  })();
+</script>
+
+<script>
+  // Haptic feedback on CTAs + cursor proximity glow
+  (function() {
+    var ctas = document.querySelectorAll('a[href*="leadconnectorhq.com"], a[href^="tel:"], .cta-primary, .cta-secondary');
+    ctas.forEach(function(el) {
+      el.addEventListener('click', function() {
+        if ('vibrate' in navigator) {
+          try { navigator.vibrate(10); } catch(e) {}
+        }
+      });
+    });
+
+    if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+      document.querySelectorAll('.cta-primary').forEach(function(btn) {
+        btn.addEventListener('mousemove', function(e) {
+          var rect = btn.getBoundingClientRect();
+          var x = ((e.clientX - rect.left) / rect.width) * 100;
+          var y = ((e.clientY - rect.top) / rect.height) * 100;
+          btn.style.setProperty('--glow-x', x + '%');
+          btn.style.setProperty('--glow-y', y + '%');
+          btn.style.setProperty('--glow-opacity', '1');
+        });
+        btn.addEventListener('mouseleave', function() {
+          btn.style.setProperty('--glow-opacity', '0');
+        });
+      });
+    }
+  })();
+
+  // Stats count-up on scroll-into-view (once per session, motion-safe)
+  (function() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (sessionStorage.getItem('avaStatsAnimated')) return;
+    var stats = document.querySelectorAll('.stat-number');
+    if (!stats.length || !('IntersectionObserver' in window)) return;
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        var target = parseInt(el.getAttribute('data-target'), 10);
+        var duration = 800;
+        var start = null;
+        el.textContent = '0';
+
+        function step(ts) {
+          if (!start) start = ts;
+          var progress = Math.min((ts - start) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.floor(eased * target);
+          if (progress < 1) requestAnimationFrame(step);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(step);
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.4 });
+
+    stats.forEach(function(s) { observer.observe(s); });
+    sessionStorage.setItem('avaStatsAnimated', '1');
   })();
 </script>
 
