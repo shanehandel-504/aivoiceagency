@@ -225,7 +225,8 @@ body.hero-animate .hero-line:nth-child(5) { animation-delay: 320ms; }
 }
 
 body.hero-animate .hero-line-cyan.flicker {
-  animation: cyanFlicker 0.5s ease-in-out 2;
+  animation: cyanFlicker 0.5s ease-in-out 1;
+  animation-fill-mode: forwards;
 }
 
 @keyframes cyanFlicker {
@@ -294,8 +295,13 @@ body.hero-animate .hero-line-cyan.flicker {
 .section-title::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 0; height: 1px; background: var(--cyan); transition: width 0.8s ease-out; }
 .section-title.in-view::after { width: 100%; }
 
-/* MOBILE STICKY CTA */
-#mobile-cta { position: fixed; bottom: 0; left: 0; right: 0; background: var(--cyan); color: var(--void); text-align: center; padding: 14px 16px; font-family: var(--font-mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; z-index: 100; transform: translateY(100%); transition: transform 0.3s; display: none; }
+/* TEL LINK CLICKABILITY GUARDS */
+.demo-phone, .phone-with-bars > a { pointer-events: auto; cursor: pointer; position: relative; z-index: 2; }
+.demo-bars, .phone-bars { pointer-events: none; user-select: none; }
+.demo-phone * { pointer-events: auto; }
+
+/* MOBILE STICKY CTA — floating */
+#mobile-cta { position: fixed; bottom: 12px; left: 12px; right: 12px; background: rgba(0,212,255,0.95); color: var(--void); text-align: center; padding: 14px 16px; font-family: var(--font-mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; z-index: 100; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transform: translateY(calc(100% + 24px)); transition: transform 0.3s ease-out; display: none; }
 #mobile-cta.visible { transform: translateY(0); }
 #mobile-cta a { color: var(--void); text-decoration: none; display: block; }
 @media (max-width: 768px) { #mobile-cta { display: block; } }
@@ -639,22 +645,19 @@ if (menuToggle && navLinks) {
     headings.forEach(function(h) { observer.observe(h); });
   })();
 
-  // Mobile sticky CTA visibility
+  // Mobile sticky CTA visibility — always-on past hero
   (function() {
     var cta = document.getElementById('mobile-cta');
-    var contact = document.getElementById('contact');
     if (!cta) return;
     function update() {
       var scrolled = window.scrollY > window.innerHeight * 0.5;
-      var contactInView = contact && contact.getBoundingClientRect().top < window.innerHeight;
-      if (scrolled && !contactInView) {
+      if (scrolled) {
         cta.classList.add('visible');
       } else {
         cta.classList.remove('visible');
       }
     }
     window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update, { passive: true });
     update();
   })();
 </script>
