@@ -6,11 +6,12 @@
 <title>AIChauffeur — Live Dispatcher Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --void: #07080C;
-    --void-2: #0C0E14;
+    /* CIRCULANT tokens (PR #27) — var names preserved, values flipped to cyan. */
+    --void: #0A0A0F;
+    --void-2: #0E0E16;
     --glass: rgba(20, 24, 36, 0.55);
     --glass-2: rgba(28, 34, 50, 0.45);
     --line: rgba(255, 255, 255, 0.07);
@@ -18,12 +19,13 @@
     --text: #EEF0F4;
     --text-dim: rgba(238, 240, 244, 0.55);
     --text-faint: rgba(238, 240, 244, 0.35);
-    --blue: #3B82F6;
-    --blue-glow: rgba(59, 130, 246, 0.35);
-    --blue-soft: rgba(59, 130, 246, 0.08);
+    --blue: #00D4FF;
+    --blue-bright: #00E5FF;
+    --blue-glow: rgba(0, 212, 255, 0.35);
+    --blue-soft: rgba(0, 212, 255, 0.08);
     --green: #10B981;
     --amber: #F59E0B;
-    --serif: 'Instrument Serif', Georgia, serif;
+    --serif: 'Space Grotesk', system-ui, sans-serif;
     --mono: 'JetBrains Mono', ui-monospace, monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,8 +43,8 @@
     content: '';
     position: fixed; inset: 0;
     background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59,130,246,0.10), transparent 60%),
-      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(59,130,246,0.06), transparent 60%),
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 212, 255,0.10), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(0, 212, 255,0.06), transparent 60%),
       linear-gradient(180deg, var(--void) 0%, var(--void-2) 100%);
     pointer-events: none;
     z-index: -2;
@@ -66,7 +68,7 @@
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(12px);
     position: sticky; top: 0; z-index: 50;
-    background: rgba(7, 8, 12, 0.7);
+    background: rgba(10, 10, 15, 0.7);
   }
   .brand {
     display: flex; align-items: center; gap: 12px;
@@ -126,7 +128,7 @@
   .scenario.active {
     border-color: var(--blue);
     background: linear-gradient(180deg, var(--blue-soft), var(--glass));
-    box-shadow: 0 0 0 1px var(--blue), 0 8px 32px rgba(59,130,246,0.15);
+    box-shadow: 0 0 0 1px var(--blue), 0 8px 32px rgba(0, 212, 255,0.15);
   }
   .scenario.active::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
@@ -171,7 +173,7 @@
   .call-head {
     padding: 22px 26px; border-bottom: 1px solid var(--line);
     display: flex; align-items: center; justify-content: space-between;
-    background: linear-gradient(180deg, rgba(59,130,246,0.04), transparent);
+    background: linear-gradient(180deg, rgba(0, 212, 255,0.04), transparent);
   }
   .call-head .left {
     display: flex; align-items: center; gap: 14px;
@@ -293,7 +295,7 @@
     font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
     padding: 4px 10px; border-radius: 99px;
     background: var(--blue-soft); color: var(--blue);
-    border: 1px solid rgba(59,130,246,0.25);
+    border: 1px solid rgba(0, 212, 255,0.25);
   }
   .ticket-head .badge.live::before {
     content: '●'; margin-right: 6px; animation: pulse 1.6s infinite;
@@ -335,8 +337,8 @@
 
   /* Quote card */
   .quote {
-    background: linear-gradient(180deg, rgba(59,130,246,0.08), var(--glass));
-    border: 1px solid rgba(59,130,246,0.25);
+    background: linear-gradient(180deg, rgba(0, 212, 255,0.08), var(--glass));
+    border: 1px solid rgba(0, 212, 255,0.25);
     border-radius: 18px;
     padding: 24px;
     backdrop-filter: blur(28px);

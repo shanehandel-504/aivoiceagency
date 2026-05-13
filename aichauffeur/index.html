@@ -7,24 +7,27 @@
 <meta name="description" content="AI dispatcher built for corporate transportation. Picks up every inbound call, builds the ticket, hands off operator-ready. Built specifically for limo and black car operators.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --void: #07080C;
-    --void-2: #0C0E14;
+    /* CIRCULANT tokens (PR #27) — kept var names to minimize churn,
+       only the underlying values flipped from blue to cyan. */
+    --void: #0A0A0F;
+    --void-2: #0E0E16;
     --glass: rgba(20, 24, 36, 0.55);
     --glass-2: rgba(28, 34, 50, 0.45);
     --line: rgba(255, 255, 255, 0.07);
     --line-2: rgba(255, 255, 255, 0.12);
+    --line-hot: rgba(0, 212, 255, 0.30);
     --text: #EEF0F4;
     --text-dim: rgba(238, 240, 244, 0.55);
     --text-faint: rgba(238, 240, 244, 0.35);
-    --blue: #3B82F6;
-    --blue-bright: #60A5FA;
-    --blue-glow: rgba(59, 130, 246, 0.35);
-    --blue-soft: rgba(59, 130, 246, 0.08);
+    --blue: #00D4FF;
+    --blue-bright: #00E5FF;
+    --blue-glow: rgba(0, 212, 255, 0.35);
+    --blue-soft: rgba(0, 212, 255, 0.08);
     --green: #10B981;
-    --serif: 'Instrument Serif', Georgia, serif;
+    --serif: 'Space Grotesk', system-ui, sans-serif;
     --mono: 'JetBrains Mono', ui-monospace, monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,8 +46,8 @@
     content: '';
     position: fixed; inset: 0;
     background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59,130,246,0.12), transparent 60%),
-      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(59,130,246,0.06), transparent 60%),
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 212, 255,0.12), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(0, 212, 255,0.06), transparent 60%),
       linear-gradient(180deg, var(--void) 0%, var(--void-2) 100%);
     pointer-events: none;
     z-index: -2;
@@ -69,7 +72,7 @@
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(12px);
     position: sticky; top: 0; z-index: 50;
-    background: rgba(7, 8, 12, 0.7);
+    background: rgba(10, 10, 15, 0.7);
   }
   .brand {
     display: flex; align-items: center; gap: 12px;
@@ -271,7 +274,7 @@
 
   /* ─────────────────────────────────────── DEMO PREVIEW */
   .demo-section {
-    background: linear-gradient(180deg, transparent, rgba(59,130,246,0.04));
+    background: linear-gradient(180deg, transparent, rgba(0, 212, 255,0.04));
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
   }
@@ -283,7 +286,7 @@
     text-align: center;
     position: relative; overflow: hidden;
     backdrop-filter: blur(28px);
-    box-shadow: 0 0 0 1px var(--blue-soft), 0 30px 100px rgba(59,130,246,0.15);
+    box-shadow: 0 0 0 1px var(--blue-soft), 0 30px 100px rgba(0, 212, 255,0.15);
   }
   .demo-cta::before {
     content: ''; position: absolute; inset: 0;
@@ -322,7 +325,7 @@
   .price-card.featured {
     border-color: var(--blue);
     background: linear-gradient(180deg, var(--blue-soft), var(--glass));
-    box-shadow: 0 20px 60px rgba(59,130,246,0.15);
+    box-shadow: 0 20px 60px rgba(0, 212, 255,0.15);
   }
   .price-card.featured::before {
     content: 'Recommended'; position: absolute; top: -12px; left: 32px;
@@ -493,6 +496,84 @@
     .price-card { padding: 32px 24px; }
     .foot { flex-direction: column; gap: 16px; padding: 24px; }
   }
+
+  /* ─── PR #27: AI Chauffeur motion identity (CIRCULANT cyan, dispatch console feel) ─── */
+
+  /* Signal Stack V2 — 9-bar voice indicator, scoped copy of AVA component
+     so this subsite ships standalone (no dep on /styles.css). */
+  .signal-stack-v2 { display: inline-flex; align-items: flex-end; gap: 3px; height: 18px; vertical-align: middle; pointer-events: none; user-select: none; margin-left: 12px; }
+  .signal-stack-v2 span { display: block; width: 3px; border-radius: 50px; background: rgba(0,212,255,0.7); box-shadow: 0 0 8px rgba(0,212,255,0.6); transform-origin: center bottom; animation: signal-stack-breathe 1.6s cubic-bezier(0.45,0.05,0.55,0.95) infinite; }
+  .signal-stack-v2 span:nth-child(1) { height: 5px;  animation-delay: 0s; }
+  .signal-stack-v2 span:nth-child(2) { height: 10px; animation-delay: 0.10s; }
+  .signal-stack-v2 span:nth-child(3) { height: 7px;  animation-delay: 0.25s; }
+  .signal-stack-v2 span:nth-child(4) { height: 12px; animation-delay: 0.40s; }
+  .signal-stack-v2 span.active { height: 16px; animation-delay: 0.15s; background: var(--blue-bright); opacity: 1; box-shadow: 0 0 10px rgba(0,229,255,0.75); }
+  .signal-stack-v2 span:nth-child(6) { height: 9px;  animation-delay: 0.30s; }
+  .signal-stack-v2 span:nth-child(7) { height: 13px; animation-delay: 0.45s; }
+  .signal-stack-v2 span:nth-child(8) { height: 6px;  animation-delay: 0.20s; }
+  .signal-stack-v2 span:nth-child(9) { height: 8px;  animation-delay: 0.35s; }
+  @keyframes signal-stack-breathe {
+    0%, 100% { transform: scaleY(0.85); opacity: 0.7; }
+    50%      { transform: scaleY(1.05); opacity: 1; }
+  }
+
+  /* Radar pulse — concentric cyan rings around the demo CTA block.
+     Decorative; sits behind content with z-index, no interaction. */
+  .demo-cta { position: relative; isolation: isolate; }
+  .demo-cta::before {
+    content: ''; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px;
+    border-radius: 50%; background: rgba(0,212,255,0.55);
+    box-shadow: 0 0 18px rgba(0,229,255,0.6);
+    transform: translate(-50%, -50%); z-index: -1;
+    animation: radar-ping 3.2s cubic-bezier(0.2,0.8,0.4,1) infinite;
+  }
+  .demo-cta::after {
+    content: ''; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px;
+    border-radius: 50%; transform: translate(-50%, -50%); z-index: -1;
+    box-shadow: 0 0 0 0 rgba(0,212,255,0.45);
+    animation: radar-rings 3.2s cubic-bezier(0.2,0.8,0.4,1) infinite 1.6s;
+  }
+  @keyframes radar-ping {
+    0%   { transform: translate(-50%, -50%) scale(1);   opacity: 0.6; }
+    70%  { transform: translate(-50%, -50%) scale(14);  opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(14);  opacity: 0; }
+  }
+  @keyframes radar-rings {
+    0%   { box-shadow: 0 0 0 0   rgba(0,212,255,0.45), 0 0 0 0   rgba(0,212,255,0.30); opacity: 0.8; }
+    70%  { box-shadow: 0 0 0 80px rgba(0,212,255,0),    0 0 0 140px rgba(0,212,255,0);  opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  /* Service tile motion — applied only to .problem-card (problems strip)
+     and .how-card (how-it-works steps). Diagonal scanline + cyan border
+     accent + inner glow on hover. Scoped tightly per Shane's clarification. */
+  .problem-card, .how-card {
+    border-color: rgba(0,212,255,0.15) !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    overflow: hidden; position: relative;
+  }
+  .problem-card::after, .how-card::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(115deg, transparent 0%, transparent 45%, rgba(0,212,255,0.06) 50%, transparent 55%, transparent 100%);
+    background-size: 250% 250%;
+    background-position: 200% 0;
+    animation: route-scanline 7s linear infinite;
+  }
+  .problem-card:hover, .how-card:hover {
+    border-color: rgba(0,212,255,0.30) !important;
+    box-shadow: 0 0 0 1px rgba(0,212,255,0.15), inset 0 0 24px rgba(0,212,255,0.05), 0 12px 40px rgba(0,212,255,0.08);
+    transform: translateY(-2px);
+  }
+  @keyframes route-scanline {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .signal-stack-v2 span,
+    .demo-cta::before, .demo-cta::after,
+    .problem-card::after, .how-card::after { animation: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -522,6 +603,7 @@
     <a href="/aichauffeur/demo/" class="btn-primary">
       Watch Live Demo
       <svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 2v10l8-5z"/></svg>
+      <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
     </a>
     <a href="#pricing" class="btn-ghost">See Pricing</a>
   </div>
@@ -626,6 +708,7 @@
       <a href="/aichauffeur/demo/" class="btn-primary">
         Open Live Demo
         <svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 2v10l8-5z"/></svg>
+        <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
       </a>
     </div>
   </div>
@@ -724,6 +807,7 @@
       <a href="mailto:shane@aichauffeur.ai?subject=AIChauffeur%20Demo%20Request" class="btn-primary">
         Email Shane
         <svg viewBox="0 0 14 14" fill="currentColor"><path d="M2 3h10v8H2V3zm1 1v.5l4 2.5 4-2.5V4H3zm0 1.5V10h8V5.5L7 8 3 5.5z"/></svg>
+        <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
       </a>
       <a href="/aichauffeur/demo/" class="btn-ghost">Watch Demo First</a>
     </div>
