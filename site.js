@@ -95,12 +95,11 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
   }
 
   // $126K BLEED COUNTER — hero centerpiece animation
-  // Spin red → slam $126,000 at 1.8s → red→cyan transition at 2.0s → glow at 2.2s → "85% never call back" at 2.5s → LIVE dot at 3.0s
+  // Spin red → slam $126,000 at 1.8s → red→cyan transition at 2.0s → glow at 2.2s → LIVE dot at 3.0s
   (function bleedCounter() {
     var module = document.getElementById('bleed-counter');
     if (!module) return;
     var value = document.getElementById('bleed-value');
-    var followup = module.querySelector('.counter-followup');
     var liveDot = module.querySelector('.counter-live-dot');
     if (!value) return;
 
@@ -112,7 +111,6 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
       value.classList.remove('alarm');
       value.classList.add('locked');
       module.classList.add('locked-border');
-      if (followup) followup.classList.add('shown');
       if (liveDot) liveDot.classList.add('on');
     }
 
@@ -140,9 +138,6 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         setTimeout(function() {
           value.classList.add('pulse');
         }, 400);
-        setTimeout(function() {
-          if (followup) followup.classList.add('shown');
-        }, 700);
         setTimeout(function() {
           if (liveDot) liveDot.classList.add('on');
         }, 1200);
@@ -260,7 +255,9 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     });
   })();
 
-  // GHL chat widget — kill auto-open welcome card; keep launcher icon clickable
+  // GHL chat widget — kill auto-open welcome card AND hide the native launcher.
+  // We render our own .ava-launcher orb (see mountCustomLauncher below) and
+  // forward clicks programmatically into the GHL widget's shadow root.
   // Widget renders in shadow DOM, so we inject CSS into each shadow root we find.
   (function killChatAutoPop() {
     var hideCSS = [
@@ -274,7 +271,11 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
       '[class*="auto-open"]',
       '[class*="autoOpen"]',
       '[class*="auto-popup"]',
-      '[class*="initial-message"]'
+      '[class*="initial-message"]',
+      '[class*="launcher-button"]',
+      '[class*="LC_launcher"]',
+      '[class*="chat-bubble"]',
+      '[class*="lc-bubble"]'
     ].join(',') + ' { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }';
 
     function injectInto(root) {
@@ -308,6 +309,42 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         }
       }).observe(document.documentElement, { childList: true, subtree: true });
     }
+  })();
+
+  // Custom AVA chat launcher — replaces the native GHL launcher (hidden via
+  // shadow-DOM CSS in killChatAutoPop above). Clicking our cyan orb sweeps
+  // every shadow root on the page for the GHL launcher button and dispatches
+  // a synthetic click, opening the chat panel as if the user had clicked the
+  // native bubble. Injected at runtime so no per-page HTML edits are needed.
+  (function mountCustomLauncher() {
+    var btn = document.createElement('button');
+    btn.className = 'ava-launcher';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Ask AVA — open chat');
+    btn.innerHTML = '<span aria-hidden="true">A</span><span class="ava-launcher-label">Ask AVA</span>';
+
+    function openChat() {
+      var els = document.getElementsByTagName('*');
+      for (var i = 0; i < els.length; i++) {
+        var root = els[i].shadowRoot;
+        if (!root) continue;
+        var candidate =
+          root.querySelector('[class*="launcher-button"]') ||
+          root.querySelector('[class*="LC_launcher"]') ||
+          root.querySelector('[class*="chat-bubble"]') ||
+          root.querySelector('[class*="lc-bubble"]') ||
+          root.querySelector('button[aria-label*="chat" i]') ||
+          root.querySelector('button');
+        if (candidate) { candidate.click(); return; }
+      }
+    }
+    btn.addEventListener('click', openChat);
+
+    function mount() {
+      if (document.body && !document.querySelector('.ava-launcher')) document.body.appendChild(btn);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);
+    else mount();
   })();
 
   // Mobile sticky CTA visibility — always-on past 50% of viewport
