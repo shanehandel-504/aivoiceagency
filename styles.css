@@ -64,9 +64,17 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .hero-sub { font-family: var(--font-body); font-size: 18px; line-height: 1.55; color: var(--ink-mute); max-width: 540px; margin-bottom: 32px; }
 .hero-sub .accent { color: var(--cyan); font-weight: 600; }
 
-/* $126K BLEED COUNTER — hero centerpiece */
-.counter-module { max-width: 480px; margin: 32px 0 28px; padding-left: 16px; border-left: 1px solid rgba(255,59,48,0.5); transition: border-color 0.4s ease; }
-.counter-module.locked-border { border-left-color: var(--cyan); }
+/* SIGNAL LOSS METER — hero LEFT instrument tile. Outer chrome only;
+   inner counter-row / counter-live-dot / counter-value / counter-caption
+   rules below are unchanged so the bleedCounter() animation in site.js
+   continues to fire on #bleed-counter / #bleed-value without edits. */
+.signal-loss-meter { position: relative; max-width: 440px; margin: 32px 0 28px; padding: 22px 24px 20px; background: #14141C; border: 1px solid var(--cyan); border-radius: 4px; overflow: hidden; isolation: isolate; transition: border-color 0.4s ease, box-shadow 0.4s ease; }
+.signal-loss-meter::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(0,212,255,0.07) 1px, transparent 1px); background-size: 8px 8px; pointer-events: none; z-index: 0; }
+.signal-loss-meter::after { content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,229,255,0.55), transparent); animation: meterScan 7s linear infinite; pointer-events: none; z-index: 1; }
+.signal-loss-meter > * { position: relative; z-index: 2; }
+.signal-loss-meter.locked-border { border-color: #00E5FF; box-shadow: 0 0 24px rgba(0,229,255,0.18); }
+.meter-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 14px; }
+@keyframes meterScan { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translateY(calc(100% + 2px)); opacity: 0; } }
 .counter-row { display: flex; align-items: center; gap: 14px; }
 .counter-live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); opacity: 0; transition: opacity 0.4s; box-shadow: 0 0 6px rgba(0,212,255,0.5); flex-shrink: 0; }
 .counter-live-dot.on { opacity: 1; animation: counterDotPulse 1s ease-in-out infinite; }
@@ -79,7 +87,7 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 @keyframes counterGlowBurst { 0% { opacity: 0; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.4); } }
 .counter-caption { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin-top: 16px; }
 @media (max-width: 768px) {
-  .counter-module { max-width: 320px; margin: 20px 0 24px; }
+  .signal-loss-meter { max-width: 100%; margin: 20px 0 24px; padding: 18px 18px 16px; }
   .counter-value { font-size: clamp(36px, 11vw, 56px) !important; }
 }
 @media (max-width: 390px) {
@@ -88,7 +96,8 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 @media (prefers-reduced-motion: reduce) {
   .counter-value { color: var(--cyan) !important; text-shadow: none !important; }
   .counter-live-dot { opacity: 1 !important; }
-  .counter-module { border-left-color: var(--cyan) !important; }
+  .signal-loss-meter { border-color: var(--cyan) !important; box-shadow: none !important; }
+  .signal-loss-meter::after { animation: none !important; opacity: 0 !important; }
 }
 .hero-founder-line { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 8px; }
 .hero-local-trust-line { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 40px; }
@@ -103,8 +112,17 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--line); padding: 4px 0; transition: color 0.15s, border-color 0.15s; }
 .btn-secondary:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
 
-.hero-meta { display: flex; flex-direction: column; gap: 24px; }
-.meta-block { border-left: 1px solid var(--cyan); padding-left: 16px; }
+/* SYSTEM SPEC PANEL — hero RIGHT instrument tile.
+   Same frame chrome as .signal-loss-meter (rectangular, cyan border,
+   #14141C interior, subtle dot grid) so the two panels read as a
+   paired cockpit. Inner .meta-block left bars stay as gauge dividers,
+   softened to rgba(0,212,255,0.4) so they don't compete with the
+   outer frame. No scan line on this panel — the meter is the "live"
+   instrument; this is the static spec readout. */
+.hero-meta { position: relative; padding: 22px 20px 20px; background: #14141C; border: 1px solid var(--cyan); border-radius: 4px; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: 22px; }
+.hero-meta::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(0,212,255,0.07) 1px, transparent 1px); background-size: 8px 8px; pointer-events: none; z-index: 0; }
+.hero-meta > * { position: relative; z-index: 1; }
+.meta-block { border-left: 1px solid rgba(0,212,255,0.4); padding-left: 14px; }
 .meta-label { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 4px; }
 .meta-value { font-family: var(--font-mono); font-size: 14px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); }
 
