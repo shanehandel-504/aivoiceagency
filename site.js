@@ -59,6 +59,7 @@
   }
 
   // Stats count-up on scroll-into-view (once per session, motion-safe)
+  // Supports data-target (required), data-prefix, data-suffix, data-duration
   if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
       && !sessionStorage.getItem('avaStatsAnimated')) {
     var stats = document.querySelectorAll('.stat-number');
@@ -68,16 +69,18 @@
           if (!entry.isIntersecting) return;
           var el = entry.target;
           var target = parseInt(el.getAttribute('data-target'), 10);
-          var duration = 800;
+          var prefix = el.getAttribute('data-prefix') || '';
+          var suffix = el.getAttribute('data-suffix') || '';
+          var duration = parseInt(el.getAttribute('data-duration'), 10) || 1500;
           var start = null;
-          el.textContent = '0';
+          el.textContent = prefix + '0' + suffix;
           function step(ts) {
             if (!start) start = ts;
             var progress = Math.min((ts - start) / duration, 1);
             var eased = 1 - Math.pow(1 - progress, 3);
-            el.textContent = Math.floor(eased * target);
+            el.textContent = prefix + Math.floor(eased * target) + suffix;
             if (progress < 1) requestAnimationFrame(step);
-            else el.textContent = target;
+            else el.textContent = prefix + target + suffix;
           }
           requestAnimationFrame(step);
           statsObserver.unobserve(el);
@@ -87,6 +90,67 @@
       sessionStorage.setItem('avaStatsAnimated', '1');
     }
   }
+
+  // $126K BLEED COUNTER — hero centerpiece animation
+  // Spin red → slam $126,000 at 1.8s → red→cyan transition at 2.0s → glow at 2.2s → "85% never call back" at 2.5s → LIVE dot at 3.0s
+  (function bleedCounter() {
+    var module = document.getElementById('bleed-counter');
+    if (!module) return;
+    var value = document.getElementById('bleed-value');
+    var followup = module.querySelector('.counter-followup');
+    var liveDot = module.querySelector('.counter-live-dot');
+    if (!value) return;
+
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var FINAL = 126000;
+    var formatted = '$' + FINAL.toLocaleString('en-US');
+
+    function reveal() {
+      value.classList.remove('alarm');
+      value.classList.add('locked');
+      module.classList.add('locked-border');
+      if (followup) followup.classList.add('shown');
+      if (liveDot) liveDot.classList.add('on');
+    }
+
+    if (reduced) {
+      value.textContent = formatted;
+      reveal();
+      return;
+    }
+
+    value.classList.add('alarm');
+    value.textContent = '$0';
+
+    var spinStart = performance.now();
+    var SPIN_DURATION = 1800;
+    function spin(ts) {
+      var elapsed = ts - spinStart;
+      if (elapsed >= SPIN_DURATION) {
+        value.textContent = formatted;
+        value.classList.add('slam');
+        setTimeout(function() {
+          value.classList.remove('alarm');
+          value.classList.add('locked');
+          module.classList.add('locked-border');
+        }, 200);
+        setTimeout(function() {
+          value.classList.add('pulse');
+        }, 400);
+        setTimeout(function() {
+          if (followup) followup.classList.add('shown');
+        }, 700);
+        setTimeout(function() {
+          if (liveDot) liveDot.classList.add('on');
+        }, 1200);
+        return;
+      }
+      var rand = Math.floor(Math.random() * 400000) + 1000;
+      value.textContent = '$' + rand.toLocaleString('en-US');
+      requestAnimationFrame(spin);
+    }
+    requestAnimationFrame(spin);
+  })();
 
   // Live timestamp on system status badge
   function updateBadge() {
@@ -125,6 +189,73 @@
       headings.forEach(function(h) { headingObserver.observe(h); });
     }
   }
+
+  // HEAR AVA ANSWER — audio sample cards (homepage)
+  // Click plays sample; pauses any other playing card; 404 falls back to "Audio coming soon" tag.
+  (function audioCards() {
+    var cards = document.querySelectorAll('.audio-card[data-src]');
+    if (!cards.length) return;
+    var current = null;
+
+    function checkExists(src) {
+      return fetch(src, { method: 'HEAD' }).then(function(r) {
+        return r.ok;
+      }).catch(function() {
+        return false;
+      });
+    }
+
+    cards.forEach(function(card) {
+      var audio = null;
+      card.addEventListener('click', function() {
+        var src = card.getAttribute('data-src');
+
+        // Pause whatever's currently playing
+        if (current && current.card !== card) {
+          current.audio.pause();
+          current.audio.currentTime = 0;
+          current.card.classList.remove('playing');
+          current = null;
+        }
+
+        // Toggle off if this card was already playing
+        if (audio && !audio.paused) {
+          audio.pause();
+          audio.currentTime = 0;
+          card.classList.remove('playing');
+          current = null;
+          return;
+        }
+
+        // Lazily check + load
+        if (card.classList.contains('coming-soon')) return;
+        if (audio) {
+          card.classList.add('playing');
+          audio.play().catch(function() {});
+          current = { card: card, audio: audio };
+          return;
+        }
+
+        checkExists(src).then(function(ok) {
+          if (!ok) {
+            card.classList.add('coming-soon');
+            return;
+          }
+          audio = new Audio(src);
+          audio.addEventListener('ended', function() {
+            card.classList.remove('playing');
+            current = null;
+          });
+          card.classList.add('playing');
+          audio.play().catch(function() {
+            card.classList.remove('playing');
+            card.classList.add('coming-soon');
+          });
+          current = { card: card, audio: audio };
+        });
+      });
+    });
+  })();
 
   // Mobile sticky CTA visibility — always-on past 50% of viewport
   var stickyCta = document.getElementById('mobile-cta');
