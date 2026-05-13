@@ -453,10 +453,26 @@ body.hero-animate .hero-line-cyan.flicker {
 #mobile-cta a { color: var(--void); text-decoration: none; display: block; }
 @media (max-width: 768px) { #mobile-cta { display: block; } }
 
-/* GHL chat widget — hide on mobile so it doesn't fight the sticky CTA */
+/* GHL chat widget — kill auto-open welcome card (light-DOM fallback;
+   primary kill is shadow-DOM CSS injection in site.js).
+   The chat ICON / launcher stays visible and clickable on desktop. */
+[class*="prompt-message"],
+[class*="welcome-message"],
+[class*="welcome-card"],
+[class*="welcome-popup"],
+[class*="auto-open"],
+[class*="auto-popup"] {
+  display: none !important;
+}
+
+/* GHL chat widget — hide entire widget on mobile so it doesn't fight the sticky CTA.
+   Includes modern custom-element form (chat-widget) plus legacy iframe form. */
 @media (max-width: 768px) {
   iframe[src*="leadconnectorhq.com"],
   iframe[id*="chat-widget"],
+  chat-widget,
+  lc-chat-widget,
+  [id*="chat-widget"],
   .lc-widget,
   #lc-chat-widget,
   div[id^="lc_"] iframe { display: none !important; }
