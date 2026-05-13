@@ -260,6 +260,56 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     });
   })();
 
+  // GHL chat widget — kill auto-open welcome card; keep launcher icon clickable
+  // Widget renders in shadow DOM, so we inject CSS into each shadow root we find.
+  (function killChatAutoPop() {
+    var hideCSS = [
+      '[class*="prompt-message"]',
+      '[class*="prompt-msg"]',
+      '[class*="prompt_message"]',
+      '[class*="welcome-message"]',
+      '[class*="welcome_message"]',
+      '[class*="welcome-card"]',
+      '[class*="welcome-popup"]',
+      '[class*="auto-open"]',
+      '[class*="autoOpen"]',
+      '[class*="auto-popup"]',
+      '[class*="initial-message"]'
+    ].join(',') + ' { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }';
+
+    function injectInto(root) {
+      if (!root || root.__avaPopKilled) return;
+      root.__avaPopKilled = true;
+      var s = document.createElement('style');
+      s.textContent = hideCSS;
+      root.appendChild(s);
+    }
+
+    function scan() {
+      var all = document.getElementsByTagName('*');
+      for (var i = 0; i < all.length; i++) {
+        if (all[i].shadowRoot && !all[i].shadowRoot.__avaPopKilled) injectInto(all[i].shadowRoot);
+      }
+    }
+
+    scan();
+    setTimeout(scan, 500);
+    setTimeout(scan, 1500);
+    setTimeout(scan, 3500);
+
+    if ('MutationObserver' in window) {
+      new MutationObserver(function(mutations) {
+        for (var i = 0; i < mutations.length; i++) {
+          var added = mutations[i].addedNodes;
+          for (var j = 0; j < added.length; j++) {
+            var n = added[j];
+            if (n.nodeType === 1 && n.shadowRoot && !n.shadowRoot.__avaPopKilled) injectInto(n.shadowRoot);
+          }
+        }
+      }).observe(document.documentElement, { childList: true, subtree: true });
+    }
+  })();
+
   // Mobile sticky CTA visibility — always-on past 50% of viewport
   var stickyCta = document.getElementById('mobile-cta');
   if (stickyCta) {
