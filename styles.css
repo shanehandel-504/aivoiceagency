@@ -212,14 +212,19 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 /* 06. FOOTER — 4-col grid */
 footer.main-footer { border-top: 1px solid var(--line); padding: 64px 32px 32px; max-width: 1280px; margin: 0 auto; }
 @media (max-width: 768px) { footer.main-footer { padding: 40px 16px 24px; } }
-.footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-bottom: 48px; }
-@media (max-width: 900px) { .footer-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
-.footer-col-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); margin-bottom: 16px; }
-.footer-col ul { list-style: none; }
-.footer-col li { margin-bottom: 8px; }
-.footer-col a { font-family: var(--font-mono); font-size: 12px; color: var(--ink-mute); letter-spacing: 0.04em; transition: color 0.15s; }
-.footer-col a:hover { color: var(--cyan); }
+.footer-rail { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
+.rail-section { display: flex; gap: 24px; align-items: baseline; padding-bottom: 16px; border-bottom: 1px solid rgba(0,212,255,0.12); }
+.rail-section:last-of-type { border-bottom: 0; padding-bottom: 0; }
+.rail-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); min-width: 140px; flex-shrink: 0; }
+.rail-items { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.rail-items a { font-family: var(--font-mono); font-size: 12px; color: var(--ink-mute); letter-spacing: 0.04em; transition: color 0.15s; text-decoration: none; }
+.rail-items a:hover { color: var(--cyan); }
+.rail-arrow { color: var(--cyan); font-family: var(--font-mono); font-size: 12px; opacity: 0.65; }
+.rail-disabled { font-family: var(--font-mono); font-size: 12px; color: #4A4A52; letter-spacing: 0.04em; }
+@media (max-width: 768px) {
+  .rail-section { flex-direction: column; gap: 8px; align-items: flex-start; padding-bottom: 14px; }
+  .rail-label { min-width: 0; }
+}
 .footer-copy { border-top: 1px solid var(--line); padding-top: 24px; text-align: center; font-family: var(--font-mono); font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); }
 .footer-copy a { color: var(--ink-mute); transition: color 0.15s; }
 .footer-copy a:hover { color: var(--cyan); }
