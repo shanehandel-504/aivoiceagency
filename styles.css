@@ -372,6 +372,41 @@ body.hero-animate .hero-line-cyan.flicker {
 .phone-cta-module .phone-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); margin-top: 16px; }
 .phone-cta-module .phone-sub .live { color: var(--cyan); }
 
+/* SIGNAL STACK V2 — unified 9-bar voice signal indicator (PR #27).
+   Replaces .demo-bars / .phone-bars / .voice-wave sitewide. CSS-only,
+   no JS. One bar (the active 5th) reads brighter than the rest. Custom
+   cubic-bezier breathing for an organic feel. .active-sweep modifier
+   triggers a one-shot scan when applied (e.g., on CTA tap from JS). */
+.signal-stack-v2 { display: inline-flex; align-items: flex-end; gap: 3px; height: 22px; vertical-align: middle; pointer-events: none; user-select: none; }
+.signal-stack-v2 span { display: block; width: 3px; border-radius: 50px; background: rgba(0,212,255,0.7); box-shadow: 0 0 8px rgba(0,212,255,0.6); transform-origin: center bottom; animation: signal-stack-breathe 1.6s cubic-bezier(0.45,0.05,0.55,0.95) infinite; }
+.signal-stack-v2 span:nth-child(1) { height: 6px;  animation-delay: 0s; }
+.signal-stack-v2 span:nth-child(2) { height: 12px; animation-delay: 0.10s; }
+.signal-stack-v2 span:nth-child(3) { height: 9px;  animation-delay: 0.25s; }
+.signal-stack-v2 span:nth-child(4) { height: 14px; animation-delay: 0.40s; }
+.signal-stack-v2 span:nth-child(5).active,
+.signal-stack-v2 span.active { height: 18px; animation-delay: 0.15s; background: var(--cyan-bright); opacity: 1; box-shadow: 0 0 10px rgba(0,229,255,0.75); }
+.signal-stack-v2 span:nth-child(6) { height: 11px; animation-delay: 0.30s; }
+.signal-stack-v2 span:nth-child(7) { height: 15px; animation-delay: 0.45s; }
+.signal-stack-v2 span:nth-child(8) { height: 8px;  animation-delay: 0.20s; }
+.signal-stack-v2 span:nth-child(9) { height: 10px; animation-delay: 0.35s; }
+@keyframes signal-stack-breathe {
+  0%, 100% { transform: scaleY(0.85); opacity: 0.7; }
+  50%      { transform: scaleY(1.05); opacity: 1; }
+}
+.signal-stack-v2.active-sweep span { animation: signal-stack-sweep 0.6s cubic-bezier(0.2,0.8,0.4,1) 1; }
+@keyframes signal-stack-sweep {
+  0%   { transform: scaleY(0.85); opacity: 0.7; }
+  40%  { transform: scaleY(1.4);  opacity: 1; box-shadow: 0 0 14px rgba(0,229,255,0.85); }
+  100% { transform: scaleY(0.85); opacity: 0.7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal-stack-v2 span { animation: none !important; transform: scaleY(1); }
+}
+.signal-stack-v2.in-mobile-cta { height: 14px; gap: 2px; margin-left: 8px; vertical-align: -2px; }
+.signal-stack-v2.in-mobile-cta span { width: 2px; box-shadow: 0 0 6px rgba(10,10,15,0.45); background: rgba(10,10,15,0.85); }
+.signal-stack-v2.in-mobile-cta span.active { background: var(--void); box-shadow: 0 0 8px rgba(10,10,15,0.7); }
+@media (max-width: 374px) { .signal-stack-v2.in-mobile-cta { display: none; } }
+
 /* HEAR AVA ANSWER — audio sample cards (homepage) */
 .audio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 @media (max-width: 900px) { .audio-grid { grid-template-columns: 1fr; gap: 16px; } }
