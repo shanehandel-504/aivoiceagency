@@ -95,12 +95,11 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
   }
 
   // $126K BLEED COUNTER — hero centerpiece animation
-  // Spin red → slam $126,000 at 1.8s → red→cyan transition at 2.0s → glow at 2.2s → "85% never call back" at 2.5s → LIVE dot at 3.0s
+  // Spin red → slam $126,000 at 1.8s → red→cyan transition at 2.0s → glow at 2.2s → LIVE dot at 3.0s
   (function bleedCounter() {
     var module = document.getElementById('bleed-counter');
     if (!module) return;
     var value = document.getElementById('bleed-value');
-    var followup = module.querySelector('.counter-followup');
     var liveDot = module.querySelector('.counter-live-dot');
     if (!value) return;
 
@@ -112,7 +111,6 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
       value.classList.remove('alarm');
       value.classList.add('locked');
       module.classList.add('locked-border');
-      if (followup) followup.classList.add('shown');
       if (liveDot) liveDot.classList.add('on');
     }
 
@@ -140,9 +138,6 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         setTimeout(function() {
           value.classList.add('pulse');
         }, 400);
-        setTimeout(function() {
-          if (followup) followup.classList.add('shown');
-        }, 700);
         setTimeout(function() {
           if (liveDot) liveDot.classList.add('on');
         }, 1200);
