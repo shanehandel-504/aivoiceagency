@@ -65,7 +65,7 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .hero-sub .accent { color: var(--cyan); font-weight: 600; }
 
 /* $126K BLEED COUNTER — hero centerpiece */
-.counter-module { max-width: 720px; margin: 32px 0; padding-left: 16px; border-left: 1px solid rgba(255,59,48,0.5); transition: border-color 0.4s ease; }
+.counter-module { max-width: 480px; margin: 32px 0 28px; padding-left: 16px; border-left: 1px solid rgba(255,59,48,0.5); transition: border-color 0.4s ease; }
 .counter-module.locked-border { border-left-color: var(--cyan); }
 .counter-row { display: flex; align-items: center; gap: 14px; }
 .counter-live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); opacity: 0; transition: opacity 0.4s; box-shadow: 0 0 6px rgba(0,212,255,0.5); flex-shrink: 0; }
@@ -77,12 +77,13 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 @keyframes counterSlam { 0% { transform: translateX(-10px); } 25% { transform: translateX(10px); } 50% { transform: translateX(-6px); } 75% { transform: translateX(6px); } 100% { transform: translateX(0); } }
 .counter-value.pulse::after { content: ''; position: absolute; inset: -20px -40px; border-radius: 50%; background: radial-gradient(circle at center, rgba(0,229,255,0.45), transparent 70%); animation: counterGlowBurst 0.6s ease-out 1; pointer-events: none; z-index: -1; }
 @keyframes counterGlowBurst { 0% { opacity: 0; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.4); } }
-.counter-caption { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin-top: 12px; }
+.counter-caption { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin-top: 16px; }
 .counter-followup { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); margin-top: 6px; opacity: 0; transform: translateY(8px); transition: opacity 0.5s ease, transform 0.5s ease; }
 .counter-followup.shown { opacity: 1; transform: translateY(0); }
-.counter-cite { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-mute); margin-top: 10px; }
+.counter-cite { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-mute); margin-top: 24px; }
 @media (max-width: 768px) {
-  .counter-module { margin: 20px 0; }
+  .counter-module { max-width: 320px; margin: 20px 0 24px; }
+  .counter-value { font-size: clamp(36px, 11vw, 56px) !important; }
   .counter-cite { font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -435,10 +436,19 @@ body.hero-animate .hero-line-cyan.flicker {
 .demo-phone *, .phone-cta-module .phone-link * { pointer-events: auto; }
 
 /* MOBILE STICKY CTA — floating */
-#mobile-cta { position: fixed; bottom: 12px; left: 12px; right: 12px; background: rgba(0,212,255,0.95); color: var(--void); text-align: center; padding: 14px 16px; font-family: var(--font-mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; z-index: 100; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transform: translateY(calc(100% + 24px)); transition: transform 0.3s ease-out; display: none; }
+#mobile-cta { position: fixed; bottom: calc(12px + env(safe-area-inset-bottom)); left: 12px; right: 12px; background: rgba(0,212,255,0.95); color: var(--void); text-align: center; padding: 14px 16px; font-family: var(--font-mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; z-index: 100; border-radius: 6px; box-shadow: 0 4px 24px rgba(0,212,255,0.35), 0 0 0 1px rgba(0,212,255,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom))); transition: transform 0.3s ease-out; display: none; }
 #mobile-cta.visible { transform: translateY(0); }
 #mobile-cta a { color: var(--void); text-decoration: none; display: block; }
 @media (max-width: 768px) { #mobile-cta { display: block; } }
+
+/* GHL chat widget — hide on mobile so it doesn't fight the sticky CTA */
+@media (max-width: 768px) {
+  iframe[src*="leadconnectorhq.com"],
+  iframe[id*="chat-widget"],
+  .lc-widget,
+  #lc-chat-widget,
+  div[id^="lc_"] iframe { display: none !important; }
+}
 
 /* ACCESSIBILITY */
 *:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
