@@ -35,15 +35,27 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     sessionStorage.setItem('avaHeroAnimated', '1');
   }
 
-  // Haptic feedback + cursor-proximity glow on primary CTAs
-  var ctas = document.querySelectorAll('a[href*="leadconnectorhq.com"], a[href^="tel:"], .cta-primary');
-  ctas.forEach(function(el) {
-    el.addEventListener('click', function() {
-      if ('vibrate' in navigator) {
-        try { navigator.vibrate(10); } catch (e) {}
-      }
-    });
-  });
+  // Haptic feedback + visual tap fallback on primary CTAs (PR #27).
+  // pointerdown (not click) so iOS Safari fires it; vibrate is feature-
+  // detected and silently no-ops on unsupported platforms. Visual fallback
+  // (.tap-feedback class) works everywhere via CSS keyframe; if a Signal
+  // Stack V2 sits near the button, it gets a one-shot sweep.
+  var HAPTIC_SELECTOR = 'a[href*="leadconnectorhq.com"], a[href^="tel:"], .cta-primary, .btn-primary, .btn-ghost, .contact-cta-btn, .ava-launcher, .demo-phone';
+  document.addEventListener('pointerdown', function(e) {
+    var btn = e.target.closest(HAPTIC_SELECTOR);
+    if (!btn) return;
+    if ('vibrate' in navigator) {
+      try { navigator.vibrate(15); } catch (_) {}
+    }
+    btn.classList.add('tap-feedback');
+    var nearbyStack = btn.querySelector('.signal-stack-v2') ||
+                      (btn.parentElement && btn.parentElement.querySelector('.signal-stack-v2'));
+    if (nearbyStack) {
+      nearbyStack.classList.add('active-sweep');
+      setTimeout(function() { nearbyStack.classList.remove('active-sweep'); }, 600);
+    }
+    setTimeout(function() { btn.classList.remove('tap-feedback'); }, 220);
+  }, { passive: true });
 
   if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
     document.querySelectorAll('.cta-primary').forEach(function(btn) {
