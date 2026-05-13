@@ -64,9 +64,17 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .hero-sub { font-family: var(--font-body); font-size: 18px; line-height: 1.55; color: var(--ink-mute); max-width: 540px; margin-bottom: 32px; }
 .hero-sub .accent { color: var(--cyan); font-weight: 600; }
 
-/* $126K BLEED COUNTER — hero centerpiece */
-.counter-module { max-width: 480px; margin: 32px 0 28px; padding-left: 16px; border-left: 1px solid rgba(255,59,48,0.5); transition: border-color 0.4s ease; }
-.counter-module.locked-border { border-left-color: var(--cyan); }
+/* SIGNAL LOSS METER — hero LEFT instrument tile. Outer chrome only;
+   inner counter-row / counter-live-dot / counter-value / counter-caption
+   rules below are unchanged so the bleedCounter() animation in site.js
+   continues to fire on #bleed-counter / #bleed-value without edits. */
+.signal-loss-meter { position: relative; max-width: 440px; margin: 32px 0 28px; padding: 22px 24px 20px; background: #14141C; border: 1px solid var(--cyan); border-radius: 4px; overflow: hidden; isolation: isolate; transition: border-color 0.4s ease, box-shadow 0.4s ease; }
+.signal-loss-meter::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(0,212,255,0.07) 1px, transparent 1px); background-size: 8px 8px; pointer-events: none; z-index: 0; }
+.signal-loss-meter::after { content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,229,255,0.55), transparent); animation: meterScan 7s linear infinite; pointer-events: none; z-index: 1; }
+.signal-loss-meter > * { position: relative; z-index: 2; }
+.signal-loss-meter.locked-border { border-color: #00E5FF; box-shadow: 0 0 24px rgba(0,229,255,0.18); }
+.meter-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 14px; }
+@keyframes meterScan { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translateY(calc(100% + 2px)); opacity: 0; } }
 .counter-row { display: flex; align-items: center; gap: 14px; }
 .counter-live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); opacity: 0; transition: opacity 0.4s; box-shadow: 0 0 6px rgba(0,212,255,0.5); flex-shrink: 0; }
 .counter-live-dot.on { opacity: 1; animation: counterDotPulse 1s ease-in-out infinite; }
@@ -79,7 +87,7 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 @keyframes counterGlowBurst { 0% { opacity: 0; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.4); } }
 .counter-caption { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin-top: 16px; }
 @media (max-width: 768px) {
-  .counter-module { max-width: 320px; margin: 20px 0 24px; }
+  .signal-loss-meter { max-width: 100%; margin: 20px 0 24px; padding: 18px 18px 16px; }
   .counter-value { font-size: clamp(36px, 11vw, 56px) !important; }
 }
 @media (max-width: 390px) {
@@ -88,7 +96,8 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 @media (prefers-reduced-motion: reduce) {
   .counter-value { color: var(--cyan) !important; text-shadow: none !important; }
   .counter-live-dot { opacity: 1 !important; }
-  .counter-module { border-left-color: var(--cyan) !important; }
+  .signal-loss-meter { border-color: var(--cyan) !important; box-shadow: none !important; }
+  .signal-loss-meter::after { animation: none !important; opacity: 0 !important; }
 }
 .hero-founder-line { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 8px; }
 .hero-local-trust-line { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 40px; }
@@ -103,8 +112,17 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--line); padding: 4px 0; transition: color 0.15s, border-color 0.15s; }
 .btn-secondary:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
 
-.hero-meta { display: flex; flex-direction: column; gap: 24px; }
-.meta-block { border-left: 1px solid var(--cyan); padding-left: 16px; }
+/* SYSTEM SPEC PANEL — hero RIGHT instrument tile.
+   Same frame chrome as .signal-loss-meter (rectangular, cyan border,
+   #14141C interior, subtle dot grid) so the two panels read as a
+   paired cockpit. Inner .meta-block left bars stay as gauge dividers,
+   softened to rgba(0,212,255,0.4) so they don't compete with the
+   outer frame. No scan line on this panel — the meter is the "live"
+   instrument; this is the static spec readout. */
+.hero-meta { position: relative; padding: 22px 20px 20px; background: #14141C; border: 1px solid var(--cyan); border-radius: 4px; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: 22px; }
+.hero-meta::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(0,212,255,0.07) 1px, transparent 1px); background-size: 8px 8px; pointer-events: none; z-index: 0; }
+.hero-meta > * { position: relative; z-index: 1; }
+.meta-block { border-left: 1px solid rgba(0,212,255,0.4); padding-left: 14px; }
 .meta-label { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 4px; }
 .meta-value { font-family: var(--font-mono); font-size: 14px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); }
 
@@ -123,7 +141,7 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 @media (max-width: 1100px) { .verticals-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px) { .verticals-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
 @media (max-width: 480px) { .verticals-grid { grid-template-columns: 1fr; } }
-.vertical-card { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; border: 1px solid var(--line); padding: 24px 20px; min-height: 160px; cursor: pointer; background-image: radial-gradient(circle, rgba(0,212,255,0.07) 1px, transparent 1px); background-size: 16px 16px; transition: border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease; color: var(--ink); }
+.vertical-card { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; border: 1px solid var(--line-strong); padding: 24px 20px; min-height: 160px; cursor: pointer; background-image: radial-gradient(circle, rgba(0,212,255,0.07) 1px, transparent 1px); background-size: 16px 16px; transition: border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease; color: var(--ink); text-decoration: none; }
 .vertical-card::before { content: ''; position: absolute; top: 0; left: 0; height: 1px; width: 30%; background: linear-gradient(90deg, transparent, rgba(0,229,255,0.9), transparent); animation: scanlineSweep 7s linear infinite; pointer-events: none; }
 .vertical-card:nth-child(2)::before { animation-delay: 1.4s; }
 .vertical-card:nth-child(3)::before { animation-delay: 2.8s; }
@@ -194,14 +212,19 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 /* 06. FOOTER — 4-col grid */
 footer.main-footer { border-top: 1px solid var(--line); padding: 64px 32px 32px; max-width: 1280px; margin: 0 auto; }
 @media (max-width: 768px) { footer.main-footer { padding: 40px 16px 24px; } }
-.footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-bottom: 48px; }
-@media (max-width: 900px) { .footer-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
-.footer-col-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); margin-bottom: 16px; }
-.footer-col ul { list-style: none; }
-.footer-col li { margin-bottom: 8px; }
-.footer-col a { font-family: var(--font-mono); font-size: 12px; color: var(--ink-mute); letter-spacing: 0.04em; transition: color 0.15s; }
-.footer-col a:hover { color: var(--cyan); }
+.footer-rail { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
+.rail-section { display: flex; gap: 24px; align-items: baseline; padding-bottom: 16px; border-bottom: 1px solid rgba(0,212,255,0.12); }
+.rail-section:last-of-type { border-bottom: 0; padding-bottom: 0; }
+.rail-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); min-width: 140px; flex-shrink: 0; }
+.rail-items { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.rail-items a { font-family: var(--font-mono); font-size: 12px; color: var(--ink-mute); letter-spacing: 0.04em; transition: color 0.15s; text-decoration: none; }
+.rail-items a:hover { color: var(--cyan); }
+.rail-arrow { color: var(--cyan); font-family: var(--font-mono); font-size: 12px; opacity: 0.65; }
+.rail-disabled { font-family: var(--font-mono); font-size: 12px; color: #4A4A52; letter-spacing: 0.04em; }
+@media (max-width: 768px) {
+  .rail-section { flex-direction: column; gap: 8px; align-items: flex-start; padding-bottom: 14px; }
+  .rail-label { min-width: 0; }
+}
 .footer-copy { border-top: 1px solid var(--line); padding-top: 24px; text-align: center; font-family: var(--font-mono); font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); }
 .footer-copy a { color: var(--ink-mute); transition: color 0.15s; }
 .footer-copy a:hover { color: var(--cyan); }
