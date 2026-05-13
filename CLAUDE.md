@@ -30,8 +30,8 @@ Vanilla HTML/CSS/JS + THREE.js r128 via CDN. No frameworks. No build systems.
 - Push to main = auto-deploy. No manual steps.
 
 ## Phone Numbers
-- 305-315-6562 — BUSINESS number (on website and marketing)
-- 786-937-1218 — Twilio/Retell demo/R&D line (NEVER public-facing)
+- 786-937-1218 — PUBLIC demo number (on website, marketing, all public pages)
+- 305-315-6562 — PRIVATE business line (NEVER public-facing; do not place on the website, in JSON-LD, in meta tags, or in tel: links)
 
 ## Pricing (Locked)
 - Starter: $497/mo + $500 setup
