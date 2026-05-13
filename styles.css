@@ -407,6 +407,19 @@ body.hero-animate .hero-line-cyan.flicker {
 .signal-stack-v2.in-mobile-cta span.active { background: var(--void); box-shadow: 0 0 8px rgba(10,10,15,0.7); }
 @media (max-width: 374px) { .signal-stack-v2.in-mobile-cta { display: none; } }
 
+/* TAP FEEDBACK — visual fallback for haptic. Wired by site.js on
+   pointerdown, kept under 220ms total so it never feels lagged or
+   interferes with the click handler that follows. */
+.tap-feedback { animation: tap-snap 220ms cubic-bezier(0.2,0.8,0.4,1) 1; }
+@keyframes tap-snap {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(0.95); box-shadow: 0 0 0 2px rgba(0,212,255,0.55), 0 0 28px rgba(0,212,255,0.45); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tap-feedback { animation: none; }
+}
+
 /* HEAR AVA ANSWER — audio sample cards (homepage) */
 .audio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 @media (max-width: 900px) { .audio-grid { grid-template-columns: 1fr; gap: 16px; } }
