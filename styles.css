@@ -59,8 +59,38 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 
 .hero-content { max-width: 720px; }
 .hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(56px, 9vw, 110px); line-height: 0.92; letter-spacing: -0.04em; text-transform: uppercase; color: var(--ink); margin: 24px 0 32px; }
+.hero h1.hero-h1-3line { font-size: clamp(40px, 6.6vw, 84px); line-height: 0.98; letter-spacing: -0.03em; margin: 24px 0 24px; }
 .hero h1 .accent { color: var(--cyan); }
 .hero-sub { font-family: var(--font-body); font-size: 18px; line-height: 1.55; color: var(--ink-mute); max-width: 540px; margin-bottom: 32px; }
+.hero-sub .accent { color: var(--cyan); font-weight: 600; }
+
+/* $126K BLEED COUNTER — hero centerpiece */
+.counter-module { max-width: 720px; margin: 32px 0; padding-left: 16px; border-left: 1px solid rgba(255,59,48,0.5); transition: border-color 0.4s ease; }
+.counter-module.locked-border { border-left-color: var(--cyan); }
+.counter-row { display: flex; align-items: center; gap: 14px; }
+.counter-live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); opacity: 0; transition: opacity 0.4s; box-shadow: 0 0 6px rgba(0,212,255,0.5); flex-shrink: 0; }
+.counter-live-dot.on { opacity: 1; animation: counterDotPulse 1s ease-in-out infinite; }
+@keyframes counterDotPulse { 0%, 100% { opacity: 0.55; box-shadow: 0 0 0 0 rgba(0,212,255,0.5); } 50% { opacity: 1; box-shadow: 0 0 0 6px rgba(0,212,255,0); } }
+.counter-value { font-family: var(--font-display); font-weight: 700; font-size: clamp(44px, 6.4vw, 72px); line-height: 1; letter-spacing: -0.02em; color: #FF3B30; font-variant-numeric: tabular-nums; transition: color 0.4s ease, text-shadow 0.4s ease; display: inline-block; position: relative; }
+.counter-value.locked { color: var(--cyan); text-shadow: 0 0 18px rgba(0,229,255,0.45); }
+.counter-value.slam { animation: counterSlam 0.35s ease-out 1; }
+@keyframes counterSlam { 0% { transform: translateX(-10px); } 25% { transform: translateX(10px); } 50% { transform: translateX(-6px); } 75% { transform: translateX(6px); } 100% { transform: translateX(0); } }
+.counter-value.pulse::after { content: ''; position: absolute; inset: -20px -40px; border-radius: 50%; background: radial-gradient(circle at center, rgba(0,229,255,0.45), transparent 70%); animation: counterGlowBurst 0.6s ease-out 1; pointer-events: none; z-index: -1; }
+@keyframes counterGlowBurst { 0% { opacity: 0; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.4); } }
+.counter-caption { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin-top: 12px; }
+.counter-followup { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); margin-top: 6px; opacity: 0; transform: translateY(8px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.counter-followup.shown { opacity: 1; transform: translateY(0); }
+.counter-cite { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-mute); margin-top: 10px; }
+@media (max-width: 768px) {
+  .counter-module { margin: 20px 0; }
+  .counter-cite { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .counter-value { color: var(--cyan) !important; text-shadow: none !important; }
+  .counter-followup { opacity: 1 !important; transform: none !important; }
+  .counter-live-dot { opacity: 1 !important; }
+  .counter-module { border-left-color: var(--cyan) !important; }
+}
 .hero-founder-line { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 8px; }
 .hero-local-trust-line { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 40px; }
 .hero-ctas { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
@@ -310,6 +340,28 @@ body.hero-animate .hero-line-cyan.flicker {
 @keyframes voiceWavePulse { 0%, 100% { opacity: 0.45; transform: scaleY(0.65); } 50% { opacity: 1; transform: scaleY(1.15); } }
 .phone-cta-module .phone-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); margin-top: 16px; }
 .phone-cta-module .phone-sub .live { color: var(--cyan); }
+
+/* HEAR AVA ANSWER — audio sample cards (homepage) */
+.audio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+@media (max-width: 900px) { .audio-grid { grid-template-columns: 1fr; gap: 16px; } }
+.audio-card { display: flex; flex-direction: column; gap: 16px; text-align: left; border: 1px solid var(--line); background: var(--void); padding: 28px 24px; font-family: inherit; color: var(--ink); cursor: pointer; transition: border-color 0.15s, transform 0.15s; position: relative; }
+.audio-card:hover { border-color: var(--cyan); transform: translateY(-2px); }
+.audio-card:focus-visible { border-color: var(--cyan); }
+.audio-card.playing { border-color: var(--cyan); }
+.audio-play { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); }
+.audio-card.playing .audio-play::before { content: '■ PAUSE'; }
+.audio-card.playing .audio-play { font-size: 0; }
+.audio-card.playing .audio-play::before { font-size: 12px; }
+.audio-label { font-family: var(--font-display); font-size: 18px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink); }
+.audio-line { font-family: var(--font-body); font-size: 14px; line-height: 1.5; color: var(--ink-mute); font-style: italic; }
+.audio-card.coming-soon::after { content: 'Audio coming soon'; position: absolute; bottom: 12px; right: 12px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); background: var(--void); padding: 4px 8px; border: 1px solid var(--line); }
+
+/* WHAT AVA DOES (AND DOESN'T) — operator-honest callout */
+.what-ava-does { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+.what-ava-does-inner { max-width: 720px; padding-left: 16px; border-left: 1px solid var(--cyan); padding-top: 8px; padding-bottom: 8px; }
+.what-ava-does .section-label { margin-bottom: 16px; }
+.what-ava-does p { font-family: var(--font-body); font-size: 17px; line-height: 1.6; color: var(--ink); }
+@media (max-width: 768px) { .what-ava-does { padding: 0 16px; } .what-ava-does p { font-size: 15px; } }
 
 /* HANDLES GRID — for vertical pages "What AVA Handles" 4-cards */
 .handles-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
