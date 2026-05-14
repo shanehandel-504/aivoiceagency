@@ -135,31 +135,48 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     value.classList.add('alarm');
     value.textContent = '$0';
 
-    var spinStart = performance.now();
-    var SPIN_DURATION = 1800;
-    function spin(ts) {
-      var elapsed = ts - spinStart;
-      if (elapsed >= SPIN_DURATION) {
-        value.textContent = formatted;
-        value.classList.add('slam');
-        setTimeout(function() {
-          value.classList.remove('alarm');
-          value.classList.add('locked');
-          module.classList.add('locked-border');
-        }, 200);
-        setTimeout(function() {
-          value.classList.add('pulse');
-        }, 400);
-        setTimeout(function() {
-          if (liveDot) liveDot.classList.add('on');
-        }, 1200);
-        return;
+    function startSpin() {
+      var spinStart = performance.now();
+      var SPIN_DURATION = 1800;
+      function spin(ts) {
+        var elapsed = ts - spinStart;
+        if (elapsed >= SPIN_DURATION) {
+          value.textContent = formatted;
+          value.classList.add('slam');
+          setTimeout(function() {
+            value.classList.remove('alarm');
+            value.classList.add('locked');
+            module.classList.add('locked-border');
+          }, 200);
+          setTimeout(function() {
+            value.classList.add('pulse');
+          }, 400);
+          setTimeout(function() {
+            if (liveDot) liveDot.classList.add('on');
+          }, 1200);
+          return;
+        }
+        var rand = Math.floor(Math.random() * 400000) + 1000;
+        value.textContent = '$' + rand.toLocaleString('en-US');
+        requestAnimationFrame(spin);
       }
-      var rand = Math.floor(Math.random() * 400000) + 1000;
-      value.textContent = '$' + rand.toLocaleString('en-US');
       requestAnimationFrame(spin);
     }
-    requestAnimationFrame(spin);
+
+    // Fire only when the counter actually enters viewport. Without this gate,
+    // a mobile user landing deeper than the hero (deep link, mid-scroll refresh)
+    // misses the animation and sees a static $0 stuck state.
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries, obs) {
+        if (entries[0].isIntersecting) {
+          startSpin();
+          obs.disconnect();
+        }
+      }, { threshold: 0.5 });
+      io.observe(module);
+    } else {
+      startSpin();
+    }
   })();
 
   // Live timestamp on system status badge
