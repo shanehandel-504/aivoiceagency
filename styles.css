@@ -68,7 +68,7 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
    inner counter-row / counter-live-dot / counter-value / counter-caption
    rules below are unchanged so the bleedCounter() animation in site.js
    continues to fire on #bleed-counter / #bleed-value without edits. */
-.signal-loss-meter { position: relative; max-width: 440px; margin: 32px 0 28px; padding: 22px 24px 20px; background: #14141C; border: 1px solid var(--cyan); border-radius: 4px; overflow: hidden; isolation: isolate; transition: border-color 0.4s ease, box-shadow 0.4s ease; }
+.signal-loss-meter { position: relative; max-width: 360px; margin: 32px 0 28px; padding: 22px 24px 20px; background: #14141C; border: 1px solid var(--cyan); border-radius: 4px; overflow: hidden; isolation: isolate; transition: border-color 0.4s ease, box-shadow 0.4s ease; }
 .signal-loss-meter::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(0,212,255,0.07) 1px, transparent 1px); background-size: 8px 8px; pointer-events: none; z-index: 0; }
 .signal-loss-meter::after { content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,229,255,0.55), transparent); animation: meterScan 7s linear infinite; pointer-events: none; z-index: 1; }
 .signal-loss-meter > * { position: relative; z-index: 2; }
@@ -87,7 +87,7 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 @keyframes counterGlowBurst { 0% { opacity: 0; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.4); } }
 .counter-caption { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin-top: 16px; }
 @media (max-width: 768px) {
-  .signal-loss-meter { max-width: 100%; margin: 20px 0 24px; padding: 18px 18px 16px; }
+  .signal-loss-meter { max-width: 280px; margin: 20px 0 24px; padding: 18px 18px 16px; }
   .counter-value { font-size: clamp(36px, 11vw, 56px) !important; }
 }
 @media (max-width: 390px) {
@@ -372,6 +372,54 @@ body.hero-animate .hero-line-cyan.flicker {
 .phone-cta-module .phone-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); margin-top: 16px; }
 .phone-cta-module .phone-sub .live { color: var(--cyan); }
 
+/* SIGNAL STACK V2 — unified 9-bar voice signal indicator (PR #27).
+   Replaces .demo-bars / .phone-bars / .voice-wave sitewide. CSS-only,
+   no JS. One bar (the active 5th) reads brighter than the rest. Custom
+   cubic-bezier breathing for an organic feel. .active-sweep modifier
+   triggers a one-shot scan when applied (e.g., on CTA tap from JS). */
+.signal-stack-v2 { display: inline-flex; align-items: flex-end; gap: 3px; height: 22px; vertical-align: middle; pointer-events: none; user-select: none; }
+.signal-stack-v2 span { display: block; width: 3px; border-radius: 50px; background: rgba(0,212,255,0.7); box-shadow: 0 0 8px rgba(0,212,255,0.6); transform-origin: center bottom; animation: signal-stack-breathe 1.6s cubic-bezier(0.45,0.05,0.55,0.95) infinite; }
+.signal-stack-v2 span:nth-child(1) { height: 6px;  animation-delay: 0s; }
+.signal-stack-v2 span:nth-child(2) { height: 12px; animation-delay: 0.10s; }
+.signal-stack-v2 span:nth-child(3) { height: 9px;  animation-delay: 0.25s; }
+.signal-stack-v2 span:nth-child(4) { height: 14px; animation-delay: 0.40s; }
+.signal-stack-v2 span:nth-child(5).active,
+.signal-stack-v2 span.active { height: 18px; animation-delay: 0.15s; background: var(--cyan-bright); opacity: 1; box-shadow: 0 0 10px rgba(0,229,255,0.75); }
+.signal-stack-v2 span:nth-child(6) { height: 11px; animation-delay: 0.30s; }
+.signal-stack-v2 span:nth-child(7) { height: 15px; animation-delay: 0.45s; }
+.signal-stack-v2 span:nth-child(8) { height: 8px;  animation-delay: 0.20s; }
+.signal-stack-v2 span:nth-child(9) { height: 10px; animation-delay: 0.35s; }
+@keyframes signal-stack-breathe {
+  0%, 100% { transform: scaleY(0.85); opacity: 0.7; }
+  50%      { transform: scaleY(1.05); opacity: 1; }
+}
+.signal-stack-v2.active-sweep span { animation: signal-stack-sweep 0.6s cubic-bezier(0.2,0.8,0.4,1) 1; }
+@keyframes signal-stack-sweep {
+  0%   { transform: scaleY(0.85); opacity: 0.7; }
+  40%  { transform: scaleY(1.4);  opacity: 1; box-shadow: 0 0 14px rgba(0,229,255,0.85); }
+  100% { transform: scaleY(0.85); opacity: 0.7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal-stack-v2 span { animation: none !important; transform: scaleY(1); }
+}
+.signal-stack-v2.in-mobile-cta { height: 14px; gap: 2px; margin-left: 8px; vertical-align: -2px; }
+.signal-stack-v2.in-mobile-cta span { width: 2px; box-shadow: 0 0 6px rgba(10,10,15,0.45); background: rgba(10,10,15,0.85); }
+.signal-stack-v2.in-mobile-cta span.active { background: var(--void); box-shadow: 0 0 8px rgba(10,10,15,0.7); }
+@media (max-width: 374px) { .signal-stack-v2.in-mobile-cta { display: none; } }
+
+/* TAP FEEDBACK — visual fallback for haptic. Wired by site.js on
+   pointerdown, kept under 220ms total so it never feels lagged or
+   interferes with the click handler that follows. */
+.tap-feedback { animation: tap-snap 220ms cubic-bezier(0.2,0.8,0.4,1) 1; }
+@keyframes tap-snap {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(0.95); box-shadow: 0 0 0 2px rgba(0,212,255,0.55), 0 0 28px rgba(0,212,255,0.45); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tap-feedback { animation: none; }
+}
+
 /* HEAR AVA ANSWER — audio sample cards (homepage) */
 .audio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 @media (max-width: 900px) { .audio-grid { grid-template-columns: 1fr; gap: 16px; } }
@@ -471,19 +519,6 @@ body.hero-animate .hero-line-cyan.flicker {
 #mobile-cta a { color: var(--void); text-decoration: none; display: block; }
 @media (max-width: 768px) { #mobile-cta { display: block; } }
 
-/* GHL chat widget — kill auto-open welcome card (light-DOM fallback;
-   primary kill is shadow-DOM CSS injection in site.js).
-   Native launcher is hidden via the same shadow-DOM injection — our
-   .ava-launcher orb below replaces it on both desktop and mobile. */
-[class*="prompt-message"],
-[class*="welcome-message"],
-[class*="welcome-card"],
-[class*="welcome-popup"],
-[class*="auto-open"],
-[class*="auto-popup"] {
-  display: none !important;
-}
-
 /* Calendar booking wrap — cyan-border box around the homepage // Book sub-block.
    Booking still opens in a new tab (no iframe by design — kept lighter for PR #25). */
 .contact-block.calendar-wrap {
@@ -493,43 +528,6 @@ body.hero-animate .hero-line-cyan.flicker {
   padding: 24px;
 }
 @media (max-width: 768px) { .contact-block.calendar-wrap { padding: 16px; } }
-
-/* Custom AVA chat launcher — injected by site.js. Cyan orb with stylized "A".
-   Clicking it programmatically clicks the (hidden) GHL launcher inside its
-   shadow root, opening the chat panel. Desktop: 56px @ 24px/24px offset.
-   Mobile: 48px stacked above the sticky CTA. */
-.ava-launcher {
-  position: fixed; bottom: 24px; right: 24px;
-  width: 56px; height: 56px; border-radius: 50%;
-  background: var(--cyan); color: var(--void);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; z-index: 110; border: 0;
-  font-family: var(--font-display); font-weight: 700; font-size: 24px; letter-spacing: -0.02em;
-  box-shadow: 0 4px 24px rgba(0,212,255,0.4), 0 0 0 1px rgba(0,229,255,0.5);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-.ava-launcher:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,229,255,0.55), 0 0 0 1px #00E5FF; background: #00E5FF; }
-.ava-launcher:focus-visible { outline: 2px solid #00E5FF; outline-offset: 4px; }
-.ava-launcher-label {
-  position: absolute; right: calc(100% + 12px);
-  background: var(--void); color: var(--cyan);
-  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 6px 10px; border: 1px solid rgba(0,212,255,0.5);
-  white-space: nowrap;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.18s ease;
-}
-.ava-launcher:hover .ava-launcher-label { opacity: 1; }
-@media (max-width: 768px) {
-  .ava-launcher { width: 48px; height: 48px; font-size: 20px; bottom: calc(80px + env(safe-area-inset-bottom)); right: 16px; }
-  .ava-launcher-label { opacity: 1; right: calc(100% + 8px); font-size: 10px; padding: 5px 8px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ava-launcher { transition: none; }
-  .ava-launcher:hover { transform: none; }
-}
 
 /* ACCESSIBILITY */
 *:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }

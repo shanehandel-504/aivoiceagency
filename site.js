@@ -35,15 +35,27 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     sessionStorage.setItem('avaHeroAnimated', '1');
   }
 
-  // Haptic feedback + cursor-proximity glow on primary CTAs
-  var ctas = document.querySelectorAll('a[href*="leadconnectorhq.com"], a[href^="tel:"], .cta-primary');
-  ctas.forEach(function(el) {
-    el.addEventListener('click', function() {
-      if ('vibrate' in navigator) {
-        try { navigator.vibrate(10); } catch (e) {}
-      }
-    });
-  });
+  // Haptic feedback + visual tap fallback on primary CTAs (PR #27).
+  // pointerdown (not click) so iOS Safari fires it; vibrate is feature-
+  // detected and silently no-ops on unsupported platforms. Visual fallback
+  // (.tap-feedback class) works everywhere via CSS keyframe; if a Signal
+  // Stack V2 sits near the button, it gets a one-shot sweep.
+  var HAPTIC_SELECTOR = 'a[href*="leadconnectorhq.com"], a[href^="tel:"], .cta-primary, .btn-primary, .btn-ghost, .contact-cta-btn, .demo-phone';
+  document.addEventListener('pointerdown', function(e) {
+    var btn = e.target.closest(HAPTIC_SELECTOR);
+    if (!btn) return;
+    if ('vibrate' in navigator) {
+      try { navigator.vibrate(15); } catch (_) {}
+    }
+    btn.classList.add('tap-feedback');
+    var nearbyStack = btn.querySelector('.signal-stack-v2') ||
+                      (btn.parentElement && btn.parentElement.querySelector('.signal-stack-v2'));
+    if (nearbyStack) {
+      nearbyStack.classList.add('active-sweep');
+      setTimeout(function() { nearbyStack.classList.remove('active-sweep'); }, 600);
+    }
+    setTimeout(function() { btn.classList.remove('tap-feedback'); }, 220);
+  }, { passive: true });
 
   if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
     document.querySelectorAll('.cta-primary').forEach(function(btn) {
@@ -123,31 +135,48 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     value.classList.add('alarm');
     value.textContent = '$0';
 
-    var spinStart = performance.now();
-    var SPIN_DURATION = 1800;
-    function spin(ts) {
-      var elapsed = ts - spinStart;
-      if (elapsed >= SPIN_DURATION) {
-        value.textContent = formatted;
-        value.classList.add('slam');
-        setTimeout(function() {
-          value.classList.remove('alarm');
-          value.classList.add('locked');
-          module.classList.add('locked-border');
-        }, 200);
-        setTimeout(function() {
-          value.classList.add('pulse');
-        }, 400);
-        setTimeout(function() {
-          if (liveDot) liveDot.classList.add('on');
-        }, 1200);
-        return;
+    function startSpin() {
+      var spinStart = performance.now();
+      var SPIN_DURATION = 1800;
+      function spin(ts) {
+        var elapsed = ts - spinStart;
+        if (elapsed >= SPIN_DURATION) {
+          value.textContent = formatted;
+          value.classList.add('slam');
+          setTimeout(function() {
+            value.classList.remove('alarm');
+            value.classList.add('locked');
+            module.classList.add('locked-border');
+          }, 200);
+          setTimeout(function() {
+            value.classList.add('pulse');
+          }, 400);
+          setTimeout(function() {
+            if (liveDot) liveDot.classList.add('on');
+          }, 1200);
+          return;
+        }
+        var rand = Math.floor(Math.random() * 400000) + 1000;
+        value.textContent = '$' + rand.toLocaleString('en-US');
+        requestAnimationFrame(spin);
       }
-      var rand = Math.floor(Math.random() * 400000) + 1000;
-      value.textContent = '$' + rand.toLocaleString('en-US');
       requestAnimationFrame(spin);
     }
-    requestAnimationFrame(spin);
+
+    // Fire only when the counter actually enters viewport. Without this gate,
+    // a mobile user landing deeper than the hero (deep link, mid-scroll refresh)
+    // misses the animation and sees a static $0 stuck state.
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries, obs) {
+        if (entries[0].isIntersecting) {
+          startSpin();
+          obs.disconnect();
+        }
+      }, { threshold: 0.5 });
+      io.observe(module);
+    } else {
+      startSpin();
+    }
   })();
 
   // Live timestamp on system status badge
@@ -253,98 +282,6 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         });
       });
     });
-  })();
-
-  // GHL chat widget — kill auto-open welcome card AND hide the native launcher.
-  // We render our own .ava-launcher orb (see mountCustomLauncher below) and
-  // forward clicks programmatically into the GHL widget's shadow root.
-  // Widget renders in shadow DOM, so we inject CSS into each shadow root we find.
-  (function killChatAutoPop() {
-    var hideCSS = [
-      '[class*="prompt-message"]',
-      '[class*="prompt-msg"]',
-      '[class*="prompt_message"]',
-      '[class*="welcome-message"]',
-      '[class*="welcome_message"]',
-      '[class*="welcome-card"]',
-      '[class*="welcome-popup"]',
-      '[class*="auto-open"]',
-      '[class*="autoOpen"]',
-      '[class*="auto-popup"]',
-      '[class*="initial-message"]',
-      '[class*="launcher-button"]',
-      '[class*="LC_launcher"]',
-      '[class*="chat-bubble"]',
-      '[class*="lc-bubble"]'
-    ].join(',') + ' { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }';
-
-    function injectInto(root) {
-      if (!root || root.__avaPopKilled) return;
-      root.__avaPopKilled = true;
-      var s = document.createElement('style');
-      s.textContent = hideCSS;
-      root.appendChild(s);
-    }
-
-    function scan() {
-      var all = document.getElementsByTagName('*');
-      for (var i = 0; i < all.length; i++) {
-        if (all[i].shadowRoot && !all[i].shadowRoot.__avaPopKilled) injectInto(all[i].shadowRoot);
-      }
-    }
-
-    scan();
-    setTimeout(scan, 500);
-    setTimeout(scan, 1500);
-    setTimeout(scan, 3500);
-
-    if ('MutationObserver' in window) {
-      new MutationObserver(function(mutations) {
-        for (var i = 0; i < mutations.length; i++) {
-          var added = mutations[i].addedNodes;
-          for (var j = 0; j < added.length; j++) {
-            var n = added[j];
-            if (n.nodeType === 1 && n.shadowRoot && !n.shadowRoot.__avaPopKilled) injectInto(n.shadowRoot);
-          }
-        }
-      }).observe(document.documentElement, { childList: true, subtree: true });
-    }
-  })();
-
-  // Custom AVA chat launcher — replaces the native GHL launcher (hidden via
-  // shadow-DOM CSS in killChatAutoPop above). Clicking our cyan orb sweeps
-  // every shadow root on the page for the GHL launcher button and dispatches
-  // a synthetic click, opening the chat panel as if the user had clicked the
-  // native bubble. Injected at runtime so no per-page HTML edits are needed.
-  (function mountCustomLauncher() {
-    var btn = document.createElement('button');
-    btn.className = 'ava-launcher';
-    btn.type = 'button';
-    btn.setAttribute('aria-label', 'Ask AVA — open chat');
-    btn.innerHTML = '<span aria-hidden="true">A</span><span class="ava-launcher-label">Ask AVA</span>';
-
-    function openChat() {
-      var els = document.getElementsByTagName('*');
-      for (var i = 0; i < els.length; i++) {
-        var root = els[i].shadowRoot;
-        if (!root) continue;
-        var candidate =
-          root.querySelector('[class*="launcher-button"]') ||
-          root.querySelector('[class*="LC_launcher"]') ||
-          root.querySelector('[class*="chat-bubble"]') ||
-          root.querySelector('[class*="lc-bubble"]') ||
-          root.querySelector('button[aria-label*="chat" i]') ||
-          root.querySelector('button');
-        if (candidate) { candidate.click(); return; }
-      }
-    }
-    btn.addEventListener('click', openChat);
-
-    function mount() {
-      if (document.body && !document.querySelector('.ava-launcher')) document.body.appendChild(btn);
-    }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);
-    else mount();
   })();
 
   // Mobile sticky CTA visibility — always-on past 50% of viewport
