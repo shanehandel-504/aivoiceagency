@@ -318,10 +318,15 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
     <p class="note">Mock Replay = scripted demo · Live = real voice through xAI Grok via LiveKit · No real ride is booked through this demo</p>
 
     <!-- ════════════════════════════════════════════
-         AUDIO ASSETS · pending Rachel/Cowork drop
-         8 ava-call snippets + 3 demo full conversations
-         Per-line mapping (data-audio on .tr-play) wired
-         at runtime — set in transcriptAudioMap below.
+         AUDIO ASSETS · 22-file Rachel drop
+           8x ava-call snippets       → /audio/ava/
+           3x ava-greeting cues       → /audio/
+           2x chauffeur brand reads   → /audio/
+           6x chauffeur-ride samples  → /audio/
+           3x full demo conversations → /audio/demo/
+         All preload="none" — zero perf cost until invoked.
+         Per-line transcript mapping (.tr-play data-audio) is
+         set in transcriptAudioMap below; remap any time.
          ════════════════════════════════════════════ -->
     <audio id="ava-call-1" src="/audio/ava/ava-call-1.mp3" preload="none"></audio>
     <audio id="ava-call-2" src="/audio/ava/ava-call-2.mp3" preload="none"></audio>
@@ -331,6 +336,17 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
     <audio id="ava-call-6" src="/audio/ava/ava-call-6.mp3" preload="none"></audio>
     <audio id="ava-call-7" src="/audio/ava/ava-call-7.mp3" preload="none"></audio>
     <audio id="ava-call-8" src="/audio/ava/ava-call-8.mp3" preload="none"></audio>
+    <audio id="ava-greeting-1" src="/audio/ava-greeting-1.mp3" preload="none"></audio>
+    <audio id="ava-greeting-2" src="/audio/ava-greeting-2.mp3" preload="none"></audio>
+    <audio id="ava-greeting-3" src="/audio/ava-greeting-3.mp3" preload="none"></audio>
+    <audio id="chauffeur-intro" src="/audio/chauffeur-intro.mp3" preload="none"></audio>
+    <audio id="chauffeur-pitch" src="/audio/chauffeur-pitch.mp3" preload="none"></audio>
+    <audio id="chauffeur-ride-1" src="/audio/chauffeur-ride-1.mp3" preload="none"></audio>
+    <audio id="chauffeur-ride-2" src="/audio/chauffeur-ride-2.mp3" preload="none"></audio>
+    <audio id="chauffeur-ride-3" src="/audio/chauffeur-ride-3.mp3" preload="none"></audio>
+    <audio id="chauffeur-ride-4" src="/audio/chauffeur-ride-4.mp3" preload="none"></audio>
+    <audio id="chauffeur-ride-5" src="/audio/chauffeur-ride-5.mp3" preload="none"></audio>
+    <audio id="chauffeur-ride-6" src="/audio/chauffeur-ride-6.mp3" preload="none"></audio>
     <audio id="demo-1" src="/audio/demo/demo-1.mp3" preload="none"></audio>
     <audio id="demo-2" src="/audio/demo/demo-2.mp3" preload="none"></audio>
     <audio id="demo-3" src="/audio/demo/demo-3.mp3" preload="none"></audio>
@@ -425,13 +441,15 @@ const scenarioAudioMap = {
   correction: 'demo-2',
   charter:    'demo-3'
 };
-// per-transcript-line audio id (by scenario + step index).
-// Shane fills these tomorrow once the 8 ava-call files arrive.
+// per-transcript-line audio id (by scenario + transcript-line index).
+// PLACEHOLDER mapping — all 8 ava-call files are referenced so every
+// audio asset has at least one live consumer. Shane remaps to the
+// correct line indices once he reviews the Rachel recordings.
 // Empty string = stub, button visible but disabled.
 const transcriptAudioMap = {
-  airport:    ['', '', '', '', '', '', '', '', ''],
-  correction: ['', '', '', '', '', '', '', '', ''],
-  charter:    ['', '', '', '', '', '', '', '', '']
+  airport:    ['ava-call-1', 'ava-call-2', 'ava-call-3', '', '', '', '', '', ''],
+  correction: ['ava-call-4', 'ava-call-5', 'ava-call-6', '', '', '', '', '', ''],
+  charter:    ['ava-call-7', 'ava-call-8', '',           '', '', '', '', '', '']
 };
 
 let currentAudio = null;
