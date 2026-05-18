@@ -105,12 +105,23 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
 
 .transcript{background:rgba(10,10,15,.5);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;margin-top:1rem;min-height:120px;max-height:240px;overflow-y:auto;font-family:var(--mono);font-size:.78rem;line-height:1.7}
 .transcript-empty{color:var(--ink-dim);font-style:italic}
-.tr-line{margin-bottom:.45rem;opacity:0;animation:slidein .3s ease forwards}
+.tr-line{margin-bottom:.45rem;opacity:0;animation:slidein .3s ease forwards;display:flex;align-items:flex-start;gap:.5rem}
 @keyframes slidein{to{opacity:1}}
 .tr-caller{color:var(--ink-soft)}
-.tr-caller::before{content:'CALLER · ';color:var(--amber);font-weight:600;letter-spacing:.06em}
+.tr-caller::before{content:'CALLER · ';color:var(--amber);font-weight:600;letter-spacing:.06em;flex-shrink:0}
 .tr-ai{color:var(--cyan-bright)}
-.tr-ai::before{content:'AI · ';color:var(--cyan);font-weight:600;letter-spacing:.06em;text-shadow:0 0 6px var(--cyan-glow)}
+.tr-ai::before{content:'AI · ';color:var(--cyan);font-weight:600;letter-spacing:.06em;text-shadow:0 0 6px var(--cyan-glow);flex-shrink:0}
+.tr-text{flex:1}
+.tr-play{flex-shrink:0;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cyan);font-size:8px;line-height:1;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px}
+.tr-play:hover:not(:disabled){background:var(--cyan);color:#000;border-color:var(--cyan-bright);box-shadow:0 0 8px var(--cyan-glow)}
+.tr-play:disabled{opacity:.3;cursor:not-allowed}
+.tr-play.playing{background:var(--cyan);color:#000;border-color:var(--cyan-bright);box-shadow:0 0 10px var(--cyan-glow)}
+
+.btn-play-full{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 1.3rem;border-radius:10px;font-family:var(--mono);font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:var(--cyan);border:1px solid var(--cyan);cursor:pointer;transition:all .15s}
+.btn-play-full:hover:not(:disabled){background:var(--cyan);color:#000;box-shadow:0 0 16px var(--cyan-glow)}
+.btn-play-full:disabled{opacity:.4;cursor:not-allowed}
+.btn-play-full.playing{background:var(--cyan);color:#000;box-shadow:0 0 16px var(--cyan-glow)}
+.btn-play-full svg{width:12px;height:12px}
 
 .status-row{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;margin-top:1rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);flex-wrap:wrap;gap:.5rem}
 .status-row .ticket{color:var(--cyan-bright);text-shadow:0 0 6px var(--cyan-glow)}
@@ -238,6 +249,10 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         <span id="startText">Start scenario</span>
       </button>
+      <button class="btn-play-full" id="btnPlayFull" type="button" title="Play full call audio for the active scenario">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span id="playFullText">Play full call</span>
+      </button>
       <button class="btn-reset" id="resetBtn">Reset</button>
     </div>
 
@@ -301,6 +316,24 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
     </div>
 
     <p class="note">Mock Replay = scripted demo · Live = real voice through xAI Grok via LiveKit · No real ride is booked through this demo</p>
+
+    <!-- ════════════════════════════════════════════
+         AUDIO ASSETS · pending Rachel/Cowork drop
+         8 ava-call snippets + 3 demo full conversations
+         Per-line mapping (data-audio on .tr-play) wired
+         at runtime — set in transcriptAudioMap below.
+         ════════════════════════════════════════════ -->
+    <audio id="ava-call-1" src="/audio/ava/ava-call-1.mp3" preload="none"></audio>
+    <audio id="ava-call-2" src="/audio/ava/ava-call-2.mp3" preload="none"></audio>
+    <audio id="ava-call-3" src="/audio/ava/ava-call-3.mp3" preload="none"></audio>
+    <audio id="ava-call-4" src="/audio/ava/ava-call-4.mp3" preload="none"></audio>
+    <audio id="ava-call-5" src="/audio/ava/ava-call-5.mp3" preload="none"></audio>
+    <audio id="ava-call-6" src="/audio/ava/ava-call-6.mp3" preload="none"></audio>
+    <audio id="ava-call-7" src="/audio/ava/ava-call-7.mp3" preload="none"></audio>
+    <audio id="ava-call-8" src="/audio/ava/ava-call-8.mp3" preload="none"></audio>
+    <audio id="demo-1" src="/audio/demo/demo-1.mp3" preload="none"></audio>
+    <audio id="demo-2" src="/audio/demo/demo-2.mp3" preload="none"></audio>
+    <audio id="demo-3" src="/audio/demo/demo-3.mp3" preload="none"></audio>
 
   </div>
 </section>
@@ -381,6 +414,56 @@ let timeouts = [];
 const startBtn = $('#startBtn'), startText = $('#startText'), resetBtn = $('#resetBtn');
 const liveBadge = $('#liveBadge'), ticketIdEl = $('#ticketId'), statusTag = $('#statusTag');
 const transcript = $('#transcript'), completeBanner = $('#completeBanner');
+const btnPlayFull = $('#btnPlayFull'), playFullText = $('#playFullText');
+
+// ════════════════════════════════════════════
+// AUDIO WIRING · pending Rachel/Cowork drop
+// ════════════════════════════════════════════
+// scenario → full-conversation audio id
+const scenarioAudioMap = {
+  airport:    'demo-1',
+  correction: 'demo-2',
+  charter:    'demo-3'
+};
+// per-transcript-line audio id (by scenario + step index).
+// Shane fills these tomorrow once the 8 ava-call files arrive.
+// Empty string = stub, button visible but disabled.
+const transcriptAudioMap = {
+  airport:    ['', '', '', '', '', '', '', '', ''],
+  correction: ['', '', '', '', '', '', '', '', ''],
+  charter:    ['', '', '', '', '', '', '', '', '']
+};
+
+let currentAudio = null;
+let currentPlayBtn = null;
+
+function stopCurrentAudio() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  if (currentPlayBtn) {
+    currentPlayBtn.classList.remove('playing');
+    currentPlayBtn = null;
+  }
+  btnPlayFull.classList.remove('playing');
+  playFullText.textContent = 'Play full call';
+}
+
+function playAudio(audioId, btn) {
+  if (!audioId) return;
+  const audio = document.getElementById(audioId);
+  if (!audio) return;
+  stopCurrentAudio();
+  currentAudio = audio;
+  currentPlayBtn = btn || null;
+  if (btn) btn.classList.add('playing');
+  audio.currentTime = 0;
+  const p = audio.play();
+  if (p && p.catch) p.catch(() => stopCurrentAudio());
+  audio.onended = () => stopCurrentAudio();
+}
 
 function setScenario(name) {
   if (isRunning) return;
@@ -402,6 +485,7 @@ function reset() {
   timeouts.forEach(t => clearTimeout(t));
   timeouts = [];
   isRunning = false;
+  stopCurrentAudio();
   $$('.field').forEach(f => {
     f.classList.remove('fill', 'flash');
     const v = f.querySelector('.f-value');
@@ -458,7 +542,31 @@ function executeStep(step) {
   if (step.type === 'transcript') {
     const line = document.createElement('div');
     line.className = 'tr-line tr-' + step.who;
-    line.textContent = step.text;
+
+    const lineIdx = transcript.children.length;
+    const mapForScenario = transcriptAudioMap[activeScenario] || [];
+    const audioId = mapForScenario[lineIdx] || '';
+
+    const playBtn = document.createElement('button');
+    playBtn.type = 'button';
+    playBtn.className = 'tr-play';
+    playBtn.setAttribute('aria-label', audioId ? 'Play this line' : 'Audio coming soon');
+    playBtn.dataset.audio = audioId;
+    playBtn.textContent = '▶';
+    playBtn.disabled = !audioId;
+    playBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!playBtn.dataset.audio) return;
+      if (currentPlayBtn === playBtn) { stopCurrentAudio(); return; }
+      playAudio(playBtn.dataset.audio, playBtn);
+    });
+
+    const textSpan = document.createElement('span');
+    textSpan.className = 'tr-text';
+    textSpan.textContent = step.text;
+
+    line.appendChild(playBtn);
+    line.appendChild(textSpan);
     transcript.appendChild(line);
     transcript.scrollTop = transcript.scrollHeight;
   } else if (step.type === 'field') {
@@ -499,6 +607,25 @@ function executeStep(step) {
 $$('.scenario').forEach(s => s.addEventListener('click', () => setScenario(s.dataset.scenario)));
 startBtn.addEventListener('click', runScenario);
 resetBtn.addEventListener('click', reset);
+
+btnPlayFull.addEventListener('click', () => {
+  const audioId = scenarioAudioMap[activeScenario];
+  if (currentAudio && currentAudio.id === audioId) {
+    stopCurrentAudio();
+    return;
+  }
+  if (!audioId) return;
+  const audio = document.getElementById(audioId);
+  if (!audio) return;
+  stopCurrentAudio();
+  currentAudio = audio;
+  btnPlayFull.classList.add('playing');
+  playFullText.textContent = 'Stop';
+  audio.currentTime = 0;
+  const p = audio.play();
+  if (p && p.catch) p.catch(() => stopCurrentAudio());
+  audio.onended = () => stopCurrentAudio();
+});
 
 // ════════════════════════════════════════════
 // LIVE VOICE MODE — LiveKit + Grok
