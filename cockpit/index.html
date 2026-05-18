@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="COCKPIT">
+<title>COCKPIT · Shane Handel</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230A0A0F'/><text x='50' y='62' font-size='44' fill='%2300D4FF' text-anchor='middle' font-family='sans-serif' font-weight='800'>C</text></svg>">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --void:#0A0A0F; --void-2:#14141C; --void-3:#1F1F2B; --void-4:#2A2A38;
+    --text:#EEF0F4; --text-dim:#8A8A99;
+    --cyan:#00D4FF; --magenta:#FF006E; --amber:#FFB800;
+    --violet:#A78BFA; --green:#00FF88; --red:#FF3B5C; --blue:#3B82F6;
+  }
+  html, body {
+    background: var(--void); color: var(--text);
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body { min-height: 100vh; padding: 16px 16px 96px; max-width: 760px; margin: 0 auto; }
+  /* HEADER */
+  .header {
+    margin-bottom: 18px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--void-3);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .header-left h1 {
+    font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+    color: var(--cyan); text-shadow: 0 0 22px rgba(0, 212, 255, 0.45); line-height: 1.1;
+  }
+  .header-left .meta {
+    font-size: 10px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.14em; margin-top: 5px;
+  }
+  .pulse {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 12px var(--green);
+    animation: pulse 2s infinite; flex-shrink: 0;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+  /* SECTION */
+  .section {
+    margin-bottom: 18px; padding: 14px;
+    background: var(--void-2); border-radius: 12px;
+    border-left: 4px solid var(--accent);
+  }
+  .section.inbox  { --accent: var(--cyan); }
+  .section.top3   { --accent: var(--magenta); }
+  .section.extract{ --accent: var(--green); }
+  .section.ai     { --accent: var(--violet); }
+  .section.biz    { --accent: var(--amber); }
+  .section.loops  { --accent: var(--blue); }
+  .section h2 {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 12px; text-shadow: 0 0 12px var(--accent);
+  }
+  .section .sub {
+    font-size: 11px; color: var(--text-dim); margin-bottom: 12px; line-height: 1.5;
+  }
+  /* BRAIN DUMP */
+  .inbox-area {
+    width: 100%; background: var(--void); color: var(--text);
+    border: 1px solid var(--void-3); border-radius: 8px;
+    padding: 10px; font-family: inherit;
+    font-size: 14px; resize: vertical;
+    min-height: 80px; outline: none; line-height: 1.5;
+  }
+  .inbox-area:focus { border-color: var(--cyan); box-shadow: 0 0 12px rgba(0, 212, 255, 0.3); }
+  /* TOP 3 */
+  .top-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px; margin-bottom: 6px;
+    background: var(--void); border-radius: 8px; border: 1px solid var(--void-3);
+  }
+  .top-num {
+    width: 26px; height: 26px; flex-shrink: 0; border-radius: 6px;
+    background: var(--magenta); color: var(--void);
+    font-weight: 800; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 10px var(--magenta);
+  }
+  .top-input {
+    flex: 1; background: transparent; border: none;
+    color: var(--text); font-family: inherit;
+    font-size: 14px; padding: 4px 0; outline: none; min-width: 0;
+  }
+  .top-input::placeholder { color: var(--text-dim); font-style: italic; }
+  /* EXTRACT */
+  .extract-area {
+    width: 100%; background: var(--void); color: var(--text);
+    border: 1px solid var(--void-3); border-radius: 8px;
+    padding: 10px; font-family: 'SF Mono', Menlo, monospace;
+    font-size: 12px; resize: vertical;
+    min-height: 90px; outline: none; line-height: 1.5;
+  }
+  .extract-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .btn {
+    background: var(--green); color: var(--void);
+    border: none; padding: 10px 14px; border-radius: 6px;
+    font-size: 11px; font-weight: 800; cursor: pointer;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: inherit; transition: transform 0.1s; flex: 1; min-width: 100px;
+  }
+  .btn:active { transform: scale(0.95); }
+  .btn.cyan { background: var(--cyan); }
+  .btn.amber { background: var(--amber); }
+  .btn.violet { background: var(--violet); }
+  /* GRID */
+  .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  @media (min-width: 480px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 720px) { .grid.three { grid-template-columns: 1fr 1fr 1fr; } }
+  .card {
+    background: var(--void); border-radius: 10px;
+    padding: 12px; border: 1px solid var(--void-3);
+    border-left: 3px solid var(--card-color);
+  }
+  .card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .card-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--card-color); box-shadow: 0 0 8px var(--card-color);
+    flex-shrink: 0;
+  }
+  .card-title {
+    font-size: 12px; font-weight: 800; letter-spacing: 0.1em;
+    color: var(--card-color); text-transform: uppercase; flex: 1;
+  }
+  .card-field { margin-bottom: 8px; }
+  .card-field:last-child { margin-bottom: 0; }
+  .card-label {
+    font-size: 9px; color: var(--text-dim);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 3px;
+  }
+  .card-input, .card-textarea, .status-select {
+    width: 100%; background: var(--void-2); color: var(--text);
+    border: 1px solid var(--void-3); border-radius: 6px;
+    padding: 7px 9px; font-family: inherit; font-size: 12px;
+    outline: none; line-height: 1.4;
+  }
+  .card-textarea { resize: vertical; min-height: 50px; }
+  .card-input:focus, .card-textarea:focus, .status-select:focus {
+    border-color: var(--card-color);
+  }
+  .status-select { font-weight: 700; }
+  /* Card colors */
+  .card.claude    { --card-color: var(--cyan); }
+  .card.chatgpt   { --card-color: var(--green); }
+  .card.grok      { --card-color: var(--violet); }
+  .card.gemini    { --card-color: var(--amber); }
+  .card.perplexity{ --card-color: var(--magenta); }
+  .card.manus     { --card-color: var(--red); }
+  .card.ava       { --card-color: var(--cyan); }
+  .card.aichauf   { --card-color: var(--blue); }
+  .card.ai100x    { --card-color: var(--magenta); }
+  .card.resume    { --card-color: var(--amber); }
+  .card.seeblinds { --card-color: var(--text-dim); }
+  .card.soulbeach { --card-color: var(--text-dim); }
+  /* LOOPS */
+  .loop-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px; background: var(--void);
+    border-radius: 6px; margin-bottom: 6px;
+    border: 1px solid var(--void-3);
+  }
+  .loop-input {
+    flex: 1; background: transparent; border: none;
+    color: var(--text); font-family: inherit;
+    font-size: 13px; outline: none; padding: 4px;
+  }
+  .loop-input::placeholder { color: var(--text-dim); }
+  .loop-del {
+    background: transparent; color: var(--red);
+    border: 1px solid var(--red);
+    width: 28px; height: 28px; border-radius: 6px;
+    font-size: 13px; cursor: pointer;
+    font-family: inherit; font-weight: 700; flex-shrink: 0;
+  }
+  .add-btn {
+    width: 100%; background: transparent;
+    color: var(--blue); border: 1px dashed var(--blue);
+    padding: 8px; border-radius: 6px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; font-family: inherit; margin-top: 4px;
+  }
+  /* MODAL */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 16px;
+    backdrop-filter: blur(8px);
+  }
+  .modal-bg.visible { display: flex; }
+  .modal {
+    background: var(--void-2); border-radius: 14px;
+    padding: 20px; max-width: 560px; width: 100%;
+    border: 1px solid var(--void-3);
+    max-height: 80vh; overflow-y: auto;
+  }
+  .modal h3 {
+    font-size: 14px; color: var(--cyan);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+  .modal p { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-bottom: 10px; }
+  .modal pre {
+    background: var(--void); padding: 12px; border-radius: 8px;
+    font-family: 'SF Mono', Menlo, monospace; font-size: 11px;
+    color: var(--text); white-space: pre-wrap; word-break: break-word;
+    max-height: 280px; overflow-y: auto; line-height: 1.5;
+    border: 1px solid var(--void-3);
+  }
+  .modal textarea {
+    width: 100%; background: var(--void); color: var(--text);
+    border: 1px solid var(--void-3); border-radius: 8px;
+    padding: 10px; font-family: 'SF Mono', Menlo, monospace;
+    font-size: 11px; resize: vertical; min-height: 120px; outline: none;
+  }
+  .modal-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .modal-btn {
+    flex: 1; background: var(--cyan); color: var(--void);
+    border: none; padding: 10px; border-radius: 6px;
+    font-weight: 800; font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer; font-family: inherit;
+  }
+  .modal-btn.gray { background: var(--void-3); color: var(--text); }
+  .modal-btn.red { background: var(--red); color: var(--void); }
+  /* FOOTER */
+  .footer-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(20, 20, 28, 0.95);
+    border-top: 1px solid var(--void-3);
+    padding: 10px 14px;
+    display: flex; gap: 6px;
+    justify-content: space-between; align-items: center;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px); z-index: 50;
+  }
+  .saved-label {
+    font-size: 9px; color: var(--text-dim);
+    flex: 1; letter-spacing: 0.1em; text-transform: uppercase;
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .saved-label strong { color: var(--cyan); }
+  .footer-btn {
+    background: transparent; color: var(--cyan);
+    border: 1px solid var(--cyan);
+    padding: 7px 10px; border-radius: 6px;
+    font-size: 10px; font-weight: 800; cursor: pointer;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: inherit;
+  }
+  .footer-btn.amber { color: var(--amber); border-color: var(--amber); }
+  .footer-btn.red { color: var(--red); border-color: var(--red); }
+  @media (max-width: 480px) {
+    body { padding: 12px 12px 88px; }
+    .header-left h1 { font-size: 18px; }
+    .section { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>COCKPIT</h1>
+    <div class="meta">v1.0 · single source of truth · auto-saves</div>
+  </div>
+  <div class="pulse" title="Live"></div>
+</div>
+<!-- BRAIN DUMP / INBOX -->
+<div class="section inbox">
+  <h2>🧠 BRAIN DUMP · CAPTURE FAST, SORT LATER</h2>
+  <div class="sub">
+    Anything floating in your head — paste it, type it, dump it. Process it
+    into the right section below when you have a moment. Don't let it live
+    in your head between sessions.
+  </div>
+  <textarea class="inbox-area" data-key="inbox" placeholder="Paste anything. Random thoughts, links, ideas, half-finished sentences from another AI..."></textarea>
+</div>
+<!-- TOP 3 -->
+<div class="section top3">
+  <h2>🎯 TODAY'S TOP 3 — THE ONLY THINGS THAT MATTER</h2>
+  <div class="top-item">
+    <div class="top-num">1</div>
+    <input class="top-input" data-key="top1" placeholder="Highest leverage move today...">
+  </div>
+  <div class="top-item">
+    <div class="top-num">2</div>
+    <input class="top-input" data-key="top2" placeholder="Second priority...">
+  </div>
+  <div class="top-item">
+    <div class="top-num">3</div>
+    <input class="top-input" data-key="top3" placeholder="Third priority...">
+  </div>
+</div>
+<!-- MANUAL EXTRACT -->
+<div class="section extract">
+  <h2>📋 EXTRACT FROM ANY CHAT · 2-STEP</h2>
+  <div class="sub">
+    Step 1: tap COPY PROMPT below. Step 2: paste it into any Claude / ChatGPT
+    chat along with the messages you want extracted. Step 3: copy the JSON
+    response. Step 4: tap IMPORT JSON and paste. Auto-fills cards below.
+  </div>
+  <div class="extract-row">
+    <button class="btn cyan" onclick="copyExtractPrompt()">COPY EXTRACT PROMPT</button>
+    <button class="btn violet" onclick="openImportModal()">IMPORT JSON</button>
+  </div>
+</div>
+<!-- PER-AI STATUS -->
+<div class="section ai">
+  <h2>🧠 PER-AI STATUS · WHERE EACH AI IS PARKED</h2>
+  <div class="grid">
+    <div class="card claude">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">Claude</div></div>
+      <div class="card-field"><div class="card-label">Last update</div><textarea class="card-textarea" data-key="ai_claude_last" placeholder="Where you left off..."></textarea></div>
+      <div class="card-field"><div class="card-label">Next move</div><input class="card-input" data-key="ai_claude_next" placeholder="What to do next..."></div>
+    </div>
+    <div class="card chatgpt">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">ChatGPT</div></div>
+      <div class="card-field"><div class="card-label">Last update</div><textarea class="card-textarea" data-key="ai_chatgpt_last" placeholder="Where you left off..."></textarea></div>
+      <div class="card-field"><div class="card-label">Next move</div><input class="card-input" data-key="ai_chatgpt_next" placeholder="What to do next..."></div>
+    </div>
+    <div class="card grok">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">Grok</div></div>
+      <div class="card-field"><div class="card-label">Last update</div><textarea class="card-textarea" data-key="ai_grok_last" placeholder="Where you left off..."></textarea></div>
+      <div class="card-field"><div class="card-label">Next move</div><input class="card-input" data-key="ai_grok_next" placeholder="What to do next..."></div>
+    </div>
+    <div class="card gemini">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">Gemini</div></div>
+      <div class="card-field"><div class="card-label">Last update</div><textarea class="card-textarea" data-key="ai_gemini_last" placeholder="Where you left off..."></textarea></div>
+      <div class="card-field"><div class="card-label">Next move</div><input class="card-input" data-key="ai_gemini_next" placeholder="What to do next..."></div>
+    </div>
+    <div class="card perplexity">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">Perplexity</div></div>
+      <div class="card-field"><div class="card-label">Last update</div><textarea class="card-textarea" data-key="ai_perplexity_last" placeholder="Where you left off..."></textarea></div>
+      <div class="card-field"><div class="card-label">Next move</div><input class="card-input" data-key="ai_perplexity_next" placeholder="What to do next..."></div>
+    </div>
+    <div class="card manus">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">Manus</div></div>
+      <div class="card-field"><div class="card-label">Last update</div><textarea class="card-textarea" data-key="ai_manus_last" placeholder="Where you left off..."></textarea></div>
+      <div class="card-field"><div class="card-label">Next move</div><input class="card-input" data-key="ai_manus_next" placeholder="What to do next..."></div>
+    </div>
+  </div>
+</div>
+<!-- PER-BUSINESS -->
+<div class="section biz">
+  <h2>🏢 PER-BUSINESS STATUS</h2>
+  <div class="grid">
+    <div class="card ava">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">AVA</div></div>
+      <div class="card-field"><div class="card-label">Status</div><select class="status-select" data-key="biz_ava_status"><option>LIVE</option><option>IN BUILD</option><option>PARKED</option><option>BLOCKED</option></select></div>
+      <div class="card-field"><div class="card-label">Current blocker</div><input class="card-input" data-key="biz_ava_block" placeholder="What's blocking?"></div>
+    </div>
+    <div class="card aichauf">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">AIChauffeur</div></div>
+      <div class="card-field"><div class="card-label">Status</div><select class="status-select" data-key="biz_aichauf_status"><option>IN BUILD</option><option>LIVE</option><option>PARKED</option><option>BLOCKED</option></select></div>
+      <div class="card-field"><div class="card-label">Current blocker</div><input class="card-input" data-key="biz_aichauf_block" placeholder="What's blocking?"></div>
+    </div>
+    <div class="card ai100x">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">AI100X</div></div>
+      <div class="card-field"><div class="card-label">Status</div><select class="status-select" data-key="biz_ai100x_status"><option>VAPOR RISK</option><option>IN BUILD</option><option>LIVE</option><option>PARKED</option></select></div>
+      <div class="card-field"><div class="card-label">Current blocker</div><input class="card-input" data-key="biz_ai100x_block" placeholder="What's blocking?"></div>
+    </div>
+    <div class="card resume">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">ResumeReady</div></div>
+      <div class="card-field"><div class="card-label">Status</div><select class="status-select" data-key="biz_resume_status"><option>PARKED 90D</option><option>LIVE</option><option>FOR SALE</option><option>RELAUNCH</option></select></div>
+      <div class="card-field"><div class="card-label">Decision due</div><input class="card-input" data-key="biz_resume_block" placeholder="When to revisit..."></div>
+    </div>
+    <div class="card seeblinds">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">SeeBlinds</div></div>
+      <div class="card-field"><div class="card-label">Status</div><select class="status-select" data-key="biz_seeblinds_status"><option>DORMANT</option><option>FOR SALE</option><option>DELETE</option></select></div>
+      <div class="card-field"><div class="card-label">Note</div><input class="card-input" data-key="biz_seeblinds_block" placeholder="Decision..."></div>
+    </div>
+    <div class="card soulbeach">
+      <div class="card-head"><div class="card-dot"></div><div class="card-title">Soul Beach</div></div>
+      <div class="card-field"><div class="card-label">Status</div><select class="status-select" data-key="biz_soulbeach_status"><option>FAVOR / FREE</option><option>ARCHIVED</option><option>DONE</option></select></div>
+      <div class="card-field"><div class="card-label">Last ask</div><input class="card-input" data-key="biz_soulbeach_block" placeholder="What does your buddy need?"></div>
+    </div>
+  </div>
+</div>
+<!-- OPEN LOOPS -->
+<div class="section loops">
+  <h2>🔄 OPEN LOOPS · WAITING ON SOMEONE</h2>
+  <div class="sub">Stuff you can't move forward today because someone else owns the next step.</div>
+  <div id="loopsList"></div>
+  <button class="add-btn" onclick="addLoop()">+ ADD OPEN LOOP</button>
+</div>
+<!-- MODALS -->
+<div class="modal-bg" id="promptModal">
+  <div class="modal">
+    <h3>📋 EXTRACT PROMPT — Copied!</h3>
+    <p>Now paste the prompt into any Claude / ChatGPT / Grok chat <em>along with the chat content you want to extract</em>. You'll get JSON back. Then tap IMPORT JSON to paste it here.</p>
+    <pre id="promptPreview"></pre>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeModal('promptModal')">GOT IT</button>
+    </div>
+  </div>
+</div>
+<div class="modal-bg" id="importModal">
+  <div class="modal">
+    <h3>📥 IMPORT JSON</h3>
+    <p>Paste the JSON response you got from the AI. Cockpit will auto-fill the cards.</p>
+    <textarea id="importJson" placeholder='{"source":"claude","last_update":"...","next_move":"...","todos":[],"open_loops":[]}'></textarea>
+    <div class="modal-actions">
+      <button class="modal-btn gray" onclick="closeModal('importModal')">CANCEL</button>
+      <button class="modal-btn" onclick="doImport()">IMPORT</button>
+    </div>
+  </div>
+</div>
+<div class="modal-bg" id="syncModal">
+  <div class="modal">
+    <h3>🔄 SYNC ACROSS DEVICES</h3>
+    <p><strong>To copy state from this device to another:</strong> tap EXPORT below, paste the result into a Notes app, open the other device, open Cockpit, tap SYNC, paste in.</p>
+    <textarea id="syncJson" placeholder="Paste exported state to import, OR tap EXPORT TO CLIPBOARD to copy current state..."></textarea>
+    <div class="modal-actions">
+      <button class="modal-btn gray" onclick="closeModal('syncModal')">CANCEL</button>
+      <button class="modal-btn" onclick="exportSyncJson()">EXPORT</button>
+      <button class="modal-btn" onclick="importSyncJson()">IMPORT</button>
+    </div>
+  </div>
+</div>
+<div class="footer-bar">
+  <div class="saved-label" id="savedLabel">Auto-saves to this device</div>
+  <button class="footer-btn" onclick="openSyncModal()">SYNC</button>
+  <button class="footer-btn amber" onclick="exportText()">EXPORT</button>
+  <button class="footer-btn red" onclick="resetAll()">RESET</button>
+</div>
+<script>
+  const STORAGE_KEY = 'cockpit_state_v1';
+  let state = {};
+  let saveTimer = null;
+  const EXTRACT_PROMPT = `Extract action items from the chat content I'm pasting below this prompt. Return ONLY valid JSON, no markdown, no preamble, no explanation. Schema:
+{
+  "source": "claude|chatgpt|grok|gemini|perplexity|manus",
+  "last_update": "1-2 sentence summary of where the user left off",
+  "next_move": "the single most important next action",
+  "todos": ["short todo 1", "short todo 2"],
+  "open_loops": ["thing waiting on someone else 1"]
+}
+Rules: items under 80 characters each. Max 5 todos, max 3 open loops. Be ruthless — only real actions, not filler. Pick source field based on which AI the chat is from. Return JSON only.
+CHAT CONTENT TO EXTRACT FROM:
+[paste your chat content here, then send to the AI]`;
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) state = JSON.parse(raw);
+    } catch (e) { state = {}; }
+    document.querySelectorAll('[data-key]').forEach(el => {
+      const k = el.dataset.key;
+      if (state[k] !== undefined) el.value = state[k];
+    });
+    if (state.loops && state.loops.length) {
+      state.loops.forEach(l => renderLoop(l));
+    }
+    if (state._saved) {
+      document.getElementById('savedLabel').innerHTML = 'Saved · <strong>' + state._saved + '</strong>';
+    }
+  }
+  function saveState() {
+    document.querySelectorAll('[data-key]').forEach(el => {
+      state[el.dataset.key] = el.value;
+    });
+    state.loops = [];
+    document.querySelectorAll('#loopsList .loop-input').forEach(el => {
+      if (el.value.trim()) state.loops.push(el.value);
+    });
+    state._saved = new Date().toLocaleString();
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      document.getElementById('savedLabel').innerHTML = 'Saved · <strong>' + state._saved + '</strong>';
+    } catch (e) { console.error(e); }
+  }
+  function debouncedSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveState, 600);
+  }
+  document.querySelectorAll('[data-key]').forEach(el => {
+    el.addEventListener('input', debouncedSave);
+    el.addEventListener('change', debouncedSave);
+  });
+  // OPEN LOOPS
+  function renderLoop(value = '') {
+    const list = document.getElementById('loopsList');
+    const div = document.createElement('div');
+    div.className = 'loop-item';
+    const input = document.createElement('input');
+    input.className = 'loop-input';
+    input.placeholder = 'What are you waiting on?';
+    input.value = value;
+    input.addEventListener('input', debouncedSave);
+    const btn = document.createElement('button');
+    btn.className = 'loop-del';
+    btn.textContent = '✕';
+    btn.onclick = () => { div.remove(); debouncedSave(); };
+    div.appendChild(input);
+    div.appendChild(btn);
+    list.appendChild(div);
+  }
+  function addLoop() { renderLoop(''); debouncedSave(); }
+  // EXTRACT PROMPT
+  function copyExtractPrompt() {
+    navigator.clipboard.writeText(EXTRACT_PROMPT).then(() => {
+      document.getElementById('promptPreview').textContent = EXTRACT_PROMPT;
+      document.getElementById('promptModal').classList.add('visible');
+    }).catch(() => alert(EXTRACT_PROMPT));
+  }
+  // IMPORT JSON
+  function openImportModal() {
+    document.getElementById('importJson').value = '';
+    document.getElementById('importModal').classList.add('visible');
+  }
+  function doImport() {
+    const raw = document.getElementById('importJson').value.trim();
+    if (!raw) return;
+    try {
+      const cleaned = raw.replace(/```json|```/g, '').trim();
+      const data = JSON.parse(cleaned);
+      const source = (data.source || 'claude').toLowerCase();
+      if (data.last_update) {
+        const el = document.querySelector(`[data-key="ai_${source}_last"]`);
+        if (el) el.value = data.last_update;
+      }
+      if (data.next_move) {
+        const el = document.querySelector(`[data-key="ai_${source}_next"]`);
+        if (el) el.value = data.next_move;
+      }
+      if (data.open_loops && Array.isArray(data.open_loops)) {
+        data.open_loops.forEach(l => renderLoop(l));
+      }
+      if (data.todos && Array.isArray(data.todos)) {
+        // Drop todos into the brain dump as a list with timestamp
+        const inboxEl = document.querySelector('[data-key="inbox"]');
+        const existing = inboxEl.value.trim();
+        const stamp = new Date().toLocaleString();
+        const todoBlock = `\n\n--- TODOS from ${source.toUpperCase()} (${stamp}) ---\n` +
+          data.todos.map(t => '• ' + t).join('\n');
+        inboxEl.value = existing + todoBlock;
+      }
+      saveState();
+      closeModal('importModal');
+      alert('Imported into ' + source.toUpperCase() + ' card + Brain Dump.');
+    } catch (e) {
+      alert('JSON parse error: ' + e.message);
+    }
+  }
+  // SYNC
+  function openSyncModal() {
+    document.getElementById('syncJson').value = '';
+    document.getElementById('syncModal').classList.add('visible');
+  }
+  function exportSyncJson() {
+    const json = JSON.stringify(state, null, 2);
+    document.getElementById('syncJson').value = json;
+    navigator.clipboard.writeText(json).then(() => alert('State copied to clipboard. Paste into Notes or other device.'));
+  }
+  function importSyncJson() {
+    const raw = document.getElementById('syncJson').value.trim();
+    if (!raw) return;
+    try {
+      const data = JSON.parse(raw);
+      state = data;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      location.reload();
+    } catch (e) { alert('JSON parse error: ' + e.message); }
+  }
+  function closeModal(id) { document.getElementById(id).classList.remove('visible'); }
+  // EXPORT to clipboard as readable text
+  async function exportText() {
+    const lines = [];
+    lines.push('=== COCKPIT EXPORT ===');
+    lines.push('Saved: ' + (state._saved || new Date().toLocaleString()));
+    lines.push('');
+    lines.push("TODAY'S TOP 3:");
+    [1,2,3].forEach(n => { if (state['top'+n]) lines.push(`${n}. ${state['top'+n]}`); });
+    lines.push('');
+    if (state.inbox) { lines.push('BRAIN DUMP:'); lines.push(state.inbox); lines.push(''); }
+    lines.push('PER-AI STATUS:');
+    ['claude','chatgpt','grok','gemini','perplexity','manus'].forEach(ai => {
+      const last = state['ai_'+ai+'_last']; const next = state['ai_'+ai+'_next'];
+      if (last || next) {
+        lines.push(`  ${ai.toUpperCase()}:`);
+        if (last) lines.push(`    Last: ${last}`);
+        if (next) lines.push(`    Next: ${next}`);
+      }
+    });
+    lines.push('');
+    lines.push('PER-BUSINESS:');
+    ['ava','aichauf','ai100x','resume','seeblinds','soulbeach'].forEach(b => {
+      const s = state['biz_'+b+'_status']; const bl = state['biz_'+b+'_block'];
+      if (s || bl) lines.push(`  ${b.toUpperCase()}: ${s||''} ${bl ? '· '+bl : ''}`);
+    });
+    lines.push('');
+    lines.push('OPEN LOOPS:');
+    (state.loops || []).forEach(l => lines.push('  - ' + l));
+    const text = lines.join('\n');
+    try {
+      await navigator.clipboard.writeText(text);
+      const lbl = document.getElementById('savedLabel');
+      const orig = lbl.innerHTML;
+      lbl.innerHTML = '<strong style="color:var(--green);">✓ COPIED</strong>';
+      setTimeout(() => { lbl.innerHTML = orig; }, 1500);
+    } catch (e) { alert(text); }
+  }
+  function resetAll() {
+    if (!confirm('Clear EVERYTHING in the cockpit? Cannot be undone.')) return;
+    state = {};
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+  loadState();
+</script>
+</body>
+</html>
