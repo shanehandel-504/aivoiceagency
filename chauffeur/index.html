@@ -240,6 +240,22 @@
       #demo-console.demo-armed .c-meta{opacity:1!important;filter:none!important;transition:none!important}
       #demo-final-badge.show{animation:none}
     }
+
+    /* Integrations strip — cyan-bordered platform pills (text only, no logos) */
+    .int-pills{display:flex;flex-wrap:wrap;gap:.6rem;margin:0 0 1.1rem}
+    .int-pill{display:inline-flex;align-items:center;font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;color:var(--cyan-bright);padding:.5rem .9rem;border-radius:99px;background:rgba(0,212,255,.05);border:1px solid var(--line-hot);box-shadow:0 0 0 1px rgba(0,212,255,.06),0 6px 18px rgba(0,212,255,.06)}
+    .int-muted{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;color:var(--ink-dim);margin:0 0 1.25rem;text-transform:uppercase}
+    .int-mini{font-size:1rem;color:var(--ink-soft);max-width:62ch;line-height:1.6}
+
+    /* CIRCULANT cyan pulse on the hero console card (not #demo-console) */
+    .hero .console{animation:hero-console-pulse 2.6s ease-in-out infinite}
+    @keyframes hero-console-pulse{
+      0%,100%{box-shadow:0 30px 80px rgba(0,0,0,.4),0 0 0 1px rgba(0,212,255,.18),0 0 0 0 rgba(0,212,255,.45)}
+      50%{box-shadow:0 30px 80px rgba(0,0,0,.4),0 0 0 1px rgba(0,212,255,.55),0 0 0 10px rgba(0,212,255,0)}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .hero .console{animation:none}
+    }
   </style>
 </head>
 <body>
@@ -413,6 +429,24 @@
   </div>
 </section>
 
+<section id="integrations">
+  <div class="wrap">
+    <div class="sec-kicker">Writes into your stack</div>
+    <h2 class="sec-h">AVA writes into the dispatch <em>you already run.</em></h2>
+    <p class="sec-sub">No rip-and-replace. AVA captures the call and writes a clean reservation straight into your existing dispatch platform — then farms overflow to your affiliate network when you're booked solid.</p>
+
+    <div class="int-pills">
+      <span class="int-pill">Limo Anywhere</span>
+      <span class="int-pill">FASTTRAK</span>
+      <span class="int-pill">SantaCruz / GroundWidgets</span>
+      <span class="int-pill">Ground Alliance</span>
+      <span class="int-pill">iCabbi</span>
+    </div>
+    <p class="int-muted">Integration scoped per platform during setup.</p>
+    <p class="int-mini">Booked solid? AVA passes the trip to your affiliate network automatically — the ride still gets covered, the revenue still gets tracked.</p>
+  </div>
+</section>
+
 <section id="how">
   <div class="wrap">
     <div class="sec-kicker">How it works</div>
@@ -459,7 +493,7 @@
     <div class="feat-grid">
       <div class="feat">
         <div class="feat-h">Trip-aware intake</div>
-        <p class="feat-p">Understands airport runs, hourly charters, hotel transfers, weddings, proms, corporate trips. Captures the right fields for each.</p>
+        <p class="feat-p">Understands airport runs, hourly charters, hotel transfers, airport runs, hourly charters, corporate accounts, roadshows, group moves. Captures the right fields for each.</p>
       </div>
       <div class="feat">
         <div class="feat-h">Mid-call corrections</div>
@@ -471,11 +505,11 @@
       </div>
       <div class="feat">
         <div class="feat-h">Flight + airport context</div>
-        <p class="feat-p">MKE, ORD, MDW, GRB. Captures flight number, terminal, departure time, and adjusts pickup buffer accordingly.</p>
+        <p class="feat-p">ORD, JFK, LAX, ATL, and your local hubs. Captures flight number, terminal, departure time, and adjusts pickup buffer accordingly.</p>
       </div>
       <div class="feat">
         <div class="feat-h">Writes to your workflow</div>
-        <p class="feat-p">Reservation lands in your CRM, dispatch software, or shared spreadsheet. We connect to where your team already works.</p>
+        <p class="feat-p">Reservation lands in your dispatch platform — Limo Anywhere, FASTTRAK, SantaCruz, and more. We connect to where your team already works.</p>
       </div>
       <div class="feat">
         <div class="feat-h">Confirmation loop</div>
@@ -573,7 +607,7 @@
     </div>
     <div class="foot-bottom">
       <span>© 2026 AIChauffeur · An AI Voice Agency property</span>
-      <span>Wisconsin · United States</span>
+      <span>United States · Built for high-volume operators</span>
     </div>
   </div>
 </footer>
