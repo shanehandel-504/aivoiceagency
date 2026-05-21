@@ -210,6 +210,52 @@
       .step,.feat{transition:none!important}
       .step:hover,.feat:hover{transform:none!important}
     }
+
+    /* Demo controls — two-button cluster (CIRCULANT cyan, Space Grotesk) */
+    .demo-play-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.85rem;margin:0 0 1.4rem}
+    .demo-play-btn,.demo-call-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.95rem 1.5rem;border-radius:10px;font-family:var(--sans);font-size:.92rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;border:1px solid var(--cyan);transition:transform .15s,box-shadow .15s,background .15s,color .15s;text-decoration:none}
+    .demo-play-btn{background:var(--cyan);color:#000;box-shadow:0 0 0 1px var(--cyan-bright),0 8px 28px var(--cyan-glow)}
+    .demo-play-btn:hover{transform:translateY(-2px);box-shadow:0 0 0 1px var(--cyan-bright),0 12px 36px var(--cyan-glow)}
+    .demo-play-btn[data-state="playing"]{background:rgba(0,212,255,.08);color:var(--cyan-bright);border-color:var(--line-hot);box-shadow:none}
+    .demo-call-btn{background:transparent;color:var(--cyan-bright);border-color:var(--cyan)}
+    .demo-call-btn:hover{background:var(--cyan-dim);color:var(--ink);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,.18)}
+    .demo-play-btn .play-glyph,.demo-call-btn .play-glyph{display:inline-flex;align-items:center;justify-content:center;font-size:1rem;line-height:1}
+
+    /* Idle: complete, sharp reservation ticket (no blur, no dim). On tap, .demo-armed enables a brief cyan capture-flash per card as audio hits each threshold. */
+    @keyframes capture-flash{0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,0)}30%{box-shadow:0 0 0 1px var(--cyan-bright),0 0 18px rgba(0,212,255,.45)}}
+    #demo-console.demo-armed [data-reveal].on{animation:capture-flash 1.1s ease}
+
+    #demo-final-badge{display:none;margin-top:1rem;padding:.95rem 1.1rem;border-radius:12px;background:linear-gradient(135deg,rgba(0,212,255,.14),rgba(0,212,255,.06));border:1px solid var(--cyan-bright);color:var(--ink);font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;text-align:center;box-shadow:0 0 24px rgba(0,212,255,.25)}
+    #demo-final-badge.show{display:block;animation:final-badge-in .6s ease}
+    #demo-final-badge::before{content:'✓ ';color:var(--cyan-bright);font-weight:600}
+    @keyframes final-badge-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    @media (prefers-reduced-motion: reduce){
+      #demo-console.demo-armed [data-reveal].on{animation:none}
+      #demo-final-badge.show{animation:none}
+    }
+
+    /* Integrations strip — cyan-bordered platform pills (text only, no logos) */
+    .int-pills{display:flex;flex-wrap:wrap;gap:.6rem;margin:0 0 1.1rem}
+    .int-pill{display:inline-flex;align-items:center;font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;color:var(--cyan-bright);padding:.5rem .9rem;border-radius:99px;background:rgba(0,212,255,.05);border:1px solid var(--line-hot);box-shadow:0 0 0 1px rgba(0,212,255,.06),0 6px 18px rgba(0,212,255,.06)}
+    .int-muted{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;color:var(--ink-dim);margin:0 0 1.25rem;text-transform:uppercase}
+    .int-mini{font-size:1rem;color:var(--ink-soft);max-width:62ch;line-height:1.6}
+
+    /* CIRCULANT cyan pulse on the hero console card (not #demo-console) */
+    .hero .console{animation:hero-console-pulse 2.6s ease-in-out infinite}
+    @keyframes hero-console-pulse{
+      0%,100%{box-shadow:0 30px 80px rgba(0,0,0,.4),0 0 0 1px rgba(0,212,255,.18),0 0 0 0 rgba(0,212,255,.45)}
+      50%{box-shadow:0 30px 80px rgba(0,0,0,.4),0 0 0 1px rgba(0,212,255,.55),0 0 0 10px rgba(0,212,255,0)}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .hero .console{animation:none}
+    }
+
+    /* Footer cross-site mesh row */
+    .foot-mesh{display:flex;flex-wrap:wrap;gap:.55rem 1.1rem;align-items:center;padding:1.2rem 0 0;margin-top:1.8rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase}
+    .foot-mesh a{color:var(--cyan-bright);transition:color .15s}
+    .foot-mesh a:hover{color:var(--ink)}
+    .foot-mesh .sep{color:var(--ink-dim)}
   </style>
 </head>
 <body>
@@ -303,15 +349,19 @@
     <h2 class="sec-h">From phone call to dispatch record — <em>captured, quoted, and routed.</em></h2>
     <p class="sec-sub">A caller speaks naturally. AIChauffeur captures the trip, estimates a quote range from your rules, handles mid-call changes, and writes a clean record into your workflow — so your dispatcher confirms instead of starting from scratch.</p>
 
-    <div style="margin-bottom:2rem">
-      <a href="/demo/" class="btn btn-primary" style="display:inline-flex">
-        Try the live demo
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
+    <div class="demo-play-bar">
+      <button type="button" id="demo-play-btn" class="demo-play-btn" data-state="idle" aria-controls="demo-audio">
+        <span class="play-glyph" aria-hidden="true">▶</span>
+        <span class="play-label">Play mock demo</span>
+      </button>
+      <a href="tel:+17869371218" class="demo-call-btn">
+        <span class="play-glyph" aria-hidden="true">📞</span>
+        <span>Try real demo</span>
       </a>
+      <audio id="demo-audio" preload="metadata" src="/audio/demos-v2/maxim-v2.mp3"></audio>
     </div>
 
-    <div class="console">
+    <div class="console" id="demo-console">
       <div class="console-bar">
         <div class="console-title">
           <div class="dots"><span></span><span></span><span></span></div>
@@ -320,55 +370,74 @@
         <span class="live-badge">Captured</span>
       </div>
       <div class="console-grid">
-        <div class="c-card">
+        <div class="c-card" data-reveal="1">
           <div class="c-label">Inbound caller</div>
           <div class="c-main">Maria T.</div>
           <div class="c-sub">+1 (262) 555-0144 · Inbound · Repeat</div>
         </div>
-        <div class="c-card">
+        <div class="c-card" data-reveal="2">
           <div class="c-label">Trip type</div>
           <div class="c-main">Airport drop · ORD</div>
           <div class="c-sub">Departure 7:15 PM · United 414</div>
         </div>
       </div>
       <div class="c-row">
-        <div class="c-card">
+        <div class="c-card" data-reveal="3">
           <div class="c-label">Pickup</div>
           <div class="c-main">3:30 PM</div>
         </div>
-        <div class="c-card">
+        <div class="c-card" data-reveal="4">
           <div class="c-label">Vehicle</div>
           <div class="c-main">Black SUV</div>
         </div>
-        <div class="c-card">
+        <div class="c-card" data-reveal="5">
           <div class="c-label">Passengers</div>
           <div class="c-main">3 · 4 bags</div>
         </div>
       </div>
       <div class="console-grid">
-        <div class="c-card">
+        <div class="c-card" data-reveal="6">
           <div class="c-label">Pickup address</div>
           <div class="c-main">142 N. Riverwalk Way · Milwaukee WI</div>
           <div class="c-sub">Hotel lobby · valet circle</div>
         </div>
-        <div class="c-card">
+        <div class="c-card" data-reveal="7">
           <div class="c-label">Quote range</div>
           <div class="c-main">$285 – $325</div>
           <div class="c-sub">90 mi · est. 1h 50m drive · tolls included</div>
         </div>
       </div>
       <div class="console-grid">
-        <div class="c-card">
+        <div class="c-card" data-reveal="8">
           <div class="c-label">Status</div>
           <span class="badge badge-blue">Reservation written</span>
         </div>
-        <div class="c-card">
+        <div class="c-card" data-reveal="9">
           <div class="c-label">Confirmation</div>
           <span class="badge badge-green">SMS sent to caller</span>
         </div>
       </div>
       <div class="c-meta">Captured 2:14 · Routed to dispatch · Awaiting confirmation</div>
+      <div id="demo-final-badge" role="status" aria-live="polite">Confirmation texted · Driver notified · Ride logged</div>
     </div>
+  </div>
+</section>
+
+<section id="integrations">
+  <div class="wrap">
+    <div class="sec-kicker">Writes into your stack</div>
+    <h2 class="sec-h">AVA writes into the dispatch <em>you already run.</em></h2>
+    <p class="sec-sub">No rip-and-replace. AVA captures the call and writes a clean reservation straight into your existing dispatch platform — then farms overflow to your affiliate network when you're booked solid.</p>
+
+    <div class="int-pills">
+      <span class="int-pill">Limo Anywhere</span>
+      <span class="int-pill">FASTTRAK</span>
+      <span class="int-pill">SantaCruz / GroundWidgets</span>
+      <span class="int-pill">Ground Alliance</span>
+      <span class="int-pill">iCabbi</span>
+    </div>
+    <p class="int-muted">Integration scoped per platform during setup.</p>
+    <p class="int-mini">Booked solid? AVA passes the trip to your affiliate network automatically — the ride still gets covered, the revenue still gets tracked.</p>
   </div>
 </section>
 
@@ -418,7 +487,7 @@
     <div class="feat-grid">
       <div class="feat">
         <div class="feat-h">Trip-aware intake</div>
-        <p class="feat-p">Understands airport runs, hourly charters, hotel transfers, weddings, proms, corporate trips. Captures the right fields for each.</p>
+        <p class="feat-p">Understands airport runs, hourly charters, hotel transfers, airport runs, hourly charters, corporate accounts, roadshows, group moves. Captures the right fields for each.</p>
       </div>
       <div class="feat">
         <div class="feat-h">Mid-call corrections</div>
@@ -430,11 +499,11 @@
       </div>
       <div class="feat">
         <div class="feat-h">Flight + airport context</div>
-        <p class="feat-p">MKE, ORD, MDW, GRB. Captures flight number, terminal, departure time, and adjusts pickup buffer accordingly.</p>
+        <p class="feat-p">ORD, JFK, LAX, ATL, and your local hubs. Captures flight number, terminal, departure time, and adjusts pickup buffer accordingly.</p>
       </div>
       <div class="feat">
         <div class="feat-h">Writes to your workflow</div>
-        <p class="feat-p">Reservation lands in your CRM, dispatch software, or shared spreadsheet. We connect to where your team already works.</p>
+        <p class="feat-p">Reservation lands in your dispatch platform — Limo Anywhere, FASTTRAK, SantaCruz, and more. We connect to where your team already works.</p>
       </div>
       <div class="feat">
         <div class="feat-h">Confirmation loop</div>
@@ -516,7 +585,7 @@
     <div class="foot">
       <div class="foot-brand">
         <div class="foot-mark">AI<em>Chauffeur</em></div>
-        <p class="foot-tagline">AI dispatch intake for limo, black car, and shuttle operators. Built by a 30-year business owner — 14 years running a chauffeured transportation company.</p>
+        <p class="foot-tagline">AI dispatch intake for limo, black car, and shuttle operators. Built by a 30-year business owner — 17 years running a chauffeured transportation company.</p>
         <div class="foot-phone">(786) 937-1218</div>
       </div>
       <div class="foot-links">
@@ -530,9 +599,16 @@
         <a href="/terms.html">Terms</a>
       </div>
     </div>
+    <div class="foot-mesh">
+      <a href="https://aivoiceagency.ai">AI Voice Agency</a>
+      <span class="sep">·</span>
+      <a href="https://aichauffeur.ai">AI Chauffeur</a>
+      <span class="sep">·</span>
+      <a href="https://ai100x.ai">AI100X</a>
+    </div>
     <div class="foot-bottom">
       <span>© 2026 AIChauffeur · An AI Voice Agency property</span>
-      <span>Wisconsin · United States</span>
+      <span>United States · Built for high-volume operators</span>
     </div>
   </div>
 </footer>
@@ -549,6 +625,92 @@ window.addEventListener('scroll', () => {
     ticking = true;
   }
 });
+
+/* Live audio-synced dispatch demo (Pass 1) */
+(function(){
+  const card = document.getElementById('demo-console');
+  const audio = document.getElementById('demo-audio');
+  const btn = document.getElementById('demo-play-btn');
+  const finalBadge = document.getElementById('demo-final-badge');
+  if (!card || !audio || !btn || !finalBadge) return;
+
+  const label = btn.querySelector('.play-label');
+  const glyph = btn.querySelector('.play-glyph');
+  const reveals = Array.from(card.querySelectorAll('[data-reveal]'));
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const setLabel = (txt, glyphChar) => { label.textContent = txt; if (glyphChar) glyph.textContent = glyphChar; };
+
+  function showAll(){
+    reveals.forEach(r => r.classList.add('on'));
+    card.classList.add('show-meta');
+    finalBadge.classList.add('show');
+  }
+  function arm(){
+    card.classList.add('demo-armed');
+    card.classList.remove('show-meta');
+    reveals.forEach(r => r.classList.remove('on'));
+    finalBadge.classList.remove('show');
+  }
+
+  if (reduced){
+    showAll();
+    btn.addEventListener('click', () => {
+      if (audio.paused){ audio.play(); btn.setAttribute('data-state','playing'); setLabel('Playing…','❚❚'); }
+      else { audio.pause(); btn.setAttribute('data-state','idle'); setLabel('Play mock demo','▶'); }
+    });
+    audio.addEventListener('ended', () => { btn.setAttribute('data-state','idle'); setLabel('Play mock demo','▶'); audio.currentTime = 0; });
+    return;
+  }
+
+  let thresholds = [];
+  let metaAt = Infinity;
+  function buildThresholds(){
+    const dur = isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 60;
+    const start = dur * 0.04;
+    const end = dur * 0.88;
+    const span = end - start;
+    const n = reveals.length;
+    thresholds = [];
+    for (let i = 0; i < n; i++){
+      thresholds.push(start + (n > 1 ? span * i / (n - 1) : 0));
+    }
+    metaAt = dur * 0.94;
+  }
+  if (audio.readyState >= 1) buildThresholds();
+  audio.addEventListener('loadedmetadata', buildThresholds);
+  audio.addEventListener('durationchange', buildThresholds);
+
+  audio.addEventListener('timeupdate', () => {
+    if (!thresholds.length) return;
+    const t = audio.currentTime;
+    for (let i = 0; i < reveals.length; i++){
+      if (t >= thresholds[i]) reveals[i].classList.add('on');
+    }
+    if (t >= metaAt) card.classList.add('show-meta');
+  });
+
+  audio.addEventListener('play', () => { btn.setAttribute('data-state','playing'); setLabel('Playing…','❚❚'); });
+  audio.addEventListener('pause', () => {
+    if (audio.ended) return;
+    btn.setAttribute('data-state','idle');
+    setLabel('Play mock demo','▶');
+  });
+  audio.addEventListener('ended', () => {
+    showAll();
+    btn.setAttribute('data-state','idle');
+    setLabel('Play mock demo','▶');
+    audio.currentTime = 0;
+  });
+
+  btn.addEventListener('click', () => {
+    audio.pause();
+    audio.currentTime = 0;
+    arm();
+    const p = audio.play();
+    if (p && typeof p.catch === 'function') p.catch(() => { setLabel('Tap to retry','▶'); });
+  });
+})();
 </script>
 
 </body>
