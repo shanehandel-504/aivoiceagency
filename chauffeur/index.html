@@ -211,22 +211,19 @@
       .step:hover,.feat:hover{transform:none!important}
     }
 
-    /* Live audio-synced dispatch demo (Pass 1) */
-    .demo-play-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.9rem;margin:0 0 1rem}
-    .demo-play-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.85rem 1.3rem;border-radius:10px;font-family:var(--mono);font-size:.74rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border:1px solid var(--cyan-bright);background:var(--cyan);color:#000;box-shadow:0 0 0 1px var(--cyan-bright),0 8px 28px var(--cyan-glow);transition:transform .15s,box-shadow .15s,background .15s,color .15s}
+    /* Demo controls — two-button cluster (CIRCULANT cyan, Space Grotesk) */
+    .demo-play-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.85rem;margin:0 0 1.4rem}
+    .demo-play-btn,.demo-call-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.95rem 1.5rem;border-radius:10px;font-family:var(--sans);font-size:.92rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;border:1px solid var(--cyan);transition:transform .15s,box-shadow .15s,background .15s,color .15s;text-decoration:none}
+    .demo-play-btn{background:var(--cyan);color:#000;box-shadow:0 0 0 1px var(--cyan-bright),0 8px 28px var(--cyan-glow)}
     .demo-play-btn:hover{transform:translateY(-2px);box-shadow:0 0 0 1px var(--cyan-bright),0 12px 36px var(--cyan-glow)}
     .demo-play-btn[data-state="playing"]{background:rgba(0,212,255,.08);color:var(--cyan-bright);border-color:var(--line-hot);box-shadow:none}
-    .demo-play-btn .play-glyph{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:.78rem;line-height:1}
-    .demo-play-hint{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim)}
+    .demo-call-btn{background:transparent;color:var(--cyan-bright);border-color:var(--cyan)}
+    .demo-call-btn:hover{background:var(--cyan-dim);color:var(--ink);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,.18)}
+    .demo-play-btn .play-glyph,.demo-call-btn .play-glyph{display:inline-flex;align-items:center;justify-content:center;font-size:1rem;line-height:1}
 
-    #demo-console.demo-armed [data-reveal] .c-main,
-    #demo-console.demo-armed [data-reveal] .c-sub,
-    #demo-console.demo-armed [data-reveal] .badge{opacity:.18;filter:blur(2px);transition:opacity .55s ease,filter .55s ease}
-    #demo-console.demo-armed [data-reveal].on .c-main,
-    #demo-console.demo-armed [data-reveal].on .c-sub,
-    #demo-console.demo-armed [data-reveal].on .badge{opacity:1;filter:none}
-    #demo-console.demo-armed .c-meta{opacity:.18;filter:blur(2px);transition:opacity .55s ease,filter .55s ease}
-    #demo-console.demo-armed.show-meta .c-meta{opacity:1;filter:none}
+    /* Idle: complete, sharp reservation ticket (no blur, no dim). On tap, .demo-armed enables a brief cyan capture-flash per card as audio hits each threshold. */
+    @keyframes capture-flash{0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,0)}30%{box-shadow:0 0 0 1px var(--cyan-bright),0 0 18px rgba(0,212,255,.45)}}
+    #demo-console.demo-armed [data-reveal].on{animation:capture-flash 1.1s ease}
 
     #demo-final-badge{display:none;margin-top:1rem;padding:.95rem 1.1rem;border-radius:12px;background:linear-gradient(135deg,rgba(0,212,255,.14),rgba(0,212,255,.06));border:1px solid var(--cyan-bright);color:var(--ink);font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;text-align:center;box-shadow:0 0 24px rgba(0,212,255,.25)}
     #demo-final-badge.show{display:block;animation:final-badge-in .6s ease}
@@ -234,10 +231,7 @@
     @keyframes final-badge-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
     @media (prefers-reduced-motion: reduce){
-      #demo-console.demo-armed [data-reveal] .c-main,
-      #demo-console.demo-armed [data-reveal] .c-sub,
-      #demo-console.demo-armed [data-reveal] .badge,
-      #demo-console.demo-armed .c-meta{opacity:1!important;filter:none!important;transition:none!important}
+      #demo-console.demo-armed [data-reveal].on{animation:none}
       #demo-final-badge.show{animation:none}
     }
 
@@ -355,21 +349,15 @@
     <h2 class="sec-h">From phone call to dispatch record — <em>captured, quoted, and routed.</em></h2>
     <p class="sec-sub">A caller speaks naturally. AIChauffeur captures the trip, estimates a quote range from your rules, handles mid-call changes, and writes a clean record into your workflow — so your dispatcher confirms instead of starting from scratch.</p>
 
-    <div style="margin-bottom:2rem">
-      <a href="/demo/" class="btn btn-primary" style="display:inline-flex">
-        Try the live demo
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
-      </a>
-    </div>
-
     <div class="demo-play-bar">
       <button type="button" id="demo-play-btn" class="demo-play-btn" data-state="idle" aria-controls="demo-audio">
         <span class="play-glyph" aria-hidden="true">▶</span>
-        <span class="play-label">Hear AVA take the call</span>
-        <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
+        <span class="play-label">Play mock demo</span>
       </button>
-      <span class="demo-play-hint">Real call · audio-synced trip ticket</span>
+      <a href="tel:+17869371218" class="demo-call-btn">
+        <span class="play-glyph" aria-hidden="true">📞</span>
+        <span>Try real demo</span>
+      </a>
       <audio id="demo-audio" preload="metadata" src="/audio/demos-v2/maxim-v2.mp3"></audio>
     </div>
 
@@ -669,13 +657,11 @@ window.addEventListener('scroll', () => {
     showAll();
     btn.addEventListener('click', () => {
       if (audio.paused){ audio.play(); btn.setAttribute('data-state','playing'); setLabel('Playing…','❚❚'); }
-      else { audio.pause(); btn.setAttribute('data-state','idle'); setLabel('Hear AVA take the call','▶'); }
+      else { audio.pause(); btn.setAttribute('data-state','idle'); setLabel('Play mock demo','▶'); }
     });
-    audio.addEventListener('ended', () => { btn.setAttribute('data-state','idle'); setLabel('Play it again','▶'); audio.currentTime = 0; });
+    audio.addEventListener('ended', () => { btn.setAttribute('data-state','idle'); setLabel('Play mock demo','▶'); audio.currentTime = 0; });
     return;
   }
-
-  arm();
 
   let thresholds = [];
   let metaAt = Infinity;
@@ -708,23 +694,21 @@ window.addEventListener('scroll', () => {
   audio.addEventListener('pause', () => {
     if (audio.ended) return;
     btn.setAttribute('data-state','idle');
-    setLabel('Resume','▶');
+    setLabel('Play mock demo','▶');
   });
   audio.addEventListener('ended', () => {
     showAll();
     btn.setAttribute('data-state','idle');
-    setLabel('Play it again','▶');
+    setLabel('Play mock demo','▶');
     audio.currentTime = 0;
   });
 
   btn.addEventListener('click', () => {
-    if (audio.paused){
-      if (finalBadge.classList.contains('show') || audio.currentTime === 0) arm();
-      const p = audio.play();
-      if (p && typeof p.catch === 'function') p.catch(() => { setLabel('Tap to retry','▶'); });
-    } else {
-      audio.pause();
-    }
+    audio.pause();
+    audio.currentTime = 0;
+    arm();
+    const p = audio.play();
+    if (p && typeof p.catch === 'function') p.catch(() => { setLabel('Tap to retry','▶'); });
   });
 })();
 </script>
