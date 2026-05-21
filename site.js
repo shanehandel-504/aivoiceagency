@@ -107,7 +107,7 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
   }
 
   // $126K BLEED COUNTER — hero centerpiece animation
-  // Spin red → slam $126,000 at 1.8s → red→cyan transition at 2.0s → glow at 2.2s → LIVE dot at 3.0s
+  // Count up $0 → $126,000 over ~3s, then slow creep (~$1-3/sec) while visible.
   (function bleedCounter() {
     var module = document.getElementById('bleed-counter');
     if (!module) return;
@@ -119,6 +119,8 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     var FINAL = 126000;
     var formatted = '$' + FINAL.toLocaleString('en-US');
 
+    function format(n) { return '$' + n.toLocaleString('en-US'); }
+
     function reveal() {
       value.classList.remove('alarm');
       value.classList.add('locked');
@@ -129,53 +131,76 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     if (reduced) {
       value.textContent = formatted;
       reveal();
+      startCreep(FINAL);
       return;
     }
 
     value.classList.add('alarm');
     value.textContent = '$0';
 
-    function startSpin() {
-      var spinStart = performance.now();
-      var SPIN_DURATION = 1800;
-      function spin(ts) {
-        var elapsed = ts - spinStart;
-        if (elapsed >= SPIN_DURATION) {
-          value.textContent = formatted;
-          value.classList.add('slam');
-          setTimeout(function() {
-            value.classList.remove('alarm');
-            value.classList.add('locked');
-            module.classList.add('locked-border');
-          }, 200);
-          setTimeout(function() {
-            value.classList.add('pulse');
-          }, 400);
-          setTimeout(function() {
-            if (liveDot) liveDot.classList.add('on');
-          }, 1200);
+    function startCountUp() {
+      var t0 = performance.now();
+      var DURATION = 3000;
+      function tick(ts) {
+        var elapsed = ts - t0;
+        var p = Math.min(elapsed / DURATION, 1);
+        // easeOutCubic — fast start, settled end so the slam feels intentional
+        var eased = 1 - Math.pow(1 - p, 3);
+        var current = Math.floor(eased * FINAL);
+        value.textContent = format(current);
+        if (p < 1) {
+          requestAnimationFrame(tick);
           return;
         }
-        var rand = Math.floor(Math.random() * 400000) + 1000;
-        value.textContent = '$' + rand.toLocaleString('en-US');
-        requestAnimationFrame(spin);
+        value.textContent = formatted;
+        value.classList.add('slam');
+        setTimeout(function() {
+          value.classList.remove('alarm');
+          value.classList.add('locked');
+          module.classList.add('locked-border');
+        }, 150);
+        setTimeout(function() { value.classList.add('pulse'); }, 350);
+        setTimeout(function() {
+          if (liveDot) liveDot.classList.add('on');
+          startCreep(FINAL);
+        }, 900);
       }
-      requestAnimationFrame(spin);
+      requestAnimationFrame(tick);
     }
 
-    // Fire only when the counter actually enters viewport. Without this gate,
-    // a mobile user landing deeper than the hero (deep link, mid-scroll refresh)
-    // misses the animation and sees a static $0 stuck state.
+    // Slow creep — adds $1-3 every ~1s while the counter is visible. Visibility
+    // gate prevents the number from running off-screen when the user scrolls away.
+    function startCreep(startVal) {
+      var current = startVal;
+      var visible = true;
+      if ('IntersectionObserver' in window) {
+        var visIo = new IntersectionObserver(function(entries) {
+          visible = entries[0].isIntersecting;
+        }, { threshold: 0.1 });
+        visIo.observe(module);
+      }
+      setInterval(function() {
+        if (!visible) return;
+        current += Math.floor(Math.random() * 3) + 1;
+        value.textContent = format(current);
+        value.classList.remove('creep');
+        // force reflow so the animation restarts each tick
+        void value.offsetWidth;
+        value.classList.add('creep');
+      }, 1000);
+    }
+
+    // Fire only when the counter actually enters viewport.
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function(entries, obs) {
         if (entries[0].isIntersecting) {
-          startSpin();
+          startCountUp();
           obs.disconnect();
         }
       }, { threshold: 0.5 });
       io.observe(module);
     } else {
-      startSpin();
+      startCountUp();
     }
   })();
 
