@@ -210,6 +210,36 @@
       .step,.feat{transition:none!important}
       .step:hover,.feat:hover{transform:none!important}
     }
+
+    /* Live audio-synced dispatch demo (Pass 1) */
+    .demo-play-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.9rem;margin:0 0 1rem}
+    .demo-play-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.85rem 1.3rem;border-radius:10px;font-family:var(--mono);font-size:.74rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border:1px solid var(--cyan-bright);background:var(--cyan);color:#000;box-shadow:0 0 0 1px var(--cyan-bright),0 8px 28px var(--cyan-glow);transition:transform .15s,box-shadow .15s,background .15s,color .15s}
+    .demo-play-btn:hover{transform:translateY(-2px);box-shadow:0 0 0 1px var(--cyan-bright),0 12px 36px var(--cyan-glow)}
+    .demo-play-btn[data-state="playing"]{background:rgba(0,212,255,.08);color:var(--cyan-bright);border-color:var(--line-hot);box-shadow:none}
+    .demo-play-btn .play-glyph{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:.78rem;line-height:1}
+    .demo-play-hint{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim)}
+
+    #demo-console.demo-armed [data-reveal] .c-main,
+    #demo-console.demo-armed [data-reveal] .c-sub,
+    #demo-console.demo-armed [data-reveal] .badge{opacity:.18;filter:blur(2px);transition:opacity .55s ease,filter .55s ease}
+    #demo-console.demo-armed [data-reveal].on .c-main,
+    #demo-console.demo-armed [data-reveal].on .c-sub,
+    #demo-console.demo-armed [data-reveal].on .badge{opacity:1;filter:none}
+    #demo-console.demo-armed .c-meta{opacity:.18;filter:blur(2px);transition:opacity .55s ease,filter .55s ease}
+    #demo-console.demo-armed.show-meta .c-meta{opacity:1;filter:none}
+
+    #demo-final-badge{display:none;margin-top:1rem;padding:.95rem 1.1rem;border-radius:12px;background:linear-gradient(135deg,rgba(0,212,255,.14),rgba(0,212,255,.06));border:1px solid var(--cyan-bright);color:var(--ink);font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;text-align:center;box-shadow:0 0 24px rgba(0,212,255,.25)}
+    #demo-final-badge.show{display:block;animation:final-badge-in .6s ease}
+    #demo-final-badge::before{content:'✓ ';color:var(--cyan-bright);font-weight:600}
+    @keyframes final-badge-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    @media (prefers-reduced-motion: reduce){
+      #demo-console.demo-armed [data-reveal] .c-main,
+      #demo-console.demo-armed [data-reveal] .c-sub,
+      #demo-console.demo-armed [data-reveal] .badge,
+      #demo-console.demo-armed .c-meta{opacity:1!important;filter:none!important;transition:none!important}
+      #demo-final-badge.show{animation:none}
+    }
   </style>
 </head>
 <body>
@@ -311,7 +341,17 @@
       </a>
     </div>
 
-    <div class="console">
+    <div class="demo-play-bar">
+      <button type="button" id="demo-play-btn" class="demo-play-btn" data-state="idle" aria-controls="demo-audio">
+        <span class="play-glyph" aria-hidden="true">▶</span>
+        <span class="play-label">Hear AVA take the call</span>
+        <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
+      </button>
+      <span class="demo-play-hint">Real call · audio-synced trip ticket</span>
+      <audio id="demo-audio" preload="metadata" src="/audio/demos-v2/maxim-v2.mp3"></audio>
+    </div>
+
+    <div class="console" id="demo-console">
       <div class="console-bar">
         <div class="console-title">
           <div class="dots"><span></span><span></span><span></span></div>
@@ -320,54 +360,55 @@
         <span class="live-badge">Captured</span>
       </div>
       <div class="console-grid">
-        <div class="c-card">
+        <div class="c-card" data-reveal="1">
           <div class="c-label">Inbound caller</div>
           <div class="c-main">Maria T.</div>
           <div class="c-sub">+1 (262) 555-0144 · Inbound · Repeat</div>
         </div>
-        <div class="c-card">
+        <div class="c-card" data-reveal="2">
           <div class="c-label">Trip type</div>
           <div class="c-main">Airport drop · ORD</div>
           <div class="c-sub">Departure 7:15 PM · United 414</div>
         </div>
       </div>
       <div class="c-row">
-        <div class="c-card">
+        <div class="c-card" data-reveal="3">
           <div class="c-label">Pickup</div>
           <div class="c-main">3:30 PM</div>
         </div>
-        <div class="c-card">
+        <div class="c-card" data-reveal="4">
           <div class="c-label">Vehicle</div>
           <div class="c-main">Black SUV</div>
         </div>
-        <div class="c-card">
+        <div class="c-card" data-reveal="5">
           <div class="c-label">Passengers</div>
           <div class="c-main">3 · 4 bags</div>
         </div>
       </div>
       <div class="console-grid">
-        <div class="c-card">
+        <div class="c-card" data-reveal="6">
           <div class="c-label">Pickup address</div>
           <div class="c-main">142 N. Riverwalk Way · Milwaukee WI</div>
           <div class="c-sub">Hotel lobby · valet circle</div>
         </div>
-        <div class="c-card">
+        <div class="c-card" data-reveal="7">
           <div class="c-label">Quote range</div>
           <div class="c-main">$285 – $325</div>
           <div class="c-sub">90 mi · est. 1h 50m drive · tolls included</div>
         </div>
       </div>
       <div class="console-grid">
-        <div class="c-card">
+        <div class="c-card" data-reveal="8">
           <div class="c-label">Status</div>
           <span class="badge badge-blue">Reservation written</span>
         </div>
-        <div class="c-card">
+        <div class="c-card" data-reveal="9">
           <div class="c-label">Confirmation</div>
           <span class="badge badge-green">SMS sent to caller</span>
         </div>
       </div>
       <div class="c-meta">Captured 2:14 · Routed to dispatch · Awaiting confirmation</div>
+      <div id="demo-final-badge" role="status" aria-live="polite">Confirmation texted · Driver notified · Ride logged</div>
     </div>
   </div>
 </section>
@@ -549,6 +590,96 @@ window.addEventListener('scroll', () => {
     ticking = true;
   }
 });
+
+/* Live audio-synced dispatch demo (Pass 1) */
+(function(){
+  const card = document.getElementById('demo-console');
+  const audio = document.getElementById('demo-audio');
+  const btn = document.getElementById('demo-play-btn');
+  const finalBadge = document.getElementById('demo-final-badge');
+  if (!card || !audio || !btn || !finalBadge) return;
+
+  const label = btn.querySelector('.play-label');
+  const glyph = btn.querySelector('.play-glyph');
+  const reveals = Array.from(card.querySelectorAll('[data-reveal]'));
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const setLabel = (txt, glyphChar) => { label.textContent = txt; if (glyphChar) glyph.textContent = glyphChar; };
+
+  function showAll(){
+    reveals.forEach(r => r.classList.add('on'));
+    card.classList.add('show-meta');
+    finalBadge.classList.add('show');
+  }
+  function arm(){
+    card.classList.add('demo-armed');
+    card.classList.remove('show-meta');
+    reveals.forEach(r => r.classList.remove('on'));
+    finalBadge.classList.remove('show');
+  }
+
+  if (reduced){
+    showAll();
+    btn.addEventListener('click', () => {
+      if (audio.paused){ audio.play(); btn.setAttribute('data-state','playing'); setLabel('Playing…','❚❚'); }
+      else { audio.pause(); btn.setAttribute('data-state','idle'); setLabel('Hear AVA take the call','▶'); }
+    });
+    audio.addEventListener('ended', () => { btn.setAttribute('data-state','idle'); setLabel('Play it again','▶'); audio.currentTime = 0; });
+    return;
+  }
+
+  arm();
+
+  let thresholds = [];
+  let metaAt = Infinity;
+  function buildThresholds(){
+    const dur = isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 60;
+    const start = dur * 0.04;
+    const end = dur * 0.88;
+    const span = end - start;
+    const n = reveals.length;
+    thresholds = [];
+    for (let i = 0; i < n; i++){
+      thresholds.push(start + (n > 1 ? span * i / (n - 1) : 0));
+    }
+    metaAt = dur * 0.94;
+  }
+  if (audio.readyState >= 1) buildThresholds();
+  audio.addEventListener('loadedmetadata', buildThresholds);
+  audio.addEventListener('durationchange', buildThresholds);
+
+  audio.addEventListener('timeupdate', () => {
+    if (!thresholds.length) return;
+    const t = audio.currentTime;
+    for (let i = 0; i < reveals.length; i++){
+      if (t >= thresholds[i]) reveals[i].classList.add('on');
+    }
+    if (t >= metaAt) card.classList.add('show-meta');
+  });
+
+  audio.addEventListener('play', () => { btn.setAttribute('data-state','playing'); setLabel('Playing…','❚❚'); });
+  audio.addEventListener('pause', () => {
+    if (audio.ended) return;
+    btn.setAttribute('data-state','idle');
+    setLabel('Resume','▶');
+  });
+  audio.addEventListener('ended', () => {
+    showAll();
+    btn.setAttribute('data-state','idle');
+    setLabel('Play it again','▶');
+    audio.currentTime = 0;
+  });
+
+  btn.addEventListener('click', () => {
+    if (audio.paused){
+      if (finalBadge.classList.contains('show') || audio.currentTime === 0) arm();
+      const p = audio.play();
+      if (p && typeof p.catch === 'function') p.catch(() => { setLabel('Tap to retry','▶'); });
+    } else {
+      audio.pause();
+    }
+  });
+})();
 </script>
 
 </body>
