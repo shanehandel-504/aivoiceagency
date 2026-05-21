@@ -80,7 +80,7 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .counter-live-dot.on { opacity: 1; animation: counterDotPulse 1s ease-in-out infinite; }
 @keyframes counterDotPulse { 0%, 100% { opacity: 0.55; box-shadow: 0 0 0 0 rgba(0,212,255,0.5); } 50% { opacity: 1; box-shadow: 0 0 0 6px rgba(0,212,255,0); } }
 .counter-value { font-family: var(--font-display); font-weight: 700; font-size: clamp(44px, 6.4vw, 72px); line-height: 1; letter-spacing: -0.02em; color: #FF3B30; font-variant-numeric: tabular-nums; transition: color 0.4s ease, text-shadow 0.4s ease; display: inline-block; position: relative; }
-.counter-value.locked { color: var(--cyan); text-shadow: 0 0 18px rgba(0,229,255,0.45); }
+.counter-value.locked { color: var(--cyan); text-shadow: 0 0 8px rgba(0,212,255,0.6); }
 .counter-value.slam { animation: counterSlam 0.35s ease-out 1; }
 @keyframes counterSlam { 0% { transform: translateX(-10px); } 25% { transform: translateX(10px); } 50% { transform: translateX(-6px); } 75% { transform: translateX(6px); } 100% { transform: translateX(0); } }
 .counter-value.pulse::after { content: ''; position: absolute; inset: -20px -40px; border-radius: 50%; background: radial-gradient(circle at center, rgba(0,229,255,0.45), transparent 70%); animation: counterGlowBurst 0.6s ease-out 1; pointer-events: none; z-index: -1; }
@@ -537,9 +537,10 @@ body.hero-animate .hero-line-cyan.flicker {
   .section-title::after { width: 100% !important; transition: none !important; }
 }
 
-/* CIRCULANT PULSE — fixed viewport border with a cyan arc that travels around it.
-   Uses @property + conic-gradient so the angle is animatable. Falls back to a
-   static low-opacity cyan border on browsers without @property (e.g. Firefox). */
+/* CIRCULANT PULSE — fixed viewport border with a persistent cyan frame and a
+   bright comet head sweeping around it on a 7s loop. Static layer = solid base
+   border + inset/outset box-shadow glow. Comet layer = masked conic-gradient
+   rotated via @property --circulant-angle. */
 @property --circulant-angle {
   syntax: '<angle>';
   initial-value: 0deg;
@@ -550,20 +551,28 @@ body.hero-animate .hero-line-cyan.flicker {
   inset: 0;
   pointer-events: none;
   z-index: 9999;
+  border: 3px solid rgba(0, 212, 255, 0.30);
+  box-shadow:
+    inset 0 0 18px rgba(0, 212, 255, 0.15),
+    0 0 18px rgba(0, 212, 255, 0.15);
 }
 .circulant-pulse::before {
   content: '';
   position: absolute;
-  inset: 0;
-  padding: 3px;
+  inset: -3px;
+  padding: 4px;
   background: conic-gradient(
     from var(--circulant-angle, 0deg),
-    transparent 0%,
-    transparent 55%,
-    rgba(0, 212, 255, 0.55) 70%,
-    #00D4FF 80%,
-    rgba(0, 212, 255, 0.55) 90%,
-    transparent 100%
+    transparent 0deg,
+    transparent 225deg,
+    rgba(0, 212, 255, 0.10) 245deg,
+    rgba(0, 212, 255, 0.28) 280deg,
+    rgba(0, 212, 255, 0.55) 305deg,
+    rgba(95, 224, 255, 0.95) 325deg,
+    #5FE0FF 340deg,
+    #00D4FF 352deg,
+    rgba(0, 212, 255, 0.45) 358deg,
+    transparent 360deg
   );
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -573,8 +582,8 @@ body.hero-animate .hero-line-cyan.flicker {
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
           mask-composite: exclude;
-  filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.55));
-  animation: circulantPulseRotate 4s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.7));
+  animation: circulantPulseRotate 7s linear infinite;
 }
 @keyframes circulantPulseRotate {
   to { --circulant-angle: 360deg; }
@@ -582,7 +591,6 @@ body.hero-animate .hero-line-cyan.flicker {
 @supports not (background: conic-gradient(from 0deg, red, blue)) {
   .circulant-pulse::before {
     background: none;
-    border: 3px solid rgba(0, 212, 255, 0.18);
     padding: 0;
     -webkit-mask: none;
             mask: none;
@@ -592,7 +600,6 @@ body.hero-animate .hero-line-cyan.flicker {
   .circulant-pulse::before {
     animation: none !important;
     background: none !important;
-    border: 3px solid rgba(0, 212, 255, 0.18);
     padding: 0;
     -webkit-mask: none;
             mask: none;

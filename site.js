@@ -106,8 +106,9 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     }
   }
 
-  // $126K BLEED COUNTER — hero centerpiece animation
-  // Spin red → slam $126,000 at 1.8s → red→cyan transition at 2.0s → glow at 2.2s → LIVE dot at 3.0s
+  // $126K BLEED COUNTER — smooth count-up from $0 → $126,000 over 3s on
+  // first viewport entry, then a slow creep (+$1–3/sec) so the number is
+  // visibly alive while the page sits in view.
   (function bleedCounter() {
     var module = document.getElementById('bleed-counter');
     if (!module) return;
@@ -115,67 +116,65 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     var liveDot = module.querySelector('.counter-live-dot');
     if (!value) return;
 
+    var TARGET = 126000;
+    var COUNTUP_MS = 3000;
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var FINAL = 126000;
-    var formatted = '$' + FINAL.toLocaleString('en-US');
+    var current = 0;
 
-    function reveal() {
+    function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+    function lockChrome() {
       value.classList.remove('alarm');
       value.classList.add('locked');
       module.classList.add('locked-border');
       if (liveDot) liveDot.classList.add('on');
     }
+    function startCreep() {
+      setInterval(function() {
+        current += 1 + Math.floor(Math.random() * 3); // +$1–3/sec
+        value.textContent = fmt(current);
+      }, 1000);
+    }
 
     if (reduced) {
-      value.textContent = formatted;
-      reveal();
+      current = TARGET;
+      value.textContent = fmt(current);
+      lockChrome();
+      startCreep();
       return;
     }
 
-    value.classList.add('alarm');
-    value.textContent = '$0';
+    value.textContent = fmt(0);
+    lockChrome();
 
-    function startSpin() {
-      var spinStart = performance.now();
-      var SPIN_DURATION = 1800;
-      function spin(ts) {
-        var elapsed = ts - spinStart;
-        if (elapsed >= SPIN_DURATION) {
-          value.textContent = formatted;
-          value.classList.add('slam');
-          setTimeout(function() {
-            value.classList.remove('alarm');
-            value.classList.add('locked');
-            module.classList.add('locked-border');
-          }, 200);
-          setTimeout(function() {
-            value.classList.add('pulse');
-          }, 400);
-          setTimeout(function() {
-            if (liveDot) liveDot.classList.add('on');
-          }, 1200);
-          return;
+    function runCountup() {
+      var start = performance.now();
+      function step(ts) {
+        var t = Math.min(1, (ts - start) / COUNTUP_MS);
+        // easeOutCubic — fast then settle
+        var eased = 1 - Math.pow(1 - t, 3);
+        current = TARGET * eased;
+        value.textContent = fmt(current);
+        if (t < 1) {
+          requestAnimationFrame(step);
+        } else {
+          current = TARGET;
+          value.textContent = fmt(current);
+          startCreep();
         }
-        var rand = Math.floor(Math.random() * 400000) + 1000;
-        value.textContent = '$' + rand.toLocaleString('en-US');
-        requestAnimationFrame(spin);
       }
-      requestAnimationFrame(spin);
+      requestAnimationFrame(step);
     }
 
-    // Fire only when the counter actually enters viewport. Without this gate,
-    // a mobile user landing deeper than the hero (deep link, mid-scroll refresh)
-    // misses the animation and sees a static $0 stuck state.
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function(entries, obs) {
         if (entries[0].isIntersecting) {
-          startSpin();
+          runCountup();
           obs.disconnect();
         }
       }, { threshold: 0.5 });
       io.observe(module);
     } else {
-      startSpin();
+      runCountup();
     }
   })();
 
