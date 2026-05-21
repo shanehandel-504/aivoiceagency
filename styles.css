@@ -59,7 +59,7 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 
 .hero-content { max-width: 720px; }
 .hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(56px, 9vw, 110px); line-height: 0.92; letter-spacing: -0.04em; text-transform: uppercase; color: var(--ink); margin: 24px 0 32px; }
-.hero h1.hero-h1-3line { font-size: clamp(40px, 6.6vw, 84px); line-height: 0.98; letter-spacing: -0.03em; margin: 24px 0 24px; }
+.hero h1.hero-h1-3line { font-size: clamp(40px, 6.6vw, 84px); line-height: 1.06; letter-spacing: -0.03em; margin: 24px 0 24px; }
 .hero h1 .accent { color: var(--cyan); }
 .hero-sub { font-family: var(--font-body); font-size: 18px; line-height: 1.55; color: var(--ink-mute); max-width: 540px; margin-bottom: 32px; }
 .hero-sub .accent { color: var(--cyan); font-weight: 600; }
@@ -274,12 +274,12 @@ body.hero-animate .hero-line-cyan.flicker {
 
 @keyframes cyanFlicker {
   0%, 100% { color: #00D4FF; text-shadow: none; }
-  50% { color: #00E5FF; text-shadow: 0 0 14px rgba(0,229,255,0.65); }
+  50% { color: #00E5FF; text-shadow: 0 0 9px rgba(0,229,255,0.6); }
 }
 
 @keyframes accentBreath {
-  0%, 100% { text-shadow: 0 0 8px rgba(0,212,255,0.25); filter: brightness(1); }
-  50% { text-shadow: 0 0 18px rgba(0,229,255,0.55); filter: brightness(1.12); }
+  0%, 100% { text-shadow: 0 0 6px rgba(0,212,255,0.28); filter: brightness(1); }
+  50% { text-shadow: 0 0 11px rgba(0,229,255,0.55); filter: brightness(1.12); }
 }
 
 /* FLAIR — cursor-proximity glow on primary CTAs */
@@ -535,4 +535,67 @@ body.hero-animate .hero-line-cyan.flicker {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
   .section-title::after { width: 100% !important; transition: none !important; }
+}
+
+/* CIRCULANT PULSE — fixed viewport border with a cyan arc that travels around it.
+   Uses @property + conic-gradient so the angle is animatable. Falls back to a
+   static low-opacity cyan border on browsers without @property (e.g. Firefox). */
+@property --circulant-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+.circulant-pulse {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+.circulant-pulse::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 3px;
+  background: conic-gradient(
+    from var(--circulant-angle, 0deg),
+    transparent 0%,
+    transparent 55%,
+    rgba(0, 212, 255, 0.55) 70%,
+    #00D4FF 80%,
+    rgba(0, 212, 255, 0.55) 90%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+          mask-composite: exclude;
+  filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.55));
+  animation: circulantPulseRotate 4s linear infinite;
+}
+@keyframes circulantPulseRotate {
+  to { --circulant-angle: 360deg; }
+}
+@supports not (background: conic-gradient(from 0deg, red, blue)) {
+  .circulant-pulse::before {
+    background: none;
+    border: 3px solid rgba(0, 212, 255, 0.18);
+    padding: 0;
+    -webkit-mask: none;
+            mask: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .circulant-pulse::before {
+    animation: none !important;
+    background: none !important;
+    border: 3px solid rgba(0, 212, 255, 0.18);
+    padding: 0;
+    -webkit-mask: none;
+            mask: none;
+    filter: none;
+  }
 }
