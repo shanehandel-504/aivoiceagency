@@ -23,13 +23,37 @@
       "source": "/chauffeur/:path*",
       "destination": "https://aichauffeur.ai/",
       "permanent": true
+    },
+    {
+      "has": [{ "type": "host", "value": "aivoiceagency.ai" }],
+      "source": "/transportation",
+      "destination": "/ground-transportation",
+      "permanent": true
+    },
+    {
+      "has": [{ "type": "host", "value": "aivoiceagency.ai" }],
+      "source": "/transportation/",
+      "destination": "/ground-transportation",
+      "permanent": true
+    },
+    {
+      "has": [{ "type": "host", "value": "www.aivoiceagency.ai" }],
+      "source": "/transportation",
+      "destination": "/ground-transportation",
+      "permanent": true
+    },
+    {
+      "has": [{ "type": "host", "value": "www.aivoiceagency.ai" }],
+      "source": "/transportation/",
+      "destination": "/ground-transportation",
+      "permanent": true
     }
   ],
   "rewrites": [
     { "source": "/chauffeur", "destination": "/chauffeur/index.html" },
     { "source": "/chauffeur/", "destination": "/chauffeur/index.html" },
-    { "source": "/transportation", "destination": "/transportation/index.html" },
-    { "source": "/transportation/", "destination": "/transportation/index.html" },
+    { "source": "/ground-transportation", "destination": "/ground-transportation/index.html" },
+    { "source": "/ground-transportation/", "destination": "/ground-transportation/index.html" },
     {
       "has": [{ "type": "host", "value": "aichauffeur.ai" }],
       "source": "/demo",

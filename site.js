@@ -320,4 +320,171 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     window.addEventListener('scroll', updateStickyCta, { passive: true });
     updateStickyCta();
   }
+
+  // LIVE CALL WIDGET — hero centerpiece. Mock state machine in v1
+  // (idle → calling → connected → idle reset). Real Retell wiring lands
+  // in a followup push via a /api/call endpoint; widget reads the
+  // endpoint URL from data-call-endpoint and POSTs { role, name, cell }.
+  // When data-call-endpoint is absent the widget runs in mock mode.
+  (function liveCallWidget() {
+    var widgets = document.querySelectorAll('[data-live-call-widget]');
+    if (!widgets.length) return;
+
+    function normalizeCell(raw) {
+      var digits = (raw || '').replace(/[^\d+]/g, '');
+      if (!digits) return '';
+      if (digits.charAt(0) === '+') return digits;
+      if (digits.length === 10) return '+1' + digits;
+      if (digits.length === 11 && digits.charAt(0) === '1') return '+' + digits;
+      return digits;
+    }
+
+    function isValidCell(e164) {
+      return /^\+[1-9]\d{7,14}$/.test(e164);
+    }
+
+    widgets.forEach(function(widget) {
+      var chips = widget.querySelectorAll('.lcw-chip');
+      var nameInput = widget.querySelector('[data-lcw-name]');
+      var cellInput = widget.querySelector('[data-lcw-cell]');
+      var submitBtn = widget.querySelector('[data-lcw-submit]');
+      var submitText = widget.querySelector('.lcw-submit-text');
+      var statusEl = widget.querySelector('[data-lcw-status]');
+      var metaEl = widget.querySelector('[data-lcw-meta]');
+      if (!submitBtn || !submitText || !cellInput) return;
+
+      var endpoint = widget.getAttribute('data-call-endpoint') || '';
+      var defaultMeta = metaEl ? metaEl.textContent : '';
+      var idleText = submitText.textContent;
+      var selectedRole = '';
+
+      // Initialize selected role from .active chip (markup-driven default)
+      chips.forEach(function(chip) {
+        if (chip.classList.contains('active')) {
+          selectedRole = chip.getAttribute('data-role') || chip.textContent.trim();
+        }
+        chip.addEventListener('click', function() {
+          chips.forEach(function(c) {
+            c.classList.remove('active');
+            c.setAttribute('aria-checked', 'false');
+          });
+          chip.classList.add('active');
+          chip.setAttribute('aria-checked', 'true');
+          selectedRole = chip.getAttribute('data-role') || chip.textContent.trim();
+        });
+      });
+
+      function setState(state) {
+        widget.classList.remove('is-calling', 'is-connected', 'is-failed');
+        if (state) widget.classList.add('is-' + state);
+      }
+
+      function setStatus(text) {
+        if (statusEl) statusEl.textContent = text;
+      }
+
+      function resetIdle(delay) {
+        setTimeout(function() {
+          setState('');
+          submitBtn.disabled = false;
+          if (nameInput) nameInput.disabled = false;
+          cellInput.disabled = false;
+          submitText.textContent = idleText;
+          setStatus('Pick the job. Drop your cell. AVA calls you.');
+          if (metaEl) {
+            metaEl.classList.remove('lcw-error');
+            metaEl.textContent = defaultMeta;
+          }
+        }, delay || 4500);
+      }
+
+      function fail(message) {
+        setState('failed');
+        submitBtn.disabled = false;
+        if (nameInput) nameInput.disabled = false;
+        cellInput.disabled = false;
+        submitText.textContent = '↻ Try again';
+        setStatus(message);
+        if (metaEl) {
+          metaEl.classList.add('lcw-error');
+          metaEl.textContent = '// ' + message;
+        }
+      }
+
+      submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var cell = normalizeCell(cellInput.value);
+        if (!isValidCell(cell)) {
+          fail('Enter a real mobile number (e.g. +1 305 555 1212).');
+          cellInput.focus();
+          return;
+        }
+        if (!selectedRole) {
+          fail('Pick a role above first.');
+          return;
+        }
+
+        var name = nameInput ? (nameInput.value || '').trim() : '';
+
+        // Lock the form, transition to calling
+        setState('calling');
+        submitBtn.disabled = true;
+        if (nameInput) nameInput.disabled = true;
+        cellInput.disabled = true;
+        submitText.textContent = 'Calling your phone…';
+        setStatus('Connecting to AVA — pick up when it rings.');
+        if (metaEl) {
+          metaEl.classList.remove('lcw-error');
+          metaEl.textContent = '// Demo mode — real call wiring lands next push.';
+        }
+
+        // Real-backend path (next push): POST to data-call-endpoint
+        if (endpoint) {
+          fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ role: selectedRole, name: name, cell: cell })
+          }).then(function(r) {
+            if (!r.ok) throw new Error('Call failed (' + r.status + ').');
+            return r.json().catch(function() { return {}; });
+          }).then(function() {
+            setTimeout(function() {
+              setState('connected');
+              submitText.textContent = 'AVA is calling…';
+              setStatus('Your phone should be ringing now.');
+              resetIdle(6000);
+            }, 1400);
+          }).catch(function(err) {
+            fail((err && err.message) || 'Call failed. Try again in a moment.');
+            resetIdle(5000);
+          });
+          return;
+        }
+
+        // Mock path (v1): fake the two-step state transition
+        setTimeout(function() {
+          setState('connected');
+          submitText.textContent = 'AVA is calling…';
+          setStatus('Demo mode: your phone won’t actually ring yet — real call wiring next push.');
+          resetIdle(5000);
+        }, 1800);
+      });
+
+      // Pressing Enter inside the cell input triggers submit
+      cellInput.addEventListener('keydown', function(ev) {
+        if (ev.key === 'Enter') {
+          ev.preventDefault();
+          submitBtn.click();
+        }
+      });
+      if (nameInput) {
+        nameInput.addEventListener('keydown', function(ev) {
+          if (ev.key === 'Enter') {
+            ev.preventDefault();
+            cellInput.focus();
+          }
+        });
+      }
+    });
+  })();
 })();
