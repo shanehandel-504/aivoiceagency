@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0A0A0F">
-  <title>AIChauffeur — AI Dispatch Intake for Transportation Operators</title>
-  <meta name="description" content="AIChauffeur answers inbound calls, captures trip details, estimates rides, and writes requests into your dispatch workflow. Built for limo, black car, and shuttle operators.">
+  <title>AI Chauffeur — Limo Dispatch AI &amp; Black Car Reservation Automation</title>
+  <meta name="description" content="AVA answers the dispatch line for limo, black car, and chauffeur operators — capturing reservations, quoting airport transfers, and routing flight-status concierge requests 24/7.">
 
   <link rel="canonical" href="https://aichauffeur.ai/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="AIChauffeur — AI Dispatch Intake for Transportation Operators">
-  <meta property="og:description" content="Answers inbound calls, captures trip details, estimates rides, writes requests into your dispatch workflow. For limo, black car, and shuttle operators.">
+  <meta property="og:title" content="AI Chauffeur — Limo Dispatch AI &amp; Black Car Reservation Automation">
+  <meta property="og:description" content="AVA answers the dispatch line for limo and black car operators — capturing reservations, quoting airport transfers, and routing flight-status concierge requests 24/7.">
   <meta property="og:url" content="https://aichauffeur.ai/">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,14 +18,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Organization","name":"AIChauffeur","url":"https://aichauffeur.ai","telephone":"+17869371218","description":"AI dispatch intake software for limo, black car, and shuttle operators.","areaServed":{"@type":"Country","name":"United States"}}
+  {"@context":"https://schema.org","@type":"Organization","name":"AI Chauffeur","url":"https://aichauffeur.ai","description":"Limo dispatch AI and black car reservation automation. AVA answers the dispatch line, captures trip details, and routes airport transfer bookings into your workflow.","areaServed":{"@type":"Country","name":"United States"}}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-    {"@type":"Question","name":"Is this just basic call coverage?","acceptedAnswer":{"@type":"Answer","text":"No. AIChauffeur is dispatch intake software powered by AI voice. It captures ride requests, organizes trip details, estimates the quote range, and routes the request into your workflow."}},
+    {"@type":"Question","name":"Is this just basic call coverage?","acceptedAnswer":{"@type":"Answer","text":"No. AI Chauffeur is dispatch intake software for limo and black car operators. AVA captures ride requests, organizes trip details, estimates the quote range, and routes the request into your workflow."}},
     {"@type":"Question","name":"Does it replace my dispatcher?","acceptedAnswer":{"@type":"Answer","text":"No. It handles the first layer of intake so your dispatcher is not buried by missed calls, repeated questions, after-hours requests, and basic confirmation work."}},
     {"@type":"Question","name":"Can it quote rides?","acceptedAnswer":{"@type":"Answer","text":"Yes, when your rate rules are configured. The page demo uses illustrative quote ranges only."}},
-    {"@type":"Question","name":"Does it work with my CRM or dispatch software?","acceptedAnswer":{"@type":"Answer","text":"Setup is custom. We connect AIChauffeur to your existing dispatch workflow, CRM, or spreadsheet so trip requests land where your team already works."}},
+    {"@type":"Question","name":"Does it work with my CRM or dispatch software?","acceptedAnswer":{"@type":"Answer","text":"Setup is custom. We connect AI Chauffeur to your existing dispatch workflow — Limo Anywhere, FASTTRAK, or your CRM — so trip requests land where your team already works."}},
     {"@type":"Question","name":"How fast can it go live?","acceptedAnswer":{"@type":"Answer","text":"Local setup is founder-led right now. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented."}}
   ]}
   </script>
@@ -256,6 +256,23 @@
     .foot-mesh a{color:var(--cyan-bright);transition:color .15s}
     .foot-mesh a:hover{color:var(--ink)}
     .foot-mesh .sep{color:var(--ink-dim)}
+
+    /* Hero Dispatch Console — self-running live intake animation */
+    .hero-console [data-hc-stage]{opacity:0;transform:translateY(4px);transition:opacity .55s ease,transform .55s ease}
+    .hero-console [data-hc-stage].on{opacity:1;transform:translateY(0)}
+    .hero-console .hc-state{display:inline-flex;align-items:center;font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;margin-left:.7rem;padding:3px 9px;border-radius:99px;text-transform:uppercase;transition:color .25s,background .25s,border-color .25s}
+    .hero-console .hc-state.ringing{color:var(--amber);background:rgba(251,191,36,.10);border:1px solid rgba(251,191,36,.45);animation:hc-ring 1s ease-in-out infinite}
+    .hero-console .hc-state.live{color:var(--cyan-bright);background:rgba(0,212,255,.12);border:1px solid var(--line-hot)}
+    .hero-console .hc-state.complete{color:var(--ink);background:rgba(0,212,255,.18);border:1px solid var(--cyan-bright)}
+    @keyframes hc-ring{0%,100%{opacity:.55}50%{opacity:1}}
+    .hero-console .hc-transcript{display:flex;flex-direction:column;gap:.45rem;padding:.95rem 1rem;margin:0 0 1rem;border-radius:10px;background:rgba(0,212,255,.04);border:1px solid var(--line);min-height:7.5rem}
+    .hero-console .hc-line{font-family:var(--mono);font-size:.78rem;line-height:1.5;color:var(--ink-soft);opacity:0;transform:translateX(-4px);transition:opacity .4s ease,transform .4s ease}
+    .hero-console .hc-line.on{opacity:1;transform:translateX(0)}
+    .hero-console .hc-who{color:var(--cyan-bright);font-weight:600;margin-right:.4rem}
+    @media (prefers-reduced-motion: reduce){
+      .hero-console [data-hc-stage],.hero-console .hc-line{opacity:1;transform:none;transition:none}
+      .hero-console .hc-state.ringing{animation:none}
+    }
   </style>
 </head>
 <body>
@@ -269,7 +286,7 @@
         <circle cx="16" cy="17" r="2" fill="#000"/>
       </svg>
     </span>
-    AIChauffeur
+    AI Chauffeur
   </a>
   <ul class="nav-links">
     <li><a href="#how">How it works</a></li>
@@ -281,9 +298,9 @@
 
 <section class="hero">
   <div class="wrap">
-    <span class="kicker">AI Dispatch Intake · Limo · Black Car · Shuttle</span>
+    <span class="kicker">Limo Dispatch AI · Black Car Reservations · Airport Transfers</span>
     <h1 class="hero-h">Book the ride before they <em>call someone else.</em></h1>
-    <p class="hero-sub">AIChauffeur answers inbound calls, captures trip details, estimates the ride, writes the request into your dispatch workflow, and helps confirm passengers and drivers — without burying your team.</p>
+    <p class="hero-sub">AVA answers the dispatch line, captures reservations, estimates airport transfers, and writes the trip into your existing limo software — without burying your team.</p>
 
     <div class="ctas">
       <a href="/demo/" class="btn btn-primary">
@@ -294,51 +311,57 @@
       <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn btn-ghost">Request local setup</a>
     </div>
 
-    <div class="console">
+    <div class="console hero-console" id="hero-console">
       <div class="console-bar">
         <div class="console-title">
           <div class="dots"><span></span><span></span><span></span></div>
-          Dispatch Console
+          Dispatch Console <span class="hc-state ringing" id="hc-state">Ringing…</span>
         </div>
         <span class="live-badge">Live intake</span>
+      </div>
+      <div class="hc-transcript" id="hc-transcript" aria-live="polite">
+        <span class="hc-line" data-hc-line="0">📞 Inbound call · +1 (414) 555-0182</span>
+        <span class="hc-line" data-hc-line="1"><span class="hc-who">AVA:</span> AI Chauffeur, this is AVA — where are you headed today?</span>
+        <span class="hc-line" data-hc-line="2"><span class="hc-who">Caller:</span> Downtown Marriott to MKE airport, 5:45 AM tomorrow.</span>
+        <span class="hc-line" data-hc-line="3"><span class="hc-who">AVA:</span> Got it — one passenger, executive sedan. Sending confirmation now.</span>
       </div>
       <div class="console-grid">
         <div class="c-card">
           <div class="c-label">Inbound caller</div>
-          <div class="c-main">James R.</div>
-          <div class="c-sub">+1 (414) 555-0182 · Inbound</div>
+          <div class="c-main" data-hc-stage="1">James R.</div>
+          <div class="c-sub" data-hc-stage="1">+1 (414) 555-0182 · Inbound</div>
         </div>
         <div class="c-card">
           <div class="c-label">Route + quote</div>
-          <div class="c-main">Downtown MKE Hotel → MKE Airport T-C</div>
-          <div class="c-sub">18.4 mi · $65–$85 est.</div>
+          <div class="c-main" data-hc-stage="2">Downtown MKE Hotel → MKE Airport T-C</div>
+          <div class="c-sub" data-hc-stage="3">18.4 mi · $65–$85 est.</div>
         </div>
       </div>
       <div class="c-row">
         <div class="c-card">
           <div class="c-label">Vehicle</div>
-          <div class="c-main">Executive Sedan</div>
+          <div class="c-main" data-hc-stage="4">Executive Sedan</div>
         </div>
         <div class="c-card">
           <div class="c-label">Pickup</div>
-          <div class="c-main">5:45 AM</div>
+          <div class="c-main" data-hc-stage="5">5:45 AM</div>
         </div>
         <div class="c-card">
           <div class="c-label">Passengers</div>
-          <div class="c-main">1</div>
+          <div class="c-main" data-hc-stage="6">1</div>
         </div>
       </div>
       <div class="console-grid">
         <div class="c-card">
           <div class="c-label">Passenger</div>
-          <span class="badge badge-green">Confirmation sent</span>
+          <span class="badge badge-green" data-hc-stage="7">Confirmation sent</span>
         </div>
         <div class="c-card">
           <div class="c-label">Driver</div>
-          <span class="badge badge-amber">Driver requested</span>
+          <span class="badge badge-amber" data-hc-stage="8">Driver requested</span>
         </div>
       </div>
-      <div class="c-meta">Call received · 05:45 AM · Intake complete</div>
+      <div class="c-meta" data-hc-stage="9">Call received · 05:45 AM · Intake complete</div>
     </div>
   </div>
 </section>
@@ -347,16 +370,16 @@
   <div class="wrap">
     <div class="sec-kicker">The dispatch flow</div>
     <h2 class="sec-h">From phone call to dispatch record — <em>captured, quoted, and routed.</em></h2>
-    <p class="sec-sub">A caller speaks naturally. AIChauffeur captures the trip, estimates a quote range from your rules, handles mid-call changes, and writes a clean record into your workflow — so your dispatcher confirms instead of starting from scratch.</p>
+    <p class="sec-sub">A caller speaks naturally. AVA captures the trip, estimates a quote range from your rate sheet, handles mid-call changes, and writes a clean record into your workflow — so your dispatcher confirms instead of starting from scratch.</p>
 
     <div class="demo-play-bar">
       <button type="button" id="demo-play-btn" class="demo-play-btn" data-state="idle" aria-controls="demo-audio">
         <span class="play-glyph" aria-hidden="true">▶</span>
         <span class="play-label">Play mock demo</span>
       </button>
-      <a href="tel:+17869371218" class="demo-call-btn">
-        <span class="play-glyph" aria-hidden="true">📞</span>
-        <span>Try real demo</span>
+      <a href="/demo/" class="demo-call-btn">
+        <span class="play-glyph" aria-hidden="true">▶</span>
+        <span>Try the live demo</span>
       </a>
       <audio id="demo-audio" preload="metadata" src="/audio/demos-v2/maxim-v2.mp3"></audio>
     </div>
@@ -450,7 +473,7 @@
       <div class="step">
         <div class="step-num">01 · Answer</div>
         <h3 class="step-h">Pick up every call</h3>
-        <p class="step-p">Inbound calls route to AIChauffeur 24/7. Voicemail and missed-call patterns get replaced with structured intake before the call goes cold.</p>
+        <p class="step-p">Inbound calls route to AVA 24/7. Voicemail and missed-call patterns get replaced with structured intake before the call goes cold.</p>
       </div>
       <div class="step">
         <div class="step-num">02 · Capture</div>
@@ -475,7 +498,7 @@
   <div class="wrap">
     <div class="sec-kicker">Why this matters</div>
     <h2 class="sec-h">Every missed call is a ride going to <em>someone else.</em></h2>
-    <p class="sec-sub" style="max-width:54ch;font-size:1.15rem">Voicemail, after-hours, the same five questions every call, three calls hitting at once on a busy night. AIChauffeur picks up all of them and writes a clean reservation your dispatcher confirms instead of building from scratch.</p>
+    <p class="sec-sub" style="max-width:54ch;font-size:1.15rem">Voicemail, after-hours, the same five questions every call, three calls hitting at once on a busy night. AVA picks up all of them and writes a clean reservation your dispatcher confirms instead of building from scratch.</p>
   </div>
 </section>
 
@@ -487,11 +510,11 @@
     <div class="feat-grid">
       <div class="feat">
         <div class="feat-h">Trip-aware intake</div>
-        <p class="feat-p">Understands airport runs, hourly charters, hotel transfers, airport runs, hourly charters, corporate accounts, roadshows, group moves. Captures the right fields for each.</p>
+        <p class="feat-p">Understands airport runs, hourly charters, hotel transfers, corporate accounts, roadshows, group moves. Captures the right fields for each.</p>
       </div>
       <div class="feat">
         <div class="feat-h">Mid-call corrections</div>
-        <p class="feat-p">Caller switches from sedan to SUV mid-sentence. AIChauffeur catches the change, updates the reservation, and confirms back.</p>
+        <p class="feat-p">Caller switches from sedan to SUV mid-sentence. AVA catches the change, updates the reservation, and confirms back.</p>
       </div>
       <div class="feat">
         <div class="feat-h">Quote ranges from your rules</div>
@@ -518,7 +541,7 @@
     <div class="crush">
       <div class="sec-kicker" style="position:relative">The Crush</div>
       <h2 class="crush-h">When three calls hit at once and the next ride goes to <em>whoever answers first.</em></h2>
-      <p class="crush-p">The Crush is what limo and black car operators call those moments — Friday airport rush, prom night, Super Bowl weekend, every concert that ends at 11 PM. AIChauffeur is built to absorb those windows. The everyday value is cleaner intake, quoting, confirmations, and follow-through. The Crush is when it earns the keep.</p>
+      <p class="crush-p">The Crush is what limo and black car operators call those moments — Friday airport rush, prom night, Super Bowl weekend, every concert that ends at 11 PM. AI Chauffeur is built to absorb those windows; AVA never lets a call sit on hold. The everyday value is cleaner intake, quoting, confirmations, and follow-through. The Crush is when it earns the keep.</p>
       <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn btn-primary">
         Request local setup
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -555,7 +578,7 @@
 
     <details>
       <summary>Is this just basic call coverage?</summary>
-      <div>No. AIChauffeur is dispatch intake software powered by AI voice. It captures ride requests, organizes trip details, estimates the quote range, and routes the request into your workflow. Call coverage is a side effect, not the product.</div>
+      <div>No. AI Chauffeur is dispatch intake software for limo and black car operators. AVA captures ride requests, organizes trip details, estimates the quote range, and routes the request into your workflow. Call coverage is a side effect, not the product.</div>
     </details>
     <details>
       <summary>Does it replace my dispatcher?</summary>
@@ -567,7 +590,7 @@
     </details>
     <details>
       <summary>Does it work with my CRM or dispatch software?</summary>
-      <div>Setup is custom. We connect AIChauffeur to your existing dispatch workflow, CRM, or spreadsheet so trip requests land where your team already works.</div>
+      <div>Setup is custom. We connect AI Chauffeur to your existing dispatch workflow — Limo Anywhere, FASTTRAK, or your CRM — so trip requests land where your team already works.</div>
     </details>
     <details>
       <summary>How fast can it go live?</summary>
@@ -584,9 +607,8 @@
   <div class="wrap">
     <div class="foot">
       <div class="foot-brand">
-        <div class="foot-mark">AI<em>Chauffeur</em></div>
-        <p class="foot-tagline">AI dispatch intake for limo, black car, and shuttle operators. Built by a 30-year business owner — 17 years running a chauffeured transportation company.</p>
-        <div class="foot-phone">(786) 937-1218</div>
+        <div class="foot-mark">AI <em>Chauffeur</em></div>
+        <p class="foot-tagline">Limo dispatch AI and black car reservation automation. AVA answers the dispatch line for chauffeured operators. Built by a 30-year business owner — 17 years running a chauffeured transportation company.</p>
       </div>
       <div class="foot-links">
         <a href="#how">How it works</a>
@@ -600,14 +622,12 @@
       </div>
     </div>
     <div class="foot-mesh">
-      <a href="https://aivoiceagency.ai">AI Voice Agency</a>
+      <a href="https://aivoiceagency.ai">AI Voice Agency · Voice Operations System</a>
       <span class="sep">·</span>
-      <a href="https://aichauffeur.ai">AI Chauffeur</a>
-      <span class="sep">·</span>
-      <a href="https://ai100x.ai">AI100X</a>
+      <a href="https://ai100x.ai">AI100X · Operator Dashboard</a>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 AIChauffeur · An AI Voice Agency property</span>
+      <span>© 2026 AI Chauffeur · An AI Voice Agency property</span>
       <span>United States · Built for high-volume operators</span>
     </div>
   </div>
@@ -710,6 +730,44 @@ window.addEventListener('scroll', () => {
     const p = audio.play();
     if (p && typeof p.catch === 'function') p.catch(() => { setLabel('Tap to retry','▶'); });
   });
+})();
+
+/* Hero Dispatch Console — self-running live intake (no audio, no mic, autoloops) */
+(function(){
+  const root = document.getElementById('hero-console');
+  if (!root) return;
+  const stateEl = document.getElementById('hc-state');
+  const lines = Array.from(root.querySelectorAll('.hc-line'));
+  const stages = Array.from(root.querySelectorAll('[data-hc-stage]'));
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setState(text, cls){ if(!stateEl) return; stateEl.textContent = text; stateEl.className = 'hc-state ' + cls; }
+  if (reduced){
+    stages.forEach(el => el.classList.add('on'));
+    lines.forEach(el => el.classList.add('on'));
+    setState('Intake complete','complete');
+    return;
+  }
+  const timeline = [
+    { t:0,    fn:()=>{ stages.forEach(el=>el.classList.remove('on')); lines.forEach(el=>el.classList.remove('on')); setState('Ringing…','ringing'); }},
+    { t:900,  fn:()=>{ const l=lines.find(x=>+x.dataset.hcLine===0); if(l)l.classList.add('on'); }},
+    { t:1500, fn:()=>{ setState('AVA on the line','live'); const l=lines.find(x=>+x.dataset.hcLine===1); if(l)l.classList.add('on'); stages.filter(s=>+s.dataset.hcStage===1).forEach(s=>s.classList.add('on')); }},
+    { t:2700, fn:()=>{ const l=lines.find(x=>+x.dataset.hcLine===2); if(l)l.classList.add('on'); stages.filter(s=>+s.dataset.hcStage===2).forEach(s=>s.classList.add('on')); }},
+    { t:3500, fn:()=>{ stages.filter(s=>+s.dataset.hcStage===3).forEach(s=>s.classList.add('on')); }},
+    { t:4200, fn:()=>{ stages.filter(s=>+s.dataset.hcStage===4).forEach(s=>s.classList.add('on')); }},
+    { t:4800, fn:()=>{ stages.filter(s=>+s.dataset.hcStage===5).forEach(s=>s.classList.add('on')); }},
+    { t:5400, fn:()=>{ stages.filter(s=>+s.dataset.hcStage===6).forEach(s=>s.classList.add('on')); }},
+    { t:6000, fn:()=>{ const l=lines.find(x=>+x.dataset.hcLine===3); if(l)l.classList.add('on'); }},
+    { t:6600, fn:()=>{ stages.filter(s=>+s.dataset.hcStage===7).forEach(s=>s.classList.add('on')); }},
+    { t:7200, fn:()=>{ stages.filter(s=>+s.dataset.hcStage===8).forEach(s=>s.classList.add('on')); }},
+    { t:7900, fn:()=>{ setState('Intake complete','complete'); stages.filter(s=>+s.dataset.hcStage===9).forEach(s=>s.classList.add('on')); }},
+  ];
+  let timers = [];
+  function run(){
+    timers.forEach(clearTimeout); timers = [];
+    timeline.forEach(step => timers.push(setTimeout(step.fn, step.t)));
+    timers.push(setTimeout(run, 12500));
+  }
+  run();
 })();
 </script>
 
