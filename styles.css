@@ -6,7 +6,7 @@
 :root {
   --void: #0A0A0F;
   --ink: #EEF0F4;
-  --ink-mute: #808088;
+  --ink-mute: #A1A1AA;
   --cyan: #00D4FF;
   --cyan-bright: #00E5FF;
   --line: rgba(255,255,255,0.10);
@@ -535,6 +535,15 @@ body.hero-animate .hero-line-cyan.flicker {
 
 /* ACCESSIBILITY */
 *:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
@@ -721,8 +730,11 @@ body.hero-animate .hero-line-cyan.flicker {
   background: rgba(0,212,255,0.04);
 }
 .lcw-input:disabled { opacity: 0.6; cursor: not-allowed; }
+.lcw-input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 
 .lcw-submit {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -743,6 +755,29 @@ body.hero-animate .hero-line-cyan.flicker {
   animation: lcwIdlePulse 3.2s ease-in-out infinite;
   box-shadow: 0 0 0 1px var(--cyan-bright), 0 0 24px rgba(0,212,255,0.32);
 }
+/* CIRCULANT signature — lit ring orbiting the primary live-call CTA.
+   Conic arc masked to a thin band so only the perimeter glows; the
+   @property angle animates so the lit arc sweeps around (the shape
+   itself stays put). Degrades to a static ring without @property. */
+@property --lcw-ring-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.lcw-submit::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  z-index: -1;
+  border-radius: 7px;
+  padding: 3px;
+  background: conic-gradient(from var(--lcw-ring-angle), transparent 0deg 250deg, #00D4FF 300deg, #00E5FF 332deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  filter: drop-shadow(0 0 6px rgba(0,212,255,0.75));
+  animation: lcwRingSpin 3.6s linear infinite;
+  pointer-events: none;
+}
+@keyframes lcwRingSpin { to { --lcw-ring-angle: 360deg; } }
+.lcw-submit:disabled::before { animation-play-state: paused; opacity: 0.35; }
 .lcw-submit:hover { background: var(--cyan-bright); box-shadow: 0 0 0 1px var(--cyan-bright), 0 0 36px rgba(0,229,255,0.5); }
 .lcw-submit:disabled { cursor: not-allowed; animation: none; }
 .live-call-widget.is-calling .lcw-submit,
