@@ -12,7 +12,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.0/dist/livekit-client.umd.min.js"></script>
+<!-- Retell Web Call SDK (browser WebRTC, no npm) — powers the live dispatcher demo -->
+<script type="module">
+  import { RetellWebClient } from 'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.7/+esm';
+  window.RetellWebClient = RetellWebClient;
+</script>
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -315,7 +319,7 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
       </a>
     </div>
 
-    <p class="note">Mock Replay = scripted demo · Live = real voice through xAI Grok via LiveKit · No real ride is booked through this demo</p>
+    <p class="note">Mock Replay = scripted demo · Live = real voice with AVA in your browser · No real ride is booked through this demo</p>
 
     <!-- ════════════════════════════════════════════
          AUDIO ASSETS · 22-file Rachel drop
@@ -646,16 +650,17 @@ btnPlayFull.addEventListener('click', () => {
 });
 
 // ════════════════════════════════════════════
-// LIVE VOICE MODE — LiveKit + Grok
+// LIVE VOICE MODE — Retell Web Call (browser WebRTC)
 // ════════════════════════════════════════════
 
 const TOKEN_ENDPOINT = 'https://aichauffeur-token.shanehandel.workers.dev/';
+const CHAUFFEUR_AGENT = 'agent_8e9e7d477949c6babcbdcc756d';
 const modeMockBtn = $('#modeMock'), modeLiveBtn = $('#modeLive');
 const livePanel = $('#livePanel'), btnLive = $('#btnLive'), btnLiveText = $('#btnLiveText');
 const micIndicator = $('#micIndicator'), micStatus = $('#micStatus'), liveError = $('#liveError');
 const scenariosEl = $('#scenarios'), startRow = document.querySelector('.start-row');
 
-let liveRoom = null, isInCall = false;
+let retellClient = null, isInCall = false, liveTranscriptCount = 0;
 
 function setMode(mode) {
   if (isInCall || isRunning) return;
@@ -694,93 +699,69 @@ async function startLiveCall() {
   btnLive.disabled = true;
   btnLiveText.textContent = 'Connecting...';
 
+  // 1. Microphone permission — graceful. If denied, fall back to Mock Replay.
   try {
-    // 1. Get token from Cloudflare Worker
+    const probe = await navigator.mediaDevices.getUserMedia({ audio: true });
+    probe.getTracks().forEach(t => t.stop());
+  } catch (err) {
+    showLiveError('Microphone access is needed for a live call. Falling back to Mock Replay — press “Start scenario” to watch a scripted call.');
+    btnLive.disabled = false;
+    btnLiveText.textContent = 'Start live call';
+    setMode('mock');
+    return;
+  }
+
+  try {
+    // 2. Mint a Retell web-call access token from the Cloudflare Worker.
     const tokenRes = await fetch(TOKEN_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({}),
+      body: JSON.stringify({ agent_id: CHAUFFEUR_AGENT }),
     });
     if (!tokenRes.ok) throw new Error('Token request failed: ' + tokenRes.status);
-    const { token, url, room } = await tokenRes.json();
-    if (!token || !url) throw new Error('Invalid token response');
+    const { access_token } = await tokenRes.json();
+    if (!access_token) throw new Error('No access token returned');
+    if (!window.RetellWebClient) throw new Error('Voice SDK not loaded');
 
-    // 2. Reset UI for live call
+    // 3. Reset the console for a live call.
     reset();
+    liveTranscriptCount = 0;
     ticketIdEl.textContent = 'AC-LIVE-' + Math.random().toString(36).slice(2,6).toUpperCase();
     statusTag.textContent = 'Connecting';
     liveBadge.textContent = 'Connecting';
+    transcript.innerHTML = '';
+    document.querySelector('.console').classList.add('active');
 
-    // 3. Connect to LiveKit
-    if (!window.LivekitClient) throw new Error('LiveKit SDK not loaded');
-    const { Room, RoomEvent, Track } = window.LivekitClient;
+    // 4. Start the Retell web call; pipe its live transcript into the console.
+    retellClient = new window.RetellWebClient();
 
-    liveRoom = new Room({
-      adaptiveStream: true,
-      dynacast: true,
-      audioCaptureDefaults: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+    retellClient.on('call_started', () => {
+      isInCall = true;
+      btnLive.disabled = false;
+      btnLive.classList.add('in-call');
+      btnLiveText.textContent = 'End call';
+      micIndicator.classList.add('show');
+      micStatus.textContent = 'Connected · listening...';
+      statusTag.textContent = 'Live call';
+      statusTag.classList.remove('complete');
+      liveBadge.textContent = 'Live call';
+      liveBadge.classList.add('live');
     });
 
-    // Listen for AVA's audio
-    liveRoom.on(RoomEvent.TrackSubscribed, (track, pub, participant) => {
-      if (track.kind === Track.Kind.Audio) {
-        const audioEl = track.attach();
-        audioEl.style.display = 'none';
-        document.body.appendChild(audioEl);
+    // Retell streams the full cumulative transcript on each update.
+    retellClient.on('update', (update) => {
+      if (update && Array.isArray(update.transcript)) {
+        renderLiveTranscript(update.transcript);
       }
     });
 
-    // Listen for dispatch_ui data channel events from agent
-    liveRoom.on(RoomEvent.DataReceived, (payload, participant, kind, topic) => {
-      if (topic !== 'dispatch_ui') return;
-      try {
-        const msg = JSON.parse(new TextDecoder().decode(payload));
-        handleAgentEvent(msg);
-      } catch (e) { console.warn('Bad data event', e); }
-    });
-
-    liveRoom.on(RoomEvent.Disconnected, () => {
+    retellClient.on('call_ended', () => cleanupLiveCall());
+    retellClient.on('error', (err) => {
+      showLiveError('Live call error: ' + ((err && err.message) || 'unknown') + '. Try Mock Replay mode.');
       cleanupLiveCall();
     });
 
-    await liveRoom.connect(url, token);
-    await liveRoom.localParticipant.setMicrophoneEnabled(true);
-
-    // Register RPC methods that Agent Builder client tools can call
-    try {
-      liveRoom.localParticipant.registerRpcMethod('update_dispatch_field', async (data) => {
-        try {
-          const args = JSON.parse(data.payload);
-          handleAgentEvent({ type: 'field_update', key: args.field_key, main: args.main_value, sub: args.sub_value || '' });
-          return JSON.stringify({ ok: true });
-        } catch (e) {
-          return JSON.stringify({ ok: false, error: e.message });
-        }
-      });
-      liveRoom.localParticipant.registerRpcMethod('finalize_ticket', async (data) => {
-        try {
-          const args = JSON.parse(data.payload);
-          handleAgentEvent({ type: 'ticket_complete', ticket_id: args.ticket_id, summary: args.summary });
-          return JSON.stringify({ ok: true });
-        } catch (e) {
-          return JSON.stringify({ ok: false, error: e.message });
-        }
-      });
-    } catch (e) {
-      console.warn('RPC register skipped:', e.message);
-    }
-
-    // 4. UI in-call state
-    isInCall = true;
-    btnLive.disabled = false;
-    btnLive.classList.add('in-call');
-    btnLiveText.textContent = 'End call';
-    micIndicator.classList.add('show');
-    micStatus.textContent = 'Connected · listening...';
-    statusTag.textContent = 'Live call';
-    statusTag.classList.remove('complete');
-    liveBadge.textContent = 'Live call';
-    liveBadge.classList.add('live');
+    await retellClient.startCall({ accessToken: access_token });
 
   } catch (err) {
     console.error('Live call error:', err);
@@ -789,6 +770,27 @@ async function startLiveCall() {
     btnLiveText.textContent = 'Start live call';
     cleanupLiveCall();
   }
+}
+
+// Pipe Retell's live transcript into the Dispatch Console transcript slot,
+// reusing the mock scenario's line styling. Appends new turns and keeps the
+// final (streaming) turn's text fresh without re-animating earlier lines.
+function renderLiveTranscript(turns) {
+  for (let i = liveTranscriptCount; i < turns.length; i++) {
+    const who = turns[i].role === 'agent' ? 'ai' : 'caller';
+    const line = document.createElement('div');
+    line.className = 'tr-line tr-' + who;
+    const textSpan = document.createElement('span');
+    textSpan.className = 'tr-text';
+    line.appendChild(textSpan);
+    transcript.appendChild(line);
+  }
+  liveTranscriptCount = turns.length;
+  const lines = transcript.querySelectorAll('.tr-line .tr-text');
+  for (let i = 0; i < turns.length && i < lines.length; i++) {
+    lines[i].textContent = turns[i].content || '';
+  }
+  transcript.scrollTop = transcript.scrollHeight;
 }
 
 function handleAgentEvent(msg) {
@@ -817,11 +819,12 @@ function handleAgentEvent(msg) {
 }
 
 function cleanupLiveCall() {
-  if (liveRoom) {
-    try { liveRoom.disconnect(); } catch (e) {}
-    liveRoom = null;
+  if (retellClient) {
+    try { retellClient.stopCall(); } catch (e) {}
+    retellClient = null;
   }
   isInCall = false;
+  liveTranscriptCount = 0;
   btnLive.classList.remove('in-call');
   btnLiveText.textContent = 'Start live call';
   micIndicator.classList.remove('show');

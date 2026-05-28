@@ -217,7 +217,7 @@
     <p class="hero-sub">AVA answers every inbound call, calls new leads back in seconds, qualifies, books, routes, texts the ones you miss — and <span class="accent">writes all of it into your CRM</span>. 24/7. Pick the role. Drop your cell. AVA calls you in seconds.</p>
     <div class="hero-founder-line">// Built by a 30-year operator ─ not a software desk</div>
 
-    <div class="live-call-widget" data-live-call-widget data-role-set="ava" id="live-call">
+    <div class="live-call-widget" data-live-call-widget data-role-set="ava" id="live-call" data-retell-endpoint="https://aichauffeur-token.shanehandel.workers.dev/" data-retell-agent="agent_d5ada9f774fe3ae7f034d2c677">
       <div class="lcw-header">
         <div class="lcw-label">// LIVE CALL</div>
         <div class="lcw-status" data-lcw-status>Pick the job. Drop your cell. AVA calls you in seconds.</div>
@@ -610,6 +610,12 @@
   <a href="#live-call">→ GET CALLED NOW<span class="signal-stack-v2 in-mobile-cta" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span></a>
 </div>
 
+<!-- Retell Web Call SDK (browser WebRTC, no npm) — exposes RetellWebClient globally for site.js -->
+<script type="module">
+  import { RetellWebClient } from 'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.7/+esm';
+  window.RetellWebClient = RetellWebClient;
+  window.dispatchEvent(new Event('retell-sdk-ready'));
+</script>
 <script src="/site.js" defer></script>
 
 <div class="circulant-pulse" aria-hidden="true"></div>
