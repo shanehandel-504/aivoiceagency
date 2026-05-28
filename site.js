@@ -354,9 +354,13 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
       if (!submitBtn || !submitText || !cellInput) return;
 
       var endpoint = widget.getAttribute('data-call-endpoint') || '';
+      var retellEndpoint = widget.getAttribute('data-retell-endpoint') || '';
+      var retellAgent = widget.getAttribute('data-retell-agent') || '';
       var defaultMeta = metaEl ? metaEl.textContent : '';
       var idleText = submitText.textContent;
       var selectedRole = '';
+      var retellClient = null;
+      var inLiveCall = false;
 
       // Initialize selected role from .active chip (markup-driven default)
       chips.forEach(function(chip) {
@@ -411,8 +415,90 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         }
       }
 
+      function endLiveCall() {
+        if (retellClient) {
+          try { retellClient.stopCall(); } catch (e) {}
+          retellClient = null;
+        }
+        inLiveCall = false;
+      }
+
+      // Retell web call (browser WebRTC). Talk to AVA in-page — no phone,
+      // no SIP, no Twilio. Needs a server-minted access token from the
+      // worker at data-retell-endpoint; the public key never starts a call.
+      function handleLiveCall() {
+        // Toggle: a live call is in progress → hang up.
+        if (inLiveCall) {
+          endLiveCall();
+          setState('');
+          submitBtn.disabled = false;
+          submitText.textContent = idleText;
+          setStatus('Call ended. Talk to AVA again anytime.');
+          if (metaEl) { metaEl.style.display = ''; metaEl.classList.remove('lcw-error'); metaEl.textContent = defaultMeta; }
+          return;
+        }
+
+        var Client = window.RetellWebClient;
+        if (!Client) {
+          fail('Voice engine still loading — give it a second and try again.');
+          return;
+        }
+
+        setState('calling');
+        submitBtn.disabled = true;
+        if (nameInput) nameInput.disabled = true;
+        cellInput.disabled = true;
+        submitText.textContent = 'Connecting…';
+        setStatus('Requesting microphone…');
+        // Hide the demo-mode meta line the moment a real call begins.
+        if (metaEl) { metaEl.classList.remove('lcw-error'); metaEl.style.display = 'none'; }
+
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+          // Release this permission-probe stream; the SDK opens its own.
+          stream.getTracks().forEach(function(t) { t.stop(); });
+          return fetch(retellEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ agent_id: retellAgent })
+          });
+        }).then(function(r) {
+          if (!r.ok) throw new Error('Token request failed (' + r.status + ').');
+          return r.json();
+        }).then(function(data) {
+          if (!data || !data.access_token) throw new Error('No access token returned.');
+          retellClient = new Client();
+          retellClient.on('call_started', function() {
+            inLiveCall = true;
+            setState('connected');
+            submitBtn.disabled = false;
+            submitText.textContent = 'End call';
+            setStatus('Connected — start talking to AVA.');
+          });
+          retellClient.on('call_ended', function() {
+            endLiveCall();
+            setState('');
+            submitBtn.disabled = false;
+            submitText.textContent = idleText;
+            setStatus('Call ended. Talk to AVA again anytime.');
+            if (metaEl) { metaEl.style.display = ''; metaEl.textContent = defaultMeta; }
+          });
+          retellClient.on('error', function(err) {
+            endLiveCall();
+            fail('Call error: ' + ((err && err.message) || 'something went wrong') + '.');
+          });
+          return retellClient.startCall({ accessToken: data.access_token });
+        }).catch(function(err) {
+          endLiveCall();
+          var denied = err && (err.name === 'NotAllowedError' || err.name === 'SecurityError');
+          fail(denied
+            ? 'Microphone blocked — allow mic access to talk to AVA.'
+            : ((err && err.message) || 'Could not start the call. Try again.'));
+        });
+      }
+
       submitBtn.addEventListener('click', function(e) {
         e.preventDefault();
+        if (retellEndpoint && retellAgent) { handleLiveCall(); return; }
         var cell = normalizeCell(cellInput.value);
         if (!isValidCell(cell)) {
           fail('Enter a real mobile number (e.g. +1 305 555 1212).');
