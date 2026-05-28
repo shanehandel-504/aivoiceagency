@@ -18,7 +18,8 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-body { background: var(--void); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; overflow-x: hidden; }
+body { background: var(--void); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+html, body { overflow-x: hidden; max-width: 100%; }
 ::selection { background: var(--cyan); color: var(--void); }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; }
@@ -628,7 +629,9 @@ body.hero-animate .hero-line-cyan.flicker {
    ============================================================ */
 .live-call-widget {
   position: relative;
+  width: 100%;
   max-width: 560px;
+  box-sizing: border-box;
   margin: 28px 0 32px;
   padding: 22px 24px 24px;
   background: #14141C;
@@ -673,15 +676,15 @@ body.hero-animate .hero-line-cyan.flicker {
 
 .lcw-chips {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 18px;
-  overflow-x: auto;
-  scrollbar-width: none;
   padding-bottom: 2px;
 }
 .lcw-chips::-webkit-scrollbar { display: none; }
 .lcw-chip {
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  white-space: nowrap;
   background: rgba(10,10,15,0.6);
   color: var(--ink-mute);
   border: 1px solid rgba(0,212,255,0.18);
@@ -792,6 +795,10 @@ body.hero-animate .hero-line-cyan.flicker {
   .live-call-widget { padding: 18px 18px 20px; max-width: 100%; }
   .lcw-chips { gap: 5px; }
   .lcw-chip { padding: 6px 12px; font-size: 10px; }
+}
+
+@media (max-width: 600px) {
+  .lcw-header { flex-direction: column; align-items: flex-start; }
 }
 
 /* PROOF STRIP — "Never sleeps. Never gets sick. Never quits."
