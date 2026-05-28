@@ -220,7 +220,7 @@
     <div class="live-call-widget" data-live-call-widget data-role-set="ava" id="live-call">
       <div class="lcw-header">
         <div class="lcw-label">// LIVE CALL</div>
-        <div class="lcw-status" data-lcw-status>Pick the job. Drop your cell. AVA calls you in seconds.</div>
+        <div class="lcw-status" data-lcw-status aria-live="polite">Pick the job. Drop your cell. AVA calls you in seconds.</div>
       </div>
       <div class="lcw-chips" role="radiogroup" aria-label="Pick the role">
         <button type="button" class="lcw-chip active" data-role="Receptionist" role="radio" aria-checked="true">Receptionist</button>
@@ -232,13 +232,15 @@
         <button type="button" class="lcw-chip" data-role="Survey & Follow-up" role="radio" aria-checked="false">Survey &amp; Follow-up</button>
       </div>
       <div class="lcw-inputs">
-        <input type="text" class="lcw-input" data-lcw-name placeholder="First name" autocomplete="given-name" maxlength="60">
-        <input type="tel" class="lcw-input" data-lcw-cell placeholder="Cell (e.g. +1 305 555 1212)" autocomplete="tel" inputmode="tel" maxlength="20">
+        <label class="sr-only" for="lcw-name">First name</label>
+        <input type="text" id="lcw-name" class="lcw-input" data-lcw-name placeholder="First name" autocomplete="given-name" maxlength="60">
+        <label class="sr-only" for="lcw-cell">Cell phone number</label>
+        <input type="tel" id="lcw-cell" class="lcw-input" data-lcw-cell placeholder="Cell (e.g. +1 305 555 1212)" autocomplete="tel" inputmode="tel" maxlength="20">
       </div>
       <button type="button" class="lcw-submit cta-primary" data-lcw-submit aria-label="Get a live AVA call">
         <span class="lcw-submit-text">→ Get a Live AVA Call</span>
       </button>
-      <div class="lcw-meta" data-lcw-meta>// Demo mode — real call wiring lands next push.</div>
+      <div class="lcw-meta" data-lcw-meta aria-live="polite">// Demo mode — real call wiring lands next push.</div>
     </div>
   </div>
   <aside class="hero-meta">
@@ -299,7 +301,7 @@
     <div class="capability-block flagship">
       <div class="capability-block-num">[01]</div>
       <h3 class="capability-block-title">Inbound Answering</h3>
-      <p class="capability-block-body">Answers on the first ring, every time. Understands why they called, asks the next right question, captures details, decides what happens next — book, qualify, route, text, escalate, or log. Uses <strong>your</strong> business rules, not a generic script.</p>
+      <p class="capability-block-body">Answers on the first ring, every time. <strong>LLM-based</strong> — AVA holds the whole conversation in context, asks the next right question, and answers in <strong>sub-second</strong>, human-quality speech. Understands why they called, captures details, decides what happens next — book, qualify, route, text, escalate, or log. Uses <strong>your</strong> business rules, not a generic script.</p>
     </div>
     <div class="capability-block flagship">
       <div class="capability-block-num">[02]</div>

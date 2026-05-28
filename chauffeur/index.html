@@ -42,6 +42,7 @@
     }
     html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;background:var(--void)}
     body{background:var(--void);color:var(--ink-soft);font-family:var(--sans);font-size:16px;line-height:1.6;overflow-x:hidden;min-height:100vh}
+    *:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
     body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 20% 0%,rgba(0,212,255,.10) 0%,transparent 45%),radial-gradient(circle at 80% 100%,rgba(0,212,255,.06) 0%,transparent 50%);pointer-events:none;z-index:0}
     body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.025) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;z-index:0;mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%)}
 
@@ -73,8 +74,14 @@
 
     .ctas{display:flex;flex-wrap:wrap;gap:.85rem;margin-bottom:3.5rem}
     .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.95rem 1.4rem;border-radius:10px;font-family:var(--mono);font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:transform .15s,box-shadow .15s,background .15s,border-color .15s;cursor:pointer;border:none}
-    .btn-primary{background:var(--cyan);color:#000;box-shadow:0 0 0 1px var(--cyan-bright),0 8px 32px var(--cyan-glow)}
+    .btn-primary{position:relative;isolation:isolate;background:var(--cyan);color:#000;box-shadow:0 0 0 1px var(--cyan-bright),0 8px 32px var(--cyan-glow)}
     .btn-primary:hover{color:#000;transform:translateY(-2px);box-shadow:0 0 0 1px var(--cyan-bright),0 12px 40px var(--cyan-glow)}
+    /* CIRCULANT signature — lit ring orbiting the primary CTA (perimeter
+       arc masked to a band; @property angle sweeps it; shape stays put) */
+    @property --btn-ring-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+    .btn-primary::before{content:'';position:absolute;inset:-3px;z-index:-1;border-radius:13px;padding:3px;background:conic-gradient(from var(--btn-ring-angle),transparent 0deg 250deg,#00D4FF 300deg,#00E5FF 332deg,transparent 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;filter:drop-shadow(0 0 6px rgba(0,212,255,.75));animation:btnRingSpin 3.6s linear infinite;pointer-events:none}
+    @keyframes btnRingSpin{to{--btn-ring-angle:360deg}}
+    @media (prefers-reduced-motion: reduce){.btn-primary::before{animation:none}}
     .btn-ghost{background:rgba(0,212,255,.06);color:var(--ink);border:1px solid var(--line-hot)}
     .btn-ghost:hover{background:var(--cyan-dim);border-color:var(--cyan-bright);color:var(--ink);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,.15)}
     .btn svg{width:14px;height:14px}
@@ -300,7 +307,7 @@
   <div class="wrap">
     <span class="kicker">Limo Dispatch AI · Black Car Reservations · Airport Transfers</span>
     <h1 class="hero-h">Book the ride before they <em>call someone else.</em></h1>
-    <p class="hero-sub">AVA answers the dispatch line, captures reservations, estimates airport transfers, and writes the trip into your existing limo software — without burying your team.</p>
+    <p class="hero-sub">AVA answers the dispatch line, captures reservations, estimates airport transfers, and writes the trip into your existing limo software — without burying your team. <strong>LLM-based</strong>: it holds the whole conversation in context, responds in under a second, and sounds human — not a phone tree.</p>
 
     <div class="ctas">
       <a href="/demo/" class="btn btn-primary">
