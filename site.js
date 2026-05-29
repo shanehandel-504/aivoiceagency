@@ -321,11 +321,14 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     updateStickyCta();
   }
 
-  // LIVE CALL WIDGET — hero centerpiece. Mock state machine in v1
-  // (idle → calling → connected → idle reset). Real Retell wiring lands
-  // in a followup push via a /api/call endpoint; widget reads the
-  // endpoint URL from data-call-endpoint and POSTs { role, name, cell }.
-  // When data-call-endpoint is absent the widget runs in mock mode.
+  // LIVE CALL WIDGET — hero lead-capture form. Picks a role, takes a
+  // first name + cell, and POSTs { role, name, cell } to GoHighLevel.
+  // The legacy in-browser WebRTC/call-button mechanic is dead and gone;
+  // the actual AVA call is placed downstream by the GHL automation that
+  // receives this lead. Shane drops the live webhook URL into
+  // GHL_WEBHOOK_URL below. Until then it stays 'TODO_SHANE' and the form
+  // confirms locally without firing a request.
+  var GHL_WEBHOOK_URL = 'TODO_SHANE';
   (function liveCallWidget() {
     var widgets = document.querySelectorAll('[data-live-call-widget]');
     if (!widgets.length) return;
@@ -353,7 +356,6 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
       var metaEl = widget.querySelector('[data-lcw-meta]');
       if (!submitBtn || !submitText || !cellInput) return;
 
-      var endpoint = widget.getAttribute('data-call-endpoint') || '';
       var defaultMeta = metaEl ? metaEl.textContent : '';
       var idleText = submitText.textContent;
       var selectedRole = '';
@@ -387,15 +389,16 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         setTimeout(function() {
           setState('');
           submitBtn.disabled = false;
-          if (nameInput) nameInput.disabled = false;
+          if (nameInput) { nameInput.disabled = false; nameInput.value = ''; }
           cellInput.disabled = false;
+          cellInput.value = '';
           submitText.textContent = idleText;
-          setStatus('Pick the job. Drop your cell. AVA calls you.');
+          setStatus('Pick the job. Enter your cell. AVA calls your phone.');
           if (metaEl) {
             metaEl.classList.remove('lcw-error');
             metaEl.textContent = defaultMeta;
           }
-        }, delay || 4500);
+        }, delay || 5000);
       }
 
       function fail(message) {
@@ -426,48 +429,49 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
 
         var name = nameInput ? (nameInput.value || '').trim() : '';
 
-        // Lock the form, transition to calling
+        // Lock the form, transition to sending
         setState('calling');
         submitBtn.disabled = true;
         if (nameInput) nameInput.disabled = true;
         cellInput.disabled = true;
-        submitText.textContent = 'Calling your phone…';
-        setStatus('Connecting to AVA — pick up when it rings.');
-        if (metaEl) {
-          metaEl.classList.remove('lcw-error');
-          metaEl.textContent = '// Demo mode — real call wiring lands next push.';
+        submitText.textContent = 'Sending…';
+        setStatus('Sending your number to AVA…');
+        if (metaEl) metaEl.classList.remove('lcw-error');
+
+        function succeed() {
+          setState('connected');
+          submitText.textContent = '✓ AVA is calling';
+          setStatus('Got it — AVA is calling the number you entered.');
+          if (metaEl) {
+            metaEl.classList.remove('lcw-error');
+            metaEl.textContent = '// Pick up when ' + (name ? name + '\'s' : 'your') + ' phone rings.';
+          }
+          resetIdle(7000);
         }
 
-        // Real-backend path (next push): POST to data-call-endpoint
-        if (endpoint) {
-          fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ role: selectedRole, name: name, cell: cell })
-          }).then(function(r) {
-            if (!r.ok) throw new Error('Call failed (' + r.status + ').');
-            return r.json().catch(function() { return {}; });
-          }).then(function() {
-            setTimeout(function() {
-              setState('connected');
-              submitText.textContent = 'AVA is calling…';
-              setStatus('Your phone should be ringing now.');
-              resetIdle(6000);
-            }, 1400);
-          }).catch(function(err) {
-            fail((err && err.message) || 'Call failed. Try again in a moment.');
-            resetIdle(5000);
-          });
+        var payload = { role: selectedRole, name: name, cell: cell };
+
+        // No webhook wired yet → confirm locally without firing a request.
+        if (!GHL_WEBHOOK_URL || GHL_WEBHOOK_URL === 'TODO_SHANE') {
+          if (window.console && console.info) {
+            console.info('[AVA] GHL_WEBHOOK_URL not set — lead not sent.', payload);
+          }
+          setTimeout(succeed, 900);
           return;
         }
 
-        // Mock path (v1): fake the two-step state transition
-        setTimeout(function() {
-          setState('connected');
-          submitText.textContent = 'AVA is calling…';
-          setStatus('Demo mode: your phone won’t actually ring yet — real call wiring next push.');
+        // Live path: POST the lead to the GoHighLevel webhook.
+        fetch(GHL_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).then(function(r) {
+          if (!r.ok) throw new Error('Submit failed (' + r.status + ').');
+          setTimeout(succeed, 600);
+        }).catch(function(err) {
+          fail((err && err.message) || 'Could not reach AVA. Try again in a moment.');
           resetIdle(5000);
-        }, 1800);
+        });
       });
 
       // Pressing Enter inside the cell input triggers submit
