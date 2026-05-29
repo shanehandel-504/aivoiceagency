@@ -322,13 +322,12 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
   }
 
   // LIVE CALL WIDGET — hero lead-capture form. Picks a role, takes a
-  // first name + cell, and POSTs { role, name, cell } to GoHighLevel.
-  // The legacy in-browser WebRTC/call-button mechanic is dead and gone;
-  // the actual AVA call is placed downstream by the GHL automation that
-  // receives this lead. Shane drops the live webhook URL into
-  // GHL_WEBHOOK_URL below. Until then it stays 'TODO_SHANE' and the form
-  // confirms locally without firing a request.
-  var GHL_WEBHOOK_URL = 'TODO_SHANE';
+  // first name + cell, and POSTs the lead to the GoHighLevel inbound
+  // webhook. GHL reads `phone` (E.164) as {{contact.phone}} to dial the
+  // lead, so phone is always sent. The legacy in-browser WebRTC/call-button
+  // mechanic is dead and gone; the actual AVA call is placed downstream by
+  // the GHL automation that receives this lead.
+  var GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/sdShCZCaxce8DHKbYcII/webhook-trigger/feba6e50-4bf3-4489-a03b-765fe5094dde';
   (function liveCallWidget() {
     var widgets = document.querySelectorAll('[data-live-call-widget]');
     if (!widgets.length) return;
@@ -441,7 +440,7 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         function succeed() {
           setState('connected');
           submitText.textContent = '✓ AVA is calling';
-          setStatus('Got it — AVA is calling the number you entered.');
+          setStatus('AVA is calling your phone…');
           if (metaEl) {
             metaEl.classList.remove('lcw-error');
             metaEl.textContent = '// Pick up when ' + (name ? name + '\'s' : 'your') + ' phone rings.';
@@ -449,9 +448,12 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
           resetIdle(7000);
         }
 
-        var payload = { role: selectedRole, name: name, cell: cell };
+        // GHL maps `phone` (E.164) to {{contact.phone}} to dial the lead —
+        // it must always be present. `name` is the first-name field.
+        var payload = { name: name, phone: cell, role: selectedRole };
 
-        // No webhook wired yet → confirm locally without firing a request.
+        // Safety net: if the webhook URL ever gets cleared, confirm locally
+        // instead of firing a broken request.
         if (!GHL_WEBHOOK_URL || GHL_WEBHOOK_URL === 'TODO_SHANE') {
           if (window.console && console.info) {
             console.info('[AVA] GHL_WEBHOOK_URL not set — lead not sent.', payload);
