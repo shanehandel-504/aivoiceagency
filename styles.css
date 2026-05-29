@@ -621,6 +621,65 @@ body.hero-animate .hero-line-cyan.flicker {
 }
 
 /* ============================================================
+   CIRCULANT RING — animated cyan lit ring around the primary call
+   button. ::after = soft pulsing cyan halo; ::before = a slow-rotating
+   bright cyan arc (conic-gradient masked to a ring). Vanilla CSS, motion-
+   safe. Reuses --circulant-angle + the circulantPulseRotate keyframe.
+   ============================================================ */
+.circulant-ring { position: relative; }
+.circulant-ring::after,
+.circulant-ring::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 9px;
+  pointer-events: none;
+  z-index: -1;
+}
+/* Soft pulsing cyan halo */
+.circulant-ring::after {
+  border: 1.5px solid rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 14px rgba(0, 212, 255, 0.45), inset 0 0 10px rgba(0, 212, 255, 0.22);
+  animation: circulantRingPulse 2.8s ease-in-out infinite;
+}
+/* Slow-rotating bright arc */
+.circulant-ring::before {
+  padding: 2px;
+  background: conic-gradient(
+    from var(--circulant-angle, 0deg),
+    transparent 0%,
+    transparent 66%,
+    rgba(0, 212, 255, 0.25) 78%,
+    rgba(96, 229, 255, 0.90) 90%,
+    #00E5FF 95%,
+    rgba(0, 229, 255, 0.60) 97%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+          mask-composite: exclude;
+  filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.7));
+  animation: circulantPulseRotate 5.5s linear infinite;
+}
+@keyframes circulantRingPulse {
+  0%, 100% { opacity: 0.5;  transform: scale(1); }
+  50%      { opacity: 0.95; transform: scale(1.025); }
+}
+/* Firefox / no-@property: keep just the static pulsing halo, drop the arc. */
+@supports not (background: conic-gradient(from 0deg, red, blue)) {
+  .circulant-ring::before { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .circulant-ring::before { display: none; }
+  .circulant-ring::after { animation: none; opacity: 0.6; }
+}
+
+/* ============================================================
    LIVE CALL WIDGET — hero centerpiece (homepage + ground-transportation).
    Mirrors .signal-loss-meter chrome (cyan border, #14141C interior,
    dot grid) so it reads as a paired instrument with .hero-meta. v1

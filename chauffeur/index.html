@@ -78,6 +78,17 @@
     .btn-ghost{background:rgba(0,212,255,.06);color:var(--ink);border:1px solid var(--line-hot)}
     .btn-ghost:hover{background:var(--cyan-dim);border-color:var(--cyan-bright);color:var(--ink);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,.15)}
     .btn svg{width:14px;height:14px}
+    /* CIRCULANT RING — animated cyan lit ring around the primary CTA.
+       ::after = soft pulsing cyan halo; ::before = slow-rotating bright arc. */
+    @property --circ-ring-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+    .circulant-ring{position:relative}
+    .circulant-ring::after,.circulant-ring::before{content:'';position:absolute;inset:-6px;border-radius:14px;pointer-events:none;z-index:-1}
+    .circulant-ring::after{border:1.5px solid rgba(0,212,255,.5);box-shadow:0 0 14px rgba(0,212,255,.45),inset 0 0 10px rgba(0,212,255,.22);animation:circ-ring-pulse 2.8s ease-in-out infinite}
+    .circulant-ring::before{padding:2px;background:conic-gradient(from var(--circ-ring-angle,0deg),transparent 0%,transparent 66%,rgba(0,212,255,.25) 78%,rgba(96,229,255,.9) 90%,#00E5FF 95%,rgba(0,229,255,.6) 97%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;filter:drop-shadow(0 0 6px rgba(0,212,255,.7));animation:circ-ring-rotate 5.5s linear infinite}
+    @keyframes circ-ring-rotate{to{--circ-ring-angle:360deg}}
+    @keyframes circ-ring-pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.95;transform:scale(1.025)}}
+    @supports not (background:conic-gradient(from 0deg,red,blue)){.circulant-ring::before{display:none}}
+    @media (prefers-reduced-motion:reduce){.circulant-ring::before{display:none}.circulant-ring::after{animation:none;opacity:.6}}
 
     .console{background:var(--void-card);border:1px solid var(--line-hot);border-radius:18px;padding:1.4rem;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 30px 80px rgba(0,0,0,.4),0 0 0 1px rgba(0,212,255,.06);position:relative;overflow:hidden}
     .console::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan-bright),transparent);opacity:.6}
@@ -303,7 +314,7 @@
     <p class="hero-sub">AVA answers the dispatch line, captures reservations, estimates airport transfers, and writes the trip into your existing limo software — without burying your team.</p>
 
     <div class="ctas">
-      <a href="/demo/" class="btn btn-primary">
+      <a href="/demo/" class="btn btn-primary circulant-ring">
         See the live demo
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
