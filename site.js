@@ -4,6 +4,16 @@
    ============================================================ */
 
 if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+
+// Land on the hero and HOLD it. A persisted #live-call hash (left in the URL
+// after tapping "GET CALLED NOW") used to make the browser smooth-scroll past
+// the hero straight to the form on every reload — too fast to read the hero.
+// Strip any hash and pin to the top before paint; in-page CTAs smooth-scroll
+// on click instead (see the anchor handler below). No auto-scroll on load.
+if (window.location.hash) {
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+}
+window.scrollTo(0, 0);
 window.addEventListener('load', function() { window.scrollTo(0, 0); });
 
 (function() {
@@ -24,6 +34,22 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
       });
     });
   }
+
+  // Smooth-scroll in-page anchors ("GET CALLED NOW" → live-call form, nav
+  // sections, etc.) to their target WITHOUT writing the hash to the URL. That
+  // keeps the hero landing clean on every reload — no auto-scroll to the form.
+  var NAV_OFFSET = 72; // fixed nav (56px) + breathing room
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    var id = link.getAttribute('href').slice(1);
+    if (!id) return;
+    var target = document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    var y = window.scrollY + target.getBoundingClientRect().top - NAV_OFFSET;
+    window.scrollTo({ top: y < 0 ? 0 : y, behavior: 'smooth' });
+  }, false);
 
   // Hero line rise + cyan flicker — once per session, motion-safe
   if (!sessionStorage.getItem('avaHeroAnimated')) {
