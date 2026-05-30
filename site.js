@@ -348,23 +348,30 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
   }
 
   // LIVE CALL WIDGET — hero lead-capture form. Picks a role, takes a
-  // first name + cell, and POSTs the lead to the GoHighLevel inbound
-  // webhook. GHL reads `phone` (E.164) as {{contact.phone}} to dial the
-  // lead, so phone is always sent. The legacy in-browser WebRTC/call-button
-  // mechanic is dead and gone; the actual AVA call is placed downstream by
-  // the GHL automation that receives this lead.
-  var GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/sdShCZCaxce8DHKbYcII/webhook-trigger/feba6e50-4bf3-4489-a03b-765fe5094dde';
+  // first name + cell, and POSTs the lead as a JSON body to the configured
+  // endpoint. The destination reads `phone` (E.164) to dial the lead, so
+  // phone is always sent. The legacy in-browser WebRTC/call-button mechanic
+  // is dead and gone; the actual AVA call is placed downstream by whatever
+  // automation receives this lead. Flip backends (GHL -> n8n) on one line.
+  var AVA_CALL_ENDPOINT = 'https://services.leadconnectorhq.com/hooks/sdShCZCaxce8DHKbYcII/webhook-trigger/feba6e50-4bf3-4489-a03b-765fe5094dde'; // GHL inbound webhook now, n8n later
   (function liveCallWidget() {
     var widgets = document.querySelectorAll('[data-live-call-widget]');
     if (!widgets.length) return;
 
+    // Normalize a raw cell value to strict E.164:
+    //   strip everything except digits
+    //   10 digits             -> prepend "+1"  (5551234567  -> +15551234567)
+    //   11 digits leading "1" -> prepend "+"   (15551234567 -> +15551234567)
+    //   already starts with "+" then digits -> keep as-is
+    //   anything else -> '' (blocks submit; isValidCell rejects it)
     function normalizeCell(raw) {
-      var digits = (raw || '').replace(/[^\d+]/g, '');
+      var hadPlus = (raw || '').trim().charAt(0) === '+';
+      var digits = (raw || '').replace(/\D/g, '');
       if (!digits) return '';
-      if (digits.charAt(0) === '+') return digits;
+      if (hadPlus) return '+' + digits;
       if (digits.length === 10) return '+1' + digits;
       if (digits.length === 11 && digits.charAt(0) === '1') return '+' + digits;
-      return digits;
+      return '';
     }
 
     function isValidCell(e164) {
@@ -474,30 +481,50 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
           resetIdle(7000);
         }
 
-        // GHL maps `phone` (E.164) to {{contact.phone}} to dial the lead —
-        // it must always be present. `name` is the first-name field.
-        var payload = { name: name, phone: cell, role: selectedRole };
+        // The destination reads `phone` (E.164) to dial the lead — it must
+        // always be present. `first_name` is the first-name field;
+        // `selected_role` is the chosen category chip.
+        var payload = {
+          first_name: name,
+          phone: cell,
+          source: 'aivoiceagency.ai live demo form',
+          selected_role: selectedRole || ''
+        };
 
-        // Safety net: if the webhook URL ever gets cleared, confirm locally
-        // instead of firing a broken request.
-        if (!GHL_WEBHOOK_URL || GHL_WEBHOOK_URL === 'TODO_SHANE') {
+        // Log the exact JSON payload before sending (URL + body, no secrets).
+        if (window.console && console.log) {
+          console.log('[AVA] POST ' + AVA_CALL_ENDPOINT + ' body=' + JSON.stringify(payload));
+        }
+
+        // Safety net: if the endpoint is still the template placeholder or
+        // empty, confirm locally instead of firing a broken request.
+        if (!AVA_CALL_ENDPOINT || AVA_CALL_ENDPOINT === 'TODO_SHANE' || AVA_CALL_ENDPOINT === '<<PASTE_ENDPOINT_URL>>') {
           if (window.console && console.info) {
-            console.info('[AVA] GHL_WEBHOOK_URL not set — lead not sent.', payload);
+            console.info('[AVA] AVA_CALL_ENDPOINT not set — lead not sent.', payload);
           }
           setTimeout(succeed, 900);
           return;
         }
 
-        // Live path: POST the lead to the GoHighLevel webhook.
-        fetch(GHL_WEBHOOK_URL, {
+        // Live path: POST a JSON body (not a query string) so the "+" in the
+        // E.164 phone is never URL-encoded into a space.
+        fetch(AVA_CALL_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         }).then(function(r) {
-          if (!r.ok) throw new Error('Submit failed (' + r.status + ').');
-          setTimeout(succeed, 600);
-        }).catch(function(err) {
-          fail((err && err.message) || 'Could not reach AVA. Try again in a moment.');
+          if (r.ok) { setTimeout(succeed, 600); return; }
+          // Non-2xx: log status + response body, then show inline retry.
+          r.text().then(function(body) {
+            if (window.console && console.error) console.error('[AVA] submit failed', r.status, body);
+          }, function() {
+            if (window.console && console.error) console.error('[AVA] submit failed', r.status, '(body unreadable)');
+          });
+          fail('Could not reach AVA (' + r.status + '). Tap to try again.');
+          resetIdle(5000);
+        }, function(err) {
+          if (window.console && console.error) console.error('[AVA] network error', err);
+          fail('Could not reach AVA. Try again in a moment.');
           resetIdle(5000);
         });
       });
