@@ -353,7 +353,7 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
   // phone is always sent. The legacy in-browser WebRTC/call-button mechanic
   // is dead and gone; the actual AVA call is placed downstream by whatever
   // automation receives this lead. Flip backends (GHL -> n8n) on one line.
-  var AVA_CALL_ENDPOINT = 'https://services.leadconnectorhq.com/hooks/sdShCZCaxce8DHKbYcII/webhook-trigger/feba6e50-4bf3-4489-a03b-765fe5094dde'; // GHL inbound webhook now, n8n later
+  var AVA_CALL_ENDPOINT = 'https://circulant.app.n8n.cloud/webhook/ava-call'; // n8n webhook (flipped from GHL)
   (function liveCallWidget() {
     var widgets = document.querySelectorAll('[data-live-call-widget]');
     if (!widgets.length) return;
