@@ -599,3 +599,183 @@ body.hero-animate .hero-line-cyan.flicker {
     filter: none;
   }
 }
+
+/* ============================================================
+   LIVE CALL WIDGET — hero lead-capture form. Pick a role, drop a
+   cell, AVA calls back. Posts to the n8n "ava-call" webhook (see
+   site.js). Mirrors .signal-loss-meter chrome (cyan border, #14141C
+   interior, dot grid) so it reads as a paired hero instrument.
+   ============================================================ */
+.live-call-widget {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  box-sizing: border-box;
+  margin: 28px 0 32px;
+  padding: 22px 24px 24px;
+  background: #14141C;
+  border: 1px solid var(--cyan);
+  border-radius: 4px;
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+.live-call-widget::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,212,255,0.07) 1px, transparent 1px);
+  background-size: 8px 8px;
+  pointer-events: none;
+  z-index: 0;
+}
+.live-call-widget::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,229,255,0.55), transparent);
+  animation: meterScan 7s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+.live-call-widget > * { position: relative; z-index: 2; }
+.live-call-widget.is-calling { border-color: #00E5FF; box-shadow: 0 0 28px rgba(0,229,255,0.2); }
+.live-call-widget.is-connected { border-color: #00E5FF; box-shadow: 0 0 36px rgba(0,229,255,0.28); }
+.live-call-widget.is-failed { border-color: #FF3B30; box-shadow: 0 0 20px rgba(255,59,48,0.18); }
+
+.lcw-header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.lcw-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); }
+.lcw-status { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-mute); }
+.live-call-widget.is-calling .lcw-status,
+.live-call-widget.is-connected .lcw-status { color: var(--cyan-bright); }
+.live-call-widget.is-failed .lcw-status { color: #FF6B6B; }
+
+.lcw-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding-bottom: 2px;
+}
+.lcw-chips::-webkit-scrollbar { display: none; }
+.lcw-chip {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  background: rgba(10,10,15,0.6);
+  color: var(--ink-mute);
+  border: 1px solid rgba(0,212,255,0.18);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.lcw-chip:hover { color: var(--ink); border-color: rgba(0,212,255,0.45); }
+.lcw-chip.active { color: var(--void); background: var(--cyan); border-color: var(--cyan-bright); box-shadow: 0 0 12px rgba(0,212,255,0.45); }
+
+.lcw-inputs { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; margin-bottom: 14px; }
+@media (max-width: 540px) { .lcw-inputs { grid-template-columns: 1fr; } }
+.lcw-input {
+  background: rgba(10,10,15,0.6);
+  border: 1px solid rgba(0,212,255,0.22);
+  color: var(--ink);
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  border-radius: 4px;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  width: 100%;
+}
+.lcw-input::placeholder { color: #5A5A66; }
+.lcw-input:focus {
+  outline: none;
+  border-color: var(--cyan-bright);
+  box-shadow: 0 0 0 1px var(--cyan-bright), 0 0 16px rgba(0,212,255,0.22);
+  background: rgba(0,212,255,0.04);
+}
+.lcw-input:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.lcw-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px 22px;
+  background: var(--cyan);
+  color: var(--void);
+  border: 1px solid var(--cyan-bright);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s, border-color 0.18s;
+  animation: lcwIdlePulse 3.2s ease-in-out infinite;
+  box-shadow: 0 0 0 1px var(--cyan-bright), 0 0 24px rgba(0,212,255,0.32);
+}
+.lcw-submit:hover { background: var(--cyan-bright); box-shadow: 0 0 0 1px var(--cyan-bright), 0 0 36px rgba(0,229,255,0.5); }
+.lcw-submit:disabled { cursor: not-allowed; animation: none; }
+.live-call-widget.is-calling .lcw-submit,
+.live-call-widget.is-connected .lcw-submit {
+  background: transparent;
+  color: var(--cyan-bright);
+  border-color: rgba(0,229,255,0.5);
+  animation: none;
+  box-shadow: 0 0 0 1px rgba(0,229,255,0.3), 0 0 18px rgba(0,212,255,0.18);
+}
+.live-call-widget.is-calling .lcw-submit-text::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan-bright);
+  margin-right: 10px;
+  vertical-align: middle;
+  animation: lcwCallDot 1.1s ease-in-out infinite;
+  box-shadow: 0 0 10px var(--cyan-bright);
+}
+.live-call-widget.is-failed .lcw-submit {
+  background: transparent;
+  color: #FF6B6B;
+  border-color: rgba(255,59,48,0.5);
+  animation: none;
+  box-shadow: none;
+}
+
+@keyframes lcwIdlePulse {
+  0%, 100% { box-shadow: 0 0 0 1px var(--cyan-bright), 0 0 18px rgba(0,212,255,0.22); }
+  50%      { box-shadow: 0 0 0 1px var(--cyan-bright), 0 0 32px rgba(0,212,255,0.45); }
+}
+@keyframes lcwCallDot {
+  0%, 100% { opacity: 0.4; box-shadow: 0 0 0 0 rgba(0,229,255,0.6), 0 0 8px var(--cyan-bright); }
+  50%      { opacity: 1;   box-shadow: 0 0 0 6px rgba(0,229,255,0),   0 0 14px var(--cyan-bright); }
+}
+
+.lcw-meta { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; color: #5A5A66; margin-top: 12px; text-align: center; text-transform: uppercase; }
+.lcw-error { color: #FF6B6B; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lcw-submit, .live-call-widget::after, .live-call-widget.is-calling .lcw-submit-text::before {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .live-call-widget { padding: 18px 18px 20px; max-width: 100%; }
+  .lcw-chips { gap: 5px; }
+  .lcw-chip { padding: 6px 12px; font-size: 10px; }
+}
+
+@media (max-width: 600px) {
+  .lcw-header { flex-direction: column; align-items: flex-start; }
+}
