@@ -37,7 +37,7 @@ Auto-read at every Claude Code session. Do not delete.
 
 ## PHONE NUMBERS
 - 305-315-6562 — public business number (on website + marketing)
-- 786-937-1218 — Twilio/Retell demo line (NEVER public-facing)
+- 414-240-8930 — live Retell AVA demo line (public-facing, on website CTAs)
 
 ## PUSH DISCIPLINE
 - One push = one complete unit of work, not one tweak

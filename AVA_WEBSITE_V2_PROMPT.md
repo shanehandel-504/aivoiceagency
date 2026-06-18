@@ -19,7 +19,7 @@ AI Voice Agency sells done-for-you AI voice agents (powered by Retell AI) that a
 
 - Target customer: Service businesses (HVAC, plumbing, dental, legal, med spa) who lose revenue from missed calls.
 - Price range: $497 to $1,997/mo.
-- Phone number: 786-937-1218 (live demo line — anyone can call it right now)
+- Phone number: 414-240-8930 (live demo line — anyone can call it right now)
 - Booking link: https://cal.com/shane-handel/strategy-call
 - Founder: Shane Handel, Wisconsin-based, national coverage.
 
@@ -61,8 +61,8 @@ Background: Signal V6 orb, centered, roughly 50% of viewport, breathing animatio
 
 - Headline: "Your phones are ringing. Is anyone picking up?"
 - Sub-headline: "AVA answers every call. Qualifies every lead. Books every job. 24/7. No hold times. No missed revenue."
-- Primary CTA: "Call AVA Now" — triggers Retell web call (fallback: tel:7869371218)
-- Secondary link: "Call 786-937-1218" text with underline
+- Primary CTA: "Call AVA Now" — triggers Retell web call (fallback: tel:4142408930)
+- Secondary link: "Call 414-240-8930" text with underline
 - The orb must be VISIBLE, GLOWING, ALIVE. Not faint dust particles.
 
 ### Section 2: PROOF BAR (not full viewport height)
@@ -94,19 +94,19 @@ Each tab shows an industry-specific headline plus 3 bullet points about how AVA 
 Starter — $497/mo
 - Tagline: "Never miss the call."
 - Best for: Small businesses that need reliable 24/7 call coverage.
-- CTA: "Start Your AVA Setup" links to tel:7869371218
+- CTA: "Start Your AVA Setup" links to tel:4142408930
 
 Pro — $997/mo (MOST POPULAR)
 - Tagline: "Turn calls into bookings."
 - Best for: Growing businesses that want automated booking and lead qualification.
-- CTA: "Start Your AVA Setup" links to tel:7869371218
+- CTA: "Start Your AVA Setup" links to tel:4142408930
 - Badge: "Most Popular" at top of card
 - Desktop: transform scale(1.05) to visually pop
 
 Enterprise — $1,997/mo
 - Tagline: "Full revenue engine."
 - Best for: Multi-location businesses that need full-stack AI voice operations.
-- CTA: "Start Your AVA Setup" links to tel:7869371218
+- CTA: "Start Your AVA Setup" links to tel:4142408930
 
 White Glove — NO PRICE SHOWN
 - Tagline: "Fully managed. We build it, run it, optimize it."
@@ -124,7 +124,7 @@ Grid layout: 1 column mobile, 2 columns tablet (768px+), 4 columns desktop (1024
 5. "What happens when something goes wrong?" — Human quality control built in. We monitor calls, review edge cases, update the agent continuously.
 6. "What about HIPAA/TCPA compliance?" — Scoped during discovery call. Call recording disclosures, data handling, opt-in flows all configurable.
 
-First FAQ item should include: "Listen to a live demo by calling 786-937-1218."
+First FAQ item should include: "Listen to a live demo by calling 414-240-8930."
 
 Accordion technique: CSS grid with grid-template-rows 0fr to 1fr transition (NOT max-height hack).
 
@@ -133,7 +133,7 @@ ARIA attributes required: role="button", tabindex="0", aria-expanded on each tog
 ### Section 7: FINAL CTA (full viewport height)
 
 - Headline: "Stop losing calls. Start closing jobs."
-- CTA: "Call AVA Now" links to tel:7869371218
+- CTA: "Call AVA Now" links to tel:4142408930
 - Orb re-expands behind this section (Signal V6 lerp-based scale)
 
 ---
@@ -151,7 +151,7 @@ ARIA attributes required: role="button", tabindex="0", aria-expanded on each tog
 ## FOOTER
 
 - "WE DEPLOY AI BUSINESS OPERATIONS SYSTEMS THAT HAPPEN TO ANSWER THE PHONE."
-- Copyright 2026 AI Voice Agency with Book a Call link and 786-937-1218
+- Copyright 2026 AI Voice Agency with Book a Call link and 414-240-8930
 - "Wisconsin-built. National coverage."
 - Privacy Policy and Terms links
 
@@ -160,7 +160,7 @@ ARIA attributes required: role="button", tabindex="0", aria-expanded on each tog
 ## MOBILE STICKY BAR (bottom of screen, mobile only)
 
 - Two buttons side by side: "Call AVA" (60% width, cyan fill) + "Listen" (40% width, ghost/outline)
-- Both link to tel:7869371218
+- Both link to tel:4142408930
 - Slides in with CSS transform translateY, NOT display:none toggle
 - Shows on scroll after hero section
 
