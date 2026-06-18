@@ -781,6 +781,66 @@ body.hero-animate .hero-line-cyan.flicker {
 }
 .lcw-input:disabled { opacity: 0.6; cursor: not-allowed; }
 
+/* TCPA consent — checkbox left, statement right; CIRCULANT cyan accent. */
+.ava-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 16px 0;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(238, 240, 244, 0.7); /* --ink #EEF0F4 @ 70% */
+  text-align: left;
+}
+.ava-consent input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 0 0 auto;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  border: 1px solid rgba(0, 212, 255, 0.5);
+  border-radius: 4px;
+  background: rgba(10, 10, 15, 0.6);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+/* Invisible ≥44×44 hit area centred on the box for comfortable mobile taps. */
+.ava-consent input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+.ava-consent input[type="checkbox"]:checked {
+  background: var(--cyan);
+  border-color: var(--cyan-bright);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.4);
+}
+/* Checkmark drawn in the void colour over the cyan fill. */
+.ava-consent input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--void);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.ava-consent input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--cyan-bright);
+  outline-offset: 2px;
+}
+.ava-consent input[type="checkbox"]:disabled { opacity: 0.6; cursor: not-allowed; }
+
 .lcw-submit {
   display: inline-flex;
   align-items: center;

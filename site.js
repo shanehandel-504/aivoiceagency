@@ -386,6 +386,7 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
       var submitText = widget.querySelector('.lcw-submit-text');
       var statusEl = widget.querySelector('[data-lcw-status]');
       var metaEl = widget.querySelector('[data-lcw-meta]');
+      var consentInput = widget.querySelector('[data-lcw-consent]');
       if (!submitBtn || !submitText || !cellInput) return;
 
       var defaultMeta = metaEl ? metaEl.textContent : '';
@@ -424,6 +425,8 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
           if (nameInput) { nameInput.disabled = false; nameInput.value = ''; }
           cellInput.disabled = false;
           cellInput.value = '';
+          // Clear consent so the next call requires a fresh, explicit tick.
+          if (consentInput) { consentInput.disabled = false; consentInput.checked = false; }
           submitText.textContent = idleText;
           setStatus('Pick the job. Enter your cell. AVA calls your phone.');
           if (metaEl) {
@@ -438,6 +441,7 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         submitBtn.disabled = false;
         if (nameInput) nameInput.disabled = false;
         cellInput.disabled = false;
+        if (consentInput) consentInput.disabled = false;
         submitText.textContent = '↻ Try again';
         setStatus(message);
         if (metaEl) {
@@ -458,6 +462,17 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
           fail('Pick a role above first.');
           return;
         }
+        // TCPA: explicit, per-call consent is required before any automated
+        // outbound call fires. Fail closed — if the box is missing or unchecked,
+        // block the POST. Consent is captured fresh on every submit (resetIdle
+        // re-clears the box so a new number always needs a new tick).
+        if (!consentInput || !consentInput.checked) {
+          if (!consentInput && window.console && console.warn) {
+            console.warn('[AVA] consent checkbox missing — blocking call (fail closed).');
+          }
+          fail('Please check the consent box to receive your demo call.');
+          return;
+        }
 
         var name = nameInput ? (nameInput.value || '').trim() : '';
 
@@ -466,6 +481,7 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         submitBtn.disabled = true;
         if (nameInput) nameInput.disabled = true;
         cellInput.disabled = true;
+        if (consentInput) consentInput.disabled = true;
         submitText.textContent = 'Sending…';
         setStatus('Sending your number to AVA…');
         if (metaEl) metaEl.classList.remove('lcw-error');
@@ -483,12 +499,16 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
 
         // The destination reads `phone` (E.164) to dial the lead — it must
         // always be present. `first_name` is the first-name field;
-        // `selected_role` is the chosen category chip.
+        // `selected_role` is the chosen category chip. `tcpa_consent` +
+        // `tcpa_consent_at` (ISO 8601, captured at submit) are the auditable
+        // proof of consent that must travel with every outbound-call request.
         var payload = {
           first_name: name,
           phone: cell,
           source: 'aivoiceagency.ai live demo form',
-          selected_role: selectedRole || ''
+          selected_role: selectedRole || '',
+          tcpa_consent: true,
+          tcpa_consent_at: new Date().toISOString()
         };
 
         // Log the exact JSON payload before sending (URL + body, no secrets).
