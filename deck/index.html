@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+
+<link rel="icon" type="image/svg+xml" href="https://aivoiceagency.ai/favicon.svg">
+<link rel="icon" type="image/x-icon" href="https://aivoiceagency.ai/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="https://aivoiceagency.ai/apple-touch-icon.png">
+
+<title>AVA — The voice that answers every call | AI Voice Agency</title>
+<meta name="description" content="AVA answers when your team can't — every call, after hours, on the first ring. AVA qualifies, books, and writes to your CRM. See what missed calls cost you, and what AVA recovers.">
+<link rel="canonical" href="https://deck.aivoiceagency.ai/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="AVA — the voice that answers every call">
+<meta property="og:description" content="Answers when your team can't. Qualifies, books, and writes to your CRM. See what missed calls cost — and what AVA recovers, every month.">
+<meta property="og:url" content="https://deck.aivoiceagency.ai/">
+<meta property="og:site_name" content="AI Voice Agency">
+<meta property="og:image" content="https://aivoiceagency.ai/brand/gbp-cover.png">
+<meta property="og:image:secure_url" content="https://aivoiceagency.ai/brand/gbp-cover.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1080">
+<meta property="og:image:height" content="608">
+<meta property="og:image:alt" content="AI Voice Agency — AVA answers every call">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AVA — the voice that answers every call">
+<meta name="twitter:description" content="Answers when your team can't. Qualifies, books, writes to your CRM.">
+<meta name="twitter:image" content="https://aivoiceagency.ai/brand/gbp-cover.png">
+<meta name="twitter:image:alt" content="AI Voice Agency — AVA answers every call">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "PresentationDigitalDocument",
+  "name": "AVA — AI Voice Agency Sales Deck",
+  "url": "https://deck.aivoiceagency.ai/",
+  "about": "AI voice agent that answers, qualifies, books, and logs inbound calls.",
+  "publisher": { "@type": "Organization", "name": "AI Voice Agency", "url": "https://aivoiceagency.ai" }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ambient field -->
+<div class="ambient" aria-hidden="true"></div>
+
+<!-- progress rail -->
+<div class="progress" aria-hidden="true"><span class="progress-fill" id="progressFill"></span></div>
+
+<main class="deck" id="deck" tabindex="-1" aria-roledescription="carousel" aria-label="AVA sales deck">
+
+  <!-- ============ SLIDE 1 — PROBLEM ============ -->
+  <!-- is-active is pre-set so slide 1 is visible even if script.js fails to load; goTo(0) re-asserts it on boot -->
+  <section class="slide is-active" id="s1" aria-label="Slide 1: The problem"
+    data-notes="Open here. Don't sell yet — let the cost land. Click the waveform live: that flatline is every customer who hit voicemail and dialled your competitor instead. Ask: 'How many calls did your team miss last week?' Then sit in the silence.">
+    <div class="slide-inner center">
+      <div class="tag tag--warn">THE PROBLEM</div>
+      <h1 class="headline">Missed calls turn into <em>missed revenue.</em></h1>
+      <p class="subhead">When no one picks up, they don't leave a message. They call the next business.</p>
+
+      <button class="wave-stage" id="waveStage" type="button" aria-label="Demonstration: click to drop the incoming call">
+        <canvas id="waveCanvas"></canvas>
+        <span class="wave-label" id="waveLabel"><span class="wave-dot" id="waveDot"></span><span id="waveText">INCOMING CALL</span></span>
+        <span class="wave-hint" id="waveHint">click to drop the call</span>
+      </button>
+
+      <div class="prob-row">
+        <div class="prob-cell"><span class="prob-x">×</span> Busy jobs ring out</div>
+        <div class="prob-cell"><span class="prob-x">×</span> After-hours uncovered</div>
+        <div class="prob-cell"><span class="prob-x">×</span> Voicemails ignored</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 2 — WHAT AVA DOES ============ -->
+  <section class="slide" id="s2" aria-label="Slide 2: What AVA does"
+    data-notes="The reveal. AVA is the safety net under every missed call. Walk the transcript line by line — point out AVA isn't reading a script, AVA is running the conversation: checks availability, offers a real slot, captures the contact. Then the grid: answers every call, sets the appointment, routes the urgent ones, writes it all to the CRM.">
+    <div class="slide-inner">
+      <div class="tag">WHAT AVA DOES</div>
+      <h2 class="headline headline--md">AVA answers <em>when your team can't.</em></h2>
+
+      <div class="ava-grid">
+        <!-- phone mockup -->
+        <div class="phone" aria-hidden="false">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="call-head">
+              <span class="call-orb"><span class="call-orb-core"></span></span>
+              <div class="call-meta">
+                <div class="call-name">AVA <span class="call-live">● LIVE</span></div>
+                <div class="call-status" id="callTimer">00:07 · incoming</div>
+              </div>
+            </div>
+            <div class="transcript" id="transcript" role="log" aria-label="Live call transcript"></div>
+          </div>
+        </div>
+
+        <!-- capability grid -->
+        <div class="caps">
+          <div class="cap">
+            <div class="cap-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H8l1.5 4-2 1.4a12 12 0 0 0 5.1 5.1l1.4-2 4 1.5v2.5c0 .8-.7 1.5-1.5 1.5A14.5 14.5 0 0 1 4 5.5Z"/></svg></div>
+            <h3>Answers every call</h3>
+            <p>First ring, 24/7. No voicemail, no missed money.</p>
+          </div>
+          <div class="cap">
+            <div class="cap-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/></svg></div>
+            <h3>Books appointments</h3>
+            <p>Qualifies the caller and drops the job on your calendar.</p>
+          </div>
+          <div class="cap">
+            <div class="cap-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v6l4 2"/><circle cx="12" cy="13" r="8"/><path d="M9 2h6"/></svg></div>
+            <h3>Routes urgent</h3>
+            <p>Recognizes a real emergency and escalates to a human.</p>
+          </div>
+          <div class="cap">
+            <div class="cap-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></div>
+            <h3>Writes to CRM</h3>
+            <p>Caller, intent, and outcome — logged and searchable.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 3 — HOW IT WORKS ============ -->
+  <section class="slide" id="s3" aria-label="Slide 3: How it works"
+    data-notes="Defuse the 'is this complicated?' worry. Five steps, fully automatic, every one in under a second between handoffs. Let the flow animate, then point: the call never touches your team unless it has to — and by the time it's over, the record's already written.">
+    <div class="slide-inner">
+      <div class="tag">HOW IT WORKS</div>
+      <h2 class="headline headline--md">From ring to record in <em>five steps.</em></h2>
+
+      <div class="flow" id="flow">
+        <div class="flow-node" data-step="0">
+          <div class="flow-tile" data-tile="ring">
+            <svg viewBox="0 0 24 24" class="t-ring"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H8l1.5 4-2 1.4a12 12 0 0 0 5.1 5.1l1.4-2 4 1.5v2.5c0 .8-.7 1.5-1.5 1.5A14.5 14.5 0 0 1 4 5.5Z"/></svg>
+            <span class="ring-pulse"></span><span class="ring-pulse r2"></span>
+          </div>
+          <div class="flow-dot"></div>
+          <div class="flow-label">Call comes in</div>
+        </div>
+        <div class="flow-link"><span></span></div>
+        <div class="flow-node" data-step="1">
+          <div class="flow-tile" data-tile="wave">
+            <canvas class="tile-wave" width="120" height="64"></canvas>
+          </div>
+          <div class="flow-dot"></div>
+          <div class="flow-label">AVA answers</div>
+        </div>
+        <div class="flow-link"><span></span></div>
+        <div class="flow-node" data-step="2">
+          <div class="flow-tile" data-tile="chat">
+            <span class="bub bub-a">Service for Tuesday?</span>
+            <span class="bub bub-b">Got it — 2:15 works.</span>
+          </div>
+          <div class="flow-dot"></div>
+          <div class="flow-label">AVA qualifies</div>
+        </div>
+        <div class="flow-link"><span></span></div>
+        <div class="flow-node" data-step="3">
+          <div class="flow-tile" data-tile="cal">
+            <span class="cal-row"></span><span class="cal-row"></span>
+            <span class="cal-slot">TUE · 2:15<span class="cal-check">✓</span></span>
+            <span class="cal-row"></span>
+          </div>
+          <div class="flow-dot"></div>
+          <div class="flow-label">AVA books</div>
+        </div>
+        <div class="flow-link"><span></span></div>
+        <div class="flow-node" data-step="4">
+          <div class="flow-tile" data-tile="crm">
+            <span class="crm-line"><span class="crm-k">name</span><span class="crm-v"></span></span>
+            <span class="crm-line"><span class="crm-k">intent</span><span class="crm-v"></span></span>
+            <span class="crm-line"><span class="crm-k">status</span><span class="crm-v crm-ok">logged ✓</span></span>
+          </div>
+          <div class="flow-dot"></div>
+          <div class="flow-label">CRM updated</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 4 — ROI CALCULATOR ============ -->
+  <section class="slide" id="s4" aria-label="Slide 4: What it costs you"
+    data-notes="THE KILL SHOT. Stop talking and type in THEIR numbers — ask for monthly call volume, their honest miss rate, average ticket, close rate. Watch their face when the 3-year number lands. Then the line: 'AVA recovers this. Every month.' Don't fill the silence — let them do the math out loud.">
+    <div class="slide-inner">
+      <div class="tag tag--warn">WHAT IT COSTS YOU</div>
+      <h2 class="headline headline--md">Punch in <em>your numbers.</em></h2>
+
+      <div class="roi">
+        <div class="roi-inputs">
+          <div class="field">
+            <div class="field-head"><label for="calls">Inbound calls / month</label>
+              <span class="field-val"><input class="num w-wide" type="number" id="calls-num" inputmode="numeric" min="50" max="2000" step="10" value="300" aria-label="Inbound calls per month"></span></div>
+            <input type="range" id="calls" min="50" max="2000" step="10" value="300" aria-label="Inbound calls per month slider">
+          </div>
+          <div class="field">
+            <div class="field-head"><label for="missed">Missed-call rate</label>
+              <span class="field-val"><input class="num" type="number" id="missed-num" inputmode="numeric" min="0" max="100" step="1" value="40" aria-label="Estimated missed call percentage"><span class="post">%</span></span></div>
+            <input type="range" id="missed" min="0" max="100" step="1" value="40" aria-label="Estimated missed call percentage slider">
+          </div>
+          <div class="field">
+            <div class="field-head"><label for="value">Average job value</label>
+              <span class="field-val"><span class="pre">$</span><input class="num w-wide" type="number" id="value-num" inputmode="numeric" min="100" max="10000" step="50" value="850" aria-label="Average job or booking value in dollars"></span></div>
+            <input type="range" id="value" min="100" max="10000" step="50" value="850" aria-label="Average job or booking value slider">
+          </div>
+          <div class="field">
+            <div class="field-head"><label for="conv">Close rate of answered calls</label>
+              <span class="field-val"><input class="num" type="number" id="conv-num" inputmode="numeric" min="5" max="75" step="1" value="25" aria-label="Conversion rate of answered calls percentage"><span class="post">%</span></span></div>
+            <input type="range" id="conv" min="5" max="75" step="1" value="25" aria-label="Conversion rate of answered calls slider">
+          </div>
+        </div>
+
+        <div class="roi-results">
+          <div class="rc"><div class="rc-label">Calls missed / month</div><div class="rc-num mono" id="r-missed">0</div></div>
+          <div class="rc"><div class="rc-label">Lost monthly revenue</div><div class="rc-num mono" id="r-monthly">$0</div></div>
+          <div class="rc"><div class="rc-label">Lost annual revenue</div><div class="rc-num mono" id="r-annual">$0</div></div>
+          <div class="rc rc--hero"><div class="rc-label">Lost over 3 years</div><div class="rc-num mono" id="r-3yr">$0</div><div class="rc-sub">at current volume, untouched</div></div>
+        </div>
+      </div>
+      <p class="roi-foot">AVA recovers this revenue. <em>Every month.</em></p>
+      <div id="roi-status" role="status" aria-live="polite" class="sr-only"></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 5 — BEFORE / AFTER ============ -->
+  <section class="slide" id="s5" aria-label="Slide 5: Before AVA, with AVA"
+    data-notes="Make it visceral. Drag the handle left — that's their Monday: red missed-call alerts stacking up, calendar empty, team underwater. Drag it right — same business, same week, with AVA: every call captured, calendar full, team focused on the work that pays. Hand them the drag if you can.">
+    <div class="slide-inner">
+      <div class="tag">BEFORE AVA / WITH AVA</div>
+      <h2 class="headline headline--md">Same business. <em>Different outcome.</em></h2>
+
+      <div class="ba" id="ba">
+        <!-- AFTER (calm) underneath, full width -->
+        <div class="ba-pane ba-after">
+          <div class="ba-tagline ba-tag-after">WITH AVA</div>
+          <div class="ba-scene">
+            <div class="ba-notes">
+              <div class="ba-chip chip-ok">✓ BOOKED · Tue 2:15</div>
+              <div class="ba-chip chip-ok">✓ BOOKED · Wed 9:00</div>
+              <div class="ba-chip chip-ok">✓ BOOKED · Wed 1:30</div>
+              <div class="ba-chip chip-ok">✓ CAPTURED · after hours</div>
+            </div>
+            <div class="ba-cal">
+              <span></span><span class="f"></span><span class="f"></span><span></span>
+              <span class="f"></span><span class="f"></span><span></span><span class="f"></span>
+              <span class="f"></span><span></span><span class="f"></span><span class="f"></span>
+            </div>
+            <div class="ba-mood mood-calm">team focused · nothing dropped</div>
+          </div>
+        </div>
+        <!-- BEFORE (chaos) clipped on top -->
+        <div class="ba-pane ba-before" id="baBefore">
+          <div class="ba-tagline ba-tag-before">BEFORE AVA</div>
+          <div class="ba-scene">
+            <div class="ba-notes">
+              <div class="ba-chip chip-bad">⚠ MISSED CALL</div>
+              <div class="ba-chip chip-bad">⚠ MISSED CALL</div>
+              <div class="ba-chip chip-bad">⚠ VOICEMAIL — no reply</div>
+              <div class="ba-chip chip-bad">⚠ MISSED CALL</div>
+            </div>
+            <div class="ba-cal">
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="ba-mood mood-chaos">calls lost · team underwater</div>
+          </div>
+        </div>
+        <!-- handle -->
+        <div class="ba-handle" id="baHandle" role="slider" tabindex="0" aria-label="Drag to reveal before and after" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+          <span class="ba-grip"><svg viewBox="0 0 24 24"><path d="M9 6 4 12l5 6M15 6l5 6-5 6"/></svg></span>
+        </div>
+      </div>
+      <p class="ba-cue">drag to reveal</p>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 6 — WHY US ============ -->
+  <section class="slide" id="s6" aria-label="Slide 6: Why AI Voice Agency"
+    data-notes="This is the trust slide and it's personal — say it in your own voice. Thirty years operating, twenty-five on the phones. AVA wasn't dreamed up in a deck; it was built by someone who knows what a dropped call costs because he's lived it. Then the three product facts — fast, human, integrated. No name-dropping vendors. The work speaks.">
+    <div class="slide-inner center">
+      <div class="tag">WHY AI VOICE AGENCY</div>
+      <h2 class="headline headline--md">Built from the <em>front desk out.</em></h2>
+
+      <div class="why-nums">
+        <div class="why-stat"><span class="why-big" data-count="30">0</span><span class="why-cap">years operating</span></div>
+        <div class="why-pulse" id="whyPulse" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="why-stat"><span class="why-big" data-count="25">0</span><span class="why-cap">years in phone-heavy ops</span></div>
+      </div>
+
+      <p class="why-copy">AVA wasn't built as a theory deck. It was built by an operator who has spent a career <em>on the phones.</em></p>
+
+      <div class="why-diff">
+        <div class="diff"><span class="diff-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 3 4 14h7l-1 7 9-11h-7z"/></svg></span>Sub-500ms response latency</div>
+        <div class="diff"><span class="diff-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M8 7v10M16 6v12M4 10v4M20 9v6"/></svg></span>Human-grade voice — no robotic uncanny valley</div>
+        <div class="diff"><span class="diff-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>Direct CRM integration</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 7 — PRICING ============ -->
+  <section class="slide" id="s7" aria-label="Slide 7: Pricing"
+    data-notes="Anchor on value before price — they just saw the 3-year loss number two slides ago. Starter is a real published price so it's not a black box. Pro and Enterprise are custom because the integration depth varies. 'By application only' is deliberate — we don't onboard everyone. Let scarcity sit.">
+    <div class="slide-inner">
+      <div class="tag">PRICING</div>
+      <h2 class="headline headline--md">Three tiers. <em>One conversation to fit.</em></h2>
+
+      <div class="tiers">
+        <div class="tier">
+          <div class="tier-name">Starter</div>
+          <div class="tier-price"><span class="tier-amt">$497</span><span class="tier-per">/mo</span></div>
+          <div class="tier-setup">+ $500 setup</div>
+          <ul class="tier-list">
+            <li>One AVA voice line</li>
+            <li>Answer, qualify &amp; book</li>
+            <li>CRM logging</li>
+            <li>Business-hours + after-hours cover</li>
+          </ul>
+        </div>
+        <div class="tier tier--feature">
+          <div class="tier-badge">Most chosen</div>
+          <div class="tier-name">Pro</div>
+          <div class="tier-price"><span class="tier-amt">Custom</span></div>
+          <div class="tier-setup">scoped to your call flow</div>
+          <ul class="tier-list">
+            <li>Everything in Starter</li>
+            <li>Multi-line &amp; call routing</li>
+            <li>Urgent-call escalation</li>
+            <li>Deeper CRM + calendar integration</li>
+            <li>Custom qualifying scripts</li>
+          </ul>
+        </div>
+        <div class="tier">
+          <div class="tier-name">Enterprise</div>
+          <div class="tier-price"><span class="tier-amt">Custom</span></div>
+          <div class="tier-setup">multi-location / high volume</div>
+          <ul class="tier-list">
+            <li>Everything in Pro</li>
+            <li>Multi-location deployment</li>
+            <li>Dedicated build &amp; tuning</li>
+            <li>Priority support &amp; SLAs</li>
+          </ul>
+        </div>
+      </div>
+      <p class="tiers-note">By application only.</p>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 8 — CTA ============ -->
+  <section class="slide" id="s8" aria-label="Slide 8: Next step"
+    data-notes="Close. Don't ask 'what do you think' — give the next action. One call: they hear AVA live, watch AVA book and log it, and we map it to their exact phone flow. Point at the QR for the room, click the button for yourself. Then stop talking.">
+    <div class="slide-inner center">
+      <div class="tag">NEXT STEP</div>
+      <h2 class="headline headline--md">Hear AVA answer <em>a real call.</em></h2>
+
+      <div class="steps">
+        <div class="step"><span class="step-n">1</span><div><div class="step-t">Listen</div><div class="step-d">Hear AVA handle a live inbound call.</div></div></div>
+        <div class="step"><span class="step-n">2</span><div><div class="step-t">See it book and log</div><div class="step-d">Watch the slot fill and the CRM record write.</div></div></div>
+        <div class="step"><span class="step-n">3</span><div><div class="step-t">Map it to your business</div><div class="step-d">We scope it to your exact phone flow.</div></div></div>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn" href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" target="_blank" rel="noopener">
+          Book the strategy call
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="qr" href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" target="_blank" rel="noopener" aria-label="Scan QR code to book the strategy call">
+          <span class="qr-frame">
+            <svg class="qr-svg" viewBox="0 0 37 37" shape-rendering="crispEdges" role="img" aria-label="QR code linking to the booking calendar"><rect width="37" height="37" fill="#EEF0F4"/><path stroke="#0A0A0F" d="M0 0.5h7m2 0h7m1 0h2m1 0h2m2 0h1m1 0h1m1 0h1m1 0h7M0 1.5h1m5 0h1m4 0h4m3 0h2m6 0h2m2 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h3m1 0h2m1 0h2m2 0h3m1 0h1m6 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h3m2 0h2m2 0h1m1 0h1m2 0h1m2 0h3m2 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m3 0h1m1 0h2m2 0h3m2 0h1m1 0h1m2 0h1m1 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h1m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1m1 0h1m4 0h2m1 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h4m1 0h1m5 0h2m2 0h1m2 0h2M0 8.5h1m1 0h5m4 0h1m3 0h1m2 0h1m1 0h9m1 0h5M1 9.5h2m2 0h1m1 0h2m1 0h2m1 0h4m6 0h1m2 0h1m1 0h2m4 0h2M0 10.5h9m2 0h1m1 0h2m5 0h2m2 0h2m1 0h2m1 0h1m1 0h5M3 11.5h1m5 0h1m2 0h1m3 0h1m1 0h1m2 0h1m4 0h1m1 0h4m4 0h1M2 12.5h1m1 0h1m1 0h1m2 0h3m2 0h1m2 0h1m2 0h1m1 0h6m1 0h2m1 0h5M0 13.5h2m6 0h5m1 0h1m1 0h8m4 0h2m1 0h1M1 14.5h1m1 0h1m2 0h2m4 0h1m2 0h3m2 0h2m2 0h2m1 0h7m1 0h2M1 15.5h3m3 0h7m2 0h7m3 0h4m1 0h2m2 0h2M2 16.5h2m1 0h2m2 0h6m1 0h1m2 0h1m1 0h1m2 0h4m1 0h4m1 0h1M0 17.5h1m4 0h1m6 0h1m2 0h1m2 0h1m1 0h4m1 0h1m1 0h3m1 0h1m3 0h1M0 18.5h1m1 0h1m3 0h1m1 0h2m4 0h4m1 0h1m1 0h1m3 0h4m1 0h2m2 0h3M0 19.5h1m3 0h1m3 0h3m2 0h1m1 0h1m3 0h4m3 0h1m3 0h1m1 0h2m2 0h1M0 20.5h1m2 0h2m1 0h2m2 0h1m1 0h4m1 0h1m1 0h1m3 0h1m1 0h3m1 0h2m1 0h3M0 21.5h2m2 0h1m4 0h1m2 0h1m1 0h1m1 0h1m1 0h2m3 0h1m1 0h1m2 0h1m4 0h1M0 22.5h1m3 0h1m1 0h2m1 0h4m1 0h2m2 0h1m1 0h1m1 0h1m2 0h3m2 0h4m1 0h2M1 23.5h1m1 0h1m1 0h1m1 0h3m1 0h4m5 0h1m2 0h2m1 0h3m2 0h2m2 0h1M1 24.5h1m1 0h2m1 0h1m1 0h2m1 0h3m1 0h1m2 0h5m1 0h3m2 0h2m3 0h1M0 25.5h1m1 0h1m4 0h1m1 0h1m3 0h1m1 0h2m8 0h1m1 0h5m2 0h1M0 26.5h1m3 0h4m2 0h2m8 0h1m1 0h1m1 0h4m3 0h2m1 0h3M0 27.5h1m7 0h3m5 0h1m4 0h1m1 0h1m4 0h3m4 0h1M0 28.5h1m1 0h3m1 0h3m1 0h2m1 0h1m3 0h1m4 0h1m1 0h3m1 0h7m1 0h1M8 29.5h1m1 0h4m2 0h2m1 0h3m1 0h1m3 0h2m3 0h2M0 30.5h7m3 0h2m2 0h4m2 0h2m3 0h1m2 0h1m1 0h1m1 0h1m1 0h3M0 31.5h1m5 0h1m1 0h3m1 0h1m3 0h7m5 0h1m3 0h2m1 0h1M0 32.5h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h1m2 0h1m2 0h1m1 0h1m3 0h8m1 0h2M0 33.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m1 0h9m1 0h1m1 0h2m2 0h1M0 34.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h1m4 0h3m1 0h1m6 0h2M0 35.5h1m5 0h1m3 0h1m3 0h2m2 0h5m4 0h4m1 0h1m3 0h1M0 36.5h7m1 0h1m2 0h1m3 0h1m1 0h3m2 0h1m1 0h3m2 0h2m1 0h2m1 0h2"/></svg>
+          </span>
+          <span class="qr-cap">scan to book</span>
+        </a>
+      </div>
+
+      <div class="wordmark"><span class="dot"></span> AI VOICE AGENCY</div>
+    </div>
+  </section>
+
+</main>
+
+<!-- chrome: nav + counter -->
+<div class="chrome">
+  <button class="nav-btn" id="prevBtn" type="button" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+  </button>
+  <div class="counter"><span id="counterCur">1</span><span class="counter-sep">/</span><span id="counterTot">8</span></div>
+  <button class="nav-btn" id="nextBtn" type="button" aria-label="Next slide">
+    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+</div>
+
+<!-- keyboard hint -->
+<div class="hint" id="hint">
+  <span><kbd>←</kbd><kbd>→</kbd> navigate</span>
+  <span><kbd>F</kbd> fullscreen</span>
+  <span><kbd>P</kbd> notes</span>
+</div>
+
+<!-- presenter notes overlay -->
+<div class="notes" id="notes" role="dialog" aria-modal="true" aria-label="Presenter notes" hidden>
+  <div class="notes-card">
+    <div class="notes-head">
+      <span class="notes-tag">PRESENTER NOTES — slide <span id="notesNum">1</span></span>
+      <button class="notes-close" id="notesClose" type="button" aria-label="Close presenter notes">✕</button>
+    </div>
+    <p class="notes-body" id="notesBody"></p>
+    <div class="notes-foot"><kbd>P</kbd> or <kbd>Esc</kbd> to close · <kbd>←</kbd><kbd>→</kbd> still navigate</div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
