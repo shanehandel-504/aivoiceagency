@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
+<meta name="theme-color" content="#0A0A0F">
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<title>How much is your phone costing you? | AI Voice Agency ROI Calculator</title>
+<meta name="description" content="Run your numbers. Most phone-heavy businesses lose 30–40% of inbound revenue to missed calls. See what it's costing you per month, per year, and over 3 years.">
+<link rel="canonical" href="https://roi.aivoiceagency.ai/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="How much is your phone costing you?">
+<meta property="og:description" content="Run the numbers. Most businesses lose 30-40% of inbound revenue.">
+<meta property="og:url" content="https://roi.aivoiceagency.ai/">
+<meta property="og:site_name" content="AI Voice Agency">
+<meta property="og:image" content="https://aivoiceagency.ai/brand/gbp-cover.png">
+<meta property="og:image:secure_url" content="https://aivoiceagency.ai/brand/gbp-cover.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1080">
+<meta property="og:image:height" content="608">
+<meta property="og:image:alt" content="AI Voice Agency — how much is your phone costing you?">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How much is your phone costing you?">
+<meta name="twitter:description" content="Run the numbers. Most businesses lose 30-40% of inbound revenue.">
+<meta name="twitter:image" content="https://aivoiceagency.ai/brand/gbp-cover.png">
+<meta name="twitter:image:alt" content="AI Voice Agency — how much is your phone costing you?">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "AI Voice Agency — Missed-Call ROI Calculator",
+  "url": "https://roi.aivoiceagency.ai/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "publisher": { "@type": "Organization", "name": "AI Voice Agency", "url": "https://aivoiceagency.ai" }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --void:#0A0A0F;
+    --panel:#0E0F17;
+    --panel-2:#12131C;
+    --matter:#EEF0F4;
+    --muted:#9aa3b6;
+    --faint:#8b93a8;
+    --cyan:#00D4FF;
+    --cyan-active:#00E5FF;
+    --cyan-soft:rgba(0,212,255,.12);
+    --line:rgba(238,240,244,.09);
+    --line-cyan:rgba(0,212,255,.22);
+    --maxw:1080px;
+    --radius:16px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    background:var(--void);
+    color:var(--matter);
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    font-weight:400;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+    padding-bottom:78px; /* room for mobile sticky CTA; reset >=768px */
+  }
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+  a{color:var(--cyan);text-decoration:none}
+  ::selection{background:var(--cyan);color:#04121a}
+
+  /* accessibility helpers */
+  .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  a:focus-visible{outline:2px solid var(--cyan-active);outline-offset:2px;border-radius:4px}
+  .btn:focus-visible{outline:2px solid var(--cyan-active);outline-offset:3px}
+  .share:focus-visible{outline:2px solid var(--cyan-active);outline-offset:2px}
+
+  /* ---------- top waveform ---------- */
+  .topwave{
+    position:absolute;
+    top:0;left:0;right:0;
+    height:140px;
+    pointer-events:none;
+    z-index:0;
+    will-change:transform,opacity;
+    -webkit-mask-image:linear-gradient(180deg,#000 35%,transparent 100%);
+            mask-image:linear-gradient(180deg,#000 35%,transparent 100%);
+  }
+  #wave{width:100%;height:100%;display:block}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px;position:relative;z-index:1}
+  section{position:relative;z-index:1}
+
+  .brandbar{
+    display:flex;align-items:center;gap:10px;
+    padding:22px 22px 0;max-width:var(--maxw);margin:0 auto;
+    position:relative;z-index:2;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan);flex:0 0 auto}
+  .brandbar .name{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500}
+
+  /* ---------- hero ---------- */
+  .hero{padding:64px 0 18px;text-align:center}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--cyan);margin-bottom:20px;opacity:.9
+  }
+  h1{
+    font-size:clamp(2.1rem,7.4vw,4rem);
+    line-height:1.04;font-weight:600;letter-spacing:-.02em;
+    max-width:14ch;margin:0 auto;
+  }
+  h1 em{font-style:italic;font-weight:400;color:var(--cyan)}
+  .subhead{
+    margin:22px auto 0;max-width:46ch;
+    font-size:clamp(1rem,2.4vw,1.18rem);color:var(--muted);font-weight:300
+  }
+  .scrollcue{margin-top:30px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+
+  /* ---------- calculator ---------- */
+  .calc{padding:44px 0 28px}
+  .panel{
+    background:linear-gradient(180deg,var(--panel),var(--void));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:clamp(22px,4vw,38px);
+  }
+  .panel-title{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:26px;font-family:'IBM Plex Mono',monospace}
+
+  .field{margin-bottom:30px}
+  .field:last-of-type{margin-bottom:6px}
+  .field-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
+  .field-head label{font-size:clamp(.95rem,2.4vw,1.05rem);font-weight:500;color:var(--matter)}
+  .field-val{display:flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-height:44px;transition:border-color .15s,box-shadow .15s}
+  .field-val:focus-within{border-color:var(--cyan-active);box-shadow:0 0 0 2px rgba(0,229,255,.4)}
+  .field-val .pre{color:var(--faint);font-family:'IBM Plex Mono',monospace;font-size:.95rem}
+  .field-val .post{color:var(--faint);font-family:'IBM Plex Mono',monospace;font-size:.95rem}
+  input.num{
+    width:5ch;background:transparent;border:none;color:var(--cyan);
+    font-family:'IBM Plex Mono',monospace;font-size:1.05rem;font-weight:600;text-align:right;
+    -moz-appearance:textfield;appearance:textfield;
+  }
+  input.num::-webkit-outer-spin-button,input.num::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input.num:focus{outline:none}
+  input.num.w-wide{width:7ch}
+
+  /* range */
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;
+    width:100%;height:8px;border-radius:8px;outline:none;cursor:pointer;
+    background:rgba(255,255,255,.1);
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;
+    background:var(--cyan);border:3px solid #06121a;
+    box-shadow:0 0 0 1px var(--cyan),0 0 16px rgba(0,212,255,.7);
+    cursor:pointer;transition:transform .12s
+  }
+  input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.12);background:var(--cyan-active)}
+  input[type=range]::-moz-range-thumb{
+    width:22px;height:22px;border-radius:50%;background:var(--cyan);border:3px solid #06121a;
+    box-shadow:0 0 0 1px var(--cyan),0 0 16px rgba(0,212,255,.7);cursor:pointer
+  }
+  input[type=range]:focus-visible{box-shadow:0 0 0 2px var(--cyan-active)}
+  /* larger touch targets on touch devices */
+  @media(pointer:coarse){
+    input[type=range]{height:10px}
+    input[type=range]::-webkit-slider-thumb{width:28px;height:28px}
+    input[type=range]::-moz-range-thumb{width:28px;height:28px}
+  }
+  .field-foot{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--faint);font-family:'IBM Plex Mono',monospace}
+
+  /* result cards */
+  .results{display:grid;grid-template-columns:1fr;gap:14px;margin-top:34px}
+  .rc{
+    background:var(--panel-2);border:1px solid var(--line);border-radius:14px;
+    padding:20px 18px;position:relative;overflow:hidden;
+  }
+  .rc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cyan);opacity:.5}
+  .rc .rc-label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .rc .rc-num{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--cyan);line-height:1.05;letter-spacing:-.01em;overflow-wrap:anywhere;word-break:break-word}
+  .rc.s1 .rc-num{font-size:clamp(1.4rem,5.5vw,2.4rem)}
+  .rc.s2 .rc-num{font-size:clamp(1.5rem,6vw,2.8rem)}
+  .rc.s2{grid-column:1 / -1}
+  .rc.hero-result{grid-column:1 / -1;background:linear-gradient(135deg,rgba(0,212,255,.10),rgba(0,212,255,.02));border-color:var(--line-cyan)}
+  .rc.hero-result::before{opacity:1;box-shadow:0 0 18px var(--cyan)}
+  .rc.hero-result .rc-num{font-size:clamp(2rem,9vw,4.4rem);text-shadow:0 0 30px rgba(0,212,255,.35)}
+  .rc.hero-result .rc-sub{margin-top:8px;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+
+  /* ---------- the fix ---------- */
+  .fix{padding:64px 0 28px;text-align:center}
+  .fix h2{font-size:clamp(1.5rem,4.5vw,2.2rem);font-weight:600;letter-spacing:-.01em;max-width:22ch;margin:0 auto}
+  .fix h2 em{font-style:italic;color:var(--cyan);font-weight:400}
+  .tiles{display:grid;grid-template-columns:1fr;gap:14px;margin-top:38px;text-align:left}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px}
+  .tile .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--cyan-soft);border:1px solid var(--line-cyan);margin-bottom:16px}
+  .tile .ic svg{width:24px;height:24px;stroke:var(--cyan);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .tile h3{font-size:1.15rem;font-weight:600;margin-bottom:6px}
+  .tile p{color:var(--muted);font-size:.95rem;font-weight:300}
+
+  /* ---------- cta ---------- */
+  .cta{padding:70px 0 40px;text-align:center}
+  .cta h2{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:600;letter-spacing:-.01em;margin-bottom:8px}
+  .cta .lead{color:var(--muted);font-weight:300;max-width:40ch;margin:0 auto 30px}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--cyan);color:#04121a;font-weight:600;font-size:1.08rem;
+    padding:17px 34px;border-radius:12px;border:none;cursor:pointer;
+    box-shadow:0 0 0 1px var(--cyan),0 10px 40px rgba(0,212,255,.35);
+    transition:transform .15s,box-shadow .15s,background .15s;font-family:inherit;
+  }
+  .btn:hover{background:var(--cyan-active);transform:translateY(-2px);box-shadow:0 0 0 1px var(--cyan-active),0 14px 50px rgba(0,212,255,.5)}
+  .btn:active{transform:translateY(0)}
+  .btn svg{width:18px;height:18px;stroke:#04121a;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .creds{margin-top:20px;font-size:13px;color:var(--faint);font-family:'IBM Plex Mono',monospace;letter-spacing:.02em}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);margin-top:30px;padding:34px 0 60px}
+  .foot-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .foot-brand{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .share{
+    display:inline-flex;align-items:center;gap:9px;background:transparent;
+    border:1px solid var(--line-cyan);color:var(--cyan);
+    padding:13px 18px;min-height:44px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:.9rem;font-weight:500;
+    transition:background .15s,border-color .15s
+  }
+  .share:hover{background:var(--cyan-soft);border-color:var(--cyan)}
+  .share svg{width:16px;height:16px;stroke:var(--cyan);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .share.copied{color:var(--cyan-active);border-color:var(--cyan-active)}
+  .disclaim{margin-top:22px;font-size:11px;color:var(--faint);max-width:60ch;line-height:1.6}
+
+  /* ---------- mobile sticky cta ---------- */
+  .sticky{
+    position:fixed;left:0;right:0;bottom:0;z-index:30;
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,rgba(10,10,15,.4),rgba(10,10,15,.96));
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-top:1px solid var(--line);
+    transform:translateY(120%);transition:transform .3s ease;
+  }
+  .sticky.show{transform:translateY(0)}
+  .sticky .btn{display:flex;width:100%;justify-content:center;padding:15px;box-shadow:0 0 0 1px var(--cyan)}
+
+  /* ---------- responsive ---------- */
+  @media(min-width:680px){
+    .results{grid-template-columns:1fr 1fr}
+    .tiles{grid-template-columns:repeat(3,1fr)}
+  }
+  @media(min-width:768px){
+    .sticky{display:none}
+    body{padding-bottom:0}
+    .hero{padding:92px 0 24px}
+    .topwave{height:170px}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+<div class="topwave" id="topwave" aria-hidden="true"><canvas id="wave"></canvas></div>
+
+<div class="brandbar">
+  <span class="dot"></span>
+  <span class="name">AI Voice Agency</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Missed-Call ROI Calculator</div>
+    <h1>How much is your phone <em>costing</em> you?</h1>
+    <p class="subhead">Most phone-heavy businesses lose 30–40% of inbound revenue to missed calls. Run your numbers.</p>
+    <div class="scrollcue">↓ move the sliders</div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="calc">
+  <div class="wrap">
+    <div class="panel">
+      <div class="panel-title">Your numbers</div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="calls">Inbound calls per month</label>
+          <span class="field-val"><input class="num w-wide" type="number" id="calls-num" inputmode="numeric" min="50" max="2000" step="10" value="300" aria-label="Inbound calls per month"></span>
+        </div>
+        <input type="range" id="calls" min="50" max="2000" step="10" value="300" aria-label="Inbound calls per month slider">
+        <div class="field-foot"><span>50</span><span>2,000</span></div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="missed">Estimated missed-call rate</label>
+          <span class="field-val"><input class="num" type="number" id="missed-num" inputmode="numeric" min="0" max="100" step="1" value="40" aria-label="Estimated missed call percentage"><span class="post">%</span></span>
+        </div>
+        <input type="range" id="missed" min="0" max="100" step="1" value="40" aria-label="Estimated missed call percentage slider">
+        <div class="field-foot"><span>0%</span><span>100%</span></div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="value">Average job / booking value</label>
+          <span class="field-val"><span class="pre">$</span><input class="num w-wide" type="number" id="value-num" inputmode="numeric" min="100" max="10000" step="50" value="850" aria-label="Average job or booking value in dollars"></span>
+        </div>
+        <input type="range" id="value" min="100" max="10000" step="50" value="850" aria-label="Average job or booking value slider">
+        <div class="field-foot"><span>$100</span><span>$10,000</span></div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="conv">Conversion rate of answered calls</label>
+          <span class="field-val"><input class="num" type="number" id="conv-num" inputmode="numeric" min="5" max="75" step="1" value="25" aria-label="Conversion rate of answered calls percentage"><span class="post">%</span></span>
+        </div>
+        <input type="range" id="conv" min="5" max="75" step="1" value="25" aria-label="Conversion rate of answered calls slider">
+        <div class="field-foot"><span>5%</span><span>75%</span></div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="results">
+        <div class="rc s1">
+          <div class="rc-label">Calls missed / month</div>
+          <div class="rc-num mono" id="r-missed">0</div>
+        </div>
+        <div class="rc s1">
+          <div class="rc-label">Lost monthly revenue</div>
+          <div class="rc-num mono" id="r-monthly">$0</div>
+        </div>
+        <div class="rc s2">
+          <div class="rc-label">Lost annual revenue</div>
+          <div class="rc-num mono" id="r-annual">$0</div>
+        </div>
+        <div class="rc hero-result">
+          <div class="rc-label">Lost over 3 years</div>
+          <div class="rc-num mono" id="r-3yr">$0</div>
+          <div class="rc-sub">at current call volume, untouched</div>
+        </div>
+      </div>
+      <div id="roi-status" role="status" aria-live="polite" class="visually-hidden"></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE FIX -->
+<section class="fix">
+  <div class="wrap">
+    <h2>AVA answers <em>every one</em> of those calls. 24/7. Books them. Writes to your CRM.</h2>
+    <div class="tiles">
+      <div class="tile">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H8l1.5 4-2 1.4a12 12 0 0 0 5.1 5.1l1.4-2 4 1.5v2.5c0 .8-.7 1.5-1.5 1.5A14.5 14.5 0 0 1 4 5.5Z"/></svg></div>
+        <h3>Answer</h3>
+        <p>Picks up on the first ring, every hour of every day. No voicemail, no missed money.</p>
+      </div>
+      <div class="tile">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/></svg></div>
+        <h3>Book</h3>
+        <p>Qualifies the caller and drops the job straight onto your calendar while they're still on the line.</p>
+      </div>
+      <div class="tile">
+        <div class="ic"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></div>
+        <h3>Log</h3>
+        <p>Writes the caller, the intent, and the outcome into your CRM — searchable, with nothing lost.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="wrap">
+    <h2>Stop paying for calls you never answer.</h2>
+    <p class="lead">Book the call to fix this. We map your phone flow and show you the recovery on real numbers.</p>
+    <a class="btn" href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" target="_blank" rel="noopener">
+      Book the strategy call
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <p class="creds">By application only. 30 yr operator · 25 in phone rooms.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="foot-brand"><span class="dot"></span> AI Voice Agency</div>
+      <button class="share" id="share" type="button" aria-label="Copy a link to this calculator">
+        <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+        <span id="share-txt">Share this calculator</span>
+      </button>
+    </div>
+    <p class="disclaim">Figures are estimates generated from the inputs you provide and are for illustration only — actual results vary by business, market, and call handling. Not a forecast or a promise of outcomes.</p>
+  </div>
+</footer>
+
+<!-- MOBILE STICKY CTA -->
+<div class="sticky" id="sticky">
+  <a class="btn" href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" target="_blank" rel="noopener">Book the strategy call</a>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- formatters ---------- */
+  var fInt = function(v){ return Math.round(v).toLocaleString('en-US'); };
+  var fUSD = function(v){ return '$' + Math.round(v).toLocaleString('en-US'); };
+  // human-readable slider values for screen readers (carry the unit)
+  var fVT = {
+    calls:  function(v){ return fInt(v) + ' calls per month'; },
+    missed: function(v){ return v + ' percent'; },
+    value:  function(v){ return fUSD(v); },
+    conv:   function(v){ return v + ' percent'; }
+  };
+  function setRangeVT(range, key, v){ range.setAttribute('aria-valuetext', fVT[key](v)); }
+
+  /* ---------- field model: two-way slider <-> number ---------- */
+  var FIELDS = ['calls','missed','value','conv'];
+  var state = { calls:300, missed:40, value:850, conv:25 };
+
+  function clamp(el, val){
+    var min = parseFloat(el.min), max = parseFloat(el.max);
+    var step = parseFloat(el.step) || 1;
+    if(isNaN(val)) val = min;
+    val = Math.min(max, Math.max(min, val));
+    return Math.round((val - min) / step) * step + min;   // snap to the field's step grid
+  }
+
+  function setFill(range){
+    var min = parseFloat(range.min), max = parseFloat(range.max);
+    var pct = ((parseFloat(range.value) - min) / (max - min)) * 100;
+    range.style.background = 'linear-gradient(90deg, var(--cyan) ' + pct + '%, rgba(255,255,255,.1) ' + pct + '%)';
+  }
+
+  FIELDS.forEach(function(key){
+    var range = document.getElementById(key);
+    var num   = document.getElementById(key + '-num');
+
+    // slider drives number + state
+    range.addEventListener('input', function(){
+      var v = parseFloat(range.value);
+      state[key] = v;
+      num.value = v;
+      setFill(range);
+      setRangeVT(range, key, v);
+      compute();
+    });
+
+    // number drives slider + state; pull out-of-range entries back in live so the box never lies
+    num.addEventListener('input', function(){
+      var raw = parseFloat(num.value);
+      if(isNaN(raw)) return;          // allow empty/partial while typing
+      var v = clamp(num, raw);
+      if(v !== raw){ num.value = v; } // over-max / under-min corrected immediately
+      state[key] = v;
+      range.value = v;
+      setFill(range);
+      setRangeVT(range, key, v);
+      compute();
+    });
+    num.addEventListener('change', function(){
+      var v = clamp(num, parseFloat(num.value));
+      num.value = v;
+      state[key] = v;
+      range.value = v;
+      setFill(range);
+      setRangeVT(range, key, v);
+      compute();
+    });
+
+    setFill(range);
+    setRangeVT(range, key, parseFloat(range.value));
+  });
+
+  /* ---------- count-up animation ---------- */
+  function animateValue(el, to, fmt){
+    var from = (typeof el._val === 'number') ? el._val : 0;
+    el._val = to;
+    if(reduceMotion || from === to || document.hidden){ el.textContent = fmt(to); return; }
+    if(el._raf) cancelAnimationFrame(el._raf);
+    var dur = 650, start = null;
+    var ease = function(t){ return 1 - Math.pow(1 - t, 3); };
+    function step(ts){
+      if(start === null) start = ts;
+      var t = Math.min(1, (ts - start) / dur);
+      el.textContent = fmt(from + (to - from) * ease(t));
+      if(t < 1){ el._raf = requestAnimationFrame(step); }
+      else { el.textContent = fmt(to); el._raf = null; }
+    }
+    el._raf = requestAnimationFrame(step);
+  }
+
+  var elMissed  = document.getElementById('r-missed');
+  var elMonthly = document.getElementById('r-monthly');
+  var elAnnual  = document.getElementById('r-annual');
+  var el3yr     = document.getElementById('r-3yr');
+
+  /* ---------- screen-reader announcement (debounced; only settled values reach AT) ---------- */
+  var roiStatus = document.getElementById('roi-status');
+  var statusTimer;
+  function announce(mc, lm, la, l3){
+    if(!roiStatus) return;
+    clearTimeout(statusTimer);
+    statusTimer = setTimeout(function(){
+      roiStatus.textContent = 'Calls missed per month ' + fInt(mc) +
+        '. Lost monthly revenue ' + fUSD(lm) +
+        '. Lost annual revenue ' + fUSD(la) +
+        '. Lost over three years ' + fUSD(l3) + '.';
+    }, 450);
+  }
+
+  /* ---------- the formula ---------- */
+  function compute(){
+    var missed_calls = state.calls * (state.missed / 100);
+    var lost_monthly = missed_calls * (state.conv / 100) * state.value;
+    var lost_annual  = lost_monthly * 12;
+    var lost_3yr     = lost_annual * 3;
+
+    animateValue(elMissed,  missed_calls, fInt);
+    animateValue(elMonthly, lost_monthly, fUSD);
+    animateValue(elAnnual,  lost_annual,  fUSD);
+    animateValue(el3yr,     lost_3yr,     fUSD);
+    announce(missed_calls, lost_monthly, lost_annual, lost_3yr);
+  }
+  compute();
+
+  /* ---------- waveform ---------- */
+  (function(){
+    var canvas = document.getElementById('wave');
+    if(!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var w = 0, h = 0, dpr = 1;
+    function size(){
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth; h = canvas.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    size();
+    window.addEventListener('resize', size);
+
+    var waves = [
+      { len:0.010, sp:0.020, amp:0.30, a:0.16, lw:1 },
+      { len:0.016, sp:-0.028, amp:0.42, a:0.22, lw:1 },
+      { len:0.024, sp:0.034, amp:0.22, a:0.55, lw:2 }
+    ];
+    var t = 0;
+    function draw(){
+      ctx.clearRect(0, 0, w, h);
+      for(var i=0;i<waves.length;i++){
+        var wv = waves[i];
+        ctx.beginPath();
+        for(var x=0;x<=w;x+=4){
+          var y = h*0.5 + Math.sin(x*wv.len + t*wv.sp + i*1.7) * h * wv.amp;
+          if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        }
+        ctx.strokeStyle = 'rgba(0,212,255,' + wv.a + ')';
+        ctx.lineWidth = wv.lw;
+        ctx.shadowColor = 'rgba(0,212,255,.6)';
+        ctx.shadowBlur = (i === waves.length-1) ? 10 : 0;
+        ctx.stroke();
+      }
+    }
+    var raf = null;
+    function frame(){
+      draw();
+      t += 1;
+      raf = document.hidden ? null : requestAnimationFrame(frame);   // pause in background tabs
+    }
+    if(reduceMotion){ draw(); }                       // single static frame, no loop
+    else if(!document.hidden){ raf = requestAnimationFrame(frame); }
+    document.addEventListener('visibilitychange', function(){
+      if(!document.hidden && !reduceMotion && !raf){ raf = requestAnimationFrame(frame); }
+    });
+  })();
+
+  /* ---------- parallax + mobile sticky cta ---------- */
+  var topwave = document.getElementById('topwave');
+  var sticky  = document.getElementById('sticky');
+  var ticking = false;
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      var y = window.pageYOffset || 0;
+      if(topwave && !reduceMotion){
+        topwave.style.transform = 'translateY(' + (y * 0.35) + 'px)';
+        topwave.style.opacity = Math.max(0, 1 - y / 220);
+      }
+      if(sticky){
+        if(y > 520) sticky.classList.add('show'); else sticky.classList.remove('show');
+      }
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  /* ---------- share / copy link ---------- */
+  var shareBtn = document.getElementById('share');
+  var shareTxt = document.getElementById('share-txt');
+  if(shareBtn){
+    shareBtn.addEventListener('click', function(){
+      var url = window.location.href;
+      var done = function(){
+        shareBtn.classList.add('copied');
+        shareTxt.textContent = 'Link copied ✓';
+        setTimeout(function(){ shareBtn.classList.remove('copied'); shareTxt.textContent = 'Share this calculator'; }, 2200);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(url).then(done, fallback);
+      } else { fallback(); }
+      function fallback(){
+        try{
+          var ta = document.createElement('textarea');
+          ta.value = url; ta.style.position='fixed'; ta.style.opacity='0';
+          document.body.appendChild(ta); ta.focus(); ta.select();
+          document.execCommand('copy'); document.body.removeChild(ta); done();
+        }catch(e){
+          shareTxt.textContent = 'Copy failed — long-press to copy';
+        }
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>
