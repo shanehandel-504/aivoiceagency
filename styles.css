@@ -781,6 +781,22 @@ body.hero-animate .hero-line-cyan.flicker {
 }
 .lcw-input:disabled { opacity: 0.6; cursor: not-allowed; }
 
+/* Business-type select — same skin as .lcw-input plus a cyan chevron.
+   Repeated on :focus because .lcw-input:focus's `background` shorthand
+   would otherwise wipe the chevron image. */
+select.lcw-select,
+select.lcw-select:focus {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2300D4FF' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+select.lcw-select:invalid { color: #5A5A66; } /* placeholder option state matches input placeholders */
+select.lcw-select option { color: var(--ink); background: #0A0A0F; }
+
 /* TCPA consent — checkbox left, statement right; CIRCULANT cyan accent. */
 .ava-consent {
   display: flex;

@@ -387,11 +387,14 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
       var statusEl = widget.querySelector('[data-lcw-status]');
       var metaEl = widget.querySelector('[data-lcw-meta]');
       var consentInput = widget.querySelector('[data-lcw-consent]');
+      var bizInput = widget.querySelector('[data-lcw-biz]');
+      var emailInput = widget.querySelector('[data-lcw-email]');
       if (!submitBtn || !submitText || !cellInput) return;
 
       var defaultMeta = metaEl ? metaEl.textContent : '';
       var idleText = submitText.textContent;
       var selectedRole = '';
+      var resetTimer = null;
 
       // Initialize selected role from .active chip (markup-driven default)
       chips.forEach(function(chip) {
@@ -419,12 +422,17 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
       }
 
       function resetIdle(delay) {
-        setTimeout(function() {
+        // One pending reset at a time — a stale timer from a failed attempt
+        // must never unlock/wipe the form while a retry POST is in flight.
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function() {
           setState('');
           submitBtn.disabled = false;
           if (nameInput) { nameInput.disabled = false; nameInput.value = ''; }
           cellInput.disabled = false;
           cellInput.value = '';
+          if (bizInput) { bizInput.disabled = false; bizInput.value = ''; }
+          if (emailInput) { emailInput.disabled = false; emailInput.value = ''; }
           // Clear consent so the next call requires a fresh, explicit tick.
           if (consentInput) { consentInput.disabled = false; consentInput.checked = false; }
           submitText.textContent = idleText;
@@ -441,6 +449,8 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         submitBtn.disabled = false;
         if (nameInput) nameInput.disabled = false;
         cellInput.disabled = false;
+        if (bizInput) bizInput.disabled = false;
+        if (emailInput) emailInput.disabled = false;
         if (consentInput) consentInput.disabled = false;
         submitText.textContent = '↻ Try again';
         setStatus(message);
@@ -452,6 +462,7 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
 
       submitBtn.addEventListener('click', function(e) {
         e.preventDefault();
+        clearTimeout(resetTimer);
         var cell = normalizeCell(cellInput.value);
         if (!isValidCell(cell)) {
           fail('Enter a real mobile number (e.g. +1 305 555 1212).');
@@ -460,6 +471,20 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         }
         if (!selectedRole) {
           fail('Pick a role above first.');
+          return;
+        }
+        // business_type is required wherever the select exists in the markup;
+        // widgets without it (other pages) keep their old contract.
+        if (bizInput && !bizInput.value) {
+          fail('Pick your business type.');
+          bizInput.focus();
+          return;
+        }
+        // email is optional — but if one was typed, it has to look like one.
+        var email = emailInput ? (emailInput.value || '').trim() : '';
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          fail('That email looks off — fix it or leave it blank.');
+          emailInput.focus();
           return;
         }
         // TCPA: explicit, per-call consent is required before any automated
@@ -481,6 +506,8 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         submitBtn.disabled = true;
         if (nameInput) nameInput.disabled = true;
         cellInput.disabled = true;
+        if (bizInput) bizInput.disabled = true;
+        if (emailInput) emailInput.disabled = true;
         if (consentInput) consentInput.disabled = true;
         submitText.textContent = 'Sending…';
         setStatus('Sending your number to AVA…');
@@ -502,11 +529,15 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         // `selected_role` is the chosen category chip. `tcpa_consent` +
         // `tcpa_consent_at` (ISO 8601, captured at submit) are the auditable
         // proof of consent that must travel with every outbound-call request.
+        // `business_type` (required select) and `email` (optional) feed the
+        // spine's retell_llm_dynamic_variables so AVA opens with real context.
         var payload = {
           first_name: name,
           phone: cell,
           source: 'aivoiceagency.ai live demo form',
           selected_role: selectedRole || '',
+          business_type: bizInput ? bizInput.value : '',
+          email: email,
           tcpa_consent: true,
           tcpa_consent_at: new Date().toISOString()
         };
@@ -561,6 +592,14 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
           if (ev.key === 'Enter') {
             ev.preventDefault();
             cellInput.focus();
+          }
+        });
+      }
+      if (emailInput) {
+        emailInput.addEventListener('keydown', function(ev) {
+          if (ev.key === 'Enter') {
+            ev.preventDefault();
+            submitBtn.click();
           }
         });
       }
