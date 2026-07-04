@@ -9,6 +9,10 @@
   --ink-mute: #808088;
   --cyan: #00D4FF;
   --cyan-bright: #00E5FF;
+  --violet: #8B5CF6;
+  --violet-bright: #A78BFA;
+  --gold: #FFB800;
+  --live-green: #22C55E;
   --line: rgba(255,255,255,0.10);
   --line-strong: rgba(0,212,255,0.40);
   --font-display: 'Space Grotesk', system-ui, sans-serif;
@@ -728,6 +732,14 @@ body.hero-animate .hero-line-cyan.flicker {
 
 .lcw-header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
 .lcw-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); }
+.lcw-label--live { color: var(--live-green); display: inline-flex; align-items: center; }
+.lcw-live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--live-green); margin-right: 8px; box-shadow: 0 0 8px rgba(34,197,94,0.75); animation: lcwLivePulse 2s ease-in-out infinite; }
+@keyframes lcwLivePulse { 0%, 100% { box-shadow: 0 0 6px rgba(34,197,94,0.5); opacity: 0.85; } 50% { box-shadow: 0 0 14px rgba(34,197,94,0.95); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .lcw-live-dot { animation: none; } }
+.see-pricing-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 3px; transition: color 0.15s, border-color 0.15s; }
+.see-pricing-link:hover, .see-pricing-link:focus-visible { color: #FFC94D; border-bottom-color: var(--gold); }
+.see-pricing-link .sp-arrow { color: var(--gold); transition: transform 0.15s; }
+.see-pricing-link:hover .sp-arrow { transform: translateX(3px); }
 .lcw-status { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-mute); }
 .live-call-widget.is-calling .lcw-status,
 .live-call-widget.is-connected .lcw-status { color: var(--cyan-bright); }

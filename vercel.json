@@ -3,8 +3,38 @@
     {
       "has": [{ "type": "host", "value": "book.aivoiceagency.ai" }],
       "source": "/",
-      "destination": "/now",
-      "permanent": false
+      "destination": "https://aivoiceagency.ai/book",
+      "permanent": true
+    },
+    {
+      "has": [{ "type": "host", "value": "book.aivoiceagency.ai" }],
+      "source": "/:path*",
+      "destination": "https://aivoiceagency.ai/book",
+      "permanent": true
+    },
+    {
+      "has": [{ "type": "host", "value": "roi.aivoiceagency.ai" }],
+      "source": "/",
+      "destination": "https://aivoiceagency.ai/roi",
+      "permanent": true
+    },
+    {
+      "has": [{ "type": "host", "value": "roi.aivoiceagency.ai" }],
+      "source": "/:path*",
+      "destination": "https://aivoiceagency.ai/roi",
+      "permanent": true
+    },
+    {
+      "has": [{ "type": "host", "value": "deck.aivoiceagency.ai" }],
+      "source": "/",
+      "destination": "https://aivoiceagency.ai/deck",
+      "permanent": true
+    },
+    {
+      "has": [{ "type": "host", "value": "deck.aivoiceagency.ai" }],
+      "source": "/:path*",
+      "destination": "https://aivoiceagency.ai/deck",
+      "permanent": true
     },
     {
       "has": [{ "type": "host", "value": "aivoiceagency.ai" }],
@@ -56,26 +86,6 @@
     }
   ],
   "rewrites": [
-    {
-      "has": [{ "type": "host", "value": "book.aivoiceagency.ai" }],
-      "source": "/:path*",
-      "destination": "/book/index.html"
-    },
-    {
-      "has": [{ "type": "host", "value": "roi.aivoiceagency.ai" }],
-      "source": "/:path*",
-      "destination": "/roi/index.html"
-    },
-    {
-      "has": [{ "type": "host", "value": "deck.aivoiceagency.ai" }],
-      "source": "/",
-      "destination": "/deck/index.html"
-    },
-    {
-      "has": [{ "type": "host", "value": "deck.aivoiceagency.ai" }],
-      "source": "/:path*",
-      "destination": "/deck/:path*"
-    },
     { "source": "/overview", "destination": "/overview.html" },
     { "source": "/overview/", "destination": "/overview.html" },
     { "source": "/book", "destination": "/book/index.html" },
