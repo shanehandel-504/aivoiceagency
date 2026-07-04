@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0A0A0F">
+
+<title>Book a Demo — AI Voice Agency</title>
+<meta name="description" content="Book your AVA demo — 20 minutes, live on your line. Pick a slot and we call you on your own number so you hear AVA exactly the way your callers will.">
+<link rel="canonical" href="https://aivoiceagency.ai/book">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Book a Demo — AI Voice Agency">
+<meta property="og:description" content="Book your AVA demo — 20 minutes, live on your line.">
+<meta property="og:url" content="https://aivoiceagency.ai/book">
+<meta property="og:site_name" content="AI Voice Agency">
+<meta property="og:image" content="https://aivoiceagency.ai/og-aivoiceagency.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Book a Demo — AI Voice Agency">
+<meta name="twitter:description" content="Book your AVA demo — 20 minutes, live on your line.">
+
+<!-- Inline favicon: book.aivoiceagency.ai rewrites every path to this page, so no external asset requests -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%2300D4FF'/%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%2300D4FF' stroke-opacity='.35' stroke-width='2'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --void: #0A0A0F;
+    --matter: #EEF0F4;
+    --cyan: #00D4FF;
+    --cyan-active: #00E5FF;
+    --dim: rgba(238, 240, 244, 0.64);
+    --line: rgba(238, 240, 244, 0.10);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { background: var(--void); }
+  body {
+    background: var(--void);
+    color: var(--matter);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Atmosphere — layered signal glow + fine grain */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 42% at 50% -8%, rgba(0, 212, 255, 0.14), transparent 70%),
+      radial-gradient(ellipse 50% 34% at 82% 108%, rgba(0, 212, 255, 0.06), transparent 70%);
+  }
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  /* Header */
+  .top {
+    padding: 40px 0 8px;
+    text-align: center;
+  }
+  .mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--matter);
+    text-decoration: none;
+  }
+  .mark:hover { color: var(--cyan-active); }
+  .signal {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 14px rgba(0, 212, 255, 0.8);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 212, 255, 0.55); }
+    50% { box-shadow: 0 0 22px rgba(0, 212, 255, 0.95); }
+  }
+
+  h1 {
+    margin-top: 32px;
+    font-size: clamp(30px, 7.5vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .sub {
+    margin: 12px auto 0;
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: 300;
+    color: var(--dim);
+    max-width: 460px;
+  }
+  .sub strong { font-weight: 600; color: var(--matter); }
+
+  /* Glass card around the calendar */
+  .card {
+    margin: 36px auto 0;
+    padding: 8px;
+    border-radius: 24px;
+    border: 1px solid rgba(0, 212, 255, 0.22);
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.5),
+      0 0 90px rgba(0, 212, 255, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  @supports not (backdrop-filter: blur(18px)) {
+    .card { background: rgba(16, 18, 26, 0.94); }
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px 14px;
+  }
+  .card-head .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--cyan);
+  }
+  .card-head .tz {
+    font-size: 12px;
+    color: var(--dim);
+    white-space: nowrap;
+  }
+  .widget-shell {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #FFFFFF;
+    min-height: 900px;
+  }
+  .widget-shell::before {
+    content: "Loading your calendar…";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: #5A6472;
+  }
+  .widget-shell iframe { position: relative; display: block; }
+
+  /* Alt path */
+  .alt {
+    margin: 28px auto 0;
+    text-align: center;
+    font-size: 15px;
+    color: var(--dim);
+    max-width: 480px;
+  }
+  .alt a {
+    color: var(--cyan);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .alt a:hover { color: var(--cyan-active); }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    margin-top: 56px;
+    padding: 28px 16px 40px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--dim);
+    border-top: 1px solid var(--line);
+  }
+  footer a { color: var(--cyan); text-decoration: none; }
+  footer a:hover { color: var(--cyan-active); }
+
+  /* Entrance — one staggered reveal */
+  @media (prefers-reduced-motion: no-preference) {
+    .top, .card, .alt {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .card { animation-delay: 0.12s; }
+    .alt { animation-delay: 0.24s; }
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+
+  @media (min-width: 768px) {
+    .top { padding-top: 64px; }
+    .card { padding: 14px; }
+    .card-head { padding: 14px 18px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="https://aivoiceagency.ai"><span class="signal" aria-hidden="true"></span>AI Voice Agency</a>
+    <h1>Book your AVA demo</h1>
+    <p class="sub"><strong>20 minutes, live on your line.</strong> Pick a slot — we call you, so you hear AVA exactly the way your callers will.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="card">
+    <div class="card-head">
+      <span class="label">Pick your time</span>
+      <span class="tz">Times shown in your timezone</span>
+    </div>
+    <div class="widget-shell">
+      <iframe src="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg"
+        style="width:100%;border:none;min-height:900px" scrolling="no"
+        id="aCIv7rUnCGrysobt6Mlg_booking" title="AVA demo scheduling calendar"></iframe>
+    </div>
+  </div>
+
+  <p class="alt">Want to hear AVA before you pick a time? Call the live demo line — <a href="tel:+14142408930">414-240-8930</a>.</p>
+</main>
+
+<footer>
+  AI Voice Agency &middot; <a href="https://aivoiceagency.ai">aivoiceagency.ai</a>
+</footer>
+
+<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+</body>
+</html>

@@ -66,7 +66,7 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
   // detected and silently no-ops on unsupported platforms. Visual fallback
   // (.tap-feedback class) works everywhere via CSS keyframe; if a Signal
   // Stack V2 sits near the button, it gets a one-shot sweep.
-  var HAPTIC_SELECTOR = 'a[href*="leadconnectorhq.com"], a[href^="tel:"], .cta-primary, .btn-primary, .btn-ghost, .contact-cta-btn, .demo-phone';
+  var HAPTIC_SELECTOR = 'a[href*="leadconnectorhq.com"], a[href*="book.aivoiceagency.ai"], a[href^="tel:"], .cta-primary, .btn-primary, .btn-ghost, .contact-cta-btn, .demo-phone';
   document.addEventListener('pointerdown', function(e) {
     var btn = e.target.closest(HAPTIC_SELECTOR);
     if (!btn) return;

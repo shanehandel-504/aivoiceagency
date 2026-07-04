@@ -1,18 +1,6 @@
 {
   "redirects": [
     {
-      "has": [{ "type": "host", "value": "book.aivoiceagency.ai" }],
-      "source": "/",
-      "destination": "https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg",
-      "permanent": false
-    },
-    {
-      "has": [{ "type": "host", "value": "book.aivoiceagency.ai" }],
-      "source": "/:path*",
-      "destination": "https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg",
-      "permanent": false
-    },
-    {
       "has": [{ "type": "host", "value": "aivoiceagency.ai" }],
       "source": "/chauffeur",
       "destination": "https://aichauffeur.ai/",
@@ -63,6 +51,16 @@
   ],
   "rewrites": [
     {
+      "has": [{ "type": "host", "value": "book.aivoiceagency.ai" }],
+      "source": "/",
+      "destination": "/book/index.html"
+    },
+    {
+      "has": [{ "type": "host", "value": "book.aivoiceagency.ai" }],
+      "source": "/:path*",
+      "destination": "/book/index.html"
+    },
+    {
       "has": [{ "type": "host", "value": "roi.aivoiceagency.ai" }],
       "source": "/:path*",
       "destination": "/roi/index.html"
@@ -79,6 +77,8 @@
     },
     { "source": "/overview", "destination": "/overview.html" },
     { "source": "/overview/", "destination": "/overview.html" },
+    { "source": "/book", "destination": "/book/index.html" },
+    { "source": "/book/", "destination": "/book/index.html" },
     { "source": "/chauffeur", "destination": "/chauffeur/index.html" },
     { "source": "/chauffeur/", "destination": "/chauffeur/index.html" },
     { "source": "/ground-transportation", "destination": "/ground-transportation/index.html" },

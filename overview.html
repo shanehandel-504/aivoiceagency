@@ -21,8 +21,12 @@
     --cyan-active: #00E5FF;
     --dim: rgba(238, 240, 244, 0.64);
     --line: rgba(238, 240, 244, 0.10);
+    --violet: #8B5CF6;
+    --violet-bright: #A78BFA;
+    --gold: #FFB800;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { overflow-x: hidden; }
   body {
     background: var(--void);
     color: var(--matter);
@@ -30,6 +34,7 @@
     font-weight: 400;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
   .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
@@ -86,6 +91,9 @@
     border: 1px solid var(--line);
     border-radius: 12px;
     font-size: 17px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
   }
   .does li::before {
     content: "";
@@ -98,16 +106,82 @@
     box-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
   }
 
-  /* Pricing */
-  .tiers { display: grid; gap: 24px; grid-template-columns: 1fr; max-width: 1080px; margin: 0 auto; }
+  /* Pricing — glass tiers */
+  .tiers {
+    display: grid;
+    gap: 28px;
+    grid-template-columns: 1fr;
+    max-width: 1080px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .tiers::before {
+    content: "";
+    position: absolute;
+    inset: -90px 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 52% 54% at 50% 44%, rgba(139, 92, 246, 0.16), transparent 70%),
+      radial-gradient(ellipse 74% 64% at 50% 56%, rgba(0, 212, 255, 0.07), transparent 72%);
+  }
   .tier {
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 32px 28px;
+    --accent: var(--cyan);
+    --accent-line: rgba(0, 212, 255, 0.45);
+    --accent-soft: rgba(0, 212, 255, 0.10);
+    --accent-glow: rgba(0, 212, 255, 0.35);
+    position: relative;
+    border: 1px solid rgba(0, 212, 255, 0.20);
+    border-radius: 20px;
+    padding: 36px 28px 28px;
     display: flex;
     flex-direction: column;
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.07);
   }
-  .tier.featured { border-color: rgba(0, 212, 255, 0.45); background: rgba(0, 212, 255, 0.04); }
+  @supports not (backdrop-filter: blur(18px)) {
+    .tier { background: rgba(17, 19, 27, 0.93); }
+    .does li { background: rgba(17, 19, 27, 0.93); }
+  }
+  .tier-2 {
+    --accent: var(--violet);
+    --accent-line: rgba(139, 92, 246, 0.55);
+    --accent-soft: rgba(139, 92, 246, 0.12);
+    --accent-glow: rgba(139, 92, 246, 0.40);
+    border-color: rgba(139, 92, 246, 0.50);
+  }
+  .tier-3 {
+    --accent: var(--gold);
+    --accent-line: rgba(255, 184, 0, 0.45);
+    --accent-soft: rgba(255, 184, 0, 0.09);
+    --accent-glow: rgba(255, 184, 0, 0.30);
+    border-color: rgba(255, 184, 0, 0.22);
+  }
+  .tier.featured {
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.05));
+    box-shadow:
+      0 24px 80px rgba(0, 0, 0, 0.5),
+      0 0 70px rgba(139, 92, 246, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    z-index: 1;
+  }
+  .badge {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: var(--violet);
+    color: var(--void);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 0 24px rgba(139, 92, 246, 0.55);
+  }
   .tier .label {
     font-size: 12px;
     font-weight: 600;
@@ -118,16 +192,73 @@
   }
   .tier .price { font-size: 32px; font-weight: 700; line-height: 1.2; }
   .tier .setup { font-size: 15px; color: var(--dim); margin-bottom: 24px; }
-  .tier ul { list-style: none; display: grid; gap: 10px; font-size: 15px; }
-  .tier ul li { padding-left: 22px; position: relative; color: var(--matter); }
-  .tier ul li::before { content: "·"; position: absolute; left: 6px; color: var(--cyan); font-weight: 700; }
+  .tier ul { list-style: none; display: grid; gap: 10px; font-size: 15px; flex: 1; align-content: start; }
+  .tier ul li { padding-left: 28px; position: relative; color: var(--matter); }
+  .tier ul li::before {
+    content: "\2713";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: rgba(0, 212, 255, 0.10);
+    color: var(--cyan);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 17px;
+    text-align: center;
+  }
   .tier .live {
     margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
-    font-size: 14px;
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 212, 255, 0.28);
+    background: rgba(0, 212, 255, 0.07);
+    font-size: 13px;
     font-weight: 600;
     color: var(--cyan);
+  }
+  .tier .live::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
+  }
+  .tier-cta {
+    margin-top: 16px;
+    display: block;
+    text-align: center;
+    padding: 13px 20px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--accent);
+    border: 1px solid var(--accent-line);
+    background: var(--accent-soft);
+    transition: all 0.2s ease;
+  }
+  .tier-cta:hover {
+    background: var(--accent);
+    color: var(--void);
+    box-shadow: 0 0 32px var(--accent-glow);
+  }
+  .tier.featured .tier-cta {
+    background: var(--violet);
+    color: var(--void);
+    border-color: var(--violet);
+  }
+  .tier.featured .tier-cta:hover {
+    background: var(--violet-bright);
+    border-color: var(--violet-bright);
+    box-shadow: 0 0 40px var(--accent-glow);
   }
 
   /* CTA */
@@ -160,7 +291,8 @@
   @media (min-width: 768px) {
     .hero { padding: 128px 0 80px; }
     section { padding: 80px 0; }
-    .tiers { grid-template-columns: repeat(3, 1fr); }
+    .tiers { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
+    .tier.featured { transform: scale(1.045); }
   }
 </style>
 </head>
@@ -190,7 +322,7 @@
   <div class="wrap">
     <h2 class="kicker">Pricing</h2>
     <div class="tiers">
-      <div class="tier">
+      <div class="tier tier-1">
         <div class="label">Tier 1</div>
         <div class="price">$497/mo</div>
         <div class="setup">+ $497 setup</div>
@@ -202,8 +334,10 @@
           <li>English</li>
         </ul>
         <div class="live">Live in 24&ndash;72 hours</div>
+        <a class="tier-cta" href="https://book.aivoiceagency.ai">Book a demo</a>
       </div>
-      <div class="tier featured">
+      <div class="tier tier-2 featured">
+        <span class="badge">Most Popular</span>
         <div class="label">Tier 2</div>
         <div class="price">$997/mo</div>
         <div class="setup">+ $997 setup</div>
@@ -215,8 +349,9 @@
           <li>We clone your best receptionist's voice</li>
         </ul>
         <div class="live">Live in 5&ndash;7 days</div>
+        <a class="tier-cta" href="https://book.aivoiceagency.ai">Book a demo</a>
       </div>
-      <div class="tier">
+      <div class="tier tier-3">
         <div class="label">Tier 3</div>
         <div class="price">Custom</div>
         <div class="setup">from $1,500/mo</div>
@@ -228,6 +363,7 @@
           <li>Scoped on the kickoff call</li>
         </ul>
         <div class="live">Live in 2&ndash;4 weeks</div>
+        <a class="tier-cta" href="https://book.aivoiceagency.ai">Scope it on a call</a>
       </div>
     </div>
   </div>
