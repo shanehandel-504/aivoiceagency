@@ -345,6 +345,21 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     }
     window.addEventListener('scroll', updateStickyCta, { passive: true });
     updateStickyCta();
+
+    // Block T: where the page has BOTH the sticky bar and the live-call form,
+    // hide the bar whenever any part of the form is in view so its own submit
+    // button can't be mistaken for the floating CTA. Restores on exit. The CSS
+    // (.form-hidden) uses a 200ms opacity fade, instant under reduced-motion.
+    var liveCallForm = document.getElementById('live-call');
+    if (liveCallForm && 'IntersectionObserver' in window) {
+      var formIo = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) stickyCta.classList.add('form-hidden');
+          else stickyCta.classList.remove('form-hidden');
+        });
+      }, { threshold: 0 });
+      formIo.observe(liveCallForm);
+    }
   }
 
   // LIVE CALL WIDGET — hero lead-capture form. Picks a role, takes a

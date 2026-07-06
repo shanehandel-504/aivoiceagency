@@ -187,6 +187,10 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .tier-position { font-family: var(--font-body); font-size: 14px; color: var(--ink-mute); margin-bottom: 32px; flex-grow: 1; }
 .tier-cta { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); display: inline-flex; align-items: center; gap: 8px; border-bottom: 1px solid transparent; padding-bottom: 4px; transition: border-color 0.15s; align-self: flex-start; }
 .tier-cta:hover { border-bottom-color: var(--cyan); }
+/* Block T: featured (MOST POPULAR) tier — violet, matches /overview */
+.tier.tier-featured { position: relative; border-color: rgba(139,92,246,0.45); box-shadow: 0 0 40px rgba(139,92,246,0.10); }
+.tier.tier-featured:hover { border-color: var(--violet); box-shadow: inset 0 0 24px rgba(139,92,246,0.14), 0 0 32px rgba(139,92,246,0.22); }
+.tier-badge { position: absolute; top: -10px; left: 24px; }
 
 /* 04. OPERATOR */
 .operator-grid { display: grid; grid-template-columns: 60% 1fr; gap: 64px; align-items: start; }
@@ -522,8 +526,11 @@ body.hero-animate .hero-line-cyan.flicker {
 .demo-phone *, .phone-cta-module .phone-link * { pointer-events: auto; }
 
 /* MOBILE STICKY CTA — floating */
-#mobile-cta { position: fixed; bottom: calc(12px + env(safe-area-inset-bottom)); left: 12px; right: 12px; background: rgba(0,212,255,0.95); color: var(--void); text-align: center; padding: 14px 16px; font-family: var(--font-mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; z-index: 100; border-radius: 6px; box-shadow: 0 4px 24px rgba(0,212,255,0.35), 0 0 0 1px rgba(0,212,255,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom))); transition: transform 0.3s ease-out; display: none; }
+#mobile-cta { position: fixed; bottom: calc(12px + env(safe-area-inset-bottom)); left: 12px; right: 12px; background: rgba(0,212,255,0.95); color: var(--void); text-align: center; padding: 14px 16px; font-family: var(--font-mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; z-index: 100; border-radius: 6px; box-shadow: 0 4px 24px rgba(0,212,255,0.35), 0 0 0 1px rgba(0,212,255,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom))); transition: transform 0.3s ease-out, opacity 0.2s ease; display: none; }
 #mobile-cta.visible { transform: translateY(0); }
+/* Block T: hide the sticky bar while the live-call form is in view (toggled by site.js) so it can't collide with the form's own submit button */
+#mobile-cta.form-hidden { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { #mobile-cta { transition: none; } }
 #mobile-cta a { color: var(--void); text-decoration: none; display: block; }
 @media (max-width: 768px) { #mobile-cta { display: block; } }
 
@@ -1008,6 +1015,8 @@ select.lcw-select option { color: var(--ink); background: #0A0A0F; }
 .capability-block.flagship { border-top-color: var(--cyan); border-left-color: var(--cyan); }
 .capability-block-num { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 14px; }
 .capability-block-title { font-family: var(--font-display); font-weight: 600; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); margin-bottom: 12px; }
+/* Block T: minimal inline capability glyphs — 20px, cyan stroke, no fill */
+.cap-glyph { display: inline-block; width: 20px; height: 20px; fill: none; stroke: var(--cyan); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; vertical-align: -3px; margin-right: 10px; }
 .capability-block-body { font-family: var(--font-body); font-size: 14px; line-height: 1.55; color: var(--ink-mute); }
 .capability-block-body strong { color: var(--ink); font-weight: 600; }
 .capability-tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--void); background: var(--cyan); padding: 3px 8px; border-radius: 2px; margin-left: 8px; vertical-align: middle; }
