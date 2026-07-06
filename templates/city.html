@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!-- ============================================================================
+     CIRCULANT PAGE TEMPLATE — CITY × INDUSTRY (local landing page)
+     ----------------------------------------------------------------------------
+     Copy this file to  /<city>-<industry>/index.html  (e.g. /green-bay-hvac/).
+     Fill every {{PLACEHOLDER}}. Canon is already baked in:
+       · /assets/circulant.css + /styles.css  (tokens + semantic colors)
+       · Booking CTA        -> /book
+       · Demo phone (tel:)  -> +14142408930   (display: (414) 240-8930)
+       · Pricing CTA        -> /overview       (gold .see-pricing-link)
+       · ROI CTA            -> /roi
+       · Industry hub       -> /ground-transportation  (never /transportation)
+     Semantic color law: green=live · gold=money · violet=featured · cyan=else.
+     Do NOT hardcode hex — the classes below already carry the tokens.
+     ============================================================================ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
+<meta name="theme-color" content="#0A0A0F">
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<title>{{TITLE — e.g. AI Receptionist for Green Bay HVAC — No-Heat Nights | AVA}}</title>
+<meta name="description" content="{{META_DESCRIPTION — 150–160 chars, end with: Demo: 414-240-8930.}}">
+<link rel="canonical" href="https://aivoiceagency.ai/{{CITY_SLUG}}-{{INDUSTRY_SLUG}}">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{META_DESCRIPTION}}">
+<meta property="og:url" content="https://aivoiceagency.ai/{{CITY_SLUG}}-{{INDUSTRY_SLUG}}">
+<meta property="og:site_name" content="AI Voice Agency">
+<meta property="og:image" content="https://aivoiceagency.ai/og-image.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{TITLE}}">
+<meta name="twitter:description" content="{{META_DESCRIPTION}}">
+<meta name="twitter:image" content="https://aivoiceagency.ai/og-image.png">
+
+<!-- LocalBusiness + Service + Breadcrumb + FAQ schema. Keep telephone +1-414-240-8930. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "AI Voice Agency — {{CITY}} {{INDUSTRY}}",
+  "url": "https://aivoiceagency.ai/{{CITY_SLUG}}-{{INDUSTRY_SLUG}}",
+  "telephone": "+1-414-240-8930",
+  "address": { "@type": "PostalAddress", "addressLocality": "Kewaskum", "addressRegion": "WI", "addressCountry": "US" },
+  "areaServed": [ { "@type": "City", "name": "{{CITY}}" }{{ADDITIONAL_AREAS — , { "@type": "Place", "name": "Neighborhood" }}} ],
+  "priceRange": "$497-$1997+"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aivoiceagency.ai/" },
+    { "@type": "ListItem", "position": 2, "name": "{{CITY}}", "item": "https://aivoiceagency.ai/{{CITY_SLUG}}" },
+    { "@type": "ListItem", "position": 3, "name": "{{CITY}} {{INDUSTRY}}", "item": "https://aivoiceagency.ai/{{CITY_SLUG}}-{{INDUSTRY_SLUG}}" }
+  ]
+}
+</script>
+<!-- {{FAQ_SCHEMA — mirror the 4 on-page FAQ Q&As here as a FAQPage block}} -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/circulant.css">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<nav class="main-nav">
+  <div class="nav-left">
+    <span class="nav-signal-dot" aria-hidden="true"></span>
+    <span class="nav-signal-label" aria-hidden="true">// SIGNAL</span>
+    <a href="/" class="logo">AI VOICE <span class="accent">AGENCY</span></a>
+  </div>
+  <ul id="navLinks">
+    <li><a href="#pain">01 Missed Calls</a></li>
+    <li><a href="#math">02 The Math</a></li>
+    <li><a href="#faq">03 FAQ</a></li>
+    <li><a href="#contact">04 Contact</a></li>
+  </ul>
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">Menu &rarr;</button>
+</nav>
+
+<main>
+
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="section-label">// {{CITY_UPPER}} &times; {{INDUSTRY_UPPER}}</div>
+    <h1><span class="hero-line">{{HERO_LINE_1}}</span><span class="hero-line">{{HERO_LINE_2}}</span><span class="hero-line"><span class="accent hero-line-cyan">{{HERO_ACCENT}}</span></span><span class="hero-line">{{HERO_LINE_4}}</span></h1>
+    <p class="hero-sub">{{HERO_SUB — one tight paragraph naming real neighborhoods and the local failure mode.}}</p>
+    <div class="hero-founder-line">// Built in Wisconsin &middot; {{FOUNDER_LINE}}</div>
+    <div class="hero-ctas">
+      <a href="/book" target="_blank" rel="noopener" class="btn-primary cta-primary">&rarr; Scope My Setup</a>
+      <a href="tel:+14142408930" class="btn-outline cta-primary">&rarr; Hear AVA Live</a>
+      <a href="/roi" class="btn-secondary">Run Your Numbers &rarr;</a>
+    </div>
+    <a href="/overview" class="see-pricing-link">See pricing <span class="sp-arrow" aria-hidden="true">&rarr;</span></a>
+  </div>
+  <aside class="hero-meta">
+    <div class="meta-block">
+      <div class="meta-label">// Service Area</div>
+      <div class="meta-value">{{SERVICE_AREA}}</div>
+    </div>
+    <div class="meta-block">
+      <div class="meta-label">// Built For</div>
+      <div class="meta-value">{{BUILT_FOR}}</div>
+    </div>
+    <div class="meta-block">
+      <div class="meta-label">// Coverage</div>
+      <div class="meta-value">24/7 &middot; {{COVERAGE_NOTES}}</div>
+    </div>
+  </aside>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="pain">
+  <div class="section-label">// 01 &#9472;&#9472; MISSED-CALL SCENARIOS</div>
+  <h2 class="section-title">{{PAIN_HEADLINE — e.g. Three ways {{CITY}} {{INDUSTRY}} shops bleed calls.}}</h2>
+  <div class="pain-list">
+    <div class="pain-row"><span class="marker">[01]</span><span class="pain-text">{{PAIN_1 — a concrete local scenario with a dollar outcome.}}</span></div>
+    <div class="pain-row"><span class="marker">[02]</span><span class="pain-text">{{PAIN_2}}</span></div>
+    <div class="pain-row"><span class="marker">[03]</span><span class="pain-text">{{PAIN_3}}</span></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="math">
+  <div class="section-label">// 02 &#9472;&#9472; THE MISSED-CALL MATH</div>
+  <div class="operator-grid">
+    <div>
+      <h2 class="operator-headline">{{MATH_HEADLINE — 3 short lines with <br>}}</h2>
+      <div class="operator-body">
+        <p>{{MATH_P1 — real local rates; state your assumptions.}}</p>
+        <p>{{MATH_P2 — the conservative arithmetic on missed calls.}}</p>
+        <p>Assumptions, stated plainly, for you to challenge. The calculator will do the same arithmetic with your call log and your rates.</p>
+      </div>
+    </div>
+    <div class="operator-stats">
+      <div class="stat-block"><div class="stat-label">// {{STAT_1_LABEL}}</div><div class="stat-value">{{STAT_1_VALUE}}</div></div>
+      <div class="stat-block"><div class="stat-label">// {{STAT_2_LABEL}}</div><div class="stat-value">{{STAT_2_VALUE}}</div></div>
+      <div class="stat-block"><div class="stat-label">// {{STAT_3_LABEL}}</div><div class="stat-value">{{STAT_3_VALUE}}</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" style="padding-top: 60px; padding-bottom: 60px;">
+  <div class="phone-cta-module">
+    <div class="kicker">// HEAR AVA RUN A {{INDUSTRY_UPPER}} INTAKE</div>
+    <a href="tel:+14142408930" class="phone-link cta-primary">
+      <span class="phone-arrow">&rarr;</span>
+      <span>(414) 240-8930</span>
+      <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
+    </a>
+    <!-- gold=money, green=live: the "Hear AVA now" tag reads live-status green via .live -->
+    <div class="phone-sub">Live demo &middot; <span class="live">Hear AVA now</span></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="faq">
+  <div class="section-label">// 03 &#9472;&#9472; COMMON QUESTIONS</div>
+  <h2 class="section-title">{{FAQ_HEADLINE}}</h2>
+  <div class="faq-grid">
+    <div class="faq-item"><div class="faq-num">[01]</div><h3 class="faq-q">{{FAQ_Q1}}</h3><p class="faq-a">{{FAQ_A1}}</p></div>
+    <div class="faq-item"><div class="faq-num">[02]</div><h3 class="faq-q">{{FAQ_Q2}}</h3><p class="faq-a">{{FAQ_A2}}</p></div>
+    <div class="faq-item"><div class="faq-num">[03]</div><h3 class="faq-q">{{FAQ_Q3}}</h3><p class="faq-a">{{FAQ_A3}}</p></div>
+    <div class="faq-item"><div class="faq-num">[04]</div><h3 class="faq-q">{{FAQ_Q4}}</h3><p class="faq-a">{{FAQ_A4}}</p></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="contact">
+  <div class="section-label">// 04 &#9472;&#9472; READY?</div>
+  <h2 class="contact-headline">Let's scope it.</h2>
+  <p class="contact-sub">{{CONTACT_SUB}}</p>
+  <div class="contact-grid">
+    <div class="contact-block">
+      <div class="contact-block-label">// Call demo</div>
+      <span class="phone-with-bars">
+        <a href="tel:+14142408930" class="contact-phone">(414) 240-8930</a>
+        <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
+      </span>
+      <p class="contact-text">Live demo line. Hear AVA answer a real call flow.</p>
+      <div class="system-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="status-badge" class="status-text">// SYSTEM ONLINE &#9472; CALL LINE ACTIVE</span>
+      </div>
+    </div>
+    <div class="contact-block">
+      <div class="contact-block-label">// Scope my setup</div>
+      <p class="contact-text">Twenty minutes at aivoiceagency.ai/book. We map your call flow, handoff rules, and where AVA routes each request.</p>
+      <a href="/book" target="_blank" rel="noopener" class="contact-cta-btn cta-primary">Open Calendar &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- Silo links: city hub + industry hub + one nearby trade. Keeps the internal mesh tight. -->
+<div class="cross-links">
+  <a href="/{{CITY_SLUG}}" class="cross-link-card"><div class="label">// City hub</div><div class="title">{{CITY}}</div><div class="arrow">All {{CITY}} trades &rarr;</div></a>
+  <a href="/{{INDUSTRY_HUB_SLUG}}" class="cross-link-card"><div class="label">// Industry hub</div><div class="title">{{INDUSTRY_HUB_NAME}}</div><div class="arrow">The full playbook &rarr;</div></a>
+  <a href="/{{NEARBY_SLUG}}" class="cross-link-card"><div class="label">// Nearby trade</div><div class="title">{{NEARBY_NAME}}</div><div class="arrow">{{NEARBY_TAG}} &rarr;</div></a>
+</div>
+
+</main>
+
+<footer class="main-footer">
+  <div class="footer-rail">
+    <div class="rail-section">
+      <div class="rail-label">// Verticals</div>
+      <div class="rail-items">
+        <a href="/professional-services">Professional Services</a><span class="rail-arrow">&rarr;</span>
+        <a href="/home-services">Home Services</a><span class="rail-arrow">&rarr;</span>
+        <a href="/medical-practices">Medical Practices</a><span class="rail-arrow">&rarr;</span>
+        <a href="/ground-transportation">Ground Transportation</a><span class="rail-arrow">&rarr;</span>
+        <a href="/hospitality">Hospitality &amp; Events</a>
+      </div>
+    </div>
+    <div class="rail-section">
+      <div class="rail-label">// Wisconsin</div>
+      <div class="rail-items">
+        <a href="/milwaukee">Milwaukee</a><span class="rail-arrow">&rarr;</span>
+        <a href="/madison">Madison</a><span class="rail-arrow">&rarr;</span>
+        <a href="/green-bay">Green Bay</a><span class="rail-arrow">&rarr;</span>
+        <span class="rail-disabled">West Bend</span><span class="rail-arrow">&rarr;</span>
+        <span class="rail-disabled">Kewaskum</span>
+      </div>
+    </div>
+    <div class="rail-section">
+      <div class="rail-label">// Resources</div>
+      <div class="rail-items">
+        <a href="/methodology.html">Methodology</a><span class="rail-arrow">&rarr;</span>
+        <a href="/roi">ROI Calculator</a><span class="rail-arrow">&rarr;</span>
+        <a href="/overview">Pricing</a><span class="rail-arrow">&rarr;</span>
+        <a href="/privacy.html">Privacy</a><span class="rail-arrow">&rarr;</span>
+        <a href="/terms.html">Terms</a>
+      </div>
+    </div>
+    <div class="rail-section">
+      <div class="rail-label">// Action</div>
+      <div class="rail-items">
+        <a href="tel:+14142408930">Call Demo (414) 240-8930</a><span class="rail-arrow">&rarr;</span>
+        <a href="/book" target="_blank" rel="noopener">Scope My Setup</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-copy">
+    // AI Voice Agency &#9472; Built in Wisconsin &#9472; &copy; 2026
+  </div>
+</footer>
+
+<div id="mobile-cta">
+  <a href="tel:+14142408930">&rarr; CALL DEMO (414) 240-8930</a>
+</div>
+
+<script src="/site.js" defer></script>
+
+</body>
+</html>

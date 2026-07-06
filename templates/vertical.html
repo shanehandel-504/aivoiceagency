@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!-- ============================================================================
+     CIRCULANT PAGE TEMPLATE — INDUSTRY VERTICAL (hub landing page)
+     ----------------------------------------------------------------------------
+     Copy this file to  /<industry>/index.html  (e.g. /home-services/).
+     Fill every {{PLACEHOLDER}}. Canon is already baked in:
+       · /assets/circulant.css + /styles.css  (tokens + semantic colors)
+       · Live-call widget with the TCPA consent block (checkbox REQUIRED,
+         approved wording) and the pulsing GREEN live dot (.lcw-live-dot)
+       · Booking CTA -> /book · Demo tel: -> +14142408930 · Pricing -> /overview
+     Semantic color law: green=live · gold=money · violet=featured · cyan=else.
+     Budget ~3 accent moments per screen. Do NOT hardcode hex.
+     ============================================================================ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
+<meta name="theme-color" content="#0A0A0F">
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<title>{{TITLE — e.g. AI Voice Agent for {{INDUSTRY}} | AVA}}</title>
+<meta name="description" content="{{META_DESCRIPTION — 150–160 chars}}">
+<link rel="canonical" href="https://aivoiceagency.ai/{{INDUSTRY_SLUG}}">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{META_DESCRIPTION}}">
+<meta property="og:url" content="https://aivoiceagency.ai/{{INDUSTRY_SLUG}}">
+<meta property="og:site_name" content="AI Voice Agency">
+<meta property="og:image" content="https://aivoiceagency.ai/og-aivoiceagency.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{TITLE}}">
+<meta name="twitter:description" content="{{META_DESCRIPTION}}">
+<meta name="twitter:image" content="https://aivoiceagency.ai/og-aivoiceagency.png">
+
+<!-- Service + Breadcrumb + FAQ schema. Keep telephone +1-414-240-8930. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "AI Phone Answering for {{INDUSTRY}}",
+  "name": "AVA for {{INDUSTRY}}",
+  "provider": { "@type": "Organization", "name": "AI Voice Agency", "url": "https://aivoiceagency.ai", "telephone": "+1-414-240-8930" },
+  "audience": { "@type": "BusinessAudience", "audienceType": "{{AUDIENCE}}" },
+  "areaServed": { "@type": "Country", "name": "United States" },
+  "description": "{{SERVICE_DESCRIPTION}}"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aivoiceagency.ai/" },
+    { "@type": "ListItem", "position": 2, "name": "Verticals", "item": "https://aivoiceagency.ai/#verticals" },
+    { "@type": "ListItem", "position": 3, "name": "{{INDUSTRY}}", "item": "https://aivoiceagency.ai/{{INDUSTRY_SLUG}}" }
+  ]
+}
+</script>
+<!-- {{FAQ_SCHEMA — mirror the on-page FAQ Q&As here as a FAQPage block}} -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/circulant.css">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<nav class="main-nav">
+  <div class="nav-left">
+    <span class="nav-signal-dot" aria-hidden="true"></span>
+    <span class="nav-signal-label" aria-hidden="true">// SIGNAL</span>
+    <a href="/" class="logo">AI VOICE <span class="accent">AGENCY</span></a>
+  </div>
+  <ul id="navLinks">
+    <li><a href="#live-call">01 Live Call</a></li>
+    <li><a href="#capabilities">02 Capabilities</a></li>
+    <li><a href="#faq">03 FAQ</a></li>
+    <li><a href="#contact">04 Contact</a></li>
+  </ul>
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">Menu &rarr;</button>
+</nav>
+
+<main>
+
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="section-label">// {{INDUSTRY_UPPER}}</div>
+    <h1 class="hero-h1-3line"><span class="hero-line">{{HERO_LINE_1}}</span><span class="hero-line">{{HERO_LINE_2}}</span><span class="hero-line"><span class="accent hero-line-cyan">{{HERO_ACCENT}}</span>.</span></h1>
+    <p class="hero-sub">{{HERO_SUB}}</p>
+    <div class="hero-founder-line">// {{FOUNDER_LINE}}</div>
+
+    <!-- LIVE-CALL WIDGET — green live dot + REQUIRED TCPA consent (approved wording).
+         Swap the .lcw-chip roles for this industry; keep all data-* attributes so
+         /site.js wires the demo call. -->
+    <div class="live-call-widget" data-live-call-widget data-role-set="ava" id="live-call">
+      <div class="lcw-header">
+        <div class="lcw-label lcw-label--live"><span class="lcw-live-dot" aria-hidden="true"></span>// LIVE CALL</div>
+        <div class="lcw-status" data-lcw-status>{{WIDGET_PROMPT — e.g. Pick the role. Enter your cell. AVA calls your phone.}}</div>
+      </div>
+      <div class="lcw-chips" role="radiogroup" aria-label="Pick the role">
+        <button type="button" class="lcw-chip active" data-role="{{ROLE_1}}" role="radio" aria-checked="true">{{ROLE_1}}</button>
+        <button type="button" class="lcw-chip" data-role="{{ROLE_2}}" role="radio" aria-checked="false">{{ROLE_2}}</button>
+        <button type="button" class="lcw-chip" data-role="{{ROLE_3}}" role="radio" aria-checked="false">{{ROLE_3}}</button>
+        <button type="button" class="lcw-chip" data-role="{{ROLE_4}}" role="radio" aria-checked="false">{{ROLE_4}}</button>
+        <button type="button" class="lcw-chip" data-role="{{ROLE_5}}" role="radio" aria-checked="false">{{ROLE_5}}</button>
+      </div>
+      <div class="lcw-inputs">
+        <input type="text" class="lcw-input" data-lcw-name placeholder="First name" autocomplete="given-name" maxlength="60">
+        <input type="tel" class="lcw-input" data-lcw-cell placeholder="Cell (e.g. +1 305 555 1212)" autocomplete="tel" inputmode="tel" maxlength="20">
+      </div>
+      <div class="lcw-inputs">
+        <select class="lcw-input lcw-select" data-lcw-biz required aria-label="Business type">
+          <option value="" selected disabled>Business type *</option>
+          <option value="HVAC">HVAC</option>
+          <option value="Plumbing">Plumbing</option>
+          <option value="Electrical">Electrical</option>
+          <option value="Dental">Dental</option>
+          <option value="Restaurant">Restaurant</option>
+          <option value="Salon/Spa">Salon/Spa</option>
+          <option value="Car service/Transportation">Car service/Transportation</option>
+          <option value="Contractor">Contractor</option>
+          <option value="Other">Other</option>
+        </select>
+        <input type="email" class="lcw-input" data-lcw-email aria-label="Email" placeholder="Email (for your confirmation)" autocomplete="email" maxlength="120">
+      </div>
+      <label class="ava-consent">
+        <input
+          type="checkbox"
+          id="tcpa_consent"
+          name="tcpa_consent"
+          required
+          value="true"
+          data-lcw-consent>
+        <span>I consent to receive an automated demonstration call and follow-up calls and texts from AI Voice Agency at the number provided. Consent is not a condition of purchase. Message and data rates may apply. Reply STOP at any time.</span>
+      </label>
+      <button type="button" class="lcw-submit cta-primary circulant-ring" data-lcw-submit aria-label="Get a live AVA call">
+        <span class="lcw-submit-text">→ Get a Live AVA Call</span>
+      </button>
+      <div class="lcw-meta" data-lcw-meta>// AVA calls the number you enter. Standard call rates apply.</div>
+    </div>
+    <!-- gold=money: the See-pricing link is gold via .see-pricing-link -->
+    <a href="/overview" class="see-pricing-link">See pricing <span class="sp-arrow" aria-hidden="true">&rarr;</span></a>
+  </div>
+  <aside class="hero-meta">
+    <div class="meta-block"><div class="meta-label">// Built For</div><div class="meta-value">{{BUILT_FOR}}</div></div>
+    <div class="meta-block"><div class="meta-label">// Handoff</div><div class="meta-value">CRM &middot; Calendar &middot; SMS &middot; Live Transfer</div></div>
+    <div class="meta-block"><div class="meta-label">// Coverage</div><div class="meta-value">24/7 &middot; {{COVERAGE_NOTES}}</div></div>
+  </aside>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="capabilities">
+  <div class="section-label">// 01 &#9472;&#9472; WHAT AVA HANDLES</div>
+  <h2 class="section-title">{{CAPABILITIES_HEADLINE}}</h2>
+  <div class="pain-list">
+    <div class="pain-row"><span class="marker">[01]</span><span class="pain-text">{{CAPABILITY_1}}</span></div>
+    <div class="pain-row"><span class="marker">[02]</span><span class="pain-text">{{CAPABILITY_2}}</span></div>
+    <div class="pain-row"><span class="marker">[03]</span><span class="pain-text">{{CAPABILITY_3}}</span></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="faq">
+  <div class="section-label">// 02 &#9472;&#9472; COMMON QUESTIONS</div>
+  <h2 class="section-title">{{FAQ_HEADLINE}}</h2>
+  <div class="faq-grid">
+    <div class="faq-item"><div class="faq-num">[01]</div><h3 class="faq-q">{{FAQ_Q1}}</h3><p class="faq-a">{{FAQ_A1}}</p></div>
+    <div class="faq-item"><div class="faq-num">[02]</div><h3 class="faq-q">{{FAQ_Q2}}</h3><p class="faq-a">{{FAQ_A2}}</p></div>
+    <div class="faq-item"><div class="faq-num">[03]</div><h3 class="faq-q">{{FAQ_Q3}}</h3><p class="faq-a">{{FAQ_A3}}</p></div>
+    <div class="faq-item"><div class="faq-num">[04]</div><h3 class="faq-q">{{FAQ_Q4}}</h3><p class="faq-a">{{FAQ_A4}}</p></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="contact">
+  <div class="section-label">// 03 &#9472;&#9472; READY?</div>
+  <h2 class="contact-headline">Let's scope it.</h2>
+  <p class="contact-sub">{{CONTACT_SUB}}</p>
+  <div class="contact-grid">
+    <div class="contact-block">
+      <div class="contact-block-label">// Call demo</div>
+      <span class="phone-with-bars">
+        <a href="tel:+14142408930" class="contact-phone">(414) 240-8930</a>
+        <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
+      </span>
+      <p class="contact-text">Live demo line. Hear AVA answer a real call flow.</p>
+      <div class="system-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="status-badge" class="status-text">// SYSTEM ONLINE &#9472; CALL LINE ACTIVE</span>
+      </div>
+    </div>
+    <div class="contact-block">
+      <div class="contact-block-label">// Scope my setup</div>
+      <p class="contact-text">Twenty minutes at aivoiceagency.ai/book. We map your call flow, handoff rules, and where AVA routes each request.</p>
+      <a href="/book" target="_blank" rel="noopener" class="contact-cta-btn cta-primary">Open Calendar &rarr;</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="main-footer">
+  <div class="footer-rail">
+    <div class="rail-section">
+      <div class="rail-label">// Verticals</div>
+      <div class="rail-items">
+        <a href="/professional-services">Professional Services</a><span class="rail-arrow">&rarr;</span>
+        <a href="/home-services">Home Services</a><span class="rail-arrow">&rarr;</span>
+        <a href="/medical-practices">Medical Practices</a><span class="rail-arrow">&rarr;</span>
+        <a href="/ground-transportation">Ground Transportation</a><span class="rail-arrow">&rarr;</span>
+        <a href="/hospitality">Hospitality &amp; Events</a>
+      </div>
+    </div>
+    <div class="rail-section">
+      <div class="rail-label">// Wisconsin</div>
+      <div class="rail-items">
+        <a href="/milwaukee">Milwaukee</a><span class="rail-arrow">&rarr;</span>
+        <a href="/madison">Madison</a><span class="rail-arrow">&rarr;</span>
+        <a href="/green-bay">Green Bay</a><span class="rail-arrow">&rarr;</span>
+        <span class="rail-disabled">West Bend</span><span class="rail-arrow">&rarr;</span>
+        <span class="rail-disabled">Kewaskum</span>
+      </div>
+    </div>
+    <div class="rail-section">
+      <div class="rail-label">// Resources</div>
+      <div class="rail-items">
+        <a href="/methodology.html">Methodology</a><span class="rail-arrow">&rarr;</span>
+        <a href="/roi">ROI Calculator</a><span class="rail-arrow">&rarr;</span>
+        <a href="/overview">Pricing</a><span class="rail-arrow">&rarr;</span>
+        <a href="/privacy.html">Privacy</a><span class="rail-arrow">&rarr;</span>
+        <a href="/terms.html">Terms</a>
+      </div>
+    </div>
+    <div class="rail-section">
+      <div class="rail-label">// Action</div>
+      <div class="rail-items">
+        <a href="tel:+14142408930">Call Demo (414) 240-8930</a><span class="rail-arrow">&rarr;</span>
+        <a href="/book" target="_blank" rel="noopener">Scope My Setup</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-copy">
+    // AI Voice Agency &#9472; Built in Wisconsin &#9472; &copy; 2026
+  </div>
+</footer>
+
+<div id="mobile-cta">
+  <a href="tel:+14142408930">&rarr; CALL DEMO (414) 240-8930</a>
+</div>
+
+<script src="/site.js" defer></script>
+
+</body>
+</html>
