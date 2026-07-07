@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0A0A0F">
+
+<title>AVA Call Record Engine — Prototype · AI Voice Agency</title>
+<meta name="description" content="Prototype: watch a call become a booked job. AVA answers, captures the need, books or routes it, writes the record, and alerts your team.">
+
+<!-- TEST / PROTOTYPE PAGE — keep out of the index. Not linked from main nav. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="AVA Call Record Engine — Prototype">
+<meta property="og:description" content="Watch a call become a booked job.">
+<meta property="og:site_name" content="AI Voice Agency">
+
+<!-- Inline favicon so the prototype makes no extra asset requests -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%2300D4FF'/%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%2300D4FF' stroke-opacity='.35' stroke-width='2'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/assets/circulant.css">
+<style>
+  :root {
+    --void:        #0A0A0F;
+    --panel:       #10131A;
+    --panel-raise: #141824;
+    --matter:      #EEF0F4;
+    --cyan:        #00D4FF;
+    --cyan-active: #00E5FF;
+    --gold:        #FFB800;
+    --green:       #22C55E;
+    --dim:         rgba(238, 240, 244, 0.64);
+    --faint:       rgba(238, 240, 244, 0.58);
+    --line:        rgba(238, 240, 244, 0.10);
+    --line-cyan:   rgba(0, 212, 255, 0.22);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { background: var(--void); scroll-behavior: smooth; }
+  body {
+    background: var(--void);
+    color: var(--matter);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  ::selection { background: rgba(0, 212, 255, 0.28); color: #fff; }
+
+  /* Atmosphere — signal glow + fine grain */
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse 78% 40% at 50% -6%, rgba(0, 212, 255, 0.13), transparent 70%),
+      radial-gradient(ellipse 52% 34% at 84% 106%, rgba(0, 212, 255, 0.05), transparent 70%);
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+  .narrow { max-width: 780px; }
+
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { color: var(--cyan-active); }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--cyan);
+  }
+
+  /* ---- Top bar (static, not fixed — keeps anchor math simple) ---------- */
+  .topbar {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    padding: 20px 0 6px;
+  }
+  .mark {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--matter);
+  }
+  .mark:hover { color: var(--cyan-active); }
+  .signal {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--cyan); box-shadow: 0 0 14px rgba(0, 212, 255, 0.8);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 10px rgba(0,212,255,.5); } 50% { box-shadow: 0 0 22px rgba(0,212,255,.95); } }
+  .topbar-call {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500;
+    white-space: nowrap;
+  }
+  .topbar-call span { color: var(--dim); }
+  @media (max-width: 560px) { .topbar-call .lbl { display: none; } }
+
+  .proto-flag {
+    display: inline-block; margin-top: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--faint);
+  }
+
+  /* ---- Section rhythm --------------------------------------------------- */
+  section { position: relative; z-index: 1; }
+  .sec { padding: 72px 0; }
+  .sec-tight { padding: 48px 0; }
+  .section-title {
+    position: relative; display: inline-block;
+    font-size: clamp(24px, 4.4vw, 38px); font-weight: 700; line-height: 1.12; letter-spacing: -0.02em;
+  }
+  .section-title::after {
+    content: ""; position: absolute; left: 0; bottom: -10px; height: 2px; width: 0;
+    background: linear-gradient(90deg, var(--cyan), transparent);
+    transition: width 0.8s cubic-bezier(.22,1,.36,1);
+  }
+  .section-title.in-view::after { width: 100%; }
+  .lede { margin-top: 22px; font-size: clamp(16px, 2.2vw, 19px); color: var(--dim); max-width: 62ch; }
+
+  /* ============================ HERO ==================================== */
+  .hero { padding: 40px 0 24px; }
+  .hero-head { max-width: 720px; }
+  .hero h1 {
+    margin-top: 20px;
+    font-size: clamp(34px, 7.4vw, 62px); font-weight: 700; line-height: 1.05; letter-spacing: -0.03em;
+  }
+  .hero h1 .accent { color: var(--cyan); }
+  .hero-sub {
+    margin-top: 18px; font-size: clamp(17px, 2.6vw, 21px); font-weight: 300; color: var(--dim);
+    max-width: 56ch;
+  }
+  .hero-sub strong { font-weight: 600; color: var(--matter); }
+
+  .hero-body {
+    margin-top: 40px;
+    display: grid; grid-template-columns: 1fr; gap: 26px;
+  }
+  @media (min-width: 900px) {
+    .hero-body { grid-template-columns: 1.02fr 0.98fr; gap: 34px; align-items: stretch; }
+  }
+
+  /* ---- Console visual --------------------------------------------------- */
+  .console {
+    position: relative; border-radius: 22px; padding: 18px;
+    background: linear-gradient(162deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+    border: 1px solid var(--line-cyan);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 90px rgba(0,212,255,0.06), inset 0 1px 0 rgba(255,255,255,0.07);
+    display: flex; flex-direction: column;
+  }
+  @supports not (backdrop-filter: blur(18px)) { .console { background: rgba(16,18,26,0.94); } }
+  .console-bar { display: flex; align-items: center; gap: 10px; padding: 4px 6px 14px; border-bottom: 1px solid var(--line); }
+  .console-dots { display: flex; gap: 6px; }
+  .console-dots i { width: 10px; height: 10px; border-radius: 50%; background: rgba(238,240,244,0.18); display: inline-block; }
+  .console-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim);
+    margin-left: 4px;
+  }
+  /* Cyan "Demo" badge — green stays reserved for genuine live status (the demo-call widget) */
+  .console-live {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 7px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan);
+  }
+  .console-live .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px rgba(0,212,255,0.8);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+
+  /* Orb — AVA Signal listening visual */
+  .orb-wrap { display: flex; justify-content: center; padding: 22px 0 12px; }
+  .orb { position: relative; width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; }
+  .orb-ring {
+    position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(0,212,255,0.5);
+    animation: orbRing 2.8s ease-out infinite;
+  }
+  .orb-ring:nth-child(2) { animation-delay: 1.4s; }
+  @keyframes orbRing { 0% { transform: scale(0.55); opacity: 0.9; } 100% { transform: scale(1.35); opacity: 0; } }
+  .orb-core {
+    position: relative; width: 62px; height: 62px; border-radius: 50%;
+    background: radial-gradient(circle at 50% 38%, rgba(0,212,255,0.35), rgba(0,212,255,0.06) 70%);
+    border: 1px solid rgba(0,212,255,0.55); box-shadow: 0 0 34px rgba(0,212,255,0.4), inset 0 0 20px rgba(0,212,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .eq { display: flex; align-items: center; gap: 3px; height: 24px; }
+  .eq i { width: 3px; height: 8px; border-radius: 2px; background: var(--cyan); box-shadow: 0 0 8px rgba(0,212,255,0.7); animation: eq 1s ease-in-out infinite; }
+  .eq i:nth-child(1) { animation-delay: 0s; }
+  .eq i:nth-child(2) { animation-delay: 0.18s; }
+  .eq i:nth-child(3) { animation-delay: 0.36s; }
+  .eq i:nth-child(4) { animation-delay: 0.14s; }
+  .eq i:nth-child(5) { animation-delay: 0.3s; }
+  @keyframes eq { 0%,100% { height: 7px; opacity: 0.7; } 50% { height: 22px; opacity: 1; } }
+  .orb-cap {
+    text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--faint); margin-top: 2px;
+  }
+
+  /* Console steps */
+  .console-steps { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; }
+  .cstep {
+    display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start;
+    padding: 11px 8px; border-radius: 12px; opacity: 0.34;
+    transition: opacity 0.45s ease, background 0.45s ease, transform 0.45s ease;
+  }
+  .cstep .node {
+    margin-top: 4px; width: 12px; height: 12px; border-radius: 50%;
+    border: 1.5px solid rgba(238,240,244,0.3); background: transparent; transition: all 0.45s ease;
+  }
+  .cstep .lbl { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+  .cstep .val { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--dim); margin-top: 2px; line-height: 1.45; }
+  .cstep.on { opacity: 1; background: rgba(0,212,255,0.06); }
+  .cstep.on .node { border-color: var(--cyan); background: var(--cyan); box-shadow: 0 0 14px rgba(0,212,255,0.7); }
+  .cstep.on .lbl { color: #fff; }
+  .console-foot {
+    margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
+    text-align: center;
+  }
+
+  /* ---- Live-call widget (wired to /site.js) ----------------------------- */
+  .form-col { display: flex; flex-direction: column; }
+  .live-call-widget {
+    border-radius: 22px; padding: 22px;
+    background: linear-gradient(162deg, rgba(0,212,255,0.07), rgba(255,255,255,0.02));
+    border: 1px solid var(--line-cyan);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .live-call-widget.is-calling { border-color: rgba(0,212,255,0.6); box-shadow: 0 0 44px rgba(0,212,255,0.2), inset 0 1px 0 rgba(255,255,255,0.06); }
+  .live-call-widget.is-connected { border-color: rgba(34,197,94,0.6); box-shadow: 0 0 44px rgba(34,197,94,0.22); }
+  .live-call-widget.is-failed { border-color: rgba(255,107,107,0.55); }
+  .lcw-header { margin-bottom: 16px; }
+  .lcw-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green);
+  }
+  .lcw-status { margin-top: 10px; font-size: 15px; color: var(--dim); }
+  .lcw-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+  .lcw-chip {
+    flex: 1 1 auto; min-height: 56px; padding: 0 18px;
+    border-radius: 14px; border: 1px solid var(--line);
+    background: rgba(255,255,255,0.03); color: var(--matter);
+    font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s ease; white-space: nowrap;
+  }
+  .lcw-chip:hover { border-color: var(--line-cyan); background: rgba(0,212,255,0.06); }
+  .lcw-chip.active { border-color: var(--cyan); background: rgba(0,212,255,0.14); color: #fff; box-shadow: 0 0 20px rgba(0,212,255,0.18); }
+  .lcw-inputs { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+  .lcw-input {
+    width: 100%; min-height: 56px; padding: 0 16px;
+    border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,0.03);
+    color: var(--matter); font-family: inherit; font-size: 16px; transition: border-color 0.2s ease;
+  }
+  .lcw-input::placeholder { color: var(--faint); }
+  .lcw-input:focus { outline: none; border-color: var(--cyan); background: rgba(0,212,255,0.05); }
+  .ava-consent {
+    display: flex; gap: 11px; align-items: flex-start; margin-bottom: 16px;
+    font-size: 12.5px; line-height: 1.5; color: var(--dim); cursor: pointer;
+  }
+  .ava-consent input {
+    flex: none; width: 22px; height: 22px; margin-top: 1px; accent-color: var(--cyan); cursor: pointer;
+  }
+  .lcw-submit {
+    width: 100%; min-height: 58px; padding: 0 20px;
+    border-radius: 14px; border: none; cursor: pointer;
+    background: var(--cyan); color: #05121A; font-family: inherit; font-size: 17px; font-weight: 700; letter-spacing: 0.01em;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+    box-shadow: 0 10px 34px rgba(0,212,255,0.34);
+  }
+  .lcw-submit:hover { background: var(--cyan-active); box-shadow: 0 14px 42px rgba(0,212,255,0.5); }
+  .lcw-submit:active { transform: translateY(1px) scale(0.995); }
+  .lcw-submit:disabled { opacity: 0.7; cursor: default; }
+  .is-connected .lcw-submit { background: var(--green); color: #04140A; box-shadow: 0 10px 34px rgba(34,197,94,0.4); }
+  .lcw-meta { margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--faint); text-align: center; }
+  .lcw-meta.lcw-error { color: #FF9B9B; }
+  .hero-call {
+    display: block; text-align: center; margin-top: 16px; font-size: 15px; color: var(--dim);
+  }
+  .hero-call a { font-weight: 600; }
+  .hero-call strong { font-weight: 700; }
+  .tap-feedback { animation: tapPulse 0.22s ease; }
+  @keyframes tapPulse { 50% { transform: scale(0.97); } }
+
+  /* ============================ EXPLAIN ================================= */
+  .explain { text-align: center; }
+  .explain .section-title::after { left: 50%; transform: translateX(-50%); }
+  .explain .lede { margin-left: auto; margin-right: auto; }
+
+  /* ============================ CARD GRIDS ============================== */
+  .grid { display: grid; gap: 18px; margin-top: 40px; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: 1fr; }
+  @media (min-width: 680px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 980px) { .grid-4 { grid-template-columns: repeat(4, 1fr); } }
+
+  .card {
+    padding: 24px; border-radius: 18px; border: 1px solid var(--line);
+    background: linear-gradient(160deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .card:hover { border-color: var(--line-cyan); transform: translateY(-3px); }
+  .card .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.12em; color: var(--cyan);
+  }
+  .card h3 { margin-top: 12px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+  .card p { margin-top: 8px; font-size: 15px; color: var(--dim); }
+  .card .ic {
+    width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,212,255,0.1); border: 1px solid var(--line-cyan); color: var(--cyan); margin-bottom: 4px;
+  }
+  .card .ic svg { width: 20px; height: 20px; }
+
+  /* ============================ RECEIPTS =============================== */
+  .receipt {
+    padding: 0; border-radius: 18px; overflow: hidden; border: 1px solid var(--line);
+    background: linear-gradient(160deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+    display: flex; flex-direction: column;
+  }
+  .receipt-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 16px 18px; border-bottom: 1px solid var(--line); background: rgba(0,212,255,0.04);
+  }
+  .receipt-head h3 { font-size: 16px; font-weight: 700; }
+  .receipt-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--cyan); border: 1px solid var(--line-cyan); border-radius: 999px; padding: 4px 9px; white-space: nowrap;
+  }
+  .receipt-body { padding: 8px 18px 18px; display: flex; flex-direction: column; }
+  .rrow { padding: 12px 0; border-bottom: 1px dashed var(--line); }
+  .rrow:last-child { border-bottom: none; }
+  .rrow .k {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .rrow .k::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px rgba(0,212,255,0.6); }
+  .rrow .v { margin-top: 5px; font-size: 14.5px; color: var(--matter); }
+
+  /* ============================ PRICING =============================== */
+  .price-grid { display: grid; gap: 18px; margin-top: 40px; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .price-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1040px) { .price-grid { grid-template-columns: repeat(4, 1fr); } }
+  .price-card {
+    padding: 24px; border-radius: 18px; border: 1px solid var(--line);
+    background: linear-gradient(160deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+    display: flex; flex-direction: column;
+  }
+  .price-card:hover { border-color: var(--line-cyan); }
+  .price-tier { font-size: 12px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+  .price-name { margin-top: 8px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+  .price-fig { margin-top: 16px; font-size: 34px; font-weight: 700; color: var(--gold); letter-spacing: -0.02em; }
+  .price-fig span { font-size: 15px; font-weight: 500; color: var(--dim); }
+  .price-meta { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .price-meta li { list-style: none; font-size: 13.5px; color: var(--dim); display: flex; gap: 8px; }
+  .price-meta li::before { content: "+"; color: var(--gold); font-weight: 700; }
+  .price-note {
+    margin-top: 28px; padding: 20px 22px; border-radius: 16px;
+    border: 1px solid rgba(255,184,0,0.28); background: rgba(255,184,0,0.05);
+  }
+  .price-note .lbl { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+  .price-note p { margin-top: 8px; font-size: 14.5px; color: var(--dim); }
+  .price-note strong { color: var(--matter); font-weight: 600; }
+
+  /* ============================ SPLIT ================================= */
+  .split { display: grid; gap: 18px; margin-top: 40px; grid-template-columns: 1fr; }
+  @media (min-width: 820px) { .split { grid-template-columns: 1fr 1fr; } }
+  .split-card { padding: 26px; border-radius: 18px; border: 1px solid var(--line); background: linear-gradient(160deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)); }
+  .split-card.complex { border-color: var(--line-cyan); background: linear-gradient(160deg, rgba(0,212,255,0.06), rgba(255,255,255,0.015)); }
+  .split-kind { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan); }
+  .split-card h3 { margin-top: 8px; font-size: 20px; font-weight: 700; }
+  .flow { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .flow-step {
+    padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.03);
+    font-size: 14px; font-weight: 600;
+  }
+  .flow-arrow { color: var(--cyan); font-weight: 700; }
+
+  /* ============================ FINAL CTA ============================= */
+  .final { text-align: center; }
+  .final .section-title::after { left: 50%; transform: translateX(-50%); }
+  .cta-row { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 58px; padding: 0 28px;
+    border-radius: 14px; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+  }
+  .btn-primary { background: var(--cyan); color: #05121A; border: none; box-shadow: 0 10px 34px rgba(0,212,255,0.34); }
+  .btn-primary:hover { background: var(--cyan-active); color: #05121A; box-shadow: 0 14px 42px rgba(0,212,255,0.5); }
+  .btn-ghost { background: transparent; color: var(--matter); border: 1px solid var(--line-cyan); }
+  .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan-active); background: rgba(0,212,255,0.06); }
+
+  /* ============================ FOOTER =============================== */
+  footer {
+    position: relative; z-index: 1; margin-top: 40px; padding: 32px 20px 120px;
+    text-align: center; font-size: 13px; color: var(--dim); border-top: 1px solid var(--line);
+  }
+  footer .foot-line { max-width: 640px; margin: 0 auto; }
+  footer .proto { display: block; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+
+  /* ---- Sticky bottom CTA (wired via /site.js) --------------------------- */
+  #mobile-cta {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(0deg, rgba(10,10,15,0.98), rgba(10,10,15,0.86));
+    border-top: 1px solid var(--line-cyan);
+    transform: translateY(120%); transition: transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.2s ease;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+  #mobile-cta.visible { transform: translateY(0); }
+  #mobile-cta.form-hidden { transform: translateY(120%); opacity: 0; pointer-events: none; }
+  #mobile-cta a {
+    display: flex; align-items: center; justify-content: center; min-height: 56px;
+    border-radius: 13px; background: var(--cyan); color: #05121A; font-weight: 700; font-size: 16px;
+    box-shadow: 0 8px 28px rgba(0,212,255,0.4);
+  }
+  @media (min-width: 900px) { #mobile-cta { display: none; } }
+
+  /* ---- Reveal on scroll ------------------------------------------------- */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .signal, .orb-ring, .eq i, .console-live .dot { animation: none !important; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .cstep { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================= TOP BAR ======================= -->
+<div class="container">
+  <div class="topbar">
+    <div>
+      <a class="mark" href="https://aivoiceagency.ai"><span class="signal" aria-hidden="true"></span>AI Voice Agency</a>
+      <span class="proto-flag">Prototype · not indexed</span>
+    </div>
+    <div class="topbar-call">
+      <span class="lbl">Live demo:</span> <a href="tel:+14142408930">414-240-8930</a>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= 1 · HERO ======================= -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-head">
+      <div class="eyebrow">// Call Record Engine</div>
+      <h1>Watch a call become a <span class="accent">booked job</span>.</h1>
+      <p class="hero-sub">Enter your cell. <strong>AVA calls you in seconds</strong>, handles the conversation, and shows what your team would receive after the call.</p>
+    </div>
+
+    <div class="hero-body">
+      <!-- Console visual -->
+      <div class="console reveal" aria-label="Demonstration of a call becoming a booked job">
+        <div class="console-bar">
+          <span class="console-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="console-title">AVA · Call Record</span>
+          <span class="console-live"><span class="dot" aria-hidden="true"></span>Demo</span>
+        </div>
+
+        <div class="orb-wrap">
+          <div class="orb" aria-hidden="true">
+            <span class="orb-ring"></span>
+            <span class="orb-ring"></span>
+            <span class="orb-core"><span class="eq"><i></i><i></i><i></i><i></i><i></i></span></span>
+          </div>
+        </div>
+        <div class="orb-cap">AVA Signal — listening</div>
+
+        <div class="console-steps">
+          <div class="cstep" data-step><span class="node" aria-hidden="true"></span><div><div class="lbl">Incoming call</div><div class="val">(555) 018-4420 · new caller</div></div></div>
+          <div class="cstep" data-step><span class="node" aria-hidden="true"></span><div><div class="lbl">AVA answering</div><div class="val">"Thanks for calling — how can I help today?"</div></div></div>
+          <div class="cstep" data-step><span class="node" aria-hidden="true"></span><div><div class="lbl">Need captured</div><div class="val">Water heater leak · wants the earliest visit</div></div></div>
+          <div class="cstep" data-step><span class="node" aria-hidden="true"></span><div><div class="lbl">Appointment booked</div><div class="val">Tomorrow · 9:00 AM arrival window</div></div></div>
+          <div class="cstep" data-step><span class="node" aria-hidden="true"></span><div><div class="lbl">Record updated</div><div class="val">Contact + job written to your CRM</div></div></div>
+          <div class="cstep" data-step><span class="node" aria-hidden="true"></span><div><div class="lbl">Owner alert sent</div><div class="val">Text to the on-call tech · address attached</div></div></div>
+        </div>
+        <div class="console-foot">Demonstration sequence</div>
+      </div>
+
+      <!-- 2 · Demo form (wired to /site.js → real demo call) -->
+      <div class="form-col">
+        <div class="live-call-widget" data-live-call-widget id="live-call">
+          <div class="lcw-header">
+            <div class="lcw-eyebrow"><span class="circ-live-dot" aria-hidden="true"></span>Live demo call</div>
+            <div class="lcw-status" data-lcw-status role="status" aria-live="polite">Pick what AVA should do. Enter your cell. AVA calls you in seconds.</div>
+          </div>
+
+          <div class="lcw-chips" role="radiogroup" aria-label="What should AVA do on the call">
+            <button type="button" class="lcw-chip active" data-role="Answer my calls" role="radio" aria-checked="true">Answer my calls</button>
+            <button type="button" class="lcw-chip" data-role="Call my leads back" role="radio" aria-checked="false">Call my leads back</button>
+            <button type="button" class="lcw-chip" data-role="Book appointments" role="radio" aria-checked="false">Book appointments</button>
+          </div>
+
+          <div class="lcw-inputs">
+            <input type="tel" class="lcw-input" data-lcw-cell placeholder="Your cell — e.g. (555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="20" aria-label="Your mobile number">
+          </div>
+
+          <label class="ava-consent">
+            <input type="checkbox" id="tcpa_consent" name="tcpa_consent" required value="true" data-lcw-consent>
+            <span>I consent to receive an automated demonstration call and follow-up calls and texts from AI Voice Agency at the number provided. Consent is not a condition of purchase. Message and data rates may apply. Reply STOP at any time.</span>
+          </label>
+
+          <button type="button" class="lcw-submit cta-primary" data-lcw-submit aria-label="Get AVA to call me">
+            <span class="lcw-submit-text">Get AVA to call me</span>
+          </button>
+
+          <div class="lcw-meta" data-lcw-meta aria-live="polite">// AVA calls the number you enter. Standard call rates apply.</div>
+        </div>
+
+        <p class="hero-call">Prefer to hear AVA first? <a href="tel:+14142408930">Call AVA live: <strong>414-240-8930</strong></a></p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ======================= 3 · SIMPLE EXPLANATION ======================= -->
+<section class="sec explain">
+  <div class="container narrow">
+    <h2 class="section-title">AVA is the first layer of your phone operation.</h2>
+    <p class="lede">AVA answers the call, captures the details, books or routes the request, writes the record, and alerts the right person — so nothing slips while your team is on the tools, in a chair, or off the clock.</p>
+  </div>
+</section>
+
+<!-- ======================= 4 · HOW IT WORKS ======================= -->
+<section class="sec-tight">
+  <div class="container">
+    <h2 class="section-title">How it works</h2>
+    <div class="grid grid-3">
+      <div class="card reveal">
+        <div class="num">01</div>
+        <h3>The call comes in</h3>
+        <p>A caller dials your business — a new lead, an existing customer, or an after-hours emergency. AVA picks up on the first ring, every time.</p>
+      </div>
+      <div class="card reveal">
+        <div class="num">02</div>
+        <h3>AVA handles it</h3>
+        <p>AVA greets the caller, asks the right questions, captures the need, and books or routes the request — in a natural, on-brand conversation.</p>
+      </div>
+      <div class="card reveal">
+        <div class="num">03</div>
+        <h3>Your team gets the record</h3>
+        <p>The moment the call ends, the details are written to your CRM and the right person gets an alert — with the context already attached.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 5 · WHERE AVA TAKES OVER ======================= -->
+<section class="sec-tight">
+  <div class="container">
+    <h2 class="section-title">Where AVA takes over</h2>
+    <div class="grid grid-4">
+      <div class="card reveal">
+        <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>After-hours calls</h3>
+        <p>Nights, weekends, holidays — AVA answers when the office is dark instead of sending callers to voicemail.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18v-6a8 8 0 0116 0v6"/><path d="M4 18a2 2 0 002 2h1v-6H6a2 2 0 00-2 2zM20 18a2 2 0 01-2 2h-1v-6h1a2 2 0 012 2z"/></svg></div>
+        <h3>Three calls at once</h3>
+        <p>When the lines all light up, AVA handles every caller in parallel — no hold music, no missed opportunities.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v6m0 0l-3-3m3 3l3-3"/><path d="M4 13v5a2 2 0 002 2h12a2 2 0 002-2v-5"/></svg></div>
+        <h3>New web leads</h3>
+        <p>A form comes in — AVA calls the lead back in seconds, while they still remember filling it out.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 00-16 0"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <h3>Existing customers</h3>
+        <p>Reschedules, questions, follow-ups — AVA recognizes the request and moves it forward without tying up your team.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 6 · PROOF RECEIPTS ======================= -->
+<section class="sec">
+  <div class="container">
+    <h2 class="section-title">What your team receives</h2>
+    <p class="lede">After every call, AVA writes a clean record and alerts the right person. These are illustrative samples of the format — not customer data.</p>
+    <div class="grid grid-3">
+
+      <div class="receipt reveal">
+        <div class="receipt-head"><h3>Home Services Call</h3><span class="receipt-tag">Sample record</span></div>
+        <div class="receipt-body">
+          <div class="rrow"><div class="k">Need captured</div><div class="v">Water heater leaking, no hot water — wants the earliest visit.</div></div>
+          <div class="rrow"><div class="k">Action taken</div><div class="v">Booked tomorrow's 9:00 AM arrival window.</div></div>
+          <div class="rrow"><div class="k">Record updated</div><div class="v">Contact + job created, tagged "emergency plumbing."</div></div>
+          <div class="rrow"><div class="k">Owner alert sent</div><div class="v">Text to the on-call tech with address + issue.</div></div>
+        </div>
+      </div>
+
+      <div class="receipt reveal">
+        <div class="receipt-head"><h3>Medical Practice Call</h3><span class="receipt-tag">Sample record</span></div>
+        <div class="receipt-body">
+          <div class="rrow"><div class="k">Need captured</div><div class="v">New patient wants a cleaning + exam; has PPO coverage.</div></div>
+          <div class="rrow"><div class="k">Action taken</div><div class="v">Offered next-week slots, held Thursday 2:30 PM.</div></div>
+          <div class="rrow"><div class="k">Record updated</div><div class="v">Patient contact created, insurance noted on file.</div></div>
+          <div class="rrow"><div class="k">Owner alert sent</div><div class="v">Front desk notified of the new-patient hold.</div></div>
+        </div>
+      </div>
+
+      <div class="receipt reveal">
+        <div class="receipt-head"><h3>Transportation Call</h3><span class="receipt-tag">Sample record</span></div>
+        <div class="receipt-body">
+          <div class="rrow"><div class="k">Need captured</div><div class="v">Airport pickup for two, Friday 6:00 AM, downtown to MKE.</div></div>
+          <div class="rrow"><div class="k">Action taken</div><div class="v">Captured trip details, routed to dispatch to confirm.</div></div>
+          <div class="rrow"><div class="k">Record updated</div><div class="v">Reservation draft created with pickup + flight time.</div></div>
+          <div class="rrow"><div class="k">Owner alert sent</div><div class="v">Dispatcher pinged to assign vehicle + driver.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 7 · PRICING ======================= -->
+<section class="sec">
+  <div class="container">
+    <h2 class="section-title">Start simple. Scope the complex.</h2>
+    <div class="price-grid">
+
+      <div class="price-card reveal">
+        <div class="price-tier">Tier 01</div>
+        <div class="price-name">Local Answering Agent</div>
+        <div class="price-fig">$497<span>/mo</span></div>
+        <ul class="price-meta">
+          <li>$500 setup</li>
+          <li>Voice usage</li>
+        </ul>
+      </div>
+
+      <div class="price-card reveal">
+        <div class="price-tier">Tier 02</div>
+        <div class="price-name">Growth Booking Agent</div>
+        <div class="price-fig">$997<span>/mo</span></div>
+        <ul class="price-meta">
+          <li>$1,500 setup</li>
+          <li>Voice usage</li>
+        </ul>
+      </div>
+
+      <div class="price-card reveal">
+        <div class="price-tier">Tier 03</div>
+        <div class="price-name">Custom Intake Engine</div>
+        <div class="price-fig">$1,997<span>/mo</span></div>
+        <ul class="price-meta">
+          <li>Scoped setup</li>
+          <li>Voice usage</li>
+        </ul>
+      </div>
+
+      <div class="price-card reveal">
+        <div class="price-tier">Tier 04</div>
+        <div class="price-name">Dispatch / Payment Engine</div>
+        <div class="price-fig">$2,997<span>/mo</span></div>
+        <ul class="price-meta">
+          <li>Scoped setup</li>
+          <li>Voice usage</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="price-note reveal">
+      <div class="lbl">// Scope</div>
+      <p><strong>Transportation, dispatch, quoting, payment capture, and industry-software workflows are custom intake builds.</strong> They are not included in the $497 or $997 local plans. Voice usage is billed separately based on call minutes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 8 · SIMPLE VS CUSTOM SPLIT ======================= -->
+<section class="sec">
+  <div class="container">
+    <h2 class="section-title">Simple, or a full phone room</h2>
+    <div class="split">
+      <div class="split-card reveal">
+        <div class="split-kind">// Simple local business</div>
+        <h3>Answer, book, notify</h3>
+        <div class="flow">
+          <span class="flow-step">Answer calls</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-step">Book appointment</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-step">Text owner</span>
+        </div>
+      </div>
+      <div class="split-card complex reveal">
+        <div class="split-kind">// Complex phone room</div>
+        <h3>Collect, apply rules, resolve</h3>
+        <div class="flow">
+          <span class="flow-step">Collect details</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-step">Apply rules</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-step">Quote / route / payment</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-step">Write record</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 9 · FINAL CTA ======================= -->
+<section class="sec final">
+  <div class="container narrow">
+    <h2 class="section-title">Let AVA handle the next call.</h2>
+    <div class="cta-row">
+      <a href="#live-call" class="btn btn-primary">Get AVA to call me</a>
+      <a href="tel:+14142408930" class="btn btn-ghost">Call AVA live: 414-240-8930</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer>
+  <div class="foot-line">
+    AI Voice Agency &middot; <a href="https://aivoiceagency.ai">aivoiceagency.ai</a> &middot; Live demo line <a href="tel:+14142408930">414-240-8930</a>
+    <span class="proto">Prototype — noindex, nofollow · not linked from main nav</span>
+  </div>
+</footer>
+
+<!-- ======================= STICKY MOBILE CTA (wired via /site.js) ======================= -->
+<div id="mobile-cta">
+  <a href="#live-call">Get AVA to call me</a>
+</div>
+
+<!-- Console step-illumination sequencer (self-contained, motion-safe) -->
+<script>
+(function () {
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.cstep[data-step]'));
+  if (!steps.length) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { steps.forEach(function (s) { s.classList.add('on'); }); return; }
+
+  var STEP_MS = 850, HOLD_MS = 2200, i = 0, timer = null, running = false;
+
+  function tick() {
+    if (i < steps.length) {
+      steps[i].classList.add('on');
+      i++;
+      timer = setTimeout(tick, STEP_MS);
+    } else {
+      timer = setTimeout(function () {
+        steps.forEach(function (s) { s.classList.remove('on'); });
+        i = 0;
+        timer = setTimeout(tick, 500);
+      }, HOLD_MS);
+    }
+  }
+
+  function start() { if (running) return; running = true; tick(); }
+  function stop() { running = false; clearTimeout(timer); }
+
+  var console_ = document.querySelector('.console');
+  if ('IntersectionObserver' in window && console_) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+    }, { threshold: 0.35 });
+    io.observe(console_);
+  } else {
+    start();
+  }
+})();
+
+/* Reveal-on-scroll for .reveal elements */
+(function () {
+  var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if (!els.length) return;
+  if (!('IntersectionObserver' in window)) { els.forEach(function (el) { el.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+
+/* Role-chip radiogroup: roving tabindex + Arrow-key selection.
+   site.js owns the click behavior (toggles .active / aria-checked / selected role);
+   this only adds the WAI-ARIA radio keyboard contract the markup promises. We read
+   aria-checked AFTER site.js's synchronous click handler via setTimeout(…,0), so the
+   listener attach-order between this inline script and deferred site.js never matters. */
+(function () {
+  var group = document.querySelector('.lcw-chips[role="radiogroup"]');
+  if (!group) return;
+  var radios = Array.prototype.slice.call(group.querySelectorAll('[role="radio"]'));
+  if (!radios.length) return;
+
+  function syncRoving() {
+    var anyTabbable = false;
+    radios.forEach(function (r) {
+      var checked = r.getAttribute('aria-checked') === 'true';
+      r.tabIndex = checked ? 0 : -1;
+      if (checked) anyTabbable = true;
+    });
+    if (!anyTabbable) radios[0].tabIndex = 0; // never trap the group out of the tab order
+  }
+  syncRoving();
+
+  // After any selection (mouse or keyboard), re-derive the single tab stop.
+  radios.forEach(function (r) { r.addEventListener('click', function () { setTimeout(syncRoving, 0); }); });
+
+  group.addEventListener('keydown', function (e) {
+    var idx = radios.indexOf(document.activeElement);
+    if (idx === -1) return;
+    var next = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = radios[(idx + 1) % radios.length];
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = radios[(idx - 1 + radios.length) % radios.length];
+    else return;
+    e.preventDefault();
+    next.click();   // let site.js update aria-checked / .active / selected role
+    next.focus();   // radio semantics: moving selection moves focus
+    setTimeout(syncRoving, 0);
+  });
+})();
+</script>
+
+<!-- Shared behavior: live-call widget (real demo-call POST), sticky CTA, haptics, anchor scroll -->
+<script src="/site.js" defer></script>
+</body>
+</html>
