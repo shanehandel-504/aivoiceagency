@@ -46,10 +46,10 @@ Auto-read at every Claude Code session. Do not delete.
 - Before any push: have I batched all related changes?
 
 ## FORBIDDEN WORDS
-- "locked" / "locked in" — use "set" or "decided"
+- "locked" / "locked in" — use "set" or "decided" in our own copy (natural booking language is OK inside clearly-labeled sample call dialogue)
 - "she" / "her" for AVA — always "AVA" by name
 - "Certainly!" / "Great question!" / "I understand"
-- "booked" / "confirmed" / "payment required" / "guaranteed" in demo copy
+- "booked" / "confirmed" / "payment required" / "guaranteed" — banned in marketing CLAIMS about AVA's service; natural booking language IS allowed inside clearly-labeled sample call dialogue
 
 ## GUARDRAILS
 - No fake proof, ROI, testimonials until verified
