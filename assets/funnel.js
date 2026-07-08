@@ -9,6 +9,11 @@
     if (el && window.va) { try { window.va('event', { name: el.getAttribute('data-event') }); } catch (_) {} }
   }, true);
 
+  /* start pulse animations only after load so they never compete with the LCP paint */
+  window.addEventListener('load', function () {
+    requestAnimationFrame(function () { document.body.classList.add('glow-ready'); });
+  });
+
   /* n8n webhook — lifted verbatim from the working /chatgpt-example live-call form */
   var AVA_CALL_ENDPOINT = 'https://circulant.app.n8n.cloud/webhook/ava-call';
 

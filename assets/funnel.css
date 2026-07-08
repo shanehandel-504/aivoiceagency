@@ -335,8 +335,8 @@ html{scroll-padding-top:76px}
 .gcard,.mini-gate,#gate,#pricing{scroll-margin-top:84px}
 
 /* Step 3 — brightness +~25% bloom (void bg + AA paper contrast unchanged) */
-.ring-ava{box-shadow:0 0 52px 8px rgba(0,212,255,.55), 0 0 130px rgba(0,212,255,.22)}
-.hero h1 .serif{text-shadow:0 0 30px rgba(0,212,255,.45), 0 0 9px rgba(0,212,255,.30)}
+.ring-ava{box-shadow:0 0 40px 6px rgba(0,212,255,.5), 0 0 90px rgba(0,212,255,.2)}
+.hero h1 .serif{text-shadow:0 0 18px rgba(0,212,255,.42), 0 0 7px rgba(0,212,255,.28)}
 .chip[aria-pressed="true"]{box-shadow:0 0 20px rgba(0,212,255,.6)}
 .pod-orb{box-shadow:0 0 15px rgba(0,212,255,.65)}
 .th-v[aria-pressed="true"]{box-shadow:0 0 16px rgba(0,212,255,.5)}
@@ -344,11 +344,13 @@ html{scroll-padding-top:76px}
 /* Step 2 — pulse rings: radar ping (::after) + glow breathe (~2.4s). Zero layout shift. */
 .pulse-cyan,.pulse-live{position:relative;isolation:isolate}
 .pulse-cyan::after,.pulse-live::after{content:"";position:absolute;inset:0;border-radius:inherit;
-  border:2px solid;pointer-events:none;opacity:0;z-index:-1;animation:ava-ping 2.4s var(--ease) infinite}
+  border:2px solid;pointer-events:none;opacity:0;z-index:-1}
 .pulse-cyan::after{border-color:var(--cyan)}
 .pulse-live::after{border-color:var(--live)}
-.pulse-cyan{animation:ava-breathe-cyan 2.4s ease-in-out infinite}
-.pulse-live{animation:ava-breathe-live 2.4s ease-in-out infinite}
+/* animations start only after load (body.glow-ready) so they never compete with LCP paint */
+body.glow-ready .pulse-cyan::after,body.glow-ready .pulse-live::after{animation:ava-ping 2.4s var(--ease) infinite}
+body.glow-ready .pulse-cyan{animation:ava-breathe-cyan 2.4s ease-in-out infinite}
+body.glow-ready .pulse-live{animation:ava-breathe-live 2.4s ease-in-out infinite}
 @keyframes ava-ping{0%{transform:scale(1);opacity:.5}70%{transform:scale(1.16);opacity:0}100%{opacity:0}}
 @keyframes ava-breathe-cyan{0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,0)}50%{box-shadow:0 0 20px 2px rgba(0,212,255,.5)}}
 @keyframes ava-breathe-live{0%,100%{box-shadow:0 0 0 0 rgba(0,230,118,0)}50%{box-shadow:0 0 22px 3px rgba(0,230,118,.55)}}
