@@ -23,11 +23,21 @@ Auto-read at every Claude Code session. Do not delete.
 - Mono: JetBrains Mono
 - KILLED: brown, gold, lime, matrix green, pure white text
 
-## DESIGN SYSTEM — AVA parent
-- Background: #0A0A0F
-- Text: #EEF0F4
-- Accent: #00D4FF (Cyan, active #00E5FF)
+## DESIGN SYSTEM — AVA parent (homepage / = index.html + /assets/funnel.css)
+- Void bg #0A0A0F · panel #10131A · line #23232E
+- Text #EEF0F4 · dim #9AA1AD (never pure white)
+- --cyan #00D4FF (active --cyan-2 #00E5FF) — the ONE brand accent
+- --live #00E676 — semantic GREEN: live/on-call dots, success states, receipt checks, pulse rings. GREEN = live/success ONLY (paper-safe variant #0a9d57 on white receipts)
+- --gold #D4A94E — pricing scope note ONLY
 - Font: Space Grotesk
+- GLOW GATE (P1 perf pattern): decorative + pulse animations are gated behind `body.glow-ready`, added on window `load` in funnel.js so they never compete with the LCP paint. Any new decorative motion MUST sit behind this gate, be zero-layout-shift (transform / opacity / shadow only), and be reduced-motion-safe. Keep LCP <=400ms, CLS 0.00.
+
+## HOMEPAGE ANALYTICS — [data-event] beacons
+Fired on click by funnel.js (no-op if window.va absent). Current set:
+- tel_tap_nav · tel_tap_hero · hear_ava_nav · hear_ava_hero · book_click_hero
+- call_me_submit_pod · call_me_submit_gate · book_click_gate
+- sticky_talk_ava · book_click_sticky · book_click_footer
+- Add a data-event on every new CTA; keep names verb_noun_location.
 
 ## PRICING (surface only when asked)
 - Starter: $497/mo + $500 setup
@@ -35,15 +45,18 @@ Auto-read at every Claude Code session. Do not delete.
 - Enterprise: $1,997/mo + $2,500 setup
 - White Glove: by application
 
-## PHONE NUMBERS
-- 305-315-6562 — public business number (on website + marketing)
-- 414-240-8930 — live Retell AVA demo line (public-facing, on website CTAs)
+## PHONE — public number 414-240-8930 only
+- 414-240-8930 — the public AVA line (voice CTAs, schema, footer). The ONLY voice number in marketing copy.
+- Private numbers (personal cells, internal/routing lines) NEVER in the repo or commits.
+- SMS: 350-220-5305 is the published text-us line (footer only).
+- 305-315-6562 retired — do not surface.
 
 ## PUSH DISCIPLINE
 - One push = one complete unit of work, not one tweak
 - Hard cap: 5 pushes per hour
 - Local preview FIRST (double-click .html in Windows Explorer)
 - Before any push: have I batched all related changes?
+- Publish-always: finish the unit, push it live, end with a DONE table (what shipped) + the production URL. If it is NOT live, first line = "RUN INCOMPLETE — what / why / next step" in caps.
 
 ## FORBIDDEN WORDS
 - "locked" / "locked in" — use "set" or "decided" in our own copy (natural booking language is OK inside clearly-labeled sample call dialogue)
@@ -57,6 +70,11 @@ Auto-read at every Claude Code session. Do not delete.
 - Don't pitch Billy at Jet Limousines or Chris at Chauffeur Driven until
   Wisconsin operators validate AVA on real calls
 - Demo language: captured / routed / dispatcher will confirm
+
+## AUTOMATION
+- Drip engine = n8n. The 7-day follow-up runs on n8n, NOT GHL workflows.
+- Email/SMS drip templates path: authored inside the n8n drip workflow (not committed to this repo).
+- Live-call lead form posts to the n8n `ava-call` webhook (funnel.js).
 
 ## VERTICAL POSITIONING
 - First vertical: corporate transportation (limo, NEMT, charter, black car)

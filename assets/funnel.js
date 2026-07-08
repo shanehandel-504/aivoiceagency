@@ -9,10 +9,12 @@
     if (el && window.va) { try { window.va('event', { name: el.getAttribute('data-event') }); } catch (_) {} }
   }, true);
 
-  /* start pulse animations only after load so they never compete with the LCP paint */
-  window.addEventListener('load', function () {
-    requestAnimationFrame(function () { document.body.classList.add('glow-ready'); });
-  });
+  /* start pulse animations only after load so they never compete with the LCP paint.
+     Fires whether or not the load event has already passed (defer can run post-load
+     in some engines) — the rAF still lands after LCP, so no perf regression. */
+  function armGlow() { requestAnimationFrame(function () { document.body.classList.add('glow-ready'); }); }
+  if (document.readyState === 'complete') armGlow();
+  else window.addEventListener('load', armGlow);
 
   /* n8n webhook — lifted verbatim from the working /chatgpt-example live-call form */
   var AVA_CALL_ENDPOINT = 'https://circulant.app.n8n.cloud/webhook/ava-call';

@@ -380,3 +380,76 @@ a.pulse-live{display:inline-flex;align-items:center;border-radius:9px;padding:2p
   .tiers{gap:20px}
   .sticky{max-width:720px;margin:0 auto;left:0;right:0;border:1px solid var(--line);border-bottom:none;border-radius:16px 16px 0 0}
 }
+
+/* ================= GLOW PASS B — bottom-half brightness + semantic live-green ================= */
+/* Same doctrine as GLOW PASS: static bloom on the void bg (paper AA contrast untouched),
+   decorative motion gated behind body.glow-ready so it never competes with LCP paint,
+   zero layout shift (transform / opacity / shadow only), reduced-motion respected. */
+
+/* B1 — section eyebrows brighten (top + bottom, one cyan bloom) */
+.eyebrow{text-shadow:0 0 12px rgba(0,212,255,.35)}
+
+/* B2 — cyan stat numbers + the ROI money get the hero-grade bloom below the fold */
+.stat-card .n{text-shadow:0 0 16px rgba(0,212,255,.3)}
+.roi-out .money{text-shadow:0 0 20px rgba(0,212,255,.4), 0 0 7px rgba(0,212,255,.28)}
+body.glow-ready .roi-out .money{animation:roi-glow 3.4s ease-in-out infinite}
+@keyframes roi-glow{
+  0%,100%{text-shadow:0 0 18px rgba(0,212,255,.35), 0 0 6px rgba(0,212,255,.25)}
+  50%{text-shadow:0 0 32px rgba(0,212,255,.6), 0 0 11px rgba(0,212,255,.42)}
+}
+
+/* B3 — tier cards: hover lift + soft cyan edge (pricing is paper; the edge is the brand cyan line) */
+.tier{transition:transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease)}
+.tier:hover{transform:translateY(-5px); border-color:rgba(0,212,255,.55);
+  box-shadow:0 0 0 1px rgba(0,212,255,.28), 0 20px 46px rgba(0,0,0,.42), 0 0 34px rgba(0,212,255,.16)}
+.tier.feat:hover{transform:translateY(-11px)}   /* feat baseline sits at -6px */
+
+/* B4 — THE RIPCORD: slow border breathe (gated; base border persists for reduced-motion) */
+body.glow-ready .ripcord{animation:ripcord-breathe 4.2s ease-in-out infinite}
+@keyframes ripcord-breathe{
+  0%,100%{border-color:rgba(0,212,255,.34); box-shadow:0 0 0 0 rgba(0,212,255,0)}
+  50%{border-color:rgba(0,212,255,.72); box-shadow:0 0 28px 0 rgba(0,212,255,.15)}
+}
+
+/* B5 — GREEN = live / success ONLY.
+   Receipt checklist checks off in sequence when the call completes (paper-safe green #0a9d57). */
+/* backwards fill (not both) + no base opacity:0 → the resting state is always visible;
+   the from-state only applies during the stagger delay, so a browser that skips the
+   animation still shows the receipt. */
+body.glow-ready .receipt:not([hidden]) .items li{animation:receipt-check .5s var(--ease) backwards}
+body.glow-ready .receipt:not([hidden]) .items li:nth-child(1){animation-delay:.06s}
+body.glow-ready .receipt:not([hidden]) .items li:nth-child(2){animation-delay:.30s}
+body.glow-ready .receipt:not([hidden]) .items li:nth-child(3){animation-delay:.54s}
+body.glow-ready .receipt:not([hidden]) .items li:nth-child(4){animation-delay:.78s}
+@keyframes receipt-check{from{opacity:0; transform:translateY(5px)} to{opacity:1; transform:none}}
+/* the "on call" dot gently pulses live-green while AVA is on the line */
+body.glow-ready .pod-live .dot{animation:oncall-pulse 2.1s ease-in-out infinite}
+@keyframes oncall-pulse{0%,100%{box-shadow:0 0 6px var(--live)} 50%{box-shadow:0 0 15px 2px var(--live)}}
+
+/* B6 — FAQ + footer contrast pass */
+.qa summary:hover{color:var(--cyan-2)}
+.qa[open]{border-color:rgba(0,212,255,.34)}
+.foot{color:#B2B8C2}                    /* brighter than --dim on the void for footer body copy */
+.foot .disc{opacity:.9}
+.foot a:hover{color:var(--cyan-2)}
+.foot .fnums b{text-shadow:0 0 10px rgba(0,212,255,.3)}
+
+/* B7 — desktop bottom rhythm (>=1024px): match the top half's intentionality */
+@media(min-width:1024px){
+  .theater .th-transcript{max-height:468px}
+  .stat-cards{gap:18px}
+  .roi-grid{gap:46px}
+  .roi-out{padding:28px}
+  .how{gap:22px}
+  .step{padding:24px}
+  .tiers{gap:22px}
+  .faq{max-width:860px}
+  .qa summary{padding:18px 22px}
+  .foot{padding:52px 0}
+}
+
+/* reduced-motion: freeze the new gated loops, keep the static bloom + a fully-visible receipt */
+@media(prefers-reduced-motion:reduce){
+  .roi-out .money,.ripcord,.pod-live .dot{animation:none!important}
+  body.glow-ready .receipt:not([hidden]) .items li{opacity:1!important; transform:none!important; animation:none!important}
+}
