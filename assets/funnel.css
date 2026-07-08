@@ -8,7 +8,8 @@
   /* dark stage */
   --void:#0A0A0F; --panel:#10131A; --line:#23232E;
   --text:#EEF0F4; --dim:#9AA1AD; --cyan:#00D4FF; --cyan-2:#00E5FF;
-  --green:#28D07A;               /* live-status dots ONLY */
+  --green:#28D07A;               /* legacy alias — superseded by --live */
+  --live:#00E676;                /* semantic ONLY: live/on-call dots, calling-now, success/receipt, pulse rings */
   --gold:#D4A94E;                /* pricing scope note ONLY */
   /* light paper */
   --paper:#FFFFFF; --paper2:#F6F7F9; --ink:#10131A; --ink2:#4A5160;
@@ -74,7 +75,7 @@ section{padding:72px 0; position:relative}
 .callchip a{font-weight:700}
 .badge-sample{display:inline-flex; align-items:center; gap:7px; margin-top:14px;
   font-size:12.5px; color:var(--dim); border:1px solid var(--line); border-radius:999px; padding:6px 12px}
-.badge-sample .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.badge-sample .dot{width:7px;height:7px;border-radius:50%;background:var(--live)}
 
 /* ---------- phone bezel + pod ---------- */
 .phone{width:330px; max-width:100%; margin:0 auto; aspect-ratio:330/680;
@@ -103,7 +104,7 @@ section{padding:72px 0; position:relative}
 .pod{display:flex;flex-direction:column;height:100%}
 .pod-top{padding:16px 14px 8px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #161922}
 .pod-live{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);margin-left:auto}
-.pod-live .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.pod-live .dot{width:7px;height:7px;border-radius:50%;background:var(--live);box-shadow:0 0 8px var(--live)}
 .pod-orb{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#0affff,#0090c8);transition:transform .08s linear}
 .pod-tabs{display:flex;gap:4px;padding:8px 10px}
 .pod-tab{flex:1;background:#0e1017;border:1px solid #1b1e28;color:var(--dim);border-radius:10px;
@@ -149,7 +150,7 @@ section{padding:72px 0; position:relative}
 .consent input{margin-top:2px;flex:none;width:16px;height:16px;accent-color:var(--cyan)}
 .gate-status{font-size:12px;min-height:16px}
 .gate-status.err{color:#ff7a7a}
-.gate-status.ok{color:var(--green)}
+.gate-status.ok{color:var(--live)}
 .webcall-offer{margin-top:6px}
 
 /* ---------- checkmarks strip ---------- */
@@ -197,13 +198,13 @@ section{padding:72px 0; position:relative}
 .slot:last-child{border-bottom:none}
 .slot .k{color:var(--dim);font-size:13px}
 .slot .v{font-weight:600;font-size:13.5px;text-align:right;color:var(--dim);opacity:1;transition:.3s}
-.slot.filled .v{color:var(--green);opacity:1}
+.slot.filled .v{color:var(--live);opacity:1}
 .slot.filled .k{color:var(--text)}
 .timeline{display:flex;flex-direction:column;gap:8px;margin-top:14px}
 .tl{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--dim);opacity:1;transition:.3s}
 .tl .d{width:9px;height:9px;border-radius:50%;background:#2a2f3a;flex:none}
 .tl.lit{opacity:1;color:var(--text)}
-.tl.lit .d{background:var(--green);box-shadow:0 0 8px var(--green)}
+.tl.lit .d{background:var(--live);box-shadow:0 0 8px var(--live)}
 .receipt{margin-top:16px;background:var(--paper);color:var(--ink);border-radius:12px;padding:14px}
 .receipt .rh{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2)}
 .receipt .items{margin:8px 0 0;padding:0;list-style:none;font-size:13.5px}
@@ -326,4 +327,54 @@ section{padding:72px 0; position:relative}
 /* reduced motion */
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;transition-duration:.05ms!important;scroll-behavior:auto}
+}
+
+/* ================= GLOW PASS ================= */
+/* Step 5 — header never covers a scrolled-to / focused form field */
+html{scroll-padding-top:76px}
+.gcard,.mini-gate,#gate,#pricing{scroll-margin-top:84px}
+
+/* Step 3 — brightness +~25% bloom (void bg + AA paper contrast unchanged) */
+.ring-ava{box-shadow:0 0 52px 8px rgba(0,212,255,.55), 0 0 130px rgba(0,212,255,.22)}
+.hero h1 .serif{text-shadow:0 0 30px rgba(0,212,255,.45), 0 0 9px rgba(0,212,255,.30)}
+.chip[aria-pressed="true"]{box-shadow:0 0 20px rgba(0,212,255,.6)}
+.pod-orb{box-shadow:0 0 15px rgba(0,212,255,.65)}
+.th-v[aria-pressed="true"]{box-shadow:0 0 16px rgba(0,212,255,.5)}
+
+/* Step 2 — pulse rings: radar ping (::after) + glow breathe (~2.4s). Zero layout shift. */
+.pulse-cyan,.pulse-live{position:relative;isolation:isolate}
+.pulse-cyan::after,.pulse-live::after{content:"";position:absolute;inset:0;border-radius:inherit;
+  border:2px solid;pointer-events:none;opacity:0;z-index:-1;animation:ava-ping 2.4s var(--ease) infinite}
+.pulse-cyan::after{border-color:var(--cyan)}
+.pulse-live::after{border-color:var(--live)}
+.pulse-cyan{animation:ava-breathe-cyan 2.4s ease-in-out infinite}
+.pulse-live{animation:ava-breathe-live 2.4s ease-in-out infinite}
+@keyframes ava-ping{0%{transform:scale(1);opacity:.5}70%{transform:scale(1.16);opacity:0}100%{opacity:0}}
+@keyframes ava-breathe-cyan{0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,0)}50%{box-shadow:0 0 20px 2px rgba(0,212,255,.5)}}
+@keyframes ava-breathe-live{0%,100%{box-shadow:0 0 0 0 rgba(0,230,118,0)}50%{box-shadow:0 0 22px 3px rgba(0,230,118,.55)}}
+/* tel: link wraps the ring cleanly */
+a.pulse-live{display:inline-flex;align-items:center;border-radius:9px;padding:2px 9px}
+/* disabled call buttons must not pulse (TCPA: submit stays off until consent) */
+.pulse-live:disabled,.pulse-cyan:disabled{animation:none}
+.pulse-live:disabled::after,.pulse-cyan:disabled::after{display:none}
+/* reduced motion → static glow, no animation, no layout shift */
+@media(prefers-reduced-motion:reduce){
+  .pulse-cyan,.pulse-live{animation:none!important}
+  .pulse-cyan::after,.pulse-live::after{animation:none!important;opacity:0}
+  .pulse-cyan{box-shadow:0 0 16px rgba(0,212,255,.45)}
+  .pulse-live{box-shadow:0 0 16px rgba(0,230,118,.5)}
+}
+
+/* Step 6 — desktop pass (>=1024px): intentional two-column rhythm, capped sticky */
+@media(min-width:1024px){
+  .wrap{max-width:1160px}
+  section{padding:88px 0}
+  .hero{padding-top:56px}
+  .hero-grid{grid-template-columns:1.05fr .92fr;gap:56px;align-items:center}
+  .hero h1{font-size:clamp(48px,4.4vw,66px)}
+  .phone{width:362px}
+  .th-grid{grid-template-columns:1.15fr .85fr;gap:34px}
+  .jobs{grid-template-columns:repeat(3,1fr)}
+  .tiers{gap:20px}
+  .sticky{max-width:720px;margin:0 auto;left:0;right:0;border:1px solid var(--line);border-bottom:none;border-radius:16px 16px 0 0}
 }

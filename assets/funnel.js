@@ -3,6 +3,12 @@
 (function () {
   "use strict";
 
+  /* Step 7 — analytics beacons (no-op if window.va absent). Fires on any [data-event] click. */
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('[data-event]');
+    if (el && window.va) { try { window.va('event', { name: el.getAttribute('data-event') }); } catch (_) {} }
+  }, true);
+
   /* n8n webhook — lifted verbatim from the working /chatgpt-example live-call form */
   var AVA_CALL_ENDPOINT = 'https://circulant.app.n8n.cloud/webhook/ava-call';
 

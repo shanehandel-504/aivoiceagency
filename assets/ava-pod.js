@@ -98,6 +98,7 @@
   function start() {
     if (!soundOn) enableSound();
     try { window.dispatchEvent(new CustomEvent('ava:play', { detail: 'pod' })); } catch (e) {}
+    try { window.va && window.va('event', { name: 'demo_play', vertical: current }); } catch (e) {}
     playing = true; if (elPlay) elPlay.textContent = '❚❚';
     if (actx && actx.state === 'suspended') actx.resume();
     if (!rafId) pump();
