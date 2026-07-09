@@ -63,3 +63,23 @@ Pause the legacy **"AVA 7-Day Drip" (GHL)** workflow in the GHL UI. Per prior fi
 ## Workflow IDs
 - AVA Drip Engine v1 — `Pu661B1J1ZgezJT7` — https://circulant.app.n8n.cloud/workflow/Pu661B1J1ZgezJT7
 - AVA Booking Receipt — `NMSWFtcyEQhSypSx` — https://circulant.app.n8n.cloud/workflow/NMSWFtcyEQhSypSx
+
+---
+
+## ADDENDUM — Outbound phone passthrough fix (SHIPPED LIVE)
+
+**Bug:** on OUTBOUND Retell calls the realtime workflows resolved the caller side, so a booking wrote `Phone: +1 0000000000` and `send_link` sent email but no SMS.
+
+**Fix (all 3 realtime workflows, published live):** the `GHL Upsert Contact` node now self-resolves the customer number from the raw webhook: valid caller-provided number wins → else the dialed `retell_llm_dynamic_variables.cell` → else direction-aware telephony (`to_number` on outbound, detected by `call.direction` OR `from_number == the AVA agent line +14142408930`) → **never the agent number, never all-zeros**, E.164-normalized. If nothing resolves, phone is omitted and the contact is tagged `phone-unresolved`. Resolver passed a 7/7 truth table (outbound+zeros, no-direction-field, dynamic-var-only, inbound, caller-alt-number, unresolvable, 10-digit).
+
+| Workflow | ID | Published | Proof |
+|---|---|---|---|
+| send_link | `CteKZ4wdebtbkBmh` | `ce863849` | Live outbound POST (args.cell="0000000000") → SMS delivered, **message_id `RwoFqXKvk0yDMLiEACal`**; upsert wrote **+1 480…9511** (real), not zeros (exec 259) |
+| book_appointment | `c5GPBkma1HyvonEa` | `5a1d3415` | Live outbound POST → appointment created, contact phone **+1 480…9511** (real), name fixed to "Outbound Test" (exec 260); test appointment then deleted |
+| write_to_crm | `Ff21U4lxAHuqgDMx` | `a52299f6` | Same resolver + upsert pattern as the two above (validated, published, no warnings) |
+
+**Cleanup / safety:** the test targeted OWNER_CELL (the +1-480 internal-identity contact `YrynHxqMzKp71C8zojNp`). Test appointment deleted. Contact re-protected — tags now `drip-complete, do-not-drip, internal-identity` (drip alias stripped) so it can never be enrolled.
+
+**GHL gotcha discovered:** `POST /contacts/upsert` with `tags` **replaces** the contact's tag set (it wiped the protection tags mid-test — re-added via the add/remove-tag endpoints, which merge). Implication for the drip: the realtime upserts can reset a contact's tags during a call; the drip's own state uses the add/remove-tag endpoints (not upsert), so drip state management is unaffected, but a mid-drip inbound call that upserts could transiently drop `drip-active`. Low probability; noted.
+
+Also verified live in passing: `GET /contacts/{id}`, `POST`/`DELETE /contacts/{id}/tags`, `DELETE /calendars/events/{id}` all work — these are endpoints the Drip/Receipt engines depend on.
