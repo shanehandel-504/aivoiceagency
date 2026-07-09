@@ -22,6 +22,7 @@
   var elWave  = pod.querySelector('[data-wave]');
   var elIncoming = pod.querySelector('[data-incoming]');
   var elTap   = pod.querySelector('[data-tap]');
+  var elNavDot = document.querySelector('.nav .signal');   /* audio-reactive hero dot */
 
   /* ---- ping-pong audio pipeline: A plays line N while B preloads line N+1 ---- */
   var pair = [new Audio(), new Audio()];
@@ -65,13 +66,14 @@
     for (var i=0;i<n;i++) sum += freq[i];
     var avg = sum / n / 255;               /* 0..1 */
     if (elOrb) elOrb.style.transform = 'scale(' + (1 + avg * 0.6).toFixed(3) + ')';
+    if (elNavDot) elNavDot.style.setProperty('--amp', avg.toFixed(2));
     for (var j=0;j<bars.length;j++){
       var v = freq[Math.floor(j/bars.length*n)] / 255;
       bars[j].style.transform = 'scaleY(' + Math.max(0.12, v).toFixed(3) + ')';
       bars[j].style.background = v>0.05 ? 'var(--cyan)' : '#233';
     }
   }
-  function stopPump(){ if(elOrb) elOrb.style.transform='scale(1)'; if(elWave) elWave.classList.remove('live'); for(var j=0;j<bars.length;j++){bars[j].style.transform='scaleY(0.12)';bars[j].style.background='#233';} }
+  function stopPump(){ if(elOrb) elOrb.style.transform='scale(1)'; if(elNavDot) elNavDot.style.setProperty('--amp',0); if(elWave) elWave.classList.remove('live'); for(var j=0;j<bars.length;j++){bars[j].style.transform='scaleY(0.12)';bars[j].style.background='#233';} }
 
   /* ---- captions ---- */
   function renderCaps() {

@@ -37,6 +37,7 @@
   window.addEventListener('ava:live', function (e) {
     demoLive = !!(e.detail && e.detail.on);
     if (sticky) sticky.classList.toggle('live', demoLive);
+    document.body.classList.toggle('audio-live', demoLive);   /* audio-reactive hero dot */
     if (!demoLive && stickyProg) stickyProg.style.transform = 'scaleX(0)';
   });
   window.addEventListener('ava:progress', function (e) {
@@ -49,6 +50,56 @@
       entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in-view'); sigIO.unobserve(en.target); } });
     }, { threshold: 0.2 });
     document.querySelectorAll('.signal-card, .signal-step').forEach(function (el) { sigIO.observe(el); });
+  }
+
+  /* ---------- interactive Ripcord (Homepage Candy item 1) ---------- */
+  var rip = document.querySelector('[data-ripcord]');
+  if (rip) {
+    var rcLine = rip.querySelector('[data-rc-line]');
+    var rcHandle = rip.querySelector('[data-rc-handle]');
+    var rcRest = rcLine ? rcLine.textContent : '';
+    var rcReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var rcPulled = false, rcDrag = false, rcMoved = false, rcStartY = 0, rcResetT = 0;
+
+    function ripFire() {
+      if (rcPulled) return;
+      rcPulled = true;
+      rip.style.setProperty('--pull', 0);
+      rip.classList.add('pulled');
+      if (rcLine) rcLine.textContent = '→ Transferring you to the owner now.';
+      if (navigator.vibrate) { try { navigator.vibrate(20); } catch (_) {} }
+      try { window.va && window.va('event', { name: 'ripcord_pull' }); } catch (_) {}
+      clearTimeout(rcResetT);
+      rcResetT = setTimeout(function () {
+        rcPulled = false;
+        rip.classList.remove('pulled');
+        if (rcLine) rcLine.textContent = rcRest;
+      }, 3000);
+    }
+
+    if (rcHandle && !rcReduce && window.PointerEvent) {
+      rcHandle.addEventListener('pointerdown', function (e) {
+        if (rcPulled) return;
+        rcDrag = true; rcMoved = false; rcStartY = e.clientY;
+        try { rcHandle.setPointerCapture(e.pointerId); } catch (_) {}
+      });
+      rcHandle.addEventListener('pointermove', function (e) {
+        if (!rcDrag) return;
+        var dy = Math.max(0, e.clientY - rcStartY);
+        if (dy > 6) rcMoved = true;
+        rip.style.setProperty('--pull', Math.min(1, dy / 48).toFixed(3));
+        if (dy >= 40) { rcDrag = false; try { rcHandle.releasePointerCapture(e.pointerId); } catch (_) {} ripFire(); }
+      });
+      rcHandle.addEventListener('pointerup', function () {
+        if (!rcDrag) return;
+        rcDrag = false; rip.style.setProperty('--pull', 0);
+        if (!rcMoved) ripFire();            /* a plain tap fires too */
+      });
+      rcHandle.addEventListener('pointercancel', function () { if (rcDrag) { rcDrag = false; rip.style.setProperty('--pull', 0); } });
+      rcHandle.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ripFire(); } });
+    } else if (rcHandle) {
+      rcHandle.addEventListener('click', ripFire);   /* reduced-motion / no-pointer: static tap */
+    }
   }
 
   /* ---------- scroll to pod / open gate ---------- */
@@ -73,11 +124,12 @@
       /* transcript ▶ lives inside <summary>; don't let the click toggle the <details> */
       if (e) { e.preventDefault(); e.stopPropagation(); }
       emit('clip');
-      if (!clip.paused && clip.src.indexOf(btn.getAttribute('data-audio')) > -1) { clip.pause(); btn.textContent = '▶'; return; }
+      if (!clip.paused && clip.src.indexOf(btn.getAttribute('data-audio')) > -1) { clip.pause(); btn.textContent = '▶'; document.body.classList.remove('audio-live'); return; }
       clip.src = btn.getAttribute('data-audio'); clip.play().catch(function(){});
       document.querySelectorAll('[data-audio]').forEach(function(x){ x.textContent='▶'; });
       btn.textContent = '❚❚';
-      clip.onended = function(){ btn.textContent = '▶'; };
+      document.body.classList.add('audio-live');   /* audio-reactive hero dot */
+      clip.onended = function(){ btn.textContent = '▶'; document.body.classList.remove('audio-live'); };
     });
   });
 
