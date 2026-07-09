@@ -40,9 +40,9 @@ Fired on click by funnel.js (no-op if window.va absent). Current set:
 - Add a data-event on every new CTA; keep names verb_noun_location.
 
 ## PRICING (surface only when asked)
-- Starter: $497/mo + $500 setup
-- Pro: $997/mo + $1,500 setup
-- Enterprise: $1,997/mo + $2,500 setup
+- Starter: $497/mo + $497 setup
+- Growth: $997/mo + $1,500 setup
+- Operations: From $1,997/mo (custom, scoped setup)
 - White Glove: by application
 
 ## PHONE — public number 414-240-8930 only

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<title>Start Your AVA Build — Client Intake | AI Voice Agency</title>
+<meta name="description" content="The 15-minute AVA client intake. Tell us how your phone works and we build AVA around it.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://aivoiceagency.ai/intake">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%2300D4FF'/%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%2300D4FF' stroke-opacity='.35' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --void:#0A0A0F; --panel:#10131A; --panel-2:#151922; --matter:#EEF0F4;
+    --cyan:#00D4FF; --cyan-active:#00E5FF; --dim:rgba(238,240,244,.64); --faint:rgba(238,240,244,.40);
+    --line:rgba(238,240,244,.10); --line-2:rgba(238,240,244,.16);
+    --live:#00E676; --gold:#FFB800; --violet:#8B5CF6; --err:#FF6B6B;
+    --r:12px;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ background:var(--void); }
+  body{
+    color:var(--matter); font-family:'Space Grotesk',system-ui,-apple-system,Segoe UI,sans-serif;
+    -webkit-font-smoothing:antialiased; min-height:100vh; min-height:100dvh; overflow-x:hidden;
+    display:flex; flex-direction:column; overscroll-behavior-y:none; line-height:1.5;
+  }
+
+  /* ---------- top bar + progress ---------- */
+  .bar{
+    position:sticky; top:0; z-index:20; background:rgba(10,10,15,.92);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+    padding:calc(10px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));
+  }
+  .bar-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; max-width:680px; margin:0 auto; }
+  .mark{ display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--dim); text-decoration:none; }
+  .mark .signal{ width:9px; height:9px; border-radius:50%; background:var(--cyan); box-shadow:0 0 12px rgba(0,212,255,.8); }
+  .stepcount{ font-size:12px; color:var(--dim); font-variant-numeric:tabular-nums; }
+  .track{ max-width:680px; margin:10px auto 0; height:5px; border-radius:99px; background:var(--line); overflow:hidden; }
+  .fill{ height:100%; width:14%; border-radius:99px; background:linear-gradient(90deg,var(--cyan),var(--cyan-active)); transition:width .35s ease; }
+
+  main{ flex:1; width:100%; max-width:680px; margin:0 auto; padding:22px 16px 140px; position:relative; }
+
+  .lead{ margin:2px 0 18px; }
+  .kick{ font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan); }
+  .lead h1{ font-size:clamp(21px,5.2vw,27px); font-weight:700; letter-spacing:-.02em; line-height:1.15; margin-top:7px; }
+  .lead p{ margin-top:8px; color:var(--dim); font-size:14.5px; }
+
+  /* ---------- steps ---------- */
+  .step{ display:none; animation:rise .32s ease backwards; }
+  .step.active{ display:block; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+  @media (prefers-reduced-motion: reduce){ .step{ animation:none; } .fill{ transition:none; } }
+
+  .s-head{ display:flex; align-items:baseline; gap:10px; margin-bottom:4px; }
+  .s-num{ font-size:12px; font-weight:700; color:var(--cyan); font-variant-numeric:tabular-nums; }
+  .s-title{ font-size:19px; font-weight:700; letter-spacing:-.01em; }
+  .s-sub{ color:var(--dim); font-size:13.5px; margin:2px 0 18px; }
+
+  .field{ margin-bottom:16px; }
+  .field label.lbl{ display:block; font-size:13px; font-weight:600; color:var(--matter); margin-bottom:6px; }
+  .field .req{ color:var(--cyan); }
+  .field .opt{ color:var(--faint); font-weight:400; font-size:12px; }
+  .field .hint{ display:block; color:var(--faint); font-size:12px; margin-top:5px; }
+
+  input, select, textarea{
+    width:100%; font-family:inherit; font-size:16px; color:var(--matter);
+    background:var(--panel); border:1px solid var(--line-2); border-radius:var(--r);
+    padding:12px 13px; outline:none; transition:border-color .15s, box-shadow .15s; -webkit-appearance:none; appearance:none;
+  }
+  textarea{ min-height:82px; resize:vertical; line-height:1.5; }
+  input::placeholder, textarea::placeholder{ color:var(--faint); }
+  input:focus, select:focus, textarea:focus{ border-color:var(--cyan); box-shadow:0 0 0 3px rgba(0,212,255,.14); }
+  input.invalid, select.invalid, textarea.invalid{ border-color:var(--err); box-shadow:0 0 0 3px rgba(255,107,107,.12); }
+  select{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%239AA1AD' stroke-width='1.6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:34px; }
+
+  .field-err{ display:none; color:var(--err); font-size:12px; margin-top:6px; }
+  .field.show-err .field-err{ display:block; }
+
+  /* toggle chips (custom-scope flags) */
+  .chk{ display:flex; gap:11px; align-items:flex-start; background:var(--panel); border:1px solid var(--line-2); border-radius:var(--r); padding:12px 13px; cursor:pointer; }
+  .chk input{ width:20px; height:20px; flex:0 0 auto; margin-top:1px; accent-color:var(--cyan); }
+  .chk span{ font-size:13.5px; color:var(--dim); }
+
+  /* custom banner */
+  .custom-banner{
+    display:none; margin:0 0 18px; padding:13px 15px; border-radius:var(--r);
+    background:rgba(139,92,246,.10); border:1px solid rgba(139,92,246,.38); color:#D9CCFF; font-size:13.5px;
+  }
+  .custom-banner.show{ display:block; animation:rise .3s ease; }
+  .custom-banner b{ color:#EDE7FF; }
+
+  /* TCPA */
+  .tcpa{ margin-top:6px; padding:14px 15px; border-radius:var(--r); background:var(--panel); border:1px solid var(--line-2); }
+  .tcpa.invalid{ border-color:var(--err); }
+  .tcpa label{ display:flex; gap:11px; align-items:flex-start; cursor:pointer; }
+  .tcpa input{ width:20px; height:20px; flex:0 0 auto; margin-top:2px; accent-color:var(--cyan); }
+  .tcpa .txt{ font-size:12.5px; color:var(--dim); line-height:1.55; }
+  .tcpa a{ color:var(--cyan); text-decoration:none; }
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:fixed; left:0; right:0; bottom:0; z-index:20; background:rgba(10,10,15,.94);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--line);
+    padding:12px max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+  }
+  .nav-row{ display:flex; gap:12px; align-items:center; max-width:680px; margin:0 auto; }
+  .btn{ font-family:inherit; font-size:15px; font-weight:600; border-radius:var(--r); padding:13px 18px; border:1px solid transparent; cursor:pointer; transition:transform .06s, background .15s, opacity .15s; }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--cyan); color:#04121a; flex:1; box-shadow:0 6px 20px rgba(0,212,255,.18); }
+  .btn-primary:hover{ background:var(--cyan-active); }
+  .btn-primary:disabled{ background:#1c3340; color:var(--faint); box-shadow:none; cursor:not-allowed; }
+  .btn-ghost{ background:transparent; color:var(--dim); border-color:var(--line-2); }
+  .btn-ghost:hover{ color:var(--matter); border-color:var(--matter); }
+  .btn-ghost[hidden]{ display:none; }
+
+  .status{ text-align:center; font-size:13px; color:var(--dim); margin-top:9px; min-height:16px; }
+  .status.err{ color:var(--err); }
+
+  /* ---------- success ---------- */
+  .done{ display:none; text-align:center; padding:40px 8px 8px; animation:rise .4s ease; }
+  .done.show{ display:block; }
+  .done .ring{ width:74px; height:74px; margin:0 auto 20px; border-radius:50%; background:rgba(0,230,118,.10); border:1px solid rgba(0,230,118,.4); display:flex; align-items:center; justify-content:center; }
+  .done .ring svg{ width:36px; height:36px; }
+  .done h2{ font-size:24px; font-weight:700; letter-spacing:-.02em; }
+  .done p{ color:var(--dim); font-size:15px; margin:12px auto 0; max-width:460px; }
+  .done .next{ margin:24px auto 0; max-width:440px; text-align:left; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 20px; }
+  .done .next h3{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+  .done .next li{ list-style:none; padding:7px 0 7px 26px; position:relative; font-size:14px; color:var(--matter); border-top:1px solid var(--line); }
+  .done .next li:first-child{ border-top:none; }
+  .done .next li::before{ content:""; position:absolute; left:2px; top:13px; width:8px; height:8px; border-radius:50%; background:var(--live); box-shadow:0 0 10px rgba(0,230,118,.6); }
+
+  footer{ text-align:center; color:var(--faint); font-size:12px; padding:26px 16px 12px; }
+  footer a{ color:var(--dim); text-decoration:none; }
+  footer .help{ color:var(--dim); }
+  footer .help a{ color:var(--cyan); font-weight:600; white-space:nowrap; }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-row">
+    <a class="mark" href="/"><span class="signal" aria-hidden="true"></span>AI Voice Agency</a>
+    <span class="stepcount" id="stepcount" aria-live="polite">Step 1 of 7</span>
+  </div>
+  <div class="track" role="progressbar" aria-label="Intake progress" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1"><div class="fill" id="fill"></div></div>
+</header>
+
+<main>
+  <div class="lead" id="lead">
+    <span class="kick">AVA Client Intake</span>
+    <h1>Let's build AVA around your phone.</h1>
+    <p>About 15 minutes. Answer what you can — anything unclear, we finish it together on your call.</p>
+  </div>
+
+  <div class="custom-banner" id="customBanner">Your build is <b>custom</b> — we'll scope it on your call. Keep going; nothing here changes.</div>
+
+  <form id="intakeForm" novalidate>
+
+    <!-- STEP 1 — BUSINESS -->
+    <section class="step active" data-step="1">
+      <div class="s-head"><span class="s-num">01 / 07</span><span class="s-title">Business</span></div>
+      <p class="s-sub">The basics — who you are and what you do.</p>
+
+      <div class="field">
+        <label class="lbl" for="business_name">Business name <span class="req">*</span></label>
+        <input id="business_name" name="business_name" type="text" required autocomplete="organization" placeholder="e.g. North Star HVAC">
+        <span class="field-err">Enter your business name.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="owner_name">Your name <span class="req">*</span></label>
+        <input id="owner_name" name="owner_name" type="text" required autocomplete="name" placeholder="First and last">
+        <span class="field-err">Enter your name.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="vertical">Industry <span class="req">*</span></label>
+        <select id="vertical" name="vertical" required>
+          <option value="" selected disabled>Choose one…</option>
+          <option>HVAC</option><option>Plumbing</option><option>Electrical</option>
+          <option>Dental</option><option>Med-spa</option><option>Roofing</option>
+          <option>Salon</option><option>Restaurant</option><option>Legal</option><option>Other</option>
+        </select>
+        <span class="field-err">Pick your industry.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="service_area">City + service area <span class="opt">optional</span></label>
+        <input id="service_area" name="service_area" type="text" placeholder="e.g. Milwaukee + 25 mi">
+      </div>
+      <div class="field">
+        <label class="lbl" for="website">Website <span class="opt">optional</span></label>
+        <input id="website" name="website" type="text" inputmode="url" placeholder="yourbusiness.com">
+      </div>
+      <div class="field">
+        <label class="lbl" for="years_in_business">Years in business <span class="opt">optional</span></label>
+        <input id="years_in_business" name="years_in_business" type="text" inputmode="numeric" placeholder="e.g. 12">
+      </div>
+    </section>
+
+    <!-- STEP 2 — THE LINE -->
+    <section class="step" data-step="2">
+      <div class="s-head"><span class="s-num">02 / 07</span><span class="s-title">The Line</span></div>
+      <p class="s-sub">The number AVA answers and how it runs today.</p>
+
+      <div class="field">
+        <label class="lbl" for="ava_number">Number AVA will answer <span class="req">*</span></label>
+        <input id="ava_number" name="ava_number" type="tel" required autocomplete="tel" placeholder="(414) 555-0100">
+        <span class="hint">Your main business line, or a new number we route.</span>
+        <span class="field-err">Enter the number AVA should answer.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="who_answers_today">Who answers it today? <span class="req">*</span></label>
+        <select id="who_answers_today" name="who_answers_today" required>
+          <option value="" selected disabled>Choose one…</option>
+          <option>Me</option><option>My staff</option><option>An answering service</option><option>Voicemail</option><option>Nobody / it rings out</option>
+        </select>
+        <span class="field-err">Tell us who answers now.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="ok_to_forward">OK to forward the line to AVA? <span class="opt">optional</span></label>
+        <select id="ok_to_forward" name="ok_to_forward">
+          <option value="" selected disabled>Choose one…</option>
+          <option>Yes</option><option>No</option><option>Not sure yet</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="lbl" for="business_hours">Business hours <span class="opt">optional</span></label>
+        <input id="business_hours" name="business_hours" type="text" placeholder="e.g. Mon–Fri 7–5, Sat 8–12">
+      </div>
+      <div class="field">
+        <label class="lbl" for="after_hours">What should happen after hours? <span class="opt">optional</span></label>
+        <input id="after_hours" name="after_hours" type="text" placeholder="e.g. Capture + text me; route emergencies to on-call">
+      </div>
+      <div class="field">
+        <label class="lbl" for="calls_per_month">Calls per month (estimate) <span class="req">*</span></label>
+        <input id="calls_per_month" name="calls_per_month" type="text" inputmode="numeric" required placeholder="e.g. 350">
+        <span class="field-err">A rough number is fine.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="pct_missed">% you miss right now <span class="opt">optional</span></label>
+        <input id="pct_missed" name="pct_missed" type="text" inputmode="numeric" placeholder="Best guess, e.g. 25">
+      </div>
+    </section>
+
+    <!-- STEP 3 — WHAT AVA SAYS -->
+    <section class="step" data-step="3">
+      <div class="s-head"><span class="s-num">03 / 07</span><span class="s-title">What AVA Says</span></div>
+      <p class="s-sub">How AVA talks to your callers.</p>
+
+      <div class="field">
+        <label class="lbl" for="services">Your services <span class="req">*</span></label>
+        <textarea id="services" name="services" required placeholder="List what you do — repairs, installs, maintenance, estimates…"></textarea>
+        <span class="field-err">List at least your main services.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="top_questions">Top caller questions + your answers <span class="opt">optional</span></label>
+        <textarea id="top_questions" name="top_questions" placeholder="The 5 things callers ask most, and how you'd want AVA to answer."></textarea>
+      </div>
+      <div class="field">
+        <label class="lbl" for="prices_quote">Prices AVA may quote <span class="opt">optional</span></label>
+        <textarea id="prices_quote" name="prices_quote" placeholder="Never quote prices">Never quote prices</textarea>
+        <span class="hint">Leave as "Never quote prices," or list what AVA may say.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="emergency_protocol">What counts as an emergency + what AVA should do <span class="opt">optional</span></label>
+        <textarea id="emergency_protocol" name="emergency_protocol" placeholder="e.g. No heat in winter → text on-call tech immediately."></textarea>
+      </div>
+      <div class="field">
+        <label class="lbl" for="never_do">Anything AVA must NEVER say or do <span class="opt">optional</span></label>
+        <textarea id="never_do" name="never_do" placeholder="e.g. Never promise same-day; never give firm pricing."></textarea>
+      </div>
+    </section>
+
+    <!-- STEP 4 — BOOKING + SYSTEMS -->
+    <section class="step" data-step="4">
+      <div class="s-head"><span class="s-num">04 / 07</span><span class="s-title">Booking + Systems</span></div>
+      <p class="s-sub">Where AVA books and what it writes to.</p>
+
+      <div class="field">
+        <label class="lbl" for="calendar_system">Calendar / scheduling system <span class="req">*</span></label>
+        <select id="calendar_system" name="calendar_system" required>
+          <option value="" selected disabled>Choose one…</option>
+          <option>Google Calendar</option><option>GoHighLevel</option><option>ServiceTitan</option>
+          <option>Housecall Pro</option><option>Calendly</option><option>Cal.com</option>
+          <option>Jobber</option><option>Other</option><option>None yet</option>
+        </select>
+        <span class="field-err">Pick what you use (or "None yet").</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="job_length">Typical job length + buffer rules <span class="opt">optional</span></label>
+        <input id="job_length" name="job_length" type="text" placeholder="e.g. 90 min + 30 min drive buffer">
+      </div>
+      <div class="field">
+        <label class="lbl" for="crm_name">CRM (if any) <span class="opt">optional</span></label>
+        <input id="crm_name" name="crm_name" type="text" placeholder="e.g. GoHighLevel, HubSpot, none">
+      </div>
+      <div class="field">
+        <label class="lbl" for="summaries_to">Where should call summaries go? <span class="opt">optional</span></label>
+        <input id="summaries_to" name="summaries_to" type="text" placeholder="Your cell + email">
+      </div>
+      <div class="field">
+        <label class="chk">
+          <input type="checkbox" id="field_mapping" data-custom>
+          <span>I need AVA to write into <b>specific fields</b> in my CRM (field-by-field mapping).</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- STEP 5 — RIPCORD -->
+    <section class="step" data-step="5">
+      <div class="s-head"><span class="s-num">05 / 07</span><span class="s-title">Ripcord</span></div>
+      <p class="s-sub">When AVA should hand a call to a human.</p>
+
+      <div class="field">
+        <label class="lbl" for="transfer_number">Transfer-to number <span class="opt">optional</span></label>
+        <input id="transfer_number" name="transfer_number" type="tel" placeholder="Where live calls should go">
+      </div>
+      <div class="field">
+        <label class="lbl" for="vip_callers">VIP callers AVA should recognize <span class="opt">optional</span></label>
+        <input id="vip_callers" name="vip_callers" type="text" placeholder="e.g. property managers, repeat commercial accounts">
+      </div>
+      <div class="field">
+        <label class="lbl" for="trigger_words">Trigger words that hand off instantly <span class="opt">optional</span></label>
+        <input id="trigger_words" name="trigger_words" type="text" placeholder="e.g. no heat, flooding, gas smell">
+      </div>
+      <div class="field">
+        <label class="lbl" for="message_vs_transfer">When should AVA take a message vs. transfer? <span class="opt">optional</span></label>
+        <textarea id="message_vs_transfer" name="message_vs_transfer" placeholder="e.g. Transfer emergencies during hours; take a message otherwise."></textarea>
+      </div>
+      <div class="field">
+        <label class="chk">
+          <input type="checkbox" id="live_transfer" data-custom>
+          <span>I need <b>live warm-transfer orchestration</b> — multi-step routing between people or teams.</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- STEP 6 — IDENTITY + COMPLIANCE -->
+    <section class="step" data-step="6">
+      <div class="s-head"><span class="s-num">06 / 07</span><span class="s-title">Identity + Compliance</span></div>
+      <p class="s-sub">How AVA introduces itself, and your consent settings.</p>
+
+      <div class="field">
+        <label class="lbl" for="greeting">AVA's greeting <span class="req">*</span></label>
+        <input id="greeting" name="greeting" type="text" required placeholder="Thanks for calling [Business], this is Ava">
+        <span class="hint">AVA always answers by name — never "she."</span>
+        <span class="field-err">Give AVA a greeting.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="ok_recording">OK for AVA to disclose calls may be recorded? <span class="req">*</span></label>
+        <select id="ok_recording" name="ok_recording" required>
+          <option value="" selected disabled>Choose one…</option>
+          <option>Yes</option><option>No</option>
+        </select>
+        <span class="field-err">Choose yes or no.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="ok_text_callers">OK for AVA to text callers confirmations? <span class="req">*</span></label>
+        <select id="ok_text_callers" name="ok_text_callers" required>
+          <option value="" selected disabled>Choose one…</option>
+          <option>Yes</option><option>No</option>
+        </select>
+        <span class="field-err">Choose yes or no.</span>
+      </div>
+    </section>
+
+    <!-- STEP 7 — PLAN + START -->
+    <section class="step" data-step="7">
+      <div class="s-head"><span class="s-num">07 / 07</span><span class="s-title">Plan + Start</span></div>
+      <p class="s-sub">Pick your plan and your go-live target.</p>
+
+      <div class="field">
+        <label class="lbl" for="tier">Plan <span class="req">*</span></label>
+        <select id="tier" name="tier" required>
+          <option value="" selected disabled>Choose your plan…</option>
+          <option value="Starter">Starter — $497/mo + $497 setup</option>
+          <option value="Growth">Growth — $997/mo + $1,500 setup</option>
+          <option value="Operations">Operations — from $1,997/mo (custom)</option>
+        </select>
+        <span class="hint">Not sure? Pick the closest — we confirm on the call.</span>
+        <span class="field-err">Pick a plan.</span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="go_live_date">Target go-live date <span class="opt">optional</span></label>
+        <input id="go_live_date" name="go_live_date" type="date">
+      </div>
+      <div class="field">
+        <label class="lbl" for="billing_email">Billing email <span class="req">*</span></label>
+        <input id="billing_email" name="billing_email" type="email" required autocomplete="email" placeholder="you@yourbusiness.com">
+        <span class="field-err">Enter a valid email.</span>
+      </div>
+
+      <div class="field" style="margin-top:20px">
+        <div class="tcpa" id="tcpaBox">
+          <label>
+            <input type="checkbox" id="tcpa_consent">
+            <span class="txt">I agree that AI Voice Agency and AVA may call and text the number(s) I provided about my build and account, including via automated systems. Consent isn't a condition of purchase. Msg &amp; data rates may apply; reply STOP to opt out. See our <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/terms.html" target="_blank" rel="noopener">Terms</a>.</span>
+          </label>
+        </div>
+        <span class="field-err" id="tcpaErr" style="display:none">Please check the box so we can build and reach you.</span>
+      </div>
+    </section>
+
+  </form>
+
+  <!-- SUCCESS RECEIPT -->
+  <div class="done" id="done">
+    <div class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <h2>Your build starts now.</h2>
+    <p>Shane will confirm your go-live window. Everything you just told us is already in front of the build team.</p>
+    <div class="next">
+      <h3>What happens next</h3>
+      <ul>
+        <li>We map your call flow from your answers and build AVA around it.</li>
+        <li>Shane confirms your go-live window and anything that needs a quick call.</li>
+        <li>You hear AVA on your own line before it ever answers a real customer.</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<nav class="nav" id="nav">
+  <div class="nav-row">
+    <button type="button" class="btn btn-ghost" id="backBtn" hidden>← Back</button>
+    <button type="button" class="btn btn-primary" id="nextBtn">Next →</button>
+  </div>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+</nav>
+
+<footer id="footer">
+  <p class="help">Stuck mid-form? Call us — <a href="tel:+14142408930">414-240-8930</a></p>
+  <p style="margin-top:8px">AI Voice Agency · <a href="/">aivoiceagency.ai</a></p>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var ENDPOINT = 'https://circulant.app.n8n.cloud/webhook/ava-intake';
+  var TOTAL = 7;
+  var cur = 1;
+
+  var form = document.getElementById('intakeForm');
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var fill = document.getElementById('fill');
+  var track = document.querySelector('.track');
+  var stepcount = document.getElementById('stepcount');
+  var backBtn = document.getElementById('backBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var statusEl = document.getElementById('status');
+  var banner = document.getElementById('customBanner');
+  var consent = document.getElementById('tcpa_consent');
+  var tcpaBox = document.getElementById('tcpaBox');
+  var tcpaErr = document.getElementById('tcpaErr');
+
+  function val(id){ var e = document.getElementById(id); return e ? (e.value || '').trim() : ''; }
+
+  /* ---------- step navigation ---------- */
+  function render(){
+    steps.forEach(function(s){ s.classList.toggle('active', +s.getAttribute('data-step') === cur); });
+    fill.style.width = Math.round((cur/TOTAL)*100) + '%';
+    stepcount.textContent = 'Step ' + cur + ' of ' + TOTAL;
+    track.setAttribute('aria-valuenow', cur);
+    backBtn.hidden = (cur === 1);
+    nextBtn.textContent = (cur === TOTAL) ? 'Start my build' : 'Next →';
+    nextBtn.classList.toggle('is-submit', cur === TOTAL);
+    if (cur === TOTAL) syncConsent();
+    statusEl.textContent = '';
+    statusEl.className = 'status';
+    /* pre-fill greeting from business name when landing on step 6 */
+    if (cur === 6){
+      var g = document.getElementById('greeting');
+      if (g && !g.value){
+        var b = val('business_name');
+        g.value = 'Thanks for calling ' + (b || '[Business]') + ', this is Ava';
+      }
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    var first = steps[cur-1].querySelector('input,select,textarea');
+    if (first){ try { first.focus({ preventScroll: true }); } catch(e){} }
+  }
+
+  function markErr(el, on){
+    var f = el.closest('.field'); if (!f) return;
+    f.classList.toggle('show-err', on);
+    el.classList.toggle('invalid', on);
+  }
+
+  function validateStep(n){
+    var scope = steps[n-1];
+    var reqs = Array.prototype.slice.call(scope.querySelectorAll('[required]'));
+    var ok = true, firstBad = null;
+    reqs.forEach(function(el){
+      var bad = !el.value || !el.value.trim();
+      if (el.type === 'email' && el.value){ bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()); }
+      markErr(el, bad);
+      if (bad && !firstBad) firstBad = el;
+      if (bad) ok = false;
+    });
+    if (firstBad){ try { firstBad.focus({ preventScroll:false }); } catch(e){} }
+    return ok;
+  }
+
+  backBtn.addEventListener('click', function(){ if (cur > 1){ cur--; render(); } });
+
+  nextBtn.addEventListener('click', function(){
+    if (!validateStep(cur)){ statusEl.textContent = 'A couple fields need a quick answer.'; statusEl.className = 'status err'; return; }
+    if (cur < TOTAL){ cur++; render(); return; }
+    submit();
+  });
+
+  /* ---------- custom auto-flag (Gemini rules) ---------- */
+  function customReasons(){
+    var r = [];
+    var calls = parseInt((val('calls_per_month')||'').replace(/[^0-9]/g,''), 10);
+    if (calls && calls > 2000) r.push('volume >2,000 calls/mo');
+    if (document.getElementById('field_mapping').checked) r.push('CRM field-by-field mapping');
+    if (document.getElementById('live_transfer').checked) r.push('live warm-transfer orchestration');
+    if (val('tier') === 'Operations') r.push('Operations tier');
+    return r;
+  }
+  function syncCustom(){
+    var r = customReasons();
+    banner.classList.toggle('show', r.length > 0);
+    return r;
+  }
+  ['calls_per_month','field_mapping','live_transfer','tier'].forEach(function(id){
+    var e = document.getElementById(id);
+    if (e){ e.addEventListener('input', syncCustom); e.addEventListener('change', syncCustom); }
+  });
+
+  /* ---------- TCPA fail-closed ---------- */
+  function syncConsent(){
+    var okC = !!(consent && consent.checked);
+    if (cur === TOTAL){ nextBtn.disabled = !okC; }
+    else { nextBtn.disabled = false; }
+    if (okC){ tcpaBox.classList.remove('invalid'); tcpaErr.style.display = 'none'; }
+  }
+  consent.addEventListener('change', syncConsent);
+
+  /* ---------- submit ---------- */
+  function submit(){
+    if (!consent.checked){
+      tcpaBox.classList.add('invalid'); tcpaErr.style.display = 'block';
+      statusEl.textContent = 'Please check the consent box to start your build.'; statusEl.className = 'status err';
+      return;
+    }
+    var reasons = syncCustom();
+    var payload = {
+      business_name: val('business_name'), owner_name: val('owner_name'), vertical: val('vertical'),
+      service_area: val('service_area'), website: val('website'), years_in_business: val('years_in_business'),
+      ava_number: val('ava_number'), who_answers_today: val('who_answers_today'), ok_to_forward: val('ok_to_forward'),
+      business_hours: val('business_hours'), after_hours: val('after_hours'), calls_per_month: val('calls_per_month'), pct_missed: val('pct_missed'),
+      services: val('services'), top_questions: val('top_questions'), prices_quote: val('prices_quote'),
+      emergency_protocol: val('emergency_protocol'), never_do: val('never_do'),
+      calendar_system: val('calendar_system'), job_length: val('job_length'), crm_name: val('crm_name'), summaries_to: val('summaries_to'),
+      transfer_number: val('transfer_number'), vip_callers: val('vip_callers'), trigger_words: val('trigger_words'), message_vs_transfer: val('message_vs_transfer'),
+      greeting: val('greeting'), ok_recording: val('ok_recording'), ok_text_callers: val('ok_text_callers'),
+      tier: val('tier'), go_live_date: val('go_live_date'), billing_email: val('billing_email'),
+      tcpa_consent: true, tcpa_consent_at: new Date().toISOString(),
+      custom_flag: reasons.length > 0, custom_reasons: reasons.join('; '),
+      field_mapping: document.getElementById('field_mapping').checked,
+      live_transfer: document.getElementById('live_transfer').checked,
+      source: 'aivoiceagency.ai /intake'
+    };
+
+    nextBtn.disabled = true;
+    statusEl.textContent = 'Sending your build to the team…'; statusEl.className = 'status';
+
+    fetch(ENDPOINT, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    }).then(function(r){
+      if (r.ok) { showDone(); }
+      else { statusEl.textContent = 'Something went wrong (' + r.status + '). Tap to try again.'; statusEl.className = 'status err'; nextBtn.disabled = false; }
+    }).catch(function(){
+      statusEl.textContent = 'Network hiccup — check your connection and try again.'; statusEl.className = 'status err'; nextBtn.disabled = false;
+    });
+  }
+
+  function showDone(){
+    form.style.display = 'none';
+    banner.classList.remove('show');
+    document.getElementById('nav').style.display = 'none';
+    document.getElementById('lead').style.display = 'none';
+    document.getElementById('done').classList.add('show');
+    var fillbar = document.getElementById('fill'); fillbar.style.width = '100%';
+    stepcount.textContent = 'Done';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

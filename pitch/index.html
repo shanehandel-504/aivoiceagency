@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  /pitch — AVA sales deck (noindex, sales-only).
+  PROVENANCE: rendered from the 8-slide arc authored by Shane in "SALES KIT v1"
+  (Notion L5, ID 398581219cb2817abbe7e963f3e43866). Content is Shane's; HTML/CSS is the build.
+  This is a faithful stand-in until the designed ava-pitch.html artifact is dropped in —
+  to swap: overwrite this file with that artifact and redeploy (same /pitch URL).
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<title>AVA — The 15-Minute Pitch</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="AVA sales deck — internal, sales-only.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%2300D4FF'/%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%2300D4FF' stroke-opacity='.35' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --void:#0A0A0F; --panel:#10131A; --panel-2:#161A24; --matter:#EEF0F4;
+    --cyan:#00D4FF; --cyan-active:#00E5FF; --dim:rgba(238,240,244,.66); --faint:rgba(238,240,244,.42);
+    --line:rgba(238,240,244,.10); --line-2:rgba(238,240,244,.18);
+    --live:#00E676; --gold:#FFB800; --violet:#8B5CF6;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; background:var(--void); }
+  body{
+    color:var(--matter); font-family:'Space Grotesk',system-ui,-apple-system,Segoe UI,sans-serif;
+    -webkit-font-smoothing:antialiased; overflow:hidden; overscroll-behavior:none;
+  }
+
+  .stage{ position:fixed; inset:0; }
+  .slide{
+    position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center;
+    padding:clamp(28px,7vw,90px); opacity:0; visibility:hidden; transform:translateY(14px);
+    transition:opacity .38s ease, transform .38s ease, visibility .38s;
+    background:radial-gradient(120% 90% at 50% -10%, rgba(0,212,255,.06), transparent 60%);
+  }
+  .slide.on{ opacity:1; visibility:visible; transform:none; }
+  .inner{ max-width:920px; margin:0 auto; width:100%; }
+  @media (prefers-reduced-motion: reduce){ .slide{ transition:opacity .2s ease; transform:none; } }
+
+  .tag{ display:inline-block; font-size:12px; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--cyan); margin-bottom:20px; }
+  h1{ font-size:clamp(30px,6.6vw,62px); font-weight:700; line-height:1.06; letter-spacing:-.03em; }
+  h2{ font-size:clamp(26px,5.4vw,50px); font-weight:700; line-height:1.1; letter-spacing:-.025em; }
+  .em{ color:var(--cyan); }
+  .sub{ font-size:clamp(16px,2.4vw,22px); color:var(--dim); margin-top:20px; max-width:640px; line-height:1.5; }
+  .whisper{ font-size:15px; color:var(--faint); margin-top:26px; }
+
+  .list{ margin-top:28px; display:grid; gap:14px; max-width:660px; }
+  .list li{ list-style:none; padding-left:34px; position:relative; font-size:clamp(16px,2.3vw,21px); line-height:1.45; color:var(--matter); }
+  .list li b{ color:#fff; font-weight:600; }
+  .list li::before{ content:""; position:absolute; left:2px; top:.55em; width:11px; height:11px; border-radius:50%; background:var(--cyan); box-shadow:0 0 12px rgba(0,212,255,.6); }
+  .list.green li::before{ background:var(--live); box-shadow:0 0 12px rgba(0,230,118,.6); }
+
+  /* THE LEAK math card */
+  .mathcard{ margin-top:26px; background:var(--panel); border:1px solid var(--line-2); border-radius:16px; padding:clamp(18px,3vw,26px); max-width:620px; }
+  .mathrow{ display:flex; justify-content:space-between; align-items:baseline; gap:14px; padding:9px 0; border-top:1px solid var(--line); font-size:clamp(15px,2vw,18px); }
+  .mathrow:first-child{ border-top:none; }
+  .mathrow .k{ color:var(--dim); }
+  .mathrow .v{ font-weight:600; font-variant-numeric:tabular-nums; }
+  .mathrow.total .k{ color:var(--matter); font-weight:600; }
+  .mathrow.total .v{ color:var(--gold); font-size:clamp(22px,3.6vw,30px); font-weight:700; }
+  .mathnote{ margin-top:14px; font-size:14px; color:var(--faint); }
+
+  /* THE MOMENT phone */
+  .dial{ display:inline-flex; align-items:center; gap:16px; margin-top:26px; text-decoration:none; }
+  .dial .num{ font-size:clamp(34px,7vw,58px); font-weight:700; letter-spacing:-.02em; color:#fff; font-variant-numeric:tabular-nums; }
+  .dial .live{ display:inline-flex; align-items:center; gap:9px; font-size:14px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--live); }
+  .dial .dot{ width:11px; height:11px; border-radius:50%; background:var(--live); box-shadow:0 0 0 0 rgba(0,230,118,.6); animation:pulse 2s infinite; }
+  @keyframes pulse{ 0%{ box-shadow:0 0 0 0 rgba(0,230,118,.5);} 70%{ box-shadow:0 0 0 14px rgba(0,230,118,0);} 100%{ box-shadow:0 0 0 0 rgba(0,230,118,0);} }
+  @media (prefers-reduced-motion: reduce){ .dial .dot{ animation:none; } }
+
+  /* PRICING tiers */
+  .tiers{ margin-top:30px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .tier{ background:var(--panel); border:1px solid var(--line-2); border-radius:16px; padding:22px 20px; position:relative; }
+  .tier.feat{ border-color:rgba(139,92,246,.55); box-shadow:0 0 0 1px rgba(139,92,246,.25), 0 14px 40px rgba(0,0,0,.35); }
+  .tier .badge{ position:absolute; top:-11px; left:20px; font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#EDE7FF; background:var(--violet); padding:4px 10px; border-radius:99px; }
+  .tier .tname{ font-size:14px; font-weight:600; color:var(--dim); }
+  .tier .tprice{ font-size:clamp(24px,3.4vw,32px); font-weight:700; margin-top:6px; letter-spacing:-.02em; }
+  .tier .tprice span{ font-size:15px; color:var(--dim); font-weight:500; }
+  .tier .tsetup{ font-size:13px; color:var(--gold); margin-top:2px; }
+  .tier .tlist{ margin-top:14px; display:grid; gap:8px; }
+  .tier .tlist li{ list-style:none; font-size:13.5px; color:var(--dim); padding-left:18px; position:relative; line-height:1.4; }
+  .tier .tlist li::before{ content:""; position:absolute; left:0; top:.5em; width:6px; height:6px; border-radius:50%; background:var(--cyan); }
+  .pricenote{ margin-top:20px; font-size:14px; color:var(--faint); }
+
+  /* CLOSE cta */
+  .urlchip{ display:inline-block; margin-top:26px; font-size:clamp(22px,4vw,34px); font-weight:700; color:var(--void); background:linear-gradient(90deg,var(--cyan),var(--cyan-active)); padding:14px 26px; border-radius:14px; letter-spacing:-.01em; box-shadow:0 12px 40px rgba(0,212,255,.22); }
+
+  /* ---------- chrome ---------- */
+  .mark{ position:fixed; top:22px; left:26px; z-index:30; display:inline-flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--dim); text-decoration:none; }
+  .mark .signal{ width:9px; height:9px; border-radius:50%; background:var(--cyan); box-shadow:0 0 12px rgba(0,212,255,.8); }
+  .counter{ position:fixed; top:22px; right:26px; z-index:30; font-size:13px; color:var(--dim); font-variant-numeric:tabular-nums; }
+  .dots{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:30; display:flex; gap:10px; }
+  .dots button{ width:9px; height:9px; border-radius:50%; border:none; background:var(--line-2); cursor:pointer; padding:0; transition:background .2s, transform .2s; }
+  .dots button.on{ background:var(--cyan); transform:scale(1.25); }
+  .arrow{ position:fixed; bottom:20px; z-index:30; width:44px; height:44px; border-radius:50%; border:1px solid var(--line-2); background:rgba(16,19,26,.7); color:var(--matter); font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(6px); }
+  .arrow:hover{ border-color:var(--cyan); color:var(--cyan); }
+  .arrow.prev{ right:78px; } .arrow.next{ right:26px; }
+  .arrow[disabled]{ opacity:.3; cursor:default; }
+  .hint{ position:fixed; bottom:26px; left:26px; z-index:30; font-size:12px; color:var(--faint); }
+
+  /* ---------- phones: stack tiers, let tall slides scroll ---------- */
+  @media (max-width:640px){
+    .slide{ justify-content:flex-start; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-top:62px; padding-bottom:74px; }
+    .tiers{ grid-template-columns:1fr; gap:12px; }
+    .tier.feat{ box-shadow:0 0 0 1px rgba(139,92,246,.25); }
+    .arrow.prev{ right:auto; left:20px; } .arrow.next{ right:20px; }
+    .hint{ display:none; }
+  }
+
+  /* ---------- print → clean PDF ---------- */
+  @media print{
+    @page{ size:landscape; margin:0; }
+    html,body{ height:auto; overflow:visible; background:#fff; }
+    body{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .mark,.counter,.dots,.arrow,.hint{ display:none !important; }
+    .stage{ position:static; }
+    .slide{
+      position:relative; inset:auto; opacity:1 !important; visibility:visible !important; transform:none !important;
+      min-height:100vh; page-break-after:always; break-after:page; background:var(--void);
+    }
+    .slide:last-child{ page-break-after:auto; }
+    .dial .dot{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="mark" href="/"><span class="signal" aria-hidden="true"></span>AI Voice Agency</a>
+<div class="counter" id="counter">1 / 8</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 — TITLE -->
+  <section class="slide on" data-i="1">
+    <div class="inner">
+      <span class="tag">AI Voice Agency</span>
+      <h1>Your phone is your best salesperson.<br><span class="em">Right now it works part-time.</span></h1>
+      <p class="sub">AVA answers every call, books the job, and texts the customer — 24/7, in one ring.</p>
+      <p class="whisper">So — who answers your phone right now?</p>
+    </div>
+  </section>
+
+  <!-- 2 — THE LEAK -->
+  <section class="slide" data-i="2">
+    <div class="inner">
+      <span class="tag">The Leak</span>
+      <h2>Every missed call is a job that went to <span class="em">whoever picked up.</span></h2>
+      <div class="mathcard">
+        <div class="mathrow"><span class="k">Calls a month</span><span class="v">350</span></div>
+        <div class="mathrow"><span class="k">Missed (28%)</span><span class="v">98</span></div>
+        <div class="mathrow"><span class="k">Would have booked (40%)</span><span class="v">39</span></div>
+        <div class="mathrow"><span class="k">Average job</span><span class="v">$380</span></div>
+        <div class="mathrow total"><span class="k">Walking out the door</span><span class="v">≈ $14,900 / mo</span></div>
+        <p class="mathnote">That's an example. On the call we run <b>your</b> numbers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 — THE MOMENT -->
+  <section class="slide" data-i="3">
+    <div class="inner">
+      <span class="tag">Hear it</span>
+      <h2>Don't take my word for it. <span class="em">Call AVA right now.</span></h2>
+      <a class="dial" href="tel:+14142408930">
+        <span class="live"><span class="dot" aria-hidden="true"></span>Live</span>
+        <span class="num">414-240-8930</span>
+      </a>
+      <p class="sub">Put it on speaker. Ask about a job. That is exactly what your callers will hear.</p>
+    </div>
+  </section>
+
+  <!-- 4 — WHAT YOU GET -->
+  <section class="slide" data-i="4">
+    <div class="inner">
+      <span class="tag">What AVA does</span>
+      <h2>One ring. <span class="em">Every time.</span></h2>
+      <ul class="list">
+        <li>Answers every call <b>24/7</b> — no voicemail, no missed leads.</li>
+        <li>Books the appointment straight onto your calendar.</li>
+        <li>Texts the caller a confirmation — and texts <b>you</b> the lead the second the call ends.</li>
+        <li>Every call transcribed and recorded on your dashboard.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5 — THE MACHINE -->
+  <section class="slide" data-i="5">
+    <div class="inner">
+      <span class="tag">The Machine</span>
+      <h2>Built around your business — <span class="em">not a script.</span></h2>
+      <ul class="list">
+        <li>Human-grade voice, <b>sub-500ms</b> response — no robotic uncanny valley.</li>
+        <li>Writes to your CRM &amp; calendar — Google, GHL, ServiceTitan, Housecall Pro, Jobber.</li>
+        <li><b>Ripcord:</b> emergencies and VIPs warm-transfer to a human on your rules.</li>
+        <li>Every call captured and routed — your dispatcher confirms the details.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 — PRICING -->
+  <section class="slide" data-i="6">
+    <div class="inner">
+      <span class="tag">Pricing</span>
+      <h2>Three tiers. <span class="em">One conversation to fit.</span></h2>
+      <div class="tiers">
+        <div class="tier">
+          <div class="tname">Starter</div>
+          <div class="tprice">$497<span>/mo</span></div>
+          <div class="tsetup">+ $497 setup</div>
+          <ul class="tlist"><li>24/7 answer, qualify &amp; book</li><li>Calendar + SMS/email confirmations</li><li>Transcripts + recordings</li></ul>
+        </div>
+        <div class="tier feat">
+          <span class="badge">Most chosen</span>
+          <div class="tname">Growth</div>
+          <div class="tprice">$997<span>/mo</span></div>
+          <div class="tsetup">+ $1,500 setup</div>
+          <ul class="tlist"><li>Everything in Starter</li><li>Speed-to-lead callback</li><li>7-day no-book follow-up</li><li>CRM writeback</li></ul>
+        </div>
+        <div class="tier">
+          <div class="tname">Operations</div>
+          <div class="tprice">From $1,997<span>/mo</span></div>
+          <div class="tsetup">+ scoped setup</div>
+          <ul class="tlist"><li>Custom intake + routing</li><li>Deep CRM / industry software</li><li>Warm transfers + escalation</li><li>Multi-line / location</li></ul>
+        </div>
+      </div>
+      <p class="pricenote">No contracts. Cancel anytime. Voice minutes billed by usage.</p>
+    </div>
+  </section>
+
+  <!-- 7 — EFFORT OBJECTION -->
+  <section class="slide" data-i="7">
+    <div class="inner">
+      <span class="tag">What it takes</span>
+      <h2>Live on your line in <span class="em">days — not months.</span></h2>
+      <ul class="list green">
+        <li>A <b>15-minute intake</b> — we do it together, right after this call.</li>
+        <li>You keep your number. Nothing rips out.</li>
+        <li><b>Ripcord</b> safety: a human is one word away, always.</li>
+        <li>You hear AVA on your own line before a single real customer does.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 8 — CLOSE -->
+  <section class="slide" data-i="8">
+    <div class="inner">
+      <span class="tag">Start</span>
+      <h2>Let's start your build <span class="em">right now.</span></h2>
+      <p class="sub">The intake takes about 15 minutes. We map your call flow and AVA goes live around it.</p>
+      <span class="urlchip">aivoiceagency.ai/intake</span>
+      <p class="whisper">Questions first? Call AVA live — 414-240-8930.</p>
+    </div>
+  </section>
+
+</div>
+
+<button class="arrow prev" id="prev" aria-label="Previous slide">‹</button>
+<button class="arrow next" id="next" aria-label="Next slide">›</button>
+<div class="dots" id="dots" role="tablist" aria-label="Slides"></div>
+<div class="hint">← → or swipe</div>
+
+<script>
+(function(){
+  "use strict";
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var N = slides.length, cur = 0;
+  var counter = document.getElementById('counter');
+  var prev = document.getElementById('prev'), next = document.getElementById('next');
+  var dotsWrap = document.getElementById('dots');
+
+  var dots = slides.map(function(_, i){
+    var b = document.createElement('button');
+    b.setAttribute('role','tab'); b.setAttribute('aria-label','Slide ' + (i+1));
+    b.addEventListener('click', function(){ go(i); });
+    dotsWrap.appendChild(b); return b;
+  });
+
+  function go(i){
+    cur = Math.max(0, Math.min(N-1, i));
+    slides.forEach(function(s, k){ s.classList.toggle('on', k === cur); });
+    dots.forEach(function(d, k){ d.classList.toggle('on', k === cur); });
+    counter.textContent = (cur+1) + ' / ' + N;
+    prev.disabled = (cur === 0); next.disabled = (cur === N-1);
+  }
+  function step(d){ go(cur + d); }
+
+  prev.addEventListener('click', function(){ step(-1); });
+  next.addEventListener('click', function(){ step(1); });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); step(1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); step(-1); }
+    else if (e.key === 'Home'){ go(0); }
+    else if (e.key === 'End'){ go(N-1); }
+  });
+
+  /* tap zones: left 32% = back, right = forward (ignore taps on links/buttons) */
+  document.getElementById('stage').addEventListener('click', function(e){
+    if (e.target.closest('a,button')) return;
+    step(e.clientX < window.innerWidth * 0.32 ? -1 : 1);
+  });
+
+  /* swipe */
+  var x0 = null;
+  document.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, { passive:true });
+  document.addEventListener('touchend', function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 45) step(dx < 0 ? 1 : -1);
+    x0 = null;
+  }, { passive:true });
+
+  go(0);
+})();
+</script>
+</body>
+</html>
