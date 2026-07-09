@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<title>Voice A/B — AVA</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%2300D4FF'/%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%2300D4FF' stroke-opacity='.35' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --void:#0A0A0F; --panel:#10131A; --line:#23232E; --text:#EEF0F4; --dim:#9AA1AD; --cyan:#00D4FF; --cyan-2:#00E5FF; --live:#00E676; }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ background:var(--void); }
+  body{ color:var(--text); font-family:'Space Grotesk',system-ui,-apple-system,Segoe UI,sans-serif; -webkit-font-smoothing:antialiased;
+    min-height:100vh; min-height:100dvh; overscroll-behavior-y:none;
+    padding:calc(16px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom)); }
+  .bar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:30px; }
+  .back{ color:var(--text); text-decoration:none; font-size:14px; font-weight:600; }
+  .back:hover{ color:var(--cyan-2); }
+  .tag{ font-size:11px; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--dim); display:inline-flex; align-items:center; gap:7px; }
+  .tag .dot{ width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 12px rgba(0,212,255,.8); }
+  main{ max-width:520px; margin:0 auto; }
+  h1{ font-size:clamp(28px,8vw,40px); font-weight:700; letter-spacing:-.02em; line-height:1.08; }
+  .sub{ color:var(--dim); font-size:16px; margin:12px 0 30px; max-width:42ch; }
+  .sub b{ color:var(--text); font-weight:600; }
+  .court{ display:flex; flex-direction:column; gap:14px; }
+  .ab{ display:flex; align-items:center; gap:16px; width:100%; text-align:left; cursor:pointer;
+    background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px 18px;
+    color:var(--text); font-family:inherit; transition:border-color .18s, box-shadow .18s, transform .12s; }
+  .ab:hover{ border-color:rgba(0,212,255,.45); }
+  .ab:active{ transform:scale(.995); }
+  .ab.playing{ border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan), 0 0 26px rgba(0,212,255,.18); }
+  .pb{ width:56px; height:56px; flex:none; border-radius:50%; background:var(--cyan); color:#04121a;
+    display:grid; place-items:center; font-size:19px; }
+  .ab.playing .pb{ background:var(--cyan-2); }
+  .meta{ display:flex; flex-direction:column; gap:2px; }
+  .letter{ font-size:20px; font-weight:700; letter-spacing:.02em; }
+  .desc{ font-size:14px; color:var(--dim); font-weight:500; }
+  .ab.playing .desc{ color:var(--cyan-2); }
+  .foot{ margin-top:34px; text-align:center; font-size:15px; color:var(--text); font-weight:600; }
+  .note{ margin-top:8px; text-align:center; font-size:12.5px; color:var(--dim); }
+  @media(prefers-reduced-motion:reduce){ .ab{ transition:none; } }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <a class="back" href="/">← AI Voice Agency</a>
+    <span class="tag"><span class="dot" aria-hidden="true"></span>Voice A/B</span>
+  </div>
+  <main>
+    <h1>Which AVA?</h1>
+    <p class="sub">Same <b>20-second call</b>, four voices. Tap each, then pick your favorite. <b>One plays at a time.</b></p>
+    <div class="court">
+      <button class="ab" type="button" data-src="/audio/ab/profile-a.mp3" aria-label="Play voice A — Closer">
+        <span class="pb"><span class="ic">▶</span></span>
+        <span class="meta"><span class="letter">A</span><span class="desc">Closer</span></span>
+      </button>
+      <button class="ab" type="button" data-src="/audio/ab/profile-b.mp3" aria-label="Play voice B — Bold">
+        <span class="pb"><span class="ic">▶</span></span>
+        <span class="meta"><span class="letter">B</span><span class="desc">Bold</span></span>
+      </button>
+      <button class="ab" type="button" data-src="/audio/ab/profile-c.mp3" aria-label="Play voice C — Warm">
+        <span class="pb"><span class="ic">▶</span></span>
+        <span class="meta"><span class="letter">C</span><span class="desc">Warm</span></span>
+      </button>
+      <button class="ab" type="button" data-src="/audio/ab/profile-d.mp3" aria-label="Play voice D — Natural">
+        <span class="pb"><span class="ic">▶</span></span>
+        <span class="meta"><span class="letter">D</span><span class="desc">Natural</span></span>
+      </button>
+    </div>
+    <p class="foot">Text Claude the winning letter.</p>
+    <p class="note">Internal — same script, AVA's voice, four render settings.</p>
+  </main>
+
+<script>
+(function(){
+  "use strict";
+  var audio = new Audio();
+  audio.preload = "none";
+  var cur = null;
+  var btns = [].slice.call(document.querySelectorAll(".ab"));
+  function setState(btn, on){
+    btn.classList.toggle("playing", on);
+    var ic = btn.querySelector(".ic");
+    if (ic) ic.textContent = on ? "❚❚" : "▶";
+  }
+  function stopAll(){ btns.forEach(function(b){ setState(b, false); }); }
+  btns.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var src = btn.getAttribute("data-src");
+      if (cur === btn && !audio.paused){ audio.pause(); setState(btn, false); cur = null; return; }
+      stopAll();
+      audio.src = src;
+      var p = audio.play();
+      if (p && p.catch) p.catch(function(){});
+      setState(btn, true);
+      cur = btn;
+    });
+  });
+  audio.addEventListener("ended", function(){ if (cur){ setState(cur, false); cur = null; } });
+})();
+</script>
+</body>
+</html>
