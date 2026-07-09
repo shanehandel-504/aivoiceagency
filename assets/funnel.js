@@ -158,29 +158,26 @@
     var mult = roi.querySelector('[data-roi-multiple]');
     var firstRun = true;
 
-    /* odometer: per-digit strips roll on translateY (rebuild only when length changes) */
-    money.innerHTML = '<span class="odo" data-odo></span>';
-    var odo = money.querySelector('[data-odo]'), odoLen = -1, odoCells = [];
-    function setMoney(str) {
-      if (str.length !== odoLen) {
-        odo.innerHTML = ''; odoCells = [];
-        for (var i = 0; i < str.length; i++) {
-          var ch = str.charAt(i);
-          if (ch >= '0' && ch <= '9') {
-            var cell = document.createElement('span'); cell.className = 'odo-d';
-            var col = document.createElement('span'); col.className = 'odo-col';
-            for (var d = 0; d < 10; d++) { var nn = document.createElement('span'); nn.className = 'odo-n'; nn.textContent = d; col.appendChild(nn); }
-            cell.appendChild(col); odo.appendChild(cell); odoCells.push(col);
-          } else {
-            var s = document.createElement('span'); s.className = 'odo-s'; s.textContent = ch; odo.appendChild(s); odoCells.push(null);
-          }
-        }
-        odoLen = str.length;
+    /* smooth rAF count-up — crisp on every device (replaces the per-digit odometer that
+       ghosted/misregistered on iOS Safari). Same value, same gold flip, just reliable. */
+    money.textContent = '$0/mo';
+    var moneyVal = 0, moneyRAF = 0, moneyTO = 0;
+    var reduceMoney = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function paintMoney(v) { money.textContent = '$' + fmt(Math.round(v)) + '/mo'; }
+    function setMoney(target) {
+      cancelAnimationFrame(moneyRAF); clearTimeout(moneyTO);
+      if (reduceMoney || firstRun || target === moneyVal || document.hidden) { moneyVal = target; paintMoney(target); return; }
+      var start = moneyVal, delta = target - start, t0 = null, dur = 420;
+      function step(ts) {
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / dur);
+        var eased = 1 - Math.pow(1 - p, 3);
+        paintMoney(start + delta * eased);
+        if (p < 1) moneyRAF = requestAnimationFrame(step);
+        else { moneyVal = target; paintMoney(target); }
       }
-      for (var j = 0; j < str.length; j++) {
-        var c = str.charAt(j), col2 = odoCells[j];
-        if (col2 && c >= '0' && c <= '9') col2.style.transform = 'translateY(-' + (parseInt(c, 10) * 10) + '%)';
-      }
+      moneyRAF = requestAnimationFrame(step);
+      moneyTO = setTimeout(function () { moneyVal = target; paintMoney(target); }, dur + 90);  /* safety net if rAF stalls */
     }
 
     function calc() {
@@ -199,7 +196,7 @@
       var hours = missedCalls * H / 60;
       var laborSaved = Math.round(hours * L);
 
-      setMoney('$' + fmt(revenue) + '/mo');
+      setMoney(revenue);
       mLeads.textContent = Math.round(recovered);
       mHours.innerHTML = hours.toFixed(1) + ' <span style="font-size:12px;color:var(--dim)">(≈ $' + fmt(laborSaved) + ' labor)</span>';
 

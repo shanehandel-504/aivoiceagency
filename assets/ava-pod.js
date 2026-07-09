@@ -255,7 +255,7 @@
     endCard.innerHTML =
       '<div class="ec-heard">Demo heard ✓</div>' +
       '<button class="btn btn-cyan" type="button" data-ec-call data-event="call_switch_endcard">📞 Have AVA call your phone</button>' +
-      '<a class="btn btn-ghost" href="https://book.aivoiceagency.ai" target="_blank" rel="noopener" data-event="book_click_endcard">Book 15 min</a>';
+      '<a class="btn btn-ghost" href="/book" data-event="book_click_endcard">Book 15 min</a>';
     elCaps.appendChild(endCard);
     var callBtn = endCard.querySelector('[data-ec-call]');
     if (callBtn) callBtn.addEventListener('click', function () {

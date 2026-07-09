@@ -29,12 +29,14 @@
   descent-override:27.4%;
   line-gap-override:0%;
 }
-html{scroll-behavior:smooth; -webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth; -webkit-text-size-adjust:100%; background:var(--void)}
 body{
   margin:0; background:var(--void); color:var(--text);
   font-family:'Space Grotesk','Space Grotesk Fallback',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   font-weight:500; font-size:17px; line-height:1.55;
   -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  /* stop the iOS rubber-band from scrolling past the footer into the black void */
+  overscroll-behavior-y:none;
 }
 img,svg,audio{max-width:100%}
 a{color:var(--cyan); text-decoration:none}
@@ -62,7 +64,9 @@ section{padding:72px 0; position:relative}
 .btn:disabled{opacity:.45; cursor:not-allowed; transform:none}
 
 /* ---------- nav ---------- */
-.nav{position:sticky; top:0; z-index:60; backdrop-filter:blur(10px);
+/* overflow:hidden + isolation contain the live-dot glow inside the bar so it never bleeds
+   onto the white pricing cards that scroll underneath the sticky nav (orb-bleed fix). */
+.nav{position:sticky; top:0; z-index:60; backdrop-filter:blur(10px); overflow:hidden; isolation:isolate;
   background:rgba(10,10,15,.82); border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex; align-items:center; justify-content:space-between; height:60px}
 .mark{display:flex; align-items:center; gap:9px; color:var(--text); font-weight:600}
@@ -547,14 +551,7 @@ body.glow-ready .wave:not(.live) i{animation:wave-idle 1.9s ease-in-out infinite
 .end-card .ec-heard{font-size:12px;font-weight:700;color:var(--live);letter-spacing:.02em}
 .end-card .btn{min-height:46px;font-size:14px}
 
-/* Item 6 — ROI odometer (per-digit strips roll on translateY, settle <500ms) */
-.roi-out .money{display:inline-flex}
-.odo{display:inline-flex;align-items:center}
-.odo-d{display:block;height:1.15em;overflow:hidden;width:.62ch}
-.odo-col{display:flex;flex-direction:column;will-change:transform;transition:transform .42s var(--ease)}
-.odo-n{height:1.15em;display:flex;align-items:center;justify-content:center;line-height:1}
-.odo-s{height:1.15em;display:flex;align-items:center;justify-content:center;line-height:1}
-@media(prefers-reduced-motion:reduce){.odo-col{transition:none}}
+/* Item 6 — ROI money is now a smooth rAF count-up (odometer retired for iOS/Safari reliability) */
 /* break-even flip: below $497 = cyan (default); crossing $497 = gold + one-shot flash, then steady gold */
 .roi-out .money.crossed{color:var(--gold);text-shadow:0 0 20px rgba(255,184,0,.45), 0 0 8px rgba(255,184,0,.3)}
 body.glow-ready .roi-out .money.crossed{animation:none}            /* halt the infinite cyan roi-glow */
@@ -625,13 +622,17 @@ body.glow-ready .ln-dot{animation:oncall-pulse 2s ease-in-out infinite}
 body.glow-ready .nav .signal{animation:nav-live 3s ease-in-out infinite}
 @keyframes nav-live{0%,100%{box-shadow:0 0 0 4px rgba(0,212,255,.18),0 0 10px rgba(0,230,118,.3)}50%{box-shadow:0 0 0 4px rgba(0,212,255,.14),0 0 16px 3px rgba(0,230,118,.6)}}
 
-/* Item 12 — TRANSCRIPT PROOF CHIPS */
-.qa.transcript summary{align-items:center;flex-wrap:wrap;gap:10px}
-.tx-chips{display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center}
-.txc{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:#0e1017;border:1px solid #1b1e28;color:var(--dim)}
+/* Item 12 — TRANSCRIPT PROOF CHIPS (alignment normalized: chips single-row, ▶ + marker pinned) */
+.qa.transcript summary{position:relative;align-items:center;flex-wrap:nowrap;gap:10px;min-height:76px;padding-right:114px}
+.tx-chips{display:flex;gap:6px;flex-wrap:nowrap;align-items:center;min-width:0;flex:1 1 auto}
+.txc{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:#0e1017;border:1px solid #1b1e28;color:var(--dim);flex:none;white-space:nowrap}
 .txc:first-child{color:var(--text);border-color:#2a3550}
+.qa.transcript .txc:nth-child(2){flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .txc.ok{color:var(--live);border-color:rgba(0,230,118,.35)}
-.qa.transcript .tx-play{width:56px;height:56px;flex:none;margin-left:auto;font-size:18px}
+/* ▶ and + are pinned so a wide problem chip can never push them out of position */
+.qa.transcript .tx-play{position:absolute;top:50%;right:46px;transform:translateY(-50%);margin:0;width:56px;height:56px;flex:none;font-size:18px}
+.qa.transcript summary::after{position:absolute;top:50%;right:18px;transform:translateY(-50%);margin:0}
+.qa.transcript[open] summary::after{transform:translateY(-50%) rotate(45deg)}
 
 /* Item 14 — webcall surfacing slot (only visible when data-webcall="on") */
 .answer-live[data-webcall="off"]{display:none}
@@ -642,4 +643,24 @@ body.glow-ready .nav .signal{animation:nav-live 3s ease-in-out infinite}
   body.glow-ready .signal-card.in-view::before,
   body.glow-ready .step.signal-step.in-view::after,
   body.glow-ready .qa[open]::before{animation:none!important;transform:scaleY(1)!important}
+}
+
+/* ============================================================
+   OVERNIGHT BATCH (item 7) — founder-directed pulses.
+   box-shadow / outline only (zero CLS), gated behind glow-ready, reduced-motion off.
+   ============================================================ */
+/* 7a — Growth pricing card: subtle cyan breathing rim */
+body.glow-ready .tier.pulse-rim-cyan{animation:tier-rim-cyan 3s ease-in-out infinite}
+@keyframes tier-rim-cyan{
+  0%,100%{box-shadow:0 0 0 1px rgba(0,212,255,.16), 0 14px 40px rgba(0,0,0,.32)}
+  50%{box-shadow:0 0 0 1px rgba(0,212,255,.5), 0 0 22px rgba(0,212,255,.26), 0 14px 40px rgba(0,0,0,.32)}
+}
+/* 7b — soft green breathing outline on the unlit CTAs (low intensity, staggered via inline delay) */
+body.glow-ready .pulse-rim-green{animation:cta-rim-green 4s ease-in-out infinite}
+@keyframes cta-rim-green{
+  0%,100%{box-shadow:0 0 0 0 rgba(0,230,118,0)}
+  50%{box-shadow:0 0 0 1px rgba(0,230,118,.34), 0 0 13px rgba(0,230,118,.18)}
+}
+@media(prefers-reduced-motion:reduce){
+  .tier.pulse-rim-cyan,.pulse-rim-green{animation:none!important}
 }
