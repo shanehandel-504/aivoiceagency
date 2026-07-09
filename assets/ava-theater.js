@@ -36,6 +36,7 @@
 
   /* cross-module: stop the hero pod when the theater plays */
   function emitPlay(){ try{ window.dispatchEvent(new CustomEvent('ava:play',{detail:'theater'})); }catch(e){} }
+  function emitLive(on){ try{ window.dispatchEvent(new CustomEvent('ava:live',{detail:{on:on,src:'theater'}})); }catch(e){} }
   window.addEventListener('ava:play', function(e){ if(e.detail!=='theater') hardStop(); });
 
   var FIELDS = ['name','urgency','job','time'];
@@ -121,10 +122,16 @@
       if (!playing || a !== pair[actEl]) return;
       gap = setTimeout(function () { actEl = 1 - actEl; playLine(idx + 1); }, 150);
     });
+    a.addEventListener('timeupdate', function () {
+      if (!playing || a !== pair[actEl]) return;
+      var total = D.verticals[cur].lines.length || 1;
+      var f = (idx + (a.duration ? a.currentTime / a.duration : 0)) / total;
+      try { window.dispatchEvent(new CustomEvent('ava:progress', { detail: Math.min(1, f) })); } catch (e) {}
+    });
   });
 
-  function play() { emitPlay(); playing = true; bPlay.textContent = '❚❚ Playing'; playLine(idx >= D.verticals[cur].lines.length ? 0 : idx); }
-  function hardStop() { playing = false; if (bPlay) bPlay.textContent = '▶ Play'; pair.forEach(function (a) { a.pause(); }); clearTimeout(gap); }
+  function play() { emitPlay(); emitLive(true); playing = true; bPlay.textContent = '❚❚ Playing'; playLine(idx >= D.verticals[cur].lines.length ? 0 : idx); }
+  function hardStop() { playing = false; if (bPlay) bPlay.textContent = '▶ Play'; pair.forEach(function (a) { a.pause(); }); clearTimeout(gap); emitLive(false); }
   function finish() { hardStop(); updateAt(99, true); }
   function reset() { hardStop(); idx = 0; renderTranscript(); renderBoard(); }
 

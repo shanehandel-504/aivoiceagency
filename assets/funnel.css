@@ -19,10 +19,20 @@
 }
 
 *{box-sizing:border-box}
+/* metric-matched fallback: same footprint as Space Grotesk (measured: 106% of Arial),
+   so the web-font swap reflows nothing → zero font-induced CLS. */
+@font-face{
+  font-family:'Space Grotesk Fallback';
+  src:local('Arial');
+  size-adjust:106%;
+  ascent-override:92.5%;
+  descent-override:27.4%;
+  line-gap-override:0%;
+}
 html{scroll-behavior:smooth; -webkit-text-size-adjust:100%}
 body{
   margin:0; background:var(--void); color:var(--text);
-  font-family:'Space Grotesk',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  font-family:'Space Grotesk','Space Grotesk Fallback',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   font-weight:500; font-size:17px; line-height:1.55;
   -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
@@ -70,7 +80,7 @@ section{padding:72px 0; position:relative}
 .hero-copy{grid-area:copy; align-self:start}
 .hero-phone{grid-area:phone; align-self:center}
 .hero-head h1{margin-bottom:0}
-.hero h1{font-size:clamp(34px,7vw,64px)}
+.hero h1{font-size:clamp(34px,7vw,64px); letter-spacing:-.01em}
 .hero .sub{color:var(--dim); font-size:19px; margin:18px 0 24px; max-width:52ch}
 .hero .sub b{color:var(--text)}
 .hero-cta{display:flex; flex-wrap:wrap; gap:12px; align-items:center}
@@ -138,7 +148,7 @@ body.glow-ready .tap-hint{animation:pulse 2s infinite}
 .pod-panel.active{display:flex}
 
 /* voice tab */
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:66px;align-content:flex-start}/* reserve 2 rows so the JS chip-fill causes no layout shift (CLS) */
 .chip{background:#0e1017;border:1px solid #1b1e28;color:var(--dim);border-radius:999px;
   padding:6px 11px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
 .chip[aria-pressed="true"]{background:var(--cyan);color:#04121a;border-color:var(--cyan)}
@@ -291,7 +301,7 @@ body.glow-ready .tap-hint{animation:pulse 2s infinite}
 .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;align-items:stretch}
 .tier{background:var(--paper);color:var(--ink);border-radius:18px;padding:24px;display:flex;flex-direction:column;border:2px solid transparent}
 .tier.feat{border-color:var(--cyan);box-shadow:0 0 0 4px rgba(0,212,255,.16),var(--sh);transform:translateY(-6px)}
-.tier .flag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);font-weight:700;min-height:16px}
+.tier .flag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#0A7EA4;font-weight:700;min-height:16px}/* paper-safe cyan — AA on white */
 .tier .tname{font-size:19px;font-weight:700;margin:4px 0 2px}
 .tier .price{font-size:34px;font-weight:700}
 .tier .price span{font-size:15px;color:var(--ink2);font-weight:600}
@@ -341,7 +351,7 @@ body.glow-ready .tap-hint{animation:pulse 2s infinite}
 @media(max-width:860px){section{padding:56px 0}}
 
 /* ---------- answer-first entity block ---------- */
-.answer-block{background:var(--panel);border-left:3px solid var(--cyan);border-radius:0 12px 12px 0;padding:16px 18px;margin-top:18px;max-width:70ch}
+.answer-block{background:var(--panel);border-radius:12px;padding:16px 18px;margin-top:18px;max-width:70ch}
 .answer-block p{margin:0;font-size:16px}
 
 /* hero responsive */
@@ -437,8 +447,8 @@ body.glow-ready .roi-out .money{animation:roi-glow 3.4s ease-in-out infinite}
 /* B4 — THE RIPCORD: slow border breathe (gated; base border persists for reduced-motion) */
 body.glow-ready .ripcord{animation:ripcord-breathe 4.2s ease-in-out infinite}
 @keyframes ripcord-breathe{
-  0%,100%{border-color:rgba(0,212,255,.34); box-shadow:0 0 0 0 rgba(0,212,255,0)}
-  50%{border-color:rgba(0,212,255,.72); box-shadow:0 0 28px 0 rgba(0,212,255,.15)}
+  0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,0)}
+  50%{box-shadow:0 0 28px 0 rgba(0,212,255,.16)}
 }
 
 /* B5 — GREEN = live / success ONLY.
@@ -557,4 +567,76 @@ body.glow-ready .roi-out .money.crossed.flash{animation:roi-crossed .62s var(--e
 .roi-copied.show{opacity:1}
 @media(prefers-reduced-motion:reduce){
   .roi-out .money.crossed,.roi-out .money.crossed.flash{animation:none!important}
+}
+
+/* ============================================================
+   THE FINAL CUT (CP2) — sticky mini-player, soft focus, trust spine,
+   live dots, transcript chips, type seasoning. Gated + reduced-motion safe.
+   ============================================================ */
+
+/* Item 13 — type seasoning: the italic 2 AM line +5%, glow kept */
+.hero h1 .serif{font-size:1.05em}
+
+/* Item 8 — STICKY MINI-PLAYER (live variant while pod/theater audio plays) */
+.sticky-default{display:flex;gap:10px;width:100%}
+.sticky-live{display:none;align-items:center;gap:12px;width:100%}
+.sticky.live .sticky-default{display:none}
+.sticky.live .sticky-live{display:flex}
+.sticky .sl-prog{position:absolute;left:0;right:0;top:0;height:2px;background:rgba(0,212,255,.14);overflow:hidden}
+.sticky .sl-bar{display:block;height:100%;width:100%;background:var(--cyan);transform:scaleX(0);transform-origin:left;transition:transform .2s linear}
+.sticky .mini-orb{width:12px;height:12px;border-radius:50%;background:var(--live);box-shadow:0 0 8px var(--live);flex:none}
+body.glow-ready .sticky.live .mini-orb{animation:oncall-pulse 1.6s ease-in-out infinite}
+.sticky .sl-label{font-weight:600;font-size:14px;color:var(--text)}
+.sticky-live .btn{margin-left:auto;flex:none;min-height:44px;padding:0 18px}
+
+/* Item 9 — SOFT FOCUS: dim everything but the hero while the pod plays (CSS only, no overlay) */
+main > section:not(.hero), .foot{transition:filter .45s var(--ease)}
+body.demo-active main > section:not(.hero),
+body.demo-active .foot{filter:brightness(.55)}
+
+/* Item 10 — LIGHT-BAR TRUST SPINE (dark cards only; white paper cards untouched) */
+.signal-card{position:relative;overflow:hidden;
+  background:linear-gradient(90deg,rgba(0,212,255,.10),transparent),var(--panel);
+  border:1px solid rgba(238,240,244,.08);
+  box-shadow:inset 0 1px 0 rgba(238,240,244,.10);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.signal-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cyan);transform-origin:top;box-shadow:0 0 12px rgba(0,212,255,.4);z-index:1}
+@keyframes bar-grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+body.glow-ready .signal-card.in-view::before{animation:bar-grow .6s var(--ease)}
+/* steps: ::before is the step counter, so the growing bar rides on ::after */
+.step.signal-step{background:linear-gradient(90deg,rgba(0,212,255,.10),transparent),var(--panel);
+  border:1px solid rgba(238,240,244,.08);box-shadow:inset 0 1px 0 rgba(238,240,244,.10);overflow:hidden}
+.step.signal-step::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cyan);transform-origin:top;box-shadow:0 0 12px rgba(0,212,255,.4)}
+body.glow-ready .step.signal-step.in-view::after{animation:bar-grow .6s var(--ease)}
+/* pricing scope note as a compact signal card (keeps its gold text) */
+.pricing-scope.signal-card{padding:12px 16px;border-radius:12px;margin-top:16px}
+/* FAQ open state gets the bar (summary's +/x marker lives on summary::after) */
+.qa[open]{position:relative}
+.qa[open]::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cyan);transform-origin:top;box-shadow:0 0 12px rgba(0,212,255,.4);z-index:2}
+body.glow-ready .qa[open]::before{animation:bar-grow .45s var(--ease)}
+
+/* Item 11 — LIVE DOTS */
+.live-now{display:inline-flex;align-items:center;gap:5px;color:var(--live);font-weight:700}
+.ln-dot{width:7px;height:7px;border-radius:50%;background:var(--live);box-shadow:0 0 8px var(--live);flex:none}
+body.glow-ready .ln-dot{animation:oncall-pulse 2s ease-in-out infinite}
+body.glow-ready .nav .signal{animation:nav-live 3s ease-in-out infinite}
+@keyframes nav-live{0%,100%{box-shadow:0 0 0 4px rgba(0,212,255,.18),0 0 10px rgba(0,230,118,.3)}50%{box-shadow:0 0 0 4px rgba(0,212,255,.14),0 0 16px 3px rgba(0,230,118,.6)}}
+
+/* Item 12 — TRANSCRIPT PROOF CHIPS */
+.qa.transcript summary{align-items:center;flex-wrap:wrap;gap:10px}
+.tx-chips{display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center}
+.txc{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:#0e1017;border:1px solid #1b1e28;color:var(--dim)}
+.txc:first-child{color:var(--text);border-color:#2a3550}
+.txc.ok{color:var(--live);border-color:rgba(0,230,118,.35)}
+.qa.transcript .tx-play{width:56px;height:56px;flex:none;margin-left:auto;font-size:18px}
+
+/* Item 14 — webcall surfacing slot (only visible when data-webcall="on") */
+.answer-live[data-webcall="off"]{display:none}
+
+/* reduced motion: freeze the CP2 gated loops (bars remain fully visible) */
+@media(prefers-reduced-motion:reduce){
+  .sticky .mini-orb,.ln-dot,.nav .signal{animation:none!important}
+  body.glow-ready .signal-card.in-view::before,
+  body.glow-ready .step.signal-step.in-view::after,
+  body.glow-ready .qa[open]::before{animation:none!important;transform:scaleY(1)!important}
 }

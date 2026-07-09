@@ -121,6 +121,7 @@
     try { window.va && window.va('event', { name: 'demo_play', vertical: current }); } catch (e) {}
     playing = true; if (elPlay) elPlay.textContent = '❚❚';
     if (elWave) elWave.classList.add('live');
+    emitLive(true); setFocus(true);
     if (actx && actx.state === 'suspended') actx.resume();
     if (!rafId) pump();
     playLine(lineIdx >= D.verticals[current].lines.length ? 0 : lineIdx);
@@ -129,6 +130,7 @@
     playing = false; if (elPlay) elPlay.textContent = '▶';
     pair.forEach(function (a) { a.pause(); }); clearTimeout(gapTimer);
     cancelAnimationFrame(rafId); rafId = 0; stopPump();
+    emitLive(false); setFocus(false);
   }
   function reset() { stop(); clearEndCard(); lineIdx = 0; if (elCaps) elCaps.querySelectorAll('.cap').forEach(function(c){c.classList.remove('on');}); }
 
@@ -222,6 +224,25 @@
 
   /* cross-module: stop pod when theater or a clip plays */
   window.addEventListener('ava:play', function (e) { if (e.detail !== 'pod') stop(); });
+
+  /* ---- CP2: sticky-live bus + soft-focus (demo-active) ---- */
+  function emitLive(on) { try { window.dispatchEvent(new CustomEvent('ava:live', { detail: { on: on, src: 'pod' } })); } catch (e) {} }
+  function setFocus(on) { document.body.classList.toggle('demo-active', on); }
+  pair.forEach(function (a) {
+    a.addEventListener('timeupdate', function () {
+      if (!playing || a !== pair[actEl]) return;
+      var total = D.verticals[current].lines.length || 1;
+      var f = (lineIdx + (a.duration ? a.currentTime / a.duration : 0)) / total;
+      try { window.dispatchEvent(new CustomEvent('ava:progress', { detail: Math.min(1, f) })); } catch (e) {}
+    });
+  });
+  /* clear the soft-focus on any tap outside the hero or Esc — audio keeps playing (never trap) */
+  document.addEventListener('click', function (e) {
+    if (document.body.classList.contains('demo-active') && e.target.closest && !e.target.closest('.hero')) document.body.classList.remove('demo-active');
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.keyCode === 27) document.body.classList.remove('demo-active');
+  });
 
   /* ---- peak-end escalation card (shown ONLY on natural finish; removed on replay / vertical change) ---- */
   var endCard = null;

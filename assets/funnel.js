@@ -31,6 +31,26 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  /* sticky live mini-player — driven by the ava:live / ava:progress bus (pod + theater) */
+  var stickyProg = sticky && sticky.querySelector('[data-sticky-prog]');
+  var demoLive = false;
+  window.addEventListener('ava:live', function (e) {
+    demoLive = !!(e.detail && e.detail.on);
+    if (sticky) sticky.classList.toggle('live', demoLive);
+    if (!demoLive && stickyProg) stickyProg.style.transform = 'scaleX(0)';
+  });
+  window.addEventListener('ava:progress', function (e) {
+    if (demoLive && stickyProg) { var f = Math.max(0, Math.min(1, +e.detail || 0)); stickyProg.style.transform = 'scaleX(' + f + ')'; }
+  });
+
+  /* trust-spine — grow the cyan bar once when each signal card first enters view */
+  if ('IntersectionObserver' in window) {
+    var sigIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in-view'); sigIO.unobserve(en.target); } });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.signal-card, .signal-step').forEach(function (el) { sigIO.observe(el); });
+  }
+
   /* ---------- scroll to pod / open gate ---------- */
   document.querySelectorAll('[data-scroll-pod]').forEach(function (b) {
     b.addEventListener('click', function () {
@@ -49,7 +69,9 @@
   function emit(src){ try{ window.dispatchEvent(new CustomEvent('ava:play',{detail:src})); }catch(e){} }
   window.addEventListener('ava:play', function (e) { if (e.detail !== 'clip') clip.pause(); });
   document.querySelectorAll('[data-audio]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', function (e) {
+      /* transcript ▶ lives inside <summary>; don't let the click toggle the <details> */
+      if (e) { e.preventDefault(); e.stopPropagation(); }
       emit('clip');
       if (!clip.paused && clip.src.indexOf(btn.getAttribute('data-audio')) > -1) { clip.pause(); btn.textContent = '▶'; return; }
       clip.src = btn.getAttribute('data-audio'); clip.play().catch(function(){});
