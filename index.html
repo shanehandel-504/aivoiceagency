@@ -85,16 +85,9 @@
 <!-- ===================== S1 HERO ===================== -->
 <section class="hero">
   <div class="wrap hero-grid">
-    <div class="hero-copy">
+    <div class="hero-head">
       <div class="eyebrow">The AI receptionist for local service businesses</div>
       <h1>AVA answers every call. And books the job.<br><span class="serif">even the ones at 2&nbsp;AM.</span></h1>
-      <p class="sub">A missed call is a lost job. <b>AVA picks up in one ring, books the appointment, and texts the customer.</b> Live on your line in days. $497/month.</p>
-      <div class="hero-cta">
-        <button class="btn btn-cyan" data-scroll-pod data-event="hear_ava_hero">▶ Hear AVA answer</button>
-        <a class="btn btn-ghost" href="https://book.aivoiceagency.ai" target="_blank" rel="noopener" data-event="book_click_hero">Talk to a human</a>
-      </div>
-      <div class="callchip">📞 Call AVA live: <a class="pulse-live" href="tel:+14142408930" data-event="tel_tap_hero">414-240-8930</a></div>
-      <div class="badge-sample"><span class="dot"></span> Demo call — AVA's real voice. Sample data.</div>
     </div>
 
     <div class="hero-phone">
@@ -102,10 +95,13 @@
         <div class="screen">
           <!-- incoming-call load state -->
           <div class="incoming" data-incoming>
-            <div class="ring-ava">AVA</div>
+            <div class="ring-ava" aria-hidden="true">AVA</div>
             <div class="who">Incoming call · Riverside home</div>
             <div class="num">11:47 PM</div>
-            <div class="tap-hint" data-tap>Tap to answer with sound 🔊</div>
+            <button class="answer-btn" type="button" data-answer aria-label="Answer — hear AVA with sound">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.3 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.2 2.2z"/></svg>
+            </button>
+            <div class="answer-label">Answer<span class="ans-sub">with sound 🔊</span></div>
           </div>
           <!-- the pod -->
           <div class="pod">
@@ -156,6 +152,16 @@
         </div>
       </div>
       <noscript><p style="text-align:center;color:var(--dim);font-size:13px;margin-top:12px">Enable JavaScript to play the demo calls. Full call transcripts are below.</p></noscript>
+    </div>
+
+    <div class="hero-copy">
+      <p class="sub">A missed call is a lost job. <b>AVA picks up in one ring, books the appointment, and texts the customer.</b> Live on your line in days. $497/month.</p>
+      <div class="hero-cta">
+        <button class="btn btn-cyan" data-scroll-pod data-event="hear_ava_hero">▶ Hear AVA answer</button>
+        <a class="btn btn-ghost" href="https://book.aivoiceagency.ai" target="_blank" rel="noopener" data-event="book_click_hero">Talk to a human</a>
+      </div>
+      <div class="callchip">📞 Call AVA live: <a class="pulse-live" href="tel:+14142408930" data-event="tel_tap_hero">414-240-8930</a></div>
+      <div class="badge-sample"><span class="dot"></span> Demo call — AVA's real voice. Sample data.</div>
     </div>
   </div>
 </section>
@@ -304,12 +310,13 @@
       <div class="roi-out">
         <div class="big">Revenue left on the table</div>
         <div class="money" data-roi-money>$11,812/mo</div>
+        <div class="roi-multiple" data-roi-multiple hidden></div>
         <div class="sub2">from calls that hit voicemail instead of AVA</div>
         <div class="roi-metrics">
           <div><b data-roi-leads>26</b><span>jobs recovered / mo</span></div>
           <div><b data-roi-hours>7.5</b><span>hours saved / mo</span></div>
         </div>
-        <p class="roi-note">Live calculator, not a fixed claim — put in your own numbers. <a href="#" data-roi-share>Copy shareable link</a></p>
+        <p class="roi-note">Estimate only — a live calculator, not a fixed claim. Put in your own numbers. <button class="roi-sharebtn" type="button" data-roi-share data-event="roi_copy_results">Copy my results</button><span class="roi-copied" data-roi-copied hidden>Copied ✓</span></p>
       </div>
     </div>
   </div>

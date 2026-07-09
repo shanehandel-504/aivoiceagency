@@ -133,6 +133,33 @@
     function inp(k){ return roi.querySelector('[data-roi="' + k + '"]'); }
     function out(k){ return roi.querySelector('[data-out="' + k + '"]'); }
     var fmt = function (n) { return n.toLocaleString('en-US'); };
+    var mult = roi.querySelector('[data-roi-multiple]');
+    var firstRun = true;
+
+    /* odometer: per-digit strips roll on translateY (rebuild only when length changes) */
+    money.innerHTML = '<span class="odo" data-odo></span>';
+    var odo = money.querySelector('[data-odo]'), odoLen = -1, odoCells = [];
+    function setMoney(str) {
+      if (str.length !== odoLen) {
+        odo.innerHTML = ''; odoCells = [];
+        for (var i = 0; i < str.length; i++) {
+          var ch = str.charAt(i);
+          if (ch >= '0' && ch <= '9') {
+            var cell = document.createElement('span'); cell.className = 'odo-d';
+            var col = document.createElement('span'); col.className = 'odo-col';
+            for (var d = 0; d < 10; d++) { var nn = document.createElement('span'); nn.className = 'odo-n'; nn.textContent = d; col.appendChild(nn); }
+            cell.appendChild(col); odo.appendChild(cell); odoCells.push(col);
+          } else {
+            var s = document.createElement('span'); s.className = 'odo-s'; s.textContent = ch; odo.appendChild(s); odoCells.push(null);
+          }
+        }
+        odoLen = str.length;
+      }
+      for (var j = 0; j < str.length; j++) {
+        var c = str.charAt(j), col2 = odoCells[j];
+        if (col2 && c >= '0' && c <= '9') col2.style.transform = 'translateY(-' + (parseInt(c, 10) * 10) + '%)';
+      }
+    }
 
     function calc() {
       var C = +inp('calls').value, M = +inp('missed').value, J = +inp('job').value;
@@ -150,10 +177,29 @@
       var hours = missedCalls * H / 60;
       var laborSaved = Math.round(hours * L);
 
-      money.textContent = '$' + fmt(revenue) + '/mo';
+      setMoney('$' + fmt(revenue) + '/mo');
       mLeads.textContent = Math.round(recovered);
       mHours.innerHTML = hours.toFixed(1) + ' <span style="font-size:12px;color:var(--dim)">(≈ $' + fmt(laborSaved) + ' labor)</span>';
-      writeHash();
+
+      /* break-even flip at the $497 plan: cyan below, gold at/above.
+         The one-shot flash + haptic fire ONLY on a real post-load crossing (never on the initial paint). */
+      var crossed = revenue >= 497;
+      if (crossed) {
+        if (!money.classList.contains('crossed')) {
+          money.classList.add('crossed');
+          if (!firstRun) {
+            money.classList.add('flash');
+            setTimeout(function () { money.classList.remove('flash'); }, 680);
+            if (navigator.vibrate) { try { navigator.vibrate(8); } catch (_) {} }
+          }
+        }
+        if (mult) { mult.textContent = '≈ ' + Math.round(revenue / 497) + '× the $497 plan'; mult.hidden = false; }
+      } else {
+        money.classList.remove('crossed', 'flash');
+        if (mult) mult.hidden = true;
+      }
+      firstRun = false;
+      /* hash hygiene: never written on input — only on the Copy-my-results tap */
     }
     function writeHash() {
       var parts = keys.map(function (k) { return k + ':' + inp(k).value; });
@@ -194,15 +240,18 @@
       advBtn.textContent = adv.classList.contains('open') ? 'Advanced ▴' : 'Advanced ▾';
     });
 
-    /* share */
+    /* Copy my results — the ONLY place the #roi hash is written */
     var share = roi.querySelector('[data-roi-share]');
+    var copied = roi.querySelector('[data-roi-copied]');
     if (share) share.addEventListener('click', function (e) {
       e.preventDefault(); writeHash();
-      var url = location.href;
-      if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () { share.textContent = 'Link copied ✓'; setTimeout(function(){ share.textContent = 'Copy shareable link'; }, 1800); });
+      function flash() { if (!copied) return; copied.hidden = false; copied.classList.add('show'); setTimeout(function () { copied.classList.remove('show'); setTimeout(function () { copied.hidden = true; }, 220); }, 1600); }
+      if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(flash, flash);
+      else flash();
     });
 
     readHash();
+    history.replaceState(null, '', location.pathname + location.search);  /* clean the URL; any shared values are already applied */
     calc();
   }
 })();

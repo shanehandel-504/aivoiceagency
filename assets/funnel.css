@@ -10,7 +10,7 @@
   --text:#EEF0F4; --dim:#9AA1AD; --cyan:#00D4FF; --cyan-2:#00E5FF;
   --green:#28D07A;               /* legacy alias — superseded by --live */
   --live:#00E676;                /* semantic ONLY: live/on-call dots, calling-now, success/receipt, pulse rings */
-  --gold:#D4A94E;                /* pricing scope note ONLY */
+  --gold:#FFB800;                /* money + pricing scope note (unified FINAL CUT) */
   /* light paper */
   --paper:#FFFFFF; --paper2:#F6F7F9; --ink:#10131A; --ink2:#4A5160;
   --wrap:1120px; --radius:16px;
@@ -65,7 +65,11 @@ section{padding:72px 0; position:relative}
 
 /* ---------- hero ---------- */
 .hero{padding-top:44px; overflow:hidden}
-.hero-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:center}
+.hero-grid{display:grid; grid-template-columns:1.05fr .95fr; grid-template-areas:"head phone" "copy phone"; gap:0 44px; align-items:center}
+.hero-head{grid-area:head; align-self:end}
+.hero-copy{grid-area:copy; align-self:start}
+.hero-phone{grid-area:phone; align-self:center}
+.hero-head h1{margin-bottom:0}
 .hero h1{font-size:clamp(34px,7vw,64px)}
 .hero .sub{color:var(--dim); font-size:19px; margin:18px 0 24px; max-width:52ch}
 .hero .sub b{color:var(--text)}
@@ -89,15 +93,34 @@ section{padding:72px 0; position:relative}
 
 /* incoming-call state */
 .incoming{position:absolute; inset:0; z-index:8; background:radial-gradient(120% 80% at 50% 20%,#0d1a24,#07090f);
-  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:26px; transition:opacity .5s var(--ease)}
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:26px; cursor:pointer; transition:opacity .5s var(--ease), filter .4s var(--ease)}
 .incoming.hide{opacity:0; pointer-events:none}
-.ring-ava{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#0affff,#0090c8);
-  display:grid;place-items:center;color:#04121a;font-weight:700;font-size:26px;margin-bottom:20px;position:relative}
-.ring-ava::after{content:"";position:absolute;inset:-10px;border-radius:50%;border:2px solid rgba(0,212,255,.5);animation:ring 1.6s var(--ease) infinite}
-@keyframes ring{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+/* the old 96px orb is now a compact caller avatar; the radar ping moves to the Answer button */
+.ring-ava{width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#0affff,#0090c8);
+  display:grid;place-items:center;color:#04121a;font-weight:700;font-size:17px;margin-bottom:12px;box-shadow:0 0 26px 4px rgba(0,212,255,.4)}
 .incoming .who{font-size:13px;color:var(--dim);letter-spacing:.04em}
 .incoming .num{font-size:20px;font-weight:700;margin-top:2px}
-.tap-hint{margin-top:22px;font-size:12.5px;color:var(--cyan);border:1px solid rgba(0,212,255,.35);border-radius:999px;padding:7px 14px;animation:pulse 2s infinite}
+/* GREEN-ANSWER PROTOCOL — the primary control */
+.answer-btn{margin-top:26px;width:78px;height:78px;border-radius:50%;border:none;cursor:pointer;padding:0;
+  background:radial-gradient(circle at 42% 34%,#5dffab,#00e676 52%,#00b257);
+  display:grid;place-items:center;position:relative;isolation:isolate;
+  box-shadow:0 12px 26px rgba(0,0,0,.5), 0 0 30px 4px rgba(0,230,118,.5); transition:transform .15s var(--ease)}
+.answer-btn svg{width:34px;height:34px;fill:#04120a}
+.answer-btn::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:2px solid rgba(0,230,118,.7);opacity:0;pointer-events:none;z-index:-1}
+body.glow-ready .answer-btn::after{animation:ring 1.5s var(--ease) infinite}
+.answer-btn:hover{transform:translateY(-2px)}
+.answer-btn:active{transform:translateY(0)}
+.answer-btn:focus-visible{outline:3px solid var(--cyan);outline-offset:4px}
+@keyframes ring{0%{transform:scale(1);opacity:.75}100%{transform:scale(1.55);opacity:0}}
+.answer-label{margin-top:12px;font-size:14px;font-weight:700;color:var(--text);letter-spacing:.01em}
+.answer-label .ans-sub{display:block;font-size:11px;font-weight:500;color:var(--dim);margin-top:2px}
+/* secondary webcall slot (wakes only when data-webcall flips on) */
+.answer-live{margin-top:14px;font-size:12.5px;font-weight:600;color:var(--cyan);background:transparent;
+  border:1px solid rgba(0,212,255,.4);border-radius:999px;padding:8px 15px;cursor:pointer;font-family:inherit}
+.answer-live:hover{border-color:var(--cyan);color:var(--cyan-2)}
+/* legacy tap-hint (kept for safety) — pulse now gated behind glow-ready */
+.tap-hint{margin-top:16px;font-size:12.5px;color:var(--cyan);border:1px solid rgba(0,212,255,.35);border-radius:999px;padding:7px 14px}
+body.glow-ready .tap-hint{animation:pulse 2s infinite}
 @keyframes pulse{50%{opacity:.5}}
 
 /* pod header (tabs) */
@@ -125,9 +148,9 @@ section{padding:72px 0; position:relative}
 .cap .spk{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);font-weight:600;display:block}
 .cap.caller .spk{color:var(--dim)}
 .pod-controls{display:flex;align-items:center;gap:8px;padding-top:8px;border-top:1px solid #161922;margin-top:6px}
-.play-btn{width:40px;height:40px;border-radius:50%;background:var(--cyan);color:#04121a;border:none;cursor:pointer;font-size:15px;display:grid;place-items:center}
+.play-btn{width:56px;height:56px;border-radius:50%;background:var(--cyan);color:#04121a;border:none;cursor:pointer;font-size:18px;display:grid;place-items:center}
 .wave{flex:1;height:24px;display:flex;align-items:center;gap:2px}
-.wave i{flex:1;height:20%;background:#233;border-radius:2px;transition:height .09s linear}
+.wave i{flex:1;height:100%;background:#233;border-radius:2px;transform:scaleY(.12);transform-origin:bottom;transition:transform .09s linear}
 .mute-btn{background:none;border:1px solid #1b1e28;color:var(--dim);border-radius:8px;padding:6px 9px;font-size:11px;cursor:pointer;font-family:inherit}
 
 /* text tab (sms) */
@@ -250,6 +273,9 @@ section{padding:72px 0; position:relative}
 .roi-metrics div b{display:block;font-size:22px;color:var(--text)}
 .roi-metrics div span{font-size:12px;color:var(--dim)}
 .roi-note{color:var(--dim);font-size:13px;margin-top:16px}
+.roi-sharebtn{background:none;border:none;padding:0;margin:0;color:var(--cyan);font-family:inherit;font-size:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
+.roi-sharebtn:hover{color:var(--cyan-2)}
+.roi-copied[hidden]{display:none}
 @media(max-width:820px){.roi-grid{grid-template-columns:1fr}.roi-out{position:static}}
 
 /* ---------- how ---------- */
@@ -320,8 +346,12 @@ section{padding:72px 0; position:relative}
 
 /* hero responsive */
 @media(max-width:900px){
-  .hero-grid{grid-template-columns:1fr;gap:30px}
-  .hero-copy{order:1}.hero-phone{order:2}
+  /* stack: H1 first, then the ringing phone + green Answer, then the sub-copy —
+     so the H1 and Answer button share the first viewport at 390x844 */
+  .hero-grid{grid-template-columns:1fr; grid-template-areas:"head" "phone" "copy"; gap:20px 0}
+  .hero-head,.hero-copy,.hero-phone{align-self:auto}
+  .hero-head h1{margin-bottom:.4em}
+  .hero .sub{margin-top:0}
 }
 
 /* reduced motion */
@@ -372,7 +402,7 @@ a.pulse-live{display:inline-flex;align-items:center;border-radius:9px;padding:2p
   .wrap{max-width:1160px}
   section{padding:88px 0}
   .hero{padding-top:56px}
-  .hero-grid{grid-template-columns:1.05fr .92fr;gap:56px;align-items:center}
+  .hero-grid{grid-template-columns:1.05fr .92fr;grid-template-areas:"head phone" "copy phone";gap:0 56px;align-items:center}
   .hero h1{font-size:clamp(48px,4.4vw,66px)}
   .phone{width:362px}
   .th-grid{grid-template-columns:1.15fr .85fr;gap:34px}
@@ -452,4 +482,79 @@ body.glow-ready .pod-live .dot{animation:oncall-pulse 2.1s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){
   .roi-out .money,.ripcord,.pod-live .dot{animation:none!important}
   body.glow-ready .receipt:not([hidden]) .items li{opacity:1!important; transform:none!important; animation:none!important}
+}
+
+/* ============================================================
+   THE FINAL CUT (CP1) — ring cadence, waveform idle, peak-end,
+   ROI odometer + break-even flip. All decorative motion gated
+   behind body.glow-ready; transform/opacity/shadow only; reduced-motion safe.
+   ============================================================ */
+
+/* Item 2 — RING CADENCE: the phone bezel buzzes in true telephone cadence.
+   The .ringing class is toggled by JS (post-load, on-screen, ≤3 cycles); the
+   animation itself is gated behind glow-ready so it never competes with LCP. */
+@keyframes buzz{
+  0%,100%{transform:translateX(0) rotate(0)}
+  8%{transform:translateX(-1px) rotate(-1.2deg)}
+  16%{transform:translateX(1px) rotate(1.2deg)}
+  24%{transform:translateX(-1px) rotate(-1.1deg)}
+  32%{transform:translateX(1px) rotate(1.1deg)}
+  40%{transform:translateX(-1px) rotate(-.9deg)}
+  48%{transform:translateX(1px) rotate(.85deg)}
+  56%{transform:translateX(-1px) rotate(-.55deg)}
+  64%{transform:translateX(1px) rotate(.5deg)}
+  72%{transform:translateX(0) rotate(0)}
+}
+body.glow-ready .phone.ringing{animation:buzz 1s var(--ease)}
+body.glow-ready .phone.ringing .incoming{filter:brightness(1.16)}
+/* after the 3rd ring the phone settles into a slow breathe */
+body.glow-ready .phone.settled{animation:phone-breathe 4.2s ease-in-out infinite}
+@keyframes phone-breathe{
+  0%,100%{box-shadow:var(--sh), inset 0 0 0 2px #05060a, 0 0 0 0 rgba(0,212,255,0)}
+  50%{box-shadow:var(--sh), inset 0 0 0 2px #05060a, 0 0 34px 2px rgba(0,212,255,.16)}
+}
+
+/* Idle nudge — one small chip anchored to the phone. No overlay, no fake banner. */
+.ava-toast{position:absolute;left:50%;bottom:-16px;transform:translate(-50%,8px);z-index:9;
+  background:rgba(10,14,22,.96);border:1px solid rgba(0,212,255,.42);color:var(--text);
+  font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:999px;white-space:nowrap;
+  box-shadow:0 12px 30px rgba(0,0,0,.5), 0 0 18px rgba(0,212,255,.25);
+  opacity:0;pointer-events:none;transition:opacity .35s var(--ease), transform .35s var(--ease)}
+.ava-toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* Item 4 — WAVEFORM idle breathe (pre-tap); killed the moment playback starts (.live) */
+body.glow-ready .wave:not(.live) i{animation:wave-idle 1.9s ease-in-out infinite; animation-delay:calc(var(--i) * 90ms)}
+@keyframes wave-idle{0%,100%{transform:scaleY(.12)}50%{transform:scaleY(.36)}}
+
+/* Item 5 — PEAK-END escalation card (natural finish only; removed on replay / vertical change) */
+.end-card{margin-top:12px;display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;
+  background:linear-gradient(180deg,rgba(0,212,255,.08),transparent),#0e1017;border:1px solid rgba(0,212,255,.28);
+  opacity:0;transform:translateY(8px);transition:opacity .4s var(--ease), transform .4s var(--ease)}
+.end-card.in{opacity:1;transform:none}
+.end-card .ec-heard{font-size:12px;font-weight:700;color:var(--live);letter-spacing:.02em}
+.end-card .btn{min-height:46px;font-size:14px}
+
+/* Item 6 — ROI odometer (per-digit strips roll on translateY, settle <500ms) */
+.roi-out .money{display:inline-flex}
+.odo{display:inline-flex;align-items:center}
+.odo-d{display:block;height:1.15em;overflow:hidden;width:.62ch}
+.odo-col{display:flex;flex-direction:column;will-change:transform;transition:transform .42s var(--ease)}
+.odo-n{height:1.15em;display:flex;align-items:center;justify-content:center;line-height:1}
+.odo-s{height:1.15em;display:flex;align-items:center;justify-content:center;line-height:1}
+@media(prefers-reduced-motion:reduce){.odo-col{transition:none}}
+/* break-even flip: below $497 = cyan (default); crossing $497 = gold + one-shot flash, then steady gold */
+.roi-out .money.crossed{color:var(--gold);text-shadow:0 0 20px rgba(255,184,0,.45), 0 0 8px rgba(255,184,0,.3)}
+body.glow-ready .roi-out .money.crossed{animation:none}            /* halt the infinite cyan roi-glow */
+body.glow-ready .roi-out .money.crossed.flash{animation:roi-crossed .62s var(--ease)}
+@keyframes roi-crossed{
+  0%{text-shadow:0 0 0 rgba(255,184,0,0)}
+  30%{text-shadow:0 0 36px rgba(255,184,0,.8), 0 0 13px rgba(255,184,0,.62)}
+  100%{text-shadow:0 0 20px rgba(255,184,0,.45), 0 0 8px rgba(255,184,0,.3)}
+}
+.roi-multiple{margin-top:6px;color:var(--gold);font-weight:700;font-size:15px}
+.roi-multiple[hidden]{display:none}
+.roi-copied{margin-left:8px;color:var(--live);font-weight:700;opacity:0;transition:opacity .2s}
+.roi-copied.show{opacity:1}
+@media(prefers-reduced-motion:reduce){
+  .roi-out .money.crossed,.roi-out .money.crossed.flash{animation:none!important}
 }

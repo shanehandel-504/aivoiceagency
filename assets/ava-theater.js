@@ -20,7 +20,18 @@
   var bSkip = root.querySelector('[data-th-skip]');
   var bReplay = root.querySelector('[data-th-replay]');
 
-  var audio = new Audio(); audio.preload = 'none';
+  /* ping-pong: A plays line N while B preloads line N+1 (kills the LTE per-line stutter) */
+  var pair = [new Audio(), new Audio()];
+  pair.forEach(function (a) { a.preload = 'none'; });
+  var actEl = 0;
+  var unlocked = false;
+  function unlockAudio() {
+    if (unlocked) return; unlocked = true;
+    pair.forEach(function (a) {
+      try { a.muted = true; var p = a.play(); if (p && p.then) p.then(function () { a.pause(); a.muted = false; }).catch(function () {}); } catch (e) {}
+    });
+  }
+  document.addEventListener('pointerdown', unlockAudio, { once: true, capture: true });
   function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   /* cross-module: stop the hero pod when the theater plays */
@@ -89,22 +100,31 @@
     if (on) on.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
+  function preloadNext(i) {
+    var lines = D.verticals[cur].lines, nx = pair[1 - actEl];
+    if (lines[i + 1]) { try { nx.src = lines[i + 1].audio; nx.preload = 'auto'; nx.load(); } catch (e) {} }
+  }
   function playLine(i) {
     var lines = D.verticals[cur].lines;
     if (i >= lines.length) { finish(); return; }
     idx = i;
     lightLine(lines[i].n);
     updateAt(lines[i].n, false);
-    audio.src = lines[i].audio; audio.muted = false;
-    var p = audio.play(); if (p && p.catch) p.catch(function(){});
+    var el = pair[actEl];
+    if (el.src.indexOf(lines[i].audio) < 0) el.src = lines[i].audio;
+    el.muted = false;
+    var p = el.play(); if (p && p.catch) p.catch(function(){});
+    preloadNext(i);
   }
-  audio.addEventListener('ended', function () {
-    if (!playing) return;
-    gap = setTimeout(function () { playLine(idx + 1); }, 150);
+  pair.forEach(function (a) {
+    a.addEventListener('ended', function () {
+      if (!playing || a !== pair[actEl]) return;
+      gap = setTimeout(function () { actEl = 1 - actEl; playLine(idx + 1); }, 150);
+    });
   });
 
   function play() { emitPlay(); playing = true; bPlay.textContent = '❚❚ Playing'; playLine(idx >= D.verticals[cur].lines.length ? 0 : idx); }
-  function hardStop() { playing = false; if (bPlay) bPlay.textContent = '▶ Play'; audio.pause(); clearTimeout(gap); }
+  function hardStop() { playing = false; if (bPlay) bPlay.textContent = '▶ Play'; pair.forEach(function (a) { a.pause(); }); clearTimeout(gap); }
   function finish() { hardStop(); updateAt(99, true); }
   function reset() { hardStop(); idx = 0; renderTranscript(); renderBoard(); }
 
@@ -131,7 +151,7 @@
     emitPlay(); hardStop();
     var n = +b.getAttribute('data-linebtn');
     var line = D.verticals[cur].lines[n - 1];
-    lightLine(n); audio.src = line.audio; audio.muted = false; audio.play().catch(function(){});
+    lightLine(n); var el = pair[actEl]; el.src = line.audio; el.muted = false; el.play().catch(function(){});
   });
   if (bPlay) bPlay.addEventListener('click', function () { playing ? hardStop() : play(); });
   if (bSkip) bSkip.addEventListener('click', skip);

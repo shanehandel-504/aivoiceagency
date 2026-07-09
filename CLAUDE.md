@@ -94,3 +94,20 @@ Fired on click by funnel.js (no-op if window.va absent). Current set:
 - BATCH IT → consolidate pending edits into one commit
 - 100X MODE → max output, no filters
 - FULL AUTHORITY → execute without asking
+
+## SHANE READBACK LAW
+- Every run ends with ONE fenced block: `===== SHANE READBACK — COPY ALL =====`
+- Contents: plain-English summary a non-coder can follow · DONE table (what shipped, live, proof) · IDs / one-line rollback per checkpoint · what's next · gotchas.
+- NOTHING comes after the block. Mirror the same block to `/reports/YYYY-MM-DD-<mission>.md`.
+
+## ACCENT LAW (homepage)
+- cyan `#00D4FF` = brand · green `#00E676` = live/success · gold `#FFB800` = money · violet `#8B5CF6` = badge.
+- Max 3 accent colors per screen. Gold is unified at `#FFB800` everywhere (killed `#D4A94E`).
+
+## ONE-REPO-LANE LAW
+- shanehandel-504/aivoiceagency → Vercel (auto-deploy from `main`) is the ONLY lane for aivoiceagency.ai.
+- No second deploy target, no parallel branch shipping the same page. One push = one live unit.
+
+## POLISH FREEZE (homepage)
+- After THE FINAL CUT (2026-07-09), the homepage (`index.html` + `/assets/funnel.*` + `ava-pod.js` / `ava-theater.js`) is FROZEN.
+- Bug fixes only. New features / redesigns require an explicit un-freeze from Shane.
