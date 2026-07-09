@@ -102,6 +102,44 @@
     }
   }
 
+  /* ---------- single green pulse per viewport (Homepage Candy: the Call-me beacon leads) ----------
+     Keeps the page from becoming a christmas tree of competing green pulses. At any scroll position
+     only ONE green beacon animates; the Call-me tab (data-beacon) wins when it is visible + unselected,
+     otherwise priority falls to the nearest visible .pulse-live. Suspended ones get .pulse-hold. */
+  (function () {
+    if (!('IntersectionObserver' in window)) return;
+    var pulsers = [].slice.call(document.querySelectorAll('.pulse-live, [data-beacon]'));
+    if (pulsers.length < 2) return;
+    /* priority: data-beacon first, then document order */
+    pulsers.sort(function (a, b) {
+      return (a.hasAttribute('data-beacon') ? 0 : 1) - (b.hasAttribute('data-beacon') ? 0 : 1);
+    });
+    var vis = [];
+    function eligible(p) {
+      /* a selected beacon tab isn't pulsing, so it yields priority to the form's own CTA */
+      return !(p.hasAttribute('data-beacon') && p.getAttribute('aria-selected') === 'true');
+    }
+    function reconcile() {
+      var chosen = null;
+      for (var i = 0; i < pulsers.length; i++) {
+        if (vis.indexOf(pulsers[i]) > -1 && eligible(pulsers[i])) { chosen = pulsers[i]; break; }
+      }
+      pulsers.forEach(function (p) { p.classList.toggle('pulse-hold', p !== chosen); });
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var i = vis.indexOf(en.target);
+        if (en.isIntersecting && i < 0) vis.push(en.target);
+        else if (!en.isIntersecting && i > -1) vis.splice(i, 1);
+      });
+      reconcile();
+    }, { threshold: 0.2 });
+    pulsers.forEach(function (p) { io.observe(p); });
+    /* tab switches change which beacon is eligible — re-pick after the aria-selected flip */
+    var tabs = document.querySelector('.pod-tabs');
+    if (tabs) tabs.addEventListener('click', function () { setTimeout(reconcile, 0); });
+  })();
+
   /* ---------- scroll to pod / open gate ---------- */
   document.querySelectorAll('[data-scroll-pod]').forEach(function (b) {
     b.addEventListener('click', function () {

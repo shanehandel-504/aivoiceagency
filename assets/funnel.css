@@ -190,6 +190,39 @@ body.glow-ready .tap-hint{animation:pulse 2s infinite}
 .gate-status.ok{color:var(--live)}
 .webcall-offer{margin-top:6px}
 
+/* ===== C — Call-me pane: white-card treatment (dark-on-dark → readable) ===== */
+/* Scoped to the HERO pod's call tab only. The S9 gate .mini-gate stays on its dark gcard. */
+.pod-panel[data-panel="call"]{padding:10px 10px 12px}
+.pod-panel[data-panel="call"] .mini-gate{
+  background:var(--paper); color:var(--ink); border-radius:14px; padding:13px 13px 14px; gap:9px;
+  box-shadow:0 8px 22px rgba(0,0,0,.38), 0 0 0 1px rgba(0,212,255,.16);
+}
+.pod-panel[data-panel="call"] .mini-gate h4{color:var(--ink); font-size:14.5px}
+.pod-panel[data-panel="call"] .field input[type=tel]{
+  background:var(--paper2); border:1px solid #cbd2dc; color:var(--ink); border-radius:9px}
+.pod-panel[data-panel="call"] .field input[type=tel]::placeholder{color:#7a828e}
+.pod-panel[data-panel="call"] .field input:focus{border-color:var(--cyan); box-shadow:0 0 0 3px rgba(0,212,255,.2)}
+.pod-panel[data-panel="call"] .consent{color:var(--ink2); font-size:11px}      /* TCPA line — kept, now legible */
+.pod-panel[data-panel="call"] .consent input{accent-color:var(--cyan); width:17px; height:17px}
+.pod-panel[data-panel="call"] .gate-status.ok{color:#0a9d57}   /* paper-safe green on white */
+.pod-panel[data-panel="call"] .gate-status.err{color:#c0392b}  /* paper-safe red on white */
+.pod-panel[data-panel="call"] .webcall-offer .btn-ghost{color:var(--ink2); border-color:#cbd2dc}
+
+/* ===== C — the "Call me live" tab is THE beacon: green breathing pulse ===== */
+.pod-tab.tab-beacon[aria-selected="false"]{border-color:rgba(0,230,118,.5); color:var(--live)}
+body.glow-ready .pod-tab.tab-beacon[aria-selected="false"]:not(.pulse-hold){
+  animation:beacon-breathe 2.2s ease-in-out infinite}
+@keyframes beacon-breathe{
+  0%,100%{box-shadow:0 0 0 0 rgba(0,230,118,0), inset 0 0 0 1px rgba(0,230,118,.28)}
+  50%{box-shadow:0 0 11px 1px rgba(0,230,118,.5), inset 0 0 0 1px rgba(0,230,118,.42)}}
+
+/* ===== C — single green pulse per viewport: suspended beacons hold still (JS-coordinated) ===== */
+.pulse-live.pulse-hold{animation:none!important}
+.pulse-live.pulse-hold::after{animation:none!important; opacity:0!important}
+@media(prefers-reduced-motion:reduce){
+  .pod-tab.tab-beacon[aria-selected="false"]{animation:none!important}
+}
+
 /* ---------- checkmarks strip ---------- */
 .checks{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .checks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 26px}
