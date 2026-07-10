@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Brand Vault — AI Voice Agency</title>
+<link rel="icon" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0A0A0F; --panel:#10131A; --line:#23232E; --line2:#2c2c38;
+    --text:#EEF0F4; --dim:#9AA1AD; --cyan:#00D4FF; --cyan2:#00E5FF;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{background:var(--void)}
+  body{margin:0;background:var(--void);color:var(--text);
+    font-family:'Space Grotesk',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{color:var(--cyan2)}
+
+  /* header */
+  header{border-bottom:1px solid var(--line);padding:40px 0 30px;
+    background:radial-gradient(1200px 300px at 12% -40%,rgba(0,212,255,.10),transparent)}
+  .brandline{display:flex;align-items:center;gap:12px;font-weight:600;font-size:15px;letter-spacing:.02em}
+  .dot{width:14px;height:14px;border-radius:50%;background:var(--cyan);
+    box-shadow:0 0 0 4px rgba(0,212,255,.16),0 0 18px var(--cyan)}
+  h1{font-size:clamp(26px,4vw,40px);font-weight:700;margin:18px 0 8px;letter-spacing:-.01em}
+  h1 span{color:var(--cyan)}
+  .sub{color:var(--dim);max-width:64ch;font-size:15.5px}
+  .canon{margin-top:18px;border-left:3px solid var(--cyan);box-shadow:-1px 0 12px rgba(0,212,255,.25);
+    background:linear-gradient(90deg,rgba(0,212,255,.06),transparent 40%),var(--panel);
+    padding:12px 16px;border-radius:0 10px 10px 0;font-size:14px;color:var(--text);max-width:70ch}
+  .canon b{color:var(--cyan)}
+
+  /* palette */
+  .palette{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .sw{display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;padding:8px 12px;font-family:var(--mono);font-size:12px}
+  .chip{width:20px;height:20px;border-radius:6px;border:1px solid rgba(255,255,255,.12);flex:none}
+  .sw small{color:var(--dim)}
+
+  /* sections */
+  main{padding:34px 0 10px}
+  section{margin:0 0 40px}
+  .sec-h{display:flex;align-items:baseline;gap:12px;margin:0 0 4px;flex-wrap:wrap}
+  .sec-h h2{font-size:18px;font-weight:700;margin:0;letter-spacing:.01em}
+  .sec-h .tag{font-family:var(--mono);font-size:11px;color:var(--cyan);border:1px solid rgba(0,212,255,.35);
+    border-radius:999px;padding:2px 9px}
+  .sec-note{color:var(--dim);font-size:13.5px;margin:2px 0 16px;max-width:74ch}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    display:flex;flex-direction:column;transition:border-color .18s,transform .18s}
+  .card:hover{border-color:rgba(0,212,255,.45);transform:translateY(-2px)}
+  .tile{height:150px;display:grid;place-items:center;padding:16px;background:#07090e;
+    background-image:
+      linear-gradient(45deg,#0c0f16 25%,transparent 25%),
+      linear-gradient(-45deg,#0c0f16 25%,transparent 25%),
+      linear-gradient(45deg,transparent 75%,#0c0f16 75%),
+      linear-gradient(-45deg,transparent 75%,#0c0f16 75%);
+    background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0;
+    border-bottom:1px solid var(--line)}
+  .tile img{max-width:100%;max-height:118px;object-fit:contain;display:block}
+  .tile.mark img{max-height:74px}          /* small icons */
+  .meta{padding:12px 13px 13px}
+  .fname{font-family:var(--mono);font-size:12.5px;color:var(--text);word-break:break-all;font-weight:500}
+  .dims{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:4px;display:flex;gap:8px;flex-wrap:wrap}
+  .badge{border:1px solid var(--line2);border-radius:5px;padding:0 5px;text-transform:uppercase;letter-spacing:.05em}
+  .row{display:flex;gap:8px;margin-top:11px}
+  .btn{flex:1;text-align:center;font-family:'Space Grotesk';font-size:12.5px;font-weight:600;
+    border-radius:8px;padding:7px 8px;cursor:pointer;border:1px solid var(--line2);background:transparent;
+    color:var(--text);transition:.15s}
+  .btn.dl{background:var(--cyan);color:#04121a;border-color:var(--cyan)}
+  .btn.dl:hover{background:var(--cyan2)}
+  .btn.cp:hover{border-color:var(--cyan);color:var(--cyan2)}
+  .btn.cp.copied{border-color:var(--cyan);color:var(--cyan)}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);margin-top:26px;padding:30px 0 60px;color:var(--dim);font-size:13.5px}
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:8px}
+  .rules h3{color:var(--text);font-size:14px;margin:0 0 8px}
+  .rules ul{margin:0;padding-left:18px}
+  .rules li{margin:4px 0}
+  .no::marker{color:#ff7a7a}
+  .yes::marker{color:var(--cyan)}
+  @media(max-width:640px){.rules{grid-template-columns:1fr}}
+  .foot-note{margin-top:22px;font-family:var(--mono);font-size:11.5px;opacity:.7}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brandline"><span class="dot" aria-hidden="true"></span>AI VOICE AGENCY · BRAND VAULT</div>
+    <h1>The canonical <span>logo stack</span>.</h1>
+    <p class="sub">Every mark, favicon, banner and print asset — one place, download-ready. This is the single source of truth: delete scattered project-file copies and pull from here. <b style="color:var(--text)">Internal · noindex.</b></p>
+    <div class="canon">The company mark is the <b>cyan dot</b>. Canon lockup = the dot sits to the <b>LEFT</b> of “AI VOICE AGENCY” on the same baseline, never overlapping a letter. Transparent logos are built for <b>dark</b> surfaces — do not place them on white.</div>
+    <div class="palette">
+      <span class="sw"><span class="chip" style="background:#0A0A0F"></span>Background <small>#0A0A0F</small></span>
+      <span class="sw"><span class="chip" style="background:#EEF0F4"></span>Text <small>#EEF0F4</small></span>
+      <span class="sw"><span class="chip" style="background:#00D4FF"></span>Accent <small>#00D4FF</small></span>
+      <span class="sw"><span class="chip" style="background:linear-gradient(135deg,#0A0A0F,#00D4FF)"></span>Type <small>Space Grotesk</small></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="vault"></main>
+
+<footer>
+  <div class="wrap">
+    <div class="rules">
+      <div>
+        <h3>Always</h3>
+        <ul>
+          <li class="yes">Cyan dot to the LEFT of the wordmark, same baseline</li>
+          <li class="yes">Transparent logos on dark surfaces only</li>
+          <li class="yes">“AI VOICE” in #EEF0F4, “AGENCY” in #00D4FF</li>
+          <li class="yes">Soft glowing dot: cyan core + cyan halo</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Never</h3>
+        <ul>
+          <li class="no">Dot behind / overlapping / inside a letter</li>
+          <li class="no">Dot as a big central glow behind text</li>
+          <li class="no">AVA disc badge or AVA letterforms on company surfaces</li>
+          <li class="no">Ring, white center, gloss, or logos on white</li>
+        </ul>
+      </div>
+    </div>
+    <p class="foot-note">Full spec: <a href="README.txt">brand/README.txt</a> · product UI marks live in <a href="product-marks/">/product-marks</a> (not for company marketing) · retired badge in <a href="parked/">/parked</a>.</p>
+  </div>
+</footer>
+
+<script>
+  var VAULT = [
+    {h:"Logos", tag:"transparent · dark surfaces", note:"Primary canonical lockup — site header, decks, docs, email signatures, footers. Compact = tighter lockup for narrow space.", items:[
+      {f:"logo-horizontal.svg", d:"1294×232", k:"3KB"},
+      {f:"logo-horizontal.png", d:"1600×287", k:"46KB"},
+      {f:"logo-compact.svg", d:"1091×165", k:"3KB"},
+      {f:"logo-compact.png", d:"1200×181", k:"31KB"}
+    ]},
+    {h:"Avatar / Profile", tag:"cyan dot only", note:"Company profile image — X, LinkedIn, IG, Google Business Profile. Dot only; reads in a circular crop.", items:[
+      {f:"social-avatar.svg", d:"1000×1000", k:"1KB"},
+      {f:"social-avatar.png", d:"1000×1000", k:"106KB"},
+      {f:"gbp-profile.png", d:"1024×1024", k:"109KB"}
+    ]},
+    {h:"Favicon / App Icons", tag:"cyan dot on #0A0A0F", note:"Mirrored to the repo root (favicon.ico / favicon.svg / apple-touch-icon.png). Do not touch the live nav-dot CSS.", mark:true, items:[
+      {f:"favicon.ico", d:"16/32/48/64", k:"6KB"},
+      {f:"favicon.svg", d:"512×512", k:"1KB"},
+      {f:"favicon-256.png", d:"256×256", k:"16KB"},
+      {f:"favicon-512.png", d:"512×512", k:"41KB"},
+      {f:"apple-touch-icon.png", d:"180×180", k:"9KB"}
+    ]},
+    {h:"Social / Share", tag:"canonical lockup + tagline", note:"Master share banner + the live Open-Graph card served by the homepage.", items:[
+      {f:"social-banner-master.svg", d:"1600×900", k:"15KB"},
+      {f:"social-banner-master.png", d:"1600×900", k:"88KB"},
+      {f:"og-home.png", d:"1200×630", k:"88KB"}
+    ]},
+    {h:"Platform Banners", tag:"safe-area aware", note:"Canonical lockup + tagline, centered. No phone, no website.", items:[
+      {f:"x-banner.png", d:"1500×500", k:"61KB"},
+      {f:"linkedin-banner.png", d:"1584×396", k:"50KB"},
+      {f:"facebook-cover.png", d:"1640×624", k:"77KB"},
+      {f:"youtube-banner.png", d:"2560×1440", k:"121KB"},
+      {f:"gbp-cover.png", d:"1080×608", k:"56KB"}
+    ]},
+    {h:"Print", tag:"300 DPI", note:"3.5×2 in business-card front. Canonical lockup + tagline.", items:[
+      {f:"business-card-front.png", d:"1050×600", k:"61KB"}
+    ]},
+    {h:"Product marks", tag:"AVA UI · not company marketing", note:"AVA product wordmark for in-app / product UI. Do NOT use on company marketing surfaces.", items:[
+      {f:"product-marks/ava-wordmark.svg", d:"610×180", k:"1KB"},
+      {f:"product-marks/ava-wordmark.png", d:"900×266", k:"27KB"}
+    ]},
+    {h:"Parked", tag:"retired · reference only", note:"AVA disc badge — not in use, retained for reference. Not allowed on company surfaces.", items:[
+      {f:"parked/ava-disc-badge.svg", d:"1000×1000", k:"1KB"},
+      {f:"parked/ava-disc-badge.png", d:"1000×1000", k:"184KB"}
+    ]}
+  ];
+  var PROD = "https://aivoiceagency.ai/brand/";
+  function ext(f){ return f.split('.').pop().toUpperCase(); }
+  function card(it, mark){
+    var e = ext(it.f);
+    return '<div class="card">'+
+      '<div class="tile'+(mark?' mark':'')+'"><img loading="lazy" src="'+it.f+'" alt="'+it.f+'"></div>'+
+      '<div class="meta"><div class="fname">'+it.f+'</div>'+
+      '<div class="dims"><span>'+it.d+'</span><span>'+it.k+'</span><span class="badge">'+e+'</span></div>'+
+      '<div class="row">'+
+        '<a class="btn dl" href="'+it.f+'" download>Download</a>'+
+        '<button class="btn cp" data-url="'+PROD+it.f+'">Copy URL</button>'+
+      '</div></div></div>';
+  }
+  document.getElementById('vault').innerHTML = VAULT.map(function(s){
+    return '<section><div class="sec-h"><h2>'+s.h+'</h2><span class="tag">'+s.tag+'</span></div>'+
+      '<p class="sec-note">'+s.note+'</p>'+
+      '<div class="grid">'+ s.items.map(function(it){ return card(it, s.mark); }).join('') +'</div></section>';
+  }).join('');
+  document.getElementById('vault').addEventListener('click', function(e){
+    var b = e.target.closest('.btn.cp'); if(!b) return;
+    var url = b.getAttribute('data-url');
+    function ok(){ var t=b.textContent; b.textContent='Copied ✓'; b.classList.add('copied');
+      setTimeout(function(){ b.textContent=t; b.classList.remove('copied'); }, 1400); }
+    if(navigator.clipboard) navigator.clipboard.writeText(url).then(ok, ok); else ok();
+  });
+</script>
+</body>
+</html>
