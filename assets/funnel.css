@@ -378,7 +378,7 @@ body.glow-ready .pod-tab.tab-beacon[aria-selected="false"]:not(.pulse-hold){
 /* ---------- footer ---------- */
 .foot{border-top:1px solid var(--line);padding:40px 0;color:var(--dim);font-size:14px}
 .foot .frow{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
-.foot a{color:var(--text)}
+.foot a{color:var(--text);transition:color .18s var(--ease),text-shadow .18s var(--ease)}
 .foot .fnums b{color:var(--cyan)}
 .foot .disc{font-size:12px;opacity:.75;margin-top:18px;max-width:70ch}
 .foot .links{display:flex;gap:16px;flex-wrap:wrap}
@@ -511,7 +511,7 @@ body.glow-ready .pod-live .dot{animation:oncall-pulse 2.1s ease-in-out infinite}
 .qa[open]{border-color:rgba(0,212,255,.34)}
 .foot{color:#B2B8C2}                    /* brighter than --dim on the void for footer body copy */
 .foot .disc{opacity:.9}
-.foot a:hover{color:var(--cyan-2)}
+.foot a:hover{color:var(--cyan-2);text-shadow:0 0 12px rgba(0,229,255,.55)}   /* E — footer link-glow on hover */
 .foot .fnums b{text-shadow:0 0 10px rgba(0,212,255,.3)}
 
 /* B7 — desktop bottom rhythm (>=1024px): match the top half's intentionality */
@@ -647,6 +647,32 @@ body.glow-ready .step.signal-step.in-view::after{animation:bar-grow .6s var(--ea
 .qa[open]{position:relative}
 .qa[open]::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cyan);transform-origin:top;box-shadow:0 0 12px rgba(0,212,255,.4);z-index:2}
 body.glow-ready .qa[open]::before{animation:bar-grow .45s var(--ease)}
+
+/* ===== D — DEPTH PASS: the founder's glowing left-edge, applied to the basic boxes.
+   cyan edge = default · gold edge = money-context · subtle inner gradient · consistent radii.
+   Accent law holds: cyan / green / gold only, ≤3 accents per screen. ===== */
+/* FAQ + transcript cards: persistent cyan left edge (subtle closed → glows on hover/open) + inner gradient */
+.qa{position:relative; background:linear-gradient(90deg,rgba(0,212,255,.05),rgba(0,212,255,0) 32%),var(--panel)}
+.qa::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;z-index:2;
+  background:var(--cyan);opacity:.3;transition:opacity .2s,box-shadow .2s}
+.qa:hover::before{opacity:.7;box-shadow:0 0 10px rgba(0,212,255,.35)}
+.qa[open]::before{opacity:1}                       /* full strength open — line-648 glow + bar-grow stay */
+/* money-context FAQ (cost) → gold edge + faint gold wash */
+.qa.money-edge{background:linear-gradient(90deg,rgba(255,184,0,.06),rgba(255,184,0,0) 32%),var(--panel)}
+.qa.money-edge::before{background:var(--gold)}
+.qa.money-edge:hover::before{box-shadow:0 0 10px rgba(255,184,0,.4)}
+.qa.money-edge[open]::before{background:var(--gold);box-shadow:0 0 12px rgba(255,184,0,.45)}
+/* ROI "revenue left on the table" is THE money card → gold left edge (inset to hug the 16px radius) */
+.roi-out{position:relative}
+.roi-out::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:2px;
+  background:var(--gold);box-shadow:0 0 12px rgba(255,184,0,.4);z-index:1}
+/* info boxes (problem stats + before/after) get the same cyan depth edge; the $0 loss stat is money → gold */
+.stat-card,.ba-card{position:relative;overflow:hidden}
+.stat-card::before,.ba-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--cyan);opacity:.55;box-shadow:0 0 10px rgba(0,212,255,.3)}
+.stat-card.money-edge::before{background:var(--gold);opacity:.72;box-shadow:0 0 10px rgba(255,184,0,.34)}
+/* transcript info chips: the vertical-label chip gets a pill-safe cyan left accent (inset, follows the radius) */
+.qa.transcript .txc:first-child{box-shadow:inset 2px 0 0 rgba(0,212,255,.7)}
 
 /* Item 11 — LIVE DOTS */
 .live-now{display:inline-flex;align-items:center;gap:5px;color:var(--live);font-weight:700}
