@@ -783,3 +783,45 @@ body.glow-ready.audio-live .nav .signal{animation:nav-active .9s ease-in-out inf
   .nav .signal{transform:none!important; transition:none!important}
   body.glow-ready.audio-live .nav .signal{animation:none!important}
 }
+
+/* ═══════════════ GLOW3 — 3 additive micro-signatures (2026-07-11) ═══════════════
+   Grok red-teamed v2 spec. SINGLE cyan #00D4FF. Pseudo-elements only, zero new DOM,
+   zero layout shift. All motion gated behind body.glow-ready (never competes with LCP),
+   reduced-motion-safe, transform/opacity-driven for 60fps. Bound to REAL selectors +
+   real Signal state hooks that already exist in the homepage:
+     (1) BREATHING  → hero primary CTA           .hero-cta .btn-cyan
+     (2) ACTIVATED  → call-box (Call-me panel)    .pod-panel[data-panel="call"].active
+     (3) SPEAKING   → demo playback (pod)         body.demo-active .play-btn[data-play]
+   Harmonizes with the existing pulse-cyan / beacon-breathe / oncall-pulse family;
+   never competes. <2KB. ============================================================ */
+
+/* (1) hero CTA breathing ring */
+.hero-cta .btn-cyan{position:relative}
+.hero-cta .btn-cyan::after{content:"";position:absolute;inset:-3px;border-radius:inherit;
+  border:1.5px solid var(--cyan);opacity:0;pointer-events:none;transform:scale(.985);
+  will-change:transform,opacity}
+body.glow-ready .hero-cta .btn-cyan::after{animation:g3-cta-breathe 3s ease-in-out infinite}
+@keyframes g3-cta-breathe{0%,100%{opacity:0;transform:scale(.985)}50%{opacity:.5;transform:scale(1.05)}}
+
+/* (2) call-box activation glow frame (fires the instant the Call-me panel goes active) */
+.pod-panel[data-panel="call"].active::after{content:"";position:absolute;inset:0;border-radius:12px;
+  pointer-events:none;opacity:0;will-change:opacity;
+  box-shadow:inset 0 0 0 1px rgba(0,212,255,.9),inset 0 0 22px -6px rgba(0,212,255,.6)}
+body.glow-ready .pod-panel[data-panel="call"].active::after{animation:g3-frame 3.2s ease-in-out infinite}
+@keyframes g3-frame{0%{opacity:.55}50%{opacity:1}100%{opacity:.55}}
+
+/* (3) demo-playback pulse (emanates from the play/pause button while the demo plays) */
+.pod-controls .play-btn[data-play]{position:relative}
+.pod-controls .play-btn[data-play]::after{content:"";position:absolute;inset:0;border-radius:50%;
+  pointer-events:none;border:2px solid var(--cyan);opacity:0;will-change:transform,opacity}
+body.glow-ready.demo-active .pod-controls .play-btn[data-play]::after{animation:g3-play 1.8s var(--ease) infinite}
+@keyframes g3-play{0%{transform:scale(1);opacity:.55}70%{transform:scale(1.5);opacity:0}100%{transform:scale(1.5);opacity:0}}
+
+/* GLOW3 reduced-motion: hold still; keep only a faint static activation frame */
+@media(prefers-reduced-motion:reduce){
+  .hero-cta .btn-cyan::after,
+  body.glow-ready .hero-cta .btn-cyan::after,
+  body.glow-ready.demo-active .pod-controls .play-btn[data-play]::after{animation:none!important;opacity:0!important}
+  .pod-panel[data-panel="call"].active::after,
+  body.glow-ready .pod-panel[data-panel="call"].active::after{animation:none!important;opacity:.5!important}
+}
