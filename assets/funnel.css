@@ -557,12 +557,8 @@ body.glow-ready .pod-live .dot{animation:oncall-pulse 2.1s ease-in-out infinite}
 }
 body.glow-ready .phone.ringing{animation:buzz 1s var(--ease)}
 body.glow-ready .phone.ringing .incoming{filter:brightness(1.16)}
-/* after the 3rd ring the phone settles into a slow breathe */
-body.glow-ready .phone.settled{animation:phone-breathe 4.2s ease-in-out infinite}
-@keyframes phone-breathe{
-  0%,100%{box-shadow:var(--sh), inset 0 0 0 2px #05060a, 0 0 0 0 rgba(0,212,255,0)}
-  50%{box-shadow:var(--sh), inset 0 0 0 2px #05060a, 0 0 34px 2px rgba(0,212,255,.16)}
-}
+/* after the 3rd ring the phone settles — the LIVING HALO (GLOW4, end of file) now owns the
+   idle + on-call breathe on .phone:not(.ringing); the old subtle phone-breathe is retired. */
 
 /* Idle nudge — one small chip anchored to the phone. No overlay, no fake banner. */
 .ava-toast{position:absolute;left:50%;bottom:-16px;transform:translate(-50%,8px);z-index:9;
@@ -784,18 +780,16 @@ body.glow-ready.audio-live .nav .signal{animation:nav-active .9s ease-in-out inf
   body.glow-ready.audio-live .nav .signal{animation:none!important}
 }
 
-/* ═══════════════ GLOW3 — 3 additive micro-signatures (2026-07-11) ═══════════════
-   Grok red-teamed v2 spec. SINGLE cyan #00D4FF. Pseudo-elements only, zero new DOM,
-   zero layout shift. All motion gated behind body.glow-ready (never competes with LCP),
-   reduced-motion-safe, transform/opacity-driven for 60fps. Bound to REAL selectors +
-   real Signal state hooks that already exist in the homepage:
-     (1) BREATHING  → hero primary CTA           .hero-cta .btn-cyan
-     (2) ACTIVATED  → call-box (Call-me panel)    .pod-panel[data-panel="call"].active
-     (3) SPEAKING   → demo playback (pod)         body.demo-active .play-btn[data-play]
-   Harmonizes with the existing pulse-cyan / beacon-breathe / oncall-pulse family;
-   never competes. <2KB. ============================================================ */
+/* ═══════════════ GLOW4 — founder AMP of the 3 signatures (2026-07-11 · L1) ═══════════════
+   Shane spec: make the phone ALIVE at arm's length. SINGLE cyan #00D4FF drives every glow
+   (green stays semantic = live / success only). All motion gated behind body.glow-ready so it
+   never competes with the LCP paint; zero new DOM; zero layout shift (transform / opacity /
+   box-shadow only — doctrine-allowed). Reduced-motion-safe. Supersedes GLOW3 (2)+(3) and the
+   FINAL-CUT settled phone-breathe. Signal-state hooks reused verbatim from the existing JS:
+     glow-ready · audio-live (AVA on call) · demo-active (pod demo playing) · .ringing (buzz).
+   ════════════════════════════════════════════════════════════════════════════════════════ */
 
-/* (1) hero CTA breathing ring */
+/* (1) KEEP — hero primary CTA breathing ring (GLOW3 #1, unchanged) */
 .hero-cta .btn-cyan{position:relative}
 .hero-cta .btn-cyan::after{content:"";position:absolute;inset:-3px;border-radius:inherit;
   border:1.5px solid var(--cyan);opacity:0;pointer-events:none;transform:scale(.985);
@@ -803,25 +797,57 @@ body.glow-ready.audio-live .nav .signal{animation:nav-active .9s ease-in-out inf
 body.glow-ready .hero-cta .btn-cyan::after{animation:g3-cta-breathe 3s ease-in-out infinite}
 @keyframes g3-cta-breathe{0%,100%{opacity:0;transform:scale(.985)}50%{opacity:.5;transform:scale(1.05)}}
 
-/* (2) call-box activation glow frame (fires the instant the Call-me panel goes active) */
-.pod-panel[data-panel="call"].active::after{content:"";position:absolute;inset:0;border-radius:12px;
-  pointer-events:none;opacity:0;will-change:opacity;
-  box-shadow:inset 0 0 0 1px rgba(0,212,255,.9),inset 0 0 22px -6px rgba(0,212,255,.6)}
-body.glow-ready .pod-panel[data-panel="call"].active::after{animation:g3-frame 3.2s ease-in-out infinite}
-@keyframes g3-frame{0%{opacity:.55}50%{opacity:1}100%{opacity:.55}}
+/* (a) LIVING HALO — a Siri-class breathing ring hugging the device frame, synced to Signal state.
+   IDLE (post-load): a clearly-visible cyan breathe — obvious at arm's length, no longer a whisper.
+   ON-CALL (audio-live): brighter + faster — the phone reads "live" the instant a demo starts.
+   One element, box-shadow loop (shadow = zero-CLS), moderate spread for paint budget. While the
+   phone .ringing-shakes the halo hands off to the buzz (mutually exclusive via :not(.ringing)). */
+body.glow-ready .phone:not(.ringing){animation:g4-halo 3.6s ease-in-out infinite}
+@keyframes g4-halo{
+  0%,100%{box-shadow:var(--sh), inset 0 0 0 2px #05060a, 0 0 0 0 rgba(0,212,255,0)}
+  50%{box-shadow:var(--sh), inset 0 0 0 2px #05060a, 0 0 30px 3px rgba(0,212,255,.36)}
+}
+body.glow-ready.audio-live .phone:not(.ringing){animation:g4-halo-live 1.7s ease-in-out infinite}
+@keyframes g4-halo-live{
+  0%,100%{box-shadow:var(--sh), inset 0 0 0 2px #05060a, 0 0 20px 2px rgba(0,212,255,.4)}
+  50%{box-shadow:var(--sh), inset 0 0 0 2px #05060a, 0 0 54px 9px rgba(0,212,255,.72)}
+}
 
-/* (3) demo-playback pulse (emanates from the play/pause button while the demo plays) */
-.pod-controls .play-btn[data-play]{position:relative}
-.pod-controls .play-btn[data-play]::after{content:"";position:absolute;inset:0;border-radius:50%;
-  pointer-events:none;border:2px solid var(--cyan);opacity:0;will-change:transform,opacity}
-body.glow-ready.demo-active .pod-controls .play-btn[data-play]::after{animation:g3-play 1.8s var(--ease) infinite}
-@keyframes g3-play{0%{transform:scale(1);opacity:.55}70%{transform:scale(1.5);opacity:0}100%{transform:scale(1.5);opacity:0}}
+/* (c) DEMO RADAR — a ring emanates outward from the phone frame while the pod demo plays.
+   transform + opacity only = compositor, 60fps; border-only + transparent fill so it never covers
+   the screen; tuned to read elite in a 1080×1920 screen-record. (.phone::before is the notch.) */
+.phone::after{content:"";position:absolute;inset:0;border-radius:44px;pointer-events:none;
+  border:2px solid var(--cyan);box-shadow:0 0 16px rgba(0,212,255,.5);
+  opacity:0;will-change:transform,opacity}
+body.glow-ready.demo-active .phone::after{animation:g4-radar 2.1s var(--ease) infinite}
+@keyframes g4-radar{
+  0%{transform:scale(1);opacity:.6}
+  60%{opacity:0}
+  100%{transform:scale(1.18);opacity:0}
+}
 
-/* GLOW3 reduced-motion: hold still; keep only a faint static activation frame */
+/* (b) CALL-BOX ACTIVATION FRAME — every "enter your phone number" pod lights cyan on FOCUS and
+   confirms GREEN on submit-success (green = success, semantic). Replaces GLOW3 #2's always-on
+   panel frame; now bound to interaction. Covers the hero white call card + the S9 gate card. */
+.mini-gate{transition:box-shadow .28s var(--ease)}
+/* hero white call card — keep its paper drop-shadow, add the glow ring */
+.pod-panel[data-panel="call"] .mini-gate:focus-within{
+  box-shadow:0 10px 26px rgba(0,0,0,.4), 0 0 0 2px var(--cyan), 0 0 26px rgba(0,212,255,.55)}
+.pod-panel[data-panel="call"] .mini-gate:has(.gate-status.ok){
+  box-shadow:0 10px 26px rgba(0,0,0,.4), 0 0 0 2px var(--live), 0 0 26px rgba(0,230,118,.5)}
+/* S9 gate call card */
+.gcard.a .mini-gate{border-radius:12px}
+.gcard.a .mini-gate:focus-within{box-shadow:0 0 0 2px var(--cyan), 0 0 22px rgba(0,212,255,.42)}
+.gcard.a .mini-gate:has(.gate-status.ok){box-shadow:0 0 0 2px var(--live), 0 0 22px rgba(0,230,118,.42)}
+
+/* GLOW4 reduced-motion: freeze every loop; keep a faint STATIC halo so the phone still reads alive.
+   The CTA ring + demo radar hide; the call-box frames are static box-shadow (already reduced-safe). */
 @media(prefers-reduced-motion:reduce){
   .hero-cta .btn-cyan::after,
   body.glow-ready .hero-cta .btn-cyan::after,
-  body.glow-ready.demo-active .pod-controls .play-btn[data-play]::after{animation:none!important;opacity:0!important}
-  .pod-panel[data-panel="call"].active::after,
-  body.glow-ready .pod-panel[data-panel="call"].active::after{animation:none!important;opacity:.5!important}
+  body.glow-ready.demo-active .phone::after{animation:none!important;opacity:0!important}
+  body.glow-ready .phone:not(.ringing),
+  body.glow-ready.audio-live .phone:not(.ringing){
+    animation:none!important;
+    box-shadow:var(--sh), inset 0 0 0 2px #05060a, 0 0 22px 2px rgba(0,212,255,.24)!important}
 }
