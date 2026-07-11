@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="robots" content="noindex, nofollow">
+<title>Social — Work Deck</title>
+<link rel="icon" href="/brand/favicon.svg">
+<link rel="manifest" href="/work/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Work Deck">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/work/kit.css">
+<script>(function(){var d=document.documentElement;d.className+=" gated";try{if(localStorage.getItem("workDeckUnlocked")==="1")d.className+=" unlocked";}catch(e){}})();</script>
+<style>
+  .htable{display:flex;flex-direction:column;gap:8px}
+  .hrow{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:12px 14px}
+  .hrow .plat{flex:0 0 92px;font-weight:700;font-size:14px}
+  .hrow .handle{flex:1;min-width:0;font-family:var(--mono);font-size:13px;color:var(--dim);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hrow .go{flex:0 0 auto;min-height:44px;padding:0 13px;font-size:13px}
+  ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
+  ol.steps li{font-size:14px;color:var(--text);line-height:1.4}
+  ol.steps li b{color:var(--cyan-2)}
+  ol.steps li span{color:var(--dim)}
+  .laws{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .laws .lh{padding:12px 15px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .laws .do .lh{color:var(--live);background:rgba(0,230,118,.08);border-bottom:1px solid rgba(0,230,118,.2)}
+  .laws .dont .lh{color:var(--warn);background:rgba(255,122,89,.08);border-top:1px solid var(--line);border-bottom:1px solid rgba(255,122,89,.2)}
+  .laws ul{list-style:none;margin:0;padding:10px 15px 14px;display:flex;flex-direction:column;gap:8px}
+  .laws li{font-size:13.5px;color:var(--text);line-height:1.4;padding-left:22px;position:relative}
+  .laws .do li::before{content:"✓";position:absolute;left:0;color:var(--live);font-weight:700}
+  .laws .dont li::before{content:"✕";position:absolute;left:0;color:var(--warn);font-weight:700}
+  .laws li b{color:var(--dim);font-weight:600}
+</style>
+</head>
+<body>
+  <div class="gatewall">
+    <form id="gateForm" class="gatecard" autocomplete="off">
+      <div class="gatetag"><span class="dot"></span>Work Deck · private</div>
+      <label for="gateInput">Passcode</label>
+      <input id="gateInput" type="password" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="Passcode">
+      <button type="submit">Unlock</button>
+      <p id="gateErr" class="gateerr">Nope — try again.</p>
+    </form>
+  </div>
+
+  <div class="deck wrap">
+    <div class="topbar">
+      <span class="brandline"><span class="dot"></span>AVA Work Deck</span>
+      <a class="exit" href="/work/">↗ Hub</a>
+    </div>
+    <nav class="mininav" aria-label="Work deck">
+      <a href="/work/">Hub</a>
+      <a href="/work/todo">To-Do</a>
+      <a href="/work/prompts">Prompts</a>
+      <a href="/work/social" aria-current="page">Social</a>
+      <a href="/work/elevenlabs">11Labs</a>
+      <a href="/work/links">Links</a>
+    </nav>
+
+    <span class="eyebrow"><span class="dot"></span>Distribution</span>
+    <h1><span class="accent">Social</span>.</h1>
+    <p class="lede">Handles, the posting checklist, and the laws that keep every post clean.</p>
+
+    <h2>Handles</h2>
+    <div class="htable">
+      <div class="hrow"><span class="plat">TikTok</span><span class="handle">@aivoiceagency.ai</span><a class="btn go" href="https://www.tiktok.com/@aivoiceagency.ai" target="_blank" rel="noopener">Open ↗</a></div>
+      <div class="hrow"><span class="plat">Instagram</span><span class="handle">@aivoiceagency.ai</span><a class="btn go" href="https://www.instagram.com/aivoiceagency.ai/" target="_blank" rel="noopener">Open ↗</a></div>
+      <div class="hrow"><span class="plat">X</span><span class="handle">@aivoiceagency</span><a class="btn go" href="https://x.com/aivoiceagency" target="_blank" rel="noopener">Open ↗</a></div>
+      <div class="hrow"><span class="plat">LinkedIn</span><span class="handle">/company/aivoiceagency</span><a class="btn go" href="https://www.linkedin.com/company/aivoiceagency" target="_blank" rel="noopener">Open ↗</a></div>
+    </div>
+
+    <h2>Per-post checklist</h2>
+    <ol class="steps">
+      <li><b>Pick the asset</b> <span>— the CapCut master / reel for this slot.</span></li>
+      <li><b>Caption = one backable result</b> <span>— real booked jobs, receipts, dollars. No invented numbers.</span></li>
+      <li><b>Strip phone numbers + raw URLs</b> <span>from GBP post text (Google flags them).</span></li>
+      <li><b>Cold surface? Sign “— AVA Team.”</b> <span>No personal name.</span></li>
+      <li><b>Scrub the copy</b> <span>— no “sounds human,” never script “I’m AI,” no real client names.</span></li>
+      <li><b>Schedule in GHL Social Planner</b> <span>— 2×/day cadence, Reel 3 first.</span></li>
+      <li><b>Log it</b> <span>— tick the To-Do + note on the HQ board.</span></li>
+    </ol>
+
+    <h2>Connect GHL Social Planner</h2>
+    <ol class="steps">
+      <li>GHL → <b>Marketing → Social Planner</b>.</li>
+      <li><b>Connect accounts</b> <span>— add each network: Facebook Page, Instagram, TikTok, LinkedIn, X, Google Business.</span></li>
+      <li><b>Authorize</b> <span>— approve in each network’s own OAuth window (do it yourself; never hand off credentials).</span></li>
+      <li><b>Set the queue</b> <span>— posting schedule / time slots for the 2×/day cadence.</span></li>
+      <li><b>Draft → Schedule</b> <span>— watch the first post publish clean before trusting the queue.</span></li>
+    </ol>
+
+    <h2>Content laws</h2>
+    <div class="laws">
+      <div class="do">
+        <div class="lh"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--live);display:inline-block"></span>Always</div>
+        <ul>
+          <li><b>Prove the work</b> — booked jobs, receipts, dollars you can back.</li>
+          <li><b>Sign cold surfaces “AVA Team.”</b></li>
+          <li>Show the outcome, not the tech.</li>
+        </ul>
+      </div>
+      <div class="dont">
+        <div class="lh"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--warn);display:inline-block"></span>Never</div>
+        <ul>
+          <li>Say AVA “sounds human.”</li>
+          <li>Script “I’m AI” / out AVA as a bot.</li>
+          <li>Phone numbers or raw URLs inside GBP post text.</li>
+          <li>Real client names, or unverified proof / ROI / testimonials.</li>
+          <li>Forbidden words: “locked / locked in,” and “booked / confirmed / guaranteed” as claims about the service.</li>
+        </ul>
+      </div>
+    </div>
+
+    <footer class="deckfoot">
+      <span><b>Cold outreach signs AVA Team.</b> Never a personal name</span>
+    </footer>
+  </div>
+
+  <script src="/work/kit.js"></script>
+</body>
+</html>

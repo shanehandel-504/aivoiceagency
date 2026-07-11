@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="robots" content="noindex, nofollow">
+<title>ElevenLabs — Work Deck</title>
+<link rel="icon" href="/brand/favicon.svg">
+<link rel="manifest" href="/work/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Work Deck">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/work/kit.css">
+<script>(function(){var d=document.documentElement;d.className+=" gated";try{if(localStorage.getItem("workDeckUnlocked")==="1")d.className+=" unlocked";}catch(e){}})();</script>
+<style>
+  .loop{display:flex;flex-direction:column;gap:8px}
+  .lstep{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:12px 14px}
+  .lstep .n{flex:0 0 30px;height:30px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);
+    font-size:13px;font-weight:500;color:var(--cyan-2);background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3)}
+  .lstep .lt{font-size:14.5px;font-weight:600}
+  .lstep .ls{font-size:12.5px;color:var(--dim)}
+  .meter{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+  .meter .big{font-family:var(--mono);font-size:34px;font-weight:500;letter-spacing:-.01em;color:var(--gold)}
+  .meter .unit{font-size:13px;color:var(--dim);margin-left:6px}
+  .bar{height:10px;border-radius:999px;background:var(--void);border:1px solid var(--line-2);overflow:hidden;margin:14px 0 8px}
+  .bar .fill{height:100%;background:linear-gradient(90deg,var(--gold),#ffd75e);border-radius:999px;transition:width .3s}
+  .meta{display:flex;justify-content:space-between;font-size:12px;color:var(--dim-2);font-family:var(--mono)}
+  .setrow{display:flex;gap:8px;margin-top:14px}
+  .setrow input{flex:1;min-width:0;height:46px;background:var(--void);border:1px solid var(--line-2);border-radius:12px;
+    color:var(--text);font-family:var(--mono);font-size:15px;padding:0 14px}
+  .setrow input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,184,0,.16)}
+  .setrow button{flex:0 0 auto;padding:0 18px}
+  table.cheat{width:100%;border-collapse:collapse;font-size:13.5px}
+  table.cheat td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}
+  table.cheat td.k{font-family:var(--mono);font-weight:500;color:var(--cyan-2);white-space:nowrap;width:34%}
+  table.cheat td.v{color:var(--dim)}
+  .clist{list-style:none;display:flex;flex-direction:column;gap:8px;margin:0}
+  .cli{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;min-height:48px}
+  .cli input{appearance:none;-webkit-appearance:none;flex:0 0 22px;width:22px;height:22px;margin:0;border:2px solid var(--line-2);border-radius:7px;background:var(--void);position:relative;cursor:pointer}
+  .cli input:checked{background:var(--live);border-color:var(--live)}
+  .cli input:checked::after{content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;border:solid #03130a;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+  .cli span{font-size:14px}
+  .cli.done span{color:var(--dim-2);text-decoration:line-through}
+</style>
+</head>
+<body>
+  <div class="gatewall">
+    <form id="gateForm" class="gatecard" autocomplete="off">
+      <div class="gatetag"><span class="dot"></span>Work Deck · private</div>
+      <label for="gateInput">Passcode</label>
+      <input id="gateInput" type="password" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="Passcode">
+      <button type="submit">Unlock</button>
+      <p id="gateErr" class="gateerr">Nope — try again.</p>
+    </form>
+  </div>
+
+  <div class="deck wrap">
+    <div class="topbar">
+      <span class="brandline"><span class="dot"></span>AVA Work Deck</span>
+      <a class="exit" href="/work/">↗ Hub</a>
+    </div>
+    <nav class="mininav" aria-label="Work deck">
+      <a href="/work/">Hub</a>
+      <a href="/work/todo">To-Do</a>
+      <a href="/work/prompts">Prompts</a>
+      <a href="/work/social">Social</a>
+      <a href="/work/elevenlabs" aria-current="page">11Labs</a>
+      <a href="/work/links">Links</a>
+    </nav>
+
+    <span class="eyebrow"><span class="dot"></span>Trend Factory</span>
+    <h1>Eleven<span class="accent">Labs</span>.</h1>
+    <p class="lede">The render loop, the credit burn, and the model cheat sheet — in one place.</p>
+
+    <h2>The loop</h2>
+    <div class="loop">
+      <div class="lstep"><span class="n">1</span><span><span class="lt">Grok mines</span> <span class="ls">— surfaces the trend / hook</span></span></div>
+      <div class="lstep"><span class="n">2</span><span><span class="lt">Claude refines</span> <span class="ls">— tightens script + angle</span></span></div>
+      <div class="lstep"><span class="n">3</span><span><span class="lt">Grok re-checks</span> <span class="ls">— fact + freshness pass</span></span></div>
+      <div class="lstep"><span class="n">4</span><span><span class="lt">ElevenLabs renders</span> <span class="ls">— VO / SFX to master</span></span></div>
+      <div class="lstep"><span class="n">5</span><span><span class="lt">Post 2×/day</span> <span class="ls">— schedule in GHL Social Planner</span></span></div>
+    </div>
+
+    <h2>Credit meter</h2>
+    <div class="meter">
+      <div><span class="big" id="creditNum">—</span><span class="unit">credits left</span></div>
+      <div class="bar"><span class="fill" id="creditFill" style="width:100%"></span></div>
+      <div class="meta"><span id="usedLbl">used 0</span><span>start 244,000</span></div>
+      <div class="setrow">
+        <input type="number" id="creditInput" inputmode="numeric" min="0" step="1" placeholder="Update balance…" aria-label="Current credit balance">
+        <button class="btn cyan" id="creditSave">Save</button>
+      </div>
+    </div>
+
+    <h2>Model cheat sheet</h2>
+    <table class="cheat">
+      <tbody>
+        <tr><td class="k">Turbo v2.5</td><td class="v">Cheap narration — the default for VO.</td></tr>
+        <tr><td class="k">v3</td><td class="v">Max emotion — hooks, reactions, big lines.</td></tr>
+        <tr><td class="k">Flows</td><td class="v">Ad-tree canvas — branching ad concepts.</td></tr>
+        <tr><td class="k">SFX</td><td class="v">Sound effects — news-breaker polish.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Checklist</h2>
+    <ul class="clist" id="clist"></ul>
+
+    <footer class="deckfoot">
+      <span><b>Credit meter is manual.</b> Update it after each render batch</span>
+    </footer>
+  </div>
+
+  <script src="/work/kit.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var START = 244000;
+
+    /* ----- credit meter ----- */
+    var CKEY = "elevenCredits_v1";
+    var numEl = document.getElementById("creditNum");
+    var fillEl = document.getElementById("creditFill");
+    var usedEl = document.getElementById("usedLbl");
+    var input = document.getElementById("creditInput");
+    var saveBtn = document.getElementById("creditSave");
+    function getCredits() {
+      var v = parseInt(localStorage.getItem(CKEY), 10);
+      return isNaN(v) ? START : v;
+    }
+    function fmt(n) { return n.toLocaleString("en-US"); }
+    function paintCredits() {
+      var c = getCredits();
+      numEl.textContent = fmt(c);
+      var ratio = Math.max(0, Math.min(1, c / START));
+      fillEl.style.width = (ratio * 100).toFixed(1) + "%";
+      var used = START - c;
+      usedEl.textContent = used >= 0 ? ("used " + fmt(used)) : ("+" + fmt(-used) + " over start");
+    }
+    saveBtn.addEventListener("click", function () {
+      var v = parseInt(input.value, 10);
+      if (isNaN(v) || v < 0) { window.WorkDeck && window.WorkDeck.toast("Enter a number"); return; }
+      try { localStorage.setItem(CKEY, String(v)); } catch (_) {}
+      input.value = ""; paintCredits();
+      window.WorkDeck && window.WorkDeck.toast("Balance saved ✓");
+    });
+    input.addEventListener("keydown", function (e) { if (e.key === "Enter") saveBtn.click(); });
+    paintCredits();
+
+    /* ----- checklist ----- */
+    var TKEY = "elevenTodo_v1";
+    var SEED = [
+      "Turbo v2.5 = default for narration VO",
+      "Save the Flows ad-tree template",
+      "SFX pass on the latest news-breaker",
+      "Update the credit meter after each render batch"
+    ];
+    var state = {};
+    try { state = JSON.parse(localStorage.getItem(TKEY)) || {}; } catch (_) { state = {}; }
+    var host = document.getElementById("clist");
+    SEED.forEach(function (label) {
+      var li = document.createElement("li");
+      li.className = "cli" + (state[label] ? " done" : "");
+      var cb = document.createElement("input");
+      cb.type = "checkbox"; cb.checked = !!state[label];
+      cb.setAttribute("aria-label", label);
+      var tx = document.createElement("span"); tx.textContent = label;
+      li.appendChild(cb); li.appendChild(tx);
+      li.addEventListener("click", function (e) {
+        if (e.target !== cb) cb.checked = !cb.checked;
+        state[label] = cb.checked; li.classList.toggle("done", cb.checked);
+        try { localStorage.setItem(TKEY, JSON.stringify(state)); } catch (_) {}
+      });
+      host.appendChild(li);
+    });
+  })();
+  </script>
+</body>
+</html>

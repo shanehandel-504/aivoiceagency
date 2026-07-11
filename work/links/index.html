@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="robots" content="noindex, nofollow">
+<title>Links — Work Deck</title>
+<link rel="icon" href="/brand/favicon.svg">
+<link rel="manifest" href="/work/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Work Deck">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/work/kit.css">
+<script>(function(){var d=document.documentElement;d.className+=" gated";try{if(localStorage.getItem("workDeckUnlocked")==="1")d.className+=" unlocked";}catch(e){}})();</script>
+<style>
+  .lrow{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:10px 10px 10px 14px;margin-bottom:8px}
+  .lrow .info{flex:1;min-width:0}
+  .lrow .lab{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .lrow .url{font-family:var(--mono);font-size:11.5px;color:var(--dim-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lrow .acts{flex:0 0 auto;display:flex;gap:6px}
+  .lrow .acts .btn{min-height:44px;width:44px;padding:0;font-size:15px}
+  .lrow.soon{opacity:.6}
+</style>
+</head>
+<body>
+  <div class="gatewall">
+    <form id="gateForm" class="gatecard" autocomplete="off">
+      <div class="gatetag"><span class="dot"></span>Work Deck · private</div>
+      <label for="gateInput">Passcode</label>
+      <input id="gateInput" type="password" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="Passcode">
+      <button type="submit">Unlock</button>
+      <p id="gateErr" class="gateerr">Nope — try again.</p>
+    </form>
+  </div>
+
+  <div class="deck wrap">
+    <div class="topbar">
+      <span class="brandline"><span class="dot"></span>AVA Work Deck</span>
+      <a class="exit" href="/work/">↗ Hub</a>
+    </div>
+    <nav class="mininav" aria-label="Work deck">
+      <a href="/work/">Hub</a>
+      <a href="/work/todo">To-Do</a>
+      <a href="/work/prompts">Prompts</a>
+      <a href="/work/social">Social</a>
+      <a href="/work/elevenlabs">11Labs</a>
+      <a href="/work/links" aria-current="page">Links</a>
+    </nav>
+
+    <span class="eyebrow"><span class="dot"></span>Everything, addressable</span>
+    <h1><span class="accent">Links</span>.</h1>
+    <p class="lede">Every operational URL, grouped. <b>Open</b> jumps there · <b>Copy</b> grabs the link.</p>
+
+    <div id="lmount"></div>
+
+    <footer class="deckfoot">
+      <span><b>Dashboards are login-gated on their side.</b> No credentials stored here</span>
+    </footer>
+  </div>
+
+  <script src="/work/kit.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var ORIGIN = "https://aivoiceagency.ai";
+    var GROUPS = [
+      { group: "Work pages", items: [
+        { lab: "Hub", url: "/work/" },
+        { lab: "To-Do", url: "/work/todo" },
+        { lab: "Prompts", url: "/work/prompts" },
+        { lab: "Social", url: "/work/social" },
+        { lab: "ElevenLabs", url: "/work/elevenlabs" },
+        { lab: "Links", url: "/work/links" }
+      ]},
+      { group: "Cockpits & vaults", items: [
+        { lab: "Voice A/B", url: "/voice-ab" },
+        { lab: "Brand Vault", url: "/brand" },
+        { lab: "Personal Cockpit", url: "/cockpit" },
+        { lab: "HQ Board", soon: true }
+      ]},
+      { group: "Ops platforms", items: [
+        { lab: "GHL", url: "https://app.gohighlevel.com/", ext: true },
+        { lab: "Retell", url: "https://dashboard.retellai.com/", ext: true },
+        { lab: "n8n cloud", url: "https://app.n8n.cloud/", ext: true },
+        { lab: "Doppler", url: "https://dashboard.doppler.com/", ext: true },
+        { lab: "GitHub repo", url: "https://github.com/shanehandel-504/aivoiceagency", ext: true },
+        { lab: "Notion · Run Reports Inbox", url: "https://www.notion.so/397581219cb2813d9914fc5d6ded12b4", ext: true },
+        { lab: "Notion · HQ Tower", url: "https://www.notion.so/300581219cb2801c8208ec44d0ba5dfb", ext: true }
+      ]}
+    ];
+    var mount = document.getElementById("lmount");
+
+    GROUPS.forEach(function (g) {
+      var h = document.createElement("h2");
+      h.textContent = g.group;
+      mount.appendChild(h);
+      g.items.forEach(function (it) {
+        var row = document.createElement("div");
+        row.className = "lrow" + (it.soon ? " soon" : "");
+        var info = document.createElement("div"); info.className = "info";
+        var lab = document.createElement("div"); lab.className = "lab";
+        lab.appendChild(document.createTextNode(it.lab));
+        if (it.soon) {
+          var chip = document.createElement("span"); chip.className = "chip planned";
+          chip.innerHTML = '<span class="d"></span>'; chip.appendChild(document.createTextNode("soon"));
+          lab.appendChild(chip);
+        }
+        info.appendChild(lab);
+        if (!it.soon) {
+          var u = document.createElement("div"); u.className = "url"; u.textContent = it.url;
+          info.appendChild(u);
+        }
+        row.appendChild(info);
+
+        if (!it.soon) {
+          var acts = document.createElement("div"); acts.className = "acts";
+          var open = document.createElement("a"); open.className = "btn";
+          open.href = it.url; open.setAttribute("aria-label", "Open " + it.lab);
+          open.textContent = "↗";
+          if (it.ext) { open.target = "_blank"; open.rel = "noopener"; }
+          var copy = document.createElement("button"); copy.className = "btn"; copy.type = "button";
+          copy.setAttribute("aria-label", "Copy link to " + it.lab); copy.textContent = "⧉";
+          var full2 = it.ext ? it.url : (ORIGIN + it.url);
+          copy.addEventListener("click", function () {
+            window.WorkDeck && window.WorkDeck.copyText(full2, it.lab + " link copied");
+          });
+          acts.appendChild(open); acts.appendChild(copy);
+          row.appendChild(acts);
+        }
+        mount.appendChild(row);
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

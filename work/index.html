@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="robots" content="noindex, nofollow">
+<title>Work Deck — AVA</title>
+<link rel="icon" href="/brand/favicon.svg">
+<link rel="manifest" href="/work/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Work Deck">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/work/kit.css">
+<script>(function(){var d=document.documentElement;d.className+=" gated";try{if(localStorage.getItem("workDeckUnlocked")==="1")d.className+=" unlocked";}catch(e){}})();</script>
+<style>
+  .cards{display:grid;gap:12px}
+  .card{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--r);padding:16px 16px;color:var(--text);transition:.15s}
+  a.card:hover{border-color:rgba(0,212,255,.45);transform:translateY(-1px)}
+  a.card:active{transform:scale(.995)}
+  .card.soon{opacity:.62}
+  .card .ico{flex:0 0 44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:20px;
+    background:var(--panel-2);border:1px solid var(--line-2)}
+  .card .body{flex:1;min-width:0}
+  .card .name{font-size:16px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .card .desc{font-size:13px;color:var(--dim);margin-top:3px;overflow:hidden;text-overflow:ellipsis}
+  .card .arw{flex:0 0 auto;color:var(--dim-2);font-size:18px}
+  a.card:hover .arw{color:var(--cyan-2)}
+  .grouplabel{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim-2);margin:24px 2px 10px}
+</style>
+</head>
+<body>
+  <div class="gatewall">
+    <form id="gateForm" class="gatecard" autocomplete="off">
+      <div class="gatetag"><span class="dot"></span>Work Deck · private</div>
+      <label for="gateInput">Passcode</label>
+      <input id="gateInput" type="password" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="Passcode">
+      <button type="submit">Unlock</button>
+      <p id="gateErr" class="gateerr">Nope — try again.</p>
+    </form>
+  </div>
+
+  <div class="deck wrap">
+    <div class="topbar">
+      <span class="brandline"><span class="dot"></span>AVA Work Deck</span>
+      <a class="exit" href="/">↗ Site</a>
+    </div>
+    <nav class="mininav" aria-label="Work deck">
+      <a href="/work/" aria-current="page">Hub</a>
+      <a href="/work/todo">To-Do</a>
+      <a href="/work/prompts">Prompts</a>
+      <a href="/work/social">Social</a>
+      <a href="/work/elevenlabs">11Labs</a>
+      <a href="/work/links">Links</a>
+    </nav>
+
+    <span class="eyebrow"><span class="dot"></span>Command Deck</span>
+    <h1>The <span class="accent">work</span> deck.</h1>
+    <p class="lede">One private surface for everything in motion. <b>Tap a card.</b> Status is read live from the HQ board.</p>
+
+    <div class="grouplabel">Deck pages</div>
+    <div class="cards">
+      <a class="card" href="/work/todo" data-id="work-todo">
+        <span class="ico" aria-hidden="true">✓</span>
+        <span class="body"><span class="name">To-Do <span class="chip live" data-chip><span class="d"></span>live</span></span><span class="desc" data-desc>Master list · TODAY / THIS WEEK / PARKED</span></span>
+        <span class="arw" aria-hidden="true">›</span>
+      </a>
+      <a class="card" href="/work/prompts" data-id="work-prompts">
+        <span class="ico" aria-hidden="true">⌘</span>
+        <span class="body"><span class="name">Prompts <span class="chip pending" data-chip><span class="d"></span>bodies pending</span></span><span class="desc" data-desc>Copy-paste vault · one-object append</span></span>
+        <span class="arw" aria-hidden="true">›</span>
+      </a>
+      <a class="card" href="/work/social" data-id="work-social">
+        <span class="ico" aria-hidden="true">◎</span>
+        <span class="body"><span class="name">Social <span class="chip live" data-chip><span class="d"></span>live</span></span><span class="desc" data-desc>Handles · posting laws · GHL Planner</span></span>
+        <span class="arw" aria-hidden="true">›</span>
+      </a>
+      <a class="card" href="/work/elevenlabs" data-id="work-elevenlabs">
+        <span class="ico" aria-hidden="true">♪</span>
+        <span class="body"><span class="name">ElevenLabs <span class="chip live" data-chip><span class="d"></span>live</span></span><span class="desc" data-desc>Trend Factory loop · credit meter</span></span>
+        <span class="arw" aria-hidden="true">›</span>
+      </a>
+      <a class="card" href="/work/links" data-id="work-links">
+        <span class="ico" aria-hidden="true">⛓</span>
+        <span class="body"><span class="name">Links <span class="chip live" data-chip><span class="d"></span>live</span></span><span class="desc" data-desc>Every operational URL, grouped</span></span>
+        <span class="arw" aria-hidden="true">›</span>
+      </a>
+    </div>
+
+    <div class="grouplabel">Cockpits &amp; vaults</div>
+    <div class="cards">
+      <a class="card" href="/voice-ab" data-id="voice-ab">
+        <span class="ico" aria-hidden="true">▶</span>
+        <span class="body"><span class="name">Voice A/B <span class="chip live" data-chip><span class="d"></span>live</span></span><span class="desc" data-desc>4-voice picker · same 20-sec call</span></span>
+        <span class="arw" aria-hidden="true">›</span>
+      </a>
+      <a class="card" href="/brand" data-id="brand">
+        <span class="ico" aria-hidden="true">◆</span>
+        <span class="body"><span class="name">Brand Vault <span class="chip live" data-chip><span class="d"></span>live</span></span><span class="desc" data-desc>Logos, marks, social masters</span></span>
+        <span class="arw" aria-hidden="true">›</span>
+      </a>
+      <div class="card soon" data-id="hq" aria-disabled="true">
+        <span class="ico" aria-hidden="true">▦</span>
+        <span class="body"><span class="name">HQ Board <span class="chip planned" data-chip><span class="d"></span>not built</span></span><span class="desc" data-desc>Live status board — board.json ledger only, page pending</span></span>
+        <span class="arw" aria-hidden="true">·</span>
+      </div>
+    </div>
+
+    <footer class="deckfoot">
+      <span><b>Private.</b> noindex · robots-blocked · FIFTHGEAR gate</span>
+      <span>·</span>
+      <span>Add to Home Screen → installs as an app</span>
+    </footer>
+  </div>
+
+  <script src="/work/kit.js"></script>
+  <script>
+  /* Pull live status from the HQ board ledger; hardcoded chips are the fallback. */
+  (function () {
+    fetch("/hq/board.json", { cache: "no-store" }).then(function (r) {
+      return r.ok ? r.json() : null;
+    }).then(function (board) {
+      if (!board || !board.items) return;
+      var map = {};
+      board.items.forEach(function (it) { map[it.id] = it; });
+      document.querySelectorAll(".card[data-id]").forEach(function (card) {
+        var it = map[card.getAttribute("data-id")];
+        if (!it) return;
+        var chip = card.querySelector("[data-chip]");
+        if (chip && it.status) {
+          var cls = it.status === "live" ? "live" : (it.status === "planned" ? "planned" : "pending");
+          chip.className = "chip " + cls;
+          chip.setAttribute("data-chip", "");
+          chip.innerHTML = '<span class="d"></span>' + (it.label || it.status);
+        }
+      });
+    }).catch(function () {});
+  })();
+  </script>
+</body>
+</html>

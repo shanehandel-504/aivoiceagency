@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="robots" content="noindex, nofollow">
+<title>To-Do — Work Deck</title>
+<link rel="icon" href="/brand/favicon.svg">
+<link rel="manifest" href="/work/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Work Deck">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/work/kit.css">
+<script>(function(){var d=document.documentElement;d.className+=" gated";try{if(localStorage.getItem("workDeckUnlocked")==="1")d.className+=" unlocked";}catch(e){}})();</script>
+<style>
+  .tlist{list-style:none;display:flex;flex-direction:column;gap:8px;margin:0}
+  .titem{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:6px 8px 6px 12px;min-height:52px}
+  .tcheck{display:flex;align-items:center;gap:12px;flex:1;min-width:0;cursor:pointer;padding:6px 0}
+  .tcheck input{appearance:none;-webkit-appearance:none;flex:0 0 22px;width:22px;height:22px;margin:0;
+    border:2px solid var(--line-2);border-radius:7px;background:var(--void);cursor:pointer;position:relative;transition:.15s}
+  .tcheck input:checked{background:var(--live);border-color:var(--live)}
+  .tcheck input:checked::after{content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;
+    border:solid #03130a;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+  .tcheck input:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(0,212,255,.3)}
+  .tx{font-size:14.5px;color:var(--text);line-height:1.35}
+  .titem.done .tx{color:var(--dim-2);text-decoration:line-through}
+  .del{flex:0 0 auto;width:44px;height:44px;border:0;background:transparent;color:var(--dim-2);
+    font-size:22px;line-height:1;border-radius:9px;cursor:pointer}
+  .del:hover{color:var(--warn);background:rgba(255,122,89,.1)}
+  .addrow{display:flex;gap:8px;margin-top:10px}
+  .addrow input{flex:1;min-width:0;height:46px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;color:var(--text);font-family:inherit;font-size:14.5px;padding:0 14px}
+  .addrow input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.14)}
+  .addrow button{flex:0 0 auto;width:52px}
+  .empty{font-size:13.5px;color:var(--dim-2);padding:10px 4px;font-style:italic}
+</style>
+</head>
+<body>
+  <div class="gatewall">
+    <form id="gateForm" class="gatecard" autocomplete="off">
+      <div class="gatetag"><span class="dot"></span>Work Deck · private</div>
+      <label for="gateInput">Passcode</label>
+      <input id="gateInput" type="password" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="Passcode">
+      <button type="submit">Unlock</button>
+      <p id="gateErr" class="gateerr">Nope — try again.</p>
+    </form>
+  </div>
+
+  <div class="deck wrap">
+    <div class="topbar">
+      <span class="brandline"><span class="dot"></span>AVA Work Deck</span>
+      <a class="exit" href="/work/">↗ Hub</a>
+    </div>
+    <nav class="mininav" aria-label="Work deck">
+      <a href="/work/">Hub</a>
+      <a href="/work/todo" aria-current="page">To-Do</a>
+      <a href="/work/prompts">Prompts</a>
+      <a href="/work/social">Social</a>
+      <a href="/work/elevenlabs">11Labs</a>
+      <a href="/work/links">Links</a>
+    </nav>
+
+    <span class="eyebrow"><span class="dot"></span>Master list</span>
+    <h1>To-<span class="accent">do</span>.</h1>
+    <p class="lede">Everything open, in three lanes. <b>Checks and adds save on this device</b> — no server, nothing leaves the phone.</p>
+
+    <section data-section="today">
+      <h2>Today <span class="count" data-count></span></h2>
+      <ul class="tlist" data-list></ul>
+      <div class="addrow">
+        <input type="text" placeholder="Add to Today…" aria-label="Add to Today" data-add>
+        <button class="btn cyan" data-addbtn aria-label="Add">+</button>
+      </div>
+    </section>
+
+    <section data-section="week">
+      <h2>This week <span class="count" data-count></span></h2>
+      <ul class="tlist" data-list></ul>
+      <div class="addrow">
+        <input type="text" placeholder="Add to This week…" aria-label="Add to This week" data-add>
+        <button class="btn cyan" data-addbtn aria-label="Add">+</button>
+      </div>
+    </section>
+
+    <section data-section="parked">
+      <h2>Parked <span class="count" data-count></span></h2>
+      <ul class="tlist" data-list></ul>
+      <div class="addrow">
+        <input type="text" placeholder="Park something…" aria-label="Add to Parked" data-add>
+        <button class="btn cyan" data-addbtn aria-label="Add">+</button>
+      </div>
+    </section>
+
+    <footer class="deckfoot">
+      <span><b>Local only.</b> Stored in this browser</span><span>·</span>
+      <span>No private numbers or keys live here</span>
+    </footer>
+  </div>
+
+  <script src="/work/kit.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var STORE = "workDeckTodo_v1";
+    var SEED = [
+      { s: "today", t: "v34 ear-check — call the public AVA line 414-240-8930" },
+      { s: "today", t: "Phone Room ear-check — private line (number in Doppler / HQ). Hold public until pricing block verified vs $497" },
+      { s: "today", t: "XAI_API_KEY → add to Doppler + verify" },
+      { s: "today", t: "Grok 7 AM Tasks pulse → ON" },
+      { s: "today", t: "Cowork clean-machine — answer Phase 8" },
+      { s: "week", t: "3 ad IDs (Meta Pixel · Google Ads conv · GA4) → Tracking Spine v2 → ADS MONDAY" },
+      { s: "week", t: "CapCut pass — 4 masters. Reel 3 posts first" },
+      { s: "week", t: "Source Book v2 → both Grok projects + Claude social project" },
+      { s: "week", t: "First 2 Trend Factory videos — rendered + posted" },
+      { s: "week", t: "Manus — Wisconsin Ledger checkpoint (due Jul 14)" },
+      { s: "week", t: "Cancel Manus + LinkedIn Premium (Jul 15)" }
+    ];
+    var seq = 0;
+    function uid() { return "t" + (Date.now().toString(36)) + "_" + (seq++); }
+    function load() {
+      try {
+        var raw = localStorage.getItem(STORE);
+        if (raw) return JSON.parse(raw);
+      } catch (_) {}
+      var seeded = SEED.map(function (x) { return { id: uid(), text: x.t, section: x.s, done: false }; });
+      save(seeded); return seeded;
+    }
+    function save(items) { try { localStorage.setItem(STORE, JSON.stringify(items)); } catch (_) {} }
+
+    var items = load();
+    var sections = ["today", "week", "parked"];
+
+    function render() {
+      sections.forEach(function (sec) {
+        var host = document.querySelector('[data-section="' + sec + '"]');
+        var list = host.querySelector("[data-list]");
+        var count = host.querySelector("[data-count]");
+        list.innerHTML = "";
+        var rows = items.filter(function (i) { return i.section === sec; });
+        var doneN = rows.filter(function (i) { return i.done; }).length;
+        count.textContent = rows.length ? (doneN + "/" + rows.length) : "";
+        if (!rows.length) {
+          var e = document.createElement("li");
+          e.className = "empty";
+          e.textContent = sec === "parked" ? "Nothing parked." : "Clear. Nice.";
+          list.appendChild(e);
+          return;
+        }
+        rows.forEach(function (it) {
+          var li = document.createElement("li");
+          li.className = "titem" + (it.done ? " done" : "");
+          li.setAttribute("data-id", it.id);
+
+          var lab = document.createElement("label");
+          lab.className = "tcheck";
+          var cb = document.createElement("input");
+          cb.type = "checkbox"; cb.checked = it.done;
+          cb.addEventListener("change", function () { it.done = cb.checked; save(items); render(); });
+          var tx = document.createElement("span");
+          tx.className = "tx"; tx.textContent = it.text; /* textContent = XSS-safe */
+          lab.appendChild(cb); lab.appendChild(tx);
+
+          var del = document.createElement("button");
+          del.className = "del"; del.type = "button";
+          del.setAttribute("aria-label", "Delete"); del.textContent = "×";
+          del.addEventListener("click", function () {
+            items = items.filter(function (x) { return x.id !== it.id; });
+            save(items); render();
+          });
+
+          li.appendChild(lab); li.appendChild(del);
+          list.appendChild(li);
+        });
+      });
+    }
+
+    document.querySelectorAll('[data-section]').forEach(function (host) {
+      var sec = host.getAttribute("data-section");
+      var input = host.querySelector("[data-add]");
+      var btn = host.querySelector("[data-addbtn]");
+      function add() {
+        var v = (input.value || "").trim();
+        if (!v) return;
+        items.push({ id: uid(), text: v, section: sec, done: false });
+        input.value = ""; save(items); render(); input.focus();
+      }
+      btn.addEventListener("click", add);
+      input.addEventListener("keydown", function (e) { if (e.key === "Enter") add(); });
+    });
+
+    render();
+  })();
+  </script>
+</body>
+</html>

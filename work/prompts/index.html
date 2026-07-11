@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="robots" content="noindex, nofollow">
+<title>Prompts — Work Deck</title>
+<link rel="icon" href="/brand/favicon.svg">
+<link rel="manifest" href="/work/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Work Deck">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/work/kit.css">
+<script>(function(){var d=document.documentElement;d.className+=" gated";try{if(localStorage.getItem("workDeckUnlocked")==="1")d.className+=" unlocked";}catch(e){}})();</script>
+<style>
+  .pcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+    padding:14px 14px 16px;margin-bottom:12px}
+  .phead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .ptitle{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--text);letter-spacing:.01em;flex:1;min-width:120px}
+  .pcard.pending{border-color:rgba(255,184,0,.28)}
+  .pbody{font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--dim);
+    background:var(--void);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin:0;
+    white-space:pre-wrap;word-break:break-word;max-height:220px;overflow:auto}
+  .pcard.pending .pbody{color:var(--gold)}
+  .copybtn{flex:0 0 auto;min-height:44px;padding:0 14px}
+  .note{background:linear-gradient(90deg,rgba(0,212,255,.06),transparent 60%),var(--panel);
+    border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:0 12px 12px 0;
+    padding:12px 14px;font-size:13px;color:var(--dim);margin-bottom:22px}
+  .note code{font-family:var(--mono);font-size:12px;color:var(--cyan-2);background:var(--void);padding:1px 6px;border-radius:5px}
+</style>
+</head>
+<body>
+  <div class="gatewall">
+    <form id="gateForm" class="gatecard" autocomplete="off">
+      <div class="gatetag"><span class="dot"></span>Work Deck · private</div>
+      <label for="gateInput">Passcode</label>
+      <input id="gateInput" type="password" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="Passcode">
+      <button type="submit">Unlock</button>
+      <p id="gateErr" class="gateerr">Nope — try again.</p>
+    </form>
+  </div>
+
+  <div class="deck wrap">
+    <div class="topbar">
+      <span class="brandline"><span class="dot"></span>AVA Work Deck</span>
+      <a class="exit" href="/work/">↗ Hub</a>
+    </div>
+    <nav class="mininav" aria-label="Work deck">
+      <a href="/work/">Hub</a>
+      <a href="/work/todo">To-Do</a>
+      <a href="/work/prompts" aria-current="page">Prompts</a>
+      <a href="/work/social">Social</a>
+      <a href="/work/elevenlabs">11Labs</a>
+      <a href="/work/links">Links</a>
+    </nav>
+
+    <span class="eyebrow"><span class="dot"></span>Copy-paste vault</span>
+    <h1><span class="accent">Prompts</span>.</h1>
+    <p class="lede">Tap <b>Copy</b>, paste into its lane. Everything lives in one JSON block below.</p>
+
+    <div class="note">
+      To add a prompt: append one object <code>{ "title", "lane", "body" }</code> to the
+      <code>#prompts</code> JSON in this file. Lanes: <b>CC</b> · <b>Grok</b> · <b>n8n</b> · <b>Cowork</b>.
+      <br><b>4 cards below are placeholders</b> — paste the real bodies where marked.
+    </div>
+
+    <div id="pmount"></div>
+
+    <footer class="deckfoot">
+      <span><b>One JSON block.</b> One-object append to grow</span>
+    </footer>
+  </div>
+
+  <!-- ===== SINGLE SOURCE OF TRUTH: append one object to grow ===== -->
+  <script type="application/json" id="prompts">
+  [
+    {
+      "title": "6A-FINAL",
+      "lane": "CC",
+      "body": "⚠ BODY PENDING — paste the 6A-FINAL prompt here (replace this string). Edit the #prompts JSON in /work/prompts/index.html. Lane set provisionally to CC."
+    },
+    {
+      "title": "DRIP-GO",
+      "lane": "n8n",
+      "body": "⚠ BODY PENDING — paste the DRIP-GO prompt here (replace this string). Edit the #prompts JSON in /work/prompts/index.html."
+    },
+    {
+      "title": "GROK-TREND",
+      "lane": "Grok",
+      "body": "⚠ BODY PENDING — paste the GROK-TREND prompt here (replace this string). Edit the #prompts JSON in /work/prompts/index.html."
+    },
+    {
+      "title": "GROK-GLOW16",
+      "lane": "Grok",
+      "body": "⚠ BODY PENDING — paste the GROK-GLOW16 prompt here (replace this string). Edit the #prompts JSON in /work/prompts/index.html."
+    }
+  ]
+  </script>
+
+  <script src="/work/kit.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var mount = document.getElementById("pmount");
+    var data = [];
+    try { data = JSON.parse(document.getElementById("prompts").textContent); } catch (_) {}
+    data.forEach(function (p) {
+      var pending = /BODY PENDING/.test(p.body || "");
+      var card = document.createElement("div");
+      card.className = "pcard" + (pending ? " pending" : "");
+
+      var head = document.createElement("div");
+      head.className = "phead";
+      var title = document.createElement("span");
+      title.className = "ptitle"; title.textContent = p.title || "untitled";
+      var lane = document.createElement("span");
+      lane.className = "chip lane";
+      lane.innerHTML = '<span class="d"></span>';
+      lane.appendChild(document.createTextNode(p.lane || "—"));
+      var copy = document.createElement("button");
+      copy.className = "btn cyan copybtn"; copy.type = "button";
+      copy.textContent = "Copy";
+      copy.addEventListener("click", function () {
+        window.WorkDeck && window.WorkDeck.copyText(p.body || "", (p.title || "Prompt") + " copied");
+      });
+      head.appendChild(title); head.appendChild(lane); head.appendChild(copy);
+
+      var body = document.createElement("pre");
+      body.className = "pbody"; body.textContent = p.body || ""; /* XSS-safe */
+
+      card.appendChild(head); card.appendChild(body);
+      mount.appendChild(card);
+    });
+    if (!data.length) { mount.innerHTML = '<p class="empty">No prompts yet.</p>'; }
+  })();
+  </script>
+</body>
+</html>
