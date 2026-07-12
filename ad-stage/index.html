@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>AVA · ad-stage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* AVA ad-stage — chrome-free capture surface. CIRCULANT: void + cyan + Space Grotesk.
+     Animation is a PURE FUNCTION of time via window.render(t) so it can be captured
+     deterministically at any fps (no CSS transitions, no dropped frames, no artifacts). */
+  :root{
+    --void:#0A0A0F; --panel:#10131A; --panel2:#161A22; --line:#23232E;
+    --text:#EEF0F4; --dim:#9AA1AD; --dim2:#6E7582;
+    --cyan:#00D4FF; --cyan2:#00E5FF; --live:#00E676;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--void)}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--text);
+    display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;width:100vw;height:100vh;overflow:hidden;background:
+    radial-gradient(120% 90% at 50% 118%, rgba(0,212,255,.16), rgba(0,212,255,0) 60%),
+    radial-gradient(90% 60% at 50% -12%, rgba(0,120,160,.10), rgba(0,0,0,0) 55%),
+    var(--void)}
+  /* vignette */
+  #stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 340px 60px rgba(0,0,0,.62)}
+  .wrap{position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;padding:0 7%}
+
+  /* live header */
+  .live{position:absolute;top:8.5%;left:0;right:0;display:flex;flex-direction:column;
+    align-items:center;gap:10px;text-align:center}
+  .pill{display:inline-flex;align-items:center;gap:11px;font-size:26px;font-weight:600;
+    letter-spacing:.02em;color:var(--live);background:rgba(0,230,118,.08);
+    border:1px solid rgba(0,230,118,.3);border-radius:999px;padding:11px 22px}
+  .pill .dot{width:13px;height:13px;border-radius:50%;background:var(--live)}
+  .biz{font-size:34px;font-weight:700;letter-spacing:-.01em;color:var(--text)}
+  .tagline{font-size:22px;color:var(--dim);font-weight:500}
+
+  /* CRM card */
+  .card{width:100%;max-width:860px;background:linear-gradient(180deg,rgba(22,26,34,.92),rgba(16,19,26,.92));
+    border:1.5px solid rgba(0,212,255,.30);border-radius:34px;padding:40px 42px;
+    box-shadow:0 30px 90px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(0,0,0,.3)}
+  .card .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+  .card .hd .t{font-size:27px;font-weight:700;color:var(--cyan2);letter-spacing:.01em;display:flex;align-items:center;gap:12px}
+  .card .hd .t .rec{width:14px;height:14px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+  .card .hd .w{font-family:'JetBrains Mono',monospace;font-size:19px;color:var(--dim2)}
+  .rows{display:flex;flex-direction:column;gap:16px}
+  .row{display:flex;align-items:center;gap:20px;background:rgba(10,12,18,.6);
+    border:1px solid var(--line);border-radius:18px;padding:19px 22px;min-height:80px}
+  .row .k{flex:0 0 200px;font-size:23px;font-weight:600;color:var(--dim);letter-spacing:.02em}
+  .row .v{flex:1;min-width:0;font-size:29px;font-weight:600;color:var(--text)}
+  .row .pending{display:inline-flex;gap:9px}
+  .row .pending i{width:9px;height:9px;border-radius:50%;background:var(--dim2);display:inline-block}
+
+  /* timeline */
+  .tl{margin-top:30px;display:flex;flex-direction:column;gap:15px;width:100%;max-width:860px}
+  .tl .step{display:flex;align-items:center;gap:16px;font-size:23px;color:var(--dim2);font-weight:500}
+  .tl .step .d{width:16px;height:16px;border-radius:50%;background:transparent;
+    border:2px solid var(--dim2);flex:0 0 auto}
+
+  /* square / wide fmt tweaks */
+  body.fmt-sq .live{top:5.5%} body.fmt-sq .card{max-width:760px}
+  body.fmt-wide .wrap{flex-direction:row;gap:5%;justify-content:center}
+  body.fmt-wide .live{position:static;align-items:flex-start;text-align:left;max-width:520px}
+  body.fmt-wide .card{max-width:820px}
+  body.fmt-wide .tl{display:none}
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div class="live">
+      <span class="pill"><span class="dot"></span><span id="pillTxt">LIVE · 414-240-8930</span></span>
+      <span class="biz" id="biz">—</span>
+      <span class="tagline" id="tag">—</span>
+    </div>
+    <div class="wrap">
+      <div class="card">
+        <div class="hd">
+          <span class="t"><span class="rec" id="rec"></span>AVA · live CRM</span>
+          <span class="w" id="writing">writing…</span>
+        </div>
+        <div class="rows" id="rows"></div>
+      </div>
+      <div class="tl" id="tl"></div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  var q = new URLSearchParams(location.search);
+  var SCRIPT = q.get('script') || 'hvac-sample';
+  var FMT = q.get('fmt') || 'vert';
+  var CAP = q.get('cap') === '1';           // capture mode: no autoplay
+  var seekT = q.get('t');                   // deterministic single-frame render
+  document.body.classList.add('fmt-' + FMT);
+
+  var DATA = null, ROWS = {}, STEPS = [];
+  window.__stageReady = false;
+  window.STAGE_DURATION = 12;
+
+  function ease(p){ p = Math.max(0, Math.min(1, p)); return 1 - Math.pow(1-p, 3); }
+
+  function build(){
+    document.getElementById('biz').textContent = DATA.business || '';
+    document.getElementById('tag').textContent = DATA.tag || '';
+    window.STAGE_DURATION = DATA.duration || 12;
+    var rowsEl = document.getElementById('rows'); rowsEl.innerHTML = '';
+    DATA.board.forEach(function(f){
+      var row = document.createElement('div'); row.className = 'row';
+      var k = document.createElement('span'); k.className = 'k'; k.textContent = f.label;
+      var v = document.createElement('span'); v.className = 'v';
+      var val = document.createElement('span'); val.className='val'; val.textContent = f.value;
+      var pend = document.createElement('span'); pend.className='pending';
+      pend.innerHTML = '<i></i><i></i><i></i>';
+      v.appendChild(val); v.appendChild(pend);
+      row.appendChild(k); row.appendChild(v);
+      rowsEl.appendChild(row);
+      ROWS[f.key] = { f:f, row:row, val:val, pend:pend };
+    });
+    var tlEl = document.getElementById('tl'); tlEl.innerHTML = '';
+    (DATA.timeline||[]).forEach(function(s){
+      var step = document.createElement('div'); step.className='step';
+      var d = document.createElement('span'); d.className='d';
+      var t = document.createElement('span'); t.textContent = s.label;
+      step.appendChild(d); step.appendChild(t);
+      tlEl.appendChild(step);
+      STEPS.push({ s:s, step:step, d:d });
+    });
+  }
+
+  // PURE render: given time t (seconds), set the exact visual state. Idempotent.
+  window.render = function(t){
+    var anyWriting = false;
+    Object.keys(ROWS).forEach(function(key){
+      var r = ROWS[key], at = r.f.at;
+      if (at == null){
+        r.val.style.display = 'none'; r.pend.style.display = 'inline-flex';
+        r.row.style.opacity = '0.5';
+        return;
+      }
+      if (t >= at){
+        var p = ease((t - at)/0.5);
+        r.pend.style.display = 'none'; r.val.style.display = 'inline';
+        r.row.style.opacity = String(0.5 + 0.5*p);
+        r.val.style.opacity = String(p);
+        r.val.style.transform = 'translateY(' + ((1-p)*14).toFixed(2) + 'px)';
+        var glow = (1-p)*22;
+        r.val.style.color = '#EEF0F4';
+        r.row.style.borderColor = 'rgba(0,212,255,' + (0.28 + (1-p)*0.55).toFixed(3) + ')';
+        r.row.style.boxShadow = '0 0 ' + glow.toFixed(1) + 'px rgba(0,212,255,' + ((1-p)*0.5).toFixed(3) + ')';
+        r.val.style.textShadow = '0 0 ' + (glow*0.6).toFixed(1) + 'px rgba(0,229,255,' + ((1-p)*0.8).toFixed(3) + ')';
+        if (t < at + 0.6) anyWriting = true;
+      } else {
+        r.pend.style.display = 'inline-flex'; r.val.style.display = 'none';
+        r.row.style.opacity = '0.5'; r.row.style.boxShadow = 'none';
+        r.row.style.borderColor = 'var(--line)';
+      }
+    });
+    STEPS.forEach(function(o){
+      var at = o.s.at, on = t >= at;
+      var p = on ? ease((t-at)/0.4) : 0;
+      o.step.style.color = on ? ('rgba(238,240,244,' + (0.55 + 0.45*p).toFixed(3) + ')') : 'var(--dim2)';
+      o.d.style.background = on ? 'var(--cyan)' : 'transparent';
+      o.d.style.borderColor = on ? 'var(--cyan)' : 'var(--dim2)';
+      o.d.style.boxShadow = on ? ('0 0 ' + (12*p).toFixed(1) + 'px var(--cyan)') : 'none';
+    });
+    // live pulses (deterministic function of t)
+    var pulse = 0.55 + 0.45*Math.sin(t*4.2);
+    var pd = document.querySelector('.pill .dot'); if (pd) pd.style.opacity = pulse.toFixed(3);
+    var rec = document.getElementById('rec'); if (rec) rec.style.opacity = (0.5+0.5*Math.sin(t*5)).toFixed(3);
+    var w = document.getElementById('writing');
+    if (w) w.style.opacity = anyWriting ? (0.5+0.5*Math.abs(Math.sin(t*8))).toFixed(3) : '0';
+  };
+
+  fetch('/ad-stage/scripts/' + SCRIPT + '.json', {cache:'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      DATA = d; build(); window.render(seekT != null ? parseFloat(seekT) : 0);
+      var go = function(){
+        window.__stageReady = true;
+        document.title = 'ad-stage:ready';
+        if (seekT != null || CAP) return;   // capture / deterministic: no autoplay
+        // live preview: play audio + rAF
+        var a = new Audio(d.audio); var start = null;
+        function loop(ts){
+          if (start == null) start = ts;
+          var t = (ts - start)/1000;
+          window.render(t);
+          if (t < window.STAGE_DURATION) requestAnimationFrame(loop);
+        }
+        document.addEventListener('pointerdown', function(){ a.play().catch(function(){}); requestAnimationFrame(loop); }, {once:true});
+        // also autostart muted visual
+        requestAnimationFrame(loop);
+      };
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(go); else go();
+    })
+    .catch(function(e){ document.title = 'ad-stage:error'; document.getElementById('biz').textContent = 'script load error'; });
+})();
+</script>
+</body>
+</html>

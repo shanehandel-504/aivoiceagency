@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="robots" content="noindex, nofollow">
+<title>Ads · Screen-Record Pipeline — Work Deck</title>
+<link rel="icon" href="/brand/favicon.svg">
+<link rel="manifest" href="/work/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Work Deck">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/work/kit.css">
+<script>(function(){var d=document.documentElement;d.className+=" gated";try{if(localStorage.getItem("workDeckUnlocked")==="1")d.className+=" unlocked";}catch(e){}})();</script>
+<style>
+  .banner{display:flex;align-items:center;gap:12px;background:rgba(0,230,118,.08);
+    border:1px solid rgba(0,230,118,.3);border-radius:14px;padding:14px 16px;margin:6px 0 20px}
+  .banner .d{width:11px;height:11px;border-radius:50%;background:var(--live);flex:0 0 auto;box-shadow:0 0 12px var(--live)}
+  .banner b{color:var(--live);font-size:15px;letter-spacing:.02em}
+  .vidwrap{display:flex;justify-content:center;margin:8px 0 6px}
+  video{width:100%;max-width:300px;border-radius:20px;border:1px solid var(--line);background:#000;
+    box-shadow:0 24px 70px -30px rgba(0,0,0,.9)}
+  .meta{text-align:center;font-family:var(--mono);font-size:12px;color:var(--dim-2);margin-bottom:20px}
+  .card2{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin:10px 0}
+  .card2 .lbl{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan-2);margin-bottom:8px}
+  .card2 p{font-size:14px;line-height:1.5;color:var(--text);margin:0 0 7px}
+  .card2 p:last-child{margin-bottom:0}
+  .card2 b{color:var(--text)}
+  ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+  ol.steps li{font-size:14px;color:var(--text);line-height:1.45}
+  ol.steps li b{color:var(--cyan-2)} ol.steps li span{color:var(--dim)}
+  .votes{display:flex;gap:10px;margin:6px 0 4px;flex-wrap:wrap}
+  .vote{flex:1;min-width:150px;border-radius:14px;padding:14px;text-align:center;border:1px solid var(--line);background:var(--panel)}
+  .vote.go{border-color:rgba(0,230,118,.4)} .vote.go .h{color:var(--live)}
+  .vote .h{font-weight:700;font-size:15px;margin-bottom:3px} .vote .s{font-size:12.5px;color:var(--dim)}
+  .dl{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px}
+  table.t{width:100%;border-collapse:collapse;font-size:13px;margin:2px 0}
+  table.t td,table.t th{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  table.t th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim-2)}
+  table.t td.k{font-family:var(--mono);color:var(--cyan-2);white-space:nowrap}
+  .warnbox{border:1px solid rgba(255,184,0,.35);background:rgba(255,184,0,.06);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--text);line-height:1.5}
+  .warnbox b{color:var(--gold)}
+</style>
+</head>
+<body>
+  <div class="gatewall">
+    <form id="gateForm" class="gatecard" autocomplete="off">
+      <div class="gatetag"><span class="dot"></span>Work Deck · private</div>
+      <label for="gateInput">Passcode</label>
+      <input id="gateInput" type="password" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="Passcode">
+      <button type="submit">Unlock</button>
+      <p id="gateErr" class="gateerr">Nope — try again.</p>
+    </form>
+  </div>
+
+  <div class="deck wrap">
+    <div class="topbar">
+      <span class="brandline"><span class="dot"></span>AVA Work Deck</span>
+      <a class="exit" href="/work/">↗ Hub</a>
+    </div>
+
+    <span class="eyebrow"><span class="dot"></span>Screen-Record Ad Pipeline v1</span>
+    <h1>Ad sample — <span class="accent">your vote</span>.</h1>
+    <p class="lede">Zero generated video. This is the real phone-sim recorded, synced to a call. Watch it, then vote.</p>
+
+    <div class="banner"><span class="d"></span><b>SAMPLE READY — awaiting your vote.</b></div>
+
+    <div class="vidwrap">
+      <video src="/work/ads/run_adstage_hvac_vert.mp4" poster="/work/ads/poster.jpg" controls playsinline preload="metadata"></video>
+    </div>
+    <p class="meta">vertical 1080×1920 · 14.5s · 60fps · 0.57 MB · captions ON</p>
+
+    <div class="card2">
+      <div class="lbl">Why this beats generated video</div>
+      <p>Generated video warps mouths, glitches audio, and cuts uncanny. This pipeline <b>generates nothing</b> — it records the real <b>/ad-stage</b> phone-sim writing a CRM record in real time. Quality ceiling is 100% because it's real footage, and it's prove-work by construction: we don't <b>claim</b> AVA logs the call, we <b>show</b> the record write itself (Urgency lands a beat after it's spoken).</p>
+    </div>
+
+    <h2>The vote</h2>
+    <div class="votes">
+      <div class="vote go"><div class="h">GO ADS →</div><div class="s">Render all 3 formats (9:16 · 1:1 · 16:9) + publish with download links.</div></div>
+      <div class="vote"><div class="h">Notes</div><div class="s">Tell me what to change — pace, which field lands, the caption, the end card.</div></div>
+    </div>
+    <p class="lede" style="font-size:13px;margin-top:6px">This sample uses the opening beat (Urgency writes). On GO ADS I can also feature the booking climax (the <b>Booked</b> field + receipt writing itself).</p>
+
+    <div class="warnbox" style="margin:16px 0">
+      <b>⚠ PENDING-SHANE — the real-call audio (Plan A).</b> This sample's audio is the existing labeled <b>sample</b> conversation (AI-generated, disclosed on-frame). For the 100%-real final, <b>you place one call</b> so it's provably yours (privacy law: never a prospect's voice):
+      <ol class="steps" style="margin-top:10px">
+        <li><b>Call 414-240-8930</b> <span>from your phone. Play the caller — state a clear problem, let AVA qualify, take a slot, say yes.</span></li>
+        <li><b>Hang up.</b> <span>Retell records it automatically.</span></li>
+        <li><b>Tell me “pull my call”</b> <span>(with the rough time). I fetch that recording_url and make it the master timeline, re-time the field cues to your real call, and re-render.</span></li>
+      </ol>
+    </div>
+
+    <h2>How it's built</h2>
+    <table class="t">
+      <tr><th>Stage</th><th>What</th></tr>
+      <tr><td class="k">/ad-stage</td><td>Chrome-free capture page. <span style="font-family:var(--mono);font-size:12px">?script=</span> timing JSON drives exactly when each CRM field lands; <span style="font-family:var(--mono);font-size:12px">?fmt=</span> 9:16 / 1:1 / 16:9. noindex, out of sitemap.</td></tr>
+      <tr><td class="k">Capture</td><td>Playwright headless, deterministic 60fps frame-seek (zero dropped frames / zero artifacts).</td></tr>
+      <tr><td class="k">Composite</td><td>ffmpeg: real audio + burned captions (muted-safe) + AI-audio disclosure + 3s CIRCULANT end card. H.264 · yuv420p · faststart.</td></tr>
+    </table>
+
+    <h2>Compliance</h2>
+    <div class="card2">
+      <p>✓ $497 only (no price shown) · ✓ 414-240-8930 only · ✓ AVA never she/her · ✓ no “sounds human” · ✓ no real names (sample business) · ✓ prove-work by construction · ✓ synthetic audio disclosed on-frame (AI-content toggle) · #AVAanswers.</p>
+    </div>
+
+    <p style="margin:14px 0"><a class="btn cyan dl" href="/work/ads/run_adstage_hvac_vert.mp4" download>⬇ Download the sample</a></p>
+
+    <footer class="deckfoot">
+      <span><b>Nothing ships without your GO.</b> Sample only — publishing to socials is your call.</span>
+    </footer>
+  </div>
+
+  <script src="/work/kit.js"></script>
+</body>
+</html>
