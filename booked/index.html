@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0A0A0F">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<title>You're Booked | AI Voice Agency</title>
+<meta name="description" content="Booking confirmed — AVA will call you at the time you picked.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://aivoiceagency.ai/booked">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/circulant.css">
+<script src="/js/tracking.js" async></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#0A0A0F;--panel:#10131A;--line:#23232E;
+  --ink:#EEF0F4;--muted:rgba(238,240,244,.55);--soft:rgba(238,240,244,.78);
+  --cyan:#00D4FF;--cyan-hot:#33EEFF;--live:#00E676;
+  --font-display:'Space Grotesk',sans-serif;--font-mono:'JetBrains Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--void);color:var(--soft);font-family:var(--font-display);font-size:17px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--cyan);text-decoration:none;transition:color .2s}
+a:hover{color:var(--cyan-hot)}
+.bar{padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,212,255,.08)}
+.mark{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.signal{width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px rgba(0,212,255,.7)}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 20px 80px}
+.card{max-width:560px;width:100%;text-align:center}
+.check{width:72px;height:72px;margin:0 auto 28px;border-radius:50%;border:2px solid rgba(0,230,118,.35);background:rgba(0,230,118,.08);display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--live)}
+h1{color:var(--ink);font-size:clamp(34px,7vw,56px);font-weight:700;letter-spacing:-0.02em;line-height:1.08;margin-bottom:14px}
+.sub{font-size:1.05rem;color:var(--soft);margin-bottom:8px}
+.note{font-size:.92rem;color:var(--muted);margin-bottom:34px}
+.actions{display:flex;flex-direction:column;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 30px;border-radius:12px;font-weight:600;font-size:1rem;letter-spacing:.01em;width:min(340px,100%)}
+.btn-cal{background:var(--cyan);color:#041018}
+.btn-cal:hover{background:var(--cyan-hot);color:#041018}
+.btn-home{border:1px solid var(--line);color:var(--ink)}
+.btn-home:hover{border-color:var(--cyan)}
+footer{padding:22px;text-align:center;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <a class="mark" href="/"><span class="signal" aria-hidden="true"></span>AVA — AI Voice Agency</a>
+</header>
+
+<main>
+  <div class="card">
+    <div class="check" aria-hidden="true">✓</div>
+    <h1>You're booked.</h1>
+    <p class="sub">AVA will call you at the time you picked.</p>
+    <p class="note" id="calNote">Your calendar invite is on its way to your email.</p>
+    <div class="actions">
+      <a class="btn btn-cal" id="calBtn" href="#" hidden rel="noopener" target="_blank">Add to Google Calendar</a>
+      <a class="btn btn-home" href="/">Back to AI Voice Agency</a>
+    </div>
+  </div>
+</main>
+
+<footer>AI Voice Agency · Kewaskum, WI</footer>
+
+<script>
+/* Calendar add: if the booking widget passed a start time in the redirect,
+ * build a dated one-tap link; otherwise a title-only template (the visitor
+ * sets the time they picked). tracking.js scrubs the query string before the
+ * trackers load and stashes it in window.__avaBookedSearch — read that first
+ * so this works no matter which script ran first. No guessed times, ever. */
+(function () {
+  'use strict';
+  var btn = document.getElementById('calBtn');
+  var note = document.getElementById('calNote');
+  var base = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + '&text=' + encodeURIComponent('AVA Strategy Call — AI Voice Agency')
+    + '&details=' + encodeURIComponent('AVA will call you at the time you picked. aivoiceagency.ai');
+  try {
+    btn.href = base;
+    btn.hidden = false;
+    var q = new URLSearchParams(window.__avaBookedSearch || location.search);
+    var raw = q.get('start_time') || q.get('appointment_time') || q.get('event_time') || q.get('slot') || '';
+    if (!raw) { note.textContent = 'Your calendar invite is on its way to your email — or add it manually with the time you picked.'; return; }
+    var start = new Date(isNaN(raw) ? raw : Number(raw) * (String(raw).length === 10 ? 1000 : 1));
+    if (isNaN(start.getTime())) return;
+    var end = new Date(start.getTime() + 30 * 60000);
+    var fmt = function (d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); };
+    btn.href = base + '&dates=' + fmt(start) + '/' + fmt(end);
+    note.textContent = 'Add it to your calendar, or use the invite in your email.';
+  } catch (e) { /* the email-invite line + template link stand */ }
+})();
+</script>
+</body>
+</html>
