@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="robots" content="noindex, nofollow">
+<title>Emails — Work Deck</title>
+<link rel="icon" href="/brand/favicon.svg">
+<link rel="manifest" href="/work/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Work Deck">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/work/kit.css">
+<script>(function(){var d=document.documentElement;d.className+=" gated";try{if(localStorage.getItem("workDeckUnlocked")==="1")d.className+=" unlocked";}catch(e){}})();</script>
+<style>
+  .egrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:840px){.egrid{grid-template-columns:1fr}}
+  .epanel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+  .ehead{padding:14px 16px;border-bottom:1px solid var(--line)}
+  .etitle{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .etitle .nm{font-size:16px;font-weight:700;letter-spacing:-.01em}
+  .tag{font-family:var(--mono);font-size:11px;font-weight:500;padding:3px 8px;border-radius:999px;border:1px solid var(--line-2)}
+  .tag.dark{color:var(--cyan-2);background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.3)}
+  .tag.light{color:#ffb800;background:rgba(255,184,0,.08);border-color:rgba(255,184,0,.3)}
+  .emeta{margin-top:10px;font-size:12.5px;line-height:1.55;color:var(--dim)}
+  .emeta b{color:var(--text);font-weight:600}
+  .emeta .mono{font-family:var(--mono);font-size:11.5px;color:var(--dim-2)}
+  .erow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .erow .btn{padding:0 14px;height:40px;font-size:13.5px}
+  .seg{display:inline-flex;border:1px solid var(--line-2);border-radius:10px;overflow:hidden}
+  .seg button{height:40px;padding:0 12px;background:var(--void);color:var(--dim);border:0;font-family:var(--mono);font-size:12px;cursor:pointer}
+  .seg button.on{background:rgba(0,212,255,.14);color:var(--cyan-2)}
+  .eframewrap{background:#05060a;padding:16px;display:flex;justify-content:center}
+  iframe.mail{width:100%;max-width:600px;border:0;border-radius:8px;background:#fff;transition:max-width .18s ease}
+  .epanel.mobile iframe.mail{max-width:375px}
+  .flag{margin:16px 2px 0;padding:12px 14px;border:1px solid rgba(255,184,0,.35);background:rgba(255,184,0,.06);border-radius:12px;font-size:13px;line-height:1.55;color:var(--text)}
+  .flag b{color:#ffb800}
+</style>
+</head>
+<body>
+  <div class="gatewall">
+    <form id="gateForm" class="gatecard" autocomplete="off">
+      <div class="gatetag"><span class="dot"></span>Work Deck · private</div>
+      <label for="gateInput">Passcode</label>
+      <input id="gateInput" type="password" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" aria-label="Passcode">
+      <button type="submit">Unlock</button>
+      <p id="gateErr" class="gateerr">Nope — try again.</p>
+    </form>
+  </div>
+
+  <div class="deck wrap">
+    <div class="topbar">
+      <span class="brandline"><span class="dot"></span>AVA Work Deck</span>
+      <a class="exit" href="/work/">↗ Hub</a>
+    </div>
+    <nav class="mininav" aria-label="Work deck">
+      <a href="/work/">Hub</a>
+      <a href="/work/todo">To-Do</a>
+      <a href="/work/prompts">Prompts</a>
+      <a href="/work/social">Social</a>
+      <a href="/work/elevenlabs">11Labs</a>
+      <a href="/work/emails" aria-current="page">Emails</a>
+      <a href="/work/links">Links</a>
+    </nav>
+
+    <span class="eyebrow"><span class="dot"></span>Email System v1</span>
+    <h1>The <span class="accent">email</span> system.</h1>
+    <p class="lede">Two templates, real samples, sent to a real inbox. <b>Eyeball both</b>, hit “copy HTML,” and say <b>SHIP EMAILS</b> when they're right.</p>
+
+    <div class="egrid">
+
+      <!-- THE SIGNAL -->
+      <div class="epanel" id="panel-signal">
+        <div class="ehead">
+          <div class="etitle"><span class="nm">THE SIGNAL</span><span class="tag dark">dark · drip / marketing</span></div>
+          <div class="emeta">
+            <b>Subject:</b> The call you missed at 2 PM was a job.<br>
+            <b>Preheader:</b> 62% of calls to local shops ring out. AVA answers every one — on one ring.<br>
+            <span class="mono">Installs → AVA Drip Engine v1 · “Build Steps” → emailHtml()</span>
+          </div>
+          <div class="erow">
+            <button class="btn cyan" data-copy-email="signal">Copy HTML</button>
+            <span class="seg" role="group" aria-label="Preview width">
+              <button class="on" data-w="desktop" data-target="panel-signal">Desktop</button>
+              <button data-w="mobile" data-target="panel-signal">Mobile</button>
+            </span>
+          </div>
+        </div>
+        <div class="eframewrap"><iframe class="mail" src="/work/emails/signal.html" title="THE SIGNAL email preview" loading="lazy"></iframe></div>
+      </div>
+
+      <!-- THE RECEIPT -->
+      <div class="epanel" id="panel-receipt">
+        <div class="ehead">
+          <div class="etitle"><span class="nm">THE RECEIPT</span><span class="tag light">light · transactional / booking</span></div>
+          <div class="emeta">
+            <b>Subject:</b> You're booked ✅ — here's what happens next.<br>
+            <b>Preheader:</b> You're booked — Monday, Jul 14 at 12:00 PM CDT. Here's what happens next.<br>
+            <span class="mono">Installs → AVA Booking Receipt · “Prep Receipt” → email_html</span>
+          </div>
+          <div class="erow">
+            <button class="btn cyan" data-copy-email="receipt">Copy HTML</button>
+            <span class="seg" role="group" aria-label="Preview width">
+              <button class="on" data-w="desktop" data-target="panel-receipt">Desktop</button>
+              <button data-w="mobile" data-target="panel-receipt">Mobile</button>
+            </span>
+          </div>
+        </div>
+        <div class="eframewrap"><iframe class="mail" src="/work/emails/receipt.html" title="THE RECEIPT email preview" loading="lazy"></iframe></div>
+      </div>
+
+    </div>
+
+    <div class="flag">
+      <b>PENDING-SHANE · CAN-SPAM.</b> The send path (GHL Conversations API) does not auto-inject an unsubscribe link.
+      THE SIGNAL footer carries a <span style="font-family:var(--mono)">{{unsubscribe_url}}</span> slot + the physical address (1787 Edgewood Rd, Kewaskum, WI 53040).
+      Confirm GHL populates that token on send, or wire an unsubscribe endpoint, before the drip goes live. THE RECEIPT is transactional — no unsubscribe required.
+    </div>
+
+    <footer class="deckfoot">
+      <span><b>Samples use example data.</b> Merge on the live path = JS <span style="font-family:var(--mono)">${first_name}</span> in the code node (not GHL <span style="font-family:var(--mono)">{{ }}</span>)</span>
+      <span>·</span>
+      <span>noindex · FIFTHGEAR gate</span>
+    </footer>
+  </div>
+
+  <script src="/work/kit.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    /* fit each iframe to its content height (same-origin) */
+    function fit(f){ try { var d = f.contentDocument || f.contentWindow.document; var h = Math.max(d.body.scrollHeight, d.documentElement.scrollHeight); if (h) f.style.height = (h + 4) + "px"; } catch (e) {} }
+    var frames = document.querySelectorAll("iframe.mail");
+    frames.forEach(function (f) {
+      f.addEventListener("load", function () { fit(f); setTimeout(function(){ fit(f); }, 300); });
+      if (f.contentDocument && f.contentDocument.readyState === "complete") fit(f);
+    });
+    window.addEventListener("resize", function () { frames.forEach(fit); });
+
+    /* device toggle */
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest(".seg button"); if (!b) return;
+      var panel = document.getElementById(b.getAttribute("data-target")); if (!panel) return;
+      panel.querySelectorAll(".seg button").forEach(function (x) { x.classList.remove("on"); });
+      b.classList.add("on");
+      panel.classList.toggle("mobile", b.getAttribute("data-w") === "mobile");
+      var f = panel.querySelector("iframe.mail"); if (f) setTimeout(function(){ fit(f); }, 220);
+    });
+
+    /* copy the raw email HTML file */
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-copy-email]"); if (!b) return;
+      var name = b.getAttribute("data-copy-email");
+      fetch("/work/emails/" + name + ".html", { cache: "no-store" })
+        .then(function (r) { return r.text(); })
+        .then(function (t) { window.WorkDeck.copyText(t, name.toUpperCase() + " HTML copied"); })
+        .catch(function () { window.WorkDeck.toast("Copy failed — open the .html directly"); });
+    });
+  })();
+  </script>
+</body>
+</html>
