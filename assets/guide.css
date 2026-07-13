@@ -1,0 +1,168 @@
+/* ============================================================
+   THE MINE — guide.css
+   Shared component system for the 16 Wave-3 pages (guides, city
+   hubs, statewide trade). Built ON the existing CIRCULANT tokens
+   (--void/--ink/--cyan from circulant.css) — NOT a second design
+   language. Loaded AFTER circulant.css + bridge.css.
+   Animations: transform/opacity only. Tables collapse to cards
+   <=700px. Reduced-motion safe.
+   ============================================================ */
+:root{
+  --g-line: rgba(255,255,255,.07);
+  --g-line-cyan: rgba(0,212,255,.16);
+  --g-panel: #0E0F16;
+  --g-term: #07080D;
+  --g-read: #C9CEDA;
+  --g-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ---- reading column + typography (guide pages are long) ---- */
+.g-wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.g-read{max-width:68ch;margin-left:auto;margin-right:auto}
+.g-read p, .g-read li{font-size:19px;line-height:1.75;color:var(--g-read)}
+.g-read h2{font-size:clamp(26px,4vw,34px);line-height:1.15;letter-spacing:-.01em;margin:3.2rem 0 1rem;color:var(--ink)}
+.g-read h3{font-size:20px;margin:2rem 0 .6rem;color:var(--ink)}
+.g-read ul{list-style:none;padding:0;margin:1rem 0}
+.g-read ul li{position:relative;padding-left:22px;margin:8px 0}
+.g-read ul li::before{content:"▸";position:absolute;left:0;color:var(--cyan)}
+.g-eyebrow{font-family:var(--g-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);font-weight:600;margin-bottom:14px}
+@media(max-width:700px){ .g-read p,.g-read li{font-size:18px;line-height:1.7} }
+
+/* ---- hero ---- */
+.g-hero{padding:112px 0 8px;position:relative;overflow:hidden}
+.g-hero h1{font-size:clamp(30px,6vw,52px);line-height:1.08;letter-spacing:-.02em;margin:.2em 0 .1em;color:var(--ink);max-width:20ch}
+.g-hero h1 .cy{color:var(--cyan);text-shadow:0 0 24px rgba(0,212,255,.35)}
+.g-hero .g-sub{color:var(--ink-mute);font-size:19px;max-width:60ch;margin-top:14px}
+/* ambient dot glow behind hero — 40% strength, decorative, gated */
+.g-hero::before{content:"";position:absolute;top:-120px;left:8%;width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,212,255,.14),transparent 70%);pointer-events:none;z-index:0;opacity:.4}
+.g-hero > *{position:relative;z-index:1}
+
+/* ---- THE ANSWER CARD (one per guide page; AEO lift target) ---- */
+.answer-card{background:var(--g-panel);border:1px solid var(--g-line);border-left:3px solid var(--cyan);
+  border-radius:0 14px 14px 0;padding:24px 26px;font-size:19px;line-height:1.6;color:var(--ink);margin:28px 0 40px;max-width:70ch}
+.answer-card::before{content:'THE SHORT ANSWER';display:block;font-family:var(--g-mono);font-size:11px;
+  letter-spacing:.14em;color:var(--cyan);margin-bottom:10px}
+.answer-card p{margin:0;color:var(--ink)}
+
+/* ---- comparison / cost tables ---- */
+.cmp{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--g-line);
+  border-radius:14px;overflow:hidden;font-size:15px;margin:24px 0}
+.cmp thead th{background:var(--g-panel);color:var(--cyan);font-family:var(--g-mono);font-size:11px;
+  letter-spacing:.12em;text-transform:uppercase;text-align:left;padding:14px 16px;border-bottom:1px solid var(--g-line-cyan)}
+.cmp td{padding:16px;border-bottom:1px solid var(--g-line);color:var(--g-read);vertical-align:top}
+.cmp tbody tr:nth-child(even){background:rgba(255,255,255,.015)}
+.cmp tbody tr:last-child td{border-bottom:0}
+.cmp td:first-child{color:var(--ink);font-weight:500}
+.cmp .ava{background:rgba(0,212,255,.04)}
+@media(max-width:700px){
+  .cmp thead{display:none}
+  .cmp tr{display:block;border:1px solid var(--g-line);border-radius:12px;margin-bottom:14px;padding:6px 0}
+  .cmp td{display:flex;justify-content:space-between;gap:16px;border:0;padding:10px 14px}
+  .cmp td::before{content:attr(data-label);color:var(--cyan);font-family:var(--g-mono);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;flex:0 0 42%}
+  .cmp .ava{border-radius:12px}
+}
+
+/* ---- decision block (two cards) ---- */
+.decision{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0}
+.decision .dc{background:var(--g-panel);border:1px solid var(--g-line);border-radius:14px;padding:22px}
+.decision .dc.ava{border-color:var(--g-line-cyan)}
+.decision .dc h3{font-family:var(--g-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cyan);margin:0 0 12px}
+.decision .dc ul{list-style:none;padding:0;margin:0}
+.decision .dc li{position:relative;padding-left:20px;margin:8px 0;font-size:15px;color:var(--g-read)}
+.decision .dc li::before{content:"▸";position:absolute;left:0;color:var(--cyan)}
+@media(max-width:700px){ .decision{grid-template-columns:1fr} }
+
+/* ---- FAQ accordion (answers stay in DOM for schema + crawlers) ---- */
+.g-faq details{border-bottom:1px solid var(--g-line)}
+.g-faq summary{list-style:none;cursor:pointer;min-height:48px;display:flex;align-items:center;
+  justify-content:space-between;gap:16px;padding:14px 0;font-size:17px;font-weight:600;color:var(--ink)}
+.g-faq summary::-webkit-details-marker{display:none}
+.g-faq summary::after{content:"+";color:var(--cyan);font-size:22px;line-height:1;transition:transform .2s ease}
+.g-faq details[open] summary::after{transform:rotate(45deg)}
+.g-faq details[open]{border-left:1px solid var(--cyan);padding-left:14px}
+.g-faq .g-faq-a{padding:0 0 16px;color:var(--g-read);font-size:16px;line-height:1.7;max-width:68ch}
+@media(prefers-reduced-motion:reduce){ .g-faq summary::after{transition:none} }
+
+/* ---- sticky TOC (desktop only) ---- */
+.g-layout{display:block}
+@media(min-width:1100px){
+  .g-layout{display:grid;grid-template-columns:1fr 220px;gap:48px;align-items:start;max-width:1160px;margin:0 auto;padding:0 20px}
+  .g-layout .g-read{margin:0}
+  .g-toc{position:sticky;top:96px;font-family:var(--g-mono);font-size:13px;line-height:1.5}
+  .g-toc a{display:block;padding:6px 0;color:var(--ink-mute);text-decoration:none;border-left:2px solid transparent;padding-left:12px}
+  .g-toc a.active,.g-toc a:hover{color:var(--cyan);border-left-color:var(--cyan)}
+}
+.g-toc{display:none}
+@media(min-width:1100px){ .g-toc{display:block} }
+
+/* ---- THE TERMINAL CALL COMPONENT (the signature move) ---- */
+.term{background:var(--g-term);border:1px solid var(--g-line);border-radius:12px;padding:20px 22px;
+  font-family:var(--g-mono);font-size:13.5px;line-height:1.9;color:var(--g-read);margin:24px 0;max-width:70ch;overflow-x:auto}
+.term .term-label{color:var(--ink-mute);font-size:11px;letter-spacing:.14em;display:block;margin-bottom:10px}
+.term .l{white-space:pre-wrap}
+.term .l::before{content:"> ";color:var(--cyan)}
+.term .l.head::before{content:"// ";color:var(--ink-mute)}
+.term .cursor{display:inline-block;width:8px;height:15px;background:var(--cyan);vertical-align:-2px;margin-left:2px;
+  animation:term-blink 1.1s steps(1) infinite}
+@keyframes term-blink{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){ .term .cursor{animation:none} }
+
+/* ---- local fact bar (city hubs) ---- */
+.factbar{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 8px}
+.factbar .chip{font-family:var(--g-mono);font-size:12px;letter-spacing:.04em;color:var(--g-read);
+  border:1px solid var(--g-line-cyan);border-radius:999px;padding:6px 12px}
+.factbar .chip b{color:var(--cyan);font-weight:600}
+
+/* ---- four-season call map (city hubs) ---- */
+.seasons{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0}
+.seasons .sc{background:var(--g-panel);border:1px solid var(--g-line);border-radius:14px;padding:18px}
+.seasons .sc.winter{border-color:var(--g-line-cyan)}
+.seasons .sc h3{font-family:var(--g-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin:0 0 6px}
+.seasons .sc .sc-line{color:var(--ink);font-size:15px;margin:0 0 10px}
+.seasons .sc ul{list-style:none;padding:0;margin:0}
+.seasons .sc li{position:relative;padding-left:18px;margin:5px 0;font-size:14px;color:var(--g-read)}
+.seasons .sc li::before{content:"▸";position:absolute;left:0;color:var(--cyan)}
+@media(max-width:700px){ .seasons{grid-template-columns:1fr} }
+
+/* ---- intake card + urgent/routine (statewide trade) ---- */
+.intake{background:var(--g-panel);border:1px solid var(--g-line);border-radius:14px;padding:22px;margin:24px 0;max-width:70ch}
+.intake h3{font-family:var(--g-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin:0 0 12px}
+.intake ul{list-style:none;padding:0;margin:0}
+.intake li{position:relative;padding-left:26px;margin:9px 0;font-size:16px;color:var(--g-read)}
+.intake li::before{content:"✓";position:absolute;left:0;color:var(--cyan);font-weight:700}
+.ur{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+.ur .uc{background:var(--g-panel);border:1px solid var(--g-line);border-radius:14px;padding:20px}
+.ur .uc.urgent{border-color:var(--g-line-cyan)}
+.ur .uc h3{font-family:var(--g-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin:0 0 10px}
+@media(max-width:700px){ .ur{grid-template-columns:1fr} }
+
+/* ---- call-flow timeline (statewide trade) ---- */
+.flow{list-style:none;padding:0;margin:24px 0;max-width:70ch}
+.flow li{position:relative;padding:0 0 22px 28px;border-left:1px solid var(--g-line-cyan);margin-left:6px}
+.flow li:last-child{border-left-color:transparent}
+.flow li::before{content:"";position:absolute;left:-6px;top:2px;width:11px;height:11px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 10px rgba(0,212,255,.5)}
+.flow li b{color:var(--ink)}
+.flow li{color:var(--g-read);font-size:16px}
+/* scroll reveal — class toggled by a tiny inline observer; backwards-safe (visible if JS off) */
+.reveal{opacity:1;transform:none}
+body.g-ready .reveal{opacity:0;transform:translateY(18px)}
+body.g-ready .reveal.in{opacity:1;transform:none;transition:opacity .5s var(--ease,ease),transform .5s var(--ease,ease)}
+@media(prefers-reduced-motion:reduce){ body.g-ready .reveal{opacity:1;transform:none} }
+
+/* ---- source notes ---- */
+.g-sources{font-family:var(--g-mono);font-size:13px;color:var(--ink-mute);line-height:1.7;margin:40px 0 0;
+  padding-top:18px;border-top:1px solid var(--g-line)}
+.g-sources a{color:var(--ink-mute);text-decoration:underline}
+.g-sources a:hover{color:var(--cyan)}
+
+/* ---- closing CTA band ---- */
+.g-cta{border-top:1px solid var(--g-line-cyan);margin-top:56px;padding:44px 0;text-align:center;position:relative}
+.g-cta .g-dot{width:12px;height:12px;border-radius:50%;background:var(--cyan);margin:0 auto 16px;
+  box-shadow:0 0 14px rgba(0,212,255,.5)}
+.g-cta h2{font-size:clamp(24px,4vw,32px);color:var(--ink);margin:0 0 18px}
+.g-cta .g-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.g-note{font-size:12.5px;color:var(--ink-mute);margin-top:16px}
