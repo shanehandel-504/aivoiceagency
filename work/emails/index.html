@@ -118,9 +118,7 @@
     </div>
 
     <div class="flag">
-      <b>PENDING-SHANE · CAN-SPAM.</b> The send path (GHL Conversations API) does not auto-inject an unsubscribe link.
-      THE SIGNAL footer carries a <span style="font-family:var(--mono)">{{unsubscribe_url}}</span> slot + the physical address (1787 Edgewood Rd, Kewaskum, WI 53040).
-      Confirm GHL populates that token on send, or wire an unsubscribe endpoint, before the drip goes live. THE RECEIPT is transactional — no unsubscribe required.
+      <b>DELIVERABILITY · why the test sends spammed.</b> Not the templates — the <b>sending identity</b>. GHL is sending from LeadConnector's <b>shared pool</b> (<span style="font-family:var(--mono)">mg.msgsndr.biz</span>), not the dedicated <span style="font-family:var(--mono)">mail.aivoiceagency.ai</span> (which is already DNS-ready but not selected in GHL). The <span style="font-family:var(--mono)">{{unsubscribe_url}}</span> token <b>does</b> populate a working link on the live send (CAN-SPAM ✓) — but the <span style="font-family:var(--mono)">List-Unsubscribe</span> <em>header</em> and the DNS/GHL switch are still PENDING-SHANE. Full punch-list → <span style="font-family:var(--mono)">reports/2026-07-13-email-deliverability.md</span>. Plain-text parts (<span style="font-family:var(--mono)">signal.txt</span> / <span style="font-family:var(--mono)">receipt.txt</span>) added for the multipart alternative.
     </div>
 
     <footer class="deckfoot">
