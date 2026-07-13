@@ -22,12 +22,11 @@
 <meta name="twitter:image" content="https://aivoiceagency.ai/assets/og-home.png">
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%2300D4FF'/%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%2300D4FF' stroke-opacity='.35' stroke-width='2'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Fonts load async, off the render-blocking critical path. The metric-matched fallback in
-     funnel.css (size-adjust 106%) makes the Space Grotesk swap zero-CLS, so this only speeds up LCP. -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"></noscript>
+<!-- Self-hosted Space Grotesk variable woff2 (OFL) — removes the Google Fonts DNS + TLS + render-blocking CSS round-trip. One ~22 KB file covers weights 300–700. The metric-matched 'Space Grotesk Fallback' in funnel.css keeps the swap zero-CLS. -->
+<link rel="preload" href="/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url('/fonts/space-grotesk.woff2') format('woff2')}
+</style>
 <link rel="stylesheet" href="/assets/funnel.css">
 
 <script type="application/ld+json">
@@ -225,7 +224,7 @@
     <div class="check"><span class="tick">✓</span> Picks up in one ring</div>
     <div class="check"><span class="tick">✓</span> 24/7/365</div>
     <div class="check"><span class="tick">✓</span> Books into your calendar</div>
-    <div class="check"><span class="tick">✓</span> Texts the customer instantly</div>
+    <div class="check"><span class="tick">✓</span> Texts the customer in seconds</div>
     <div class="check"><span class="tick">✓</span> You're texted the second it books</div>
     <div class="check"><span class="tick">✓</span> Emergencies flagged to your cell</div>
   </div>
@@ -263,7 +262,7 @@
       <thead><tr><th></th><th>The old way</th><th>With AVA</th></tr></thead>
       <tbody>
         <tr><th scope="row">After-hours call</th><td class="old">Voicemail</td><td class="ava">Answered in one ring</td></tr>
-        <tr><th scope="row">Speed to lead</th><td class="old">Next morning</td><td class="ava">Instant</td></tr>
+        <tr><th scope="row">Speed to lead</th><td class="old">Next morning</td><td class="ava">Seconds</td></tr>
         <tr><th scope="row">Booking</th><td class="old">Phone tag</td><td class="ava">Booked on the call</td></tr>
         <tr><th scope="row">You find out</th><td class="old">Monday</td><td class="ava">The second it happens</td></tr>
       </tbody>
@@ -439,7 +438,7 @@
         <ul>
           <li>One line, answered 24/7 — nights, weekends, overflow</li>
           <li>Callers qualified + booked into your calendar</li>
-          <li>Missed-call recovery + instant text-back</li>
+          <li>Missed-call recovery + text-back in seconds</li>
           <li>Every call summarized, recorded, transcribed</li>
           <li>Owner alerted the moment it matters</li>
         </ul>
@@ -684,7 +683,7 @@
   </div>
 </div>
 
-<script src="/assets/ava-data.js"></script>
+<script src="/assets/ava-data.js" defer></script>
 <script src="/assets/ava-pod.js" defer></script>
 <script src="/assets/ava-theater.js" defer></script>
 <script src="/assets/ava-webcall.js" defer></script>
