@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "purpose": "Verified local-fact spine for AVA city hubs + city-trade landers. Every fact here is sourceable; NEVER invent a local fact, a local missed-call %, or a local job value. Consumed by the city hubs (Milwaukee/Madison/Green Bay + Kenosha/Racine/Appleton) so each page passes the swap test with real, city-specific data.",
+    "built": "2026-07-13",
+    "law": "Seasonal call examples are labeled EXAMPLES, not measured local volume. Area codes are PSC/NANPA public record. Corridors, employers, and neighborhoods are public geography/economic-development record. Attribute in a visible 'Source notes' block on each page."
+  },
+  "seasonMap": {
+    "note": "Wisconsin's four-season call map — regional, true, and the thing no competitor writes. Written generically here; each hub tailors it to its own trade mix.",
+    "winter": { "months": "Dec–Feb", "headline": "No-heat calls at 2 AM", "phone": "Sub-zero stretches turn a furnace failure into an emergency, not an appointment. Frozen and burst pipes. The phone rings in the middle of the night.", "calls": ["No-heat / furnace failure", "Frozen or burst pipe", "Emergency after-hours dispatch", "Heating-system diagnostics"] },
+    "spring": { "months": "Mar–May", "headline": "The thaw surfaces the damage", "phone": "Snowmelt and rain expose what winter hid — wet basements, failed sump pumps, ice-dam roof damage coming due.", "calls": ["Sump-pump failure / wet basement", "Ice-dam roof damage", "Drainage and grading", "Spring HVAC tune-up"] },
+    "summer": { "months": "Jun–Aug", "headline": "AC fails during the heat wave — all at once", "phone": "When the heat index spikes, the phone doesn't ring evenly — it rings all at once. Storm damage clusters.", "calls": ["AC failure during a heat wave", "Storm / wind damage", "Refrigerant and compressor calls", "Peak-season booking overflow"] },
+    "fall": { "months": "Sep–Nov", "headline": "Beat the snow", "phone": "Heating-season prep, tune-up bookings, and the last roof and exterior work before the first snow.", "calls": ["Furnace / boiler tune-up", "Pre-winter inspection", "Last-call roof and exterior work", "Fireplace and chimney"] }
+  },
+  "cities": {
+    "milwaukee": {
+      "name": "Milwaukee", "county": "Milwaukee County", "areaCode": "414",
+      "anchors": ["Bay View", "Historic Third Ward", "Wauwatosa", "Brookfield", "Menomonee Falls", "the lakefront"],
+      "corridors": ["I-43 / I-94 metro spine", "the lakefront", "the Menomonee Valley"],
+      "situations": ["Brewers and Bucks game-day traffic spikes", "lakefront weather swings that flip a forecast in an hour"],
+      "tradeMix": "professional services in the financial corridor, hospitality in the Third Ward, home services across the metro, medical near the Wauwatosa hospital cluster, and ground transportation for airport and event volume",
+      "sources": [{ "label": "Area code 414 — NANPA/Wisconsin PSC", "url": "https://psc.wi.gov/" }]
+    },
+    "madison": {
+      "name": "Madison", "county": "Dane County", "areaCode": "608",
+      "anchors": ["the Isthmus", "Monona", "Middleton", "Fitchburg", "Sun Prairie", "Verona"],
+      "corridors": ["the Isthmus between the lakes", "the Beltline (US-12/18)", "the campus corridor"],
+      "situations": ["campus and Badger game-day congestion", "lakes-and-Isthmus geography that funnels every route through a few chokepoints"],
+      "tradeMix": "state-government and university-adjacent professional services, biotech and healthcare, home services across Dane County, and hospitality around the Capitol and campus",
+      "sources": [{ "label": "Area code 608 — NANPA/Wisconsin PSC", "url": "https://psc.wi.gov/" }]
+    },
+    "green-bay": {
+      "name": "Green Bay", "county": "Brown County", "areaCode": "920",
+      "anchors": ["De Pere", "Ashwaubenon", "Howard", "Bellevue", "Allouez", "Suamico"],
+      "corridors": ["I-43 / US-41 corridor", "the east side around the stadium district"],
+      "situations": ["Packers home-game days that shut the east side down", "port-and-paper industrial call patterns"],
+      "tradeMix": "manufacturing and paper, healthcare, home services across Brown County, and hospitality and transportation that spike hard on game weekends",
+      "sources": [{ "label": "Area code 920 — NANPA/Wisconsin PSC", "url": "https://psc.wi.gov/" }]
+    },
+    "kenosha": {
+      "name": "Kenosha", "county": "Kenosha County", "areaCode": "262",
+      "anchors": ["the Lake Michigan lakefront", "Somers", "Pleasant Prairie", "Paddock Lake", "western Kenosha County"],
+      "corridors": ["the I-94 Milwaukee–Chicago corridor", "the Lake Michigan shoreline", "STH-50 west into the county"],
+      "situations": ["a workforce that commutes both directions on I-94 between Milwaukee and Chicago", "a split between the lakefront city and the rural western county"],
+      "tradeMix": "manufacturing, food processing, and distribution/logistics along the I-94 corridor, plus the home-service and professional trades that serve them",
+      "sources": [
+        { "label": "Area code 262 — NANPA/Wisconsin PSC", "url": "https://psc.wi.gov/" },
+        { "label": "Manufacturing / food-processing / logistics base — Kenosha Area Business Alliance (KABA)", "url": "https://www.kaba.org/" }
+      ]
+    },
+    "racine": {
+      "name": "Racine", "county": "Racine County", "areaCode": "262",
+      "anchors": ["the Lake Michigan shoreline", "the Root River", "Mount Pleasant", "Sturtevant", "Caledonia"],
+      "corridors": ["the Lake Michigan shoreline", "I-94 west of the city", "the Root River through downtown"],
+      "situations": ["a manufacturing base that runs shift work around the clock", "lakefront weather that drives seasonal demand"],
+      "tradeMix": "a manufacturing base, home services across Racine County, and the professional trades that support them",
+      "sources": [{ "label": "Area code 262 — NANPA/Wisconsin PSC", "url": "https://psc.wi.gov/" }]
+    },
+    "appleton": {
+      "name": "Appleton", "county": "Outagamie County", "areaCode": "920",
+      "anchors": ["the Fox Cities", "the Fox River Valley", "Neenah", "Menasha", "Grand Chute", "Kimberly"],
+      "corridors": ["the Fox River Valley", "US-41 through the Fox Cities", "the Neenah–Menasha–Appleton band"],
+      "situations": ["a multi-city Fox Cities metro where one operator covers several municipalities", "a paper-and-manufacturing economy with shift work"],
+      "tradeMix": "paper, healthcare, and manufacturing across the Fox Cities, plus home services and professional trades serving Neenah, Menasha, and Grand Chute",
+      "sources": [{ "label": "Area code 920 — NANPA/Wisconsin PSC", "url": "https://psc.wi.gov/" }]
+    }
+  }
+}
