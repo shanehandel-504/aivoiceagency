@@ -364,8 +364,8 @@ body.hero-animate .hero-line-cyan.flicker {
 
 /* H2 UNDERLINE DRAW */
 .section-title { position: relative; display: inline-block; }
-.section-title::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 0; height: 1px; background: var(--cyan); transition: width 0.8s ease-out; }
-.section-title.in-view::after { width: 100%; }
+.section-title::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 1px; background: var(--cyan); transform: scaleX(0); transform-origin: left; transition: transform 0.8s ease-out; }
+.section-title.in-view::after { transform: scaleX(1); }
 
 /* STANDARDIZED PHONE CTA MODULE — used sitewide */
 .phone-cta-module { border: 1px solid var(--cyan); padding: 32px; max-width: 720px; margin: 64px 0; background: var(--void); }
@@ -526,7 +526,7 @@ body.hero-animate .hero-line-cyan.flicker {
 .demo-phone *, .phone-cta-module .phone-link * { pointer-events: auto; }
 
 /* MOBILE STICKY CTA — floating */
-#mobile-cta { position: fixed; bottom: calc(12px + env(safe-area-inset-bottom)); left: 12px; right: 12px; background: rgba(0,212,255,0.95); color: var(--void); text-align: center; padding: 14px 16px; font-family: var(--font-mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; z-index: 100; border-radius: 6px; box-shadow: 0 4px 24px rgba(0,212,255,0.35), 0 0 0 1px rgba(0,212,255,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom))); transition: transform 0.3s ease-out, opacity 0.2s ease; display: none; }
+#mobile-cta { position: fixed; bottom: calc(12px + env(safe-area-inset-bottom)); left: 12px; right: 12px; background: rgba(0,212,255,0.95); color: var(--void); text-align: center; padding: 14px 16px; font-family: var(--font-mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; z-index: 100; border-radius: 6px; box-shadow: 0 4px 24px rgba(0,212,255,0.35), 0 0 0 1px rgba(0,212,255,0.5); transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom))); transition: transform 0.3s ease-out, opacity 0.2s ease; display: none; }
 #mobile-cta.visible { transform: translateY(0); }
 /* Block T: hide the sticky bar while the live-call form is in view (toggled by site.js) so it can't collide with the form's own submit button */
 #mobile-cta.form-hidden { opacity: 0; pointer-events: none; }
@@ -549,7 +549,7 @@ body.hero-animate .hero-line-cyan.flicker {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
-  .section-title::after { width: 100% !important; transition: none !important; }
+  .section-title::after { transform: scaleX(1) !important; transition: none !important; }
 }
 
 /* CIRCULANT PULSE — fixed viewport border with a cyan arc that travels around it.

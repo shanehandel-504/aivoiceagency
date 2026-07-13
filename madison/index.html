@@ -62,7 +62,7 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "Does AVA work with Madison's seasonal business cycles?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AVA handles the Badger gameday volume, the legislative-session call spike, the move-in week chaos, and the summer farmers-market overflow. Two hundred plus simultaneous calls at peak." } },
+    { "@type": "Question", "name": "Does AVA work with Madison's seasonal business cycles?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AVA handles the Badger gameday volume, the legislative-session call spike, the move-in week chaos, and the summer farmers-market overflow. Concurrency is scoped and tested to your call volume before launch." } },
     { "@type": "Question", "name": "What about healthcare practices around the Epic and UW Health campuses?", "acceptedAnswer": { "@type": "Answer", "text": "AVA captures appointment requests, refill triage, and after-hours triage for medical practices throughout the Madison metro — including the dense Verona, Middleton, and East Side practice clusters." } },
     { "@type": "Question", "name": "How does AVA handle state-government adjacent workflows?", "acceptedAnswer": { "@type": "Answer", "text": "Professional services firms with state business — lobbying, legal, consulting — get AVA configured for legislative-cycle volume and after-hours session calls." } },
     { "@type": "Question", "name": "What's the Madison setup process?", "acceptedAnswer": { "@type": "Answer", "text": "Twenty-minute scoping call. Two to three hours for Starter setup. Call forwarding from your existing number. No hardware. No software install." } }
@@ -76,23 +76,47 @@
 <link rel="stylesheet" href="/assets/circulant.css">
 <link rel="stylesheet" href="/styles.css">
 <script src="/js/tracking.js" async></script>
+<!-- BRIDGE:HEAD -->
+<link rel="stylesheet" href="/assets/bridge.css">
+<script src="/js/bridge.js" defer></script>
+<!-- /BRIDGE:HEAD -->
 </head>
 <body>
 
-<nav class="main-nav">
-  <div class="nav-left">
-    <span class="nav-signal-dot" aria-hidden="true"></span>
-    <span class="nav-signal-label" aria-hidden="true">// SIGNAL</span>
-    <a href="/" class="logo">AI VOICE <span class="accent">AGENCY</span></a>
+<!-- BRIDGE:NAV -->
+<nav class="bnav" aria-label="Main">
+  <a class="bnav-brand" href="/"><span class="bdot" aria-hidden="true"></span>AI VOICE AGENCY</a>
+  <button class="bnav-burger" aria-expanded="false" aria-controls="bnavMenu" aria-label="Menu">MENU</button>
+  <div class="bnav-menu" id="bnavMenu">
+    <div class="bnav-group">
+      <button class="bnav-top" type="button" aria-expanded="false">Verticals</button>
+      <div class="bnav-drop">
+        <a href="/home-services">AI receptionist for home services</a>
+        <a href="/medical-practices">AI receptionist for medical practices</a>
+        <a href="/professional-services">AI receptionist for professional services</a>
+        <a href="/hospitality">AI receptionist for hospitality &amp; events</a>
+        <a href="/ground-transportation">AI receptionist for transportation</a>
+      </div>
+    </div>
+    <div class="bnav-group">
+      <button class="bnav-top" type="button" aria-expanded="false">Wisconsin</button>
+      <div class="bnav-drop">
+        <a href="/milwaukee">Milwaukee answering service</a>
+        <a href="/madison">Madison answering service</a>
+        <a href="/green-bay">Green Bay answering service</a>
+        <a href="/wisconsin-limo">Wisconsin limo &amp; livery</a>
+      </div>
+    </div>
+    <a class="bnav-top" href="/#pricing">Pricing</a>
+    <a class="bnav-top" href="/roi">ROI</a>
+    <a class="bnav-cta" href="/book" data-event="book_click_nav">Book a 15-minute call</a>
+    <a class="bnav-tel" href="tel:+14142408930" data-event="tel_tap_nav">414-240-8930</a>
   </div>
-  <ul id="navLinks">
-    <li><a href="#pain">01 Local Pain</a></li>
-    <li><a href="#credibility">02 Wisconsin-Built</a></li>
-    <li><a href="#faq">03 FAQ</a></li>
-    <li><a href="#contact">04 Contact</a></li>
-  </ul>
-  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">Menu →</button>
 </nav>
+<!-- /BRIDGE:NAV -->
+<!-- BRIDGE:CRUMB -->
+<nav class="bcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span class="bc-sep">/</span><span>Wisconsin</span><span class="bc-sep">/</span><span class="bc-here">Madison</span></nav>
+<!-- /BRIDGE:CRUMB -->
 
 <main>
 
@@ -128,7 +152,7 @@
 
 <section class="section" id="pain">
   <div class="section-label">// 01 ── LOCAL PAIN POINTS</div>
-  <h2 class="section-title">What Madison operators told us.</h2>
+  <h2 class="section-title">Where Madison phones get crushed.</h2>
   <div class="pain-list">
     <div class="pain-row">
       <span class="marker">[01]</span>
@@ -162,7 +186,7 @@
       <h2 class="operator-headline">Built<br>from Kewaskum.</h2>
       <div class="operator-body">
         <p>AI Voice Agency operates from Kewaskum, Wisconsin — ninety minutes east of the Capitol. Shane Handel built AVA after thirty years running phone-heavy operations. He has watched Wisconsin operators lose business to call leakage in every economic cycle since the early 1990s.</p>
-        <p>AVA's pronunciation library already locks Madison-region names — Waunakee, Middleton, Verona, Mount Horeb, McFarland, Oregon, Stoughton — and AVA already knows the difference between routing East Side and West Side calls. Your callers will think they're talking to a local.</p>
+        <p>AVA's pronunciation library already locks Madison-region names — Waunakee, Middleton, Verona, Mount Horeb, McFarland, Oregon, Stoughton — and AVA already knows the difference between routing East Side and West Side calls. Configured with your neighborhoods, service area, and local rules.</p>
         <p>Madison runs on cycles — academic, legislative, seasonal. AVA is configured around those cycles, not against them.</p>
       </div>
     </div>
@@ -206,7 +230,7 @@
     <div class="faq-item">
       <div class="faq-num">[01]</div>
       <h3 class="faq-q">Does AVA work with Madison's seasonal business cycles?</h3>
-      <p class="faq-a">Yes. AVA handles the Badger gameday volume, the legislative-session call spike, the move-in week chaos, and the summer farmers-market overflow. Two hundred plus simultaneous calls at peak.</p>
+      <p class="faq-a">Yes. AVA handles the Badger gameday volume, the legislative-session call spike, the move-in week chaos, and the summer farmers-market overflow. Concurrency is scoped and tested to your call volume before launch.</p>
     </div>
     <div class="faq-item">
       <div class="faq-num">[02]</div>
@@ -301,53 +325,94 @@
 
 </main>
 
-<footer class="main-footer">
-  <div class="footer-rail">
-    <div class="rail-section">
-      <div class="rail-label">// Verticals</div>
-      <div class="rail-items">
-        <a href="/professional-services">Professional Services</a><span class="rail-arrow">→</span>
-        <a href="/home-services">Home Services</a><span class="rail-arrow">→</span>
-        <a href="/medical-practices">Medical Practices</a><span class="rail-arrow">→</span>
-        <a href="/ground-transportation">Transportation</a><span class="rail-arrow">→</span>
-        <a href="/hospitality">Hospitality &amp; Events</a>
+<!-- BRIDGE:FOOTER -->
+<footer class="bfoot">
+  <div class="bfoot-wrap">
+    <div class="bfoot-grid">
+      <div class="bfoot-brand">
+        <span class="bmark"><span class="bdot" aria-hidden="true"></span>AI VOICE AGENCY</span>
+        <p class="bfoot-tag">The AI receptionist for local service businesses. Answers in one ring. Books the job.</p>
+        <span class="bfoot-built">Built in Wisconsin</span>
       </div>
+      <details class="bfoot-col" open>
+        <summary>Verticals</summary>
+        <div class="bfoot-items">
+          <a href="/home-services">AI receptionist for home services</a>
+          <a href="/medical-practices">AI receptionist for medical practices</a>
+          <a href="/professional-services">AI receptionist for professional services</a>
+          <a href="/hospitality">AI receptionist for hospitality &amp; events</a>
+          <a href="/ground-transportation">AI receptionist for transportation</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>Wisconsin</summary>
+        <div class="bfoot-items">
+          <a href="/milwaukee">Milwaukee</a>
+          <a href="/madison">Madison</a>
+          <a href="/green-bay">Green Bay</a>
+          <a href="/wisconsin-limo">Wisconsin Limo</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>By city &amp; trade</summary>
+        <div class="bfoot-items">
+          <span class="bfoot-sub">Milwaukee</span>
+          <a href="/milwaukee-hvac">HVAC answering</a>
+          <a href="/milwaukee-plumbing">Plumbing answering</a>
+          <a href="/milwaukee-electrical">Electrical answering</a>
+          <a href="/milwaukee-dental">Dental answering</a>
+          <a href="/milwaukee-roofing">Roofing answering</a>
+          <span class="bfoot-sub">Madison</span>
+          <a href="/madison-hvac">HVAC answering</a>
+          <a href="/madison-plumbing">Plumbing answering</a>
+          <a href="/madison-electrical">Electrical answering</a>
+          <a href="/madison-dental">Dental answering</a>
+          <a href="/madison-roofing">Roofing answering</a>
+          <span class="bfoot-sub">West Bend</span>
+          <a href="/west-bend-hvac">HVAC answering</a>
+          <a href="/west-bend-plumbing">Plumbing answering</a>
+          <a href="/west-bend-electrical">Electrical answering</a>
+          <a href="/west-bend-dental">Dental answering</a>
+          <a href="/west-bend-roofing">Roofing answering</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>Insights</summary>
+        <div class="bfoot-items">
+          <a href="/blog">The AVA blog</a>
+          <a href="/blog/what-happens-when-you-call-ava">What happens when you call AVA</a>
+          <a href="/blog/wisconsin-limo-crush">The Wisconsin limo call crush</a>
+          <a href="/blog/home-services-30-percent-missed">The 30% missed-call problem</a>
+          <a href="/videos">Videos</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>Company</summary>
+        <div class="bfoot-items">
+          <a href="/overview">Overview</a>
+          <a href="/roi">ROI Calculator</a>
+          <a href="/methodology.html">Methodology</a>
+          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms</a>
+          <a href="/sms-policy.html">SMS Policy</a>
+        </div>
+      </details>
     </div>
-    <div class="rail-section">
-      <div class="rail-label">// Wisconsin</div>
-      <div class="rail-items">
-        <a href="/milwaukee">Milwaukee</a><span class="rail-arrow">→</span>
-        <a href="/madison">Madison</a><span class="rail-arrow">→</span>
-        <a href="/green-bay">Green Bay</a><span class="rail-arrow">→</span>
-        <span class="rail-disabled">West Bend</span><span class="rail-arrow">→</span>
-        <span class="rail-disabled">Kewaskum</span>
-      </div>
+    <div class="bfoot-action">
+      <a class="bf-tel" href="tel:+14142408930" data-event="tel_tap_footer">Hear AVA live — 414-240-8930</a>
+      <a class="bf-book" href="/book" data-event="book_click_footer">Book a 15-minute call</a>
     </div>
-    <div class="rail-section">
-      <div class="rail-label">// Resources</div>
-      <div class="rail-items">
-        <a href="/methodology.html">Methodology</a><span class="rail-arrow">→</span>
-        <a href="/privacy.html">Privacy</a><span class="rail-arrow">→</span>
-        <a href="/terms.html">Terms</a><span class="rail-arrow">→</span>
-        <a href="/sms-policy.html">SMS Policy</a>
-      </div>
-    </div>
-    <div class="rail-section">
-      <div class="rail-label">// Action</div>
-      <div class="rail-items">
-        <a href="tel:+14142408930">Call Demo (414) 240-8930</a><span class="rail-arrow">→</span>
-        <a href="/book" target="_blank" rel="noopener">Scope My Setup</a>
-      </div>
-    </div>
-  </div>
-  <div class="footer-copy">
-    // AI Voice Agency ─ Built in Wisconsin ─ © 2026
+    <p class="bfoot-legal">AVA is an AI assistant. Demo calls are scripted samples using AVA's demo voice and sample data. &copy; 2026 AI Voice Agency.</p>
   </div>
 </footer>
+<!-- /BRIDGE:FOOTER -->
 
-<div id="mobile-cta">
-  <a href="tel:+14142408930">→ CALL DEMO (414) 240-8930</a>
+<!-- BRIDGE:CALLBAR -->
+<div class="bcallbar" role="region" aria-label="Contact AVA">
+  <a class="bcall" href="tel:+14142408930" data-event="tel_tap_callbar">&#9654; HEAR AVA LIVE</a>
+  <a class="bbook" href="/book" data-event="book_click_callbar">BOOK A CALL</a>
 </div>
+<!-- /BRIDGE:CALLBAR -->
 
 <script src="/site.js" defer></script>
 

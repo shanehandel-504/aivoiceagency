@@ -12,9 +12,37 @@
   /* start pulse animations only after load so they never compete with the LCP paint.
      Fires whether or not the load event has already passed (defer can run post-load
      in some engines) — the rAF still lands after LCP, so no perf regression. */
-  function armGlow() { requestAnimationFrame(function () { document.body.classList.add('glow-ready'); }); }
+  function armGlow() { requestAnimationFrame(function () { document.body.classList.add('glow-ready'); startTerm(); }); }
   if (document.readyState === 'complete') armGlow();
   else window.addEventListener('load', armGlow);
+
+  /* ---------- hero terminal observer (BRIDGE Phase 3.6) ----------
+     Static list by default (no-JS / reduced-motion safe); after load it
+     becomes a typing loop: 350ms per line, 2.5s hold, fade-restart. */
+  function startTerm() {
+    var term = document.querySelector('[data-term]');
+    if (!term) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var lines = [].slice.call(term.querySelectorAll('.term-line'));
+    if (!lines.length) return;
+    term.classList.add('typing');
+    var i = 0;
+    function tick() {
+      if (document.hidden) { setTimeout(tick, 1200); return; }
+      if (i < lines.length) {
+        lines[i].classList.add('on');
+        i++;
+        setTimeout(tick, 350);
+      } else {
+        setTimeout(function () {
+          lines.forEach(function (l) { l.classList.remove('on'); });
+          i = 0;
+          setTimeout(tick, 420);
+        }, 2500);
+      }
+    }
+    tick();
+  }
 
   /* n8n webhook — lifted verbatim from the working /chatgpt-example live-call form */
   var AVA_CALL_ENDPOINT = 'https://circulant.app.n8n.cloud/webhook/ava-call';
@@ -200,7 +228,15 @@
       var phone = toE164(cell && cell.value);
       if (phone.replace(/\D/g, '').length < 11) { status.textContent = 'Enter a valid mobile number.'; status.classList.add('err'); return; }
 
-      submit.disabled = true; status.textContent = 'Connecting AVA…';
+      submit.disabled = true;
+      status.setAttribute('role', 'status');
+      status.textContent = 'Starting your demo call…';
+      /* 3B.7 — visible delayed state */
+      var slowT = setTimeout(function () {
+        if (status.textContent === 'Starting your demo call…') {
+          status.textContent = 'Taking longer than expected — call 414-240-8930 instead.';
+        }
+      }, 12000);
       var payload = {
         first_name: '',
         phone: phone,
@@ -214,17 +250,23 @@
       fetch(AVA_CALL_ENDPOINT, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
       }).then(function (r) {
+        clearTimeout(slowT);
         if (r.ok) {
-          status.textContent = '📞 Calling you now — answer your phone.';
+          status.setAttribute('role', 'status');
+          status.textContent = 'AVA is calling now. Keep your phone nearby.';
           status.classList.add('ok');
           if (offer && offer.getAttribute('data-webcall') === 'on') offer.hidden = false;
           if (consent) { consent.checked = false; }
         } else {
-          status.textContent = 'Could not reach AVA (' + r.status + '). Tap to try again.';
+          status.setAttribute('role', 'alert');
+          status.textContent = 'We couldn’t start the demo call. Try again or call 414-240-8930.';
           status.classList.add('err'); submit.disabled = false;
         }
       }, function () {
-        status.textContent = 'Network error. Try again in a moment.'; status.classList.add('err'); submit.disabled = false;
+        clearTimeout(slowT);
+        status.setAttribute('role', 'alert');
+        status.textContent = 'We couldn’t start the demo call. Try again or call 414-240-8930.';
+        status.classList.add('err'); submit.disabled = false;
       });
     });
 
@@ -306,6 +348,13 @@
       } else {
         money.classList.remove('crossed', 'flash');
         if (mult) mult.hidden = true;
+      }
+      /* calculator bridge (Phase 4.5) — book label carries the user's own figure past $5k/mo */
+      var bookCta = roi.querySelector('[data-roi-book]');
+      if (bookCta) {
+        bookCta.textContent = revenue > 5000
+          ? 'Book a 15-minute call — recover $' + fmt(revenue) + '/mo'
+          : 'Book a 15-minute call';
       }
       firstRun = false;
       /* hash hygiene: never written on input — only on the Copy-my-results tap */

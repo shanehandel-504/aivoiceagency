@@ -10,12 +10,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
 <title>How much is your phone costing you? | AI Voice Agency ROI Calculator</title>
-<meta name="description" content="Run your numbers. Most phone-heavy businesses lose 30–40% of inbound revenue to missed calls. See what it's costing you per month, per year, and over 3 years.">
+<meta name="description" content="How much are missed calls costing you? Run your own numbers — per month, per year, and over 3 years.">
 <link rel="canonical" href="https://aivoiceagency.ai/roi">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="How much is your phone costing you?">
-<meta property="og:description" content="Run the numbers. Most businesses lose 30-40% of inbound revenue.">
+<meta property="og:description" content="How much are missed calls costing you? Run your own numbers.">
 <meta property="og:url" content="https://aivoiceagency.ai/roi">
 <meta property="og:site_name" content="AI Voice Agency">
 <meta property="og:image" content="https://aivoiceagency.ai/brand/gbp-cover.png">
@@ -27,7 +27,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="How much is your phone costing you?">
-<meta name="twitter:description" content="Run the numbers. Most businesses lose 30-40% of inbound revenue.">
+<meta name="twitter:description" content="How much are missed calls costing you? Run your own numbers.">
 <meta name="twitter:image" content="https://aivoiceagency.ai/brand/gbp-cover.png">
 <meta name="twitter:image:alt" content="AI Voice Agency — how much is your phone costing you?">
 
@@ -249,7 +249,6 @@
     position:fixed;left:0;right:0;bottom:0;z-index:30;
     padding:12px 16px calc(12px + env(safe-area-inset-bottom));
     background:linear-gradient(180deg,rgba(10,10,15,.4),rgba(10,10,15,.96));
-    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
     border-top:1px solid var(--line);
     transform:translateY(120%);transition:transform .3s ease;
   }
@@ -274,22 +273,59 @@
   }
 </style>
 <script src="/js/tracking.js" async></script>
+<!-- BRIDGE:HEAD -->
+<link rel="stylesheet" href="/assets/bridge.css">
+<script src="/js/bridge.js" defer></script>
+<!-- /BRIDGE:HEAD -->
+<!-- BRIDGE:CRUMBLD -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://aivoiceagency.ai/"},{"@type":"ListItem","position":2,"name":"ROI Calculator","item":"https://aivoiceagency.ai/roi"}]}</script>
+<!-- /BRIDGE:CRUMBLD -->
 </head>
 <body>
 
 <div class="topwave" id="topwave" aria-hidden="true"><canvas id="wave"></canvas></div>
 
-<div class="brandbar">
-  <span class="dot"></span>
-  <span class="name">AI Voice Agency</span>
-</div>
+<!-- BRIDGE:NAV -->
+<nav class="bnav" aria-label="Main">
+  <a class="bnav-brand" href="/"><span class="bdot" aria-hidden="true"></span>AI VOICE AGENCY</a>
+  <button class="bnav-burger" aria-expanded="false" aria-controls="bnavMenu" aria-label="Menu">MENU</button>
+  <div class="bnav-menu" id="bnavMenu">
+    <div class="bnav-group">
+      <button class="bnav-top" type="button" aria-expanded="false">Verticals</button>
+      <div class="bnav-drop">
+        <a href="/home-services">AI receptionist for home services</a>
+        <a href="/medical-practices">AI receptionist for medical practices</a>
+        <a href="/professional-services">AI receptionist for professional services</a>
+        <a href="/hospitality">AI receptionist for hospitality &amp; events</a>
+        <a href="/ground-transportation">AI receptionist for transportation</a>
+      </div>
+    </div>
+    <div class="bnav-group">
+      <button class="bnav-top" type="button" aria-expanded="false">Wisconsin</button>
+      <div class="bnav-drop">
+        <a href="/milwaukee">Milwaukee answering service</a>
+        <a href="/madison">Madison answering service</a>
+        <a href="/green-bay">Green Bay answering service</a>
+        <a href="/wisconsin-limo">Wisconsin limo &amp; livery</a>
+      </div>
+    </div>
+    <a class="bnav-top" href="/#pricing">Pricing</a>
+    <a class="bnav-top" href="/roi">ROI</a>
+    <a class="bnav-cta" href="/book" data-event="book_click_nav">Book a 15-minute call</a>
+    <a class="bnav-tel" href="tel:+14142408930" data-event="tel_tap_nav">414-240-8930</a>
+  </div>
+</nav>
+<!-- /BRIDGE:NAV -->
+<!-- BRIDGE:CRUMB -->
+<nav class="bcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span class="bc-sep">/</span><span class="bc-here">ROI Calculator</span></nav>
+<!-- /BRIDGE:CRUMB -->
 
 <!-- HERO -->
 <section class="hero">
   <div class="wrap">
     <div class="eyebrow">Missed-Call ROI Calculator</div>
     <h1>How much is your phone <em>costing</em> you?</h1>
-    <p class="subhead">Most phone-heavy businesses lose 30–40% of inbound revenue to missed calls. Run your numbers.</p>
+    <p class="subhead">How much are missed calls costing you? Run your own numbers below.</p>
     <div class="scrollcue">↓ move the sliders</div>
   </div>
 </section>
@@ -399,23 +435,89 @@
 </section>
 
 <!-- FOOTER -->
-<footer>
-  <div class="wrap">
-    <div class="foot-row">
-      <div class="foot-brand"><span class="dot"></span> AI Voice Agency</div>
-      <button class="share" id="share" type="button" aria-label="Copy a link to this calculator">
-        <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
-        <span id="share-txt">Share this calculator</span>
-      </button>
+<!-- BRIDGE:FOOTER -->
+<footer class="bfoot">
+  <div class="bfoot-wrap">
+    <div class="bfoot-grid">
+      <div class="bfoot-brand">
+        <span class="bmark"><span class="bdot" aria-hidden="true"></span>AI VOICE AGENCY</span>
+        <p class="bfoot-tag">The AI receptionist for local service businesses. Answers in one ring. Books the job.</p>
+        <span class="bfoot-built">Built in Wisconsin</span>
+      </div>
+      <details class="bfoot-col" open>
+        <summary>Verticals</summary>
+        <div class="bfoot-items">
+          <a href="/home-services">AI receptionist for home services</a>
+          <a href="/medical-practices">AI receptionist for medical practices</a>
+          <a href="/professional-services">AI receptionist for professional services</a>
+          <a href="/hospitality">AI receptionist for hospitality &amp; events</a>
+          <a href="/ground-transportation">AI receptionist for transportation</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>Wisconsin</summary>
+        <div class="bfoot-items">
+          <a href="/milwaukee">Milwaukee</a>
+          <a href="/madison">Madison</a>
+          <a href="/green-bay">Green Bay</a>
+          <a href="/wisconsin-limo">Wisconsin Limo</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>By city &amp; trade</summary>
+        <div class="bfoot-items">
+          <span class="bfoot-sub">Milwaukee</span>
+          <a href="/milwaukee-hvac">HVAC answering</a>
+          <a href="/milwaukee-plumbing">Plumbing answering</a>
+          <a href="/milwaukee-electrical">Electrical answering</a>
+          <a href="/milwaukee-dental">Dental answering</a>
+          <a href="/milwaukee-roofing">Roofing answering</a>
+          <span class="bfoot-sub">Madison</span>
+          <a href="/madison-hvac">HVAC answering</a>
+          <a href="/madison-plumbing">Plumbing answering</a>
+          <a href="/madison-electrical">Electrical answering</a>
+          <a href="/madison-dental">Dental answering</a>
+          <a href="/madison-roofing">Roofing answering</a>
+          <span class="bfoot-sub">West Bend</span>
+          <a href="/west-bend-hvac">HVAC answering</a>
+          <a href="/west-bend-plumbing">Plumbing answering</a>
+          <a href="/west-bend-electrical">Electrical answering</a>
+          <a href="/west-bend-dental">Dental answering</a>
+          <a href="/west-bend-roofing">Roofing answering</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>Insights</summary>
+        <div class="bfoot-items">
+          <a href="/blog">The AVA blog</a>
+          <a href="/blog/what-happens-when-you-call-ava">What happens when you call AVA</a>
+          <a href="/blog/wisconsin-limo-crush">The Wisconsin limo call crush</a>
+          <a href="/blog/home-services-30-percent-missed">The 30% missed-call problem</a>
+          <a href="/videos">Videos</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>Company</summary>
+        <div class="bfoot-items">
+          <a href="/overview">Overview</a>
+          <a href="/roi">ROI Calculator</a>
+          <a href="/methodology.html">Methodology</a>
+          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms</a>
+          <a href="/sms-policy.html">SMS Policy</a>
+        </div>
+      </details>
     </div>
-    <p class="disclaim">Figures are estimates generated from the inputs you provide and are for illustration only — actual results vary by business, market, and call handling. Not a forecast or a promise of outcomes.</p>
+    <div class="bfoot-action">
+      <a class="bf-tel" href="tel:+14142408930" data-event="tel_tap_footer">Hear AVA live — 414-240-8930</a>
+      <a class="bf-book" href="/book" data-event="book_click_footer">Book a 15-minute call</a>
+    </div>
+    <p class="bfoot-legal">AVA is an AI assistant. Demo calls are scripted samples using AVA's demo voice and sample data. &copy; 2026 AI Voice Agency.</p>
   </div>
 </footer>
+<!-- /BRIDGE:FOOTER -->
 
-<!-- MOBILE STICKY CTA -->
-<div class="sticky" id="sticky">
-  <a class="btn" href="/book" target="_blank" rel="noopener">Book the strategy call</a>
-</div>
+<!-- MOBILE STICKY CTA removed — THE BRIDGE call bar owns the mobile bottom rail -->
 
 <script>
 (function(){
@@ -644,5 +746,11 @@
   }
 })();
 </script>
+<!-- BRIDGE:CALLBAR -->
+<div class="bcallbar" role="region" aria-label="Contact AVA">
+  <a class="bcall" href="tel:+14142408930" data-event="tel_tap_callbar">&#9654; HEAR AVA LIVE</a>
+  <a class="bbook" href="/book" data-event="book_click_callbar">BOOK A CALL</a>
+</div>
+<!-- /BRIDGE:CALLBAR -->
 </body>
 </html>
