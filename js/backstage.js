@@ -13,35 +13,7 @@
   'use strict';
   var d = document;
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* ---------- theme (sun/moon in header; light twins in guide.css) ---------- */
-  var THEME_KEY = 'bs-theme';
-  var metaTheme = d.querySelector('meta[name="theme-color"]');
-  function applyTheme(t) {
-    if (t === 'light') d.documentElement.setAttribute('data-theme', 'light');
-    else d.documentElement.removeAttribute('data-theme');
-    if (metaTheme) metaTheme.setAttribute('content', t === 'light' ? '#F4F6FA' : '#0A0A0F');
-    var b = d.querySelector('.bs-theme');
-    if (b) {
-      b.textContent = t === 'light' ? '☀' : '☾';
-      b.setAttribute('aria-label', t === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
-    }
-  }
-  function mountToggle() {
-    var nav = d.querySelector('.bnav');
-    if (!nav || d.querySelector('.bs-theme')) return;
-    var btn = d.createElement('button');
-    btn.className = 'bs-theme';
-    btn.type = 'button';
-    btn.addEventListener('click', function () {
-      var next = d.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
-      applyTheme(next); /* instant — no transition by design */
-    });
-    nav.insertBefore(btn, nav.querySelector('.bnav-burger'));
-    applyTheme(d.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
-  }
-  mountToggle();
+  /* theme toggle is owned by bridge.js now (shared across every page) */
 
   /* ---------- [data-event] beacons (no-op if window.va absent) ---------- */
   function beacon(name) { if (window.va) window.va('event', { name: name }); }
@@ -50,7 +22,7 @@
     if (el) beacon(el.getAttribute('data-event'));
   });
 
-  /* ---------- pricing fit tabs ---------- */
+  /* ---------- pricing fit tabs (B3) ---------- */
   var ptabs = d.querySelectorAll('.bs-ptab');
   ptabs.forEach(function (tab) {
     tab.addEventListener('click', function () {
@@ -58,9 +30,17 @@
         t.classList.toggle('is-on', t === tab);
         t.setAttribute('aria-pressed', t === tab ? 'true' : 'false');
       });
+      var fit = tab.getAttribute('data-fit');
+      var match = null;
       d.querySelectorAll('.bs-tier').forEach(function (card) {
-        card.classList.toggle('is-reco', card.getAttribute('data-tier') === tab.getAttribute('data-fit'));
+        var on = card.getAttribute('data-tier') === fit;
+        card.classList.toggle('is-reco', on);
+        if (on) match = card;
       });
+      /* on mobile the matching card is far below the chips — bring it into view */
+      if (match && window.matchMedia('(max-width:900px)').matches) {
+        match.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+      }
     });
   });
 
@@ -73,8 +53,8 @@
     clock: stage.querySelector('[data-clock]'),
     clockLabel: stage.querySelector('[data-clock-label]'),
     caller: stage.querySelector('[data-caller]'),
-    log: stage.querySelector('[data-log]'),
-    chips: stage.querySelector('[data-chips]'),
+    feed: stage.querySelector('[data-feed]'),
+    strip: stage.querySelector('[data-strip]'),
     payoff: stage.querySelector('[data-payoff]'),
     veil: stage.querySelector('[data-veil]'),
     phone: stage.querySelector('[data-phone]'),
@@ -82,10 +62,12 @@
     wires: stage.querySelector('[data-wires]'),
     wirepath: stage.querySelector('[data-wirepath]'),
     start: stage.querySelector('[data-start]'),
-    floor: stage.querySelector('.bs-floor')
+    floor: stage.querySelector('.bs-floor'),
+    announce: stage.querySelector('[data-announce]')
   };
   var pathOK = !reduced && window.CSS && CSS.supports && CSS.supports('offset-path', 'path("M0 0 L10 10")');
   if (!pathOK && els.dot) els.dot.classList.add('no-path'); /* Safari/reduced: dot hidden, wires by opacity */
+  var LANES = ['intake', 'triage', 'tools', 'output'];
 
   var DATA = null, trade = null, agents = [], agentIdx = {};
   var running = false, everStarted = false, paused = false;
@@ -97,12 +79,26 @@
 
   function emit(name, detail) { stage.dispatchEvent(new CustomEvent(name, { detail: detail })); }
   function finalT() { return trade ? trade.events[trade.events.length - 1].t : 0; }
-  function orbEl(id) { return stage.querySelector('[data-agent="' + id + '"] .orb'); }
+  function orbEl(id) { return stage.querySelector('.bs-card[data-agent="' + id + '"] .orb'); }
+  function cardEl(i) { return els.feed && els.feed.querySelector('.bs-card[data-i="' + i + '"]'); }
   function setOrb(id, state) {
     var o = orbEl(id); if (!o) return;
     o.setAttribute('data-state', state);
-    var wrap = o.closest('.bs-agent');
+    var wrap = o.closest('.bs-card');
     if (wrap) { if (state === 'idle') wrap.removeAttribute('data-live'); else wrap.setAttribute('data-live', ''); }
+  }
+  /* the 4 pill orbs mirror each lane's progress */
+  function updatePillOrbs() {
+    LANES.forEach(function (lane) {
+      var pillOrb = stage.querySelector('[data-pill-lane="' + lane + '"]');
+      if (!pillOrb) return;
+      var states = agents.filter(function (a) { return a.lane === lane; })
+        .map(function (a) { var o = orbEl(a.id); return o ? o.getAttribute('data-state') : 'idle'; });
+      var st = 'idle';
+      if (states.length && states.every(function (s) { return s === 'done'; })) st = 'done';
+      else if (states.some(function (s) { return s !== 'idle'; })) st = 'working';
+      pillOrb.setAttribute('data-state', st);
+    });
   }
 
   /* ---------- lazy hydrate (tap or idle) ---------- */
@@ -179,31 +175,32 @@
     }, 28);
   }
 
-  /* ---------- render a script into the DOM (log text lives in DOM) ---------- */
+  /* ---------- render a script into the cards (payloads live in the DOM) ---------- */
   function renderScript() {
     if (els.clockLabel) els.clockLabel.textContent = 'INBOUND · ' + trade.clockLabel + ' · sample data';
     if (els.caller) els.caller.textContent = '“' + trade.callerLine + '”';
-    if (els.log) {
-      /* mute the role=log live region during the bulk rewrite so a trade
-         swap doesn't queue 17 announcements on a screen reader */
-      var region = els.log.parentElement;
-      if (region && region.getAttribute('role') === 'log') {
-        region.setAttribute('aria-live', 'off');
-        setTimeout(function () { region.setAttribute('aria-live', 'polite'); }, 120);
-      }
-      els.log.textContent = '';
-      trade.events.forEach(function (ev, i) {
-        var li = d.createElement('li');
-        li.setAttribute('data-i', i);
-        li.setAttribute('data-t', ev.t);
-        var name = ev.agent === 'result' ? 'RESULT' : agents[agentIdx[ev.agent]].name;
-        li.innerHTML = '<span class="bs-lt">' + ev.t.toFixed(1) + '</span><b>' + name +
-          '</b><span class="bs-ltx"></span>';
-        li.querySelector('.bs-ltx').textContent = ev.text;
-        els.log.appendChild(li);
-      });
+    /* mute the role=log feed during the bulk swap so a trade change doesn't
+       queue announcements on a screen reader */
+    if (els.feed && els.feed.getAttribute('role') === 'log') {
+      els.feed.setAttribute('aria-live', 'off');
+      setTimeout(function () { els.feed.setAttribute('aria-live', 'polite'); }, 120);
     }
+    trade.events.forEach(function (ev, i) {
+      if (ev.agent === 'result') return;
+      var card = cardEl(i);
+      if (!card) return;
+      var pay = card.querySelector('.bs-cpay');
+      if (pay) pay.textContent = ev.text;
+      card.setAttribute('data-chiptext', ev.chip || '');
+      card.classList.remove('on', 'final');
+      card.removeAttribute('tabindex');
+      var slot = card.querySelector('[data-chip]');
+      if (slot) { slot.textContent = ''; slot.removeAttribute('data-filled'); slot.classList.remove('ok'); }
+    });
+    agents.forEach(function (a) { setOrb(a.id, 'idle'); });
+    updatePillOrbs();
     fillPayoff();
+    fillStrip();
   }
   function fillPayoff() {
     if (!els.payoff || !trade) return;
@@ -213,28 +210,39 @@
     q('[data-p-secs]').textContent = trade.payoff.seconds;
     q('[data-p-tag]').textContent = trade.payoff.tag;
   }
-
-  /* ---------- chips (RECEIPT-POP; never move after landing) ---------- */
-  function popChip(ev) {
-    if (!els.chips) return;
-    var c = d.createElement('span');
-    c.className = 'bs-chip' + (ev.final ? ' ok' : '');
-    c.textContent = ev.chip;
-    els.chips.appendChild(c);
-    emit('ava:chip', { text: ev.chip, t: ev.t, final: !!ev.final });
+  function fillStrip() {
+    if (!els.strip || !trade) return;
+    var r = els.strip.querySelector('[data-strip-result]');
+    var s = els.strip.querySelector('[data-strip-secs]');
+    if (r) r.textContent = trade.payoff.result + ' · ' + trade.payoff.when;
+    if (s) s.textContent = trade.payoff.seconds;
   }
 
   /* ---------- event firing ---------- */
   function fire(ev, i) {
-    var li = els.log && els.log.querySelector('li[data-i="' + i + '"]');
-    if (li) { li.classList.add('on'); li.setAttribute('tabindex', '0'); }
-    if (ev.chip) popChip(ev);
     if (ev.agent === 'result') {
-      if (li) li.classList.add('final');
       setOrb(agents[agents.length - 1].id, 'done');
+      updatePillOrbs();
       emit('ava:agent', { id: agents[agents.length - 1].id, lane: 'output', t: ev.t, text: ev.text, state: 'done' });
       emit('ava:booked', { trade: trade.id, t: ev.t });
       return;
+    }
+    var card = cardEl(i);
+    if (card) {
+      card.classList.add('on');           /* HARD-DOCK arrival */
+      card.setAttribute('tabindex', '0'); /* fired card is a button that reveals the recap SMS */
+      card.setAttribute('role', 'button');
+      var nm = card.querySelector('.bs-cname'), py = card.querySelector('.bs-cpay');
+      card.setAttribute('aria-label', (nm ? nm.textContent + ': ' : '') + (py ? py.textContent + '. ' : '') + 'Show the recap text message.');
+      if (ev.chip) {
+        var slot = card.querySelector('[data-chip]');
+        if (slot) {
+          slot.textContent = ev.chip;
+          if (ev.final) slot.classList.add('ok');
+          slot.setAttribute('data-filled', '');     /* RECEIPT-POP on the card */
+        }
+        emit('ava:chip', { text: ev.chip, t: ev.t, final: !!ev.final });
+      }
     }
     var k = agentIdx[ev.agent];
     if (k > 0) {
@@ -242,6 +250,7 @@
       emit('ava:agent', { id: agents[k - 1].id, lane: agents[k - 1].lane, t: ev.t, text: '', state: 'done' });
     }
     setOrb(ev.agent, 'working'); /* ONE working agent at a time — by construction */
+    updatePillOrbs();
     emit('ava:agent', { id: ev.agent, lane: agents[k].lane, t: ev.t, text: ev.text, state: 'working' });
     var nx = trade.events[i + 1];
     if (nx && nx.agent !== 'result') {
@@ -274,12 +283,38 @@
     running = false;
     cancelAnimationFrame(raf);
     clockNode.data = finalT().toFixed(1) + 's'; /* stops dead — no ease */
+    if (els.feed) markFinal();
+    fillStrip();
     stage.classList.remove('is-running');
     stage.classList.remove('is-live'); /* revoke will-change */
     stage.classList.add('is-frozen');
     payoffRaf = requestAnimationFrame(function () { els.payoff.classList.add('in'); });
+    /* announce the outcome — the payoff text is static in the DOM, so a class
+       toggle alone never reaches a screen reader; write it into a live region */
+    if (els.announce && trade) {
+      els.announce.textContent = trade.payoff.result + ' — ' + trade.payoff.when +
+        '. ' + trade.payoff.seconds + ' seconds. Sample call.';
+    }
     emit('ava:freeze', { trade: trade.id, seconds: finalT() });
-    /* payoff holds >=7s, no auto-restart — nothing scheduled here by design */
+    /* payoff holds, no auto-restart. "review the call" (B4) collapses it into
+       the sticky strip — the page never locks scroll in any state. */
+  }
+  function markFinal() {
+    var last = cardEl(agents.length - 1);
+    if (last) last.classList.add('final');
+  }
+
+  /* B4 · "review the call" — un-dim, keep the outcome pinned, scroll freely */
+  function review() {
+    beacon('review_tap_theater');
+    els.payoff.classList.remove('in');
+    stage.classList.add('is-reviewed');
+    if (els.strip) {
+      els.strip.hidden = false;
+      /* focus was inside the payoff we just hid — move it to the strip */
+      var f = els.strip.querySelector('a,button');
+      if (f) f.focus();
+    }
   }
 
   function resetStage() {
@@ -288,14 +323,18 @@
     clearInterval(typeTimer);
     running = false; paused = false; evIdx = 0; elapsed = 0;
     agents.forEach(function (a) { setOrb(a.id, 'idle'); });
-    if (els.log) els.log.querySelectorAll('li').forEach(function (li) {
-      li.classList.remove('on', 'final');
-      li.removeAttribute('tabindex');
+    updatePillOrbs();
+    if (els.feed) els.feed.querySelectorAll('.bs-card').forEach(function (c) {
+      c.classList.remove('on', 'final');
+      c.removeAttribute('tabindex'); c.removeAttribute('role'); c.removeAttribute('aria-label');
+      var slot = c.querySelector('[data-chip]');
+      if (slot) { slot.textContent = ''; slot.removeAttribute('data-filled'); slot.classList.remove('ok'); }
     });
-    if (els.chips) els.chips.textContent = '';
+    if (els.announce) els.announce.textContent = '';
     els.payoff.classList.remove('in');
     els.phone.classList.remove('in');
-    stage.classList.remove('is-frozen', 'is-running', 'is-live', 'bs-skip');
+    if (els.strip) els.strip.hidden = true;
+    stage.classList.remove('is-frozen', 'is-running', 'is-live', 'is-reviewed', 'bs-skip');
     clockNode.data = '0.0s';
     dotSnap(0);
   }
@@ -361,26 +400,36 @@
   }, { threshold: 0.12 });
   io.observe(stage);
 
-  /* ---------- party trick: tap a completed log line → recap SMS ---------- */
-  function peekSms(li) {
-    if (!li || !li.classList.contains('on') || !trade) return;
+  /* ---------- party trick: tap a fired card → recap SMS ---------- */
+  var smsOpener = null;
+  function peekSms(card) {
+    if (!card || !card.classList.contains('on') || !trade) return;
     els.phone.querySelector('[data-ph-msg]').textContent = trade.sms;
     els.phone.querySelector('[data-ph-time]').textContent = trade.smsTime;
     els.phone.classList.add('in');
+    els.phone.setAttribute('tabindex', '-1');
+    smsOpener = card;
+    els.phone.focus({ preventScroll: true }); /* SR reads the recap; Esc/tap dismisses */
     beacon('sms_peek_theater');
   }
-  if (els.log) {
-    els.log.addEventListener('click', function (e) { peekSms(e.target.closest('li')); });
-    els.log.addEventListener('keydown', function (e) { /* keyboard path for fired lines */
+  function closeSms() {
+    if (!els.phone.classList.contains('in')) return;
+    els.phone.classList.remove('in');
+    if (smsOpener) { smsOpener.focus(); smsOpener = null; }
+  }
+  if (els.feed) {
+    els.feed.addEventListener('click', function (e) { peekSms(e.target.closest('.bs-card')); });
+    els.feed.addEventListener('keydown', function (e) { /* keyboard path for fired cards */
       if (e.key !== 'Enter' && e.key !== ' ') return;
-      var li = e.target.closest('li');
-      if (li) { e.preventDefault(); peekSms(li); }
+      var card = e.target.closest('.bs-card');
+      if (card) { e.preventDefault(); peekSms(card); }
     });
   }
+  d.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSms(); });
   d.addEventListener('click', function (e) {
     if (els.phone.classList.contains('in') &&
-        !e.target.closest('[data-phone]') && !e.target.closest('[data-log]')) {
-      els.phone.classList.remove('in');
+        !e.target.closest('[data-phone]') && !e.target.closest('[data-feed]')) {
+      closeSms();
     }
   });
 
@@ -410,8 +459,8 @@
   d.querySelectorAll('[data-watch]').forEach(function (a) {
     a.addEventListener('click', function () { start(); });
   });
-  var replayBtn = stage.querySelector('[data-replay]');
-  if (replayBtn) replayBtn.addEventListener('click', replay);
+  stage.querySelectorAll('[data-replay]').forEach(function (b) { b.addEventListener('click', replay); });
+  stage.querySelectorAll('[data-review]').forEach(function (b) { b.addEventListener('click', review); });
 
   var rsz = 0;
   addEventListener('resize', function () {

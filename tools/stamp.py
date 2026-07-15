@@ -10,6 +10,7 @@ import re, sys, io, os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 HEAD = '''<!-- BRIDGE:HEAD -->
+<script>(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
 <link rel="stylesheet" href="/assets/bridge.css">
 <script src="/js/bridge.js" defer></script>
 <!-- /BRIDGE:HEAD -->'''

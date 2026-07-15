@@ -18,7 +18,17 @@ body.backstage::before{content:"";position:fixed;inset:0;pointer-events:none;z-i
 .bs-section{padding:64px 0}
 .bs-section--tight{padding:36px 0}
 .bs-center{text-align:center}
+/* B5 · mobile density — keep the homepage to ~9 screens */
+@media(max-width:860px){
+  .bs-section{padding:38px 0}
+  .bs-section--tight{padding:24px 0}
+  .bs-hero{padding:28px 0 6px}
+}
 .bs-h2{font-size:clamp(26px,4.4vw,38px);line-height:1.12;letter-spacing:-.015em;color:var(--ink);margin:0 0 12px}
+
+/* ---- visually-hidden live region (payoff announced to screen readers) ---- */
+.bs-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 /* ---- skip link ---- */
 .bs-skiplink{position:fixed;top:-48px;left:12px;z-index:1000;background:var(--e3);color:var(--ink);
@@ -135,10 +145,7 @@ body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
 /* ============================================================
    HOMEPAGE — LAYER 1
    ============================================================ */
-/* theme toggle (injected by backstage.js into the nav) */
-.bs-theme{margin-left:8px;min-width:44px;min-height:44px;border-radius:10px;border:1px solid var(--bz-line);
-  background:transparent;color:var(--bz-ink);cursor:pointer;font-size:17px;line-height:1}
-.bs-theme:hover{border-color:var(--bz-cyan)}
+/* theme toggle styling + light tokens now live in bridge.css (site-wide) */
 
 /* hero */
 .bs-hero{padding:44px 0 8px;text-align:center}
@@ -161,7 +168,9 @@ body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
   border:1px solid var(--line);border-radius:999px;padding:7px 14px}
 
 /* ============================================================
-   HOMEPAGE — LAYER 2 · THE THEATER
+   HOMEPAGE — LAYER 2 · THE THEATER (Run 1.5 · GROK PASS)
+   Mobile = one streaming feed of glass agent cards.
+   Desktop >=1024 = the same cards in 4 lane columns.
    ============================================================ */
 .bs-theater-sub{font-size:clamp(17px,2.4vw,21px);color:var(--ink);margin:0 0 4px;font-weight:600}
 .bs-cutaway{color:var(--ink-mute);font-size:15px;margin:0 0 22px}
@@ -172,97 +181,125 @@ body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
   transition:color .2s var(--quiet-settle),border-color .2s var(--quiet-settle)}
 .bs-trade.is-on{border-color:var(--cyan);color:var(--cyan)}
 
-/* the stage */
+/* the stage — overflow visible so the sticky result strip can pin */
 .bs-stage{position:relative;background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);
-  border-radius:18px;padding:20px;overflow:hidden}
-.bs-stage .bs-dim{transition:opacity .32s var(--glide)}
-.bs-stage.is-frozen .bs-dim{opacity:.4}
-.bs-stagetop{display:flex;gap:14px;align-items:stretch;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
-.bs-caller{flex:1;min-width:min(100%,340px);margin:0;max-width:none}
-.bs-clockwrap{display:flex;flex-direction:column;gap:8px;align-items:flex-end;justify-content:space-between}
-.bs-clock{font-family:var(--g-mono);font-size:26px;font-weight:600;color:var(--ink);
-  font-variant-numeric:tabular-nums;min-width:6ch;text-align:right;contain:layout paint}
-.bs-start{font-family:var(--g-mono);font-size:12px;letter-spacing:.12em;padding:10px 16px;min-height:44px;
+  border-radius:18px;padding:20px}
+.bs-stagetop{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.bs-caller{flex:1;min-width:min(100%,320px);margin:0;max-width:none}
+.bs-start{font-family:var(--g-mono);font-size:12px;letter-spacing:.12em;padding:10px 18px;min-height:44px;flex:none;
   border-radius:10px;border:1px solid var(--cyan);background:transparent;color:var(--cyan);cursor:pointer}
 .bs-start:hover{background:rgba(0,212,255,.08)}
 
-/* lanes + wires */
-.bs-floor{position:relative;margin-bottom:14px}
-.bs-lanes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.bs-lane{background:var(--e2);box-shadow:var(--e2-sh);border-radius:14px;padding:12px 12px 14px;
-  border-top:2px solid var(--lane-c,var(--line))}
-.bs-lane[data-lane="intake"]{--lane-c:var(--lane-intake)}
-.bs-lane[data-lane="triage"]{--lane-c:var(--lane-triage)}
-.bs-lane[data-lane="tools"]{--lane-c:var(--lane-tools)}
-.bs-lane[data-lane="output"]{--lane-c:var(--lane-output)}
-.bs-lane h3{font-family:var(--g-mono);font-size:10.5px;letter-spacing:.18em;color:var(--lane-c);margin:0 0 10px}
-.bs-agent{display:flex;align-items:center;gap:9px;padding:5px 0}
-.bs-agent .orb{--size:32px}
-.bs-aname{font-family:var(--g-mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-mute)}
-.bs-agent[data-live] .bs-aname{color:var(--ink)}
-/* wires overlay + THE LIVE WIRE dot */
-.bs-wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.bs-wires path{fill:none;stroke:rgba(0,212,255,.16);stroke-width:1.5;stroke-dasharray:5 6;
+/* stacked-orb signal pill — the feed header */
+.bs-pill{display:flex;align-items:center;width:100%;max-width:440px;margin:0 0 16px;
+  padding:8px 16px 8px 10px;border-radius:999px;background:var(--e2);box-shadow:var(--e2-sh);border:1px solid var(--line)}
+.bs-pill-orbs{display:inline-flex;align-items:center;flex:none}
+.bs-pill-orbs .orb{--size:28px}
+.bs-pill-orbs .orb+.orb{margin-left:calc(28px*-.32);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.28),inset 0 calc(28px*-.09) calc(28px*.18) rgba(0,0,0,.38),0 0 0 2px var(--e2)}
+.bs-pill-label{font-family:var(--g-mono);font-size:11px;letter-spacing:.14em;color:var(--ink-mute);margin-left:14px}
+.bs-pill-secs{font-family:var(--g-mono);font-size:15px;font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums;min-width:5ch;text-align:right;margin-left:auto;padding-left:12px;contain:layout paint}
+
+/* the feed */
+.bs-floor{position:relative;margin:0 0 8px}
+.bs-feed{display:flex;flex-direction:column;gap:8px}   /* mobile: one chronological stream */
+.bs-lane{display:contents}                                /* cards hoist into the feed, ordered */
+.bs-lanelabel{display:none}
+
+/* glass agent card — ghost at rest (AA-safe ghost color, not opacity), ignites on fire */
+.bs-card{position:relative;display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:14px;
+  background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);border-left:2px solid var(--lane-c,var(--line));
+  cursor:default;--card-ink:#79818F;transition:border-color .3s var(--quiet-settle)}
+html[data-theme="light"] .bs-card{--card-ink:#5A6272}
+.bs-card[data-lane="intake"]{--lane-c:var(--lane-intake)}
+.bs-card[data-lane="triage"]{--lane-c:var(--lane-triage)}
+.bs-card[data-lane="tools"]{--lane-c:var(--lane-tools)}
+.bs-card[data-lane="output"]{--lane-c:var(--lane-output)}
+.bs-card .orb{--size:44px;flex:none}
+.bs-cbody{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+.bs-cname{font-family:var(--g-mono);font-size:10.5px;letter-spacing:.12em;color:var(--card-ink);
+  transition:color .3s var(--quiet-settle)}
+.bs-cpay{font-size:14px;line-height:1.35;color:var(--card-ink);transition:color .3s var(--quiet-settle)}
+.bs-cchip{flex:none;font-family:var(--g-mono);font-size:10.5px;letter-spacing:.04em;color:var(--ink);
+  background:var(--e2);box-shadow:var(--e2-sh);border:1px solid var(--line);border-radius:999px;
+  padding:5px 10px;transform:scale(0);opacity:0;transition:none}
+.bs-cchip.ok{border-color:color-mix(in srgb,var(--live-green) 45%,transparent);color:var(--live-green)}
+.bs-cchip[data-filled]{opacity:1;animation:orb-check .38s var(--receipt-pop) forwards}
+/* ignited card */
+.bs-card.on{animation:card-dock .32s var(--hard-dock);cursor:pointer}
+.bs-card.on .bs-cname{color:var(--lane-c)}
+.bs-card.on .bs-cpay{color:var(--g-read)}
+.bs-card.on:hover{border-color:var(--g-line-cyan)}
+.bs-card.final{border-left-color:var(--live-green)}
+.bs-card.final .bs-cname,.bs-card.final .bs-cpay{color:var(--live-green)}
+@keyframes card-dock{from{opacity:.5;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* wires overlay + THE LIVE WIRE dot (card-to-card mobile · lane-to-lane desktop) */
+.bs-wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:0}
+.bs-wires path{fill:none;stroke:rgba(0,212,255,.14);stroke-width:1.5;stroke-dasharray:5 6;
   transition:stroke .3s var(--quiet-settle)}
-.bs-stage.is-running .bs-wires path{stroke:rgba(0,212,255,.45)}
-html[data-theme="light"] .bs-wires path{stroke:rgba(0,135,190,.22)}
-html[data-theme="light"] .bs-stage.is-running .bs-wires path{stroke:rgba(0,135,190,.5)}
-.bs-dot{position:absolute;top:0;left:0;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;
+.bs-stage.is-running .bs-wires path{stroke:rgba(0,212,255,.4)}
+html[data-theme="light"] .bs-wires path{stroke:rgba(0,116,156,.2)}
+html[data-theme="light"] .bs-stage.is-running .bs-wires path{stroke:rgba(0,116,156,.45)}
+.bs-feed{position:relative;z-index:1}
+.bs-dot{position:absolute;top:0;left:0;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;z-index:2;
   background:var(--wire-c,var(--cyan));pointer-events:none;opacity:0;
-  box-shadow:0 0 10px 3px color-mix(in srgb,var(--wire-c,var(--cyan)) 65%,transparent)}
+  box-shadow:0 0 12px 3px color-mix(in srgb,var(--wire-c,var(--cyan)) 70%,transparent)}
 .bs-stage.is-running .bs-dot{opacity:1}
 .bs-dot.no-path{display:none}
 
-/* chips row — chips never move after landing; phones get a 2-row reserve
-   so a wrapping chip can't shift the live log mid-run */
-.bs-chips{display:flex;gap:8px;flex-wrap:wrap;min-height:34px;margin:0 0 12px}
-@media(max-width:640px){.bs-chips{min-height:76px}}
+/* collapsed result strip (B4) — pins while you scroll the reviewed feed */
+.bs-strip{position:sticky;top:74px;z-index:8;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin:0 0 14px;padding:11px 16px;border-radius:12px;background:var(--e3);box-shadow:var(--e3-sh);
+  border:1px solid var(--g-line-cyan)}
+.bs-strip[hidden]{display:none}
+.bs-strip-r{font-family:var(--g-mono);font-size:13px;color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+.bs-strip-r b{color:var(--live-green);font-weight:700}
+.bs-strip-check{color:var(--live-green);font-weight:800}
+.bs-strip-t{font-family:var(--g-mono);font-size:11.5px;color:var(--ink-mute);font-variant-numeric:tabular-nums}
+.bs-strip-book{margin-left:auto;font-weight:700;font-size:13px;color:var(--cyan);text-decoration:none;
+  border:1px solid var(--g-line-cyan);border-radius:9px;padding:8px 14px;min-height:40px;display:inline-flex;align-items:center}
+.bs-strip-replay{background:none;border:none;color:var(--ink-mute);font-family:var(--g-mono);font-size:12px;
+  cursor:pointer;padding:8px;min-height:40px}
+.bs-strip-replay:hover{color:var(--cyan)}
 
-/* live log — captions ARE the log; text in DOM from load.
-   Queued lines use an AA-safe ghost color (no opacity trick) so the
-   pending state still passes contrast in both themes. */
-.bs-log{list-style:none;margin:0;padding:14px 16px;background:var(--e0);border-radius:12px;
-  border:1px solid var(--line);font-family:var(--g-mono);font-size:13px;line-height:1.5;
-  display:grid;gap:7px;--log-ghost:#79818F}
-html[data-theme="light"] .bs-log{--log-ghost:#5A6272}
-.bs-log li{display:flex;gap:10px;align-items:baseline;cursor:default;color:var(--log-ghost)}
-.bs-log li:not(.on) .bs-lt,.bs-log li:not(.on) b,.bs-log li:not(.on) .bs-ltx{color:inherit;
-  transition:color .3s var(--quiet-settle)}
-.bs-log li.on{cursor:pointer}
-.bs-log li.on:hover b{color:var(--cyan)}
-.bs-log .bs-lt{color:var(--ink-mute);font-variant-numeric:tabular-nums;min-width:4ch;text-align:right;flex:none;
-  transition:color .3s var(--quiet-settle)}
-.bs-log b{font-weight:600;color:var(--ink);flex:none;min-width:11ch;transition:color .3s var(--quiet-settle)}
-.bs-log .bs-ltx{color:var(--g-read);transition:color .3s var(--quiet-settle)}
-.bs-log li.final b{color:var(--live-green)}
-.bs-log li.final .bs-ltx{color:var(--live-green)}
-
-/* payoff card — e3, docks QUIET-SETTLE 480ms */
-.bs-payoff{position:absolute;left:50%;top:50%;width:min(92%,420px);z-index:5;
+/* payoff card — e3 + key-light glow (S4, the money shot) */
+.bs-payoff{position:absolute;left:50%;top:50%;width:min(92%,420px);z-index:6;
   transform:translate(-50%,-42%);opacity:0;text-align:center;
-  background:var(--e3);box-shadow:var(--e3-sh);border:1px solid var(--g-line-cyan);
-  border-radius:18px;padding:28px 24px;pointer-events:none;visibility:hidden;
+  background:var(--e3);box-shadow:var(--e3-sh),0 0 60px 6px color-mix(in srgb,var(--cyan) 22%,transparent);
+  border:1px solid var(--g-line-cyan);border-radius:18px;padding:28px 24px;pointer-events:none;visibility:hidden;
   transition:transform .48s var(--quiet-settle),opacity .48s var(--quiet-settle),visibility 0s .48s}
+.bs-payoff::before{content:"";position:absolute;inset:-40%;z-index:-1;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,color-mix(in srgb,var(--cyan) 16%,transparent),transparent 66%);opacity:0;
+  transition:opacity .48s var(--glide)}
 .bs-payoff.in{transform:translate(-50%,-50%);opacity:1;pointer-events:auto;visibility:visible;
   transition:transform .48s var(--quiet-settle),opacity .48s var(--quiet-settle)}
+.bs-payoff.in::before{opacity:1}
+.bs-stage.is-reviewed .bs-payoff{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s var(--glide),visibility 0s .3s}
 .bs-pr{font-size:clamp(26px,5vw,34px);font-weight:700;letter-spacing:.02em;color:var(--live-green);margin:0}
 .bs-pw{font-family:var(--g-mono);font-size:15px;letter-spacing:.1em;color:var(--ink);margin:8px 0 0}
 .bs-ps{font-family:var(--g-mono);font-size:12.5px;letter-spacing:.14em;color:var(--ink-mute);margin:6px 0 0;
   font-variant-numeric:tabular-nums}
 .bs-pt{font-family:var(--g-mono);font-size:12.5px;letter-spacing:.14em;color:var(--cyan);margin:2px 0 0}
 .bs-pcta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 6px}
-.bs-replay{background:none;border:none;color:var(--ink-mute);font-family:var(--g-mono);font-size:12px;
+.bs-preview{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:4px 0 0}
+.bs-replay,.bs-review{background:none;border:none;color:var(--ink-mute);font-family:var(--g-mono);font-size:12px;
   letter-spacing:.1em;cursor:pointer;padding:10px;min-height:44px}
-.bs-replay:hover{color:var(--cyan)}
-.bs-pline{font-size:12.5px;color:var(--ink-mute);margin:2px 0 0}
+.bs-replay:hover,.bs-review:hover{color:var(--cyan)}
+.bs-pline{font-size:12.5px;color:var(--ink-mute);margin:6px 0 0}
+
+/* the feed dims behind the payoff on freeze; "review the call" restores it */
+.bs-feed,.bs-pill{transition:opacity .32s var(--glide)}
+.bs-stage.is-frozen:not(.is-reviewed) .bs-feed{opacity:.4}
 
 /* replay veil — 180ms crossfade */
-.bs-veil{position:absolute;inset:0;background:var(--e1);opacity:0;pointer-events:none;z-index:6;
+.bs-veil{position:absolute;inset:0;background:var(--e1);opacity:0;pointer-events:none;z-index:7;border-radius:18px;
   transition:opacity .18s var(--glide)}
 .bs-veil.on{opacity:1}
 
 /* party trick — phone mockup (e2), recap SMS */
-.bs-phone{position:absolute;right:18px;bottom:18px;z-index:7;width:min(78%,260px);
+.bs-phone{position:absolute;right:18px;bottom:18px;z-index:9;width:min(78%,260px);
   background:var(--e2);box-shadow:var(--e2-sh);border:1px solid var(--line);border-radius:18px;
   padding:14px;transform:translateY(8px) scale(.96);opacity:0;visibility:hidden;
   transition:transform .3s var(--receipt-pop),opacity .3s var(--quiet-settle),visibility 0s .3s}
@@ -272,6 +309,22 @@ html[data-theme="light"] .bs-log{--log-ghost:#5A6272}
   padding:10px 12px;font-size:13px;line-height:1.5;color:var(--ink)}
 .bs-phone .ph-time{font-family:var(--g-mono);font-size:10.5px;color:var(--ink-mute);margin-top:6px}
 .bs-disclosure{font-family:var(--g-mono);font-size:11.5px;color:var(--ink-mute);margin-top:12px}
+
+/* desktop: the same cards in four lane columns */
+@media(min-width:1024px){
+  .bs-feed{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+  .bs-lane{display:flex;flex-direction:column;gap:10px;padding-top:26px;position:relative}
+  .bs-lane::before{content:"";position:absolute;top:14px;left:0;right:0;height:2px;border-radius:2px;
+    background:var(--lane-c,var(--line));opacity:.7}
+  .bs-lane[data-lane="intake"]{--lane-c:var(--lane-intake)}
+  .bs-lane[data-lane="triage"]{--lane-c:var(--lane-triage)}
+  .bs-lane[data-lane="tools"]{--lane-c:var(--lane-tools)}
+  .bs-lane[data-lane="output"]{--lane-c:var(--lane-output)}
+  .bs-lanelabel{display:block;position:absolute;top:0;left:0;font-family:var(--g-mono);font-size:10.5px;
+    letter-spacing:.18em;color:var(--lane-c)}
+  .bs-card{flex-direction:column;align-items:flex-start;gap:8px}
+  .bs-cchip{align-self:flex-start}
+}
 
 /* ---- objection strip ---- */
 .bs-objections{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 0}
@@ -338,26 +391,66 @@ html[data-theme="light"] .card{background:#FFFFFF;border-color:rgba(16,19,26,.1)
 .bs-stage.is-running .bs-start,.bs-stage.is-frozen .bs-start{visibility:hidden}
 .bs-stage.bs-skip *{transition-duration:0ms!important;animation-duration:0ms!important}
 
+/* ============================================================
+   THE SEVEN QUESTIONS — glass accordions (B5)
+   Answers stay in the DOM (details content); first is open.
+   ============================================================ */
+.bs-qa-grid{display:grid;gap:12px;margin-top:24px}
+.bs-qa{background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);border-radius:14px;
+  overflow:hidden;transition:border-color .25s var(--quiet-settle)}
+.bs-qa[open]{border-color:var(--g-line-cyan)}
+.bs-qa summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+  gap:16px;min-height:56px;padding:16px 20px;font-size:17px;font-weight:600;color:var(--ink)}
+.bs-qa summary::-webkit-details-marker{display:none}
+.bs-qa summary::after{content:"+";color:var(--cyan);font-size:24px;line-height:1;flex:none;transition:transform .2s var(--quiet-settle)}
+.bs-qa[open] summary::after{transform:rotate(45deg)}
+.bs-qa-a{padding:0 20px 18px}
+.bs-qa-a p{font-size:15.5px;line-height:1.65;color:var(--g-read);margin:0 0 8px;max-width:70ch}
+.bs-qa-a p:last-child{margin-bottom:0}
+.bs-qa-a b{color:var(--ink)}
+.bs-qa-a .wiring-panel{margin:14px 0 2px}
+@media(prefers-reduced-motion:reduce){.bs-qa summary::after{transition:none}}
+
 /* ---- performance / motion discipline ---- */
 .bs-stage.is-live .orb[data-state="working"],
 .bs-stage.is-live .bs-dot{will-change:transform,opacity} /* granted by .is-live, revoked on freeze */
 .bs-stage:not(.is-live) *{animation-play-state:paused}
-/* receipt chips are one-shot fill-forwards pops — the final "✓ BOOKED" chip
-   lands in the same task freeze() revokes .is-live, so exempt chips from the pause */
-.bs-stage:not(.is-live) .bs-chip{animation-play-state:running}
+/* the final ✓ BOOKED chip + the last OWNER ALERT orb check + card-dock all land
+   in the same task freeze() revokes .is-live — exempt these one-shot pops so the
+   climactic frame isn't frozen at scale(0) */
+.bs-stage:not(.is-live) .bs-cchip,
+.bs-stage:not(.is-live) .bs-card.on,
+.bs-stage:not(.is-live) .orb[data-state="done"] i{animation-play-state:running}
 @media(max-width:860px){
-  .bs-lanes{grid-template-columns:repeat(2,1fr)}
-  .bs-stagetop{flex-direction:column}
-  .bs-clockwrap{flex-direction:row;align-items:center;justify-content:space-between}
+  .bs-stagetop{flex-direction:column;align-items:stretch}
+  .bs-start{width:100%}
   .bs-phone{right:10px;bottom:10px}
+  .bs-card{gap:11px;padding:8px 12px}
+  .bs-card .orb{--size:36px}
+  /* queued cards are a compact one-line preview; the payload reveals when the
+     card fires (authentic streaming + keeps the rest-state short). Text stays
+     in the DOM for crawlers. */
+  .bs-card .bs-cpay{font-size:13px;line-height:1.3}
+  .bs-card:not(.on) .bs-cpay{display:none}
+  .bs-card:not(.on){padding-top:11px;padding-bottom:11px}
+  .bs-stage{padding:16px}
+  /* denser pricing so 3 stacked tiers don't add a full screen */
+  .bs-tier{padding:18px 18px}
+  .bs-tier ul{gap:6px;margin-bottom:12px}
+  .bs-tier .t-price{font-size:28px}
+  .bs-objections{margin-top:16px}
+  .bs-ob{padding:16px 18px}
+  .bs-qa summary{min-height:52px;padding:14px 16px;font-size:16px}
+  .bs-qa-a{padding:0 16px 16px}
 }
 @media(prefers-reduced-motion:reduce){
-  .orb,.orb::before,.orb::after,.bs-log li,.bs-payoff,.bs-phone,.bs-veil{transition-duration:.01ms!important}
+  .orb,.orb::before,.orb::after,.bs-card,.bs-payoff,.bs-phone,.bs-veil{transition-duration:.01ms!important}
+  .bs-card.on{animation:none}
   .orb[data-state="working"]::after{animation:none;
     background:conic-gradient(from 0deg,var(--lane) 0 270deg,transparent 270deg 360deg);
     animation:orb-breathe 2.4s ease-in-out infinite}
   @keyframes orb-breathe{0%,100%{opacity:.55}50%{opacity:1}}
   .orb[data-state="done"] i{animation:none;transform:scale(1)}
-  .bs-chip{animation:none;transform:scale(1)}
+  .bs-cchip[data-filled]{animation:none;transform:scale(1)}
   .bs-dot{display:none} /* Live Wire dot hidden; wires light by opacity only */
 }

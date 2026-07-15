@@ -64,6 +64,7 @@
 </script>
 <script src="/js/tracking.js" async></script>
 <!-- BRIDGE:HEAD -->
+<script>(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
 <link rel="stylesheet" href="/assets/bridge.css">
 <script src="/js/bridge.js" defer></script>
 <!-- /BRIDGE:HEAD -->
@@ -152,76 +153,70 @@
     </div>
 
     <div class="bs-stage" id="stage" tabindex="-1">
-      <div class="bs-stagetop bs-dim">
+      <div class="bs-stagetop">
         <div class="term bs-caller">
           <span class="term-label" data-clock-label>INBOUND · 2:14 AM · sample data</span>
           <span class="l" data-caller>“water heater's leaking — there's water everywhere”</span><span class="cursor" aria-hidden="true"></span>
         </div>
-        <div class="bs-clockwrap">
-          <span class="bs-clock" data-clock>0.0s</span>
-          <button class="bs-start" type="button" data-start data-event="watch_tap_theater">▶ TAP TO START</button>
-        </div>
+        <button class="bs-start" type="button" data-start data-event="watch_tap_theater">▶ TAP TO START</button>
       </div>
 
-      <div class="bs-floor bs-dim">
-        <div class="bs-lanes" data-lanes>
+      <!-- stacked-orb signal pill: the header for the streaming feed -->
+      <div class="bs-pill" data-pill>
+        <span class="bs-pill-orbs" aria-hidden="true">
+          <span class="orb" data-pill-lane="intake" data-state="idle" style="--size:28px;--lane:var(--lane-intake)"><i>✓</i></span><span class="orb" data-pill-lane="triage" data-state="idle" style="--size:28px;--lane:var(--lane-triage)"><i>✓</i></span><span class="orb" data-pill-lane="tools" data-state="idle" style="--size:28px;--lane:var(--lane-tools)"><i>✓</i></span><span class="orb" data-pill-lane="output" data-state="idle" style="--size:28px;--lane:var(--lane-output)"><i>✓</i></span>
+        </span>
+        <span class="bs-pill-label">AGENTS ON THE CALL</span>
+        <span class="bs-pill-secs" data-clock>0.0s</span>
+      </div>
+
+      <!-- collapsed result strip (B4 · payoff folds into this on "review the call").
+           Sits ABOVE the feed so position:sticky can pin it while the feed scrolls. -->
+      <div class="bs-strip" data-strip hidden>
+        <span class="bs-strip-r"><span class="bs-strip-check" aria-hidden="true">✓</span> <b data-strip-result>JOB BOOKED · TUE 7:00 AM</b></span>
+        <span class="bs-strip-t"><span data-strip-secs>11.3</span>s · sample</span>
+        <a class="bs-strip-book" href="/book" data-event="book_click_strip">Book</a>
+        <button class="bs-strip-replay" type="button" data-replay>↻ replay</button>
+      </div>
+      <p class="bs-sr-only" data-announce role="status" aria-live="polite"></p>
+
+      <!-- the feed: glass agent cards. role=log; payloads live in initial DOM. -->
+      <div class="bs-floor">
+        <div class="bs-feed" role="log" aria-label="Live call log — sample data" data-feed>
           <div class="bs-lane" data-lane="intake">
-            <h3>INTAKE</h3>
-            <div class="bs-agent" data-agent="listener"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-intake)"><i>✓</i></span><span class="bs-aname">LISTENER</span></div>
-            <div class="bs-agent" data-agent="callerid"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-intake)"><i>✓</i></span><span class="bs-aname">CALLER ID</span></div>
-            <div class="bs-agent" data-agent="noisegate"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-intake)"><i>✓</i></span><span class="bs-aname">NOISE GATE</span></div>
-            <div class="bs-agent" data-agent="transcriber"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-intake)"><i>✓</i></span><span class="bs-aname">TRANSCRIBER</span></div>
+            <span class="bs-lanelabel">INTAKE</span>
+            <div class="bs-card" data-agent="listener"    data-i="0" data-t="0.4" data-lane="intake" style="order:0"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-intake)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">LISTENER</b><span class="bs-cpay">answered on ring 1</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="callerid"    data-i="1" data-t="0.7" data-lane="intake" style="order:1"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-intake)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">CALLER ID</b><span class="bs-cpay">captured caller name + mobile number</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="audio"       data-i="2" data-t="1.0" data-lane="intake" style="order:2"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-intake)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">AUDIO CLEANUP</b><span class="bs-cpay">filtered out background water + truck noise</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="transcriber" data-i="3" data-t="1.4" data-lane="intake" style="order:3"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-intake)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">TRANSCRIBER</b><span class="bs-cpay">transcribed: “water heater is leaking”</span></span><span class="bs-cchip" data-chip></span></div>
           </div>
           <div class="bs-lane" data-lane="triage">
-            <h3>TRIAGE</h3>
-            <div class="bs-agent" data-agent="intent"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-triage)"><i>✓</i></span><span class="bs-aname">INTENT</span></div>
-            <div class="bs-agent" data-agent="urgency"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-triage)"><i>✓</i></span><span class="bs-aname">URGENCY</span></div>
-            <div class="bs-agent" data-agent="triage"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-triage)"><i>✓</i></span><span class="bs-aname">TRIAGE</span></div>
-            <div class="bs-agent" data-agent="sentiment"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-triage)"><i>✓</i></span><span class="bs-aname">SENTIMENT</span></div>
+            <span class="bs-lanelabel">TRIAGE</span>
+            <div class="bs-card" data-agent="request"   data-i="4" data-t="1.9" data-lane="triage" style="order:4"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-triage)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">REQUEST</b><span class="bs-cpay">identified request: water heater repair</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="urgency"   data-i="5" data-t="2.3" data-lane="triage" style="order:5"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-triage)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">URGENCY</b><span class="bs-cpay">flagged active leak · time-sensitive</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="emergency" data-i="6" data-t="3.0" data-lane="triage" style="order:6"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-triage)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">EMERGENCY RULES</b><span class="bs-cpay">matched your after-hours rule · shutoff confirmed</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="tone"      data-i="7" data-t="3.5" data-lane="triage" style="order:7"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-triage)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">TONE READ</b><span class="bs-cpay">read stressed caller · kept it short</span></span><span class="bs-cchip" data-chip></span></div>
           </div>
           <div class="bs-lane" data-lane="tools">
-            <h3>TOOLS</h3>
-            <div class="bs-agent" data-agent="calendar"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-tools)"><i>✓</i></span><span class="bs-aname">CALENDAR</span></div>
-            <div class="bs-agent" data-agent="availability"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-tools)"><i>✓</i></span><span class="bs-aname">AVAILABILITY</span></div>
-            <div class="bs-agent" data-agent="scheduler"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-tools)"><i>✓</i></span><span class="bs-aname">SCHEDULER</span></div>
-            <div class="bs-agent" data-agent="crmsync"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-tools)"><i>✓</i></span><span class="bs-aname">CRM SYNC</span></div>
+            <span class="bs-lanelabel">TOOLS</span>
+            <div class="bs-card" data-agent="calendar"     data-i="8"  data-t="4.2" data-lane="tools" style="order:8"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-tools)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">CALENDAR</b><span class="bs-cpay">opened your service calendar</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="availability" data-i="9"  data-t="4.8" data-lane="tools" style="order:9"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-tools)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">AVAILABILITY</b><span class="bs-cpay">found Tue · 7:00 AM open on the route</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="scheduler"    data-i="10" data-t="5.6" data-lane="tools" style="order:10"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-tools)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">SCHEDULER</b><span class="bs-cpay">held the 7:00 AM slot</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="crmwrite"     data-i="11" data-t="6.4" data-lane="tools" style="order:11"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-tools)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">CRM WRITE</b><span class="bs-cpay">job created: name · address · photos requested</span></span><span class="bs-cchip" data-chip></span></div>
           </div>
           <div class="bs-lane" data-lane="output">
-            <h3>OUTPUT</h3>
-            <div class="bs-agent" data-agent="dispatch"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-output)"><i>✓</i></span><span class="bs-aname">DISPATCH</span></div>
-            <div class="bs-agent" data-agent="confirmer"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-output)"><i>✓</i></span><span class="bs-aname">CONFIRMER</span></div>
-            <div class="bs-agent" data-agent="recorder"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-output)"><i>✓</i></span><span class="bs-aname">RECORDER</span></div>
-            <div class="bs-agent" data-agent="notifier"><span class="orb" data-state="idle" style="--size:32px;--lane:var(--lane-output)"><i>✓</i></span><span class="bs-aname">NOTIFIER</span></div>
+            <span class="bs-lanelabel">OUTPUT</span>
+            <div class="bs-card" data-agent="board"      data-i="12" data-t="7.1"  data-lane="output" style="order:12"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-output)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">MORNING BOARD</b><span class="bs-cpay">added to tomorrow's morning board</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="conftext"   data-i="13" data-t="8.0"  data-lane="output" style="order:13"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-output)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">CONFIRMATION TEXT</b><span class="bs-cpay">confirmation text sent to the caller</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="recording"  data-i="14" data-t="9.2"  data-lane="output" style="order:14"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-output)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">CALL RECORDING</b><span class="bs-cpay">recorded · transcript saved to the job</span></span><span class="bs-cchip" data-chip></span></div>
+            <div class="bs-card" data-agent="owneralert" data-i="15" data-t="10.4" data-lane="output" style="order:15"><span class="orb" data-state="idle" style="--size:44px;--lane:var(--lane-output)"><i>✓</i></span><span class="bs-cbody"><b class="bs-cname">OWNER ALERT</b><span class="bs-cpay">booked-job ping sent to your cell</span></span><span class="bs-cchip" data-chip></span></div>
           </div>
         </div>
         <svg class="bs-wires" data-wires aria-hidden="true" preserveAspectRatio="none"><path data-wirepath d=""/></svg>
         <span class="bs-dot" data-dot aria-hidden="true"></span>
       </div>
 
-      <div class="bs-chips bs-dim" data-chips aria-live="polite"></div>
-
-      <div role="log" aria-label="Live call log — sample data">
-      <ol class="bs-log bs-dim" data-log>
-        <li data-i="0"  data-t="0.4"><span class="bs-lt">0.4</span><b>LISTENER</b><span class="bs-ltx">picked up · ring 1</span></li>
-        <li data-i="1"  data-t="0.7"><span class="bs-lt">0.7</span><b>CALLER ID</b><span class="bs-ltx">captured name + number</span></li>
-        <li data-i="2"  data-t="1.0"><span class="bs-lt">1.0</span><b>NOISE GATE</b><span class="bs-ltx">cut truck noise</span></li>
-        <li data-i="3"  data-t="1.4"><span class="bs-lt">1.4</span><b>TRANSCRIBER</b><span class="bs-ltx">heard "water heater is leaking"</span></li>
-        <li data-i="4"  data-t="1.9"><span class="bs-lt">1.9</span><b>INTENT</b><span class="bs-ltx">plumbing service call</span></li>
-        <li data-i="5"  data-t="2.3"><span class="bs-lt">2.3</span><b>URGENCY</b><span class="bs-ltx">active leak</span></li>
-        <li data-i="6"  data-t="3.0"><span class="bs-lt">3.0</span><b>TRIAGE</b><span class="bs-ltx">⚠ urgent · shutoff confirmed</span></li>
-        <li data-i="7"  data-t="3.5"><span class="bs-lt">3.5</span><b>SENTIMENT</b><span class="bs-ltx">stressed · keep it short</span></li>
-        <li data-i="8"  data-t="4.2"><span class="bs-lt">4.2</span><b>CALENDAR</b><span class="bs-ltx">opened next service route</span></li>
-        <li data-i="9"  data-t="4.8"><span class="bs-lt">4.8</span><b>AVAILABILITY</b><span class="bs-ltx">Tue · 7:00 AM</span></li>
-        <li data-i="10" data-t="5.6"><span class="bs-lt">5.6</span><b>SCHEDULER</b><span class="bs-ltx">held the appointment</span></li>
-        <li data-i="11" data-t="6.4"><span class="bs-lt">6.4</span><b>CRM SYNC</b><span class="bs-ltx">created the service job</span></li>
-        <li data-i="12" data-t="7.1"><span class="bs-lt">7.1</span><b>DISPATCH</b><span class="bs-ltx">added to morning board</span></li>
-        <li data-i="13" data-t="8.0"><span class="bs-lt">8.0</span><b>CONFIRMER</b><span class="bs-ltx">repeated address + window</span></li>
-        <li data-i="14" data-t="9.2"><span class="bs-lt">9.2</span><b>RECORDER</b><span class="bs-ltx">saved call notes</span></li>
-        <li data-i="15" data-t="10.4"><span class="bs-lt">10.4</span><b>NOTIFIER</b><span class="bs-ltx">sent owner the booked job</span></li>
-        <li data-i="16" data-t="11.3"><span class="bs-lt">11.3</span><b>RESULT</b><span class="bs-ltx">✓ JOB BOOKED · TUE 7:00 AM</span></li>
-      </ol>
-      </div>
-
+      <!-- payoff (e3 · key-light glow · the money shot) -->
       <div class="bs-payoff" data-payoff aria-live="polite">
         <p class="bs-pr" data-p-result>JOB BOOKED</p>
         <p class="bs-pw" data-p-when>TUESDAY · 7:00 AM</p>
@@ -231,7 +226,10 @@
           <a class="bs-cta bs-cta-cyan" href="/book" data-event="book_click_payoff">Book My 15-Minute Call</a>
           <a class="bs-cta bs-cta-line" href="tel:+14142408930" data-event="tel_tap_payoff">Call AVA Live</a>
         </div>
-        <button class="bs-replay" type="button" data-replay>↻ replay</button>
+        <div class="bs-preview">
+          <button class="bs-replay" type="button" data-replay>↻ replay</button>
+          <button class="bs-review" type="button" data-review>↩ review the call</button>
+        </div>
         <p class="bs-pline">We build the flow, connect it, launch it, and run it.</p>
       </div>
       <div class="bs-veil" data-veil aria-hidden="true"></div>
@@ -241,7 +239,7 @@
         <p class="ph-time" data-ph-time>Tue 7:00 AM · sample data</p>
       </div>
     </div>
-    <p class="bs-disclosure">Simulated backstage view — a scripted sample call with sample data. Times and jobs on screen come from the demo script, not customer results. Tap any finished log line to peek at the recap text.</p>
+    <p class="bs-disclosure">Simulated backstage view — a scripted sample call with sample data. Times and jobs on screen come from the demo script, not customer results. Tap any finished card to peek at the recap text.</p>
 
     <!-- objection strip — right where the doubt happens -->
     <div class="bs-objections">
@@ -257,37 +255,48 @@
   </div>
 </section>
 
-<!-- ===================== THE SEVEN QUESTIONS ===================== -->
-<section class="bs-section g-read" style="padding-top:20px">
-  <h2>What does AVA do when your phone rings?</h2>
-  <p>AVA picks up in one ring, any hour of the day. It greets the caller in your business's voice, listens to what they need, and pulls out the details that matter — name, number, address, what's wrong, and how urgent it is. Then it does the receptionist's real job: it books the appointment into your calendar or routes the call by your rules. The caller gets a confirmation text. You get a summary the moment it lands.</p>
-
-  <h2>Can AVA book jobs on my calendar?</h2>
-  <p>Yes — that's the point of the whole machine. During setup we connect AVA to the calendar you already run your day from. On a call, AVA offers real open slots, holds the appointment, writes the job into your CRM if you use one, and texts both sides. No phone tag, no sticky notes.</p>
-  <div class="wiring-panel">
-    <div class="wp-orb"><span class="orb" data-state="done" style="--size:56px;--lane:var(--lane-tools)"><i>✓</i></span><span>AVA</span></div>
-    <ul>
-      <li>Calendar</li>
-      <li>CRM</li>
-      <li>SMS</li>
-      <li>Owner</li>
-    </ul>
+<!-- ===================== THE SEVEN QUESTIONS (glass accordions · answers in DOM) ===================== -->
+<section class="bs-section" id="questions">
+  <div class="g-wrap">
+    <p class="g-eyebrow">The questions operators ask</p>
+    <h2 class="bs-h2">Straight answers.</h2>
+    <div class="bs-qa-grid">
+      <details class="bs-qa" open>
+        <summary>What does AVA do when your phone rings?</summary>
+        <div class="bs-qa-a"><p>AVA picks up in one ring, any hour of the day. It greets the caller in your business's voice, listens to what they need, and pulls out the details that matter — name, number, address, what's wrong, and how urgent it is. Then it does the receptionist's real job: it books the appointment into your calendar or routes the call by your rules. The caller gets a confirmation text. You get a summary the moment it lands.</p></div>
+      </details>
+      <details class="bs-qa">
+        <summary>Can AVA book jobs on my calendar?</summary>
+        <div class="bs-qa-a">
+          <p>Yes — that's the point of the whole machine. During setup we connect AVA to the calendar you already run your day from. On a call, AVA offers real open slots, holds the appointment, writes the job into your CRM if you use one, and texts both sides. No phone tag, no sticky notes.</p>
+          <div class="wiring-panel">
+            <div class="wp-orb"><span class="orb" data-state="done" style="--size:56px;--lane:var(--lane-tools)"><i>✓</i></span><span>AVA</span></div>
+            <ul><li>Calendar</li><li>CRM</li><li>SMS</li><li>Owner</li></ul>
+          </div>
+        </div>
+      </details>
+      <details class="bs-qa">
+        <summary>What happens when a call is urgent?</summary>
+        <div class="bs-qa-a"><p>You set the triage rules; AVA runs them. A burst pipe, sparks at an outlet, no heat in January — whatever you define as urgent gets flagged on the call, moved to the front of the schedule or transferred live, and your cell gets an alert immediately. Routine calls book like routine calls. Emergencies act like emergencies.</p></div>
+      </details>
+      <details class="bs-qa">
+        <summary>Can AVA work with my existing phone number?</summary>
+        <div class="bs-qa-a"><p>Yes. Nothing changes for your customers — they dial the number they've always dialed. We launch AVA on your existing line, and your forwarding rules decide what it takes: every call, after-hours only, or just the overflow when your team is already on the phone.</p></div>
+      </details>
+      <details class="bs-qa">
+        <summary>Does AVA replace my receptionist or dispatcher?</summary>
+        <div class="bs-qa-a"><p>No. AVA covers what they physically can't: 2 AM, Sunday, both lines ringing at once, and the calls that come in while they're already helping someone. Keep your people on the work only people can do — AVA takes the ringing phone they had to keep dropping everything for.</p></div>
+      </details>
+      <details class="bs-qa">
+        <summary>What happens when AVA cannot handle a call?</summary>
+        <div class="bs-qa-a"><p>It follows the fallback rule you chose: transfer straight to your cell, take a message and text it to you, or schedule a callback. You define the trigger words, the VIP callers, and the situations that always go to a human. You can also take over or pause AVA any time you want.</p></div>
+      </details>
+      <details class="bs-qa" id="cost">
+        <summary>How much does AVA cost?</summary>
+        <div class="bs-qa-a"><p>The Starter System is <b>$497 a month plus a $497 one-time setup</b>. Setup is the done-for-you part: we map your calls, build AVA around them, test it with you on real calls, launch it on your number, and keep running and tuning it after it's live. Growth is $997 a month plus a $1,500 setup. Operations builds start around $1,997 a month and are scoped on your call volume. Voice minutes bill by usage. No contracts — cancel anytime.</p></div>
+      </details>
+    </div>
   </div>
-
-  <h2>What happens when a call is urgent?</h2>
-  <p>You set the triage rules; AVA runs them. A burst pipe, sparks at an outlet, no heat in January — whatever you define as urgent gets flagged on the call, moved to the front of the schedule or transferred live, and your cell gets an alert immediately. Routine calls book like routine calls. Emergencies act like emergencies.</p>
-
-  <h2>Can AVA work with my existing phone number?</h2>
-  <p>Yes. Nothing changes for your customers — they dial the number they've always dialed. We launch AVA on your existing line, and your forwarding rules decide what it takes: every call, after-hours only, or just the overflow when your team is already on the phone.</p>
-
-  <h2>Does AVA replace my receptionist or dispatcher?</h2>
-  <p>No. AVA covers what they physically can't: 2 AM, Sunday, both lines ringing at once, and the calls that come in while they're already helping someone. Keep your people on the work only people can do — AVA takes the ringing phone they had to keep dropping everything for.</p>
-
-  <h2>What happens when AVA cannot handle a call?</h2>
-  <p>It follows the fallback rule you chose: transfer straight to your cell, take a message and text it to you, or schedule a callback. You define the trigger words, the VIP callers, and the situations that always go to a human. You can also take over or pause AVA any time you want.</p>
-
-  <h2 id="cost">How much does AVA cost?</h2>
-  <p>The Starter System is <b>$497 a month plus a $497 one-time setup</b>. Setup is the done-for-you part: we map your calls, build AVA around them, test it with you on real calls, launch it on your number, and keep running and tuning it after it's live. Growth is $997 a month plus a $1,500 setup. Operations builds start around $1,997 a month and are scoped on your call volume. Voice minutes bill by usage. No contracts — cancel anytime.</p>
 </section>
 
 <!-- ===================== WORTH IT? → PRICING ===================== -->

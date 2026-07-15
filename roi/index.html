@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
 <meta name="theme-color" content="#0A0A0F">
+<script>(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32">
@@ -62,9 +63,20 @@
     --cyan-soft:rgba(0,212,255,.12);
     --line:rgba(238,240,244,.09);
     --line-cyan:rgba(0,212,255,.22);
+    --track-empty:rgba(255,255,255,.1);
+    --btn-ink:#04121a;
     --maxw:1080px;
     --radius:16px;
   }
+  /* B6 · light theme (shared toggle sets html[data-theme=light]) — AA-safe twins */
+  html[data-theme="light"]{
+    --void:#F4F6FA; --panel:#FFFFFF; --panel-2:#FFFFFF; --matter:#10131A;
+    --muted:#5A6272; --faint:#5A6272; --cyan:#00749C; --cyan-active:#005E80;
+    --cyan-soft:rgba(0,116,156,.10); --line:rgba(16,19,26,.12); --line-cyan:rgba(0,116,156,.28);
+    --track-empty:rgba(16,19,26,.14); --btn-ink:#FFFFFF;
+    color-scheme:light;
+  }
+  html[data-theme="light"] body{ background:var(--void); color:var(--matter); }
 
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -163,7 +175,7 @@
   input[type=range]{
     -webkit-appearance:none;appearance:none;
     width:100%;height:8px;border-radius:8px;outline:none;cursor:pointer;
-    background:rgba(255,255,255,.1);
+    background:var(--track-empty);
   }
   input[type=range]::-webkit-slider-thumb{
     -webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;
@@ -219,14 +231,14 @@
   .cta .lead{color:var(--muted);font-weight:300;max-width:40ch;margin:0 auto 30px}
   .btn{
     display:inline-flex;align-items:center;gap:10px;
-    background:var(--cyan);color:#04121a;font-weight:600;font-size:1.08rem;
+    background:var(--cyan);color:var(--btn-ink);font-weight:600;font-size:1.08rem;
     padding:17px 34px;border-radius:12px;border:none;cursor:pointer;
     box-shadow:0 0 0 1px var(--cyan),0 10px 40px rgba(0,212,255,.35);
     transition:transform .15s,box-shadow .15s,background .15s;font-family:inherit;
   }
   .btn:hover{background:var(--cyan-active);transform:translateY(-2px);box-shadow:0 0 0 1px var(--cyan-active),0 14px 50px rgba(0,212,255,.5)}
   .btn:active{transform:translateY(0)}
-  .btn svg{width:18px;height:18px;stroke:#04121a;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .btn svg{width:18px;height:18px;stroke:var(--btn-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .creds{margin-top:20px;font-size:13px;color:var(--faint);font-family:'IBM Plex Mono',monospace;letter-spacing:.02em}
 
   /* ---------- footer ---------- */
@@ -274,6 +286,7 @@
 </style>
 <script src="/js/tracking.js" async></script>
 <!-- BRIDGE:HEAD -->
+<script>(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
 <link rel="stylesheet" href="/assets/bridge.css">
 <script src="/js/bridge.js" defer></script>
 <!-- /BRIDGE:HEAD -->
@@ -551,7 +564,7 @@
   function setFill(range){
     var min = parseFloat(range.min), max = parseFloat(range.max);
     var pct = ((parseFloat(range.value) - min) / (max - min)) * 100;
-    range.style.background = 'linear-gradient(90deg, var(--cyan) ' + pct + '%, rgba(255,255,255,.1) ' + pct + '%)';
+    range.style.background = 'linear-gradient(90deg, var(--cyan) ' + pct + '%, var(--track-empty) ' + pct + '%)';
   }
 
   FIELDS.forEach(function(key){

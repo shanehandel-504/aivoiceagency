@@ -28,6 +28,52 @@ body{font-size:18px;line-height:1.65}
 
 /* ---- Phase 4 · ROI slider ergonomics ---- */
 input[type=range]{height:6px;border-radius:3px;accent-color:var(--bz-cyan)}
+
+/* ============================================================
+   SHARED THEME TOGGLE + LIGHT-TWIN TOKENS (Run 1.5 · B6)
+   bridge.css loads on every stamped page, so this is the ONE
+   site-wide light theme. Values are AA-safe and match guide.css's
+   homepage remap. Default (dark) is untouched — light only flips
+   under html[data-theme="light"], set by the shared toggle.
+   ============================================================ */
+.bs-theme{margin-left:8px;min-width:44px;min-height:44px;border-radius:10px;
+  border:1px solid var(--bz-line);background:transparent;color:var(--bz-ink);
+  cursor:pointer;font-size:17px;line-height:1;flex:none}
+.bs-theme:hover{border-color:var(--bz-cyan)}
+.bs-theme:focus-visible{outline:2px solid var(--bz-cyan);outline-offset:3px}
+/* group the toggle with the burger on the right (theme's auto pushes the pair;
+   drop the burger's own auto so they don't both grab free space = mid-bar float) */
+@media(max-width:820px){.bs-theme{margin-left:auto}.bnav-burger{margin-left:8px}}
+
+html[data-theme="light"]{
+  /* CIRCULANT tokens (token-driven pages flip with these) */
+  --void:#F4F6FA; --void-raise:#FFFFFF; --ink:#10131A; --matter:#10131A;
+  --ink-mute:#5A6272; --dim:rgba(16,19,26,.64);
+  --cyan:#00749C; --cyan-bright:#005E80; --cyan-active:#005E80;
+  --live-green:#0B7E56; --live-green-bright:#0B7E56;
+  --gold:#9A6200; --gold-bright:#9A6200; --violet:#6355E6;
+  --line:rgba(16,19,26,.12); --line-strong:rgba(0,116,156,.4);
+  /* BRIDGE chrome tokens */
+  --bz-void:#F4F6FA; --bz-ink:#10131A; --bz-cyan:#00749C;
+  --bz-line:rgba(0,116,156,.28); --bz-surface:rgba(255,255,255,.88);
+  --ink-2:#5A6272;
+  color-scheme:light;
+}
+html[data-theme="light"] body{background:var(--bz-void)}
+/* bridge chrome fixes for hardcoded colors under light */
+html[data-theme="light"] .bnav-tel:hover{color:#005E80}
+html[data-theme="light"] .bnav-drop{background:rgba(255,255,255,.98)}
+html[data-theme="light"] .bnav-drop a:hover{background:rgba(0,116,156,.08)}
+html[data-theme="light"] .bnav-cta{color:#FFFFFF}
+html[data-theme="light"] .bfoot-action .bf-book{color:#FFFFFF}
+html[data-theme="light"] .bcallbar{background:#FFFFFF}
+/* AA: white text on the darkened light-cyan fill (near-black failed 4.5:1) */
+html[data-theme="light"] .bcallbar .bcall,
+html[data-theme="light"] .btn-primary,
+html[data-theme="light"] .btn-primary:hover{color:#FFFFFF}
+html[data-theme="light"] .bcallbar .bbook{border-color:rgba(16,19,26,.28);color:var(--bz-ink)}
+@supports not (backdrop-filter:blur(12px)){html[data-theme="light"] .bnav{background:rgba(255,255,255,.97)}}
+@media(max-width:820px){html[data-theme="light"] .bnav,html[data-theme="light"] .bnav-menu{background:rgba(244,246,250,.98)}}
 input[type=range]::-webkit-slider-thumb{width:32px!important;height:32px!important;border-radius:50%;
   background:var(--bz-cyan);border:2px solid var(--bz-void);-webkit-appearance:none;appearance:none;cursor:pointer}
 input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;border-radius:50%;
@@ -81,7 +127,11 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
 .bnav-tel:hover{color:#5ee6ff}
 @media(max-width:1120px){.bnav-top{padding:0 10px;font-size:14px}.bnav-cta{padding:0 13px;font-size:13.5px}}
 @media(max-width:820px){
-  .bnav{min-height:60px}
+  /* B1 ROOT FIX: backdrop-filter on .bnav made it the containing block for its
+     fixed child menu, trapping the overlay inside the 60px nav bar (so it never
+     covered the screen and outside-taps hit the page/iframe behind it). Drop the
+     filter on mobile so the fixed menu resolves against the viewport = full height. */
+  .bnav{min-height:60px;-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(10,10,15,.96)}
   .bnav-burger{display:inline-flex;align-items:center;justify-content:center}
   .bnav-menu{display:none;position:fixed;inset:60px 0 0 0;z-index:899;margin:0;
     flex-direction:column;align-items:stretch;gap:2px;padding:18px 20px 40px;overflow-y:auto;

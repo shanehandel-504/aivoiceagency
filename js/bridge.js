@@ -7,6 +7,44 @@
   var mqMobile = window.matchMedia('(max-width: 820px)');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ============================================================
+     THEME — single shared owner (sun/moon toggle in the nav).
+     Light-twin tokens live in bridge.css (site-wide chrome) +
+     guide.css (homepage backstage tokens). Injected here so EVERY
+     stamped page carries the same header. An early inline script on
+     token pages sets data-theme pre-paint to avoid a flash.
+     ============================================================ */
+  var THEME_KEY = 'bs-theme';
+  var metaTheme = document.querySelector('meta[name="theme-color"]');
+  function applyTheme(t) {
+    if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    else document.documentElement.removeAttribute('data-theme');
+    if (metaTheme) metaTheme.setAttribute('content', t === 'light' ? '#F4F6FA' : '#0A0A0F');
+    var b = document.querySelector('.bs-theme');
+    if (b) {
+      b.textContent = t === 'light' ? '☀' : '☾';
+      b.setAttribute('aria-label', t === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
+      b.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false');
+    }
+  }
+  (function mountTheme() {
+    var navEl = document.querySelector('.bnav');
+    if (!navEl || document.querySelector('.bs-theme')) return;
+    var saved;
+    try { saved = localStorage.getItem(THEME_KEY); } catch (e) {}
+    var btn = document.createElement('button');
+    btn.className = 'bs-theme';
+    btn.type = 'button';
+    btn.addEventListener('click', function () {
+      var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+      applyTheme(next); /* instant — no transition by design */
+    });
+    var burgerEl = navEl.querySelector('.bnav-burger');
+    navEl.insertBefore(btn, burgerEl || null);
+    applyTheme(saved === 'light' || document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+  })();
+
   /* ---------- nav: burger + dropdown groups ---------- */
   var nav = document.querySelector('.bnav');
   if (nav) {
@@ -26,13 +64,15 @@
     function closeMenu() {
       if (!menu) return;
       menu.classList.remove('open');
-      if (burger) burger.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
+      if (burger) { burger.setAttribute('aria-expanded', 'false'); burger.textContent = 'MENU'; }
+      document.body.style.overflow = '';       /* B1: scroll-lock ALWAYS released */
       closeGroups(null);
     }
+    function menuOpen() { return menu && menu.classList.contains('open'); }
 
     if (burger && menu) {
-      burger.addEventListener('click', function () {
+      burger.addEventListener('click', function (e) {
+        e.stopPropagation();                    /* don't let the outside-tap handler re-close it */
         var open = menu.classList.toggle('open');
         burger.setAttribute('aria-expanded', String(open));
         burger.textContent = open ? 'CLOSE' : 'MENU';
@@ -48,16 +88,23 @@
         closeGroups(open ? g : null);
       });
     });
+    /* Esc closes overlay + groups */
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') { closeGroups(null); closeMenu(); }
     });
+    /* B1: tap OUTSIDE the nav (incl. the overlay's own backdrop) closes it */
     document.addEventListener('click', function (e) {
+      if (menuOpen() && (e.target === menu || !nav.contains(e.target))) { closeMenu(); return; }
       if (!nav.contains(e.target)) closeGroups(null);
     });
     /* a tap on any real link closes the mobile overlay */
     if (menu) menu.addEventListener('click', function (e) {
       if (e.target.closest('a')) closeMenu();
     });
+    /* B1: crossing to desktop must never leave the body scroll-locked */
+    function onMq() { if (!mqMobile.matches) closeMenu(); }
+    if (mqMobile.addEventListener) mqMobile.addEventListener('change', onMq);
+    else if (mqMobile.addListener) mqMobile.addListener(onMq);
   }
 
   /* ---------- footer: columns are accordions on mobile, open on desktop ---------- */
