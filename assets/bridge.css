@@ -227,35 +227,49 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
   body.bcallbar-on{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
 }
 
-/* ===================== AVA PULSE (P1 · RUN 1.8) =====================
-   Signature glow for primary CTAs. box-shadow ONLY (a paint effect, never
-   layout) so the rings can never widen the page (P2-safe) and never shift
-   anything (CLS 0). An outset shadow is drawn OUTSIDE the button, so the
-   text is never overlaid — AA contrast is untouched. Zero JS. */
+/* ============== AVA PULSE v2 — TRAVELING RING (RUN 1.9) ==============
+   Primary CTAs get a light that laps the button's outer edge (Apple/Google
+   notification style): a rotating conic-gradient comet masked to a 2px border
+   ring, driven by an @property <angle> on the compositor (zero JS). The ring
+   lives INSIDE the button's own box (inset:0) so it adds zero width (P2-safe)
+   and never shifts layout (CLS 0); masked to the 2px edge it never overlaps the
+   centred text, so AA contrast is untouched. Verified moving on Chromium AND
+   WebKit (iOS Safari 16.4+ animates registered <angle> props). */
+@property --ava-angle{ syntax:"<angle>"; inherits:false; initial-value:0deg; }
 .ava-pulse{position:relative;isolation:isolate}
-.ava-pulse::before,.ava-pulse::after{
-  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1}
-/* breathing colour-journey halo: cyan -> violet -> gold -> cyan (~4.6s) */
-.ava-pulse::before{animation:ava-halo 4.6s ease-in-out infinite}
-/* expanding notification ring (~3.2s): spread grows out then fades to nothing */
-.ava-pulse::after{animation:ava-ring 3.2s cubic-bezier(.33,0,.2,1) infinite}
-@keyframes ava-halo{        /* cyan-anchored; violet + gold are brief hints, not the main colour */
-  0%,20%,100%{box-shadow:0 0 13px 1px color-mix(in srgb,var(--bz-pulse) 34%,transparent)}
-  46%        {box-shadow:0 0 19px 2px color-mix(in srgb,var(--bz-pulse-2) 26%,transparent)}
-  68%        {box-shadow:0 0 18px 2px color-mix(in srgb,var(--bz-pulse-3) 16%,transparent)}
-  84%        {box-shadow:0 0 14px 1px color-mix(in srgb,var(--bz-pulse) 30%,transparent)}
+.ava-pulse::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;z-index:1;
+  /* comet: cyan head, violet->gold tail hints, transparent majority = a light travels the edge.
+     var() fallback 0deg keeps a visible (static) ring on the rare engine without @property. */
+  background:conic-gradient(from var(--ava-angle,0deg),
+    transparent 0 232deg,
+    color-mix(in srgb,var(--bz-pulse-3) 40%,transparent) 280deg,   /* gold tail hint */
+    color-mix(in srgb,var(--bz-pulse-2) 72%,transparent) 320deg,   /* violet tail */
+    var(--bz-pulse) 349deg,                                        /* cyan */
+    color-mix(in srgb,#fff 52%,var(--bz-pulse)) 360deg);           /* bright cyan-white comet tip — pops on cyan buttons */
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+  animation:ava-lap 3.4s linear infinite;
 }
-@keyframes ava-ring{
-  0%  {box-shadow:0 0 0 0 color-mix(in srgb,var(--bz-pulse) 40%,transparent)}
-  62% {box-shadow:0 0 0 11px color-mix(in srgb,var(--bz-pulse) 0%,transparent)}
-  100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--bz-pulse) 0%,transparent)}
+@keyframes ava-lap{ to{ --ava-angle:360deg } }
+/* stagger — sibling CTAs (hero pair) start their lap out of phase */
+.ava-pulse:nth-of-type(2)::before{animation-delay:-1.15s}
+.ava-pulse:nth-of-type(3)::before{animation-delay:-2.25s}
+.ava-pulse:nth-of-type(4)::before{animation-delay:-.6s}
+/* Fallback for engines missing conic-gradient OR color-mix (the ring's colours use
+   color-mix, which shipped LATER than conic — Safari 16.2 vs 12.1 — so guarding on
+   conic alone would leave iOS Safari 15/16.0-16.1 with an invalid, invisible ring).
+   This body is color-mix-free (plain token), so it renders wherever the primary can't. */
+@supports not ((background:conic-gradient(from 0deg,red,red)) and (background:color-mix(in srgb,red,blue))){
+  .ava-pulse::before{
+    background:linear-gradient(100deg,transparent 34%,var(--bz-pulse) 50%,transparent 66%);
+    background-size:260% 100%;background-repeat:no-repeat;
+    animation:ava-sweep 3.4s linear infinite;
+  }
+  @keyframes ava-sweep{ to{ background-position:260% 0 } }
 }
-/* stagger — sibling CTAs (hero pair, tier trio) never pulse in lock-step */
-.ava-pulse:nth-of-type(2)::after{animation-delay:-1.05s}
-.ava-pulse:nth-of-type(2)::before{animation-delay:-1.6s}
-.ava-pulse:nth-of-type(3)::after{animation-delay:-2.1s}
-.ava-pulse:nth-of-type(3)::before{animation-delay:-3s}
-/* quieter variant — cyan-only slow breathe, no ring, no colour march */
+/* quieter variant — social pills keep the cyan slow-breathe halo (no traveling ring) */
 @keyframes ava-halo-soft{
   0%,100%{box-shadow:0 0 8px 0 color-mix(in srgb,var(--bz-pulse) 20%,transparent)}
   50%    {box-shadow:0 0 14px 2px color-mix(in srgb,var(--bz-pulse) 30%,transparent)}
@@ -266,11 +280,13 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
 .ava-pulse-soft:nth-of-type(2)::before{animation-delay:-2.2s}
 .ava-pulse-soft:nth-of-type(3)::before{animation-delay:-4s}
 .ava-pulse-soft:nth-of-type(4)::before{animation-delay:-1.1s}
-/* reduced-motion: no ping, no colour march — one static soft glow */
+/* reduced-motion: no lap — a soft static ring on the edge.
+   Kept color-mix-FREE (rgba/plain) so it also renders on color-mix-lacking engines. */
 @media(prefers-reduced-motion:reduce){
-  .ava-pulse::after,.ava-pulse-soft::before{animation:none;box-shadow:none}
   .ava-pulse::before{animation:none;
-    box-shadow:0 0 14px 1px color-mix(in srgb,var(--bz-pulse) 30%,transparent)}
+    background:conic-gradient(from 210deg,transparent 0 250deg,
+      rgba(139,92,246,.38) 302deg,var(--bz-pulse) 355deg,var(--bz-pulse) 360deg)}
+  .ava-pulse-soft::before{animation:none;box-shadow:0 0 8px 0 rgba(0,212,255,.22)}
 }
 
 /* ============ 2028 VISUAL PACK (Phase 4B — site-wide) ============ */

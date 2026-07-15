@@ -293,12 +293,11 @@ html[data-theme="light"] .bs-stage.is-running .bs-wires path{stroke:rgba(0,116,1
     color-mix(in srgb,var(--violet) 34%,transparent) 52%,color-mix(in srgb,var(--gold) 34%,transparent));
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
-.bs-payoff::before{content:"";position:absolute;inset:-28px 0;z-index:-1;border-radius:50%;pointer-events:none;
-  background:radial-gradient(120% 120% at 50% 50%,color-mix(in srgb,var(--cyan) 16%,transparent),transparent 66%);opacity:0;
-  transition:opacity .48s var(--glide)}   /* P2: 0 horizontal inset so the halo never widens the page (box-shadow carries the side glow) */
+/* RUN 1.9 P1: the radial circle/halo behind JOB BOOKED is REMOVED (Shane).
+   Layered glass depth (box-shadow), the top highlight, the gradient rim (::after),
+   and the coloured keywords all stay. */
 .bs-payoff.in{transform:translate(-50%,-50%);opacity:1;pointer-events:auto;visibility:visible;
   transition:transform .48s var(--quiet-settle),opacity .48s var(--quiet-settle)}
-.bs-payoff.in::before{opacity:1}
 .bs-stage.is-reviewed .bs-payoff{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s var(--glide),visibility 0s .3s}
 .bs-pr{font-size:clamp(26px,5vw,34px);font-weight:700;letter-spacing:.02em;color:var(--live-green);margin:0}
 .bs-pw{font-family:var(--g-mono);font-size:15px;letter-spacing:.1em;color:var(--gold);margin:8px 0 0}  /* P3: gold */
@@ -405,6 +404,10 @@ html[data-theme="light"] .bs-payoff{background:color-mix(in srgb,var(--e3) 96%,t
   background:linear-gradient(165deg,rgba(255,255,255,.11),rgba(255,255,255,.05));
   box-shadow:0 24px 80px rgba(0,0,0,.5),0 0 70px color-mix(in srgb,var(--violet) 22%,transparent),inset 0 1px 0 rgba(255,255,255,.10)}
 @media(min-width:901px){.bs-tier[data-tier="growth"]{transform:scale(1.045)}}
+/* RUN 1.9: desync the 3 tier CTA laps (they aren't DOM siblings, so bridge's
+   nth-of-type stagger can't reach them) */
+.bs-tier[data-tier="growth"] .ava-pulse::before{animation-delay:-1.7s}
+.bs-tier[data-tier="operations"] .ava-pulse::before{animation-delay:-2.9s}
 /* light theme: glass → clean white card */
 html[data-theme="light"] .bs-tier{background:#FFFFFF;box-shadow:var(--e2-sh);
   border-color:color-mix(in srgb,var(--accent) 34%,transparent)}
