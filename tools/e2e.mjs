@@ -96,6 +96,85 @@ async function suite(engine, launcher) {
     await pg.close();
   }
 
+  // ---- RUN 2 · /watch ad lander (390) ----
+  {
+    const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const errs = [];
+    pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
+    pg.on('pageerror', (e) => errs.push(e.message));
+    await pg.goto(BASE + '/watch', { waitUntil: 'networkidle', timeout: 45000 });
+    const w = await pg.evaluate(() => ({
+      overflow: document.documentElement.scrollWidth - window.innerWidth,
+      cards: document.querySelectorAll('.bs-feed .bs-card').length,
+      clips: document.querySelectorAll('[data-clip]').length,
+      preloadNone: [...document.querySelectorAll('[data-clip] audio')].every(a => a.getAttribute('preload') === 'none'),
+      slim: !document.querySelector('.bnav-menu'), theme: !!document.querySelector('.bs-theme'),
+      h1: !!(document.querySelector('h1') && document.querySelector('h1').textContent.trim()),
+      canonical: (document.querySelector('link[rel=canonical]') || {}).href,
+      versioned: [...document.querySelectorAll('link[rel=stylesheet],script[src]')].filter(e => (e.href || e.src || '').match(/\/(assets|css|js)\//)).every(e => (e.href || e.src).includes('?v=')),
+    }));
+    ok('/watch: no h-overflow @390, 16 cards, 3 clips preload=none, slim header + theme, real H1, versioned',
+      w.overflow <= 0 && w.cards === 16 && w.clips === 3 && w.preloadNone && w.slim && w.theme && w.h1 && w.versioned && /\/watch$/.test(w.canonical || ''), JSON.stringify(w));
+    const wp = await pg.evaluate(async () => { await window.__backstage.skipToPayoff(); await new Promise(r => setTimeout(r, 120));
+      return { on: document.querySelectorAll('.bs-card.on').length, payoff: document.querySelector('[data-payoff]').classList.contains('in'), secs: document.querySelector('[data-clock]').textContent }; });
+    ok('/watch: theater streams to payoff (16 on · 11.3s)', wp.on === 16 && wp.payoff && wp.secs === '11.3s', JSON.stringify(wp));
+    ok('/watch: zero console errors', errs.length === 0, errs.join(' | '));
+    await pg.close();
+  }
+
+  // ---- RUN 2 · /overview rebuild (390) — pricing imported from homepage (drift guard) ----
+  {
+    const isLocal = /localhost|127\.0\.0\.1/.test(BASE);
+    const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const errs = [];
+    pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
+    pg.on('pageerror', (e) => errs.push(e.message));
+    await pg.goto(BASE + (isLocal ? '/overview.html' : '/overview'), { waitUntil: 'networkidle', timeout: 45000 });
+    const o = await pg.evaluate(() => {
+      const t = (sel) => { const e = document.querySelector(sel + ' .t-price'); return e ? e.textContent.replace(/\s/g, '') : null; };
+      return {
+        overflow: document.documentElement.scrollWidth - window.innerWidth,
+        starter: t('.bs-tier[data-tier="starter"]'), growth: t('.bs-tier[data-tier="growth"]'), ops: t('.bs-tier[data-tier="operations"]'),
+        ptabs: document.querySelectorAll('.bs-ptab').length, h1: !!(document.querySelector('h1') && document.querySelector('h1').textContent.trim()),
+        nav: !!document.querySelector('.bnav-menu'), crumb: !!document.querySelector('.bcrumb'),
+        ld: document.querySelectorAll('script[type="application/ld+json"]').length,
+      };
+    });
+    ok('/overview: no h-overflow @390, tiers match homepage ($497/$997/$1,997), 3 tabs, full nav+crumb+2 JSON-LD',
+      o.overflow <= 0 && o.starter === '$497/mo' && o.growth === '$997/mo' && o.ops === 'From$1,997/mo' && o.ptabs === 3 && o.h1 && o.nav && o.crumb && o.ld >= 2, JSON.stringify(o));
+    await pg.evaluate(() => document.querySelector('.bs-ptab[data-fit="growth"]').click());
+    ok('/overview: pricing tab highlights Growth', await pg.evaluate(() => document.querySelector('.bs-tier[data-tier="growth"]').classList.contains('is-reco')));
+    await pg.click('.bs-theme'); await pg.waitForTimeout(120);
+    ok('/overview: theme flips light', await pg.evaluate(() => getComputedStyle(document.body).backgroundColor === 'rgb(244, 246, 250)'));
+    ok('/overview: zero console errors', errs.length === 0, errs.join(' | '));
+    await pg.close();
+  }
+
+  // ---- RUN 2 · /booked conversion page (390) — noindex + fires conversion ----
+  {
+    const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const errs = [];
+    pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
+    pg.on('pageerror', (e) => errs.push(e.message));
+    await pg.goto(BASE + '/booked', { waitUntil: 'networkidle', timeout: 45000 });
+    const b = await pg.evaluate(() => {
+      let convFired = false; try { convFired = sessionStorage.getItem('ava_booking_tracked') === '1'; } catch (e) {}
+      const dl = window.dataLayer || [];
+      const bookingComplete = dl.some((a) => a && a[0] === 'event' && a[1] === 'booking_complete');
+      return {
+        overflow: document.documentElement.scrollWidth - window.innerWidth,
+        robots: (document.querySelector('meta[name=robots]') || {}).content, convFired, bookingComplete,
+        steps: document.querySelectorAll('.bk-steps li').length, clip: document.querySelectorAll('[data-clip]').length,
+        cal: !!(document.getElementById('calBtn') && !document.getElementById('calBtn').hidden),
+        h1: !!(document.querySelector('h1') && document.querySelector('h1').textContent.trim()),
+      };
+    });
+    ok('/booked: no h-overflow @390, noindex,nofollow, conversion fired (booking_complete), 3 steps, clip, cal btn, H1',
+      b.overflow <= 0 && /noindex/.test(b.robots || '') && /nofollow/.test(b.robots || '') && b.convFired && b.bookingComplete && b.steps === 3 && b.clip === 1 && b.cal && b.h1, JSON.stringify(b));
+    ok('/booked: zero console errors', errs.length === 0, errs.join(' | '));
+    await pg.close();
+  }
+
   await browser.close();
 }
 

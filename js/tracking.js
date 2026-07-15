@@ -181,8 +181,9 @@
     } catch (e) { /* storage blocked — in-memory flag still dedupes this page */ }
     bookingFiredThisPage = true;
     fb('Schedule');
-    ga('booking_confirmed', { source: source });
-    adsConversion(ADS_BOOKING_LABEL); // live once the two ADS_ constants are real
+    ga('booking_complete', { source: source }); // RUN 2 /booked — GA4 conversion event
+    ga('booking_confirmed', { source: source }); // legacy alias (kept for existing GA4 config)
+    adsConversion(ADS_BOOKING_LABEL); // Google Ads — live once the two ADS_ constants are real
   }
 
   if (PATH === '/booked') {

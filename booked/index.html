@@ -1,72 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0A0A0F">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<script>(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
 <title>You're Booked | AI Voice Agency</title>
 <meta name="description" content="Booking confirmed — AVA will call you at the time you picked.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="https://aivoiceagency.ai/booked">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/circulant.css">
-<script src="/js/tracking.js" async></script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%2300D4FF'/%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%2300D4FF' stroke-opacity='.35' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preload" href="/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --void:#0A0A0F;--panel:#10131A;--line:#23232E;
-  --ink:#EEF0F4;--muted:rgba(238,240,244,.55);--soft:rgba(238,240,244,.78);
-  --cyan:#00D4FF;--cyan-hot:#33EEFF;--live:#00E676;
-  --font-display:'Space Grotesk',sans-serif;--font-mono:'JetBrains Mono',monospace;
-}
-html{-webkit-font-smoothing:antialiased}
-body{background:var(--void);color:var(--soft);font-family:var(--font-display);font-size:17px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
-a{color:var(--cyan);text-decoration:none;transition:color .2s}
-a:hover{color:var(--cyan-hot)}
-.bar{padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,212,255,.08)}
-.mark{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
-.signal{width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px rgba(0,212,255,.7)}
-main{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 20px 80px}
-.card{max-width:560px;width:100%;text-align:center}
-.check{width:72px;height:72px;margin:0 auto 28px;border-radius:50%;border:2px solid rgba(0,230,118,.35);background:rgba(0,230,118,.08);display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--live)}
-h1{color:var(--ink);font-size:clamp(34px,7vw,56px);font-weight:700;letter-spacing:-0.02em;line-height:1.08;margin-bottom:14px}
-.sub{font-size:1.05rem;color:var(--soft);margin-bottom:8px}
-.note{font-size:.92rem;color:var(--muted);margin-bottom:34px}
-.actions{display:flex;flex-direction:column;gap:12px;align-items:center}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 30px;border-radius:12px;font-weight:600;font-size:1rem;letter-spacing:.01em;width:min(340px,100%)}
-.btn-cal{background:var(--cyan);color:#041018}
-.btn-cal:hover{background:var(--cyan-hot);color:#041018}
-.btn-home{border:1px solid var(--line);color:var(--ink)}
-.btn-home:hover{border-color:var(--cyan)}
-footer{padding:22px;text-align:center;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url('/fonts/space-grotesk.woff2') format('woff2')}
+body.bk{background:var(--e0);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;
+  margin:0;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+body.bk::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:radial-gradient(1000px 560px at 50% -12%,var(--key-light),transparent 70%)}
+/* slim header reuses the bridge .bnav (brand + tel only) so bridge.js mounts the
+   theme toggle and the bar matches site chrome. Compact custom tel — NOT .bnav-tel,
+   which bumps to 18px under 820px and would overflow the 390 bar. */
+.bk-tel{margin-left:auto;display:inline-flex;align-items:center;min-height:44px;padding:0 10px;
+  color:var(--cyan);font-weight:700;font-size:14.5px;text-decoration:none;white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.bk-tel:hover{color:var(--cyan-bright)}
+/* confirmation shell */
+.bk-main{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:44px 20px 64px}
+.bk-card{max-width:640px;width:100%;text-align:center}
+.bk-check{width:76px;height:76px;margin:0 auto 24px;border-radius:50%;
+  border:2px solid color-mix(in srgb,var(--live-green) 40%,transparent);
+  background:color-mix(in srgb,var(--live-green) 10%,transparent);
+  display:flex;align-items:center;justify-content:center;font-size:2.1rem;color:var(--live-green)}
+.bk-card h1{font-size:clamp(32px,7vw,52px);font-weight:700;letter-spacing:-.02em;line-height:1.08;
+  color:var(--ink);margin:0 0 12px}
+.bk-sub{font-size:clamp(16px,2.4vw,19px);color:var(--g-read);margin:0 0 6px}
+.bk-note{font-family:var(--g-mono);font-size:13px;color:var(--ink-mute);margin:0 0 30px}
+/* what-happens-next timeline */
+.bk-steps{text-align:left;max-width:520px;margin:0 auto 30px;list-style:none;padding:0}
+.bk-steps li{position:relative;padding:0 0 20px 46px;border-left:1px solid var(--g-line-cyan);margin-left:14px}
+.bk-steps li:last-child{border-left-color:transparent;padding-bottom:0}
+.bk-steps li::before{content:attr(data-n);position:absolute;left:-15px;top:-2px;width:30px;height:30px;
+  border-radius:50%;background:var(--e2);box-shadow:var(--e2-sh);border:1px solid var(--g-line-cyan);
+  color:var(--cyan);font-family:var(--g-mono);font-size:13px;font-weight:700;display:flex;
+  align-items:center;justify-content:center}
+.bk-steps h2{font-size:16px;color:var(--ink);margin:0 0 3px;font-weight:600}
+.bk-steps p{font-size:14.5px;line-height:1.55;color:var(--g-read);margin:0}
+/* actions */
+.bk-actions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-bottom:34px}
+.bk-actions .bs-cta{width:min(360px,100%)}
+/* demo reminder + clip */
+.bk-demo{border-top:1px solid var(--line);padding-top:28px;margin-top:8px;text-align:left}
+.bk-demo .g-eyebrow{text-align:center;margin-bottom:8px}
+.bk-demo .bk-demoline{text-align:center;font-size:15px;color:var(--g-read);margin:0 0 18px}
+.bk-demo .bk-demoline a{color:var(--cyan);font-weight:700;text-decoration:none;font-variant-numeric:tabular-nums}
+/* slim footer */
+.bk-foot{padding:26px 20px;text-align:center;font-family:var(--g-mono);font-size:12px;
+  letter-spacing:.06em;color:var(--ink-mute);border-top:1px solid var(--line)}
+.bk-foot a{color:var(--ink-mute);text-decoration:underline}
+.bk-foot a:hover{color:var(--cyan)}
 </style>
+<link rel="stylesheet" href="/assets/circulant.css?v=7e40048">
+<link rel="stylesheet" href="/assets/guide.css?v=7e40048">
+<link rel="stylesheet" href="/css/backstage.css?v=7e40048">
+<script src="/js/tracking.js?v=7e40048" async></script>
+<!-- BRIDGE:HEAD -->
+<script>window.__ASSET_V='7e40048';(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
+<link rel="stylesheet" href="/assets/bridge.css?v=7e40048">
+<script src="/js/bridge.js?v=7e40048" defer></script>
+<!-- /BRIDGE:HEAD -->
 </head>
-<body>
+<body class="bk">
 
-<header class="bar">
-  <a class="mark" href="/"><span class="signal" aria-hidden="true"></span>AVA — AI Voice Agency</a>
-</header>
+<nav class="bnav" aria-label="Main">
+  <a class="bnav-brand" href="/"><span class="bdot" aria-hidden="true"></span>AI VOICE AGENCY</a>
+  <a class="bk-tel" href="tel:+14142408930" data-event="tel_tap_nav">414-240-8930</a>
+</nav>
 
-<main>
-  <div class="card">
-    <div class="check" aria-hidden="true">✓</div>
-    <h1>You're booked.</h1>
-    <p class="sub">AVA will call you at the time you picked.</p>
-    <p class="note" id="calNote">Your calendar invite is on its way to your email.</p>
-    <div class="actions">
-      <a class="btn btn-cal" id="calBtn" href="#" hidden rel="noopener" target="_blank">Add to Google Calendar</a>
-      <a class="btn btn-home" href="/">Back to AI Voice Agency</a>
+<main class="bk-main">
+  <div class="bk-card">
+    <div class="bk-check" aria-hidden="true">✓</div>
+    <h1>You're on the calendar.</h1>
+    <p class="bk-sub">Your 15-minute call is set. We'll walk your calls and map where AVA fits.</p>
+    <p class="bk-note" id="calNote">Your calendar invite is on its way to your email.</p>
+
+    <ol class="bk-steps">
+      <li data-n="1">
+        <h2>We map your calls</h2>
+        <p>On the call, we walk your services, your service area, your booking rules, and what counts as an emergency.</p>
+      </li>
+      <li data-n="2">
+        <h2>We build AVA around them</h2>
+        <p>We build AVA on your playbook — not a generic script — and connect it to the calendar you already run your day from.</p>
+      </li>
+      <li data-n="3">
+        <h2>You approve it before it goes live</h2>
+        <p>You test AVA on real calls and sign off with your own ears. It only takes live calls once you say go, and we keep tuning after launch.</p>
+      </li>
+    </ol>
+
+    <div class="bk-actions">
+      <a class="bs-cta bs-cta-cyan" id="calBtn" href="#" hidden rel="noopener" target="_blank" data-event="cal_add_booked">Add to Google Calendar</a>
+      <a class="bs-cta bs-cta-line" href="/">Back to AI Voice Agency</a>
+    </div>
+
+    <div class="bk-demo">
+      <p class="g-eyebrow">While you wait</p>
+      <p class="bk-demoline">Want to hear AVA before the call? It answers the demo line right now — <a href="tel:+14142408930" data-event="tel_tap_demo">414-240-8930</a>.</p>
+      <div class="bs-clips">
+        <article class="bs-clip" data-clip>
+          <div class="bs-clip-top">
+            <button class="bs-clip-play" type="button" data-play aria-label="Play a sample call" aria-pressed="false" data-event="hear_play_booked">▶</button>
+            <div class="bs-clip-meta">
+              <span class="bs-clip-label">A sample call: AVA books a 7:00 AM leak visit</span>
+              <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the sample call">
+            </div>
+            <span class="bs-clip-time" data-time>0:00 / 0:46</span>
+          </div>
+          <audio data-audio preload="none"><source src="/audio/v2/plumbing/full.mp3?v=7e40048" type="audio/mpeg"></audio>
+          <details class="bs-clip-tx">
+            <summary>Read the transcript</summary>
+            <div class="tx-body">
+              <p><span class="spk">AVA</span>Thanks for calling — this is AVA. How can I help?</p>
+              <p><span class="spk">Caller</span>My water heater is leaking all over the garage floor. Like, right now.</p>
+              <p><span class="spk">AVA</span>Okay — you called the right place. Quick check: is it spraying, or seeping from the bottom?</p>
+              <p><span class="spk">Caller</span>Seeping. I already shut the water off at the—</p>
+              <p><span class="spk">AVA</span>Perfect — you're ahead of me. That was the exact right move, Sarah.</p>
+              <p><span class="spk">Caller</span>Can someone come tonight? What's that cost?</p>
+              <p><span class="spk">AVA</span>Tonight's emergency visit is one-forty-nine. Or seven A-M tomorrow is our standard fifty-nine dollar trip fee. Which works?</p>
+              <p><span class="spk">Caller</span>Seven's fine. It's contained.</p>
+              <p><span class="spk">AVA</span>Seven A-M tomorrow, booked. Confirmation text is on its way to you right now.</p>
+              <p><span class="spk">AVA</span>Keep a couple towels on it tonight — you handled this exactly right.</p>
+            </div>
+          </details>
+        </article>
+      </div>
+      <p class="bs-disclosure" style="text-align:center">Sample call — AVA's real voice, sample data. Scripted scenario, not a customer recording.</p>
     </div>
   </div>
 </main>
 
-<footer>AI Voice Agency · Kewaskum, WI</footer>
+<footer class="bk-foot">
+  AI VOICE AGENCY · KEWASKUM, WI &nbsp;·&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html">Terms</a>
+</footer>
 
+<script src="/js/backstage.js?v=7e40048" defer></script>
 <script>
 /* Calendar add: if the booking widget passed a start time in the redirect,
  * build a dated one-tap link; otherwise a title-only template (the visitor
