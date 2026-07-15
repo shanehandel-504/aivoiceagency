@@ -166,3 +166,51 @@ body.g-ready .reveal.in{opacity:1;transform:none;transition:opacity .5s var(--ea
 .g-cta h2{font-size:clamp(24px,4vw,32px);color:var(--ink);margin:0 0 18px}
 .g-cta .g-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .g-note{font-size:12.5px;color:var(--ink-mute);margin-top:16px}
+
+/* ============================================================
+   BACKSTAGE TOKENS — Run 1 (AVA Backstage · Wave 0 foundation)
+   Merged HERE per the one-system law: same design language as the
+   CIRCULANT/guide tokens above. Components live in css/backstage.css.
+   Dark is the default; light twins flip via <html data-theme="light">
+   — instant, no transition. Curves: these five are the ONLY curves.
+   ============================================================ */
+:root{
+  /* lane colors */
+  --lane-intake:#00D4FF; --lane-triage:#FFB020; --lane-tools:#9A8CFF; --lane-output:#34E39B;
+  /* elevations e0–e3 + inset top-edge highlight */
+  --e0:#0A0A0F; --e1:#10121A; --e2:#161926; --e3:#1C2030;
+  --e-edge:inset 0 1px 0 rgba(255,255,255,.06);
+  --e1-sh:var(--e-edge);
+  --e2-sh:var(--e-edge),0 10px 30px rgba(0,0,0,.35);
+  --e3-sh:var(--e-edge),0 18px 48px rgba(0,0,0,.5);
+  --key-light:rgba(0,212,255,.07);
+  /* motion curves — HARD-DOCK arrivals · QUIET-SETTLE states ·
+     RECEIPT-POP chips/check · GLIDE crossfades · METRONOME = linear */
+  --hard-dock:cubic-bezier(.16,1,.3,1);
+  --quiet-settle:cubic-bezier(.22,.61,.36,1);
+  --receipt-pop:cubic-bezier(.34,1.56,.64,1);
+  --glide:cubic-bezier(.65,0,.35,1);
+}
+html[data-theme="light"]{
+  /* twins darkened past the spec draft (#0087BE/#A66A00/#0E9D6B) to clear
+     WCAG AA 4.5:1 both as text-on-white and under white button text */
+  --lane-intake:#00749C; --lane-triage:#9A6200; --lane-tools:#6355E6; --lane-output:#0B7E56;
+  --e0:#F4F6FA; --e1:#FFFFFF; --e2:#FFFFFF; --e3:#FFFFFF;
+  --e1-sh:0 1px 3px rgba(16,19,26,.08);
+  --e2-sh:0 4px 14px rgba(16,19,26,.10);
+  --e3-sh:0 10px 32px rgba(16,19,26,.16);
+  --key-light:rgba(0,135,190,.06);
+  /* re-map the shared CIRCULANT / guide / bridge tokens so the whole
+     page flips with one attribute (ink never pure black/white) */
+  --void:#F4F6FA; --void-raise:#FFFFFF; --ink:#10131A; --matter:#10131A;
+  --ink-mute:#5A6272; --dim:rgba(16,19,26,.64);
+  --line:rgba(16,19,26,.12); --line-strong:rgba(0,116,156,.4);
+  --cyan:#00749C; --cyan-bright:#005E80; --cyan-active:#005E80;
+  --live-green:#0B7E56; --live-green-bright:#0B7E56;
+  --gold:#9A6200; --gold-bright:#9A6200;
+  --g-line:rgba(16,19,26,.10); --g-line-cyan:rgba(0,116,156,.28);
+  --g-panel:#FFFFFF; --g-term:#EDF0F6; --g-read:#3A4150;
+  --bz-void:#F4F6FA; --bz-ink:#10131A; --bz-cyan:#00749C;
+  --bz-line:rgba(0,135,190,.28); --bz-surface:rgba(255,255,255,.88);
+  --ink-2:#5A6272;
+}

@@ -1,0 +1,363 @@
+/* ============================================================
+   AVA BACKSTAGE — css/backstage.css  (Run 1 · Wave 0 foundation)
+   Components only. Tokens live in assets/guide.css (BACKSTAGE
+   TOKENS block) on the CIRCULANT base — one system, no forks.
+   Loaded AFTER circulant.css + guide.css, BEFORE bridge.css.
+   Motion law: transform / opacity / box-shadow only. Zero CLS.
+   Curves: --hard-dock arrivals · --quiet-settle states ·
+   --receipt-pop chips+check · --glide crossfades · linear clock.
+   ============================================================ */
+
+/* ---- page base ---- */
+body.backstage{background:var(--e0);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;
+  margin:0;padding-bottom:72px; /* persistent callbar reserve — zero CLS */
+  -webkit-font-smoothing:antialiased}
+/* key light — static, fixed, paints once, behind all content */
+body.backstage::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:radial-gradient(1100px 620px at 72% -8%,var(--key-light),transparent 70%)}
+.bs-section{padding:64px 0}
+.bs-section--tight{padding:36px 0}
+.bs-center{text-align:center}
+.bs-h2{font-size:clamp(26px,4.4vw,38px);line-height:1.12;letter-spacing:-.015em;color:var(--ink);margin:0 0 12px}
+
+/* ---- skip link ---- */
+.bs-skiplink{position:fixed;top:-48px;left:12px;z-index:1000;background:var(--e3);color:var(--ink);
+  box-shadow:var(--e3-sh);border-radius:0 0 10px 10px;padding:12px 18px;text-decoration:none;
+  font-size:14px;transition:top .2s var(--quiet-settle)}
+.bs-skiplink:focus{top:0}
+
+/* ---- CTAs ---- */
+.bs-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;
+  padding:0 26px;border-radius:12px;font-weight:700;font-size:15.5px;letter-spacing:.04em;
+  text-decoration:none;border:1px solid transparent;cursor:pointer;
+  transition:transform .18s var(--quiet-settle),box-shadow .18s var(--quiet-settle)}
+.bs-cta:active{transform:scale(.98)}
+.bs-cta-cyan{background:var(--cyan);color:#03151B}
+.bs-cta-cyan:hover{box-shadow:0 0 24px rgba(0,212,255,.35)}
+html[data-theme="light"] .bs-cta-cyan{color:#FFFFFF}
+.bs-cta-line{background:transparent;color:var(--ink);border-color:var(--line)}
+.bs-cta-line:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ============================================================
+   ORB — one <span class="orb"> + <i>✓</i>. Three paint layers,
+   ZERO per-frame paint: body = static layered radial gradients;
+   ::before = glow halo (opacity only); ::after = conic arc
+   (static gradient, spun by transform, masked to a ring).
+   States via [data-state=idle|active|working|done].
+   ============================================================ */
+.orb{--size:44px;--lane:var(--cyan);
+  position:relative;width:var(--size);height:var(--size);border-radius:50%;
+  display:inline-block;flex:none;vertical-align:middle;
+  background:
+    radial-gradient(circle at 32% 26%,rgba(255,255,255,.85),transparent 31%),
+    radial-gradient(circle at 66% 20%,rgba(255,255,255,.30),transparent 26%),
+    radial-gradient(circle at 50% 118%,rgba(0,0,0,.55),transparent 55%),
+    radial-gradient(circle at 50% 42%,
+      color-mix(in srgb,var(--lane) 62%,#FFFFFF 10%),
+      color-mix(in srgb,var(--lane) 30%,#000000 42%) 78%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.28),
+             inset 0 calc(var(--size)*-.09) calc(var(--size)*.18) rgba(0,0,0,.38),
+             0 0 0 1px color-mix(in srgb,var(--lane) 40%,transparent);
+  opacity:.38;
+  transition:opacity .35s var(--quiet-settle),transform .35s var(--quiet-settle)}
+.orb::before{content:"";position:absolute;inset:-32%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,color-mix(in srgb,var(--lane) 45%,transparent),transparent 68%);
+  opacity:0;transition:opacity .3s var(--quiet-settle)}
+.orb::after{content:"";position:absolute;inset:-4px;border-radius:50%;pointer-events:none;opacity:0;
+  background:conic-gradient(from 0deg,var(--lane) 0 78deg,transparent 78deg 360deg);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3.5px),#000 calc(100% - 3px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - 3.5px),#000 calc(100% - 3px));
+  transition:opacity .25s var(--glide)}
+.orb i{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-weight:800;
+  font-size:calc(var(--size)*.46);line-height:1;color:#FFFFFF;transform:scale(0);pointer-events:none}
+html[data-theme="light"] .orb i{color:#FFFFFF}
+.orb[data-state="active"]{opacity:1;transform:scale(1.06)}
+.orb[data-state="active"]::before{opacity:.5}
+.orb[data-state="working"]{opacity:1;transform:scale(1.06)}
+.orb[data-state="working"]::before{opacity:.75}
+.orb[data-state="working"]::after{opacity:1;animation:orb-arc 900ms linear infinite}
+@keyframes orb-arc{to{transform:rotate(1turn)}}
+.orb[data-state="done"]{opacity:1;transform:none}
+.orb[data-state="done"]::before{opacity:.28}
+.orb[data-state="done"]::after{opacity:1;animation:none;
+  background:conic-gradient(var(--live-green) 0 360deg)}
+.orb[data-state="done"] i{animation:orb-check .38s var(--receipt-pop) forwards}
+@keyframes orb-check{to{transform:scale(1)}}
+
+/* ---- SIGNAL PILL (compact tier): stacked orbs + live seconds + status ----
+   no flex gap — it would cancel the orb stack's negative margin */
+.signal-pill{display:inline-flex;align-items:center;padding:8px 16px 8px 10px;
+  border-radius:999px;background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line)}
+.signal-pill .orb{--size:32px}
+.signal-pill .sp-secs{margin-left:12px}
+.signal-pill .sp-status{margin-left:10px}
+.signal-pill .orb+.orb{margin-left:calc(var(--size)*-.28);box-shadow:inset 0 1px 1px rgba(255,255,255,.28),
+  inset 0 calc(var(--size)*-.09) calc(var(--size)*.18) rgba(0,0,0,.38),
+  0 0 0 2px var(--e1)} /* surface ring on the stack */
+.sp-secs{font-family:var(--g-mono);font-size:13px;font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.sp-status{font-family:var(--g-mono);font-size:11.5px;letter-spacing:.08em;color:var(--ink-mute)}
+
+/* ---- WIRING PANEL (static tier): one orb, dashed lines to systems ---- */
+.wiring-panel{display:grid;grid-template-columns:auto 1fr;gap:0 26px;align-items:center;
+  background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);
+  border-radius:14px;padding:22px 24px;margin:22px 0;max-width:520px}
+.wiring-panel .wp-orb{display:flex;flex-direction:column;align-items:center;gap:8px;
+  font-family:var(--g-mono);font-size:11px;letter-spacing:.14em;color:var(--ink-mute)}
+.wiring-panel .wp-orb .orb{--size:56px}
+.wiring-panel ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.wiring-panel li{position:relative;padding-left:56px;font-family:var(--g-mono);font-size:13px;
+  letter-spacing:.06em;color:var(--ink)}
+.wiring-panel li::before{content:"";position:absolute;left:0;top:50%;width:44px;
+  border-top:1px dashed var(--g-line-cyan)}
+.wiring-panel li::after{content:"";position:absolute;left:46px;top:50%;width:5px;height:5px;
+  margin-top:-2.5px;border-radius:50%;background:var(--cyan)}
+
+/* ---- receipt chips ---- */
+.bs-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;
+  font-family:var(--g-mono);font-size:12px;letter-spacing:.05em;color:var(--ink);
+  background:var(--e2);box-shadow:var(--e2-sh);border:1px solid var(--line);
+  transform:scale(0);animation:orb-check .38s var(--receipt-pop) forwards}
+.bs-chip.ok{border-color:color-mix(in srgb,var(--live-green) 45%,transparent);color:var(--live-green)}
+
+/* ---- persistent bottom callbar (e3, every viewport) ---- */
+.bs-callbar{position:fixed;left:0;right:0;bottom:0;z-index:940;display:flex;gap:10px;
+  align-items:center;justify-content:center;padding:10px max(14px,env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom));
+  background:var(--e3);box-shadow:var(--e3-sh);border-top:1px solid var(--line)}
+.bs-callbar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+  border-radius:10px;font-weight:700;font-size:14px;letter-spacing:.04em;text-decoration:none;padding:0 18px}
+.bs-callbar .bs-cb-tel{background:var(--cyan);color:#03151B;flex:1;max-width:420px}
+html[data-theme="light"] .bs-callbar .bs-cb-tel{color:#FFFFFF}
+.bs-callbar .bs-cb-book{border:1px solid var(--line);color:var(--ink)}
+/* yield to the open mobile burger menu (bnav-menu is z 899, callbar 940) */
+body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
+
+/* ============================================================
+   HOMEPAGE — LAYER 1
+   ============================================================ */
+/* theme toggle (injected by backstage.js into the nav) */
+.bs-theme{margin-left:8px;min-width:44px;min-height:44px;border-radius:10px;border:1px solid var(--bz-line);
+  background:transparent;color:var(--bz-ink);cursor:pointer;font-size:17px;line-height:1}
+.bs-theme:hover{border-color:var(--bz-cyan)}
+
+/* hero */
+.bs-hero{padding:44px 0 8px;text-align:center}
+.bs-hero .g-eyebrow{margin-bottom:10px}
+.bs-hero h1{font-size:clamp(34px,8.6vw,64px);line-height:1.05;letter-spacing:-.02em;
+  margin:0 auto .35em;max-width:16ch;color:var(--ink)}
+.bs-sub{font-size:clamp(15px,2.2vw,18px);line-height:1.55;color:var(--ink-mute);
+  max-width:56ch;margin:0 auto 20px}
+.bs-hcta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.bs-micro{font-family:var(--g-mono);font-size:11.5px;letter-spacing:.1em;color:var(--ink-mute);margin:12px 0 16px}
+/* poster result strip (pre-tap) */
+.bs-result{display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;
+  padding:10px 18px 10px 12px;border-radius:16px;background:var(--e1);box-shadow:var(--e1-sh);
+  border:1px solid var(--g-line-cyan);text-decoration:none;color:var(--ink)}
+.bs-result-line{font-family:var(--g-mono);font-size:13px;letter-spacing:.06em;color:var(--ink-mute)}
+.bs-result-line b{color:var(--live-green);font-weight:700}
+.bs-chipsrow{list-style:none;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+  padding:0;margin:18px 0 0}
+.bs-chipsrow li{font-family:var(--g-mono);font-size:12px;letter-spacing:.05em;color:var(--ink-mute);
+  border:1px solid var(--line);border-radius:999px;padding:7px 14px}
+
+/* ============================================================
+   HOMEPAGE — LAYER 2 · THE THEATER
+   ============================================================ */
+.bs-theater-sub{font-size:clamp(17px,2.4vw,21px);color:var(--ink);margin:0 0 4px;font-weight:600}
+.bs-cutaway{color:var(--ink-mute);font-size:15px;margin:0 0 22px}
+/* trade chips */
+.bs-trades{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.bs-trade{font-family:var(--g-mono);font-size:12px;letter-spacing:.08em;padding:9px 14px;min-height:40px;
+  border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-mute);cursor:pointer;
+  transition:color .2s var(--quiet-settle),border-color .2s var(--quiet-settle)}
+.bs-trade.is-on{border-color:var(--cyan);color:var(--cyan)}
+
+/* the stage */
+.bs-stage{position:relative;background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);
+  border-radius:18px;padding:20px;overflow:hidden}
+.bs-stage .bs-dim{transition:opacity .32s var(--glide)}
+.bs-stage.is-frozen .bs-dim{opacity:.4}
+.bs-stagetop{display:flex;gap:14px;align-items:stretch;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.bs-caller{flex:1;min-width:min(100%,340px);margin:0;max-width:none}
+.bs-clockwrap{display:flex;flex-direction:column;gap:8px;align-items:flex-end;justify-content:space-between}
+.bs-clock{font-family:var(--g-mono);font-size:26px;font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums;min-width:6ch;text-align:right;contain:layout paint}
+.bs-start{font-family:var(--g-mono);font-size:12px;letter-spacing:.12em;padding:10px 16px;min-height:44px;
+  border-radius:10px;border:1px solid var(--cyan);background:transparent;color:var(--cyan);cursor:pointer}
+.bs-start:hover{background:rgba(0,212,255,.08)}
+
+/* lanes + wires */
+.bs-floor{position:relative;margin-bottom:14px}
+.bs-lanes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.bs-lane{background:var(--e2);box-shadow:var(--e2-sh);border-radius:14px;padding:12px 12px 14px;
+  border-top:2px solid var(--lane-c,var(--line))}
+.bs-lane[data-lane="intake"]{--lane-c:var(--lane-intake)}
+.bs-lane[data-lane="triage"]{--lane-c:var(--lane-triage)}
+.bs-lane[data-lane="tools"]{--lane-c:var(--lane-tools)}
+.bs-lane[data-lane="output"]{--lane-c:var(--lane-output)}
+.bs-lane h3{font-family:var(--g-mono);font-size:10.5px;letter-spacing:.18em;color:var(--lane-c);margin:0 0 10px}
+.bs-agent{display:flex;align-items:center;gap:9px;padding:5px 0}
+.bs-agent .orb{--size:32px}
+.bs-aname{font-family:var(--g-mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-mute)}
+.bs-agent[data-live] .bs-aname{color:var(--ink)}
+/* wires overlay + THE LIVE WIRE dot */
+.bs-wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.bs-wires path{fill:none;stroke:rgba(0,212,255,.16);stroke-width:1.5;stroke-dasharray:5 6;
+  transition:stroke .3s var(--quiet-settle)}
+.bs-stage.is-running .bs-wires path{stroke:rgba(0,212,255,.45)}
+html[data-theme="light"] .bs-wires path{stroke:rgba(0,135,190,.22)}
+html[data-theme="light"] .bs-stage.is-running .bs-wires path{stroke:rgba(0,135,190,.5)}
+.bs-dot{position:absolute;top:0;left:0;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;
+  background:var(--wire-c,var(--cyan));pointer-events:none;opacity:0;
+  box-shadow:0 0 10px 3px color-mix(in srgb,var(--wire-c,var(--cyan)) 65%,transparent)}
+.bs-stage.is-running .bs-dot{opacity:1}
+.bs-dot.no-path{display:none}
+
+/* chips row — chips never move after landing; phones get a 2-row reserve
+   so a wrapping chip can't shift the live log mid-run */
+.bs-chips{display:flex;gap:8px;flex-wrap:wrap;min-height:34px;margin:0 0 12px}
+@media(max-width:640px){.bs-chips{min-height:76px}}
+
+/* live log — captions ARE the log; text in DOM from load.
+   Queued lines use an AA-safe ghost color (no opacity trick) so the
+   pending state still passes contrast in both themes. */
+.bs-log{list-style:none;margin:0;padding:14px 16px;background:var(--e0);border-radius:12px;
+  border:1px solid var(--line);font-family:var(--g-mono);font-size:13px;line-height:1.5;
+  display:grid;gap:7px;--log-ghost:#79818F}
+html[data-theme="light"] .bs-log{--log-ghost:#5A6272}
+.bs-log li{display:flex;gap:10px;align-items:baseline;cursor:default;color:var(--log-ghost)}
+.bs-log li:not(.on) .bs-lt,.bs-log li:not(.on) b,.bs-log li:not(.on) .bs-ltx{color:inherit;
+  transition:color .3s var(--quiet-settle)}
+.bs-log li.on{cursor:pointer}
+.bs-log li.on:hover b{color:var(--cyan)}
+.bs-log .bs-lt{color:var(--ink-mute);font-variant-numeric:tabular-nums;min-width:4ch;text-align:right;flex:none;
+  transition:color .3s var(--quiet-settle)}
+.bs-log b{font-weight:600;color:var(--ink);flex:none;min-width:11ch;transition:color .3s var(--quiet-settle)}
+.bs-log .bs-ltx{color:var(--g-read);transition:color .3s var(--quiet-settle)}
+.bs-log li.final b{color:var(--live-green)}
+.bs-log li.final .bs-ltx{color:var(--live-green)}
+
+/* payoff card — e3, docks QUIET-SETTLE 480ms */
+.bs-payoff{position:absolute;left:50%;top:50%;width:min(92%,420px);z-index:5;
+  transform:translate(-50%,-42%);opacity:0;text-align:center;
+  background:var(--e3);box-shadow:var(--e3-sh);border:1px solid var(--g-line-cyan);
+  border-radius:18px;padding:28px 24px;pointer-events:none;visibility:hidden;
+  transition:transform .48s var(--quiet-settle),opacity .48s var(--quiet-settle),visibility 0s .48s}
+.bs-payoff.in{transform:translate(-50%,-50%);opacity:1;pointer-events:auto;visibility:visible;
+  transition:transform .48s var(--quiet-settle),opacity .48s var(--quiet-settle)}
+.bs-pr{font-size:clamp(26px,5vw,34px);font-weight:700;letter-spacing:.02em;color:var(--live-green);margin:0}
+.bs-pw{font-family:var(--g-mono);font-size:15px;letter-spacing:.1em;color:var(--ink);margin:8px 0 0}
+.bs-ps{font-family:var(--g-mono);font-size:12.5px;letter-spacing:.14em;color:var(--ink-mute);margin:6px 0 0;
+  font-variant-numeric:tabular-nums}
+.bs-pt{font-family:var(--g-mono);font-size:12.5px;letter-spacing:.14em;color:var(--cyan);margin:2px 0 0}
+.bs-pcta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 6px}
+.bs-replay{background:none;border:none;color:var(--ink-mute);font-family:var(--g-mono);font-size:12px;
+  letter-spacing:.1em;cursor:pointer;padding:10px;min-height:44px}
+.bs-replay:hover{color:var(--cyan)}
+.bs-pline{font-size:12.5px;color:var(--ink-mute);margin:2px 0 0}
+
+/* replay veil — 180ms crossfade */
+.bs-veil{position:absolute;inset:0;background:var(--e1);opacity:0;pointer-events:none;z-index:6;
+  transition:opacity .18s var(--glide)}
+.bs-veil.on{opacity:1}
+
+/* party trick — phone mockup (e2), recap SMS */
+.bs-phone{position:absolute;right:18px;bottom:18px;z-index:7;width:min(78%,260px);
+  background:var(--e2);box-shadow:var(--e2-sh);border:1px solid var(--line);border-radius:18px;
+  padding:14px;transform:translateY(8px) scale(.96);opacity:0;visibility:hidden;
+  transition:transform .3s var(--receipt-pop),opacity .3s var(--quiet-settle),visibility 0s .3s}
+.bs-phone.in{transform:none;opacity:1;visibility:visible;transition:transform .3s var(--receipt-pop),opacity .3s var(--quiet-settle)}
+.bs-phone .ph-top{font-family:var(--g-mono);font-size:10.5px;letter-spacing:.12em;color:var(--ink-mute);margin-bottom:8px}
+.bs-phone .ph-msg{background:var(--e3);box-shadow:var(--e3-sh);border-radius:12px 12px 12px 4px;
+  padding:10px 12px;font-size:13px;line-height:1.5;color:var(--ink)}
+.bs-phone .ph-time{font-family:var(--g-mono);font-size:10.5px;color:var(--ink-mute);margin-top:6px}
+.bs-disclosure{font-family:var(--g-mono);font-size:11.5px;color:var(--ink-mute);margin-top:12px}
+
+/* ---- objection strip ---- */
+.bs-objections{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 0}
+.bs-ob{background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.bs-ob h3{font-size:16.5px;color:var(--ink);margin:0 0 8px}
+.bs-ob p{font-size:15px;line-height:1.65;color:var(--g-read);margin:0}
+@media(max-width:760px){.bs-objections{grid-template-columns:1fr}}
+
+/* ---- pricing ---- */
+.bs-ptabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.bs-ptab{font-family:var(--g-mono);font-size:12px;letter-spacing:.08em;padding:9px 16px;min-height:44px;
+  border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-mute);cursor:pointer}
+.bs-ptab.is-on{border-color:var(--cyan);color:var(--cyan)}
+.bs-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:900px){.bs-tiers{grid-template-columns:1fr}}
+.bs-tier{background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);border-radius:16px;
+  padding:24px 22px;display:flex;flex-direction:column;gap:0;
+  transition:border-color .25s var(--quiet-settle),box-shadow .25s var(--quiet-settle)}
+.bs-tier.is-reco{border-color:var(--g-line-cyan);box-shadow:var(--e2-sh)}
+.bs-tier .t-flag{font-family:var(--g-mono);font-size:10.5px;letter-spacing:.16em;color:var(--cyan);margin-bottom:10px;min-height:14px}
+.bs-tier .t-name{font-size:18px;font-weight:700;color:var(--ink)}
+.bs-tier .t-price{font-size:32px;font-weight:700;color:var(--gold);margin:8px 0 2px}
+.bs-tier .t-price span{font-size:15px;color:var(--ink-mute);font-weight:500}
+.bs-tier .t-setup{font-family:var(--g-mono);font-size:12px;color:var(--ink-mute);margin-bottom:12px}
+.bs-tier ul{list-style:none;padding:0;margin:0 0 16px;display:grid;gap:8px}
+.bs-tier li{position:relative;padding-left:20px;font-size:14.5px;color:var(--g-read)}
+.bs-tier li::before{content:"▸";position:absolute;left:0;color:var(--cyan)}
+.bs-tier .bs-cta{margin-top:auto}
+
+/* ---- book / escape ---- */
+.bs-escape{font-size:15px;color:var(--ink-mute);margin:14px 0 0}
+.bs-escape a{color:var(--cyan);text-decoration:none;font-weight:600}
+
+/* ---- foot band: socials + news + signature ---- */
+.bs-footband{border-top:1px solid var(--line);padding:36px 0 28px}
+.bs-footgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+@media(max-width:760px){.bs-footgrid{grid-template-columns:1fr}}
+.bs-footband h3{font-family:var(--g-mono);font-size:11px;letter-spacing:.18em;color:var(--ink-mute);margin:0 0 12px}
+.bs-social{display:flex;flex-wrap:wrap;gap:8px}
+.bs-social a{font-family:var(--g-mono);font-size:12.5px;letter-spacing:.05em;color:var(--ink);
+  text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:9px 15px;min-height:40px;
+  display:inline-flex;align-items:center}
+.bs-social a:hover{border-color:var(--cyan);color:var(--cyan)}
+.bs-news{display:grid;gap:8px}
+.bs-news a{font-size:14.5px;color:var(--g-read);text-decoration:none}
+.bs-news a:hover{color:var(--cyan)}
+.bs-sig{font-family:var(--g-mono);font-size:12px;letter-spacing:.22em;color:var(--ink-mute);
+  text-align:center;margin:30px 0 0}
+
+/* bridge's interior-page scroll-reveal keys on the retired .pod — neutralize
+   it here so homepage sections never flash hidden after first paint */
+body.backstage .brv{opacity:1!important;transform:none!important;transition:none!important}
+
+/* ---- light-theme fixes for bridge chrome (hardcoded colors) ---- */
+html[data-theme="light"] .bnav-tel:hover{color:#005E80}
+html[data-theme="light"] .bnav-drop{background:rgba(255,255,255,.98)}
+html[data-theme="light"] .bnav-drop a:hover{background:rgba(0,135,190,.08)}
+html[data-theme="light"] .bnav-cta{color:#FFFFFF}
+html[data-theme="light"] .bfoot-action .bf-book{color:#FFFFFF}
+html[data-theme="light"] .card{background:#FFFFFF;border-color:rgba(16,19,26,.1)}
+@supports not (backdrop-filter:blur(12px)){html[data-theme="light"] .bnav{background:rgba(255,255,255,.97)}}
+@media(max-width:820px){html[data-theme="light"] .bnav-menu{background:rgba(244,246,250,.98)}}
+
+.bs-stage.is-running .bs-start,.bs-stage.is-frozen .bs-start{visibility:hidden}
+.bs-stage.bs-skip *{transition-duration:0ms!important;animation-duration:0ms!important}
+
+/* ---- performance / motion discipline ---- */
+.bs-stage.is-live .orb[data-state="working"],
+.bs-stage.is-live .bs-dot{will-change:transform,opacity} /* granted by .is-live, revoked on freeze */
+.bs-stage:not(.is-live) *{animation-play-state:paused}
+/* receipt chips are one-shot fill-forwards pops — the final "✓ BOOKED" chip
+   lands in the same task freeze() revokes .is-live, so exempt chips from the pause */
+.bs-stage:not(.is-live) .bs-chip{animation-play-state:running}
+@media(max-width:860px){
+  .bs-lanes{grid-template-columns:repeat(2,1fr)}
+  .bs-stagetop{flex-direction:column}
+  .bs-clockwrap{flex-direction:row;align-items:center;justify-content:space-between}
+  .bs-phone{right:10px;bottom:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .orb,.orb::before,.orb::after,.bs-log li,.bs-payoff,.bs-phone,.bs-veil{transition-duration:.01ms!important}
+  .orb[data-state="working"]::after{animation:none;
+    background:conic-gradient(from 0deg,var(--lane) 0 270deg,transparent 270deg 360deg);
+    animation:orb-breathe 2.4s ease-in-out infinite}
+  @keyframes orb-breathe{0%,100%{opacity:.55}50%{opacity:1}}
+  .orb[data-state="done"] i{animation:none;transform:scale(1)}
+  .bs-chip{animation:none;transform:scale(1)}
+  .bs-dot{display:none} /* Live Wire dot hidden; wires light by opacity only */
+}
