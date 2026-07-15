@@ -5,15 +5,42 @@ deployed (tools/ is in .vercelignore). Re-runnable: if markers exist the
 block between them is replaced; legacy nav/footer/mobile-cta blocks are
 replaced once on first stamp. Run from repo root:  python tools/stamp.py
 """
-import re, sys, io, os
+import re, sys, io, os, subprocess
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
+def git_ver():
+    """Short git hash → the cache-busting ?v= token (Run 1.6). 'dev' if git absent."""
+    try:
+        return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'],
+                                       cwd=ROOT, stderr=subprocess.DEVNULL).decode().strip()
+    except Exception:
+        return 'dev'
+
+
+VER = git_ver()
+
+# CACHE ARMOR (Run 1.6): version-stamp every first-party CSS/JS/JSON/audio URL in an
+# href/src attribute with ?v=<hash>. Matches ANY root-relative first-party path (so
+# root-level bundles /styles.css and /site.js are covered, not just /assets|css|js/...).
+# (?<![\w-]) skips data-src / data-href; /(?!/) skips protocol-relative //cdn URLs;
+# external http(s):// and data: URIs never start with a single /; fonts (.woff2) are
+# intentionally excluded (filename-immutable). Re-runnable: an existing ?v is replaced.
+ASSET_RE = re.compile(
+    r'(?<![\w-])((?:href|src)=")(/(?!/)[^"?\s]+\.(?:css|js|json|mp3|wav|ogg|m4a))(?:\?v=[^"]*)?(")')
+
+
+def version_stamp(c):
+    return ASSET_RE.sub(lambda m: m.group(1) + m.group(2) + '?v=' + VER + m.group(3), c)
+
+
+# __ASSET_V is read by backstage.js so JS-level fetches (e.g. /data/calls.json) bust too.
 HEAD = '''<!-- BRIDGE:HEAD -->
-<script>(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
+<script>window.__ASSET_V='%s';(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
 <link rel="stylesheet" href="/assets/bridge.css">
 <script src="/js/bridge.js" defer></script>
-<!-- /BRIDGE:HEAD -->'''
+<!-- /BRIDGE:HEAD -->''' % VER
 
 NAV = '''<!-- BRIDGE:NAV -->
 <nav class="bnav" aria-label="Main">
@@ -280,6 +307,9 @@ def stamp(page):
             c = done
         elif 'BreadcrumbList' not in c:
             c = c.replace('</head>', ld + '\n</head>', 1)
+
+    # --- cache armor: version-stamp first-party asset URLs (last, over the whole page) ---
+    c = version_stamp(c)
 
     if c != orig:
         with io.open(path, 'w', encoding='utf-8', newline='\n') as fh:

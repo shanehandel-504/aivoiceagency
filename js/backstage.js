@@ -106,7 +106,8 @@
   function hydrate() {
     if (DATA) return Promise.resolve(DATA);
     if (hydrating) return hydrating;
-    hydrating = fetch('/data/calls.json').then(function (r) { return r.json(); }).then(function (j) {
+    var callsUrl = '/data/calls.json' + (window.__ASSET_V ? '?v=' + window.__ASSET_V : ''); /* cache armor */
+    hydrating = fetch(callsUrl).then(function (r) { return r.json(); }).then(function (j) {
       DATA = j; agents = j.agents;
       agents.forEach(function (a, i) { agentIdx[a.id] = i; });
       trade = j.trades[0];
@@ -494,4 +495,49 @@
       });
     }
   };
+})();
+
+/* ============================================================
+   HEAR AVA — audio clip player (Run 1.6, self-contained).
+   Native <audio preload="none">, never autoplay, one plays at a
+   time. Independent of the theater IIFE above.
+   ============================================================ */
+(function () {
+  'use strict';
+  var clips = [].slice.call(document.querySelectorAll('[data-clip]'));
+  if (!clips.length) return;
+  function fmt(s) { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+  var players = [];
+  clips.forEach(function (clip) {
+    var audio = clip.querySelector('[data-audio]');
+    var btn = clip.querySelector('[data-play]');
+    var scrub = clip.querySelector('[data-scrub]');
+    var time = clip.querySelector('[data-time]');
+    if (!audio || !btn || !scrub || !time) return;
+    var dur = 0;
+    function paint() {
+      var cur = audio.currentTime || 0;
+      time.textContent = fmt(cur) + ' / ' + fmt(dur || audio.duration || 0);
+      if (dur && !scrub.matches(':active')) scrub.value = (cur / dur * 100).toFixed(1);
+    }
+    audio.addEventListener('loadedmetadata', function () { dur = audio.duration; paint(); });
+    audio.addEventListener('timeupdate', paint);
+    audio.addEventListener('ended', function () { stop(); audio.currentTime = 0; paint(); }); /* rewind so paint() lands on 0:00 */
+    scrub.addEventListener('input', function () { if (dur) { audio.currentTime = scrub.value / 100 * dur; paint(); } });
+    function play() {
+      players.forEach(function (p) { if (p.stop !== stop) p.stop(); }); /* one at a time */
+      audio.play().catch(function () {});
+      clip.classList.add('is-playing'); btn.textContent = '⏸';
+      btn.setAttribute('aria-pressed', 'true');
+      btn.setAttribute('aria-label', btn.getAttribute('aria-label').replace('Play', 'Pause'));
+    }
+    function stop() {
+      if (!audio.paused) audio.pause();
+      clip.classList.remove('is-playing'); btn.textContent = '▶';
+      btn.setAttribute('aria-pressed', 'false');
+      btn.setAttribute('aria-label', btn.getAttribute('aria-label').replace('Pause', 'Play'));
+    }
+    btn.addEventListener('click', function () { audio.paused ? play() : stop(); });
+    players.push({ stop: stop });
+  });
 })();
