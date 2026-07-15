@@ -95,10 +95,17 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
 .bnav a,.bnav button{font-family:inherit;text-decoration:none}
 .bnav-brand{display:inline-flex;align-items:center;gap:10px;color:var(--bz-ink);
   font-weight:700;font-size:14.5px;letter-spacing:.14em;min-height:var(--tap);white-space:nowrap}
-.bdot{width:10px;height:10px;border-radius:50%;background:var(--bz-cyan);flex:none;
-  box-shadow:0 0 12px rgba(0,212,255,.5)}
-@keyframes bdot-breathe{0%,100%{box-shadow:0 0 8px rgba(0,212,255,.35)}50%{box-shadow:0 0 16px 3px rgba(0,212,255,.6)}}
-.bdot{animation:bdot-breathe 3.2s ease-in-out infinite}
+/* P3 · brand dot RADIATES — a bright cyan halo + slow breathing pulse.
+   Glow via box-shadow only (zero layout / zero CLS); a ::before halo layer
+   animates by opacity so the pulse is a compositor-only paint. Both themes. */
+.bdot{position:relative;width:10px;height:10px;border-radius:50%;background:var(--bz-cyan);flex:none;
+  box-shadow:0 0 16px 2px color-mix(in srgb,var(--bz-cyan) 75%,transparent),
+             0 0 4px color-mix(in srgb,var(--bz-cyan) 90%,transparent)}
+.bdot::before{content:"";position:absolute;inset:-9px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,color-mix(in srgb,var(--bz-cyan) 55%,transparent),transparent 68%);
+  opacity:.5;animation:bdot-breathe 3.6s ease-in-out infinite}
+@keyframes bdot-breathe{0%,100%{opacity:.32;transform:scale(.85)}50%{opacity:.85;transform:scale(1.12)}}
+@media(prefers-reduced-motion:reduce){.bdot::before{animation:none;opacity:.55}}
 .bnav-burger{display:none;margin-left:auto;min-width:48px;min-height:48px;background:transparent;
   border:1px solid var(--bz-line);border-radius:10px;color:var(--bz-ink);
   font-weight:700;font-size:12px;letter-spacing:.12em;cursor:pointer;padding:0 14px}

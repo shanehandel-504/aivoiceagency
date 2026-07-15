@@ -49,7 +49,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="/assets/circulant.css?v=e638a51">
+<link rel="stylesheet" href="/assets/circulant.css?v=6421452">
 <style>
   :root{
     --void:#0A0A0F;
@@ -65,6 +65,7 @@
     --line-cyan:rgba(0,212,255,.22);
     --track-empty:rgba(255,255,255,.1);
     --btn-ink:#04121a;
+    --violet:#8B5CF6; --gold:#FFB800;   /* P2.3 tile accents (donor) */
     --maxw:1080px;
     --radius:16px;
   }
@@ -74,6 +75,7 @@
     --muted:#5A6272; --faint:#5A6272; --cyan:#00749C; --cyan-active:#005E80;
     --cyan-soft:rgba(0,116,156,.10); --line:rgba(16,19,26,.12); --line-cyan:rgba(0,116,156,.28);
     --track-empty:rgba(16,19,26,.14); --btn-ink:#FFFFFF;
+    --violet:#6355E6; --gold:#9A6200;
     color-scheme:light;
   }
   html[data-theme="light"] body{ background:var(--void); color:var(--matter); }
@@ -89,7 +91,8 @@
     -webkit-font-smoothing:antialiased;
     text-rendering:optimizeLegibility;
     overflow-x:hidden;
-    padding-bottom:78px; /* room for mobile sticky CTA; reset >=768px */
+    overscroll-behavior-y:none; /* P2.4: no rubber-band "scroll past the footer" on iOS */
+    /* bottom reserve for the mobile call bar is owned by bridge.css (body.bcallbar-on) */
   }
   .mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
   a{color:var(--cyan);text-decoration:none}
@@ -101,18 +104,11 @@
   .btn:focus-visible{outline:2px solid var(--cyan-active);outline-offset:3px}
   .share:focus-visible{outline:2px solid var(--cyan-active);outline-offset:2px}
 
-  /* ---------- top waveform ---------- */
-  .topwave{
-    position:absolute;
-    top:0;left:0;right:0;
-    height:140px;
-    pointer-events:none;
-    z-index:0;
-    will-change:transform,opacity;
-    -webkit-mask-image:linear-gradient(180deg,#000 35%,transparent 100%);
-            mask-image:linear-gradient(180deg,#000 35%,transparent 100%);
-  }
-  #wave{width:100%;height:100%;display:block}
+  /* P2.1: the generic waveform header is gone. A static key-light glow (like the
+     homepage) sits behind the hero — fixed, paints once, zero CLS, no scroll transform. */
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+    background:radial-gradient(1100px 560px at 72% -6%,rgba(0,212,255,.08),transparent 70%)}
+  html[data-theme="light"] body::before{background:radial-gradient(1100px 560px at 72% -6%,rgba(0,116,156,.07),transparent 70%)}
 
   /* ---------- layout ---------- */
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px;position:relative;z-index:1}
@@ -127,10 +123,10 @@
   .brandbar .name{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500}
 
   /* ---------- hero ---------- */
-  .hero{padding:64px 0 18px;text-align:center}
+  .hero{padding:40px 0 12px;text-align:center}
   .eyebrow{
     font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.22em;
-    text-transform:uppercase;color:var(--cyan);margin-bottom:20px;opacity:.9
+    text-transform:uppercase;color:var(--cyan);margin-bottom:14px;opacity:.9
   }
   h1{
     font-size:clamp(2.1rem,7.4vw,4rem);
@@ -144,19 +140,19 @@
   }
   .scrollcue{margin-top:30px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
 
-  /* ---------- calculator ---------- */
-  .calc{padding:44px 0 28px}
+  /* ---------- calculator (P2.2: denser — slider block ≤ ~1.5 screens on mobile) ---------- */
+  .calc{padding:22px 0 20px}
   .panel{
     background:linear-gradient(180deg,var(--panel),var(--void));
     border:1px solid var(--line);
     border-radius:var(--radius);
-    padding:clamp(22px,4vw,38px);
+    padding:clamp(18px,3.4vw,30px);
   }
-  .panel-title{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:26px;font-family:'IBM Plex Mono',monospace}
+  .panel-title{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:16px;font-family:'IBM Plex Mono',monospace}
 
-  .field{margin-bottom:30px}
-  .field:last-of-type{margin-bottom:6px}
-  .field-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
+  .field{margin-bottom:18px}
+  .field:last-of-type{margin-bottom:4px}
+  .field-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:9px}
   .field-head label{font-size:clamp(.95rem,2.4vw,1.05rem);font-weight:500;color:var(--matter)}
   .field-val{display:flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-height:44px;transition:border-color .15s,box-shadow .15s}
   .field-val:focus-within{border-color:var(--cyan-active);box-shadow:0 0 0 2px rgba(0,229,255,.4)}
@@ -214,14 +210,22 @@
   .rc.hero-result .rc-num{font-size:clamp(2rem,9vw,4.4rem);text-shadow:0 0 30px rgba(0,212,255,.35)}
   .rc.hero-result .rc-sub{margin-top:8px;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
 
-  /* ---------- the fix ---------- */
-  .fix{padding:64px 0 28px;text-align:center}
+  /* ---------- the fix (P2.3: DONOR skin — glass tiles, per-card accents) ---------- */
+  .fix{padding:40px 0 24px;text-align:center}
   .fix h2{font-size:clamp(1.5rem,4.5vw,2.2rem);font-weight:600;letter-spacing:-.01em;max-width:22ch;margin:0 auto}
   .fix h2 em{font-style:italic;color:var(--cyan);font-weight:400}
-  .tiles{display:grid;grid-template-columns:1fr;gap:14px;margin-top:38px;text-align:left}
-  .tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px}
-  .tile .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--cyan-soft);border:1px solid var(--line-cyan);margin-bottom:16px}
-  .tile .ic svg{width:24px;height:24px;stroke:var(--cyan);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .tiles{display:grid;grid-template-columns:1fr;gap:18px;margin-top:34px;text-align:left;max-width:var(--maxw);margin-left:auto;margin-right:auto}
+  .tile{--tacc:var(--cyan);position:relative;border-radius:20px;padding:28px 24px;
+    background:linear-gradient(165deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+    border:1px solid color-mix(in srgb,var(--tacc) 22%,transparent);
+    box-shadow:0 16px 50px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)}
+  .tile:nth-child(2){--tacc:var(--violet)}
+  .tile:nth-child(3){--tacc:var(--gold)}
+  html[data-theme="light"] .tile{background:#FFFFFF;box-shadow:0 10px 32px rgba(16,19,26,.10);border-color:color-mix(in srgb,var(--tacc) 32%,transparent)}
+  .tile .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+    background:color-mix(in srgb,var(--tacc) 12%,transparent);
+    border:1px solid color-mix(in srgb,var(--tacc) 40%,transparent);margin-bottom:16px}
+  .tile .ic svg{width:24px;height:24px;stroke:var(--tacc);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .tile h3{font-size:1.15rem;font-weight:600;margin-bottom:6px}
   .tile p{color:var(--muted);font-size:.95rem;font-weight:300}
 
@@ -274,9 +278,8 @@
   }
   @media(min-width:768px){
     .sticky{display:none}
-    body{padding-bottom:0}
-    .hero{padding:92px 0 24px}
-    .topwave{height:170px}
+    .hero{padding:64px 0 22px}
+    .calc{padding:32px 0 24px}
   }
 
   @media(prefers-reduced-motion:reduce){
@@ -284,19 +287,17 @@
     *{transition:none!important}
   }
 </style>
-<script src="/js/tracking.js?v=e638a51" async></script>
+<script src="/js/tracking.js?v=6421452" async></script>
 <!-- BRIDGE:HEAD -->
-<script>window.__ASSET_V='e638a51';(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
-<link rel="stylesheet" href="/assets/bridge.css?v=e638a51">
-<script src="/js/bridge.js?v=e638a51" defer></script>
+<script>window.__ASSET_V='6421452';(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
+<link rel="stylesheet" href="/assets/bridge.css?v=6421452">
+<script src="/js/bridge.js?v=6421452" defer></script>
 <!-- /BRIDGE:HEAD -->
 <!-- BRIDGE:CRUMBLD -->
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://aivoiceagency.ai/"},{"@type":"ListItem","position":2,"name":"ROI Calculator","item":"https://aivoiceagency.ai/roi"}]}</script>
 <!-- /BRIDGE:CRUMBLD -->
 </head>
 <body>
-
-<div class="topwave" id="topwave" aria-hidden="true"><canvas id="wave"></canvas></div>
 
 <!-- BRIDGE:NAV -->
 <nav class="bnav" aria-label="Main">
@@ -659,77 +660,9 @@
   }
   compute();
 
-  /* ---------- waveform ---------- */
-  (function(){
-    var canvas = document.getElementById('wave');
-    if(!canvas) return;
-    var ctx = canvas.getContext('2d');
-    var w = 0, h = 0, dpr = 1;
-    function size(){
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = canvas.clientWidth; h = canvas.clientHeight;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    size();
-    window.addEventListener('resize', size);
-
-    var waves = [
-      { len:0.010, sp:0.020, amp:0.30, a:0.16, lw:1 },
-      { len:0.016, sp:-0.028, amp:0.42, a:0.22, lw:1 },
-      { len:0.024, sp:0.034, amp:0.22, a:0.55, lw:2 }
-    ];
-    var t = 0;
-    function draw(){
-      ctx.clearRect(0, 0, w, h);
-      for(var i=0;i<waves.length;i++){
-        var wv = waves[i];
-        ctx.beginPath();
-        for(var x=0;x<=w;x+=4){
-          var y = h*0.5 + Math.sin(x*wv.len + t*wv.sp + i*1.7) * h * wv.amp;
-          if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-        }
-        ctx.strokeStyle = 'rgba(0,212,255,' + wv.a + ')';
-        ctx.lineWidth = wv.lw;
-        ctx.shadowColor = 'rgba(0,212,255,.6)';
-        ctx.shadowBlur = (i === waves.length-1) ? 10 : 0;
-        ctx.stroke();
-      }
-    }
-    var raf = null;
-    function frame(){
-      draw();
-      t += 1;
-      raf = document.hidden ? null : requestAnimationFrame(frame);   // pause in background tabs
-    }
-    if(reduceMotion){ draw(); }                       // single static frame, no loop
-    else if(!document.hidden){ raf = requestAnimationFrame(frame); }
-    document.addEventListener('visibilitychange', function(){
-      if(!document.hidden && !reduceMotion && !raf){ raf = requestAnimationFrame(frame); }
-    });
-  })();
-
-  /* ---------- parallax + mobile sticky cta ---------- */
-  var topwave = document.getElementById('topwave');
-  var sticky  = document.getElementById('sticky');
-  var ticking = false;
-  function onScroll(){
-    if(ticking) return;
-    ticking = true;
-    requestAnimationFrame(function(){
-      var y = window.pageYOffset || 0;
-      if(topwave && !reduceMotion){
-        topwave.style.transform = 'translateY(' + (y * 0.35) + 'px)';
-        topwave.style.opacity = Math.max(0, 1 - y / 220);
-      }
-      if(sticky){
-        if(y > 520) sticky.classList.add('show'); else sticky.classList.remove('show');
-      }
-      ticking = false;
-    });
-  }
-  window.addEventListener('scroll', onScroll, { passive:true });
-  onScroll();
+  /* P2.1/P2.4: the waveform canvas + its scroll parallax are gone — the header is a
+     static key-light glow (CSS body::before), which also removes the on-scroll
+     transform that fed the mobile "keeps scrolling past the footer" feel. */
 
   /* ---------- share / copy link ---------- */
   var shareBtn = document.getElementById('share');

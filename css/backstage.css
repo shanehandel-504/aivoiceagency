@@ -338,35 +338,90 @@ html[data-theme="light"] .bs-stage.is-running .bs-wires path{stroke:rgba(0,116,1
 .bs-ptab{font-family:var(--g-mono);font-size:12px;letter-spacing:.08em;padding:9px 16px;min-height:44px;
   border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-mute);cursor:pointer}
 .bs-ptab.is-on{border-color:var(--cyan);color:var(--cyan)}
-/* pricing — legacy TREATMENT ported onto the token cards (Run 1.6 · skin only):
-   featured card lifts with a cyan ring, 34px price, green-✓ divider bullets,
-   hover lift. Content is frozen; this block changes styling only. */
-.bs-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
-@media(max-width:900px){.bs-tiers{grid-template-columns:1fr}}
-.bs-tier{background:var(--e1);box-shadow:var(--e1-sh);border:2px solid transparent;border-radius:18px;
-  padding:24px 22px;display:flex;flex-direction:column;gap:0;
-  transition:transform .2s var(--quiet-settle),border-color .2s var(--quiet-settle),box-shadow .2s var(--quiet-settle)}
-.bs-tier.is-reco{border-color:var(--cyan);
-  box-shadow:0 0 0 4px color-mix(in srgb,var(--cyan) 16%,transparent),var(--e2-sh);
-  transform:translateY(-6px)}
-/* hover-lift only on real pointer devices — a tap must not leave a card floating on touch */
-@media(hover:hover){
-  .bs-tier:hover{transform:translateY(-5px);border-color:color-mix(in srgb,var(--cyan) 55%,transparent)}
-  .bs-tier.is-reco:hover{transform:translateY(-11px)}
-}
-.bs-tier .t-flag{font-family:var(--g-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--cyan);font-weight:700;margin-bottom:6px;min-height:16px}
+/* ============================================================
+   pricing — DONOR treatment (overview.html purple glass tiers) ported onto
+   the tokens (Run 1.7 · SKIN ONLY, content frozen). Per-card accents:
+   Starter=cyan · Growth=violet (the featured hero) · Operations=gold.
+   Radial glow behind. Price stays gold per the ACCENT LAW. Both themes.
+   ============================================================ */
+.bs-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch;
+  position:relative;max-width:1080px;margin:0 auto}
+.bs-tiers::before{content:"";position:absolute;inset:-80px 0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 52% 54% at 50% 44%,color-mix(in srgb,var(--violet) 16%,transparent),transparent 70%),
+    radial-gradient(ellipse 74% 64% at 50% 56%,color-mix(in srgb,var(--cyan) 7%,transparent),transparent 72%)}
+@media(max-width:900px){.bs-tiers{grid-template-columns:1fr;gap:16px}.bs-tiers::before{inset:-24px 0}}
+.bs-tier{--accent:var(--cyan);
+  --accent-line:color-mix(in srgb,var(--cyan) 45%,transparent);
+  --accent-soft:color-mix(in srgb,var(--cyan) 12%,transparent);
+  --accent-glow:color-mix(in srgb,var(--cyan) 35%,transparent);
+  position:relative;z-index:1;display:flex;flex-direction:column;border-radius:20px;padding:34px 26px 26px;
+  background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.04));
+  border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);
+  box-shadow:0 18px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .25s var(--quiet-settle),box-shadow .25s var(--quiet-settle),border-color .25s var(--quiet-settle)}
+.bs-tier[data-tier="growth"]{--accent:var(--violet);
+  --accent-line:color-mix(in srgb,var(--violet) 55%,transparent);
+  --accent-soft:color-mix(in srgb,var(--violet) 14%,transparent);
+  --accent-glow:color-mix(in srgb,var(--violet) 40%,transparent)}
+.bs-tier[data-tier="operations"]{--accent:var(--gold);
+  --accent-line:color-mix(in srgb,var(--gold) 45%,transparent);
+  --accent-soft:color-mix(in srgb,var(--gold) 12%,transparent);
+  --accent-glow:color-mix(in srgb,var(--gold) 32%,transparent)}
+/* Growth = the featured purple hero (glass + violet glow + desktop scale) */
+.bs-tier[data-tier="growth"]{border-color:color-mix(in srgb,var(--violet) 50%,transparent);
+  background:linear-gradient(165deg,rgba(255,255,255,.11),rgba(255,255,255,.05));
+  box-shadow:0 24px 80px rgba(0,0,0,.5),0 0 70px color-mix(in srgb,var(--violet) 22%,transparent),inset 0 1px 0 rgba(255,255,255,.10)}
+@media(min-width:901px){.bs-tier[data-tier="growth"]{transform:scale(1.045)}}
+/* light theme: glass → clean white card */
+html[data-theme="light"] .bs-tier{background:#FFFFFF;box-shadow:var(--e2-sh);
+  border-color:color-mix(in srgb,var(--accent) 34%,transparent)}
+html[data-theme="light"] .bs-tier[data-tier="growth"]{background:#FFFFFF;
+  box-shadow:var(--e3-sh),0 0 46px color-mix(in srgb,var(--violet) 20%,transparent)}
+/* B3 selection ring — keeps the tab behavior; accent-colored, no layout shift */
+.bs-tier.is-reco{border-color:var(--accent);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent),0 18px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07)}
+.bs-tier[data-tier="growth"].is-reco{
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 26%,transparent),0 24px 80px rgba(0,0,0,.5),0 0 70px color-mix(in srgb,var(--violet) 22%,transparent),inset 0 1px 0 rgba(255,255,255,.10)}
+@media(hover:hover){.bs-tier:hover{border-color:var(--accent)}}
+/* light theme needs its own state rules — the html-scoped light base out-specifies
+   the bare .is-reco/:hover, so the B3 selection ring would otherwise never show */
+html[data-theme="light"] .bs-tier.is-reco{border-color:var(--accent);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent),var(--e2-sh)}
+html[data-theme="light"] .bs-tier[data-tier="growth"].is-reco{
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 26%,transparent),var(--e3-sh),0 0 46px color-mix(in srgb,var(--violet) 20%,transparent)}
+@media(hover:hover){html[data-theme="light"] .bs-tier:hover{border-color:var(--accent)}}
+/* label / price / setup */
+.bs-tier .t-flag{font-family:var(--g-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;margin-bottom:8px;min-height:16px}
+/* growth flag: darkened --violet fails AA on the dark glass card → brighter in dark, darker on white */
+.bs-tier[data-tier="growth"] .t-flag{color:var(--violet-bright)}
+html[data-theme="light"] .bs-tier[data-tier="growth"] .t-flag{color:var(--violet)}
 .bs-tier .t-name{font-size:19px;font-weight:700;color:var(--ink);margin:2px 0}
 .bs-tier .t-price{font-size:34px;font-weight:700;color:var(--gold);margin:6px 0 2px;letter-spacing:-.01em}
 .bs-tier .t-price span{font-size:15px;color:var(--ink-mute);font-weight:600}
-.bs-tier .t-setup{font-family:var(--g-mono);font-size:12.5px;color:var(--ink-mute);margin-bottom:14px}
-.bs-tier ul{list-style:none;padding:0;margin:0 0 18px;flex:1}
-.bs-tier li{position:relative;padding:8px 0 8px 24px;font-size:14.5px;color:var(--g-read);
-  border-bottom:1px solid var(--line)}
-.bs-tier li:last-child{border-bottom:0}
-.bs-tier li::before{content:"✓";position:absolute;left:0;top:8px;color:var(--live-green);font-weight:700}
-.bs-tier .bs-cta{margin-top:auto;width:100%}
-@media(max-width:900px){.bs-tier.is-reco,.bs-tier:hover,.bs-tier.is-reco:hover{transform:none}}
+.bs-tier .t-setup{font-family:var(--g-mono);font-size:12.5px;color:var(--ink-mute);margin-bottom:18px}
+/* ✓-in-circle bullets (donor) */
+.bs-tier ul{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:11px;flex:1;align-content:start}
+.bs-tier li{position:relative;padding:0 0 0 28px;font-size:14.5px;color:var(--g-read)}
+.bs-tier li::before{content:"✓";position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:50%;
+  background:var(--accent-soft);color:var(--accent);font-size:10px;font-weight:800;line-height:18px;text-align:center}
+/* accent CTA pill; Growth = filled violet (darkened for AA white text) */
+.bs-tier .bs-cta{margin-top:auto;width:100%;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
+.bs-tier .bs-cta:hover{background:color-mix(in srgb,var(--accent) 22%,transparent);border-color:var(--accent)}
+.bs-tier[data-tier="growth"] .bs-cta{background:color-mix(in srgb,var(--violet) 78%,#000);color:#FFFFFF;border-color:transparent}
+.bs-tier[data-tier="growth"] .bs-cta:hover{background:color-mix(in srgb,var(--violet) 90%,#000);box-shadow:0 0 30px var(--accent-glow)}
+/* light theme CTA pills — accent-soft-on-white failed AA (and bs-cta-cyan forced white
+   text onto a near-white tint = ~1.2:1). Outline pill on white + a darkened accent text
+   that clears 4.5:1; Growth stays the filled violet. */
+html[data-theme="light"] .bs-tier .bs-cta,
+html[data-theme="light"] .bs-tier .bs-cta-cyan{background:transparent;
+  color:color-mix(in srgb,var(--accent) 82%,#000);border-color:var(--accent-line)}
+html[data-theme="light"] .bs-tier .bs-cta:hover,
+html[data-theme="light"] .bs-tier .bs-cta-cyan:hover{background:color-mix(in srgb,var(--accent) 9%,transparent);border-color:var(--accent)}
+html[data-theme="light"] .bs-tier[data-tier="growth"] .bs-cta{background:color-mix(in srgb,var(--violet) 78%,#000);color:#FFFFFF;border-color:transparent}
+@media(max-width:900px){.bs-tier[data-tier="growth"],.bs-tier.is-reco,.bs-tier:hover{transform:none}}
 
 /* ============================================================
    HEAR AVA — real-call audio clips (Run 1.6 · additive)
@@ -489,10 +544,10 @@ html[data-theme="light"] .card{background:#FFFFFF;border-color:rgba(16,19,26,.1)
   .bs-card:not(.on) .bs-cpay{display:none}
   .bs-card:not(.on){padding-top:11px;padding-bottom:11px}
   .bs-stage{padding:16px}
-  /* denser pricing so 3 stacked tiers don't add a full screen */
-  .bs-tier{padding:18px 18px}
-  .bs-tier ul{gap:6px;margin-bottom:12px}
-  .bs-tier .t-price{font-size:28px}
+  /* denser pricing so 3 stacked tiers don't add a full screen (keeps donor glass) */
+  .bs-tier{padding:24px 20px}
+  .bs-tier ul{gap:8px;margin-bottom:14px}
+  .bs-tier .t-price{font-size:30px}
   .bs-objections{margin-top:16px}
   .bs-ob{padding:16px 18px}
   .bs-qa summary{min-height:52px;padding:14px 16px;font-size:16px}
