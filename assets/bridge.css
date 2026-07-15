@@ -7,6 +7,7 @@
    ============================================================ */
 :root{
   --bz-void:#0A0A0F; --bz-ink:#EEF0F4; --bz-cyan:#00D4FF;
+  --bz-pulse:#00D4FF; --bz-pulse-2:#8B5CF6; --bz-pulse-3:#FFB800;  /* AVA PULSE colour journey (P1) */
   --ink-2:#9499A3;               /* contrast floor — replaces every gray darker than this */
   --bz-line:rgba(0,212,255,.16);
   --bz-surface:rgba(14,15,22,.82);
@@ -57,6 +58,7 @@ html[data-theme="light"]{
   --bz-void:#F4F6FA; --bz-ink:#10131A; --bz-cyan:#00749C;
   --bz-line:rgba(0,116,156,.28); --bz-surface:rgba(255,255,255,.88);
   --ink-2:#5A6272;
+  --bz-pulse:#00A6CC; --bz-pulse-2:#7C4DD6; --bz-pulse-3:#C98A00;  /* deeper journey — reads on paper */
   color-scheme:light;
 }
 html[data-theme="light"] body{background:var(--bz-void)}
@@ -223,6 +225,52 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
   .bcallbar .bcall{background:var(--bz-cyan);color:#03151B}
   .bcallbar .bbook{background:transparent;color:var(--bz-ink);border:1px solid rgba(238,240,244,.28)}
   body.bcallbar-on{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+}
+
+/* ===================== AVA PULSE (P1 · RUN 1.8) =====================
+   Signature glow for primary CTAs. box-shadow ONLY (a paint effect, never
+   layout) so the rings can never widen the page (P2-safe) and never shift
+   anything (CLS 0). An outset shadow is drawn OUTSIDE the button, so the
+   text is never overlaid — AA contrast is untouched. Zero JS. */
+.ava-pulse{position:relative;isolation:isolate}
+.ava-pulse::before,.ava-pulse::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1}
+/* breathing colour-journey halo: cyan -> violet -> gold -> cyan (~4.6s) */
+.ava-pulse::before{animation:ava-halo 4.6s ease-in-out infinite}
+/* expanding notification ring (~3.2s): spread grows out then fades to nothing */
+.ava-pulse::after{animation:ava-ring 3.2s cubic-bezier(.33,0,.2,1) infinite}
+@keyframes ava-halo{        /* cyan-anchored; violet + gold are brief hints, not the main colour */
+  0%,20%,100%{box-shadow:0 0 13px 1px color-mix(in srgb,var(--bz-pulse) 34%,transparent)}
+  46%        {box-shadow:0 0 19px 2px color-mix(in srgb,var(--bz-pulse-2) 26%,transparent)}
+  68%        {box-shadow:0 0 18px 2px color-mix(in srgb,var(--bz-pulse-3) 16%,transparent)}
+  84%        {box-shadow:0 0 14px 1px color-mix(in srgb,var(--bz-pulse) 30%,transparent)}
+}
+@keyframes ava-ring{
+  0%  {box-shadow:0 0 0 0 color-mix(in srgb,var(--bz-pulse) 40%,transparent)}
+  62% {box-shadow:0 0 0 11px color-mix(in srgb,var(--bz-pulse) 0%,transparent)}
+  100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--bz-pulse) 0%,transparent)}
+}
+/* stagger — sibling CTAs (hero pair, tier trio) never pulse in lock-step */
+.ava-pulse:nth-of-type(2)::after{animation-delay:-1.05s}
+.ava-pulse:nth-of-type(2)::before{animation-delay:-1.6s}
+.ava-pulse:nth-of-type(3)::after{animation-delay:-2.1s}
+.ava-pulse:nth-of-type(3)::before{animation-delay:-3s}
+/* quieter variant — cyan-only slow breathe, no ring, no colour march */
+@keyframes ava-halo-soft{
+  0%,100%{box-shadow:0 0 8px 0 color-mix(in srgb,var(--bz-pulse) 20%,transparent)}
+  50%    {box-shadow:0 0 14px 2px color-mix(in srgb,var(--bz-pulse) 30%,transparent)}
+}
+.ava-pulse-soft{position:relative;isolation:isolate}
+.ava-pulse-soft::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  animation:ava-halo-soft 6.6s ease-in-out infinite}
+.ava-pulse-soft:nth-of-type(2)::before{animation-delay:-2.2s}
+.ava-pulse-soft:nth-of-type(3)::before{animation-delay:-4s}
+.ava-pulse-soft:nth-of-type(4)::before{animation-delay:-1.1s}
+/* reduced-motion: no ping, no colour march — one static soft glow */
+@media(prefers-reduced-motion:reduce){
+  .ava-pulse::after,.ava-pulse-soft::before{animation:none;box-shadow:none}
+  .ava-pulse::before{animation:none;
+    box-shadow:0 0 14px 1px color-mix(in srgb,var(--bz-pulse) 30%,transparent)}
 }
 
 /* ============ 2028 VISUAL PACK (Phase 4B — site-wide) ============ */

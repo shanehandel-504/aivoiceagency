@@ -158,7 +158,7 @@ FOOTER = '''<!-- BRIDGE:FOOTER -->
 
 CALLBAR = '''<!-- BRIDGE:CALLBAR -->
 <div class="bcallbar" role="region" aria-label="Contact AVA">
-  <a class="bcall" href="tel:+14142408930" data-event="tel_tap_callbar">&#9654; HEAR AVA LIVE</a>
+  <a class="bcall ava-pulse" href="tel:+14142408930" data-event="tel_tap_callbar">&#9654; HEAR AVA LIVE</a>
   <a class="bbook" href="/book" data-event="book_click_callbar">BOOK A CALL</a>
 </div>
 <!-- /BRIDGE:CALLBAR -->'''
