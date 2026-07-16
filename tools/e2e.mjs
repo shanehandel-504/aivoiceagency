@@ -178,8 +178,33 @@ async function suite(engine, launcher) {
   await browser.close();
 }
 
+/* ---- P0 RING GATE — HEADED pixel diff (RUN 3). The RUN 1.9 @property/conic ring
+ * moved in HEADLESS but froze on headed Chrome's GPU compositor, so a headless-only
+ * check could never catch it. This runs HEADED where the environment allows (real
+ * Chrome + WebKit) and asserts the ring band's pixels actually CHANGE between two
+ * frames. Green = pixels moved — never the computed --ava-angle (which advances even
+ * when the paint is frozen). Falls back to headless (logged) on a headless CI box. */
+async function ringGate() {
+  for (const [engine, launcher, opts] of [['chromium', chromium, { channel: 'chrome' }], ['webkit', webkit, {}]]) {
+    let browser, headed = true;
+    try { browser = await launcher.launch({ headless: false, ...opts }); }
+    catch (e1) { headed = false; try { browser = await launcher.launch({ headless: true }); } catch (e2) { rec(engine, 'ring gate: launch', false, e2.message); continue; } }
+    try {
+      const pg = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+      await pg.goto(BASE + '/', { waitUntil: 'load', timeout: 45000 });
+      await pg.waitForSelector('.ava-pulse .ava-lap', { timeout: 8000 });
+      const box = await pg.evaluate(() => { const b = document.querySelector('.ava-pulse'); b.scrollIntoView({ block: 'center' }); const r = b.getBoundingClientRect(); return { x: Math.max(0, Math.floor(r.x)), y: Math.max(0, Math.floor(r.y)), width: Math.ceil(r.width), height: Math.ceil(r.height) }; });
+      const grab = async () => { const b64 = (await pg.screenshot({ clip: box })).toString('base64'); return pg.evaluate(async (b) => { const img = new Image(); await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = 'data:image/png;base64,' + b; }); const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const x = c.getContext('2d'); x.drawImage(img, 0, 0); return Array.from(x.getImageData(0, 0, img.width, img.height).data); }, b64); };
+      const a = await grab(); await pg.waitForTimeout(800); const z = await grab();
+      let changed = 0; for (let i = 0; i < a.length; i += 4) { if (Math.abs(a[i] - z[i]) > 12 || Math.abs(a[i + 1] - z[i + 1]) > 12 || Math.abs(a[i + 2] - z[i + 2]) > 12) changed++; }
+      rec(engine, `P0 ring moves${headed ? ' HEADED' : ' (headless fallback)'} — real pixel diff, not computed --ava-angle`, changed >= 40, `changed=${changed}`);
+    } finally { await browser.close(); }
+  }
+}
+
 await suite('chromium', chromium);
 await suite('webkit', webkit);
+await ringGate();
 
 // ---- report ----
 const byEngine = { chromium: [], webkit: [] };

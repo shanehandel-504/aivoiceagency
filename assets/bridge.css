@@ -235,34 +235,50 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
    and never shifts layout (CLS 0); masked to the 2px edge it never overlaps the
    centred text, so AA contrast is untouched. Verified moving on Chromium AND
    WebKit (iOS Safari 16.4+ animates registered <angle> props). */
-@property --ava-angle{ syntax:"<angle>"; inherits:false; initial-value:0deg; }
+/* RUN 1.9 drove this with an @property <angle> feeding a conic-gradient, but on
+   headed Chrome's GPU compositor that conic paint tile is CACHED — the registered
+   property advanced while the gradient never re-rasterised, so the comet froze on
+   real hardware (it moved only in headless). P0 rebuild: motion is now a compositor
+   TRANSFORM — a static oversized conic layer spun by rotate() inside a static,
+   edge-aligned 2px masked window (.ava-lap, injected once per button by bridge.js
+   on load). Transforms reposition every frame on every engine — no @property, no
+   paint-cache dependency. */
 .ava-pulse{position:relative;isolation:isolate}
-.ava-pulse::before{
-  content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;z-index:1;
-  /* comet: cyan head, violet->gold tail hints, transparent majority = a light travels the edge.
-     var() fallback 0deg keeps a visible (static) ring on the rare engine without @property. */
-  background:conic-gradient(from var(--ava-angle,0deg),
+/* the ring WINDOW — static, edge-aligned; masks its rotating child to a 2px band.
+   inset:0 → adds zero width (P2-safe, CLS 0); the band never touches centred text. */
+.ava-lap{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;z-index:1;overflow:hidden;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+}
+/* the COMET — an oversized square conic layer (aspect-ratio:1; width 1.5× the button,
+   margin% refs width on both axes so it stays centred and always covers the pill as it
+   spins). Masked by .ava-lap to the 2px edge. cyan head, violet->gold tail, transparent
+   majority. Same stops as RUN 1.9 — only the motion mechanism changed. */
+.ava-lap::before{
+  content:"";position:absolute;top:50%;left:50%;width:150%;aspect-ratio:1;margin:-75% 0 0 -75%;
+  background:conic-gradient(from 0deg,
     transparent 0 232deg,
     color-mix(in srgb,var(--bz-pulse-3) 40%,transparent) 280deg,   /* gold tail hint */
     color-mix(in srgb,var(--bz-pulse-2) 72%,transparent) 320deg,   /* violet tail */
     var(--bz-pulse) 349deg,                                        /* cyan */
-    color-mix(in srgb,#fff 52%,var(--bz-pulse)) 360deg);           /* bright cyan-white comet tip — pops on cyan buttons */
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+    color-mix(in srgb,#fff 52%,var(--bz-pulse)) 360deg);           /* bright cyan-white comet tip */
+  will-change:transform;
   animation:ava-lap 3.4s linear infinite;
 }
-@keyframes ava-lap{ to{ --ava-angle:360deg } }
+@keyframes ava-lap{ from{ transform:rotate(0) } to{ transform:rotate(360deg) } }
 /* stagger — sibling CTAs (hero pair) start their lap out of phase */
-.ava-pulse:nth-of-type(2)::before{animation-delay:-1.15s}
-.ava-pulse:nth-of-type(3)::before{animation-delay:-2.25s}
-.ava-pulse:nth-of-type(4)::before{animation-delay:-.6s}
+.ava-pulse:nth-of-type(2) .ava-lap::before{animation-delay:-1.15s}
+.ava-pulse:nth-of-type(3) .ava-lap::before{animation-delay:-2.25s}
+.ava-pulse:nth-of-type(4) .ava-lap::before{animation-delay:-.6s}
 /* Fallback for engines missing conic-gradient OR color-mix (the ring's colours use
    color-mix, which shipped LATER than conic — Safari 16.2 vs 12.1 — so guarding on
    conic alone would leave iOS Safari 15/16.0-16.1 with an invalid, invisible ring).
    This body is color-mix-free (plain token), so it renders wherever the primary can't. */
 @supports not ((background:conic-gradient(from 0deg,red,red)) and (background:color-mix(in srgb,red,blue))){
-  .ava-pulse::before{
+  .ava-lap::before{
+    top:0;left:0;width:100%;height:100%;aspect-ratio:auto;margin:0;
     background:linear-gradient(100deg,transparent 34%,var(--bz-pulse) 50%,transparent 66%);
     background-size:260% 100%;background-repeat:no-repeat;
     animation:ava-sweep 3.4s linear infinite;
@@ -283,7 +299,7 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
 /* reduced-motion: no lap — a soft static ring on the edge.
    Kept color-mix-FREE (rgba/plain) so it also renders on color-mix-lacking engines. */
 @media(prefers-reduced-motion:reduce){
-  .ava-pulse::before{animation:none;
+  .ava-lap::before{animation:none;transform:none;top:0;left:0;width:100%;height:100%;aspect-ratio:auto;margin:0;
     background:conic-gradient(from 210deg,transparent 0 250deg,
       rgba(139,92,246,.38) 302deg,var(--bz-pulse) 355deg,var(--bz-pulse) 360deg)}
   .ava-pulse-soft::before{animation:none;box-shadow:0 0 8px 0 rgba(0,212,255,.22)}

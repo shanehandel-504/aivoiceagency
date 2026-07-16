@@ -201,3 +201,27 @@
   }, { passive: true });
   paint();
 })();
+
+/* P0 · AVA pulse ring layer (RUN 3). RUN 1.9's @property/conic ring froze on headed
+   Chrome — the conic paint tile is GPU-cached, so the registered angle advanced while
+   the gradient never repainted. The ring is now a transform-spun conic inside a masked
+   window (.ava-lap in bridge.css); it's injected here, once per .ava-pulse, on load so
+   it never competes with the LCP paint (glow-gate parity). No-JS visitors simply get no
+   decorative ring — zero-cost, zero-risk, zero layout shift. */
+(function () {
+  'use strict';
+  function mountLaps() {
+    var btns = document.querySelectorAll('.ava-pulse');
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      if (b.getAttribute('data-lap') === '1') continue; /* idempotent — safe to re-run */
+      b.setAttribute('data-lap', '1');
+      var lap = document.createElement('i');
+      lap.className = 'ava-lap';
+      lap.setAttribute('aria-hidden', 'true');
+      b.insertBefore(lap, b.firstChild);
+    }
+  }
+  if (document.readyState === 'complete') mountLaps();
+  else window.addEventListener('load', mountLaps);
+})();
