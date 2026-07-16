@@ -175,6 +175,38 @@ async function suite(engine, launcher) {
     await pg.close();
   }
 
+  // ---- RUN 3 · compact demo pill on every hub + homepage ?trade= honor (390) ----
+  const isLoc = /localhost|127\.0\.0\.1/.test(BASE);
+  const HUBS = [
+    ['/home-services', '/home-services/index.html', 'plumbing'], ['/medical-practices', '/medical-practices/index.html', 'dental'],
+    ['/professional-services', '/professional-services/index.html', 'plumbing'], ['/hospitality', '/hospitality/index.html', 'plumbing'],
+    ['/ground-transportation', '/ground-transportation/index.html', 'black-car'], ['/overview', '/overview.html', 'plumbing'],
+    ['/roi', '/roi/index.html', 'plumbing'], ['/book', '/book/index.html', 'plumbing'],
+  ];
+  for (const [prod, loc, trade] of HUBS) {
+    const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const e2 = []; pg.on('console', (m) => { if (m.type() === 'error') e2.push(m.text()); }); pg.on('pageerror', (e) => e2.push(e.message));
+    await pg.goto(BASE + (isLoc ? loc : prod), { waitUntil: 'networkidle', timeout: 45000 });
+    const r = await pg.evaluate(() => {
+      const p = document.querySelector('.dp-pill'), h1 = document.querySelector('h1');
+      return { href: p ? p.getAttribute('href') : null, ev: p ? p.getAttribute('data-event') : null, trade: p ? p.getAttribute('data-trade') : null,
+        ring: !!(p && p.querySelector('.ava-lap')), overflow: document.documentElement.scrollWidth - window.innerWidth,
+        h1: h1 ? Math.round(h1.getBoundingClientRect().top) : null, css: [...document.querySelectorAll('link[rel=stylesheet]')].some((l) => /demo-pill\.css/.test(l.href)) };
+    });
+    ok(`${prod}: demo pill+ring, ?trade=${trade}, css linked, no h-overflow @390, H1 above fold`,
+      r.href === `/?trade=${trade}#stage` && r.ev === 'demo_pill_tap' && r.trade === trade && r.ring && r.overflow <= 0 && r.css && r.h1 !== null && r.h1 < 844 && e2.length === 0,
+      JSON.stringify({ ...r, e: e2.slice(0, 1) }));
+    await pg.close();
+  }
+  for (const t of ['hvac', 'black-car']) {
+    const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    await pg.goto(BASE + `/?trade=${t}#stage`, { waitUntil: 'networkidle', timeout: 45000 });
+    await pg.waitForTimeout(1500);
+    const s = await pg.evaluate(() => ({ t: (document.querySelector('.bs-trade.is-on') || {}).getAttribute ? document.querySelector('.bs-trade.is-on').getAttribute('data-trade') : null, started: document.querySelector('[data-payoff]').classList.contains('in') }));
+    ok(`homepage ?trade=${t} preselects chip, no autostart`, s.t === t && !s.started, JSON.stringify(s));
+    await pg.close();
+  }
+
   await browser.close();
 }
 

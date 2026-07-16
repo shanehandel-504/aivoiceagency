@@ -105,6 +105,17 @@
     } catch (err) {}
   }, true);
 
+  /* 1b · demo pill tap (RUN 3) — hub → homepage theater deep-link. GA4 only, no new
+   * pixels/IDs. gtag uses sendBeacon transport so the event survives the navigation. */
+  document.addEventListener('click', function (e) {
+    try {
+      var t = e.target;
+      var a = t && t.closest ? t.closest('[data-event="demo_pill_tap"]') : null;
+      if (!a) return;
+      ga('demo_pill_tap', { page: PATH, trade: a.getAttribute('data-trade') || '' });
+    } catch (err) {}
+  }, true);
+
   /* 2 · lead-form submit (hero call-me form, gate form, /intake — any form).
    * Semantics: submit ATTEMPT = Lead (client-side validation rejects are
    * counted once). Per-form dedupe caps retry inflation per page view.      */

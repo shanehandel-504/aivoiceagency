@@ -42,6 +42,17 @@ HEAD = '''<!-- BRIDGE:HEAD -->
 <script src="/js/bridge.js" defer></script>
 <!-- /BRIDGE:HEAD -->''' % VER
 
+# Demo pill (RUN 3) rides its own shared stylesheet, added to <head> on hub pages only.
+PILL_CSS = '<link rel="stylesheet" href="/css/demo-pill.css">'
+
+
+def head_block(page):
+    """BRIDGE:HEAD, plus the demo-pill stylesheet on hub pages that carry a pill."""
+    if not page.get('pill'):
+        return HEAD
+    return HEAD.replace('<!-- /BRIDGE:HEAD -->', PILL_CSS + '\n<!-- /BRIDGE:HEAD -->')
+
+
 NAV = '''<!-- BRIDGE:NAV -->
 <nav class="bnav" aria-label="Main">
   <a class="bnav-brand" href="/"><span class="bdot" aria-hidden="true"></span>AI VOICE AGENCY</a>
@@ -163,17 +174,24 @@ CALLBAR = '''<!-- BRIDGE:CALLBAR -->
 </div>
 <!-- /BRIDGE:CALLBAR -->'''
 
+
+# Demo pill (RUN 3) config: trade preselected in the homepage theater + the sample-call
+# result line + the anchor key (per-template insertion point, see PILL_ANCHORS).
+def P(trade, result, when, anchor):
+    return dict(trade=trade, result=result, when=when, anchor=anchor)
+
+
 # (label, href-or-None). Last item is always the current page (rendered unlinked).
 V = [('Verticals', None)]
 W = [('Wisconsin', None)]
 PAGES = [
     dict(f='index.html',                                   kind='home',      trail=None),
-    dict(f='book/index.html',                              kind='book',      trail=[('Book', None)], jsonld=True),
-    dict(f='home-services/index.html',                     kind='circulant', trail=V+[('Home Services', None)]),
-    dict(f='medical-practices/index.html',                 kind='circulant', trail=V+[('Medical Practices', None)]),
-    dict(f='professional-services/index.html',             kind='circulant', trail=V+[('Professional Services', None)]),
-    dict(f='hospitality/index.html',                       kind='circulant', trail=V+[('Hospitality', None)]),
-    dict(f='ground-transportation/index.html',             kind='circulant', trail=V+[('Transportation', None)]),
+    dict(f='book/index.html',                              kind='book',      trail=[('Book', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'book')),
+    dict(f='home-services/index.html',                     kind='circulant', trail=V+[('Home Services', None)], pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'circ')),
+    dict(f='medical-practices/index.html',                 kind='circulant', trail=V+[('Medical Practices', None)], pill=P('dental', 'VISIT BOOKED', 'TMRW 11:20 AM', 'circ')),
+    dict(f='professional-services/index.html',             kind='circulant', trail=V+[('Professional Services', None)], pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'circ')),
+    dict(f='hospitality/index.html',                       kind='circulant', trail=V+[('Hospitality', None)], pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'circ')),
+    dict(f='ground-transportation/index.html',             kind='circulant', trail=V+[('Transportation', None)], pill=P('black-car', 'RIDE BOOKED', 'TMRW 3:45 AM', 'circ')),
     dict(f='milwaukee/index.html',                         kind='circulant', trail=W+[('Milwaukee', None)]),
     dict(f='madison/index.html',                           kind='circulant', trail=W+[('Madison', None)]),
     dict(f='green-bay/index.html',                         kind='circulant', trail=W+[('Green Bay', None)]),
@@ -183,8 +201,8 @@ PAGES = [
     dict(f='blog/wisconsin-limo-crush/index.html',         kind='circulant', trail=[('Insights', '/blog'), ('Wisconsin limo call crush', None)]),
     dict(f='blog/home-services-30-percent-missed/index.html', kind='circulant', trail=[('Insights', '/blog'), ('The 30% missed-call problem', None)]),
     dict(f='videos/index.html',                            kind='circulant', trail=[('Videos', None)]),
-    dict(f='overview.html',                                kind='insert',    trail=[('Overview', None)], jsonld=True),
-    dict(f='roi/index.html',                               kind='insert',    trail=[('ROI Calculator', None)], jsonld=True),
+    dict(f='overview.html',                                kind='insert',    trail=[('Overview', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'ovw')),
+    dict(f='roi/index.html',                               kind='insert',    trail=[('ROI Calculator', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'roi')),
     dict(f='methodology.html',                             kind='legal',     trail=[('Methodology', None)], jsonld=True),
     dict(f='privacy.html',                                 kind='legal',     trail=[('Privacy', None)], jsonld=True),
     dict(f='terms.html',                                   kind='legal',     trail=[('Terms', None)], jsonld=True),
@@ -252,6 +270,48 @@ def between(content, tag, block):
     return None
 
 
+# --- demo pill (RUN 3): ONE component, injected after each hub's hero. Per-template
+#     anchors below pick where "after the hero" is; the pill is a plain <a> deep-linking
+#     to the homepage theater (/?trade=X#stage) with its own ava-pulse edge ring.
+PILL_ANCHORS = {
+    'circ': re.compile(r'<section class="hero" id="hero">[\s\S]*?</section>'),
+    'roi':  re.compile(r'<section class="hero">[\s\S]*?</section>'),
+    'ovw':  re.compile(r'<section class="bs-hero">[\s\S]*?</section>'),
+    'book': re.compile(r'<div class="lead">[\s\S]*?</div>'),
+}
+
+
+def pill_html(pill):
+    return ('<!-- BRIDGE:PILL -->\n'
+            '<div class="dp-wrap">\n'
+            '  <a class="dp-pill ava-pulse" href="/?trade=%s#stage" data-event="demo_pill_tap" '
+            'data-trade="%s" aria-label="Watch AVA book it &mdash; 11.3-second sample call">\n'
+            '    <span class="dp-orbs" aria-hidden="true"><i></i><i></i><i></i><i></i></span>\n'
+            '    <span class="dp-copy">\n'
+            '      <span class="dp-kicker"><b>11.3s</b> SAMPLE CALL</span>\n'
+            '      <span class="dp-result">CALL RESULT &rarr; <b>%s</b> &middot; %s</span>\n'
+            '    </span>\n'
+            '    <span class="dp-go">WATCH THE FULL CALL <span aria-hidden="true">&rarr;</span></span>\n'
+            '  </a>\n'
+            '</div>\n'
+            '<!-- /BRIDGE:PILL -->') % (pill['trade'], pill['trade'], pill['result'], pill['when'])
+
+
+def inject_pill(c, page):
+    pill = page.get('pill')
+    if not pill:
+        return c
+    block = pill_html(pill)
+    done = between(c, 'PILL', block)      # re-run: replace the marker region in place
+    if done is not None:
+        return done
+    m = PILL_ANCHORS[pill['anchor']].search(c)
+    if not m:
+        print('  ! pill anchor MISS (%s) for %s' % (pill['anchor'], page['f']))
+        return c
+    return c[:m.end()] + '\n\n' + block + c[m.end():]
+
+
 def stamp(page):
     path = os.path.join(ROOT, page['f'])
     with io.open(path, 'r', encoding='utf-8') as fh:
@@ -261,9 +321,10 @@ def stamp(page):
     crumb = crumb_html(page['trail']) if page['trail'] else ''
     navblock = NAV + ('\n' + crumb if crumb else '')
 
-    # --- head ---
-    done = between(c, 'HEAD', HEAD)
-    c = done if done is not None else c.replace('</head>', HEAD + '\n</head>', 1)
+    # --- head (+ demo-pill stylesheet on hub pages) ---
+    hb = head_block(page)
+    done = between(c, 'HEAD', hb)
+    c = done if done is not None else c.replace('</head>', hb + '\n</head>', 1)
 
     # --- nav (+ crumb rides with it) ---
     done = between(c, 'NAV', NAV)
@@ -316,6 +377,9 @@ def stamp(page):
             c = done
         elif 'BreadcrumbList' not in c:
             c = c.replace('</head>', ld + '\n</head>', 1)
+
+    # --- demo pill (RUN 3): hub pages only, injected after the hero ---
+    c = inject_pill(c, page)
 
     # --- cache armor: version-stamp first-party asset URLs (last, over the whole page) ---
     c = version_stamp(c)

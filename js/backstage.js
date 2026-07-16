@@ -455,6 +455,33 @@
     });
   });
 
+  /* RUN 3 · ?trade= deep-link from a hub demo pill — preselect the matching chip
+     (same path as a manual tap, minus the tap beacon). Never autostarts: the
+     tap-to-start law stands on every engine. */
+  (function preselectTrade() {
+    try {
+      var q = (new URLSearchParams(location.search).get('trade') || '').replace(/[^a-z-]/gi, '');
+      if (!q) return;
+      var chip = d.querySelector('.bs-trade[data-trade="' + q + '"]');
+      if (!chip) return;
+      hydrate().then(function () {
+        if (!DATA) return;
+        var tr = null;
+        DATA.trades.forEach(function (x) { if (x.id === q) tr = x; });
+        if (!tr) return;
+        d.querySelectorAll('.bs-trade').forEach(function (b) {
+          b.classList.toggle('is-on', b === chip);
+          b.setAttribute('aria-pressed', b === chip ? 'true' : 'false');
+        });
+        trade = tr;
+        resetStage();
+        renderScript();
+        /* re-honor #stage after the async hydrate settles layout */
+        if (location.hash === '#stage') { var s = d.getElementById('stage'); if (s) s.scrollIntoView(); }
+      });
+    } catch (e) {}
+  })();
+
   /* ---------- wiring ---------- */
   if (els.start) els.start.addEventListener('click', start);
   d.querySelectorAll('[data-watch]').forEach(function (a) {
