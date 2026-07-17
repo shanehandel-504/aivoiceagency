@@ -53,6 +53,13 @@ body.bk::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1
 .bk-demo .g-eyebrow{text-align:center;margin-bottom:8px}
 .bk-demo .bk-demoline{text-align:center;font-size:15px;color:var(--g-read);margin:0 0 18px}
 .bk-demo .bk-demoline a{color:var(--cyan);font-weight:700;text-decoration:none;font-variant-numeric:tabular-nums}
+/* audio wall (RUN 4): render every sample as a lazy-loaded grid of the shared clip player */
+.bk-wall{border-top:1px solid var(--line);padding-top:30px;margin-top:30px;text-align:left}
+.bk-wall .g-eyebrow{text-align:center;margin-bottom:6px}
+.bk-wall .bk-wall-cap{text-align:center;font-size:14px;color:var(--g-read);margin:0 0 20px}
+.bk-wall .bs-clips{grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:14px;align-items:start;margin:0}
+.bk-wall .bs-clip-label{font-size:13.5px}
+@media (max-width:620px){.bk-wall .bs-clips{grid-template-columns:1fr}}
 /* slim footer */
 .bk-foot{padding:26px 20px;text-align:center;font-family:var(--g-mono);font-size:12px;
   letter-spacing:.06em;color:var(--ink-mute);border-top:1px solid var(--line)}
@@ -106,17 +113,23 @@ body.bk::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1
     <div class="bk-demo">
       <p class="g-eyebrow">While you wait</p>
       <p class="bk-demoline">Want to hear AVA before the call? It answers the demo line right now — <a href="tel:+14142408930" data-event="tel_tap_demo">414-240-8930</a>.</p>
+    </div>
+
+    <div class="bk-wall">
+      <p class="g-eyebrow">Hear AVA work</p>
+      <p class="bk-wall-cap">Sample calls — AVA's real voice, sample data.</p>
       <div class="bs-clips">
+
         <article class="bs-clip" data-clip>
           <div class="bs-clip-top">
-            <button class="bs-clip-play" type="button" data-play aria-label="Play a sample call" aria-pressed="false" data-event="hear_play_booked">▶</button>
+            <button class="bs-clip-play" type="button" data-play aria-label="Play the plumbing sample call" aria-pressed="false" data-event="hear_play_booked">▶</button>
             <div class="bs-clip-meta">
-              <span class="bs-clip-label">A sample call: AVA books a 7:00 AM leak visit</span>
-              <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the sample call">
+              <span class="bs-clip-label">AVA books a 7:00 AM water-heater leak</span>
+              <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the plumbing sample call">
             </div>
             <span class="bs-clip-time" data-time>0:00 / 0:46</span>
           </div>
-          <audio data-audio preload="none"><source src="/audio/v2/plumbing/full.mp3?v=5a22ae5" type="audio/mpeg"></audio>
+          <audio data-audio preload="none"><source src="/audio/v2/plumbing/full.mp3" type="audio/mpeg"></audio>
           <details class="bs-clip-tx">
             <summary>Read the transcript</summary>
             <div class="tx-body">
@@ -128,13 +141,86 @@ body.bk::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1
               <p><span class="spk">Caller</span>Can someone come tonight? What's that cost?</p>
               <p><span class="spk">AVA</span>Tonight's emergency visit is one-forty-nine. Or seven A-M tomorrow is our standard fifty-nine dollar trip fee. Which works?</p>
               <p><span class="spk">Caller</span>Seven's fine. It's contained.</p>
-              <p><span class="spk">AVA</span>Seven A-M tomorrow, booked. Confirmation text is on its way to you right now.</p>
+              <p><span class="spk">AVA</span>Seven A-M tomorrow, set. Confirmation text is on its way to you right now.</p>
               <p><span class="spk">AVA</span>Keep a couple towels on it tonight — you handled this exactly right.</p>
             </div>
           </details>
         </article>
+
+        <article class="bs-clip" data-clip>
+          <div class="bs-clip-top">
+            <button class="bs-clip-play" type="button" data-play aria-label="Play the HVAC sample call" aria-pressed="false" data-event="hear_play_booked">▶</button>
+            <div class="bs-clip-meta">
+              <span class="bs-clip-label">A no-heat call at 11:52 PM, ten below coming</span>
+              <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the HVAC sample call">
+            </div>
+            <span class="bs-clip-time" data-time>0:00 / 0:49</span>
+          </div>
+          <audio data-audio preload="none"><source src="/audio/v2/hvac/full.mp3" type="audio/mpeg"></audio>
+        </article>
+
+        <article class="bs-clip" data-clip>
+          <div class="bs-clip-top">
+            <button class="bs-clip-play" type="button" data-play aria-label="Play the electrical sample call" aria-pressed="false" data-event="hear_play_booked">▶</button>
+            <div class="bs-clip-meta">
+              <span class="bs-clip-label">A sparking-outlet call, handled same day</span>
+              <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the electrical sample call">
+            </div>
+            <span class="bs-clip-time" data-time>0:00 / 0:46</span>
+          </div>
+          <audio data-audio preload="none"><source src="/audio/v2/electrical/full.mp3" type="audio/mpeg"></audio>
+        </article>
+
+        <article class="bs-clip" data-clip>
+          <div class="bs-clip-top">
+            <button class="bs-clip-play" type="button" data-play aria-label="Play the dental sample call" aria-pressed="false" data-event="hear_play_booked">▶</button>
+            <div class="bs-clip-meta">
+              <span class="bs-clip-label">A cracked molar after dinner, seen next morning</span>
+              <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the dental sample call">
+            </div>
+            <span class="bs-clip-time" data-time>0:00 / 0:41</span>
+          </div>
+          <audio data-audio preload="none"><source src="/audio/v2/dental/full.mp3" type="audio/mpeg"></audio>
+        </article>
+
+        <article class="bs-clip" data-clip>
+          <div class="bs-clip-top">
+            <button class="bs-clip-play" type="button" data-play aria-label="Play the roofing sample call" aria-pressed="false" data-event="hear_play_booked">▶</button>
+            <div class="bs-clip-meta">
+              <span class="bs-clip-label">A storm leak through the ceiling, tarp crew dispatched</span>
+              <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the roofing sample call">
+            </div>
+            <span class="bs-clip-time" data-time>0:00 / 0:43</span>
+          </div>
+          <audio data-audio preload="none"><source src="/audio/v2/roofing/full.mp3" type="audio/mpeg"></audio>
+        </article>
+
+        <article class="bs-clip" data-clip>
+          <div class="bs-clip-top">
+            <button class="bs-clip-play" type="button" data-play aria-label="Play the corporate car sample call" aria-pressed="false" data-event="hear_play_booked">▶</button>
+            <div class="bs-clip-meta">
+              <span class="bs-clip-label">A late airport request, car staged for 3:45 AM</span>
+              <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the corporate car sample call">
+            </div>
+            <span class="bs-clip-time" data-time>0:00 / 0:48</span>
+          </div>
+          <audio data-audio preload="none"><source src="/audio/v2/corporate-car/full.mp3" type="audio/mpeg"></audio>
+        </article>
+
+        <article class="bs-clip" data-clip>
+          <div class="bs-clip-top">
+            <button class="bs-clip-play" type="button" data-play aria-label="Play the med spa sample call" aria-pressed="false" data-event="hear_play_booked">▶</button>
+            <div class="bs-clip-meta">
+              <span class="bs-clip-label">A med-spa consult request, on the book</span>
+              <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the med spa sample call">
+            </div>
+            <span class="bs-clip-time" data-time>0:00 / 0:49</span>
+          </div>
+          <audio data-audio preload="none"><source src="/audio/v2/medspa/full.mp3" type="audio/mpeg"></audio>
+        </article>
+
       </div>
-      <p class="bs-disclosure" style="text-align:center">Sample call — AVA's real voice, sample data. Scripted scenario, not a customer recording.</p>
+      <p class="bs-disclosure" style="text-align:center">Scripted scenarios using AVA's demo voice and sample data — not customer recordings.</p>
     </div>
   </div>
 </main>
