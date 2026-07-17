@@ -140,6 +140,7 @@ FOOTER = '''<!-- BRIDGE:FOOTER -->
         <summary>Insights</summary>
         <div class="bfoot-items">
           <a href="/blog">The AVA blog</a>
+          <a href="/lsa">3AM. Google was listening</a>
           <a href="/blog/what-happens-when-you-call-ava">What happens when you call AVA</a>
           <a href="/blog/wisconsin-limo-crush">The Wisconsin limo call crush</a>
           <a href="/blog/home-services-30-percent-missed">The 30% missed-call problem</a>
