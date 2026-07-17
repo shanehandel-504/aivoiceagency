@@ -1,26 +1,98 @@
 <!DOCTYPE html>
+<!--
+  ============================================================================
+  LANDER MASTER TEMPLATE  ·  factory mold, NOT a page  ·  RUN 5.5 (2026-07-17)
+  ----------------------------------------------------------------------------
+  Cloned from the /lsa "3AM. Google Was Listening" master. Every future ad
+  lander clones THIS file. It is deliberately excluded from the live site:
+    · <meta name="robots" content="noindex, nofollow"> below
+    · never linked from any page or the nav/footer
+    · NOT added to sitemap.xml
+  It renders on its own (open it in a browser) so you can preview the mold, but
+  it must never be treated as a shipped URL.
+
+  HOW TO SPIN A NEW LANDER
+    1. Copy this file to  <slug>/index.html  (clean-URL directory).
+    2. Fill each  {{SLOT}}  token and the  <!-- SLOT: NAME -->  regions below.
+    3. Delete the robots=noindex line ONLY if the lander is meant to be indexed
+       (conversion/thank-you pages stay noindex; ad landers are usually indexed).
+    4. Wire analytics: add a  PATH === '/<slug>'  block to js/tracking.js on the
+       same pattern as the /lsa block (data-event driven, routed through ga() so
+       the NOTRACK self-tag silences it). Add data-event to every CTA.
+    5. Cache armor: add  '<slug>/index.html'  to VERSION_ONLY in tools/stamp.py
+       and add the <loc> to sitemap.xml (indexed landers only). Re-run stamp.py.
+
+  CIRCULANT / AVA-PARENT DESIGN TOKENS (hard-coded here so the mold is portable
+  and does not depend on /assets/funnel.css — keep these values in sync):
+    --void   #0A0A0F   deep void background
+    --panel  #101018   card / surface
+    --text   #EEF0F4   body text (NEVER pure #FFF)
+    --muted  #8A93A6   dim text  ── see STATE-COLOR RULING
+    --cyan   #00D4FF   the ONE brand accent (active #00E5FF elsewhere on site)
+    --red    #FF3B4E   miss / loss / penalty  ── see STATE-COLOR RULING
+    fonts    Space Grotesk (body/display) · Space Mono (labels/records)
+
+  STATE-COLOR RULING (RUN 5.5, standing):
+    On a CAMPAIGN SURFACE, red #FF3B4E and gray #8A93A6 are SEMANTIC STATE
+    colors (miss/penalty = red, secondary/record text = gray), NOT brand-palette
+    violations. They are authored, not accidental. DO NOT "recolor to brand."
+    The homepage ACCENT LAW (max 3 accents, gold=money, violet=badge) governs
+    the marketing site; a single-purpose loss-vs-fix lander is allowed its two
+    state colors on top of cyan. Keep them.
+
+  NAMED SLOTS (search for each marker):
+    OG-META            <head> title/description/canonical/OG/Twitter
+    SCHEMA             <head> JSON-LD @graph (Organization + Service, url=canonical)
+    HOOK-KICKER        hero eyebrow / kicker line
+    TIME-HEADLINE      hero timestamp + H1 + subhead
+    WHAT-GOOGLE-HEARD  the evidence section header (the "record" framing)
+    PROOF-TRANSCRIPTS  miss transcript, penalty graph, sourced facts, booked transcript
+    LOSS-CALCULATOR    labeled-math calculator (industry rates x visitor numbers)
+    CTA-STACK          hero CTA row + end-card CTA row
+
+  LAWS-CHECK before you ship a lander built from this mold — grep the new file
+  and reconcile against CLAUDE.md before commit:
+    · PHONE — the public voice line 414-240-8930 is the ONLY number allowed on
+      any marketing surface. Reject every retired, private, SMS, or internal
+      routing line — CLAUDE.md (PHONE) holds the exact block-list.
+    · WORDS — follow CLAUDE.md (FORBIDDEN WORDS): no set-in-stone phrasing (say
+      "set" / "decided"), no free-trial-minute offers, always name AVA rather
+      than a pronoun, and keep booking absolutes to clearly-labeled samples.
+    · PRICE — $497 only (the Starter tier); no tier price not already sitewide.
+    · STATS — every number carries a source label (.src / .fact .src); no new,
+      unsourced, or invented stat. No fake proof / ROI / testimonials.
+  ============================================================================
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3AM. Google Was Listening — Missed LSA Calls Drop Your Ranking | AI Voice Agency</title>
-<meta name="description" content="Google routes, transcribes, and grades every Local Services Ads call. Missed LSA calls lower your responsiveness score and your ranking. AVA answers every call 24/7, books the job, and protects your placement. Hear AVA live: 414-240-8930.">
-<meta property="og:title" content="3AM. Google Was Listening.">
-<meta property="og:description" content="Every missed LSA call is graded against you. AVA answers every ring, books the job, and protects your Google ranking. From $497/mo.">
+<meta name="robots" content="noindex, nofollow">
+<!-- SLOT: OG-META ─────────────────────────────────────────────────────────
+     Fill title, description, canonical (pick ONE of /slug vs /slug/ and use it
+     for canonical + og:url + sitemap), and the OG/Twitter card image. -->
+<title>{{TITLE}} | AI Voice Agency</title>
+<meta name="description" content="{{META_DESCRIPTION}}">
+<meta property="og:title" content="{{OG_TITLE}}">
+<meta property="og:description" content="{{OG_DESCRIPTION}}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://aivoiceagency.ai/lsa/">
-<meta property="og:image" content="https://aivoiceagency.ai/assets/og-lsa.png">
+<meta property="og:url" content="https://aivoiceagency.ai/{{SLUG}}/">
+<meta property="og:image" content="https://aivoiceagency.ai/assets/{{OG_IMAGE}}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="3AM. Google Was Listening.">
-<meta name="twitter:description" content="Every missed LSA call is graded against you. AVA answers every ring, books the job, and protects your Google ranking. From $497/mo.">
-<meta name="twitter:image" content="https://aivoiceagency.ai/assets/og-lsa.png">
+<meta name="twitter:title" content="{{OG_TITLE}}">
+<meta name="twitter:description" content="{{OG_DESCRIPTION}}">
+<meta name="twitter:image" content="https://aivoiceagency.ai/assets/{{OG_IMAGE}}">
 <meta name="theme-color" content="#0A0A0F">
-<link rel="canonical" href="https://aivoiceagency.ai/lsa/">
+<link rel="canonical" href="https://aivoiceagency.ai/{{SLUG}}/">
+<!-- /SLOT: OG-META -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- SLOT: SCHEMA ──────────────────────────────────────────────────────────
+     @graph: shared Organization node (stable @id) + one Service node whose
+     url === canonical. Keep price at 497 (Starter). Do not invent claims. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -38,10 +110,10 @@
     },
     {
       "@type": "Service",
-      "@id": "https://aivoiceagency.ai/lsa/#ava-lsa-service",
-      "name": "AVA — AI receptionist for Local Services Ads leads",
-      "url": "https://aivoiceagency.ai/lsa/",
-      "serviceType": "24/7 AI phone answering that answers every Local Services Ads call, qualifies the lead, and books the job",
+      "@id": "https://aivoiceagency.ai/{{SLUG}}/#ava-service",
+      "name": "{{SERVICE_NAME}}",
+      "url": "https://aivoiceagency.ai/{{SLUG}}/",
+      "serviceType": "{{SERVICE_TYPE}}",
       "provider": { "@id": "https://aivoiceagency.ai/#organization" },
       "areaServed": { "@type": "State", "name": "Wisconsin" },
       "offers": { "@type": "Offer", "price": "497", "priceCurrency": "USD", "description": "Starting monthly price. Setup starts at $497." }
@@ -49,7 +121,10 @@
   ]
 }
 </script>
-<script src="/js/tracking.js?v=b44afb4" async></script>
+<!-- /SLOT: SCHEMA -->
+<!-- Tracking spine: the ONE tracking file. NOTRACK self-tag silences our own
+     traffic. Add a PATH === '/{{SLUG}}' block in js/tracking.js for named events. -->
+<script src="/js/tracking.js" async></script>
 <style>
   :root{
     --void:#0A0A0F;
@@ -302,7 +377,7 @@
   }
   @media(max-width:520px){.stats{grid-template-columns:1fr;}}
 
-  /* ---------- AVA FIX ---------- */
+  /* ---------- FIX LIST ---------- */
   .fix-list{margin-top:26px;display:grid;gap:0;}
   .fix{
     display:flex;
@@ -453,135 +528,158 @@
 <header class="hero">
   <canvas id="ring" aria-hidden="true"></canvas>
   <div class="wrap hero-inner">
-    <div class="eyebrow"><span class="tick">●</span> LOCAL SERVICES ADS · 2026</div>
-    <div class="stamp-time">3:00<span class="am">AM</span></div>
-    <h1>Your phone went to voicemail. <span class="listen">Google was listening.</span></h1>
-    <p class="sub">Every LSA call runs through Google's own number. Google's AI transcribes it, grades it, and scores whether you answered. Voicemail counts against you — on every future search in your service area.</p>
+    <!-- SLOT: HOOK-KICKER — the mono kicker. Keep it short + dated. -->
+    <div class="eyebrow"><span class="tick">●</span> {{HOOK_KICKER}}</div>
+    <!-- /SLOT: HOOK-KICKER -->
+
+    <!-- SLOT: TIME-HEADLINE — the timestamp hook, the emotional H1, the setup line.
+         The .am span is the cyan superscript on the timestamp. -->
+    <div class="stamp-time">{{TIME}}<span class="am">{{TIME_MERIDIEM}}</span></div>
+    <h1>{{HEADLINE}} <span class="listen">{{HEADLINE_ACCENT}}</span></h1>
+    <p class="sub">{{SUBHEAD}}</p>
+    <!-- /SLOT: TIME-HEADLINE -->
+
+    <!-- SLOT: CTA-STACK (hero) — data-event on EVERY CTA. Public line only. -->
     <div class="cta-row">
-      <a class="btn btn-cyan" href="tel:14142408930" data-event="lsa_call_tap">Call or text 414-240-8930</a>
-      <a class="btn btn-ghost" href="tel:14142408930" data-event="lsa_demo_tap">Hear AVA live</a>
+      <a class="btn btn-cyan" href="tel:14142408930" data-event="{{SLUG}}_call_tap">Call or text 414-240-8930</a>
+      <a class="btn btn-ghost" href="tel:14142408930" data-event="{{SLUG}}_demo_tap">Hear AVA live</a>
     </div>
-    <div class="scroll-hint">↓ WHAT GOOGLE HEARD</div>
+    <!-- /SLOT: CTA-STACK (hero) -->
+    <div class="scroll-hint">↓ {{SCROLL_HINT}}</div>
   </div>
 </header>
 
 <!-- ================= THE RECORD (MISS) ================= -->
 <section id="record">
   <div class="wrap">
+    <!-- SLOT: WHAT-GOOGLE-HEARD — the evidence framing. Name what the third
+         party (Google, the caller, the ranking) "heard/saw/graded". -->
     <div class="sec-head reveal">
-      <div class="eyebrow">THE CALL RECORD</div>
-      <h2>Google heard the whole thing.<br><span class="red">Including the silence.</span></h2>
-      <p>LSA calls are routed through Google's number. Google sees whether the call was answered, how fast, and how long it lasted — then Google's AI transcribes and grades the lead.</p>
+      <div class="eyebrow">{{RECORD_EYEBROW}}</div>
+      <h2>{{RECORD_HEADLINE}}<br><span class="red">{{RECORD_HEADLINE_ACCENT}}</span></h2>
+      <p>{{RECORD_BODY}}</p>
     </div>
+    <!-- /SLOT: WHAT-GOOGLE-HEARD -->
+
+    <!-- SLOT: PROOF-TRANSCRIPTS — the miss record (types on scroll), the penalty
+         graph, and the sourced facts. Every .fact carries a .src label. -->
     <div class="transcript t-miss reveal" id="tMiss">
-      <div class="bar"><span><span class="dot">●</span> LSA CALL RECORD</span><span>3:00:41 AM</span></div>
-      <div class="line" data-type="INBOUND CALL ......... burst pipe, emergency"></div>
-      <div class="line" data-type="RING 1 ... RING 2 ... RING 3 ... RING 4"></div>
-      <div class="line" data-type="RESULT ............... VOICEMAIL"></div>
-      <div class="line" data-type="CALLER MESSAGE ....... none. hung up."></div>
-      <div class="line" data-type="NEXT ACTION .......... caller dialed competitor"></div>
-      <span class="grade grade-miss" id="gMiss">MISS — RESPONSIVENESS ↓</span>
-      <div class="t-note">Per Google's Local Services documentation: "Missed calls may negatively affect your responsiveness." Responsiveness is a ranking input.</div>
+      <div class="bar"><span><span class="dot">●</span> {{RECORD_LABEL}}</span><span>{{RECORD_TIMESTAMP}}</span></div>
+      <div class="line" data-type="{{MISS_LINE_1}}"></div>
+      <div class="line" data-type="{{MISS_LINE_2}}"></div>
+      <div class="line" data-type="{{MISS_LINE_3}}"></div>
+      <div class="line" data-type="{{MISS_LINE_4}}"></div>
+      <div class="line" data-type="{{MISS_LINE_5}}"></div>
+      <span class="grade grade-miss" id="gMiss">{{MISS_GRADE}}</span>
+      <div class="t-note">{{MISS_NOTE}}</div>
     </div>
 
     <div class="graph-card reveal">
-      <div class="bar"><span>YOUR LSA PLACEMENT</span><span class="red">AFTER THE MISS</span></div>
-      <svg viewBox="0 0 600 160" role="img" aria-label="Ranking line drops after a missed call">
+      <div class="bar"><span>{{GRAPH_LABEL}}</span><span class="red">{{GRAPH_LABEL_RIGHT}}</span></div>
+      <svg viewBox="0 0 600 160" role="img" aria-label="{{GRAPH_ALT}}">
         <polyline points="0,52 90,48 180,54 270,46 330,50" fill="none" stroke="rgba(238,240,244,.5)" stroke-width="3"/>
         <polyline points="330,50 400,78 470,104 540,124 600,138" fill="none" stroke="#FF3B4E" stroke-width="3"/>
         <circle cx="330" cy="50" r="6" fill="#FF3B4E"/>
-        <text x="330" y="30" fill="#FF3B4E" font-family="Space Mono, monospace" font-size="12" text-anchor="middle" letter-spacing="2">MISS</text>
+        <text x="330" y="30" fill="#FF3B4E" font-family="Space Mono, monospace" font-size="12" text-anchor="middle" letter-spacing="2">{{GRAPH_MARK}}</text>
       </svg>
     </div>
 
     <div class="facts">
-      <div class="fact reveal"><b>Voicemail counts as a missed call.</b> A lead that hits voicemail reduces your placement on future searches in your service area.<span class="src">LSA industry reporting, 2026</span></div>
-      <div class="fact reveal"><b>Answer rate separates the ranked from the buried.</b> Businesses answering 95%+ of LSA calls consistently outrank those in the 70–80% range.<span class="src">LSA agency benchmarks, 2026</span></div>
-      <div class="fact reveal"><b>After-hours is where it hurts most.</b> The 11 PM flooded-basement call is the highest-intent lead LSA sends — and the one most likely to hit voicemail.<span class="src">Home-services LSA analysis, 2026</span></div>
+      <div class="fact reveal"><b>{{FACT_1_LEAD}}</b> {{FACT_1_BODY}}<span class="src">{{FACT_1_SRC}}</span></div>
+      <div class="fact reveal"><b>{{FACT_2_LEAD}}</b> {{FACT_2_BODY}}<span class="src">{{FACT_2_SRC}}</span></div>
+      <div class="fact reveal"><b>{{FACT_3_LEAD}}</b> {{FACT_3_BODY}}<span class="src">{{FACT_3_SRC}}</span></div>
     </div>
+    <!-- /SLOT: PROOF-TRANSCRIPTS (miss half) -->
   </div>
 </section>
 
-<!-- ================= LOCKED STATS ================= -->
+<!-- ================= SOURCED STATS ================= -->
 <section class="tight">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="eyebrow">THE LEAK, MEASURED</div>
-      <h2>The math Google is grading you on.</h2>
+      <div class="eyebrow">{{STATS_EYEBROW}}</div>
+      <h2>{{STATS_HEADLINE}}</h2>
     </div>
+    <!-- Every stat carries a .src. No number without a source. -->
     <div class="stats">
       <div class="stat reveal">
-        <div class="num">62%</div>
-        <p>of calls to small service businesses go unanswered.</p>
-        <span class="src">411 LOCALS · SERVICETITAN</span>
+        <div class="num">{{STAT_1_NUM}}</div>
+        <p>{{STAT_1_BODY}}</p>
+        <span class="src">{{STAT_1_SRC}}</span>
       </div>
       <div class="stat reveal">
-        <div class="num">85%</div>
-        <p>of callers who hit voicemail never call back.</p>
-        <span class="src">PATLIVE · AIRCALL</span>
+        <div class="num">{{STAT_2_NUM}}</div>
+        <p>{{STAT_2_BODY}}</p>
+        <span class="src">{{STAT_2_SRC}}</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================= AVA ANSWERS (CYAN) ================= -->
+<!-- ================= AVA ANSWERS (BOOKED) ================= -->
 <section id="ava">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="eyebrow"><span class="tick">●</span> THE FIX</div>
-      <h2>AVA answers. <span class="cyan">Google hears that too.</span></h2>
-      <p>AVA is a done-for-you AI receptionist built around your calls. Every ring gets answered — so every LSA lead gets caught, and your responsiveness score stays protected.</p>
+      <div class="eyebrow"><span class="tick">●</span> {{FIX_EYEBROW}}</div>
+      <h2>{{FIX_HEADLINE}} <span class="cyan">{{FIX_HEADLINE_ACCENT}}</span></h2>
+      <p>{{FIX_BODY}}</p>
     </div>
 
+    <!-- SLOT: PROOF-TRANSCRIPTS (booked half) — the answered record. Labeled as
+         a scripted sample. Do NOT present as a real customer recording. -->
     <div class="transcript t-book reveal" id="tBook">
-      <div class="bar"><span><span class="dot">●</span> LSA CALL RECORD</span><span>3:00:41 AM</span></div>
-      <div class="line" data-type="INBOUND CALL ......... burst pipe, emergency"></div>
-      <div class="line" data-type="ANSWERED ............. 00:01, first ring"></div>
-      <div class="line" data-type="QUALIFIED ............ address + issue captured"></div>
-      <div class="line" data-type="BOOKED ............... TUE 7:00 AM, your calendar"></div>
-      <div class="line" data-type="OWNER NOTIFIED ....... summary emailed + texted"></div>
-      <span class="grade grade-book" id="gBook">ANSWERED — JOB BOOKED</span>
+      <div class="bar"><span><span class="dot">●</span> {{RECORD_LABEL}}</span><span>{{RECORD_TIMESTAMP}}</span></div>
+      <div class="line" data-type="{{BOOK_LINE_1}}"></div>
+      <div class="line" data-type="{{BOOK_LINE_2}}"></div>
+      <div class="line" data-type="{{BOOK_LINE_3}}"></div>
+      <div class="line" data-type="{{BOOK_LINE_4}}"></div>
+      <div class="line" data-type="{{BOOK_LINE_5}}"></div>
+      <span class="grade grade-book" id="gBook">{{BOOK_GRADE}}</span>
       <div class="t-note">Scripted sample of an AVA-handled call. Built around your call flow before launch.</div>
     </div>
+    <!-- /SLOT: PROOF-TRANSCRIPTS (booked half) -->
 
     <div class="fix-list">
-      <div class="fix reveal"><span class="k">24/7</span><div class="v">Every overflow and after-hours call answered<span>Nights, weekends, both lines ringing at once.</span></div></div>
-      <div class="fix reveal"><span class="k">LIVE</span><div class="v">Qualifies the caller on the spot<span>Emergency vs. estimate, address, issue — captured in the call.</span></div></div>
-      <div class="fix reveal"><span class="k">BOOK</span><div class="v">Appointments straight to your calendar<span>The job is scheduled before the caller hangs up.</span></div></div>
-      <div class="fix reveal"><span class="k">PROOF</span><div class="v">Email summary after every call<span>You see every lead AVA caught while you were on the tools.</span></div></div>
-      <div class="fix reveal"><span class="k">RANK</span><div class="v">Your responsiveness signals stay strong<span>Answered calls are what Google's grader wants to hear.</span></div></div>
+      <div class="fix reveal"><span class="k">{{FIX_1_K}}</span><div class="v">{{FIX_1_V}}<span>{{FIX_1_SUB}}</span></div></div>
+      <div class="fix reveal"><span class="k">{{FIX_2_K}}</span><div class="v">{{FIX_2_V}}<span>{{FIX_2_SUB}}</span></div></div>
+      <div class="fix reveal"><span class="k">{{FIX_3_K}}</span><div class="v">{{FIX_3_V}}<span>{{FIX_3_SUB}}</span></div></div>
+      <div class="fix reveal"><span class="k">{{FIX_4_K}}</span><div class="v">{{FIX_4_V}}<span>{{FIX_4_SUB}}</span></div></div>
+      <div class="fix reveal"><span class="k">{{FIX_5_K}}</span><div class="v">{{FIX_5_V}}<span>{{FIX_5_SUB}}</span></div></div>
     </div>
   </div>
 </section>
 
-<!-- ================= YOUR MATH ================= -->
+<!-- ================= LOSS CALCULATOR ================= -->
 <section class="tight" id="math">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="eyebrow">RUN YOUR OWN NUMBERS</div>
-      <h2>What voicemail costs <span class="red">you.</span></h2>
+      <div class="eyebrow">{{CALC_EYEBROW}}</div>
+      <h2>{{CALC_HEADLINE}} <span class="red">{{CALC_HEADLINE_ACCENT}}</span></h2>
     </div>
+    <!-- SLOT: LOSS-CALCULATOR — inputs are inputmode=numeric. The rates are
+         labeled + sourced in the .formula. calc() below multiplies them. -->
     <div class="math-card reveal">
-      <div class="label">LABELED MATH — INDUSTRY RATES × YOUR NUMBERS</div>
+      <div class="label">{{CALC_LABEL}}</div>
       <div class="inputs">
         <div class="field">
-          <label for="calls">Inbound calls per month</label>
+          <label for="calls">{{CALC_INPUT_1_LABEL}}</label>
           <input id="calls" type="number" inputmode="numeric" value="120" min="0">
         </div>
         <div class="field">
-          <label for="ticket">Average job value ($)</label>
+          <label for="ticket">{{CALC_INPUT_2_LABEL}}</label>
           <input id="ticket" type="number" inputmode="numeric" value="450" min="0">
         </div>
       </div>
       <div class="formula">
-        <b><span id="fCalls">120</span> calls</b> × <b>62%</b> unanswered (411 Locals / ServiceTitan) × <b>85%</b> never call back (PATLive / Aircall) × <b>$<span id="fTicket">450</span></b> avg job
+        <b><span id="fCalls">120</span> calls</b> × <b>{{RATE_1}}</b> ({{RATE_1_SRC}}) × <b>{{RATE_2}}</b> ({{RATE_2_SRC}}) × <b>$<span id="fTicket">450</span></b> avg job
       </div>
       <div class="result">
-        <span class="big" id="loss">$28,458</span>
-        <span class="per">walking out the door / month</span>
+        <span class="big" id="loss">$0</span>
+        <span class="per">{{CALC_RESULT_SUFFIX}}</span>
       </div>
       <div class="vs">AVA catches those calls for <b>$497/mo</b>. No bundles. No contracts. Cancel anytime.</div>
     </div>
+    <!-- /SLOT: LOSS-CALCULATOR -->
   </div>
 </section>
 
@@ -589,13 +687,15 @@
 <section class="endcard">
   <div class="wrap">
     <div class="ava reveal">AVA</div>
-    <a class="num reveal" href="tel:14142408930" data-event="lsa_call_tap">414-240-8930</a>
+    <!-- SLOT: CTA-STACK (end card) — data-event on EVERY CTA. Public line only. -->
+    <a class="num reveal" href="tel:14142408930" data-event="{{SLUG}}_call_tap">414-240-8930</a>
     <div class="site reveal">aivoiceagency.ai</div>
     <p class="terms reveal">Done for you. Your existing number. <b>From $497/mo.</b></p>
     <div class="cta-row reveal">
-      <a class="btn btn-cyan" href="tel:14142408930" data-event="lsa_demo_tap">Hear AVA live now</a>
-      <a class="btn btn-ghost" href="sms:14142408930" data-event="lsa_call_tap">Text AVA instead</a>
+      <a class="btn btn-cyan" href="tel:14142408930" data-event="{{SLUG}}_demo_tap">Hear AVA live now</a>
+      <a class="btn btn-ghost" href="sms:14142408930" data-event="{{SLUG}}_call_tap">Text AVA instead</a>
     </div>
+    <!-- /SLOT: CTA-STACK (end card) -->
   </div>
 </section>
 
@@ -606,6 +706,9 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- particle ring (hero) ---------- */
+  /* rAF-only, devicePixelRatio-scaled for retina, single loop guarded by rafId,
+   * paused off-screen via IntersectionObserver, static single frame under
+   * prefers-reduced-motion. No per-frame layout reads. */
   const cv = document.getElementById('ring');
   const ctx = cv.getContext('2d');
   let W, H, cx, cy, R, running = true, rafId = 0;
@@ -707,6 +810,8 @@
   }, {threshold: 0.4}).observe(document.getElementById('tBook'));
 
   /* ---------- labeled math calculator ---------- */
+  /* Replace 0.62 / 0.85 with THIS campaign's sourced rates and keep them in sync
+   * with the .formula labels above. loss = calls × rate1 × rate2 × ticket. */
   const calls = document.getElementById('calls');
   const ticket = document.getElementById('ticket');
   function calc(){

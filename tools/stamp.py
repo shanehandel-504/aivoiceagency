@@ -223,6 +223,7 @@ for city, hub in [('milwaukee', '/milwaukee'), ('madison', '/madison'), ('west-b
 VERSION_ONLY = [
     'watch/index.html',    # ad lander (indexable) — slim header, single price/ROI anchors
     'booked/index.html',   # post-booking conversion page (noindex) — slim, dead-end
+    'lsa/index.html',      # LSA campaign lander (RUN 5.5) — Shane-authored chrome, carries tracking.js
 ]
 
 

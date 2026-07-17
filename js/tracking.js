@@ -202,6 +202,33 @@
     document.addEventListener('change', roiHandler, true);
   }
 
+  /* 6 · /lsa campaign lander (RUN 5.5). Three named GA4 events, all declarative
+   * via data-event so the markup stays the source of truth, all through ga() so
+   * NOTRACK silences every one exactly like the rest of the spine:
+   *   lsa_call_tap  — "Call or text" / "Text AVA" CTAs (tel: + sms:)
+   *   lsa_demo_tap  — "Hear AVA live" CTAs
+   *   lsa_calc_use  — first interaction with the loss calculator            */
+  if (PATH === '/lsa') {
+    document.addEventListener('click', function (e) {
+      try {
+        var t = e.target;
+        var el = t && t.closest
+          ? t.closest('[data-event="lsa_call_tap"],[data-event="lsa_demo_tap"]') : null;
+        if (!el) return;
+        ga(el.getAttribute('data-event'), { page: PATH });
+      } catch (err) {}
+    }, true);
+
+    var lsaCalcFired = false;
+    document.addEventListener('input', function (e) {
+      if (lsaCalcFired) return;
+      var t = e.target;
+      if (!t || (t.id !== 'calls' && t.id !== 'ticket')) return;
+      lsaCalcFired = true;
+      ga('lsa_calc_use', { page: PATH });
+    }, true);
+  }
+
   /* ==================== BOOKING CONVERSION (the money) ================== */
   /* Primary: /booked thank-you page (GHL post-booking redirect).           */
   /* Fallback: GHL widget postMessage on /book.                             */
