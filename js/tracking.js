@@ -13,11 +13,9 @@
   /* ------------------------------------------------------------ TAG IDS -- */
   var META_PIXEL_ID = '1029719056532809';
   var GA4_ID = 'G-ZJZD091SMC';
-  /* TODO(SHANE): Google Ads — account 916-658-0915 exists, the AW- ID does
-   * not yet. Enabling Ads later is EXACTLY these two lines — the code below
-   * is already live and silently skips while these hold placeholders:      */
-  var ADS_ID = 'AW-PENDING';                    // <- 1/2: real AW-XXXXXXXXXX
-  var ADS_BOOKING_LABEL = 'LABEL-PENDING';      // <- 2/2: booking conversion label (Ads > Goals > Conversions)
+  /* Google Ads: conversions run on the GA4 ads-conversion IMPORT (account
+   * 916-658-0915) — the standalone AW- tag path is retired. No AW- constant,
+   * no gtag('config', AW-...), no adsConversion() stub lives here anymore.  */
 
   function isPlaceholder(id) {
     return !id || /PENDING|X{4,}/i.test(String(id));
@@ -29,8 +27,8 @@
    *   - navigator.webdriver          Playwright / headless / THE EYE gate runs
    *   - localStorage ava_internal    an operator device we've opted out
    *   - ?notrack=1 in the URL        one-shot opt-out; also PERSISTS the flag
-   * When NOTRACK holds, no tag ever initializes and fb()/ga()/adsConversion()
-   * are no-ops — the page itself is untouched.                              */
+   * When NOTRACK holds, no tag ever initializes and fb() / ga() are no-ops —
+   * the page itself is untouched.                                           */
   var NOTRACK = (function () {
     try {
       var q = new URLSearchParams(location.search);
@@ -67,7 +65,6 @@
       window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
       window.gtag('js', new Date());
       window.gtag('config', GA4_ID);
-      if (!isPlaceholder(ADS_ID)) window.gtag('config', ADS_ID); // Google Ads — live once ADS_ID is real
     }
   } catch (e) { /* tracking must never break the page */ }
 
@@ -96,16 +93,6 @@
     if (NOTRACK) return;
     try { if (window.gtag) window.gtag('event', event, params || {}); } catch (e) {}
   }
-  /* Google Ads conversion — live code, silently skips on placeholder IDs. */
-  function adsConversion(label) {
-    if (NOTRACK) return;
-    try {
-      if (window.gtag && !isPlaceholder(ADS_ID) && !isPlaceholder(label)) {
-        window.gtag('event', 'conversion', { send_to: ADS_ID + '/' + label });
-      }
-    } catch (e) {}
-  }
-
   /* --------------------------------------------------------- PAGE UTILS -- */
   function pagePath() {
     var p = location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
@@ -242,9 +229,8 @@
     } catch (e) { /* storage blocked — in-memory flag still dedupes this page */ }
     bookingFiredThisPage = true;
     fb('Schedule');
-    ga('booking_complete', { source: source }); // RUN 2 /booked — GA4 conversion event
+    ga('booking_complete', { source: source }); // /booked — GA4 conversion event; Ads run via the GA4 import (acct 916-658-0915)
     ga('booking_confirmed', { source: source }); // legacy alias (kept for existing GA4 config)
-    adsConversion(ADS_BOOKING_LABEL); // Google Ads — live once the two ADS_ constants are real
   }
 
   if (PATH === '/booked') {

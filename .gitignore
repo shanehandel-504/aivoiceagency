@@ -1,1 +1,9 @@
 .env
+
+# Build scratch + backups — Run-4 near-miss guard: never let voice-stack backups,
+# python caches, or transient build dirs get swept into a commit (secret risk).
+__pycache__/
+*.bak
+*.backup
+.ava_build_tmp/
+voice-stack/**

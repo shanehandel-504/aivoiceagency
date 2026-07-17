@@ -196,7 +196,13 @@ PAGES = [
     dict(f='milwaukee/index.html',                         kind='circulant', trail=W+[('Milwaukee', None)]),
     dict(f='madison/index.html',                           kind='circulant', trail=W+[('Madison', None)]),
     dict(f='green-bay/index.html',                         kind='circulant', trail=W+[('Green Bay', None)]),
+    dict(f='west-bend/index.html',                         kind='circulant', trail=W+[('West Bend', None)]),
+    dict(f='waukesha/index.html',                          kind='circulant', trail=W+[('Waukesha', None)]),
     dict(f='wisconsin-limo/index.html',                    kind='circulant', trail=W+[('Wisconsin Limo', None)]),
+    dict(f='plumber-answering-service/index.html',         kind='circulant', trail=V+[('Plumber Answering Service', None)]),
+    dict(f='hvac-answering-service/index.html',            kind='circulant', trail=V+[('HVAC Answering Service', None)]),
+    dict(f='electrician-answering-service/index.html',     kind='circulant', trail=V+[('Electrician Answering Service', None)]),
+    dict(f='24-hour-answering-service/index.html',         kind='circulant', trail=V+[('24-Hour Answering Service', None)]),
     dict(f='blog/index.html',                              kind='circulant', trail=[('Insights', None)]),
     dict(f='blog/what-happens-when-you-call-ava/index.html', kind='circulant', trail=[('Insights', '/blog'), ('What happens when you call AVA', None)]),
     dict(f='blog/wisconsin-limo-crush/index.html',         kind='circulant', trail=[('Insights', '/blog'), ('Wisconsin limo call crush', None)]),
@@ -209,7 +215,8 @@ PAGES = [
     dict(f='terms.html',                                   kind='legal',     trail=[('Terms', None)], jsonld=True),
     dict(f='sms-policy.html',                              kind='legal',     trail=[('SMS Policy', None)], jsonld=True),
 ]
-for city, hub in [('milwaukee', '/milwaukee'), ('madison', '/madison'), ('west-bend', None)]:
+for city, hub in [('milwaukee', '/milwaukee'), ('madison', '/madison'), ('west-bend', '/west-bend'),
+                  ('green-bay', '/green-bay'), ('waukesha', '/waukesha')]:
     cname = city.replace('-', ' ').title()
     for trade in ['hvac', 'plumbing', 'electrical', 'dental', 'roofing']:
         tname = 'HVAC' if trade == 'hvac' else trade.title()
