@@ -23,6 +23,26 @@
     return !id || /PENDING|X{4,}/i.test(String(id));
   }
 
+  /* -------------------------------------------- INTERNAL / BOT SELF-TAG -- */
+  /* Never pollute analytics with our own traffic. Three off-switches, any one
+   * of which silences EVERY fire (GA4 / gtag / Google Ads / Meta):
+   *   - navigator.webdriver          Playwright / headless / THE EYE gate runs
+   *   - localStorage ava_internal    an operator device we've opted out
+   *   - ?notrack=1 in the URL        one-shot opt-out; also PERSISTS the flag
+   * When NOTRACK holds, no tag ever initializes and fb()/ga()/adsConversion()
+   * are no-ops — the page itself is untouched.                              */
+  var NOTRACK = (function () {
+    try {
+      var q = new URLSearchParams(location.search);
+      if (q.get('notrack') === '1') {
+        try { localStorage.setItem('ava_internal', '1'); } catch (e) {}
+        return true;
+      }
+      if (localStorage.getItem('ava_internal') === '1') return true;
+    } catch (e) { /* storage/URL blocked — fall through to the bot check */ }
+    return navigator.webdriver === true;
+  })();
+
   /* -------------------------------------------- /booked QUERY SCRUB ------ */
   /* The GHL post-booking redirect may carry query params. Strip them BEFORE
    * either tracker initializes so nothing beyond the path ever reaches
@@ -38,7 +58,7 @@
 
   /* ---------------------------------------------------------------- GA4 -- */
   try {
-    if (!isPlaceholder(GA4_ID)) {
+    if (!NOTRACK && !isPlaceholder(GA4_ID)) {
       var gs = document.createElement('script');
       gs.async = true;
       gs.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
@@ -53,7 +73,7 @@
 
   /* --------------------------------------------------------- META PIXEL -- */
   try {
-    if (!isPlaceholder(META_PIXEL_ID) && !window.fbq) {
+    if (!NOTRACK && !isPlaceholder(META_PIXEL_ID) && !window.fbq) {
       !function (f, b, e, v, n, t, s) {
         if (f.fbq) return; n = f.fbq = function () {
           n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
@@ -69,13 +89,16 @@
 
   /* ------------------------------------------------------ SAFE WRAPPERS -- */
   function fb(event, params) {
+    if (NOTRACK) return;
     try { if (window.fbq) window.fbq('track', event, params || {}); } catch (e) {}
   }
   function ga(event, params) {
+    if (NOTRACK) return;
     try { if (window.gtag) window.gtag('event', event, params || {}); } catch (e) {}
   }
   /* Google Ads conversion — live code, silently skips on placeholder IDs. */
   function adsConversion(label) {
+    if (NOTRACK) return;
     try {
       if (window.gtag && !isPlaceholder(ADS_ID) && !isPlaceholder(label)) {
         window.gtag('event', 'conversion', { send_to: ADS_ID + '/' + label });

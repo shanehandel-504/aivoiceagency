@@ -10,6 +10,7 @@ const require = createRequire('C:/Users/offic/Desktop/AVA-factory/adstage/packag
 const { chromium, webkit } = require('playwright');
 
 const BASE = (process.argv[2] || 'http://localhost:8847').replace(/\/$/, '');
+const nt = (u) => { const [p, h] = String(u).split('#'); return p + (p.includes('?') ? '&' : '?') + 'notrack=1' + (h ? '#' + h : ''); };  // RUN 4: opt gate traffic out of analytics
 const results = [];
 const rec = (engine, name, pass, detail) =>
   results.push({ engine, name, pass, detail: detail || '' });
@@ -24,7 +25,7 @@ async function suite(engine, launcher) {
     const errs = [];
     pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
     pg.on('pageerror', (e) => errs.push(e.message));
-    await pg.goto(BASE + '/', { waitUntil: 'networkidle', timeout: 45000 });
+    await pg.goto(nt(BASE + '/'), { waitUntil: 'networkidle', timeout: 45000 });
 
     const fold = await pg.evaluate(() => {
       const y = (s) => { const e = document.querySelector(s); return e ? Math.round(e.getBoundingClientRect().top) : null; };
@@ -85,7 +86,7 @@ async function suite(engine, launcher) {
     const errs = [];
     pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
     pg.on('pageerror', (e) => errs.push(e.message));
-    await pg.goto(BASE + path, { waitUntil: 'networkidle', timeout: 45000 });
+    await pg.goto(nt(BASE + path), { waitUntil: 'networkidle', timeout: 45000 });
     await pg.click('.bnav-burger'); await pg.waitForTimeout(150);
     const opened = await pg.evaluate(() => ({ open: document.querySelector('.bnav-menu').classList.contains('open'), ov: document.body.style.overflow, h: Math.round(document.querySelector('.bnav-menu').getBoundingClientRect().height) }));
     await pg.mouse.click(195, 780); await pg.waitForTimeout(150);
@@ -102,7 +103,7 @@ async function suite(engine, launcher) {
     const errs = [];
     pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
     pg.on('pageerror', (e) => errs.push(e.message));
-    await pg.goto(BASE + '/watch', { waitUntil: 'networkidle', timeout: 45000 });
+    await pg.goto(nt(BASE + '/watch'), { waitUntil: 'networkidle', timeout: 45000 });
     const w = await pg.evaluate(() => ({
       overflow: document.documentElement.scrollWidth - window.innerWidth,
       cards: document.querySelectorAll('.bs-feed .bs-card').length,
@@ -129,7 +130,7 @@ async function suite(engine, launcher) {
     const errs = [];
     pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
     pg.on('pageerror', (e) => errs.push(e.message));
-    await pg.goto(BASE + (isLocal ? '/overview.html' : '/overview'), { waitUntil: 'networkidle', timeout: 45000 });
+    await pg.goto(nt(BASE + (isLocal ? '/overview.html' : '/overview')), { waitUntil: 'networkidle', timeout: 45000 });
     const o = await pg.evaluate(() => {
       const t = (sel) => { const e = document.querySelector(sel + ' .t-price'); return e ? e.textContent.replace(/\s/g, '') : null; };
       return {
@@ -156,7 +157,7 @@ async function suite(engine, launcher) {
     const errs = [];
     pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
     pg.on('pageerror', (e) => errs.push(e.message));
-    await pg.goto(BASE + '/booked', { waitUntil: 'networkidle', timeout: 45000 });
+    await pg.goto(nt(BASE + '/booked'), { waitUntil: 'networkidle', timeout: 45000 });
     const b = await pg.evaluate(() => {
       let convFired = false; try { convFired = sessionStorage.getItem('ava_booking_tracked') === '1'; } catch (e) {}
       const dl = window.dataLayer || [];
@@ -186,7 +187,7 @@ async function suite(engine, launcher) {
   for (const [prod, loc, trade] of HUBS) {
     const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
     const e2 = []; pg.on('console', (m) => { if (m.type() === 'error') e2.push(m.text()); }); pg.on('pageerror', (e) => e2.push(e.message));
-    await pg.goto(BASE + (isLoc ? loc : prod), { waitUntil: 'networkidle', timeout: 45000 });
+    await pg.goto(nt(BASE + (isLoc ? loc : prod)), { waitUntil: 'networkidle', timeout: 45000 });
     const r = await pg.evaluate(() => {
       const p = document.querySelector('.dp-pill'), h1 = document.querySelector('h1');
       return { href: p ? p.getAttribute('href') : null, ev: p ? p.getAttribute('data-event') : null, trade: p ? p.getAttribute('data-trade') : null,
@@ -200,7 +201,7 @@ async function suite(engine, launcher) {
   }
   for (const t of ['hvac', 'black-car']) {
     const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    await pg.goto(BASE + `/?trade=${t}#stage`, { waitUntil: 'networkidle', timeout: 45000 });
+    await pg.goto(nt(BASE + `/?trade=${t}#stage`), { waitUntil: 'networkidle', timeout: 45000 });
     await pg.waitForTimeout(1500);
     const s = await pg.evaluate(() => ({ t: (document.querySelector('.bs-trade.is-on') || {}).getAttribute ? document.querySelector('.bs-trade.is-on').getAttribute('data-trade') : null, started: document.querySelector('[data-payoff]').classList.contains('in') }));
     ok(`homepage ?trade=${t} preselects chip, no autostart`, s.t === t && !s.started, JSON.stringify(s));
@@ -223,7 +224,7 @@ async function ringGate() {
     catch (e1) { headed = false; try { browser = await launcher.launch({ headless: true }); } catch (e2) { rec(engine, 'ring gate: launch', false, e2.message); continue; } }
     try {
       const pg = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-      await pg.goto(BASE + '/', { waitUntil: 'load', timeout: 45000 });
+      await pg.goto(nt(BASE + '/'), { waitUntil: 'load', timeout: 45000 });
       await pg.waitForSelector('.ava-pulse .ava-lap', { timeout: 8000 });
       const box = await pg.evaluate(() => { const b = document.querySelector('.ava-pulse'); b.scrollIntoView({ block: 'center' }); const r = b.getBoundingClientRect(); return { x: Math.max(0, Math.floor(r.x)), y: Math.max(0, Math.floor(r.y)), width: Math.ceil(r.width), height: Math.ceil(r.height) }; });
       const grab = async () => { const b64 = (await pg.screenshot({ clip: box })).toString('base64'); return pg.evaluate(async (b) => { const img = new Image(); await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = 'data:image/png;base64,' + b; }); const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const x = c.getContext('2d'); x.drawImage(img, 0, 0); return Array.from(x.getImageData(0, 0, img.width, img.height).data); }, b64); };

@@ -9,6 +9,7 @@ const require = createRequire('C:/Users/offic/Desktop/AVA-factory/adstage/packag
 const { chromium, webkit } = require('playwright');
 
 const url = process.argv[2] || 'https://aivoiceagency.ai/';
+const nt = (u) => { const [p, h] = String(u).split('#'); return p + (p.includes('?') ? '&' : '?') + 'notrack=1' + (h ? '#' + h : ''); };  // RUN 4: opt gate traffic out of analytics
 const tag = process.argv[3] || 'shot';
 mkdirSync(new URL('../audits', import.meta.url), { recursive: true });
 const shot = (name) => new URL(`../audits/${tag}-${name}.png`, import.meta.url).pathname.slice(1);
@@ -17,7 +18,7 @@ const shot = (name) => new URL(`../audits/${tag}-${name}.png`, import.meta.url).
 const cr = await chromium.launch();
 for (const [w, h, name] of [[390, 844, 'mobile'], [1440, 900, 'desktop']]) {
   const page = await cr.newPage({ viewport: { width: w, height: h } });
-  await page.goto(url, { waitUntil: 'networkidle', timeout: 45000 });
+  await page.goto(nt(url), { waitUntil: 'networkidle', timeout: 45000 });
   await page.waitForTimeout(600);
   const r = await page.evaluate(() => {
     const top = (el) => (el ? Math.round(el.getBoundingClientRect().top + scrollY) : null);
@@ -36,7 +37,7 @@ const wk = await webkit.launch();
 for (const theme of ['dark', 'light']) {
   const page = await wk.newPage({ viewport: { width: 390, height: 844 } });
   if (theme === 'light') await page.addInitScript(() => { try { localStorage.setItem('bs-theme', 'light'); } catch (e) {} });
-  await page.goto(url, { waitUntil: 'networkidle', timeout: 45000 });
+  await page.goto(nt(url), { waitUntil: 'networkidle', timeout: 45000 });
   await page.waitForTimeout(600);
   console.log(`[${tag} webkit-390 ${theme}] rendered`);
   await page.screenshot({ path: shot('webkit-390-' + theme) });

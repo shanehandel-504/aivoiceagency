@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 const require = createRequire('C:/Users/offic/Desktop/AVA-factory/adstage/package.json');
 const { chromium, webkit } = require('playwright');
 const BASE = (process.argv[2] || 'http://localhost:8847').replace(/\/$/, '');
+const nt = (u) => { const [p, h] = String(u).split('#'); return p + (p.includes('?') ? '&' : '?') + 'notrack=1' + (h ? '#' + h : ''); };  // RUN 4: opt gate traffic out of analytics
 const LOCAL = /localhost|127\.0\.0\.1/.test(BASE);
 
 // [path (prod), local path, expected trade]
@@ -29,7 +30,7 @@ async function suite(eng, launcher) {
     const errs = [];
     pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
     pg.on('pageerror', (e) => errs.push(e.message));
-    await pg.goto(BASE + path, { waitUntil: 'networkidle', timeout: 45000 });
+    await pg.goto(nt(BASE + path), { waitUntil: 'networkidle', timeout: 45000 });
     const r = await pg.evaluate(() => {
       const p = document.querySelector('.dp-pill');
       const h1 = document.querySelector('h1');
@@ -58,7 +59,7 @@ async function suite(eng, launcher) {
   for (const [prod, loc] of [HUBS[0], HUBS[4], HUBS[5]]) {
     const path = LOCAL ? loc : prod;
     const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    await pg.goto(BASE + path, { waitUntil: 'load', timeout: 45000 });
+    await pg.goto(nt(BASE + path), { waitUntil: 'load', timeout: 45000 });
     const res = await pg.evaluate(() => new Promise((resv) => {
       let total = 0; const pillHit = [];
       try {
@@ -74,7 +75,7 @@ async function suite(eng, launcher) {
   // homepage ?trade= honor (deep-link preselect, no autostart)
   for (const t of ['hvac', 'black-car']) {
     const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    await pg.goto(BASE + `/?trade=${t}#stage`, { waitUntil: 'networkidle', timeout: 45000 });
+    await pg.goto(nt(BASE + `/?trade=${t}#stage`), { waitUntil: 'networkidle', timeout: 45000 });
     await pg.waitForTimeout(1600);
     const sel = await pg.evaluate((t) => {
       const on = document.querySelector('.bs-trade.is-on');

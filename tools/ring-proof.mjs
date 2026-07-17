@@ -14,6 +14,7 @@ const require = createRequire('C:/Users/offic/Desktop/AVA-factory/adstage/packag
 const { chromium, webkit } = require('playwright');
 
 const BASE = (process.argv[2] || 'http://localhost:8847').replace(/\/$/, '');
+const nt = (u) => { const [p, h] = String(u).split('#'); return p + (p.includes('?') ? '&' : '?') + 'notrack=1' + (h ? '#' + h : ''); };  // RUN 4: opt gate traffic out of analytics
 const GAP_MS = 800;
 const DIFF_CH = 12;        // per-channel delta that counts a pixel as "changed"
 const MIN_PX = 40;         // a real moving comet changes far more than this
@@ -48,7 +49,7 @@ async function run(label, launcher, opts) {
     label += ' (headless fallback)';
   }
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-  await page.goto(BASE + '/', { waitUntil: 'load', timeout: 45000 });
+  await page.goto(nt(BASE + '/'), { waitUntil: 'load', timeout: 45000 });
 
   // (a) environment facts — logged, not used as proof
   const env = await page.evaluate(() => {
