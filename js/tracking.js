@@ -216,6 +216,18 @@
     }, true);
   }
 
+  /* 7 · Google Health Check (RUN 7) — the check UI computes its score in page
+   * JS and dispatches a DOM CustomEvent; the spine forwards it to GA4 so the
+   * NOTRACK self-tag silences it exactly like every other event. Path-free by
+   * design: the section rides from /staging/xray to / on swap unchanged.     */
+  var healthCheckFired = false;
+  document.addEventListener('ava:health_check_complete', function (e) {
+    if (healthCheckFired) return;
+    healthCheckFired = true;
+    var d = (e && e.detail) || {};
+    ga('health_check_complete', { page: PATH, score: d.score, of: d.of });
+  });
+
   /* ==================== BOOKING CONVERSION (the money) ================== */
   /* Primary: /booked thank-you page (GHL post-booking redirect).           */
   /* Fallback: GHL widget postMessage on /book.                             */

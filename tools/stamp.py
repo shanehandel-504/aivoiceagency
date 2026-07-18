@@ -144,6 +144,8 @@ FOOTER = '''<!-- BRIDGE:FOOTER -->
           <a href="/blog/what-happens-when-you-call-ava">What happens when you call AVA</a>
           <a href="/blog/wisconsin-limo-crush">The Wisconsin limo call crush</a>
           <a href="/blog/home-services-30-percent-missed">The 30% missed-call problem</a>
+          <a href="/guides/furnace-short-cycling.html">Furnace short cycling</a>
+          <a href="/guides/ac-running-but-not-cooling.html">AC running but not cooling</a>
           <a href="/videos">Videos</a>
         </div>
       </details>
@@ -207,6 +209,8 @@ PAGES = [
     dict(f='blog/what-happens-when-you-call-ava/index.html', kind='circulant', trail=[('Insights', '/blog'), ('What happens when you call AVA', None)]),
     dict(f='blog/wisconsin-limo-crush/index.html',         kind='circulant', trail=[('Insights', '/blog'), ('Wisconsin limo call crush', None)]),
     dict(f='blog/home-services-30-percent-missed/index.html', kind='circulant', trail=[('Insights', '/blog'), ('The 30% missed-call problem', None)]),
+    dict(f='guides/furnace-short-cycling.html',            kind='circulant', trail=[('Insights', '/blog'), ('Furnace short cycling', None)]),
+    dict(f='guides/ac-running-but-not-cooling.html',       kind='circulant', trail=[('Insights', '/blog'), ('AC running but not cooling', None)]),
     dict(f='videos/index.html',                            kind='circulant', trail=[('Videos', None)]),
     dict(f='overview.html',                                kind='insert',    trail=[('Overview', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'ovw')),
     dict(f='roi/index.html',                               kind='insert',    trail=[('ROI Calculator', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'roi')),
