@@ -111,12 +111,19 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .hero-local-trust-line { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 40px; }
 .hero-ctas { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 
-.btn-primary { display: inline-flex; align-items: center; gap: 10px; padding: 16px 28px; background: var(--cyan); color: var(--void); border: 1px solid var(--cyan); border-radius: 0; font-family: var(--font-mono); font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: background 0.15s, color 0.15s, box-shadow 0.18s ease, border-color 0.15s; }
-.btn-primary:hover { background: transparent; color: #00E5FF; border-color: #00E5FF; box-shadow: 0 0 28px rgba(0,212,255,0.4); }
-.btn-primary:focus-visible { background: transparent; color: #00E5FF; border-color: #00E5FF; box-shadow: 0 0 28px rgba(0,229,255,0.5); }
-.btn-outline { display: inline-flex; align-items: center; gap: 10px; padding: 16px 28px; background: transparent; color: var(--cyan); border: 1px solid var(--cyan); border-radius: 0; font-family: var(--font-mono); font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: background 0.15s, color 0.15s, box-shadow 0.18s ease, border-color 0.15s; }
-.btn-outline:hover { background: #00E5FF; color: var(--void); border-color: #00E5FF; box-shadow: 0 0 28px rgba(0,212,255,0.4); }
-.btn-outline:focus-visible { background: #00E5FF; color: var(--void); border-color: #00E5FF; box-shadow: 0 0 28px rgba(0,229,255,0.5); }
+/* RUN 3 · FINAL SKIN — the legacy pair maps onto the canonical button system.
+   .btn-primary IS the one solid green per page on the 40 stamped SEO pages
+   (each carries exactly one; verified by count before this edit). .btn-outline
+   is quiet. Pages that declare their own .btn-primary locally — /chauffeur
+   (Brand B, never cross tokens), /intake, /chatgpt-example, /live — are
+   untouched by this rule and keep their own treatment. */
+.btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; background: var(--green); color: var(--canvas); border: 1px solid rgba(255,255,255,0.16); border-radius: 999px; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; text-transform: none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 24px rgba(46,230,168,0.18); transition: transform 0.18s cubic-bezier(.16,1,.3,1), box-shadow 0.18s ease; }
+.btn-primary:hover { transform: translateY(-2px); background: var(--green); color: var(--canvas); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 14px 38px rgba(46,230,168,0.27); }
+.btn-primary:active { transform: translateY(0); transition-duration: 0.09s; }
+.btn-primary:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; background: var(--green); color: var(--canvas); }
+.btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; background: rgba(18,18,26,0.72); color: var(--text); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; text-transform: none; transition: transform 0.18s cubic-bezier(.16,1,.3,1), border-color 0.18s ease; }
+.btn-outline:hover { transform: translateY(-2px); background: rgba(18,18,26,0.72); color: var(--text); border-color: rgba(46,230,168,0.5); }
+.btn-outline:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; background: rgba(18,18,26,0.72); color: var(--text); }
 .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--line); padding: 4px 0; transition: color 0.15s, border-color 0.15s; }
 .btn-secondary:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
 
@@ -218,8 +225,9 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .contact-phone { font-family: var(--font-display); font-weight: 600; font-size: 28px; letter-spacing: -0.01em; color: var(--ink); display: block; margin-bottom: 12px; }
 .contact-phone:hover { color: var(--cyan); }
 .contact-text { font-family: var(--font-body); font-size: 14px; color: var(--ink-mute); line-height: 1.55; }
-.contact-cta-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; padding: 14px 24px; background: transparent; color: var(--cyan); border: 1px solid var(--cyan); font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: background 0.15s, color 0.15s; }
-.contact-cta-btn:hover { background: var(--cyan); color: var(--void); }
+/* RUN 3: quiet — the page's green already lives in the hero and the footer */
+.contact-cta-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; margin-top: 16px; min-height: 52px; padding: 0 24px; background: rgba(18,18,26,0.72); color: var(--text); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; text-transform: none; transition: border-color 0.18s ease, transform 0.18s cubic-bezier(.16,1,.3,1); }
+.contact-cta-btn:hover { background: rgba(18,18,26,0.72); color: var(--text); border-color: rgba(46,230,168,0.5); transform: translateY(-2px); }
 
 /* 06. FOOTER — 4-col grid */
 footer.main-footer { border-top: 1px solid var(--line); padding: 64px 32px 32px; max-width: 1280px; margin: 0 auto; }

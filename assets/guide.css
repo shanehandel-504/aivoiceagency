@@ -213,4 +213,19 @@ html[data-theme="light"]{
   --bz-void:#F4F6FA; --bz-ink:#10131A; --bz-cyan:#00749C;
   --bz-line:rgba(0,135,190,.28); --bz-surface:rgba(255,255,255,.88);
   --ink-2:#5A6272;
+  /* RUN 3 · FINAL SKIN light twins. Without these the RUN 3 tokens stay at their
+     dark values and any token-driven component (the 3AM strip, the status rail,
+     the .cta pair) paints black-on-white when the toggle flips. Every value below
+     is MEASURED on the #F4F6FA canvas — lowest is green at 4.70:1. */
+  --canvas:#F4F6FA;    /* —                        */
+  --panel:#FFFFFF;     /* —                        */
+  --text:#10131A;      /* 17.17:1 ✓                */
+  --body-dim:#3A4150;  /*  9.46:1 ✓                */
+  --neutral:#5A6272;   /*  5.67:1 ✓                */
+  --green:#0B7E56;     /*  4.70:1 ✓  advance       */
+  --amber:#8A5A00;     /*  5.48:1 ✓  cost of miss  */
+  --red:#C2182A;       /*  5.61:1 ✓  the miss      */
+  /* --cyan is already remapped to #00749C (4.88:1 ✓) above.
+     --paper / --paper-ink / --light-link do NOT flip: the paper document card is
+     a deliberate light surface in BOTH themes (it is Google's own words). */
 }

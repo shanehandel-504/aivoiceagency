@@ -5,17 +5,65 @@
    Linked in every page <head> BEFORE that page's own styles, so every page can
    consume the tokens and inherits the shared polish (focus, glass, LIVE dot).
 
-   Semantic color law (also in DESIGN.md):
-     green  = live status     gold = money / pricing
-     violet = featured        cyan = everything else
-     Budget: max ~3 accent moments per screen.
-
    This file only defines :root tokens + OPT-IN utility classes + a global
    keyboard-focus rule. It sets NO base/body styles, so linking it onto an
    existing page can never cause a visual regression.
    ============================================================================ */
 
+/* ============================================================================
+   SEMANTIC LAW — RUN 3 · FINAL SKIN (2026-07-23)
+   ----------------------------------------------------------------------------
+   Enforced on every page this run touches. Supersedes the pre-X accent law
+   (cyan=brand · green=live · gold=money · violet=badge), which remains an
+   accurate description of untouched legacy surfaces only.
+
+   CYAN    = INSPECT THE SYSTEM.
+             Focus rings, links, technical states, the idle waveform.
+
+   GREEN   = ADVANCE THE SALE.
+             MAX ONE solid green CTA per viewport, sitewide. Selected slot,
+             final confirmation, result chip. Never decoration.
+
+   AMBER   = THE COST OF THE MISS.
+             Loss stats, pending states, urgency.
+
+   RED     = THE MISS ITSELF.
+             Missed calls, voicemail, validation errors.
+             NEVER adjacent to a primary CTA. NEVER a background wash.
+             Text on any solid red fill = #0A0A0F (never #EEF0F4 — fails AA).
+
+   NEUTRAL = inactive · not-yet · n/a. Never counts toward the
+             max-2-signal-colors-per-section cap.
+
+   Problem zone lives UPSTREAM (red/amber). Resolution zone lives DOWNSTREAM
+   (green/cyan). They do not share a viewport band.
+   ============================================================================ */
+
 :root {
+  /* ---- RUN 3 · FINAL SKIN TOKENS (law) --------------------------------- */
+  --canvas:     #0A0A0F;   /* page void                                    */
+  --panel:      #12121A;   /* panel surface on void                        */
+  --text:       #EEF0F4;   /* primary text            17.31:1 on canvas ✓ */
+  --body-dim:   #B7BFCE;   /* body copy / inclusions  11.19:1 on canvas ✓ */
+  --neutral:    #8A93A6;   /* inactive · not-yet · n/a  6.40:1 ✓          */
+
+  --cyan:       #00D4FF;   /* inspect the system      11.16:1 ✓           */
+  --green:      #2EE6A8;   /* advance the sale        12.23:1 ✓           */
+  --amber:      #FFB020;   /* the cost of the miss    10.80:1 ✓           */
+  --red:        #FF3B4E;   /* the miss itself          5.63:1 ✓           */
+
+  --paper:      #F7F8FA;   /* the ONLY light surface — Google's own words  */
+  --paper-ink:  #14161C;   /* text on paper           17.02:1 ✓           */
+  --light-link: #00688F;   /* body links on paper      5.51:1 ✓           */
+                           /* #0090C8 is 3.39:1 — LARGE TEXT (>=24px) ONLY */
+
+  /* NAME NOTE — RUN 3's spec calls the paper text colour `--ink`. `--ink` is
+     already load-bearing sitewide as CURRENT-THEME body text (#EEF0F4 dark /
+     #10131A light, remapped by assets/guide.css). Redefining it here would
+     paint near-black text on the dark void across 184 pages. The RUN 3 value
+     therefore ships as `--paper-ink`; the semantics are identical. */
+
+  /* ---- Legacy palette (untouched surfaces) ----------------------------- */
   /* ---- Palette --------------------------------------------------------- */
   --void:        #0A0A0F;   /* background — never pure black            */
   --void-raise:  #14141C;   /* raised surface (card on void)           */
@@ -145,6 +193,46 @@
   text-transform: uppercase;
   white-space: nowrap;
   box-shadow: 0 0 24px rgba(139,92,246,0.55);
+}
+
+/* ============================================================================
+   RUN 3 · BUTTON SYSTEM — the canonical CTA pair. Sitewide.
+   ----------------------------------------------------------------------------
+   .cta        = ADVANCE THE SALE. Solid green. MAX ONE per viewport.
+   .cta--quiet = every other action. Never green fill; green only on hover
+                 border, which reads as "this could become the next step".
+   Both are 52px min-height (>=44px touch law) and carry a cyan focus ring.
+   ============================================================================ */
+.cta{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:999px;background:var(--green);color:var(--canvas);font:700 15px/1 "Space Grotesk",sans-serif;border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 24px rgba(46,230,168,.18);transition:transform .18s cubic-bezier(.16,1,.3,1),box-shadow .18s ease}
+.cta:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 14px 38px rgba(46,230,168,.27)}
+.cta:active{transform:translateY(0);transition-duration:.09s}
+.cta:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.cta--quiet{background:rgba(18,18,26,.72);color:var(--text);border:1px solid rgba(255,255,255,.14);box-shadow:none}
+.cta--quiet:hover{border-color:rgba(46,230,168,.5)}
+
+/* Shared geometry. .cta--quiet is usable BOTH as a modifier (class="cta cta--quiet")
+   and standalone (class="cta--quiet") — the sitewide sweep uses it standalone, so
+   it has to carry the box on its own or it collapses to an inline link. */
+.cta,.cta--quiet{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+  gap:10px;min-height:52px;padding:0 28px;border-radius:999px;max-width:100%;
+  font:700 15px/1 "Space Grotesk",sans-serif;letter-spacing:.02em;text-align:center;
+  text-decoration:none;cursor:pointer}
+.cta--quiet{transition:transform .18s cubic-bezier(.16,1,.3,1),border-color .18s ease}
+.cta--quiet:hover{transform:translateY(-2px)}
+.cta--quiet:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.cta svg,.cta--quiet svg{flex:none}
+
+/* Light theme. rgba(18,18,26,.72) is a DARK-theme fill — on paper it renders as a
+   grey slab with a near-invisible label. Measured: ink on white pill = 18.58:1 ✓,
+   white on the light-green fill = 5.08:1 ✓ (ink on that green is 3.66:1 — FAILS,
+   so the green label stays white in light, unlike dark where it is --canvas). */
+html[data-theme="light"] .cta--quiet{background:#FFFFFF;color:var(--text);border-color:rgba(16,19,26,.20)}
+html[data-theme="light"] .cta--quiet:hover{border-color:var(--green)}
+html[data-theme="light"] .cta,
+html[data-theme="light"] .cta:hover{color:#FFFFFF}
+@media(prefers-reduced-motion:reduce){
+  .cta,.cta--quiet{transition:none}
+  .cta:hover,.cta--quiet:hover{transform:none}
 }
 
 /* ---- Global keyboard focus (a11y) ------------------------------------- */

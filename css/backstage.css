@@ -37,17 +37,24 @@ body.backstage::before{content:"";position:fixed;inset:0;pointer-events:none;z-i
   font-size:14px;transition:top .2s var(--quiet-settle)}
 .bs-skiplink:focus{top:0}
 
-/* ---- CTAs ---- */
+/* ---- CTAs ----
+   RUN 3 · the filled-cyan primary is RETIRED at the mixin. .bs-cta-cyan was the
+   site's "primary" on ~120 stamped pages, which meant three or four filled cyan
+   buttons could share one viewport, all shouting, none of them meaning anything
+   under the semantic law (cyan = INSPECT the system, not advance the sale).
+   Both variants now render the QUIET treatment. The one solid green per viewport
+   is opted into explicitly with .cta (assets/circulant.css). */
 .bs-cta{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;
-  padding:0 26px;border-radius:12px;font-weight:700;font-size:15.5px;letter-spacing:.04em;max-width:100%;
+  padding:0 28px;border-radius:999px;font-weight:700;font-size:15.5px;letter-spacing:.04em;max-width:100%;
   text-decoration:none;border:1px solid transparent;cursor:pointer;
-  transition:transform .18s var(--quiet-settle),box-shadow .18s var(--quiet-settle)}
+  transition:transform .18s var(--quiet-settle),border-color .18s var(--quiet-settle)}
 .bs-cta:active{transform:scale(.98)}
-.bs-cta-cyan{background:var(--cyan);color:#03151B}
-.bs-cta-cyan:hover{box-shadow:0 0 24px rgba(0,212,255,.35)}
-html[data-theme="light"] .bs-cta-cyan{color:#FFFFFF}
-.bs-cta-line{background:transparent;color:var(--ink);border-color:var(--line)}
-.bs-cta-line:hover{border-color:var(--cyan);color:var(--cyan)}
+.bs-cta-cyan,.bs-cta-line{background:rgba(18,18,26,.72);color:var(--ink);border-color:rgba(255,255,255,.14);box-shadow:none}
+.bs-cta-cyan:hover,.bs-cta-line:hover{border-color:rgba(46,230,168,.5);color:var(--ink);transform:translateY(-2px)}
+html[data-theme="light"] .bs-cta-cyan,
+html[data-theme="light"] .bs-cta-line{background:#FFFFFF;color:var(--ink);border-color:rgba(16,19,26,.20)}
+html[data-theme="light"] .bs-cta-cyan:hover,
+html[data-theme="light"] .bs-cta-line:hover{border-color:var(--green);color:var(--ink)}
 
 /* ============================================================
    ORB — one <span class="orb"> + <i>✓</i>. Three paint layers,
@@ -135,11 +142,17 @@ html[data-theme="light"] .orb i{color:#FFFFFF}
 .bs-callbar{position:fixed;left:0;right:0;bottom:0;z-index:940;display:flex;gap:10px;
   align-items:center;justify-content:center;padding:10px max(14px,env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom));
   background:var(--e3);box-shadow:var(--e3-sh);border-top:1px solid var(--line)}
+/* RUN 3: the persistent bar is CHROME. It floats over every viewport, so a solid
+   fill here would double whatever green that viewport already owns. Both buttons
+   are quiet; the green hover border still reads "this is the next step". */
 .bs-callbar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;
-  border-radius:10px;font-weight:700;font-size:14px;letter-spacing:.04em;text-decoration:none;padding:0 18px}
-.bs-callbar .bs-cb-tel{background:var(--cyan);color:#03151B;flex:1;max-width:420px}
-html[data-theme="light"] .bs-callbar .bs-cb-tel{color:#FFFFFF}
-.bs-callbar .bs-cb-book{border:1px solid var(--line);color:var(--ink)}
+  border-radius:999px;font-weight:700;font-size:14px;letter-spacing:.04em;text-decoration:none;padding:0 18px;
+  border:1px solid rgba(255,255,255,.14);transition:border-color .18s var(--quiet-settle)}
+.bs-callbar a:hover{border-color:rgba(46,230,168,.5)}
+.bs-callbar .bs-cb-tel{background:rgba(18,18,26,.72);color:var(--ink);flex:1;max-width:420px}
+.bs-callbar .bs-cb-book{background:rgba(18,18,26,.72);color:var(--ink)}
+html[data-theme="light"] .bs-callbar a{background:#FFFFFF;color:var(--ink);border-color:rgba(16,19,26,.20)}
+html[data-theme="light"] .bs-callbar a:hover{border-color:var(--green)}
 /* yield to the open mobile burger menu (bnav-menu is z 899, callbar 940) */
 body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
 
@@ -153,16 +166,49 @@ body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
 .bs-hero .g-eyebrow{margin-bottom:10px}
 .bs-hero h1{font-size:clamp(34px,8.6vw,64px);line-height:1.05;letter-spacing:-.02em;
   margin:0 auto .35em;max-width:16ch;color:var(--ink)}
-.bs-sub{font-size:clamp(15px,2.2vw,18px);line-height:1.55;color:var(--ink-mute);
-  max-width:56ch;margin:0 auto 20px}
+/* RUN 3 hero copy ladder: sub = the consequence (A2, protected verbatim), carried
+   at near-headline weight; support = the plain-language mechanism underneath it.
+   Hero accents are cyan / white / neutral only — no amber, no red above the fold
+   until the 3AM STRIP, which owns the miss moment. */
+.bs-sub{font-size:clamp(17px,2.9vw,22px);line-height:1.4;color:var(--text);font-weight:600;
+  max-width:30ch;margin:0 auto 14px;letter-spacing:-.005em}
+.bs-support{font-size:clamp(14.5px,2vw,16.5px);line-height:1.6;color:var(--body-dim);
+  max-width:58ch;margin:0 auto 22px}
 .bs-hcta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 /* P2: at 390 the fixed-content CTAs (362px) overran the 350 column — stack them
    full-width so they fit instead of getting clipped by the overflow belt */
 @media(max-width:440px){
   .bs-hcta{flex-direction:column;align-items:stretch}
-  .bs-hcta .bs-cta{width:100%}
+  .bs-hcta .bs-cta,.bs-hcta .cta,.bs-hcta .cta--quiet{width:100%}
 }
 .bs-micro{font-family:var(--g-mono);font-size:11.5px;letter-spacing:.1em;color:var(--ink-mute);margin:12px 0 16px}
+
+/* ============================================================
+   3AM STRIP — the single above-fold miss moment. RED = the miss,
+   AMBER = the cost of it. These two hues appear nowhere else
+   above the fold; the hero proper stays cyan / white / neutral.
+   Every colour is a token, so the strip flips with the theme
+   (it used to be hardcoded #101018 and stayed black in light).
+   Red sits on the far LEFT of the strip and the green hero CTA
+   above it — problem upstream, resolution downstream, never
+   adjacent. No red background wash: red is a 2px rule + a dot.
+   ============================================================ */
+.bs-3am{display:flex;align-items:center;justify-content:center;gap:8px 18px;flex-wrap:wrap;
+  padding:13px 20px;text-align:center;text-decoration:none;
+  background:var(--panel);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  border-left:2px solid var(--red);
+  transition:background .18s var(--quiet-settle)}
+.bs-3am:hover{background:color-mix(in srgb,var(--panel) 88%,var(--text))}
+.bs-3am-trace{display:inline-flex;align-items:center;gap:8px;flex:none;
+  font-family:var(--g-mono);font-size:12px;letter-spacing:.1em;font-weight:600;
+  color:var(--red);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bs-3am-dot{width:6px;height:6px;border-radius:50%;background:var(--red);flex:none}
+.bs-3am-cost{font-size:14.5px;line-height:1.45;font-weight:600;color:var(--amber);max-width:66ch}
+@media(max-width:520px){
+  .bs-3am{flex-direction:column;gap:7px;padding:12px 18px}
+  .bs-3am-cost{font-size:13.5px}
+}
 /* poster result strip (pre-tap) */
 .bs-result{display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;
   padding:10px 18px 10px 12px;border-radius:16px;background:var(--e1);box-shadow:var(--e1-sh);
@@ -287,10 +333,11 @@ html[data-theme="light"] .bs-stage.is-running .bs-wires path{stroke:rgba(0,116,1
 @supports not ((backdrop-filter:blur(6px)) or (-webkit-backdrop-filter:blur(6px))){
   .bs-payoff{background:var(--e3)}   /* opaque fallback so text AA never depends on blur */
 }
-/* P3: 1px gradient rim (cyan -> violet -> gold), corner-hugging via mask */
+/* 1px rim, corner-hugging via mask. RUN 3 rainbow audit: the cyan->violet->gold
+   journey is retired — a single cyan hairline fading out. Same geometry. */
 .bs-payoff::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;padding:1px;
   background:linear-gradient(140deg,color-mix(in srgb,var(--cyan) 60%,transparent),
-    color-mix(in srgb,var(--violet) 34%,transparent) 52%,color-mix(in srgb,var(--gold) 34%,transparent));
+    color-mix(in srgb,var(--cyan) 26%,transparent) 52%,color-mix(in srgb,var(--cyan) 10%,transparent));
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
 /* RUN 1.9 P1: the radial circle/halo behind JOB BOOKED is REMOVED (Shane).
@@ -300,12 +347,12 @@ html[data-theme="light"] .bs-stage.is-running .bs-wires path{stroke:rgba(0,116,1
   transition:transform .48s var(--quiet-settle),opacity .48s var(--quiet-settle)}
 .bs-stage.is-reviewed .bs-payoff{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s var(--glide),visibility 0s .3s}
 .bs-pr{font-size:clamp(26px,5vw,34px);font-weight:700;letter-spacing:.02em;color:var(--live-green);margin:0}
-.bs-pw{font-family:var(--g-mono);font-size:15px;letter-spacing:.1em;color:var(--gold);margin:8px 0 0}  /* P3: gold */
+.bs-pw{font-family:var(--g-mono);font-size:15px;letter-spacing:.1em;color:var(--body-dim);margin:8px 0 0}  /* RUN 3: gold retired */
 .bs-ps{font-family:var(--g-mono);font-size:12.5px;letter-spacing:.14em;color:var(--ink-mute);margin:6px 0 0;
   font-variant-numeric:tabular-nums}
 .bs-ps [data-p-secs]{color:var(--cyan);font-weight:700;font-size:1.24em}  /* P3: the count in cyan (large+bold = AA) */
-.bs-pt{font-family:var(--g-mono);font-size:12.5px;letter-spacing:.14em;color:#A78BFA;margin:2px 0 0}  /* P3: violet (bright for dark AA) */
-html[data-theme="light"] .bs-pt{color:#6355E6}   /* P3: light violet keeps AA on the white panel */
+.bs-pt{font-family:var(--g-mono);font-size:12.5px;letter-spacing:.14em;color:var(--neutral);margin:2px 0 0}  /* RUN 3: violet retired */
+html[data-theme="light"] .bs-pt{color:#5A6272}
 /* P4: light payoff = paper elevation (layered soft shadows + crisp top line), not glow;
    96% opacity keeps every keyword safely above AA on the near-white panel */
 html[data-theme="light"] .bs-payoff{background:color-mix(in srgb,var(--e3) 96%,transparent);
@@ -411,51 +458,51 @@ html[data-theme="light"] .bs-payoff{background:color-mix(in srgb,var(--e3) 96%,t
 /* light theme: glass → clean white card */
 html[data-theme="light"] .bs-tier{background:#FFFFFF;box-shadow:var(--e2-sh);
   border-color:color-mix(in srgb,var(--accent) 34%,transparent)}
-html[data-theme="light"] .bs-tier[data-tier="growth"]{background:#FFFFFF;
-  box-shadow:var(--e3-sh),0 0 46px color-mix(in srgb,var(--violet) 20%,transparent)}
+html[data-theme="light"] .bs-tier[data-tier="growth"]{background:#FFFFFF;box-shadow:var(--e3-sh)}
 /* B3 selection ring — keeps the tab behavior; accent-colored, no layout shift */
 .bs-tier.is-reco{border-color:var(--accent);
   box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent),0 18px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07)}
 .bs-tier[data-tier="growth"].is-reco{
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 26%,transparent),0 24px 80px rgba(0,0,0,.5),0 0 70px color-mix(in srgb,var(--violet) 22%,transparent),inset 0 1px 0 rgba(255,255,255,.10)}
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent),0 18px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07)}
 @media(hover:hover){.bs-tier:hover{border-color:var(--accent)}}
 /* light theme needs its own state rules — the html-scoped light base out-specifies
    the bare .is-reco/:hover, so the B3 selection ring would otherwise never show */
 html[data-theme="light"] .bs-tier.is-reco{border-color:var(--accent);
   box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent),var(--e2-sh)}
 html[data-theme="light"] .bs-tier[data-tier="growth"].is-reco{
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 26%,transparent),var(--e3-sh),0 0 46px color-mix(in srgb,var(--violet) 20%,transparent)}
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent),var(--e2-sh)}
 @media(hover:hover){html[data-theme="light"] .bs-tier:hover{border-color:var(--accent)}}
 /* label / price / setup */
 .bs-tier .t-flag{font-family:var(--g-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--accent);font-weight:700;margin-bottom:8px;min-height:16px}
-/* growth flag: darkened --violet fails AA on the dark glass card → brighter in dark, darker on white */
-.bs-tier[data-tier="growth"] .t-flag{color:var(--violet-bright)}
-html[data-theme="light"] .bs-tier[data-tier="growth"] .t-flag{color:var(--violet)}
+/* RUN 3: growth flag drops violet (banned) — a chip is a label, not a badge colour */
+.bs-tier[data-tier="growth"] .t-flag{color:var(--neutral)}
+html[data-theme="light"] .bs-tier[data-tier="growth"] .t-flag{color:var(--neutral)}
 .bs-tier .t-name{font-size:19px;font-weight:700;color:var(--ink);margin:2px 0}
-.bs-tier .t-price{font-size:34px;font-weight:700;color:var(--gold);margin:6px 0 2px;letter-spacing:-.01em}
-.bs-tier .t-price span{font-size:15px;color:var(--ink-mute);font-weight:600}
-.bs-tier .t-setup{font-family:var(--g-mono);font-size:12.5px;color:var(--ink-mute);margin-bottom:18px}
+/* RUN 3 · type hierarchy: price = --text, inclusions = --body-dim, qualifiers = --neutral.
+   Gold-as-money is banned (§ 3); the number carries weight and size, not a hue. */
+.bs-tier .t-price{font-size:34px;font-weight:700;color:var(--text);margin:6px 0 2px;letter-spacing:-.01em}
+.bs-tier .t-price span{font-size:15px;color:var(--neutral);font-weight:600}
+.bs-tier .t-setup{font-family:var(--g-mono);font-size:12.5px;color:var(--neutral);margin-bottom:18px}
 /* ✓-in-circle bullets (donor) */
 .bs-tier ul{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:11px;flex:1;align-content:start}
 .bs-tier li{position:relative;padding:0 0 0 28px;font-size:14.5px;color:var(--g-read)}
 .bs-tier li::before{content:"✓";position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:50%;
   background:var(--accent-soft);color:var(--accent);font-size:10px;font-weight:800;line-height:18px;text-align:center}
-/* accent CTA pill; Growth = filled violet (darkened for AA white text) */
+/* RUN 3 · pricing CTA pills. The violet Growth fill is DEAD — violet-as-badge is
+   banned (§ 3) and a second filled button fought the one-green-per-viewport law.
+   Every tier CTA is now .cta--quiet shaped; the ONE solid green is transferred
+   onto the selected card's CTA by .is-picked (see PRICING SELECTION below). */
 .bs-tier .bs-cta{margin-top:auto;width:100%;border-radius:999px;
-  background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
-.bs-tier .bs-cta:hover{background:color-mix(in srgb,var(--accent) 22%,transparent);border-color:var(--accent)}
-.bs-tier[data-tier="growth"] .bs-cta{background:color-mix(in srgb,var(--violet) 78%,#000);color:#FFFFFF;border-color:transparent}
-.bs-tier[data-tier="growth"] .bs-cta:hover{background:color-mix(in srgb,var(--violet) 90%,#000);box-shadow:0 0 30px var(--accent-glow)}
-/* light theme CTA pills — accent-soft-on-white failed AA (and bs-cta-cyan forced white
-   text onto a near-white tint = ~1.2:1). Outline pill on white + a darkened accent text
-   that clears 4.5:1; Growth stays the filled violet. */
+  background:rgba(18,18,26,.72);color:var(--text);border:1px solid rgba(255,255,255,.14);box-shadow:none}
+.bs-tier .bs-cta:hover{border-color:rgba(46,230,168,.5);background:rgba(18,18,26,.72)}
+/* light theme CTA pills — a tinted fill on white failed AA. Outline pill on white
+   with a darkened accent text that clears 4.5:1. Growth is no longer special-cased. */
 html[data-theme="light"] .bs-tier .bs-cta,
 html[data-theme="light"] .bs-tier .bs-cta-cyan{background:transparent;
   color:color-mix(in srgb,var(--accent) 82%,#000);border-color:var(--accent-line)}
 html[data-theme="light"] .bs-tier .bs-cta:hover,
-html[data-theme="light"] .bs-tier .bs-cta-cyan:hover{background:color-mix(in srgb,var(--accent) 9%,transparent);border-color:var(--accent)}
-html[data-theme="light"] .bs-tier[data-tier="growth"] .bs-cta{background:color-mix(in srgb,var(--violet) 78%,#000);color:#FFFFFF;border-color:transparent}
+html[data-theme="light"] .bs-tier .bs-cta-cyan:hover{background:transparent;border-color:var(--green)}
 @media(max-width:900px){.bs-tier[data-tier="growth"],.bs-tier.is-reco,.bs-tier:hover{transform:none}}
 
 /* ============================================================

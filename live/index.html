@@ -114,6 +114,15 @@
     --cyan:#00D4FF;
     --green:#2EE6A8;
     --red:#FF3B4E;
+    /* RUN 3 · FINAL SKIN additions. /live is standalone (it does not link
+       circulant.css), so the run's tokens are declared locally.
+       CYAN inspect · GREEN advance · AMBER cost-of-miss · RED the-miss.
+       Text on any solid red fill = --canvas (#EEF0F4 on red is 3.07:1). */
+    --canvas:#0A0A0F;
+    --amber:#FFB020;     /* 10.80:1 on canvas ✓ */
+    --neutral:#8A93A6;   /*  6.40:1 on canvas ✓ */
+    --body-dim:#B7BFCE;  /* 10.68:1 on canvas ✓ */
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
     /* 4px spacing scale — nothing lands off it */
     --s1:4px;  --s2:8px;  --s3:12px; --s4:16px;
     --s6:24px; --s8:32px; --s12:48px; --s24:96px;
@@ -143,14 +152,16 @@
   .col{max-width:var(--col);}
   .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 
+  /* RUN 3: de-glyphed. The ▮ kicker marker encoded nothing — a decorative block
+     that read as a rendering artifact on the phones this page is built for. */
   .kicker{
+    font-family:var(--mono);
     font-size:12px;
     font-weight:600;
     letter-spacing:.22em;
     text-transform:uppercase;
     color:var(--muted);
   }
-  .kicker .tick{color:var(--cyan);}
 
   /* ---------------------------------------------------------- HEADER ---- */
   .lhead{
@@ -556,7 +567,7 @@
   <section class="hero">
     <div class="wrap">
       <div class="col">
-        <p class="kicker"><span class="tick">▮</span> The live test drive</p>
+        <p class="kicker">The live test drive</p>
         <h1>Hear AVA <span class="live">live.</span></h1>
         <p class="sub">Type your business in. Your phone rings in seconds. AVA answers it the way it answers your customers — <b>using your real website.</b></p>
         <a class="btn btn-primary" href="#live-intake" data-event="run_test_click_hero">&#9654;&nbsp; Run my live test</a>
@@ -655,7 +666,7 @@
             <p>Reply <span class="reply">READY</span> and AVA calls you in 3 seconds — or call AVA right now: <a href="tel:+14142408930" data-event="tel_tap_live_success"><b>414-240-8930</b></a>.</p>
             <div class="row-cta">
               <a class="btn btn-primary" href="tel:+14142408930" data-event="tel_tap_live_card">&#9654;&nbsp; Call AVA now</a>
-              <a class="btn btn-ghost" href="/book" data-event="book_click_live_success">Book a 15-minute call</a>
+              <a class="btn btn-ghost" href="/book" data-event="book_click_live_success">Book a 30-minute call</a>
             </div>
           </div>
 
@@ -743,7 +754,7 @@
           <h2>Heard enough? Set your own line up.</h2>
           <p>Fifteen minutes, no pitch deck. We walk your calls and tell you what AVA would answer.</p>
           <div class="row-cta">
-            <a class="btn btn-primary" href="/book" data-event="book_click_live_footer">Book a 15-minute call</a>
+            <a class="btn btn-primary" href="/book" data-event="book_click_live_footer">Book a 30-minute call</a>
             <a class="btn btn-ghost" href="tel:+14142408930" data-event="tel_tap_live_footer">Or call 414-240-8930</a>
           </div>
         </div>
