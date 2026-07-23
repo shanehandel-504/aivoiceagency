@@ -50,30 +50,60 @@ const REGISTRY = join(ROOT, 'automation', 'retell-agent-config.json');
 
 /* ---------------------------------------------------------------- prompt -- */
 
-function loadPrompt() {
-  const md = readFileSync(join(ROOT, 'docs', 'demo-agent-prompt.md'), 'utf8');
-  // Match the real heading at line-start, not the "## ROLE" mentioned in the
-  // provenance note's prose above it.
-  const m = md.match(/^## ROLE\s*$/m);
-  if (!m) throw new Error('docs/demo-agent-prompt.md has no "## ROLE" heading — cannot build the prompt.');
-  return md.slice(m.index).trim();
+/* ---------------------------------------------------------- DEPLOY PATCHES --
+ * The doc holds the Run-2-FINAL script. STAGE 4 there promises a dashboard that
+ * does not exist yet, so these substitutions are applied on the way to Retell —
+ * the deployed agent never promises a thing that is not built. The doc is never
+ * modified. Empty this array when Run 2 ships the dashboard.
+ *
+ * Every patch MUST match exactly once, or the deploy aborts. A silently-missed
+ * patch would put the dashboard promise live.
+ * -------------------------------------------------------------------------- */
+const DEPLOY_PATCHES = [
+  {
+    why: 'no dashboard / no surfaced recording in Run 1.5 — the setup link IS real',
+    from: '"I already built your dashboard — the recording of this exact call is sitting in it. The second we hang up, check your texts: your private link is live for 48 hours. Want me to send it now?" Any yes → trigger_dashboard_sms → STAGE_5.',
+    to: '"The second we hang up, check your texts — your setup link is live for 48 hours. Want me to send it now?" Any yes → STAGE_5.',
+  },
+  {
+    why: 'trigger_dashboard_sms is not a tool on this agent; n8n fires the post-call SMS',
+    from: "Pretty quick, right? Your dashboard's already built.",
+    to: "Pretty quick, right? Your setup link's already on its way.",
+  },
+];
+
+function between(md, tag) {
+  const re = new RegExp('<!-- ' + tag + ':BEGIN[\\s\\S]*?-->([\\s\\S]*?)<!-- ' + tag + ':END -->');
+  const m = md.match(re);
+  if (!m) throw new Error(`docs/demo-agent-prompt.md is missing the ${tag}:BEGIN/END markers.`);
+  return m[1].trim();
 }
 
-/* Pull the voicemail message out of the same doc so the two can never drift. */
-function loadVoicemail(md) {
-  const sec = md.slice(md.indexOf('## VOICEMAIL'));
-  const lines = sec.split('\n');
-  const out = [];
-  let started = false;
-  for (const ln of lines) {
-    if (ln.startsWith('> ')) { started = true; out.push(ln.slice(2).trim()); continue; }
-    if (started && !ln.startsWith('>')) break;
+/* The verbatim script, exactly as committed. */
+function loadPromptRaw() {
+  return between(readFileSync(join(ROOT, 'docs', 'demo-agent-prompt.md'), 'utf8'), 'PROMPT');
+}
+
+/* What actually ships to Retell = verbatim script + DEPLOY_PATCHES. */
+function loadPrompt() {
+  let p = loadPromptRaw();
+  for (const patch of DEPLOY_PATCHES) {
+    const hits = p.split(patch.from).length - 1;
+    if (hits !== 1) {
+      throw new Error(
+        `DEPLOY PATCH did not match exactly once (found ${hits}).\n` +
+        `  why: ${patch.why}\n  from: ${patch.from.slice(0, 90)}...\n` +
+        'The doc changed. Reconcile DEPLOY_PATCHES before deploying.'
+      );
+    }
+    p = p.replace(patch.from, patch.to);
   }
-  // The doc wraps the message in typographic quotes for readability — Retell
-  // must receive the bare spoken text.
-  const text = out.join(' ').replace(/\s+/g, ' ').trim().replace(/^["“”]+|["“”]+$/g, '').trim();
-  if (!text) throw new Error('Could not extract the voicemail block from docs/demo-agent-prompt.md');
-  return text;
+  return p;
+}
+
+/* Voicemail lives in its own marker block so the two can never drift. */
+function loadVoicemail(md) {
+  return between(md, 'VOICEMAIL').replace(/\s+/g, ' ').trim();
 }
 
 /* ------------------------------------------------------------------ http -- */
@@ -110,14 +140,25 @@ function llmSpec(prompt) {
     ],
     // Fallbacks for every dynamic variable, so a failed scrape can never put a
     // literal {{token}} or an empty hole into AVA's mouth.
+    // Fallbacks for every variable the script interpolates. These exist so a
+    // failed scrape can never put a literal {{token}} or an empty hole into
+    // AVA's mouth mid-sentence. n8n normally supplies all of them; these only
+    // fire if a variable is missing entirely.
+    //
+    // NOTE on scraped_fact: STAGE_2 says "and I saw {{scraped_fact}}", so this
+    // value becomes a claim about the prospect's site. It must therefore never
+    // be a specific invented fact (no numbers, no years, no guarantees) —
+    // CLAUDE.md bans fabricated proof. n8n derives a TRUE one from the page it
+    // actually read; this is the conservative floor.
     default_dynamic_variables: {
       first_name: 'there',
       company_name: 'your business',
-      website_url: '',
-      city: '',
+      website_url: 'your website',
+      city: 'your area',
       service_1: 'the work you do',
-      service_2: '',
-      scraped_fact: ''
+      service_2: 'more',
+      scraped_fact: 'you list your services right up front',
+      services_typed: 'the work you do'
     }
   };
 }
@@ -159,8 +200,36 @@ function saveRegistry(reg) {
 if (mode === '--show') {
   console.log('--- prompt chars:', prompt.length);
   console.log('--- voicemail chars:', voicemail.length);
-  console.log('--- voicemail text ---\n' + voicemail);
-  console.log('\n--- prompt head ---\n' + prompt.slice(0, 600));
+  console.log('--- deploy patches applied:', DEPLOY_PATCHES.length);
+  console.log('\n--- voicemail text ---\n' + voicemail);
+  console.log('\n--- DEPLOYED prompt ---\n' + prompt);
+  process.exit(0);
+}
+
+/* --diff — show doc-vs-deployed, and what Retell is actually serving now. */
+if (mode === '--diff') {
+  const raw = loadPromptRaw();
+  console.log('=== DOC (Run-2-final) vs DEPLOYED ===');
+  for (const p of DEPLOY_PATCHES) {
+    console.log('\n  WHY : ' + p.why);
+    console.log('  DOC : ' + p.from);
+    console.log('  LIVE: ' + p.to);
+  }
+  console.log('\ndoc chars %d -> deployed chars %d'.replace('%d', raw.length).replace('%d', prompt.length));
+
+  if (existsSync(REGISTRY)) {
+    const reg = JSON.parse(readFileSync(REGISTRY, 'utf8'));
+    for (const key of Object.keys(reg.agents)) {
+      const a = reg.agents[key];
+      const live = await call('GET', `/get-retell-llm/${a.llm_id}`);
+      const gp = live.general_prompt || '';
+      console.log(`\n${a.agent_name} (${a.llm_id})`);
+      console.log('  live chars      : ' + gp.length);
+      console.log('  matches deployed: ' + (gp.trim() === prompt.trim()));
+      console.log('  dashboard claim : ' + (/dashboard/i.test(gp) ? 'PRESENT -- BAD' : 'absent (correct)'));
+      console.log('  ghost tool ref  : ' + (/trigger_dashboard_sms/.test(gp) ? 'PRESENT -- BAD' : 'absent (correct)'));
+    }
+  }
   process.exit(0);
 }
 
@@ -194,16 +263,44 @@ if (mode === '--create') {
 if (mode === '--update') {
   if (!existsSync(REGISTRY)) { console.error('No automation/retell-agent-config.json — run --create first.'); process.exit(1); }
   const reg = JSON.parse(readFileSync(REGISTRY, 'utf8'));
+  const spec = llmSpec(prompt);
+
   for (const key of Object.keys(reg.agents)) {
     const a = reg.agents[key];
-    await call('PATCH', `/update-retell-llm/${a.llm_id}`, { general_prompt: prompt });
-    await call('PATCH', `/update-agent/${a.agent_id}`, {
-      voicemail_option: { action: { type: 'static_text', text: voicemail } }
+
+    /* Retell PUBLISHED versions are IMMUTABLE — a PATCH against one returns
+       400 "Cannot update published LLM". The documented edit path is:
+         1. fork an editable draft off the current version
+         2. PATCH the LLM + the agent on that draft
+         3. publish the draft (which publishes the linked LLM too)
+       See retell-backups/README.md. */
+    const live = await call('GET', `/get-agent/${a.agent_id}`);
+    const base = live.version;
+
+    let draft = live;
+    if (live.is_published) {
+      draft = await call('POST', `/create-agent-version/${a.agent_id}`, { base_version: base });
+      console.log(`  forked ${a.agent_name}: v${base} -> editable v${draft.version}`);
+    }
+    const ver = draft.version;
+
+    await call('PATCH', `/update-retell-llm/${a.llm_id}?version=${draft.response_engine.version}`, {
+      general_prompt: prompt,
+      default_dynamic_variables: spec.default_dynamic_variables,
     });
-    console.log(`updated ${a.agent_name} (${a.agent_id})`);
+    await call('PATCH', `/update-agent/${a.agent_id}?version=${ver}`, {
+      voicemail_option: { action: { type: 'static_text', text: voicemail } },
+    });
+    await call('POST', `/publish-agent-version/${a.agent_id}`, { version: ver });
+
+    a.version = ver;
+    console.log(`updated + published ${a.agent_name} (${a.agent_id}) -> v${ver}`);
   }
+
   reg.updated_at = new Date().toISOString();
   reg.prompt_chars = prompt.length;
+  reg.prompt_source = 'docs/demo-agent-prompt.md (PROMPT:BEGIN/END markers) + DEPLOY_PATCHES';
+  reg.deploy_patches = DEPLOY_PATCHES.map((p) => p.why);
   saveRegistry(reg);
   process.exit(0);
 }
