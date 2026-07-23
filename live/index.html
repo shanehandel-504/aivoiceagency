@@ -238,10 +238,13 @@
     transition:background .18s ease,border-color .18s ease,color .18s ease;
   }
   .btn:hover{text-decoration:none;}
-  .btn-primary{background:var(--cyan);color:#04161C;}
-  .btn-primary:hover{background:#4FE3FF;}
+  /* RUN 3: "Run my live test" is the ONE solid green on this page — it is the
+     only action here that advances the sale. Text on the green fill is
+     --canvas (12.23:1); everything else on the page is quiet or cyan. */
+  .btn-primary{background:var(--green);color:var(--canvas);border-color:var(--green);}
+  .btn-primary:hover{background:#4FF0BC;border-color:#4FF0BC;color:var(--canvas);}
   .btn-ghost{background:transparent;border-color:var(--line);color:var(--text);}
-  .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+  .btn-ghost:hover{border-color:var(--green);color:var(--text);}
   .btn-block{width:100%;}
 
   /* ------------------------------------------- LIVING WAVEFORM (idle) ----
@@ -342,6 +345,10 @@
     transition:border-color .18s ease;
   }
   .field textarea{min-height:96px;resize:vertical;}
+  /* ---- RUN 3 · FIELD STATE LANGUAGE ------------------------------------
+     NEUTRAL at rest -> CYAN on focus (inspect) -> RED on validation error
+     (the miss) -> GREEN on accepted (advance). Each state is carried by the
+     border, so the field never moves and the form never reflows. ---- */
   .field input:hover,.field textarea:hover{border-color:#3A3A48;}
   .field input:focus,.field textarea:focus{border-color:var(--cyan);}
   .field input:disabled{
@@ -358,6 +365,18 @@
   }
   .field.bad input,.field.bad textarea{border-color:var(--red);}
   .field.bad .err{display:block;}
+  /* accepted — a 2px green edge and a green tick. Never a fill: a solid green
+     field would read as a CTA and steal the page's one green. */
+  .field.ok input,.field.ok textarea{border-color:var(--green);}
+  .field.ok{position:relative;}
+  .field.ok label.lab::after{
+    content:"✓";
+    color:var(--green);
+    font-weight:700;
+    margin-left:var(--s2);
+  }
+  /* consent + helper text are neutral micro-labels — no competing badges */
+  .field .help,.check .lab-in{color:var(--neutral);}
 
   .check{
     display:flex;
@@ -459,6 +478,48 @@
     margin-top:var(--s6);
   }
   .card-note.warn{border-left-color:var(--red);}
+
+  /* ---- RUN 3 · PENDING STATE ------------------------------------------
+     After submit the text is out but nothing has happened yet. That is a
+     PENDING state, so it is AMBER — not green (nothing has advanced) and
+     not red (nothing has been missed). The card's left edge turns amber
+     until the visitor does their half of it. ---- */
+  .card-note{border-left-color:var(--amber);}
+  .pending{
+    display:flex; align-items:center; gap:var(--s2);
+    font-family:var(--mono);
+    font-size:12px; letter-spacing:.14em; font-weight:700;
+    color:var(--amber);
+    margin-top:var(--s4);
+  }
+  .pending .dot{
+    width:7px; height:7px; border-radius:50%;
+    background:var(--amber); flex:none;
+    animation:pend 1.8s ease-in-out infinite;
+  }
+  @keyframes pend{0%,100%{opacity:.45}50%{opacity:1}}
+  @media(prefers-reduced-motion:reduce){ .pending .dot{animation:none;opacity:1} }
+
+  /* ---- receipt preview — the EXACT text they are about to look for, in
+     mono, so the phone in their hand matches the screen. ---- */
+  .receipt{
+    margin-top:var(--s4);
+    background:var(--void);
+    border:1px solid var(--line);
+    border-left:2px solid var(--neutral);
+    padding:var(--s4);
+    font-family:var(--mono);
+    font-size:13px;
+    line-height:1.65;
+    color:var(--body-dim);
+  }
+  .receipt .rc-head{
+    display:block;
+    font-size:10.5px; letter-spacing:.16em; font-weight:700;
+    color:var(--neutral);
+    margin-bottom:var(--s2);
+  }
+  .receipt b{color:var(--green);font-weight:700;}
   .card-note h3{
     font-size:clamp(20px,4vw,26px);
     font-weight:700;
@@ -695,6 +756,23 @@
           <div class="card-note" id="okCard" hidden>
             <h3>One text just landed.</h3>
             <p>Reply <span class="reply">READY</span> and AVA calls you in 3 seconds — or call AVA right now: <a href="tel:+14142408930" data-event="tel_tap_live_success"><b>414-240-8930</b></a>.</p>
+
+            <!-- PENDING. The text is out; nothing has advanced yet. Amber, not
+                 green (nothing booked) and not red (nothing missed). -->
+            <p class="pending"><span class="dot" aria-hidden="true"></span>WAITING ON YOUR REPLY — TEXT “READY”</p>
+
+            <!-- RECEIPT PREVIEW. This is the message VERBATIM as the deployed
+                 n8n LIVE INTAKE v1 workflow sends it (automation/
+                 live-intake.workflow.json, the GHL SMS node) — so the screen
+                 and the phone in their hand say exactly the same thing. If the
+                 workflow copy changes, this block changes with it. -->
+            <div class="receipt">
+              <span class="rc-head">FROM 350-220-5305 — WHAT YOUR PHONE SAYS</span>
+              This is AVA at AI Voice Agency — your live test from aivoiceagency.ai is loaded.<br><br>
+              Reply <b>READY</b> to accept a call from our AI demo agent in 3 seconds. Or hear AVA right now: 414-240-8930.<br><br>
+              Msg &amp; data rates may apply. Reply STOP to opt out.
+            </div>
+
             <div class="row-cta">
               <a class="btn btn-primary" href="tel:+14142408930" data-event="tel_tap_live_card">&#9654;&nbsp; Call AVA now</a>
               <a class="btn btn-ghost" href="/book" data-event="book_click_live_success">Book a 30-minute call</a>
@@ -785,7 +863,8 @@
           <h2>Heard enough? Set your own line up.</h2>
           <p>Fifteen minutes, no pitch deck. We walk your calls and tell you what AVA would answer.</p>
           <div class="row-cta">
-            <a class="btn btn-primary" href="/book" data-event="book_click_live_footer">Book a 30-minute call</a>
+            <!-- RUN 3: quiet. "Run my live test" is this page's only solid green. -->
+            <a class="btn btn-ghost" href="/book" data-event="book_click_live_footer">Book a 30-minute call</a>
             <a class="btn btn-ghost" href="tel:+14142408930" data-event="tel_tap_live_footer">Or call 414-240-8930</a>
           </div>
         </div>
@@ -863,8 +942,15 @@
   syncNoSite();
 
   /* ------------------------------------------------------- validation --- */
-  function setErr(id) { var n = document.getElementById(id); if (n) n.classList.add('bad'); }
+  /* RUN 3 state language: neutral at rest -> cyan on focus -> RED on error ->
+     GREEN on accepted. setErr/clearErr also clear the accepted flag so a field
+     can never show red and green at the same time. */
+  function setErr(id) { var n = document.getElementById(id); if (n) { n.classList.add('bad'); n.classList.remove('ok'); } }
   function clearErr(id) { var n = document.getElementById(id); if (n) n.classList.remove('bad'); }
+  function setOk(id, on) {
+    var n = document.getElementById(id);
+    if (n) { n.classList.toggle('ok', !!on); if (on) n.classList.remove('bad'); }
+  }
 
   function digits(s) { return String(s || '').replace(/\D+/g, ''); }
 
@@ -892,6 +978,31 @@
   function hostOf(href) {
     try { return new URL(href).hostname.replace(/^www\./i, ''); } catch (e) { return 'your site'; }
   }
+
+  /* ---- RUN 3 · live ACCEPTED state ------------------------------------
+     A field turns green the moment it is genuinely valid, on blur and while
+     typing once it has passed. On blur only for the first pass, so nobody is
+     told they are wrong halfway through typing their own phone number. ---- */
+  function gradeName() { setOk('f-name', String(elName.value || '').trim().length >= 2); }
+  function gradeUrl()  { if (!elNo.checked) setOk('f-url', !!normalizeUrl(elUrl.value)); }
+  function gradeSvc()  { if (elNo.checked)  setOk('f-svc', String(elSvc.value || '').trim().length >= 3); }
+  function gradeTel()  { setOk('f-tel', !!validPhone(elTel.value)); }
+
+  [[elName, gradeName], [elUrl, gradeUrl], [elSvc, gradeSvc], [elTel, gradeTel]].forEach(function (pair) {
+    var el = pair[0], grade = pair[1];
+    if (!el) return;
+    el.addEventListener('blur', grade);
+    el.addEventListener('input', function () {
+      var f = el.closest('.field');
+      /* while typing, only ever UPGRADE to green or clear a red — never
+         introduce a new red mid-keystroke */
+      if (f && (f.classList.contains('ok') || f.classList.contains('bad'))) grade();
+    });
+  });
+  if (elCon) elCon.addEventListener('change', function () {
+    var f = document.getElementById('f-consent');
+    if (f && elCon.checked) f.classList.remove('bad');
+  });
 
   /* ---------------------------------------------------------- theater --- */
   var TERM_STEP = 900;

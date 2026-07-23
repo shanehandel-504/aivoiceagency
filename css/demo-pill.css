@@ -49,8 +49,13 @@
 html[data-theme="light"] .dp-pill{background:#FFFFFF;color:#10131A;border-color:#E3E7EE;
   box-shadow:0 8px 24px rgba(16,19,26,.10),inset 0 1px 0 rgba(255,255,255,.7)}
 html[data-theme="light"] .dp-result{color:#10131A}
-html[data-theme="light"] .dp-result b{color:#0a9d57}   /* paper-safe green */
+/* RUN 3 AA fix — the previous light values were assumed, not measured, and all
+   three failed on white: green #0a9d57 = 3.52:1, cyan #0090b8 = 3.70:1, and the
+   kicker's <b> was never overridden at all so it stayed #00D4FF = 1.77:1.
+   Measured replacements: green 5.37:1 ✓ · cyan 6.22:1 ✓. */
+html[data-theme="light"] .dp-result b{color:#077A50}   /* 5.37:1 ✓ */
 html[data-theme="light"] .dp-kicker{color:#5A6473}
-html[data-theme="light"] .dp-go{color:#0090b8}
+html[data-theme="light"] .dp-kicker b{color:#00688F}   /* 6.22:1 ✓ */
+html[data-theme="light"] .dp-go{color:#00688F}         /* 6.22:1 ✓ */
 @media(hover:hover){html[data-theme="light"] .dp-pill:hover{border-color:#00D4FF}}
 @media(max-width:520px){html[data-theme="light"] .dp-go{border-top-color:#E3E7EE}}

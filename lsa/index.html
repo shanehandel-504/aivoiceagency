@@ -63,6 +63,16 @@
     --red-dim:rgba(255,59,78,.12);
     --line:rgba(238,240,244,.08);
     --mono:'Space Mono', ui-monospace, monospace;
+    /* RUN 3 · FINAL SKIN. /lsa is standalone (no circulant.css), so the run's
+       tokens are declared locally. All measured on the #0A0A0F void:
+       CYAN inspect · GREEN advance · AMBER the cost of the miss · RED the miss. */
+    --green:#2EE6A8;     /* 12.23:1 ✓ — the one solid CTA               */
+    --amber:#FFB020;     /* 10.80:1 ✓ — $28,458, the cost of the miss   */
+    --neutral:#8A93A6;   /*  6.40:1 ✓ — sources, inactive               */
+    --body-dim:#B7BFCE;  /* 10.68:1 ✓ — body copy                       */
+    /* the paper document card is a deliberate LIGHT surface in this dark page:
+       it holds Google's own words. Paper #F7F8FA · ink #14161C = 17.02:1 ✓ */
+    --paper:#F7F8FA; --paper-ink:#14161C; --light-link:#00688F;  /* 5.85:1 ✓ */
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -154,6 +164,17 @@
   .btn:active{transform:scale(.97);}
   .btn-cyan{background:var(--cyan);color:#03181E;}
   .btn-cyan:hover{background:#33DDFF;}
+  /* RUN 3: the hero's one solid green — the only "advance the sale" action
+     above the fold. Label on the fill is --canvas (12.23:1 ✓). */
+  .btn-green{background:var(--green);color:#0A0A0F;border-color:var(--green);}
+  .btn-green:hover{background:#4FF0BC;border-color:#4FF0BC;color:#0A0A0F;}
+  /* the number as a plain cyan link — dial it by hand if you'd rather */
+  .tel-plain{
+    display:inline-flex;align-items:center;min-height:48px;
+    font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:.02em;
+    color:var(--cyan);text-decoration:none;font-variant-numeric:tabular-nums;
+  }
+  .tel-plain:hover{text-decoration:underline;}
   .btn-ghost{border-color:rgba(0,212,255,.45);color:var(--cyan);}
   .btn-ghost:hover{border-color:var(--cyan);background:var(--cyan-dim);}
   .scroll-hint{
@@ -206,8 +227,18 @@
   }
   .transcript .line{white-space:pre-wrap;min-height:1.9em;}
   .transcript .line b{font-weight:700;}
+  /* ---- RUN 3 · TWO-STATE RECORDS -------------------------------------
+     The two call records are the page's argument, so they read as opposites
+     at a glance: MISSED carries a red left edge and a red mono label, ANSWERED
+     carries green. The problem record lives UPSTREAM of the resolution record,
+     and the green CTA lives downstream of both — red is never adjacent to it.
+     Red is an edge and a label here, never a background wash. ---- */
+  .t-miss{border-left:2px solid var(--red);}
+  .t-book{border-left:2px solid var(--green);}
   .t-miss .bar .dot{color:var(--red);}
-  .t-book .bar .dot{color:var(--cyan);}
+  .t-book .bar .dot{color:var(--green);}
+  .t-miss .bar span:first-child{color:var(--red);}
+  .t-book .bar span:first-child{color:var(--green);}
   .grade{
     display:inline-block;
     margin-top:14px;
@@ -223,8 +254,10 @@
     animation:stamp .3s cubic-bezier(.2,1.4,.4,1) forwards;
   }
   @keyframes stamp{to{opacity:1;transform:scale(1) rotate(-2deg);}}
+  /* labels, not fills — a solid red block would be a background wash, and light
+     text on solid red measures 3.07:1. Tinted background + coloured label. */
   .grade-miss{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,59,78,.5);}
-  .grade-book{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,212,255,.5);}
+  .grade-book{background:rgba(46,230,168,.10);color:var(--green);border:1px solid rgba(46,230,168,.5);}
   .t-note{
     font-family:var(--mono);
     font-size:11.5px;
@@ -232,6 +265,64 @@
     margin-top:14px;
     line-height:1.7;
   }
+
+  /* ======================================================================
+     RUN 3 · GOOGLE DOCUMENT CARD
+     ----------------------------------------------------------------------
+     The ONE light surface on this site. It exists because the words inside
+     it are Google's own — a verbatim quote from the Local Services
+     documentation, not our paraphrase (§ 6: paraphrase is attribution
+     fraud). Rendering it as a printed page rather than another dark panel
+     is the whole point: it does not look like something we wrote.
+     Paper #F7F8FA · ink #14161C = 17.02:1 ✓. Links on paper use
+     --light-link #00688F = 5.85:1 ✓ (#0090C8 is 3.39:1 and is barred from
+     body copy). Flat: a hairline and a fold rule, no drop shadow.
+     ====================================================================== */
+  .gdoc{
+    background:#F7F8FA;
+    color:#14161C;
+    border:1px solid #D8DCE4;
+    border-radius:4px;
+    padding:26px 26px 22px;
+    margin-top:22px;
+    max-width:640px;
+  }
+  .gdoc-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:#5A6272;
+    border-bottom:1px solid #D8DCE4;
+    padding-bottom:12px;
+    margin-bottom:18px;
+  }
+  .gdoc-quote{
+    font-size:clamp(19px,3.4vw,25px);
+    font-weight:600;
+    line-height:1.4;
+    letter-spacing:-.01em;
+    color:#14161C;
+    margin:0;
+  }
+  .gdoc-attr{
+    font-family:var(--mono);
+    font-size:11.5px;
+    line-height:1.7;
+    color:#3A4150;
+    margin-top:16px;
+    padding-top:14px;
+    border-top:1px solid #D8DCE4;
+  }
+  .gdoc-attr a{color:#00688F;text-decoration:underline;font-weight:600;}
+  .gdoc-attr a:hover{color:#004E6B;}
+  .gdoc-gloss{font-size:15px;line-height:1.6;color:#3A4150;margin-top:14px;}
+  .gdoc-gloss b{color:#14161C;font-weight:700;}
 
   /* ---------- PENALTY GRAPH ---------- */
   .graph-card{
@@ -277,28 +368,47 @@
     gap:14px;
     margin-top:8px;
   }
+  /* ---- RUN 3 · EVIDENCE CARDS ----------------------------------------
+     62% and 85% are DEMOTED. They used to be 58px hero numbers competing
+     with the $28,458 loss figure — three giant statistics on one page and
+     no hierarchy between them. They are now compact source-led evidence:
+     the number is small and neutral, and the SOURCE is promoted to sit
+     directly under it, because on a claims page the source is the point.
+     $28,458 stays the only hero number. ---- */
   .stat{
     background:var(--panel);
     border:1px solid var(--line);
-    border-radius:14px;
-    padding:26px 20px;
+    border-left:2px solid var(--line);
+    border-radius:10px;
+    padding:16px 18px;
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    flex-wrap:wrap;
   }
   .stat .num{
-    font-size:clamp(40px,9vw,58px);
+    font-family:var(--mono);
+    font-size:22px;
     font-weight:700;
-    letter-spacing:-.03em;
-    line-height:1;
-    color:var(--cyan);
+    letter-spacing:-.01em;
+    line-height:1.2;
+    color:var(--text);
+    flex:none;
   }
-  .stat p{color:var(--muted);font-size:14px;margin-top:10px;}
+  .stat p{color:var(--body-dim);font-size:14px;line-height:1.5;margin:0;flex:1;min-width:180px;}
+  /* the source is PROMOTED — on a claims page it carries more weight than the
+     number does, and it must be visible without hunting for it */
   .stat .src{
     font-family:var(--mono);
-    font-size:10px;
+    font-size:10.5px;
     letter-spacing:.14em;
     text-transform:uppercase;
-    color:rgba(138,147,166,.7);
+    color:var(--neutral);
     display:block;
-    margin-top:12px;
+    flex:1 0 100%;
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px solid var(--line);
   }
   @media(max-width:520px){.stats{grid-template-columns:1fr;}}
 
@@ -371,11 +481,14 @@
     flex-wrap:wrap;
     margin-top:8px;
   }
+  /* RUN 3: $28,458 is the page's ONE hero number, and it is AMBER — this is
+     the cost of the miss, not the miss itself. Red is reserved for the miss
+     (the voicemail record upstream). Amber measures 10.80:1 on the void. */
   .result .big{
     font-size:clamp(34px,8vw,50px);
     font-weight:700;
     letter-spacing:-.03em;
-    color:var(--red);
+    color:var(--amber);
   }
   .result .per{color:var(--muted);font-size:14px;}
   .vs{
@@ -457,9 +570,12 @@
     <div class="stamp-time">3:00<span class="am">AM</span></div>
     <h1>Your phone went to voicemail. <span class="listen">Google was listening.</span></h1>
     <p class="sub">Every LSA call runs through Google's own number. Google's AI transcribes it, grades it, and scores whether you answered. Voicemail counts against you — on every future search in your service area.</p>
+    <!-- RUN 3: the twin phone CTAs are merged. Two buttons pointing at the SAME
+         tel: link was a false choice — one solid green action, and the number
+         itself as a cyan text link for anyone who wants to dial it by hand. -->
     <div class="cta-row">
-      <a class="btn btn-cyan" href="tel:14142408930" data-event="lsa_call_tap">Call (414) 240-8930</a>
-      <a class="btn btn-ghost" href="tel:14142408930" data-event="lsa_demo_tap">Hear AVA live</a>
+      <a class="btn btn-green" href="tel:14142408930" data-event="lsa_call_tap">Hear AVA Live</a>
+      <a class="tel-plain" href="tel:14142408930" data-event="lsa_demo_tap">(414) 240-8930</a>
     </div>
     <div class="scroll-hint">↓ WHAT GOOGLE HEARD</div>
   </div>
@@ -481,8 +597,24 @@
       <div class="line" data-type="CALLER MESSAGE ....... none. hung up."></div>
       <div class="line" data-type="NEXT ACTION .......... caller dialed competitor"></div>
       <span class="grade grade-miss" id="gMiss">MISS — RESPONSIVENESS ↓</span>
-      <div class="t-note">Per Google's Local Services documentation: "Missed calls may negatively affect your responsiveness." Responsiveness is a ranking input.</div>
     </div>
+
+    <!-- RUN 3 · GOOGLE DOCUMENT CARD. The quote is VERBATIM from Google's Local
+         Services documentation. It is set as a printed page — the only light
+         surface on the site — precisely so it cannot be mistaken for our copy.
+         § 6: "Google says" means a direct quote or it is not Google saying it. -->
+    <figure class="gdoc reveal">
+      <div class="gdoc-head">
+        <span>Google · Local Services Ads Help</span>
+        <span>VERBATIM</span>
+      </div>
+      <blockquote class="gdoc-quote">“Missed calls may negatively affect your responsiveness.”</blockquote>
+      <figcaption class="gdoc-attr">
+        Google Local Services Ads documentation ·
+        <a href="https://support.google.com/localservices" target="_blank" rel="noopener">support.google.com/localservices</a>
+      </figcaption>
+      <p class="gdoc-gloss">Those are Google's words, not ours. <b>Responsiveness is one of the inputs Google names</b> — so an unanswered call is not just a lost lead, it is a signal fed back into the system that decides who gets shown next.</p>
+    </figure>
 
     <div class="graph-card reveal">
       <div class="bar"><span>YOUR LSA PLACEMENT</span><span class="red">AFTER THE MISS</span></div>
@@ -593,8 +725,9 @@
     <div class="site reveal">aivoiceagency.ai</div>
     <p class="terms reveal">Done for you. Your existing number. <b>From $497/mo.</b></p>
     <div class="cta-row reveal">
-      <a class="btn btn-cyan" href="tel:14142408930" data-event="lsa_demo_tap">Hear AVA live now</a>
-      <a class="btn btn-ghost" href="tel:14142408930" data-event="lsa_call_tap">Call (414) 240-8930</a>
+      <!-- RUN 3: same merge as the hero — one green action, the number as a link -->
+      <a class="btn btn-green" href="tel:14142408930" data-event="lsa_demo_tap">Hear AVA Live</a>
+      <a class="tel-plain" href="tel:14142408930" data-event="lsa_call_tap">(414) 240-8930</a>
     </div>
   </div>
 </section>

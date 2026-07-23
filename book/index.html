@@ -64,6 +64,98 @@
   .alt a{ color:var(--cyan); font-weight:600; text-decoration:none; white-space:nowrap; }
 
   @media(min-width:768px){ .shell,.shell iframe{ min-height:920px; } }
+
+  /* ======================================================================
+     RUN 3 · FOCUS MODE. /book has exactly one job. Every competing exit is
+     stripped back until the visitor has actually engaged the calendar.
+     The links are all still in the DOM — this is visual suppression, never
+     removal, so nothing is hidden from a crawler.
+     ====================================================================== */
+
+  /* --- nav collapses to logo + the phone number --- */
+  body.focus .bnav-menu > .bnav-group,
+  body.focus .bnav-menu > .bnav-top,
+  body.focus .bnav-menu > .bnav-cta,
+  body.focus .bnav-burger,
+  body.focus .bcrumb{ display:none; }
+  body.focus .bnav-menu{ display:flex; align-items:center; justify-content:flex-end;
+    position:static; inset:auto; background:none; border:none; box-shadow:none;
+    padding:0; height:auto; min-width:0; overflow:visible; transform:none; visibility:visible; }
+  body.focus .bnav-tel{ display:inline-flex; flex:none; white-space:nowrap; }
+  /* at 390 the mobile nav sizes the tel at 18px and centres it, which overran
+     the bar once the burger was gone — clamp it so the number always fits */
+  @media(max-width:820px){
+    body.focus .bnav{ gap:8px; padding-left:14px; padding-right:14px; }
+    body.focus .bnav-brand{ min-width:0; font-size:14px; }
+    body.focus .bnav-tel{ justify-content:flex-end; min-height:44px; font-size:15px; padding:0 2px; }
+  }
+  @media(max-width:380px){
+    body.focus .bnav-brand span:not(.bdot){ display:none; }   /* mark only */
+  }
+
+  /* --- proof rail: what they are actually agreeing to, before the embed --- */
+  .proof-rail{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+    gap:10px 22px; margin:0 auto 14px; padding:11px 18px; max-width:640px;
+    border-top:1px solid var(--line, rgba(255,255,255,.08));
+    border-bottom:1px solid var(--line, rgba(255,255,255,.08));
+    font-family:var(--g-mono); font-size:11.5px; letter-spacing:.14em; font-weight:600;
+    color:var(--neutral); text-transform:uppercase; }
+  .proof-rail b{ color:var(--text); font-weight:700; }
+
+  /* --- branded skeleton, sized to the FINAL calendar so the swap is silent.
+         Neutral, not cyan: nothing is happening yet, and a pulsing accent on
+         a loading state reads as activity that does not exist. --- */
+  .cal-skel{ display:block; padding:0; background:var(--e1); }
+  .skel-head{ height:64px; border-bottom:1px solid var(--line,rgba(255,255,255,.08));
+    display:flex; align-items:center; gap:12px; padding:0 20px; }
+  .skel-line{ background:var(--neutral); opacity:.14; border-radius:3px; }
+  .skel-head .skel-line:first-child{ width:132px; height:13px; }
+  .skel-head .skel-line:last-child{ width:76px;  height:11px; }
+  .skel-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:10px; padding:22px 20px; }
+  .skel-cell{ height:38px; border-radius:6px; background:var(--neutral); opacity:.09; }
+  .skel-slots{ display:grid; gap:10px; padding:4px 20px 24px; }
+  .skel-slot{ height:44px; border-radius:8px; background:var(--neutral); opacity:.12; }
+  .skel-note{ font-family:var(--g-mono); font-size:11.5px; letter-spacing:.12em;
+    color:var(--neutral); text-align:center; padding:0 20px 22px; }
+  @media(prefers-reduced-motion:no-preference){
+    .skel-line,.skel-cell,.skel-slot{ animation:skel-settle 1.9s ease-in-out infinite; }
+    @keyframes skel-settle{ 0%,100%{ opacity:.09 } 50%{ opacity:.17 } }
+  }
+
+  /* --- trust line: true as written. Contracts DO exist on higher tiers, so
+         this is scoped to Starter and never generalised sitewide. --- */
+  .trust-line{ text-align:center; font-size:14px; color:var(--body-dim); margin:14px auto 0; max-width:520px; }
+  .trust-line b{ color:var(--text); font-weight:600; }
+
+  /* --- footer: one line until the calendar is touched, directory below.
+         COLLAPSED, NOT REMOVED. /book is index,follow, so display:none on the
+         directory would drop 40+ internal links out of the render tree on an
+         indexed page. max-height + visibility keeps every link in the DOM and
+         in layout; visibility:hidden also takes them out of the tab order and
+         the a11y tree for free, so there is no invisible focus trap. --- */
+  body.focus .bfoot-grid,
+  body.focus .bfoot-action{
+    max-height:0; overflow:hidden; visibility:hidden;
+    margin-top:0; padding-top:0; border-top:0;
+    transition:max-height .45s cubic-bezier(.16,1,.3,1);
+  }
+  body.focus.engaged .bfoot-grid,
+  body.focus.engaged .bfoot-action{ max-height:none; overflow:visible; visibility:visible; }
+  body.focus.engaged .bfoot-action{ margin-top:40px; padding-top:26px; border-top:1px solid var(--bz-line,rgba(255,255,255,.08)); }
+  body.focus .bfoot-wrap{ padding-top:18px; padding-bottom:18px; }
+  body.focus .bfoot-legal{ margin:0; }
+  .foot-oneline{ display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center; justify-content:center;
+    font-size:13px; color:var(--neutral); margin-bottom:10px; }
+  .foot-oneline a{ color:var(--neutral); text-decoration:none; }
+  .foot-oneline a:hover{ color:var(--cyan); }
+  body.focus.engaged .foot-oneline{ display:none; }
+  @media(prefers-reduced-motion:reduce){
+    body.focus .bfoot-grid, body.focus .bfoot-action{ transition:none; }
+  }
+  /* on /book the footer's Book CTA is a loop back to this page — never green here */
+  body.focus .bfoot-action .bf-book{ background:rgba(18,18,26,.72); color:var(--text);
+    border:1px solid rgba(255,255,255,.14); box-shadow:none; }
+  html[data-theme="light"] body.focus .bfoot-action .bf-book{ background:#FFFFFF; color:var(--ink); border-color:rgba(16,19,26,.20); }
 </style>
 <script src="/js/tracking.js?v=8865063" async></script>
 <!-- BRIDGE:HEAD -->
@@ -76,7 +168,7 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://aivoiceagency.ai/"},{"@type":"ListItem","position":2,"name":"Book","item":"https://aivoiceagency.ai/book"}]}</script>
 <!-- /BRIDGE:CRUMBLD -->
 </head>
-<body>
+<body class="focus">
 
 <!-- BRIDGE:NAV -->
 <nav class="bnav" aria-label="Main">
@@ -134,13 +226,34 @@
 <!-- /BRIDGE:PILL -->
   <p class="alt hatch">Hear AVA live — <a href="tel:+14142408930">414-240-8930</a> &nbsp;·&nbsp;
     Calendar not loading? <a href="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg" target="_blank" rel="noopener">Open it full screen →</a></p>
+
+  <!-- RUN 3 · proof rail — what the slot actually is, stated before they pick one -->
+  <p class="proof-rail"><b>30 minutes</b> · Live on your line · No deck</p>
+
   <div class="shell" data-cal-shell>
-    <div class="cal-skel" data-cal-skel><span class="skel-dot" aria-hidden="true"></span>Loading the calendar…</div>
+    <!-- RUN 3 · branded skeleton shaped like the calendar it replaces (header,
+         7-column month grid, slot list) so the real widget swaps in without a
+         jolt. Neutral, never accent: nothing is happening yet, and a pulsing
+         cyan dot reads as activity that is not occurring. -->
+    <div class="cal-skel" data-cal-skel aria-hidden="true">
+      <div class="skel-head"><span class="skel-line"></span><span class="skel-line"></span></div>
+      <div class="skel-grid">
+        <span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span>
+        <span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span>
+        <span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span><span class="skel-cell"></span>
+      </div>
+      <div class="skel-slots"><span class="skel-slot"></span><span class="skel-slot"></span><span class="skel-slot"></span></div>
+      <p class="skel-note">BRINGING UP OPEN TIMES</p>
+    </div>
     <iframe src="https://api.leadconnectorhq.com/widget/booking/aCIv7rUnCGrysobt6Mlg"
       style="width:100%;border:none;min-height:920px" scrolling="no"
       id="aCIv7rUnCGrysobt6Mlg_booking" title="AVA demo scheduling calendar"
       onload="var s=document.querySelector('[data-cal-skel]'); if(s) s.classList.add('gone');"></iframe>
   </div>
+
+  <!-- RUN 3 · trust line. Scoped to Starter ON PURPOSE — contracts do exist on
+       the higher tiers, so a blanket "no contracts" claim would be false. -->
+  <p class="trust-line"><b>Starter is month-to-month.</b> Cancel anytime.</p>
 </main>
 
 <!-- BRIDGE:FOOTER -->
@@ -229,6 +342,58 @@
 <!-- /BRIDGE:FOOTER -->
 
 <script src="https://link.msgsndr.com/js/form_embed.js"></script>
+
+<!-- ===================== RUN 3 · FOCUS MODE ENGAGEMENT =====================
+     The footer stays one line until the visitor actually engages the calendar,
+     then the full directory unfolds. The calendar is a CROSS-ORIGIN iframe, so
+     clicks inside it are unreadable — but the browser still moves focus to the
+     frame, which surfaces as a window blur with the iframe as activeElement.
+     That is the signal. A scroll-past-the-embed fallback covers pointer users
+     who never take focus, and it is one-way: the footer never re-collapses.
+     No JS? The one-line footer + the full directory are BOTH in the DOM, so a
+     crawler sees every link either way. -->
+<script>
+(function(){
+  'use strict';
+  var body = document.body, shell = document.querySelector('[data-cal-shell]');
+  if (!body || !shell) return;
+
+  /* the one-line footer. Injected rather than authored into the markup because
+     the whole <footer> is a stamp.py-owned marker region — anything written
+     inline there is reverted on the next stamp run. */
+  var wrap = document.querySelector('.bfoot-wrap');
+  if (wrap) {
+    var one = document.createElement('p');
+    one.className = 'foot-oneline';
+    one.innerHTML = '<a href="tel:+14142408930">414-240-8930</a>'
+                  + '<a href="/privacy.html">Privacy</a>'
+                  + '<a href="/terms.html">Terms</a>'
+                  + '<span>&copy; 2026 AI Voice Agency</span>';
+    wrap.insertBefore(one, wrap.firstChild);
+  }
+
+  var done = false;
+  function engage(){
+    if (done) return; done = true;
+    body.classList.add('engaged');
+    removeEventListener('scroll', onScroll);
+    removeEventListener('blur', onBlur);
+  }
+  function onBlur(){
+    setTimeout(function(){
+      var a = document.activeElement;
+      if (a && a.tagName === 'IFRAME' && shell.contains(a)) engage();
+    }, 0);
+  }
+  function onScroll(){
+    if (shell.getBoundingClientRect().bottom < innerHeight * 0.9) engage();
+  }
+  addEventListener('blur', onBlur);
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
 <!-- BRIDGE:CALLBAR -->
 <div class="bcallbar" role="region" aria-label="Contact AVA">
   <a class="bcall ava-pulse" href="tel:+14142408930" data-event="tel_tap_callbar">&#9654; HEAR AVA LIVE</a>
