@@ -109,6 +109,27 @@
 
 <main id="main">
 
+<!-- ===================== AVA STATUS RAIL (RUN 3 · commit 2) =====================
+     REPLAY of REAL demo-line events. Sources are named in js/ava-signal.js:
+     (A) reports/2026-07-22-run15-e2e-proof.md — the Run 1.5 live proof call,
+         57s answered, 8/8 variables off a live scrape. It was a system test,
+         so it supplies RINGING / ANSWERED / INTENT FOUND and nothing past them.
+     (B) /audio/v2/plumbing/full.mp3 — a real recorded call, transcript open
+         further down this page. It supplies SLOT HELD / JOB BOOKED.
+     Nothing on this rail is invented. The three rows below are in the initial
+     DOM (real, readable with JS off) and the height is fixed, so CLS stays 0. -->
+<div class="bs-rail" data-rail>
+  <div class="bs-rail-head">
+    <span class="bs-rail-label">RECENT ACTIVITY — DEMO LINE</span>
+    <span class="bs-rail-tag">REPLAY</span>
+  </div>
+  <ol class="bs-rail-feed" data-rail-feed>
+    <li data-age="0" data-tone="done"><span class="bs-rail-at" data-rail-at>22:31:47</span><span class="bs-rail-state" data-rail-state>JOB BOOKED</span><span class="bs-rail-line" data-rail-line>7:00 AM BOOKED · CONFIRMATION TEXT SENT</span></li>
+    <li data-age="1" data-tone="work"><span class="bs-rail-at" data-rail-at>22:31:38</span><span class="bs-rail-state" data-rail-state>SLOT HELD</span><span class="bs-rail-line" data-rail-line>7:00 AM OFFERED · $59 TRIP FEE QUOTED</span></li>
+    <li data-age="2" data-tone="work"><span class="bs-rail-at" data-rail-at>22:31:12</span><span class="bs-rail-state" data-rail-state>INTENT FOUND</span><span class="bs-rail-line" data-rail-line>8/8 CALLER DETAILS READ FROM A LIVE SCRAPE</span></li>
+  </ol>
+</div>
+
 <!-- ===================== HERO · LAYER 1 (the LCP is this text) ===================== -->
 <section class="bs-hero">
   <div class="g-wrap">
@@ -282,7 +303,11 @@
           </div>
           <span class="bs-clip-time" data-time>0:00 / 0:46</span>
         </div>
-        <audio data-audio preload="none"><source src="/audio/v2/plumbing/full.mp3?v=605ef1d" type="audio/mpeg"></audio>
+        <!-- LIVING WAVEFORM. Idle = a pure-CSS cyan sine. On play, ava-signal.js
+             attaches an AnalyserNode to this exact <audio> element, so the trace
+             is the real file's amplitude — not a canned animation. -->
+        <div class="ava-wave" data-wave aria-hidden="true"><span class="ava-wave-idle"></span><canvas></canvas></div>
+        <audio data-audio preload="none" crossorigin="anonymous"><source src="/audio/v2/plumbing/full.mp3?v=605ef1d" type="audio/mpeg"></audio>
         <details class="bs-clip-tx">
           <summary>Read the transcript</summary>
           <div class="tx-body">
@@ -604,5 +629,6 @@
 </div>
 
 <script src="/js/backstage.js?v=605ef1d" defer></script>
+<script src="/js/ava-signal.js?v=605ef1d" defer></script>
 </body>
 </html>

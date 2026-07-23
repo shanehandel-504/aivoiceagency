@@ -244,6 +244,33 @@
   .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
   .btn-block{width:100%;}
 
+  /* ------------------------------------------- LIVING WAVEFORM (idle) ----
+     RUN 3 · commit 2. /live is standalone (no backstage.css), so the idle
+     sine is declared here. It is the open line: 2px cyan, breathing, no
+     player attached. Motion is background-position + opacity only — never
+     width/height — behind the glow gate, and reduced-motion stills it. */
+  .ava-wave{
+    position:relative;
+    height:34px;
+    margin:var(--s6) 0 var(--s4);
+    overflow:hidden;
+  }
+  .ava-wave-idle{
+    position:absolute; inset:0; pointer-events:none;
+    background-repeat:repeat-x; background-position:0 50%; background-size:112px 34px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='34'%3E%3Cpath d='M0 17 C 14 3, 42 3, 56 17 C 70 31, 98 31, 112 17' fill='none' stroke='%2300D4FF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    opacity:.5;
+  }
+  body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle,
+  body.glow-ready .ava-wave:not([data-wave-state]) .ava-wave-idle{
+    animation:ava-wave-drift 7s linear infinite, ava-wave-breathe 3.4s ease-in-out infinite;
+  }
+  @keyframes ava-wave-drift{ to{ background-position:112px 50% } }
+  @keyframes ava-wave-breathe{ 0%,100%{ opacity:.34 } 50%{ opacity:.62 } }
+  @media(prefers-reduced-motion:reduce){
+    .ava-wave .ava-wave-idle{ animation:none!important; opacity:.5 }
+  }
+
   .trust{
     display:flex;
     flex-wrap:wrap;
@@ -570,6 +597,10 @@
         <p class="kicker">The live test drive</p>
         <h1>Hear AVA <span class="live">live.</span></h1>
         <p class="sub">Type your business in. Your phone rings in seconds. AVA answers it the way it answers your customers — <b>using your real website.</b></p>
+        <!-- LIVING WAVEFORM · idle. This page has no player, so the sine stays in
+             its idle state: cyan, breathing, 2px — the open line, nothing on it
+             yet. Pure CSS, reduced-motion-safe, height reserved (0 CLS). -->
+        <div class="ava-wave" data-wave aria-hidden="true"><span class="ava-wave-idle"></span></div>
         <a class="btn btn-primary" href="#live-intake" data-event="run_test_click_hero">&#9654;&nbsp; Run my live test</a>
         <div class="trust">
           <span>No signup</span>
@@ -1017,6 +1048,10 @@
   })();
 })();
 </script>
+
+<!-- RUN 3 · commit 2 — status rail + living waveform (this page uses the idle
+     waveform only; the module no-ops on components it does not find). -->
+<script src="/js/ava-signal.js?v=605ef1d" defer></script>
 
 </body>
 </html>
