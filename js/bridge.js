@@ -133,9 +133,12 @@
     }
     window.addEventListener('scroll', paintBar, { passive: true });
     paintBar();
-    /* no double-CTA fights: hide while a form / contact section / booking iframe is on screen */
+    /* no double-CTA fights: hide while a form / contact section / booking iframe is on screen.
+       RUN 3 adds .bfoot — the sticky bar was overlapping the footer's own action
+       row at the bottom of every page, covering the links it sits on top of and
+       putting a second CTA pair in the same viewport as the footer's green. */
     if ('IntersectionObserver' in window) {
-      var hot = [].slice.call(document.querySelectorAll('form, #contact, .shell, .phone-cta-module'));
+      var hot = [].slice.call(document.querySelectorAll('form, #contact, .shell, .phone-cta-module, .bfoot'));
       if (hot.length) {
         var vis = [];
         var io = new IntersectionObserver(function (entries) {
@@ -151,6 +154,33 @@
       }
     }
   }
+
+  /* ---------- RUN 3 · responsive footer disclosure ----------
+     The footer groups ship <details open> so desktop and every crawler see the
+     whole directory. On a phone that is a wall of ~40 links between the content
+     and the legal line, so below 820px they close and become taps. CSS cannot
+     close a <details>, hence the JS — and because <details> keeps its content
+     in the DOM either way, nothing is hidden from a crawler at any width. */
+  (function footerDisclosure() {
+    var cols = [].slice.call(document.querySelectorAll('.bfoot-col'));
+    if (!cols.length) return;
+    function sync() {
+      var narrow = mqMobile.matches;
+      cols.forEach(function (c) {
+        /* never fight a visitor who opened one themselves */
+        if (c.getAttribute('data-touched') === '1') return;
+        c.open = !narrow;
+      });
+    }
+    cols.forEach(function (c) {
+      c.addEventListener('toggle', function () {
+        if (mqMobile.matches) c.setAttribute('data-touched', '1');
+      });
+    });
+    sync();
+    if (mqMobile.addEventListener) mqMobile.addEventListener('change', sync);
+    else if (mqMobile.addListener) mqMobile.addListener(sync);
+  })();
 
   /* ---------- scroll reveal (Phase 4 motion pack) ----------
      Interior pages only — the homepage runs its own glow-gated reveal system.

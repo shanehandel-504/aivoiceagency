@@ -283,12 +283,15 @@ body.hero-animate .hero-line:nth-child(4) { animation-delay: 240ms; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Cyan flicker (one-shot) + accent breath (perpetual, starts after flicker) */
-.hero-line-cyan {
-  animation: accentBreath 2.4s ease-in-out infinite;
-}
+/* RUN 3 · KILL — the perpetual neon glow on the cyan headline phrase.
+   accentBreath pulsed a text-shadow forever ("SECOND BRAIN" on
+   /ground-transportation was the worst of it). Motion has to convey meaning
+   or not exist (§ APPENDIX A); a headline that breathes says nothing, it just
+   flickers. The one-shot arrival flicker stays — that IS a moment. The colour
+   and the weight carry the emphasis from here. */
+.hero-line-cyan { animation: none; }
 body.hero-animate .hero-line-cyan.flicker {
-  animation: cyanFlicker 0.5s ease-in-out 1, accentBreath 2.4s ease-in-out infinite 0.5s;
+  animation: cyanFlicker 0.5s ease-in-out 1;
   animation-fill-mode: forwards;
 }
 

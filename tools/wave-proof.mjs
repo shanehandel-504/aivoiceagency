@@ -27,7 +27,7 @@ check('rail rows server-rendered', railBefore.length >= 3, railBefore.join(' / '
 await page.waitForTimeout(3200);
 const railAfter = await page.$$eval('[data-rail-feed] li [data-rail-state]', (n) => n.map((x) => x.textContent.trim()));
 check('rail cycles', JSON.stringify(railBefore) !== JSON.stringify(railAfter), railAfter.join(' / '));
-const REAL = ['RINGING', 'ANSWERED', 'INTENT FOUND', 'SLOT HELD', 'JOB BOOKED'];
+const REAL = ['TEXT SENT', 'RINGING', 'ANSWERED', 'INTENT FOUND', 'RECAP SENT'];
 check('rail states are the 5 real ones', [...railBefore, ...railAfter].every((s) => REAL.includes(s)));
 
 // --- waveform ---

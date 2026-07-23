@@ -86,9 +86,13 @@ html[data-theme="light"] .bs-cta-line:hover{border-color:var(--green);color:var(
   -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3.5px),#000 calc(100% - 3px));
           mask:radial-gradient(farthest-side,transparent calc(100% - 3.5px),#000 calc(100% - 3px));
   transition:opacity .25s var(--glide)}
-.orb i{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-weight:800;
-  font-size:calc(var(--size)*.46);line-height:1;color:#FFFFFF;transform:scale(0);pointer-events:none}
-html[data-theme="light"] .orb i{color:#FFFFFF}
+/* RUN 3 · KILL THE ✓-SPAM. Twenty-plus identical ticks fired across the
+   theater, so a tick stopped meaning "this completed" and started meaning
+   "there is a tick here". The mark is retired; an orb's completion is carried
+   by its ring closing to green, which is the state change itself rather than
+   a decoration announcing it. The <i> stays in the DOM — backstage.js and the
+   demo pill both address it — it simply no longer paints. */
+.orb i{display:none}
 .orb[data-state="active"]{opacity:1;transform:scale(1.06)}
 .orb[data-state="active"]::before{opacity:.5}
 .orb[data-state="working"]{opacity:1;transform:scale(1.06)}
@@ -97,9 +101,10 @@ html[data-theme="light"] .orb i{color:#FFFFFF}
 @keyframes orb-arc{to{transform:rotate(1turn)}}
 .orb[data-state="done"]{opacity:1;transform:none}
 .orb[data-state="done"]::before{opacity:.28}
+/* completion is the RING closing to green — the state change itself, not a
+   tick announcing it. This is the only green in the theater. */
 .orb[data-state="done"]::after{opacity:1;animation:none;
-  background:conic-gradient(var(--live-green) 0 360deg)}
-.orb[data-state="done"] i{animation:orb-check .38s var(--receipt-pop) forwards}
+  background:conic-gradient(var(--green) 0 360deg)}
 @keyframes orb-check{to{transform:scale(1)}}
 
 /* ---- SIGNAL PILL (compact tier): stacked orbs + live seconds + status ----
@@ -345,6 +350,28 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
 
 /* the feed */
 .bs-floor{position:relative;margin:0 0 8px}
+/* ============================================================
+   RUN 3 · KILL THE EQUAL-WEIGHT THEATER
+   ------------------------------------------------------------
+   Sixteen agents used to render at identical weight in four
+   lanes, which showed ACTIVITY — sixteen things happening — and
+   buried the only thing a plumber cares about: what came out the
+   other end. The roster stays (it is true, it is crawlable, and
+   "One call. Sixteen agents." is a protected anchor), but the
+   weighting now maps onto CONSEQUENCE:
+     intake / triage / tools  = the work, quieted
+     output                   = the consequence, full weight
+   Temporal, not simultaneous: a card only lights when the call
+   actually reaches it, and only the OUTPUT lane resolves green.
+   ============================================================ */
+.bs-lane[data-lane="output"] .bs-card{--card-ink:var(--ink)}
+.bs-lane:not([data-lane="output"]) .bs-card{opacity:.82}
+.bs-lane:not([data-lane="output"]) .bs-card .bs-cname{font-size:11.5px;letter-spacing:.1em;color:var(--neutral)}
+.bs-lane[data-lane="output"] .bs-card .bs-cname{font-size:13px;color:var(--text)}
+.bs-lane[data-lane="output"] .bs-card[data-state="done"]{border-color:color-mix(in srgb,var(--green) 40%,transparent)}
+/* the consequence lane keeps its orbs full size; the work lanes shrink theirs */
+.bs-lane:not([data-lane="output"]) .bs-card .orb{--size:30px}
+
 .bs-feed{display:flex;flex-direction:column;gap:8px}   /* mobile: one chronological stream */
 .bs-lane{display:contents}                                /* cards hoist into the feed, ordered */
 .bs-lanelabel{display:none}
@@ -518,28 +545,34 @@ html[data-theme="light"] .bs-payoff{background:color-mix(in srgb,var(--e3) 96%,t
     radial-gradient(ellipse 52% 54% at 50% 44%,color-mix(in srgb,var(--violet) 16%,transparent),transparent 70%),
     radial-gradient(ellipse 74% 64% at 50% 56%,color-mix(in srgb,var(--cyan) 7%,transparent),transparent 72%)}
 @media(max-width:900px){.bs-tiers{grid-template-columns:1fr;gap:16px}.bs-tiers::before{inset:-24px 0}}
+/* RUN 3 · PRICING SYSTEM. Every card is the SAME surface — panel + one
+   hairline. The old build gave each tier its own accent hue (cyan / violet /
+   gold), which meant the card colours argued about which plan mattered while
+   the copy said something else. Now nothing but the SELECTION says that, and
+   exactly one card is selected at any moment. */
 .bs-tier{--accent:var(--cyan);
   --accent-line:color-mix(in srgb,var(--cyan) 45%,transparent);
   --accent-soft:color-mix(in srgb,var(--cyan) 12%,transparent);
   --accent-glow:color-mix(in srgb,var(--cyan) 35%,transparent);
   position:relative;z-index:1;display:flex;flex-direction:column;border-radius:20px;padding:34px 26px 26px;
-  background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.04));
-  border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);
-  box-shadow:0 18px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07);
-  transition:transform .25s var(--quiet-settle),box-shadow .25s var(--quiet-settle),border-color .25s var(--quiet-settle)}
-.bs-tier[data-tier="growth"]{--accent:var(--violet);
-  --accent-line:color-mix(in srgb,var(--violet) 55%,transparent);
-  --accent-soft:color-mix(in srgb,var(--violet) 14%,transparent);
-  --accent-glow:color-mix(in srgb,var(--violet) 40%,transparent)}
-.bs-tier[data-tier="operations"]{--accent:var(--gold);
-  --accent-line:color-mix(in srgb,var(--gold) 45%,transparent);
-  --accent-soft:color-mix(in srgb,var(--gold) 12%,transparent);
-  --accent-glow:color-mix(in srgb,var(--gold) 32%,transparent)}
-/* Growth = the featured purple hero (glass + violet glow + desktop scale) */
-.bs-tier[data-tier="growth"]{border-color:color-mix(in srgb,var(--violet) 50%,transparent);
-  background:linear-gradient(165deg,rgba(255,255,255,.11),rgba(255,255,255,.05));
-  box-shadow:0 24px 80px rgba(0,0,0,.5),0 0 70px color-mix(in srgb,var(--violet) 22%,transparent),inset 0 1px 0 rgba(255,255,255,.10)}
-@media(min-width:901px){.bs-tier[data-tier="growth"]{transform:scale(1.045)}}
+  background:var(--panel);
+  border:1px solid rgba(255,255,255,.06);
+  border-left:2px solid transparent;
+  box-shadow:none;
+  transition:border-color .25s var(--quiet-settle)}
+html[data-theme="light"] .bs-tier{background:#FFFFFF;border-color:rgba(16,19,26,.10)}
+/* the selected card — a subtle green left hairline, nothing more. It carries
+   the page's one solid green on its CTA (see .is-picked .bs-cta below). */
+.bs-tier.is-picked{border-left-color:var(--green)}
+.bs-tier[data-tier="growth"],
+.bs-tier[data-tier="operations"]{--accent:var(--cyan);
+  --accent-line:color-mix(in srgb,var(--cyan) 45%,transparent);
+  --accent-soft:color-mix(in srgb,var(--cyan) 12%,transparent);
+  --accent-glow:color-mix(in srgb,var(--cyan) 35%,transparent)}
+/* chips are LABELS, not badges — neutral, no fill, no hue */
+.bs-tier .t-flag{color:var(--neutral)}
+.bs-tier .t-terms{font-family:var(--g-mono);font-size:11.5px;letter-spacing:.06em;
+  color:var(--neutral);margin:0 0 14px}
 /* RUN 1.9: desync the 3 tier CTA laps (they aren't DOM siblings, so bridge's
    nth-of-type stagger can't reach them) */
 .bs-tier[data-tier="growth"] .ava-lap::before{animation-delay:-1.7s}
@@ -548,18 +581,24 @@ html[data-theme="light"] .bs-payoff{background:color-mix(in srgb,var(--e3) 96%,t
 html[data-theme="light"] .bs-tier{background:#FFFFFF;box-shadow:var(--e2-sh);
   border-color:color-mix(in srgb,var(--accent) 34%,transparent)}
 html[data-theme="light"] .bs-tier[data-tier="growth"]{background:#FFFFFF;box-shadow:var(--e3-sh)}
-/* B3 selection ring — keeps the tab behavior; accent-colored, no layout shift */
-.bs-tier.is-reco{border-color:var(--accent);
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent),0 18px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07)}
-.bs-tier[data-tier="growth"].is-reco{
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent),0 18px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07)}
+/* RUN 3 · SELECTION RING. Green, not cyan: selection is what will advance the
+   sale, and this card is the one carrying the solid green CTA. A flat 2px ring
+   (§ 3 bans elevation) with no layout shift.
+   NOTE the border-left is re-stated AFTER the shorthand — .is-reco sets
+   border-color, which would otherwise reset the green left hairline. */
+.bs-tier.is-reco,
+.bs-tier[data-tier="growth"].is-reco{border-color:color-mix(in srgb,var(--green) 34%,transparent);
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--green) 22%,transparent)}
+.bs-tier.is-picked,
+.bs-tier.is-reco.is-picked{border-left-color:var(--green);border-left-width:2px}
 @media(hover:hover){.bs-tier:hover{border-color:var(--accent)}}
 /* light theme needs its own state rules — the html-scoped light base out-specifies
    the bare .is-reco/:hover, so the B3 selection ring would otherwise never show */
-html[data-theme="light"] .bs-tier.is-reco{border-color:var(--accent);
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent),var(--e2-sh)}
+html[data-theme="light"] .bs-tier.is-reco,
 html[data-theme="light"] .bs-tier[data-tier="growth"].is-reco{
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent),var(--e2-sh)}
+  border-color:color-mix(in srgb,var(--green) 40%,transparent);
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--green) 24%,transparent)}
+html[data-theme="light"] .bs-tier.is-picked{border-left-color:var(--green)}
 @media(hover:hover){html[data-theme="light"] .bs-tier:hover{border-color:var(--accent)}}
 /* label / price / setup */
 .bs-tier .t-flag{font-family:var(--g-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
@@ -585,6 +624,17 @@ html[data-theme="light"] .bs-tier[data-tier="growth"] .t-flag{color:var(--neutra
 .bs-tier .bs-cta{margin-top:auto;width:100%;border-radius:999px;
   background:rgba(18,18,26,.72);color:var(--text);border:1px solid rgba(255,255,255,.14);box-shadow:none}
 .bs-tier .bs-cta:hover{border-color:rgba(46,230,168,.5);background:rgba(18,18,26,.72)}
+/* THE TRANSFER — the solid green lives on whichever card is selected, and only
+   on that one. Selecting a different card moves it. There is exactly one green
+   on this screen at every moment, including mid-transition. */
+.bs-tier.is-picked .bs-cta{
+  background:var(--green);color:var(--canvas);border-color:rgba(255,255,255,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 24px rgba(46,230,168,.18)}
+.bs-tier.is-picked .bs-cta:hover{background:var(--green);color:var(--canvas);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 14px 38px rgba(46,230,168,.27)}
+html[data-theme="light"] .bs-tier.is-picked .bs-cta,
+html[data-theme="light"] .bs-tier.is-picked .bs-cta:hover{
+  background:var(--green);color:#FFFFFF;border-color:transparent}
 /* light theme CTA pills — a tinted fill on white failed AA. Outline pill on white
    with a darkened accent text that clears 4.5:1. Growth is no longer special-cased. */
 html[data-theme="light"] .bs-tier .bs-cta,
@@ -599,7 +649,24 @@ html[data-theme="light"] .bs-tier .bs-cta-cyan:hover{background:transparent;bord
    Native <audio preload=none>, custom glass controls, never autoplay.
    Below the fold, heights reserved → zero LCP/CLS impact.
    ============================================================ */
-.bs-clips{display:grid;gap:12px;margin:22px 0 14px}
+/* RUN 3 · one featured record, two compact ones ------------------------- */
+.bs-cliptabs{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 12px}
+.bs-cliptab{background:transparent;border:1px solid var(--line);border-radius:999px;
+  min-height:40px;padding:0 16px;color:var(--neutral);cursor:pointer;
+  font-family:var(--g-mono);font-size:11.5px;letter-spacing:.14em;font-weight:600;
+  transition:border-color .18s var(--quiet-settle),color .18s var(--quiet-settle)}
+.bs-cliptab:hover{color:var(--text);border-color:rgba(255,255,255,.22)}
+.bs-cliptab.is-on{color:var(--cyan);border-color:color-mix(in srgb,var(--cyan) 50%,transparent)}
+.bs-cliptab:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+/* closed = a compact record: label + play, no waveform, no transcript */
+.bs-clip:not(.is-open) .ava-wave,
+.bs-clip:not(.is-open) .bs-clip-tx,
+.bs-clip:not(.is-open) .bs-clip-scrub{display:none}
+.bs-clip:not(.is-open){padding:10px 14px;opacity:.72}
+.bs-clip:not(.is-open):hover{opacity:1;cursor:pointer}
+.bs-clip:not(.is-open) .bs-clip-label{font-size:13px}
+
+.bs-clips{display:grid;gap:12px;margin:0 0 14px}
 .bs-clip{background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);
   border-left:2px solid var(--lane-intake);border-radius:14px;padding:14px 16px;
   transition:border-color .3s var(--quiet-settle)}

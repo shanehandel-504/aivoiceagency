@@ -205,6 +205,24 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
 .bfoot-items a:hover,.bfoot-items a:focus-visible{color:var(--bz-cyan)}
 .bfoot-sub{font-weight:600;color:var(--bz-ink);font-size:13px;margin:10px 0 2px}
 .bfoot-sub:first-child{margin-top:0}
+
+/* ============================================================
+   RUN 3 · FOOTER SUPPRESSION
+   ------------------------------------------------------------
+   The footer carries 40+ links and every one of them stays in
+   the DOM — this is a crawl spine and nothing is removed. What
+   changes is its VOLUME: it was competing with the page for
+   attention at full text colour and full scale. Now it reads as
+   what it is — a directory you go to when you want it.
+   Group headings keep the hierarchy; the links go neutral and
+   drop a size. On mobile the groups collapse behind their own
+   <summary> disclosure, which the markup already supports.
+   ============================================================ */
+.bfoot-items a{color:var(--neutral);font-size:13.5px}
+.bfoot-items a:hover,.bfoot-items a:focus-visible{color:var(--bz-cyan)}
+.bfoot-col>summary{color:var(--bz-ink);font-size:12px;letter-spacing:.14em}
+.bfoot-sub{color:var(--neutral);font-size:12px;letter-spacing:.06em}
+.bfoot-tag,.bfoot-built,.bfoot-legal{color:var(--neutral)}
 .bfoot-action{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;
   margin-top:40px;padding-top:26px;border-top:1px solid var(--bz-line)}
 /* RUN 3: the footer action row IS the footer viewport's one green moment.

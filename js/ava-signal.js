@@ -11,19 +11,23 @@
    a named source. Nothing here is invented, rounded up, or dramatised. If you
    add a state, you must add its source with it.
 
-   SOURCE A — reports/2026-07-22-run15-e2e-proof.md
-     The Run 1.5 end-to-end live proof. Agent agent_67381fcfabf6731dad4f40c590
-     placed a real outbound call from +1 414-946-6486 (DEMO-POOL-03), it was
-     answered, and it held 57 seconds of talk time before agent_hangup. All 8
-     dynamic variables resolved from a live scrape — none fell back.
-     That call was a SYSTEM TEST. It did not book a job, so it supplies
-     RINGING / ANSWERED / INTENT FOUND and nothing past them.
+   SINGLE SOURCE — reports/2026-07-22-run15-e2e-proof.md
+     The Run 1.5 end-to-end live proof, hop by hop with measured latencies.
+     A form POST produced a real text (GHL messageId RYEWnTvk9p5ycOdxP2c6), the
+     READY gate produced a real outbound call from +1 414-946-6486
+     (DEMO-POOL-03) by agent_67381fcfabf6731dad4f40c590, that call was ANSWERED
+     and held 57 seconds of talk time before agent_hangup with all 8 dynamic
+     variables resolved from a live scrape (none fell back), and the post-call
+     text landed (messageId JKumJmYPx22L1FfHCNRS).
 
-   SOURCE B — /audio/v2/plumbing/full.mp3
-     A real recorded call, already published on this page with its transcript
-     open below the player. AVA offers 7:00 AM against the $59 standard trip
-     fee, the caller takes it, AVA books it and confirms the text.
-     That call supplies SLOT HELD / JOB BOOKED.
+   WHY THE STATE NAMES DIVERGE FROM THE BRIEF. The brief's cycle ends
+   SLOT HELD -> JOB BOOKED. The Run 1.5 call was a SYSTEM TEST — it never held
+   a slot and never booked a job, so those two states have no real event behind
+   them. The obvious second source, /audio/v2/plumbing/full.mp3, is disclosed on
+   this very page as "Scripted scenarios, not customer recordings" — using it
+   here would be dressing scripted copy as recent activity.
+   NO FABRICATION outranks the state list, so the rail ships the five states
+   that DID happen. Every line below is a measured hop from that proof.
 
    The rail is labelled REPLAY in the markup. It is not a live socket — the
    hook for that is window.AVA_LIVE_FEED (see below), wired but not connected.
@@ -45,11 +49,11 @@
      1 · STATUS RAIL
      ========================================================================== */
   var REAL_EVENTS = [
-    { state: 'RINGING',      tone: 'idle', at: '22:31:04', line: 'OUTBOUND FROM 414-946-6486 · DEMO-POOL-03', src: 'A' },
-    { state: 'ANSWERED',     tone: 'work', at: '22:31:06', line: 'PICKED UP · 57s TALK TIME',                  src: 'A' },
-    { state: 'INTENT FOUND', tone: 'work', at: '22:31:12', line: '8/8 CALLER DETAILS READ FROM A LIVE SCRAPE', src: 'A' },
-    { state: 'SLOT HELD',    tone: 'work', at: '22:31:38', line: '7:00 AM OFFERED · $59 TRIP FEE QUOTED',      src: 'B' },
-    { state: 'JOB BOOKED',   tone: 'done', at: '22:31:47', line: '7:00 AM BOOKED · CONFIRMATION TEXT SENT',    src: 'B' }
+    { state: 'TEXT SENT',    tone: 'idle', at: '22:28:11', line: 'READY GATE DISPATCHED IN 0.60s' },
+    { state: 'RINGING',      tone: 'work', at: '22:31:04', line: 'OUTBOUND FROM 414-946-6486 · DEMO-POOL-03' },
+    { state: 'ANSWERED',     tone: 'work', at: '22:31:06', line: 'PICKED UP · 57s TALK TIME' },
+    { state: 'INTENT FOUND', tone: 'work', at: '22:31:12', line: '8/8 CALLER DETAILS READ FROM A LIVE SCRAPE' },
+    { state: 'RECAP SENT',   tone: 'done', at: '22:32:29', line: 'POST-CALL TEXT LANDED IN 0.9s' }
   ];
 
   /* window.AVA_LIVE_FEED — the Phase-3 seam. When the Backstage Retell socket

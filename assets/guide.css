@@ -175,8 +175,17 @@ body.g-ready .reveal.in{opacity:1;transform:none;transition:opacity .5s var(--ea
    — instant, no transition. Curves: these five are the ONLY curves.
    ============================================================ */
 :root{
-  /* lane colors */
-  --lane-intake:#00D4FF; --lane-triage:#FFB020; --lane-tools:#9A8CFF; --lane-output:#34E39B;
+  /* RUN 3 · TEMPORAL LANE COLOURS. These four used to be a decorative rainbow
+     (cyan / amber / PURPLE / green) shown all at once, so a 16-agent theater
+     lit up like a christmas tree and told you nothing about where the call
+     actually was. The purple dot-avatar is dead. What remains maps onto the
+     semantic law and onto TIME:
+       intake  = cyan    · the system is being inspected (incoming)
+       triage  = amber   · in progress, nothing resolved yet
+       tools   = cyan    · still working the system
+       output  = green   · complete, the job is captured
+     States change WITH the call, they are not all shown simultaneously. */
+  --lane-intake:#00D4FF; --lane-triage:#FFB020; --lane-tools:#00D4FF; --lane-output:#2EE6A8;
   /* elevations e0–e3 + inset top-edge highlight */
   --e0:#0A0A0F; --e1:#10121A; --e2:#161926; --e3:#1C2030;
   --e-edge:inset 0 1px 0 rgba(255,255,255,.06);
@@ -194,7 +203,7 @@ body.g-ready .reveal.in{opacity:1;transform:none;transition:opacity .5s var(--ea
 html[data-theme="light"]{
   /* twins darkened past the spec draft (#0087BE/#A66A00/#0E9D6B) to clear
      WCAG AA 4.5:1 both as text-on-white and under white button text */
-  --lane-intake:#00749C; --lane-triage:#9A6200; --lane-tools:#6355E6; --lane-output:#0B7E56;
+  --lane-intake:#00749C; --lane-triage:#8A5A00; --lane-tools:#00749C; --lane-output:#0B7E56;
   --e0:#F4F6FA; --e1:#FFFFFF; --e2:#FFFFFF; --e3:#FFFFFF;
   --e1-sh:0 1px 3px rgba(16,19,26,.08);
   --e2-sh:0 4px 14px rgba(16,19,26,.10);

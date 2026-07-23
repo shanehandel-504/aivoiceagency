@@ -35,12 +35,36 @@
       d.querySelectorAll('.bs-tier').forEach(function (card) {
         var on = card.getAttribute('data-tier') === fit;
         card.classList.toggle('is-reco', on);
+        /* RUN 3 · THE TRANSFER. is-picked carries the page's one solid green
+           CTA plus the green left hairline. Toggling every card in the same
+           pass means the green is never on two cards, not even for a frame. */
+        card.classList.toggle('is-picked', on);
         if (on) match = card;
       });
       /* on mobile the matching card is far below the chips — bring it into view */
       if (match && window.matchMedia('(max-width:900px)').matches) {
         match.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
       }
+    });
+  });
+
+  /* RUN 3: selecting a CARD transfers the green too, not just the fit chips.
+     The CTA's own click is left alone — tapping the button books, it does not
+     merely select. Everything else on the card selects it. */
+  d.querySelectorAll('.bs-tier').forEach(function (card) {
+    card.addEventListener('click', function (ev) {
+      if (ev.target.closest('a,button')) return;          // let real actions through
+      var tier = card.getAttribute('data-tier');
+      d.querySelectorAll('.bs-tier').forEach(function (c) {
+        var on = c === card;
+        c.classList.toggle('is-picked', on);
+        c.classList.toggle('is-reco', on);
+      });
+      ptabs.forEach(function (t) {
+        var on = t.getAttribute('data-fit') === tier;
+        t.classList.toggle('is-on', on);
+        t.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
     });
   });
 
@@ -535,6 +559,30 @@
   if (!clips.length) return;
   function fmt(s) { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
   var players = [];
+
+  /* RUN 3: one clip is open at a time. The tabs and the compact records both
+     select; opening one pauses whatever was playing so two calls never talk
+     over each other. All three transcripts stay in the DOM either way. */
+  var tabs = [].slice.call(document.querySelectorAll('.bs-cliptab'));
+  function openClip(i) {
+    clips.forEach(function (c, n) {
+      var on = n === i;
+      c.classList.toggle('is-open', on);
+      if (!on) { var a = c.querySelector('[data-audio]'); if (a && !a.paused) a.pause(); }
+    });
+    tabs.forEach(function (t, n) {
+      t.classList.toggle('is-on', n === i);
+      t.setAttribute('aria-selected', n === i ? 'true' : 'false');
+    });
+  }
+  tabs.forEach(function (t, i) { t.addEventListener('click', function () { openClip(i); }); });
+  clips.forEach(function (c, i) {
+    c.addEventListener('click', function (ev) {
+      if (c.classList.contains('is-open')) return;
+      if (ev.target.closest('a,button,input,summary')) return;
+      openClip(i);
+    });
+  });
   clips.forEach(function (clip) {
     var audio = clip.querySelector('[data-audio]');
     var btn = clip.querySelector('[data-play]');

@@ -109,24 +109,29 @@
 
 <main id="main">
 
-<!-- ===================== AVA STATUS RAIL (RUN 3 · commit 2) =====================
-     REPLAY of REAL demo-line events. Sources are named in js/ava-signal.js:
-     (A) reports/2026-07-22-run15-e2e-proof.md — the Run 1.5 live proof call,
-         57s answered, 8/8 variables off a live scrape. It was a system test,
-         so it supplies RINGING / ANSWERED / INTENT FOUND and nothing past them.
-     (B) /audio/v2/plumbing/full.mp3 — a real recorded call, transcript open
-         further down this page. It supplies SLOT HELD / JOB BOOKED.
-     Nothing on this rail is invented. The three rows below are in the initial
-     DOM (real, readable with JS off) and the height is fixed, so CLS stays 0. -->
+<!-- ===================== AVA STATUS RAIL (RUN 3 · commit 2, corrected in c4) ===
+     REPLAY of REAL demo-line events, ALL from one source:
+     reports/2026-07-22-run15-e2e-proof.md — the Run 1.5 end-to-end live proof.
+     Real text out, real outbound from 414-946-6486 (DEMO-POOL-03), answered,
+     57s talk time, 8/8 variables off a live scrape, real post-call text.
+
+     The brief's cycle ended SLOT HELD -> JOB BOOKED. That call was a SYSTEM
+     TEST: it never held a slot and never booked a job. The only other candidate
+     source, the plumbing audio, is disclosed further down this page as a
+     scripted scenario. NO FABRICATION outranks the state list, so the rail
+     shows the five hops that actually happened. See js/ava-signal.js.
+
+     Rows are in the initial DOM (real, readable with JS off) and the height is
+     fixed at both breakpoints, so CLS stays 0. -->
 <div class="bs-rail" data-rail>
   <div class="bs-rail-head">
     <span class="bs-rail-label">RECENT ACTIVITY — DEMO LINE</span>
     <span class="bs-rail-tag">REPLAY</span>
   </div>
   <ol class="bs-rail-feed" data-rail-feed>
-    <li data-age="0" data-tone="done"><span class="bs-rail-at" data-rail-at>22:31:47</span><span class="bs-rail-state" data-rail-state>JOB BOOKED</span><span class="bs-rail-line" data-rail-line>7:00 AM BOOKED · CONFIRMATION TEXT SENT</span></li>
-    <li data-age="1" data-tone="work"><span class="bs-rail-at" data-rail-at>22:31:38</span><span class="bs-rail-state" data-rail-state>SLOT HELD</span><span class="bs-rail-line" data-rail-line>7:00 AM OFFERED · $59 TRIP FEE QUOTED</span></li>
-    <li data-age="2" data-tone="work"><span class="bs-rail-at" data-rail-at>22:31:12</span><span class="bs-rail-state" data-rail-state>INTENT FOUND</span><span class="bs-rail-line" data-rail-line>8/8 CALLER DETAILS READ FROM A LIVE SCRAPE</span></li>
+    <li data-age="0" data-tone="done"><span class="bs-rail-at" data-rail-at>22:32:29</span><span class="bs-rail-state" data-rail-state>RECAP SENT</span><span class="bs-rail-line" data-rail-line>POST-CALL TEXT LANDED IN 0.9s</span></li>
+    <li data-age="1" data-tone="work"><span class="bs-rail-at" data-rail-at>22:31:12</span><span class="bs-rail-state" data-rail-state>INTENT FOUND</span><span class="bs-rail-line" data-rail-line>8/8 CALLER DETAILS READ FROM A LIVE SCRAPE</span></li>
+    <li data-age="2" data-tone="work"><span class="bs-rail-at" data-rail-at>22:31:06</span><span class="bs-rail-state" data-rail-state>ANSWERED</span><span class="bs-rail-line" data-rail-line>PICKED UP · 57s TALK TIME</span></li>
   </ol>
 </div>
 
@@ -290,11 +295,25 @@
 <!-- ===================== HEAR AVA (real-call audio · additive, Run 1.6) ===================== -->
 <section class="bs-section" id="hear">
   <div class="g-wrap">
-    <p class="g-eyebrow">Real calls</p>
-    <h2 class="bs-h2">Hear AVA answer a real call.</h2>
-    <p class="bs-cutaway">The theater above is the transmission. This is the recording — AVA's real voice, running the same call.</p>
+    <!-- RUN 3 · TRUTH FIX. The heading said "a real call" and the disclosure
+         eight lines below said "Scripted scenarios, not customer recordings."
+         Both cannot be true. The disclosure is the accurate one, so the heading
+         now matches it: the VOICE is real, the scenario is scripted. Nothing on
+         this site claims a customer recording until one is cleared to ship. -->
+    <p class="g-eyebrow">AVA's real voice</p>
+    <h2 class="bs-h2">Hear AVA run the call.</h2>
+    <p class="bs-cutaway">The theater above is the transmission. This is the audio — AVA's real voice, working a scripted scenario end to end.</p>
+    <!-- RUN 3: ONE featured scenario carries the Living Waveform; the other two
+         are compact selectable records. Three stacked equal players gave three
+         equal invitations and got three equal shrugs. All three transcripts stay
+         in the DOM — they are the page's answer-engine content. -->
+    <div class="bs-cliptabs" role="tablist" aria-label="Pick a recorded call">
+      <button class="bs-cliptab is-on" type="button" role="tab" aria-selected="true"  data-cliptab="0" data-event="hear_tab_plumbing">PLUMBING</button>
+      <button class="bs-cliptab" type="button" role="tab" aria-selected="false" data-cliptab="1" data-event="hear_tab_hvac">HVAC</button>
+      <button class="bs-cliptab" type="button" role="tab" aria-selected="false" data-cliptab="2" data-event="hear_tab_electrical">ELECTRICAL</button>
+    </div>
     <div class="bs-clips">
-      <article class="bs-clip" data-clip>
+      <article class="bs-clip is-open" data-clip>
         <div class="bs-clip-top">
           <button class="bs-clip-play" type="button" data-play aria-label="Play the plumbing call" aria-pressed="false" data-event="hear_play_plumbing">▶</button>
           <div class="bs-clip-meta">
@@ -445,7 +464,7 @@
       <button class="bs-ptab" type="button" aria-pressed="false" data-fit="operations" data-event="fit_tap_pricing">Multi-location</button>
     </div>
     <div class="bs-tiers">
-      <div class="bs-tier is-reco" data-tier="starter">
+      <div class="bs-tier is-reco is-picked" data-tier="starter">
         <p class="t-flag">START HERE</p>
         <p class="t-name">Starter System</p>
         <p class="t-price">$497<span>/mo</span></p>
@@ -457,10 +476,13 @@
           <li>Calls summarized, recorded, transcribed</li>
           <li>Owner alerted the moment it matters</li>
         </ul>
-        <a class="bs-cta bs-cta-cyan ava-pulse" href="/book" data-event="book_click_pricing">Put AVA on my line</a>
+        <p class="t-terms">Month-to-month. No contract.</p>
+        <a class="bs-cta ava-pulse" href="/book" data-event="book_click_pricing">Put AVA on my line</a>
       </div>
       <div class="bs-tier" data-tier="growth">
-        <p class="t-flag">MOST OPERATORS</p>
+        <!-- RUN 3: "MOST OPERATORS" is dead — it implies data we have never
+             published. "RECOMMENDED" is our recommendation, and says so. -->
+        <p class="t-flag">RECOMMENDED</p>
         <p class="t-name">Growth System</p>
         <p class="t-price">$997<span>/mo</span></p>
         <p class="t-setup">+ $1,500 setup · + voice usage</p>
@@ -486,7 +508,10 @@
         <a class="bs-cta bs-cta-line ava-pulse" href="/book" data-event="book_click_pricing">Scope it</a>
       </div>
     </div>
-    <p style="font-family:var(--g-mono);font-size:12.5px;color:var(--ink-mute);margin-top:16px">No contracts. Cancel anytime. Final scope depends on call volume, handoff rules, and the systems AVA works alongside.</p>
+    <!-- RUN 3: the blanket "No contracts" claim is gone. Starter is
+         month-to-month and says so on its own card; contracts DO exist on the
+         higher tiers, so a sitewide no-contract line would be false. -->
+    <p style="font-family:var(--g-mono);font-size:12.5px;color:var(--neutral);margin-top:16px">Starter is month-to-month. Growth and Operations terms are set during scoping. Final scope depends on call volume, handoff rules, and the systems AVA works alongside.</p>
   </div>
 </section>
 
