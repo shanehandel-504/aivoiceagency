@@ -51,26 +51,17 @@ const REGISTRY = join(ROOT, 'automation', 'retell-agent-config.json');
 /* ---------------------------------------------------------------- prompt -- */
 
 /* ---------------------------------------------------------- DEPLOY PATCHES --
- * The doc holds the Run-2-FINAL script. STAGE 4 there promises a dashboard that
- * does not exist yet, so these substitutions are applied on the way to Retell —
- * the deployed agent never promises a thing that is not built. The doc is never
- * modified. Empty this array when Run 2 ships the dashboard.
+ * RUN 1.6 · SCRIPT v3 — EMPTY BY DESIGN.
  *
- * Every patch MUST match exactly once, or the deploy aborts. A silently-missed
- * patch would put the dashboard promise live.
+ * The doc is now the ONE source of truth and ships BYTE-FOR-BYTE. Run 1.5's
+ * 2-entry patch table (which rewrote the Stage-4 dashboard promise) is retired:
+ * v3 carries its own INTERIM ACTIVE VARIANT, so the interim wording lives in the
+ * script itself rather than in a substitution table. `--verify` byte-compares
+ * the live prompt against the file, which is only meaningful while this is empty.
+ *
+ * If a patch is ever re-added it MUST match exactly once, or the deploy aborts.
  * -------------------------------------------------------------------------- */
-const DEPLOY_PATCHES = [
-  {
-    why: 'no dashboard / no surfaced recording in Run 1.5 — the setup link IS real',
-    from: '"I already built your dashboard — the recording of this exact call is sitting in it. The second we hang up, check your texts: your private link is live for 48 hours. Want me to send it now?" Any yes → trigger_dashboard_sms → STAGE_5.',
-    to: '"The second we hang up, check your texts — your setup link is live for 48 hours. Want me to send it now?" Any yes → STAGE_5.',
-  },
-  {
-    why: 'trigger_dashboard_sms is not a tool on this agent; n8n fires the post-call SMS',
-    from: "Pretty quick, right? Your dashboard's already built.",
-    to: "Pretty quick, right? Your setup link's already on its way.",
-  },
-];
+const DEPLOY_PATCHES = [];
 
 function between(md, tag) {
   const re = new RegExp('<!-- ' + tag + ':BEGIN[\\s\\S]*?-->([\\s\\S]*?)<!-- ' + tag + ':END -->');
@@ -233,6 +224,54 @@ if (mode === '--diff') {
   process.exit(0);
 }
 
+/* --verify — GET both agents back and BYTE-COMPARE the live prompt to the file.
+   Exits non-zero on any mismatch so CI / a run script can gate on it. */
+if (mode === '--verify') {
+  if (!existsSync(REGISTRY)) { console.error('No automation/retell-agent-config.json — run --create first.'); process.exit(1); }
+  const reg = JSON.parse(readFileSync(REGISTRY, 'utf8'));
+  let allPass = true;
+
+  console.log('=== SCRIPT v3 BYTE-MATCH VERIFY ===');
+  console.log(`file: docs/demo-agent-prompt.md (PROMPT markers) — ${prompt.length} chars`);
+  console.log(`deploy patches applied: ${DEPLOY_PATCHES.length} (must be 0 for a true byte-match)\n`);
+
+  for (const key of Object.keys(reg.agents)) {
+    const a = reg.agents[key];
+    const agent = await call('GET', `/get-agent/${a.agent_id}`);
+    const llmVer = agent.response_engine && agent.response_engine.version;
+    const llm = await call('GET', `/get-retell-llm/${a.llm_id}` + (llmVer !== undefined ? `?version=${llmVer}` : ''));
+    const live = llm.general_prompt || '';
+
+    const match = live === prompt;
+    if (!match) allPass = false;
+
+    console.log(`${a.agent_name}`);
+    console.log(`  agent_id   : ${a.agent_id}`);
+    console.log(`  llm_id     : ${a.llm_id}  (llm v${llmVer})`);
+    console.log(`  agent ver  : v${agent.version}  published=${agent.is_published}`);
+    console.log(`  live chars : ${live.length}   file chars: ${prompt.length}`);
+    console.log(`  BYTE-MATCH : ${match ? 'PASS' : 'FAIL'}`);
+    // Prove the v3 markers actually landed, not just that lengths agree.
+    console.log(`  v3 markers : STAGE_1-open="${/Am I coming through clear/.test(live)}" ` +
+                `interim-variant="${/INTERIM ACTIVE VARIANT/.test(live)}" ` +
+                `stage5-exit="${/It should be right there/.test(live)}"`);
+    if (!match) {
+      for (let i = 0; i < Math.max(live.length, prompt.length); i++) {
+        if (live[i] !== prompt[i]) {
+          console.log(`  first diff at char ${i}:`);
+          console.log(`    file: ${JSON.stringify(prompt.slice(Math.max(0, i - 40), i + 40))}`);
+          console.log(`    live: ${JSON.stringify(live.slice(Math.max(0, i - 40), i + 40))}`);
+          break;
+        }
+      }
+    }
+    console.log('');
+  }
+
+  console.log(`OVERALL: ${allPass ? 'PASS — both agents byte-match the file' : 'FAIL — see diffs above'}`);
+  process.exit(allPass ? 0 : 1);
+}
+
 if (mode === '--create') {
   const out = { created_at: new Date().toISOString(), run: 'RUN 1 · HEAR AVA LIVE', agents: {} };
 
@@ -305,5 +344,5 @@ if (mode === '--update') {
   process.exit(0);
 }
 
-console.error(`unknown mode ${mode} — use --create | --update | --show`);
+console.error(`unknown mode ${mode} — use --create | --update | --show | --diff | --verify`);
 process.exit(1);
