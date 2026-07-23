@@ -77,6 +77,7 @@ NAV = '''<!-- BRIDGE:NAV -->
         <a href="/wisconsin-limo">Wisconsin limo &amp; livery</a>
       </div>
     </div>
+    <a class="bnav-top" href="/live" data-event="hear_ava_live_nav">Hear AVA Live</a>
     <a class="bnav-top" href="/#pricing">Pricing</a>
     <a class="bnav-top" href="/roi">ROI</a>
     <a class="bnav-cta" href="/book" data-event="book_click_nav">Book a 15-minute call</a>
@@ -235,6 +236,7 @@ VERSION_ONLY = [
     'watch/index.html',    # ad lander (indexable) — slim header, single price/ROI anchors
     'booked/index.html',   # post-booking conversion page (noindex) — slim, dead-end
     'lsa/index.html',      # LSA campaign lander (RUN 5.5) — Shane-authored chrome, carries tracking.js
+    'live/index.html',     # HEAR AVA LIVE test-drive page (RUN 1) — conversion surface, one exit by design
 ]
 
 

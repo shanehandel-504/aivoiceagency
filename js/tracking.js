@@ -216,6 +216,28 @@
     }, true);
   }
 
+  /* 6b · /live — HEAR AVA LIVE (RUN 1). The live test-drive funnel. Named
+   * events are markup-driven via data-event and routed through ga(), so the
+   * NOTRACK self-tag silences them exactly like the rest of the spine:
+   *   run_test_click_hero  — hero CTA -> scrolls to the intake form
+   *   live_test_submit     — the intake submit button itself
+   *   tel_tap_live_*       — every tel: CTA on the page (nav/card/fail/footer)
+   *   book_click_live_*    — /book exits from the success card + end card
+   * The generic form-submit handler (#2 above) already fires generate_lead
+   * with form_id="liveForm"; this block adds the funnel-step detail.        */
+  if (PATH === '/live') {
+    document.addEventListener('click', function (e) {
+      try {
+        var t = e.target;
+        var el = t && t.closest ? t.closest('[data-event]') : null;
+        if (!el) return;
+        var name = el.getAttribute('data-event') || '';
+        if (name.indexOf('live') === -1 && name !== 'run_test_click_hero') return;
+        ga(name, { page: PATH });
+      } catch (err) {}
+    }, true);
+  }
+
   /* 7 · Google Health Check (RUN 7) — the check UI computes its score in page
    * JS and dispatches a DOM CustomEvent; the spine forwards it to GA4 so the
    * NOTRACK self-tag silences it exactly like every other event. Path-free by
