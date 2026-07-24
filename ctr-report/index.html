@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="Digital Inspection Report — Complete Total Restoration &amp; Roofing">
+<meta property="og:description" content="20 findings across 4 systems · Prepared for Bryan Bradley by Shane Handel · July 24, 2026">
+<meta property="og:type" content="website">
+<title>CTR — Digital Property Inspection Report</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJZD091SMC"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZJZD091SMC');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F5F1;
+  --sheet:#FFFFFF;
+  --ink:#101820;
+  --ink-soft:#3D4750;
+  --ink-faint:#6B7680;
+  --ctr-blue:#2B5FA5;
+  --ctr-blue-deep:#1E4478;
+  --alarm:#C7391B;
+  --alarm-bg:#FBEDE9;
+  --serious:#B97709;
+  --serious-bg:#FBF3E2;
+  --repair:#1E7F4F;
+  --repair-bg:#E9F5EE;
+  --rule:#DAD7CE;
+  --mono-bg:#0F1B2B;
+  --mono-ink:#BFD4EF;
+  --mono-hot:#7FB2F0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+.disp{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.02em;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+.rpt-head{background:var(--ctr-blue-deep);color:#fff;padding:34px 0 30px;border-bottom:6px solid var(--ctr-blue);}
+.rpt-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#9DBCE8;margin-bottom:14px;}
+.rpt-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(40px,9vw,64px);line-height:.95;text-transform:uppercase;letter-spacing:.01em;}
+.rpt-title span{color:#8FB4E8;}
+.rpt-meta{margin-top:22px;border-top:1px solid rgba(255,255,255,.18);padding-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;font-size:13px;}
+.rpt-meta b{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#8FA9CE;margin-bottom:3px;font-weight:500;}
+.rpt-meta div{color:#EAF1FB;font-weight:600;}
+.scan{background:var(--mono-bg);color:var(--mono-ink);font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.85;padding:22px 0;border-bottom:1px solid #23364F;}
+.scan .wrap{max-width:760px;}
+.scan-line{display:flex;gap:10px;opacity:0;transform:translateY(4px);animation:scanin .4s forwards;}
+.scan-line:nth-child(1){animation-delay:.1s}.scan-line:nth-child(2){animation-delay:.35s}
+.scan-line:nth-child(3){animation-delay:.6s}.scan-line:nth-child(4){animation-delay:.85s}
+.scan-line:nth-child(5){animation-delay:1.1s}.scan-line:nth-child(6){animation-delay:1.35s}
+.scan-line:nth-child(7){animation-delay:1.65s}
+@keyframes scanin{to{opacity:1;transform:none}}
+.scan .ok{color:#5FCB8B;}
+.scan .hot{color:var(--mono-hot);font-weight:600;}
+.scan .flag{color:#F2A54A;font-weight:600;}
+@media (prefers-reduced-motion: reduce){.scan-line{animation:none;opacity:1;transform:none}}
+.grade{padding:44px 0 10px;}
+.grade-row{display:flex;align-items:center;gap:26px;flex-wrap:wrap;}
+.stamp{
+  border:3px solid var(--alarm);color:var(--alarm);
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px;
+  text-transform:uppercase;letter-spacing:.06em;line-height:1;
+  padding:12px 18px 10px;transform:rotate(-3deg);
+  border-radius:4px;position:relative;background:rgba(199,57,27,.03);
+}
+.stamp small{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;font-weight:500;margin-top:6px;color:var(--ink-soft);}
+.grade-copy{flex:1;min-width:250px;}
+.grade-copy h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px;text-transform:uppercase;line-height:1.05;margin-bottom:8px;}
+.grade-copy p{color:var(--ink-soft);font-size:15.5px;}
+.meters{margin-top:30px;display:grid;gap:14px;}
+.meter{display:grid;grid-template-columns:150px 1fr 44px;gap:12px;align-items:center;}
+.meter label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
+.bar{height:10px;background:#E7E4DB;border-radius:99px;overflow:hidden;}
+.fill{height:100%;border-radius:99px;width:0;transition:width 1.1s cubic-bezier(.2,.7,.2,1);}
+.fill.red{background:var(--alarm);} .fill.amb{background:var(--serious);} .fill.grn{background:var(--repair);}
+.meter b{font-family:'IBM Plex Mono',monospace;font-size:12px;text-align:right;color:var(--ink);}
+.meter-note{font-size:12px;color:var(--ink-faint);margin-top:10px;}
+@media(max-width:520px){.meter{grid-template-columns:112px 1fr 38px;}}
+.sec{padding:46px 0 8px;}
+.sec-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ctr-blue);margin-bottom:8px;}
+.sec h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(30px,6.4vw,42px);text-transform:uppercase;line-height:1;margin-bottom:10px;}
+.sec-intro{color:var(--ink-soft);font-size:15.5px;max-width:600px;margin-bottom:24px;}
+.solid{background:var(--sheet);border:1px solid var(--rule);border-left:5px solid var(--repair);border-radius:8px;padding:24px 22px;margin-bottom:14px;}
+.solid h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:21px;text-transform:uppercase;color:var(--repair);margin-bottom:6px;}
+.solid p{font-size:15px;color:var(--ink-soft);}
+.solid p b{color:var(--ink);}
+.cred-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-top:14px;}
+.cred{font-size:13.5px;font-weight:600;color:var(--ink);display:flex;gap:8px;align-items:flex-start;}
+.cred::before{content:"✓";color:var(--repair);font-weight:800;flex-shrink:0;}
+@media(max-width:520px){.cred-grid{grid-template-columns:1fr;}}
+.find{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:20px 20px 18px;margin-bottom:14px;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s;}
+.find.vis{opacity:1;transform:none;}
+@media (prefers-reduced-motion: reduce){.find{opacity:1;transform:none;transition:none}}
+.find-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.chip{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:3px;}
+.chip.crit{background:var(--alarm-bg);color:var(--alarm);border:1px solid #EAC2B8;}
+.chip.ser{background:var(--serious-bg);color:var(--serious);border:1px solid #E8D3A6;}
+.chip.tune{background:#EEF2F8;color:var(--ctr-blue);border:1px solid #C9D8EC;}
+.fnum{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint);letter-spacing:.08em;}
+.find h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;line-height:1.05;text-transform:uppercase;margin-bottom:8px;}
+.find p{font-size:14.5px;color:var(--ink-soft);}
+.evid{font-family:'IBM Plex Mono',monospace;font-size:12px;background:#F1F0EA;border-left:3px solid var(--ink-faint);padding:10px 12px;margin:12px 0;color:var(--ink-soft);border-radius:0 4px 4px 0;overflow-wrap:anywhere;}
+.fix{display:flex;gap:8px;font-size:14px;margin-top:12px;background:var(--repair-bg);border-radius:6px;padding:10px 12px;color:#14532D;}
+.fix b{color:var(--repair);font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;flex-shrink:0;padding-top:2px;}
+.selftest{background:var(--ink);color:#F2F1EC;border-radius:10px;padding:26px 22px;margin:34px 0 8px;}
+.selftest h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;text-transform:uppercase;margin-bottom:4px;color:#fff;}
+.selftest .sub{color:#B9BEC4;font-size:14px;margin-bottom:18px;}
+.st-item{border-top:1px solid #2C3540;padding:14px 0;display:flex;gap:14px;}
+.st-num{font-family:'IBM Plex Mono',monospace;color:var(--mono-hot);font-size:13px;font-weight:600;padding-top:2px;}
+.st-item p{font-size:14.5px;color:#DFE2E6;}
+.st-item p b{color:#fff;}
+.funnel{display:grid;gap:0;margin-top:6px;}
+.fstep{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:20px;position:relative;}
+.fstep+.fstep{margin-top:26px;}
+.fstep+.fstep::before{content:"↓";position:absolute;top:-24px;left:26px;font-size:18px;color:var(--ink-faint);}
+.fstep h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;text-transform:uppercase;margin-bottom:4px;}
+.fstep p{font-size:14.5px;color:var(--ink-soft);}
+.fstep .tagline{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--alarm);margin-bottom:6px;}
+.phase{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;margin-bottom:14px;overflow:hidden;}
+.phase-head{display:flex;align-items:center;gap:14px;padding:16px 20px;background:#FBFAF7;border-bottom:1px solid var(--rule);}
+.pnum{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;color:var(--ctr-blue);line-height:1;}
+.phase-head h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:21px;text-transform:uppercase;line-height:1;}
+.phase-head .cost{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--repair);background:var(--repair-bg);padding:5px 10px;border-radius:3px;font-weight:600;white-space:nowrap;}
+.phase ul{list-style:none;padding:16px 20px;}
+.phase li{font-size:14.5px;color:var(--ink-soft);padding:6px 0 6px 22px;position:relative;}
+.phase li::before{content:"→";position:absolute;left:0;color:var(--ctr-blue);font-weight:700;}
+.phase li b{color:var(--ink);}
+.phase .why{padding:0 20px 16px;font-size:13px;color:var(--ink-faint);font-style:italic;}
+.deal{background:var(--ctr-blue-deep);color:#fff;border-radius:10px;padding:28px 24px;margin-top:34px;}
+.deal h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px;text-transform:uppercase;margin-bottom:14px;}
+.deal-grid{display:grid;gap:12px;}
+.deal-item{display:flex;gap:12px;font-size:14.5px;color:#E6EDF8;}
+.deal-item::before{content:"—";color:#8FB4E8;font-weight:700;flex-shrink:0;}
+.deal-item b{color:#fff;}
+.cta{padding:50px 0 60px;text-align:center;}
+.cta h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(32px,8vw,48px);text-transform:uppercase;line-height:1;margin-bottom:12px;}
+.cta p{color:var(--ink-soft);max-width:520px;margin:0 auto 8px;font-size:15.5px;}
+.cta .sig{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink);margin-top:22px;font-weight:600;}
+.foot{border-top:1px solid var(--rule);padding:18px 0 34px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);text-align:center;line-height:2;}
+:focus-visible{outline:3px solid var(--ctr-blue);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header class="rpt-head">
+  <div class="wrap">
+    <div class="rpt-eyebrow">Confidential · Prepared for the owner only</div>
+    <h1 class="rpt-title">Digital Property<br>Inspection <span>Report</span></h1>
+    <div class="rpt-meta">
+      <div><b>Property</b>Complete Total Restoration &amp; Roofing LLC</div>
+      <div><b>Prepared for</b>Bryan Bradley</div>
+      <div><b>Inspected by</b>Shane Handel</div>
+      <div><b>Date of inspection</b>July 24, 2026</div>
+    </div>
+  </div>
+</header>
+
+<div class="scan" aria-label="System scan summary">
+  <div class="wrap">
+    <div class="scan-line"><span class="hot">&gt; SYSTEM SCAN</span><span>ctrroofaz.com — full render, every page, phone + desktop</span></div>
+    <div class="scan-line"><span class="ok">&gt; CHECKED</span><span>Google Business Profile — live listing, reviews, services, photos</span></div>
+    <div class="scan-line"><span class="ok">&gt; CHECKED</span><span>Domain records — registration + renewal dates, both domains</span></div>
+    <div class="scan-line"><span class="ok">&gt; CHECKED</span><span>7 directories + your verified credential profile</span></div>
+    <div class="scan-line"><span class="ok">&gt; CHECKED</span><span>Mesa competitor set — sites, reviews, rankings</span></div>
+    <div class="scan-line"><span class="flag">&gt; RESULT</span><span>20 findings · 6 critical · most are cheap or free to fix</span></div>
+    <div class="scan-line"><span class="hot">&gt; VERDICT</span><span>the business is solid — the digital property is leaking</span></div>
+  </div>
+</div>
+
+<section class="grade">
+  <div class="wrap">
+    <div class="grade-row">
+      <div class="stamp">Mitigation<br>Required<small>STRUCTURE SOUND · SYSTEMS COMPROMISED</small></div>
+      <div class="grade-copy">
+        <h2>You know this pattern, Bryan.</h2>
+        <p>The frame is good. The leak's been running behind the wall for a while. Nobody sees it from the street — but it's why the phone is quiet. Here's the full walk-through.</p>
+      </div>
+    </div>
+    <div class="meters" id="meters">
+      <div class="meter"><label>Website</label><div class="bar"><div class="fill red" data-w="31%"></div></div><b>31</b></div>
+      <div class="meter"><label>Google Profile</label><div class="bar"><div class="fill red" data-w="38%"></div></div><b>38</b></div>
+      <div class="meter"><label>Reviews</label><div class="bar"><div class="fill amb" data-w="44%"></div></div><b>44</b></div>
+      <div class="meter"><label>Consistency</label><div class="bar"><div class="fill red" data-w="22%"></div></div><b>22</b></div>
+      <div class="meter"><label>Lead capture</label><div class="bar"><div class="fill red" data-w="15%"></div></div><b>15</b></div>
+    </div>
+    <p class="meter-note">Assessed scores out of 100, based on this inspection. 70+ is where the phone starts working for you.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">Section 00 · What's already solid</div>
+    <h2>The good bones first</h2>
+    <p class="sec-intro">Straight up: on paper, you're one of the most qualified operators in the East Valley. That's not flattery — it's third-party verified. The problem is none of it is visible where customers actually look.</p>
+
+    <div class="solid">
+      <h3>Your verified credential stack is elite</h3>
+      <p>All of this is <b>independently verified</b> and current:</p>
+      <div class="cred-grid">
+        <div class="cred">AZ contractor license — General / Home Improvement</div>
+        <div class="cred">IICRC: WRT · CRT · FSRT · ASD · RRT</div>
+        <div class="cred">RIA Certified Restorer</div>
+        <div class="cred">EPA Lead-Safe certified firm + 8-hr Lead Renovator</div>
+        <div class="cred">$1M / $2M contractor's pollution liability</div>
+        <div class="cred">$1M / $2M general liability (A+ rated carrier)</div>
+        <div class="cred">$1M commercial auto</div>
+        <div class="cred">Background-checked · 220 AZ zip codes served</div>
+      </div>
+    </div>
+
+    <div class="solid">
+      <h3>Your reviews are gold — there just aren't enough</h3>
+      <p>The Saturday-night burst pipe where you shut the main yourself, worked Sunday, and handled the adjuster — <b>that review is worth more than any ad you could buy.</b> Every review you have tells the same story: shows up, handles insurance, human. That's the exact story we need 5x more of.</p>
+    </div>
+
+    <div class="solid">
+      <h3>You hold a card the competition can't play</h3>
+      <p>The Mesa competitor you showed me does water, fire, mold, asbestos — <b>no roofing.</b> In monsoon country, the insurance job IS the roof: tarp it, dry it, rebuild it, roof it. They have to hand that off. You don't. One call, one contractor, whole claim. That's your headline and nobody's saying it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">Section 01 · The website</div>
+    <h2>Cause of loss: the site</h2>
+    <p class="sec-intro">Rendered every page the way a real visitor sees it, phone and desktop. The $1,000 build has structural problems the builder never should have shipped.</p>
+
+    <div class="find">
+      <div class="find-top"><span class="chip crit">Critical</span><span class="fnum">FINDING 01</span></div>
+      <h3>The CALL NOW button is dead. On every page.</h3>
+      <p>The main call button in your header doesn't dial your phone — it just reloads the homepage. On the homepage it does nothing. On every other page it kicks the visitor <em>backwards</em>. A homeowner standing in two inches of water taps it once, nothing happens, and calls the next company.</p>
+      <div class="evid">header button "CALL NOW" → links to "/" (homepage) — confirmed on all pages, mobile + desktop</div>
+      <div class="fix"><b>The fix</b><span>One line of code. This is the single highest-value repair on the whole property.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip crit">Critical</span><span class="fnum">FINDING 02</span></div>
+      <h3>Your #1 weapon — insurance help — is a blank page</h3>
+      <p>"Insurance Assistance" is the reason people pick you over a handyman with a wet-vac. Your page for it is one headline and empty space. The thing your best reviews rave about has nothing behind it when a stressed homeowner goes looking.</p>
+      <div class="evid">/insurance-assistance → 1 headline, no content, no process, no call to action</div>
+      <div class="fix"><b>The fix</b><span>Build this into the strongest page on the site: your claim process step-by-step, direct-billing, real jobs, real outcomes.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip crit">Critical</span><span class="fnum">FINDING 03</span></div>
+      <h3>Nine verified credentials. Zero shown on the site.</h3>
+      <p>Everything in that green box above — license, IICRC stack, RIA, EPA, insurance — appears <b>nowhere</b> on ctrroofaz.com. Meanwhile the competitor site you liked runs a full badge wall. You said "I can say all the same things." You're right — and right now you're saying none of them.</p>
+      <div class="evid">site-wide scan: 0 license #, 0 cert badges, 0 insurance mention, 0 trust marks beyond a generic seal</div>
+      <div class="fix"><b>The fix</b><span>Credential wall on the homepage + license number in the footer of every page. Free ammunition you already paid for.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip ser">Serious</span><span class="fnum">FINDING 04</span></div>
+      <h3>Template placeholder text is live on your homepage</h3>
+      <p>Between your Services and Reviews sections, the page literally says: <em>"Add a footnote if this applies to your business."</em> That's the builder's fill-in-the-blank instruction, published to the world. To a homeowner it reads as "nobody's home."</p>
+      <div class="evid">visible on homepage between Services and Reviews — confirmed in live render</div>
+      <div class="fix"><b>The fix</b><span>Delete it. Sixty seconds. It's the kind of thing that never should've shipped on a paid build.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip ser">Serious</span><span class="fnum">FINDING 05</span></div>
+      <h3>Stock photos where your real work should be</h3>
+      <p>The site runs on generic stock imagery — models on roofs. Meanwhile your actual jobs (that mold containment shot, the drying setups) are stronger than anything a stock library sells. Insurance adjusters and homeowners can both smell stock a mile away.</p>
+      <div class="fix"><b>The fix</b><span>Replace with your real job photos. You already have them — some are sitting on your Google listing right now.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip ser">Serious</span><span class="fnum">FINDING 06</span></div>
+      <h3>The lead form asks for almost nothing — and tells you nothing</h3>
+      <p>Name, email, phone. That's it. No "what happened," no address, no urgency level. You can't triage a burst pipe against a roof quote, and the homeowner gets no signal that help is actually in motion.</p>
+      <div class="fix"><b>The fix</b><span>Emergency-first form: what happened, where, how bad, photo upload — then route the hot ones straight to your cell.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip tune">Tune-up</span><span class="fnum">FINDING 07</span></div>
+      <h3>No pages for the searches that matter</h3>
+      <p>There's no dedicated page for "water damage restoration Mesa," none for roof repair, none per city you serve. Google ranks pages, not companies — 5 generic pages can't compete with competitors running 20+ targeted ones.</p>
+      <div class="fix"><b>The fix</b><span>Service + city pages built around how East Valley homeowners actually search. This is the engine of free leads.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip tune">Tune-up</span><span class="fnum">FINDING 08</span></div>
+      <h3>Copyright still says 2025</h3>
+      <p>Small thing — but it's the digital version of a truck with expired tags. Signals "not maintained" to both Google and people.</p>
+      <div class="fix"><b>The fix</b><span>Auto-updating year. Ten seconds.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">Section 02 · Google Business Profile</div>
+    <h2>Where Mesa actually finds you</h2>
+    <p class="sec-intro">When a pipe bursts at 2am, nobody browses websites — they grab a phone, type "water damage near me," and call whoever Google puts on the map. Your listing exists and has good pieces. It's just badly outgunned.</p>
+
+    <div class="find">
+      <div class="find-top"><span class="chip crit">Critical</span><span class="fnum">FINDING 09</span></div>
+      <h3>6 reviews. Competitors are sitting on 22 to 268.</h3>
+      <p>Your profile: <b>4.3 stars from 6 reviews.</b> Mesa restoration listings we benchmarked run from 22 up to 268 reviews. Review count is the heaviest lever in map rankings AND the first thing a panicking homeowner compares. At 6 total, one rough review drags your whole average — at 50+, it wouldn't move the needle. Volume is armor, and you're not wearing any.</p>
+      <div class="evid">Google listing 7/24: "Complete Total Restoration and Roofing — 4.3 ★ (6)" · Mesa competitor range: 22–268 reviews</div>
+      <div class="fix"><b>The fix</b><span>A review engine: every completed job gets a link the customer can tap in 10 seconds. Your customers clearly love you — we just start asking, every time. Target: 30+ reviews in 90 days.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip ser">Serious</span><span class="fnum">FINDING 10</span></div>
+      <h3>Your photo section is flyer graphics, not jobs</h3>
+      <p>Most of what shows is marketing flyers. Google's own guidance and every ranking study agree: real, regular job photos move listings up and convert callers. Your mold-containment shot is exactly right — you need dozens more like it, added weekly.</p>
+      <div class="fix"><b>The fix</b><span>Photo pipeline: before/during/after from every job, uploaded on a schedule. You already take these for adjusters.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip ser">Serious</span><span class="fnum">FINDING 11</span></div>
+      <h3>The listing leads with water — roofing is buried</h3>
+      <p>Your services line opens with water damage repair and mitigation. Good. But roofing — your unfair advantage, the word that's literally in your company name — isn't pulling its weight in the profile's categories and services. Every storm-damage search that goes roofing-first is a search you're sitting out.</p>
+      <div class="fix"><b>The fix</b><span>Full category + services rebuild: restoration AND roofing AND mold AND fire AND insurance-claim services, each loaded properly.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">Section 03 · Identity &amp; directories</div>
+    <h2>Google thinks you're three different companies</h2>
+    <p class="sec-intro">Search trust is built on one simple thing: the same name, address, and phone number everywhere. Right now your identity is split across old sites and stale listings — and it's splitting your credibility with it.</p>
+
+    <div class="find">
+      <div class="find-top"><span class="chip crit">Critical</span><span class="fnum">FINDING 12</span></div>
+      <h3>A second live website is answering under your name — with a different phone number</h3>
+      <p>ctrrpro.com is up right now, presenting as Complete Total Restoration and Roofing, publishing <b>(480) 605-3850</b> — not your real line. Looks like an old marketing company's build with their tracking number. Any customer or adjuster who lands there is calling a number you may not control.</p>
+      <div class="evid">ctrrpro.com — live 7/24 · "Complete Total Restoration and Roofing (480) 605-3850"</div>
+      <div class="fix"><b>The fix</b><span>Track down who controls it, then kill it or redirect it to the real site. Until it dies, it's leaking calls and confusing Google.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip crit">Critical</span><span class="fnum">FINDING 13</span></div>
+      <h3>A zombie website carries your company name — with another company's story</h3>
+      <p>There's an old free WordPress site under "Complete Total Restoration" that still comes up in searches for your name — and its About text talks about <em>a different company entirely</em>, mixed with leftover template filler. Anyone researching you before hiring can hit this and walk away confused.</p>
+      <div class="evid">completetotalrestoration.wordpress.com — live in search results 7/24, contains another business's copy</div>
+      <div class="fix"><b>The fix</b><span>Delete it or point it at the real site. It's actively polluting your brand search.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip ser">Serious</span><span class="fnum">FINDING 14</span></div>
+      <h3>Old listings still put you in Scottsdale</h3>
+      <p>Yelp and other directories carry your old Scottsdale address. Every mismatched address chips at Google's confidence in your Mesa listing — and it's exactly the kind of inconsistency that keeps a map ranking suppressed.</p>
+      <div class="fix"><b>The fix</b><span>Citation cleanup pass: one name, one address, one number, everywhere that matters.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip ser">Serious</span><span class="fnum">FINDING 15</span></div>
+      <h3>Nextdoor has you filed as "Asbestos removal"</h3>
+      <p>Nextdoor is where neighborhoods ask "anyone know a good roofer?" Your category there is asbestos removal. You're invisible for the referrals that platform exists to generate.</p>
+      <div class="fix"><b>The fix</b><span>Recategorize + a real profile. Nextdoor referrals are free leads in your exact zips.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip ser">Serious</span><span class="fnum">FINDING 16</span></div>
+      <h3>Your verified profile has you filed under the wrong trades</h3>
+      <p>That verified credential account you sent me — the verification is real and worth keeping. But check the "Verified Services" line: it reads <b>"Designer"</b> and <b>"Investor or Broker."</b> Restoration and roofing aren't listed. The networks that use that directory search by trade and zip — filed like this, they can't find you for the work you actually do.</p>
+      <div class="evid">your profile 7/24 → Verified Services: "Designer" · "Investor or Broker" — no restoration, no roofing</div>
+      <div class="fix"><b>The fix</b><span>Free fix — get the trades corrected and that badge starts working for you instead of hiding you.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip ser">Serious</span><span class="fnum">FINDING 17</span></div>
+      <h3>Another company owns your name in search</h3>
+      <p>Search "Complete Total Restoration" and a different, similarly-named Mesa outfit dominates the results — big review counts, listings everywhere. When a referral hears your name at a kitchen table and Googles it later, there's a real chance they call the wrong company.</p>
+      <div class="fix"><b>The fix</b><span>Brand-search defense: your site, profile, and cleaned-up listings locking down page one for your own name.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip tune">Tune-up</span><span class="fnum">FINDING 18</span></div>
+      <h3>Your properties can't agree on your founding year</h3>
+      <p>One profile says you've been at it since 1997. The old site says 2009. Pick the true story — then we tell it the same way everywhere. Consistency is trust, to Google and to people.</p>
+      <div class="fix"><b>The fix</b><span>You tell me the real number. We standardize it across every surface.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">Section 04 · The clock</div>
+    <h2>Two dates that decide the plan</h2>
+
+    <div class="find">
+      <div class="find-top"><span class="chip crit">Critical</span><span class="fnum">FINDING 19</span></div>
+      <h3>Your website contract renews August 22 — 29 days out</h3>
+      <p>The current site's domain comes up for renewal <b>August 22.</b> Before you pay the builder another dime, you deserve to decide with full information: patch what you've got, or rebuild it right. Either path works — but the decision window is open now and closes in four weeks.</p>
+      <div class="evid">ctrroofaz.com — registered Aug 22, 2025 · expires Aug 22, 2026</div>
+      <div class="fix"><b>The fix</b><span>We make the fix-vs-rebuild call together in the next two weeks, before the renewal forces your hand.</span></div>
+    </div>
+
+    <div class="find">
+      <div class="find-top"><span class="chip tune">Tune-up</span><span class="fnum">FINDING 20</span></div>
+      <h3>You own a 7-year-old domain that's doing nothing</h3>
+      <p>You've held <b>ctrroofingaz.com</b> since December 2018 — that's your email domain. Google gives weight to domain age, and yours has been quietly building seniority for seven years while the brand-new domain does the ranking work. That's a real asset sitting in the garage.</p>
+      <div class="evid">ctrroofingaz.com — registered Dec 2018 · currently unused for the website</div>
+      <div class="fix"><b>The fix</b><span>Part of the rebuild conversation: consolidate onto the aged domain and stop starting from zero.</span></div>
+    </div>
+
+    <div class="selftest">
+      <h2>Don't take my word for it</h2>
+      <p class="sub">Three 30-second checks you can run right now from your phone:</p>
+      <div class="st-item"><span class="st-num">01</span><p>Open <b>ctrroofaz.com</b>, tap the <b>CALL NOW</b> button at the top. Watch what happens. (Finding 01)</p></div>
+      <div class="st-item"><span class="st-num">02</span><p>Scroll your homepage between Services and Reviews. Read the line that starts <b>"Add a footnote…"</b> (Finding 04)</p></div>
+      <div class="st-item"><span class="st-num">03</span><p>Open the verified profile link you sent me. Look at <b>"Verified Services."</b> (Finding 16)</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">The chain of loss</div>
+    <h2>Why the phone is quiet</h2>
+    <p class="sec-intro">Put the 20 findings together and the quiet phone stops being a mystery. It's a three-stage failure — and it repairs in the same order.</p>
+    <div class="funnel">
+      <div class="fstep">
+        <div class="tagline">Stage 1 · Can't be found</div>
+        <h3>Google barely shows you</h3>
+        <p>6 reviews vs. 22–268, split identity, stale listings, thin profile. On the searches that matter in your zips, you're under the fold or off the map.</p>
+      </div>
+      <div class="fstep">
+        <div class="tagline">Stage 2 · Can't be trusted</div>
+        <h3>The few who find you see nothing</h3>
+        <p>No credentials, blank insurance page, stock photos, another company's site answering under your name. Your elite paper trail is invisible at the exact moment of decision.</p>
+      </div>
+      <div class="fstep">
+        <div class="tagline">Stage 3 · Can't get through</div>
+        <h3>The ones who commit hit a dead button</h3>
+        <p>The main call button doesn't dial. The form captures almost nothing. Even won trust leaks out at the last step.</p>
+      </div>
+    </div>
+    <p style="margin-top:22px;font-size:15px;color:var(--ink-soft);"><b style="color:var(--ink);">This is also why I'd never let you buy ads today.</b> Restoration clicks run $40–80+ apiece on industry benchmarks — pouring that into a property with a dead call button is pouring water into a cracked bucket. We fix the bucket first. Then we turn on water that's a lot cheaper than clicks.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-tag">Scope of repairs</div>
+    <h2>The repair plan — cheapest first</h2>
+    <p class="sec-intro">Sequenced like a job: stop the loss, dry it in, rebuild, then upgrade. Each phase pays for the next.</p>
+
+    <div class="phase">
+      <div class="phase-head"><span class="pnum">P0</span><h3>Stop the bleeding</h3><span class="cost">Days · mostly free</span></div>
+      <ul>
+        <li>Fix the <b>dead CALL NOW button</b> — every page</li>
+        <li>Delete the placeholder text</li>
+        <li>Correct your verified profile's trades</li>
+        <li>Hunt down + kill/redirect the old site and the zombie site</li>
+      </ul>
+      <p class="why">Nothing new gets built until the leaks are closed.</p>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head"><span class="pnum">P1</span><h3>Get found</h3><span class="cost">Weeks 1–4</span></div>
+      <ul>
+        <li><b>Google Business Profile overhaul</b> — categories, services, roofing loaded properly, real job-photo pipeline</li>
+        <li><b>Review engine</b> — every finished job gets the 10-second review link · target 30+ in 90 days</li>
+        <li><b>Citation cleanup</b> — Scottsdale ghosts gone, Nextdoor fixed, one identity everywhere</li>
+      </ul>
+      <p class="why">The map pack is where 2am emergencies get decided. This is the cheapest lead source that exists — free.</p>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head"><span class="pnum">P2</span><h3>Get chosen</h3><span class="cost">Before Aug 22</span></div>
+      <ul>
+        <li>Website decision: <b>repair vs. rebuild</b> — made together before the renewal deadline</li>
+        <li><b>Credential wall</b> + license on every page — the badge stack the competitor can't match</li>
+        <li><b>Insurance Assistance page built for real</b> — your differentiator, finally loaded</li>
+        <li>Real job photos, emergency-first lead form, service + city pages</li>
+      </ul>
+      <p class="why">When Google sends them, the site's one job is making them call YOU. Right now it's doing the opposite.</p>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head"><span class="pnum">P3</span><h3>Turn on the faucet</h3><span class="cost">Once P0–P2 hold</span></div>
+      <ul>
+        <li>There's a way to buy leads where you <b>pay only when a real customer contacts you</b> — not per click — and junk leads can be disputed for credit. Most contractors either don't know it exists or set it up wrong.</li>
+        <li>Your verified license, insurance, and background check are <b>exactly</b> what its screening requires — you're pre-qualified and don't know it</li>
+        <li>I run it connected by API: <b>every dollar and every call monitored</b>, reported to you weekly</li>
+        <li>Expensive per-click ads only later, only if the math earns it</li>
+      </ul>
+      <p class="why">Cheapest leads first: free map-pack calls, then pay-per-lead, then — maybe — pay-per-click. Never the reverse.</p>
+    </div>
+
+    <div class="deal">
+      <h2>How this works with me</h2>
+      <div class="deal-grid">
+        <div class="deal-item"><span><b>Friend pricing.</b> You know me 20+ years. I'm building this exact system for my own company right now — you get it at roughly half what an agency charges, because there's no agency.</span></div>
+        <div class="deal-item"><span><b>Phased, so your cash is never overextended.</b> We start small, each phase proves itself before the next one spends a dollar.</span></div>
+        <div class="deal-item"><span><b>Nothing set-and-forget.</b> My stack connects to your accounts by API — I see what Google sees, monitored and managed, with numbers you can actually read every week.</span></div>
+        <div class="deal-item"><span><b>You own everything.</b> Your domain, your profile, your accounts. I build it, you keep it.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>The frame is good, Bryan.</h2>
+    <p>Twenty findings and not one of them says "bad company." Every single one says "great company, invisible." That's the easiest kind of job there is — and you'd be my favorite one to do it for.</p>
+    <p><b>Text me. We'll walk the plan together and figure out numbers that fit.</b></p>
+    <div class="sig">— Shane</div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    Digital Property Inspection · Prepared July 24, 2026<br>
+    For Bryan Bradley · Complete Total Restoration &amp; Roofing LLC · Confidential
+  </div>
+</footer>
+
+<script>
+const meters=document.getElementById('meters');
+if(meters){
+  new IntersectionObserver((e,o)=>{e.forEach(x=>{if(x.isIntersecting){
+    meters.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w);o.disconnect();}})},{threshold:.4}).observe(meters);
+}
+const io=new IntersectionObserver(es=>{es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('vis');io.unobserve(x.target);}})},{threshold:.12});
+document.querySelectorAll('.find').forEach(f=>io.observe(f));
+</script>
+</body>
+</html>

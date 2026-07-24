@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-07-23T19:55:00-05:00",
+  "updated": "2026-07-24T15:35:00-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -65,6 +65,13 @@
       "status": "live",
       "note": "100X Cockpit v3.3.0 — P2 FIRE RAIL + METRICS SPINE live on 127.0.0.1:4100. MISSIONS panel (local ingest/push/vault-commit/close-day + honest-disabled n8n remotes w/ 2-click confirm); LIVE metrics from CockpitMetrics /30min collector: LEADS 7·24h/19·7d, CALLS 47/7d avg 71s, BOOKINGS 1·24h/7·7d (real GHL+Retell), AI SPEND + GSC honest reasons; chips bound; SSE-live; Hermes gateway probed = not present (no fake chat) · HERMES WEBUI trial live 127.0.0.1:8787 (stock nesquena/hermes-webui @e5148f9, isolated brain, OpenRouter round-trip + vault read proven, no secrets on disk, NOT pushed — reports/2026-07-13-l8-hermes-webui.md)",
       "updated": "2026-07-13T15:45:00-05:00"
+    },
+    {
+      "id": "prospects",
+      "label": "Services/Prospects",
+      "status": "live",
+      "note": "CTR client audit report LIVE at /ctr-report — standalone client audit for warm prospect Bryan Bradley (Complete Total Restoration & Roofing). Intentionally NOT CIRCULANT (CTR-blue palette, architect-granted). Cul-de-sac page: no site nav, no links to/from the rest of the site, noindex/nofollow, absent from sitemap. Published 2026-07-24.",
+      "updated": "2026-07-24T15:35:00-05:00"
     }
   ],
   "items": [
@@ -214,9 +221,20 @@
       "url": "/home-services",
       "status": "live",
       "label": "live"
+    },
+    {
+      "id": "ctr-report",
+      "title": "CTR client audit report",
+      "url": "/ctr-report/",
+      "status": "live",
+      "label": "live · noindex · cul-de-sac"
     }
   ],
   "log": [
+    {
+      "ts": "2026-07-24T15:35:00-05:00",
+      "entry": "Published /ctr-report standalone client audit (noindex, cul-de-sac)."
+    },
     {
       "ts": "2026-07-23T16:18:03-05:00",
       "entry": "RUN 1.6 - SCRIPT v3 DEPLOY + QUOTA HYGIENE + PAGE LIST + SURFACE SEAL. (1) SCRIPT v3 (Grok-merged) overwritten wholesale into docs/demo-agent-prompt.md and pushed BYTE-FOR-BYTE to BOTH demo agents - DEPLOY_PATCHES emptied, both forked v1->v2 and republished, new --verify mode byte-compares live vs file: PASS/PASS at 2333 chars each. (2) QUOTA HYGIENE: the two 10-minute pollers (Booking Receipt + Drip Engine v1) retuned to 30 min - 8,640 -> 2,880 executions/month of 10,000, headroom 71.2%. All 11 other active workflows are event-driven webhooks with no timer cost. Execution health since the PRO recovery is 249/252 = 98.8%. (3) reports/pages-list.md written - all 58 sitemap URLs grouped (core 7 / verticals 6 / cities 30 / trades 4 / blog 8 / utility 3), diffed against sitemap.xml at 58/58 with zero drops and zero invented URLs. (4) SURFACE SEAL: /retell-backups/, /reports/2026-07-22-outage-recovery.md, /automation/number-pool.json, /docs/demo-agent-prompt.md and /tools/stamp.py all return 404 - .vercelignore already covered every one, no change needed. Zero public pages touched; POLISH FREEZE intact."
