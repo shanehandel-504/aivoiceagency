@@ -114,6 +114,26 @@ html[data-theme="light"] .bs-cta-line:hover{border-color:var(--green);color:var(
 .signal-pill .orb{--size:32px}
 .signal-pill .sp-secs{margin-left:12px}
 .signal-pill .sp-status{margin-left:10px}
+/* RUN 3.5 · WAVEFORM THUMB — the single element that replaced the hero's
+   four-orb tick cluster. Cyan only. Static by default; the amplitude breathe
+   waits behind body.glow-ready and is transform-only (scaleY on a fill-box
+   origin), so it costs 0 layout and 0 CLS. */
+.bs-wavethumb{display:inline-flex;align-items:center;color:var(--cyan);flex:none;line-height:0}
+.bs-wavethumb svg{display:block;overflow:visible}
+.bs-wavethumb rect{transform-box:fill-box;transform-origin:center}
+body.glow-ready .bs-wavethumb rect{animation:wavethumb 1.6s ease-in-out infinite}
+.bs-wavethumb rect:nth-child(1){animation-delay:-.00s}
+.bs-wavethumb rect:nth-child(2){animation-delay:-.14s}
+.bs-wavethumb rect:nth-child(3){animation-delay:-.28s}
+.bs-wavethumb rect:nth-child(4){animation-delay:-.42s}
+.bs-wavethumb rect:nth-child(5){animation-delay:-.56s}
+.bs-wavethumb rect:nth-child(6){animation-delay:-.70s}
+.bs-wavethumb rect:nth-child(7){animation-delay:-.84s}
+.bs-wavethumb rect:nth-child(8){animation-delay:-.98s}
+@keyframes wavethumb{0%,100%{transform:scaleY(.62)}50%{transform:scaleY(1)}}
+@media(prefers-reduced-motion:reduce){
+  body.glow-ready .bs-wavethumb rect{animation:none}
+}
 .signal-pill .orb+.orb{margin-left:calc(var(--size)*-.28);box-shadow:inset 0 1px 1px rgba(255,255,255,.28),
   inset 0 calc(var(--size)*-.09) calc(var(--size)*.18) rgba(0,0,0,.38),
   0 0 0 2px var(--e1)} /* surface ring on the stack */
@@ -187,6 +207,46 @@ body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
   .bs-hcta .bs-cta,.bs-hcta .cta,.bs-hcta .cta--quiet{width:100%}
 }
 .bs-micro{font-family:var(--g-mono);font-size:11.5px;letter-spacing:.1em;color:var(--ink-mute);margin:12px 0 16px}
+
+/* ============================================================
+   RUN 3.5 · DESKTOP SCALE (>=1024px only — mobile is untouched)
+   ------------------------------------------------------------
+   At 1440 the hero shipped a 64px H1 inside a 1120px column: the
+   headline filled less than half the canvas and the whole block
+   floated in the middle of the void, which reads as a template
+   that was designed at 390 and then stretched. A product page at
+   desktop width has to USE the width.
+
+   H1 clamps 5.5rem -> 6.5rem (88px at 1024, ~101px at 1440), and
+   max-width goes to 17ch — wide enough that "3AM. GOOGLE WAS"
+   holds one line at both ends of the clamp, narrow enough that
+   the two-line break never becomes three. The CTAs, the micro
+   line and the chip row scale WITH it so the ladder stays intact,
+   and the vertical gaps tighten so the extra size buys presence
+   instead of more empty canvas.
+
+   REFINEMENT (self-review at 1440x900): the first pass scaled the type but
+   kept the old gaps, which pushed the chip row down BEHIND the sticky call
+   bar — the hero got bigger and the fold got worse. Every gap below is the
+   tightened value; the whole ladder now lands above the bar with air to
+   spare. Bigger type has to be paid for in whitespace, not in the fold. */
+@media(min-width:1024px){
+  .bs-hero{padding:22px 0 4px}
+  .bs-hero .g-eyebrow{font-size:13px;letter-spacing:.24em;margin-bottom:10px}
+  .bs-hero h1{font-size:clamp(5.5rem,7vw,6.5rem);line-height:.95;letter-spacing:-.03em;
+    max-width:17ch;margin:0 auto .19em}
+  .bs-sub{font-size:26px;line-height:1.3;max-width:34ch;margin:0 auto 10px}
+  .bs-support{font-size:18px;line-height:1.55;max-width:62ch;margin:0 auto 22px}
+  .bs-hcta{gap:14px}
+  .bs-hcta .cta,.bs-hcta .cta--quiet{min-height:60px;padding:0 34px;font-size:16.5px}
+  .bs-micro{font-size:12.5px;margin:12px 0 14px}
+  .bs-result{padding:12px 22px 12px 16px;gap:18px}
+  .bs-result-line{font-size:14px}
+  .sp-secs{font-size:15px}
+  .sp-status{font-size:12.5px}
+  .bs-chipsrow{gap:10px;margin-top:14px}
+  .bs-chipsrow li{font-size:13px;padding:9px 17px}
+}
 
 /* ============================================================
    AVA STATUS RAIL (RUN 3 · commit 2) — a glass strip under the

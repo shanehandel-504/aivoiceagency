@@ -39,6 +39,23 @@
    (green/cyan). They do not share a viewport band.
    ============================================================================ */
 
+/* ============================================================================
+   RUN 3.5 · SELF-HOSTED MONO. `--font-mono` / `--g-mono` / `--mono` have named
+   'JetBrains Mono' sitewide since the first build, but the homepage and every
+   other self-hosted-font page never LOADED it — the family silently fell
+   through to ui-monospace, so the whole technical voice of the site (rail,
+   chips, timestamps, agent names, eyebrows) rendered in whatever mono the OS
+   happened to ship. This is the latin subset, variable 400-700, from the
+   upstream OFL release. font-display:swap; no external round-trip.
+   ============================================================================ */
+@font-face{
+  font-family:'JetBrains Mono';
+  font-style:normal;
+  font-weight:400 700;
+  font-display:swap;
+  src:url('/fonts/jetbrains-mono.woff2') format('woff2');
+}
+
 :root {
   /* ---- RUN 3 · FINAL SKIN TOKENS (law) --------------------------------- */
   --canvas:     #0A0A0F;   /* page void                                    */
