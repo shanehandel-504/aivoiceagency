@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-07-24T15:35:00-05:00",
+  "updated": "2026-07-24T22:07:16-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -21,8 +21,8 @@
       "id": "L3",
       "label": "GHL",
       "status": "live",
-      "note": "RUN 1.5 PENDING-SHANE (HIGHEST PRIORITY): the GHL inbound-SMS webhook must point at https://circulant.app.n8n.cloud/webhook/live-ready. The E2E proof waited 180s for a genuine READY reply and saw none, so that hop is UNVERIFIED - everything downstream of it is proven, that leg is not. Test: reply READY to the AVA text and confirm a new execution appears on workflow V6wAFgJ803xmLM0K. Also noted: there is NO GHL contact named 'Shane' (duplicate-search by number returns nothing) and POST /contacts/search returns 403 with the current PIT scope. | PREV: AVA Client Intake + CRM upsert rails active · Email System v1 built + live-tested · DELIVERABILITY DIAGNOSED: spam cause = GHL sends from shared LC pool (mg.msgsndr.biz) not the dedicated mail.aivoiceagency.ai (DNS-ready but unselected); root domain has no SPF/DMARC/Workspace-DKIM. Fix plan + 14-day warm-up shipped (reports/2026-07-13-email-deliverability.md); DNS/GHL flip PENDING-SHANE · review /work/emails · PENDING SHIP EMAILS | RUN 1 PENDING-SHANE: the GHL inbound-SMS webhook must be pointed at https://circulant.app.n8n.cloud/webhook/live-ready in the GHL UI, or a customer's READY reply reaches nothing.",
-      "updated": "2026-07-22T22:50:00-05:00"
+      "note": "RUN 1.7 - POST-CALL UPSERT REPAIRED (2026-07-24). AVA Post-Call to GHL (6r8YHuMEJbxeDyT5) had failed EVERY run since the quota recovery - executions 3031, 4340, 4564, 4643 all died 400 Bad Request at GHL Upsert Contact. CAUSE: Retell can deliver call_analyzed with an entirely EMPTY custom_analysis_data when the caller hangs up during the greeting, so caller_phone and caller_email are both '' and the node posted {locationId, firstName:'', source, tags} with NO IDENTIFIER AT ALL; GHL answers 400 'Pass at least one of number, email query parameter'. The real caller ANI was sitting unused in the same payload at call.from_number. FIX (Run-1.5 class): a new Build GHL Body Code node moves all regex/string work OUT of the inline jsonBody expression (the double-escape trap that cost Run 1.5 a cycle) and falls back spoken caller_phone -> call.from_number, tagging phone-from-ani when the fallback fires and firstName 'Unknown Caller' when the caller never gave a name; BOTH of our own published lines (414-240-8930 voice, 350-220-5305 SMS) are guarded so we can never become our own contact; and a Has Identifier IF gate routes a genuinely unidentifiable web call to a 200 no_identifier response instead of crashing the run and leaving Retell without an answer. VERIFIED execution 4694 SUCCESS replaying the exact 4643 payload with a NANP-reserved test ANI (+1 414 555 0142, the fictional 555-01xx range that cannot ring a real person): the body went from NO identifier to phone +14145550142, has_identifier true, Has Identifier routed true, chain ran through to Respond OK. Published activeVersion 3184cc42. HONEST LIMIT: the GHL round-trip was NOT re-exercised live - test_workflow pins HTTP nodes, so no contact was written to the production CRM; the 200 contract for this body shape rests on execution 2486, which posted the same shape with a phone present and got a contact back. | PREV: RUN 1.5 PENDING-SHANE (HIGHEST PRIORITY): the GHL inbound-SMS webhook must point at https://circulant.app.n8n.cloud/webhook/live-ready. The E2E proof waited 180s for a genuine READY reply and saw none, so that hop is UNVERIFIED - everything downstream of it is proven, that leg is not. Test: reply READY to the AVA text and confirm a new execution appears on workflow V6wAFgJ803xmLM0K. Also noted: there is NO GHL contact named 'Shane' (duplicate-search by number returns nothing) and POST /contacts/search returns 403 with the current PIT scope. | PREV: AVA Client Intake + CRM upsert rails active · Email System v1 built + live-tested · DELIVERABILITY DIAGNOSED: spam cause = GHL sends from shared LC pool (mg.msgsndr.biz) not the dedicated mail.aivoiceagency.ai (DNS-ready but unselected); root domain has no SPF/DMARC/Workspace-DKIM. Fix plan + 14-day warm-up shipped (reports/2026-07-13-email-deliverability.md); DNS/GHL flip PENDING-SHANE · review /work/emails · PENDING SHIP EMAILS | RUN 1 PENDING-SHANE: the GHL inbound-SMS webhook must be pointed at https://circulant.app.n8n.cloud/webhook/live-ready in the GHL UI, or a customer's READY reply reaches nothing.",
+      "updated": "2026-07-24T22:07:16-05:00"
     },
     {
       "id": "L4",
@@ -231,6 +231,10 @@
     }
   ],
   "log": [
+    {
+      "ts": "2026-07-24T22:07:16-05:00",
+      "entry": "L3 RUN 1.7 - POST-CALL REPAIR. AVA Post-Call to GHL (6r8YHuMEJbxeDyT5) fixed: the 400 at GHL Upsert Contact was an identifier-less request body, produced whenever Retell sends call_analyzed with an empty custom_analysis_data (caller hangs up during the greeting). Added a Build GHL Body Code node with a call.from_number ANI fallback + own-number guard (414-240-8930, 350-220-5305), moved the regex work out of the inline expression per the Run-1.5 double-escape trap, and added a Has Identifier gate fronting a 200 no_identifier branch so an unidentifiable web call no longer crashes the run. Verified execution 4694 SUCCESS on the exact failing payload using NANP-reserved test ANI +1 414 555 0142; HTTP nodes pinned, so nothing was written to GHL. Published activeVersion 3184cc42. REGRESSION CLEAN: AVA Booking Receipt (NMSWFtcyEQhSypSx) and AVA Drip Engine v1 (Pu661B1J1ZgezJT7) both confirmed active=true at minutesInterval 30."
+    },
     {
       "ts": "2026-07-24T15:35:00-05:00",
       "entry": "Published /ctr-report standalone client audit (noindex, cul-de-sac)."
