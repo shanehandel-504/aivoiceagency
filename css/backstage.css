@@ -364,8 +364,13 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
    above it — problem upstream, resolution downstream, never
    adjacent. No red background wash: red is a 2px rule + a dot.
    ============================================================ */
+/* RUN 4.5 · D14 — latent, not live: this <a> declared no colour, so it computed
+   to the UA default link blue (#0000EE). Both its children set their own
+   colour today, so nothing renders blue — but any bare text or currentColor
+   child added to this strip would come out browser-blue on a CIRCULANT
+   surface. Naming the inherited colour closes the trap. */
 .bs-3am{display:flex;align-items:center;justify-content:center;gap:8px 18px;flex-wrap:wrap;
-  padding:13px 20px;text-align:center;text-decoration:none;
+  padding:13px 20px;text-align:center;text-decoration:none;color:var(--text);
   background:var(--panel);
   border-top:1px solid var(--line);border-bottom:1px solid var(--line);
   border-left:2px solid var(--red);
@@ -414,7 +419,8 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
 .bs-cutaway{color:var(--ink-mute);font-size:15px;margin:0 0 22px}
 /* trade chips */
 .bs-trades{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
-.bs-trade{font-family:var(--g-mono);font-size:12px;letter-spacing:.08em;padding:9px 14px;min-height:40px;
+/* RUN 4.5 · D10 — 40px measured on all six trade tabs; the law is >=44px. */
+.bs-trade{font-family:var(--g-mono);font-size:12px;letter-spacing:.08em;padding:9px 14px;min-height:44px;
   border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-mute);cursor:pointer;
   transition:color .2s var(--quiet-settle),border-color .2s var(--quiet-settle)}
 .bs-trade.is-on{border-color:var(--cyan);color:var(--cyan)}
@@ -794,8 +800,9 @@ html[data-theme="light"] .bs-tier .bs-cta-cyan:hover{background:transparent;bord
    ============================================================ */
 /* RUN 3 · one featured record, two compact ones ------------------------- */
 .bs-cliptabs{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 12px}
+/* RUN 4.5 · D10 — 40px measured; the law is >=44px. */
 .bs-cliptab{background:transparent;border:1px solid var(--line);border-radius:999px;
-  min-height:40px;padding:0 16px;color:var(--neutral);cursor:pointer;
+  min-height:44px;padding:0 16px;color:var(--neutral);cursor:pointer;
   font-family:var(--g-mono);font-size:11.5px;letter-spacing:.14em;font-weight:600;
   transition:border-color .18s var(--quiet-settle),color .18s var(--quiet-settle)}
 .bs-cliptab:hover{color:var(--text);border-color:rgba(255,255,255,.22)}
@@ -835,7 +842,7 @@ html[data-theme="light"] .bs-clip-scrub{background:rgba(16,19,26,.28)}
 .bs-clip.is-playing .bs-clip-play{color:var(--live-green);border-color:color-mix(in srgb,var(--live-green) 45%,transparent)}
 .bs-clip-tx{margin-top:12px;border-top:1px solid var(--line);padding-top:6px}
 .bs-clip-tx summary{cursor:pointer;list-style:none;font-family:var(--g-mono);font-size:12px;letter-spacing:.08em;
-  color:var(--ink-mute);min-height:40px;display:flex;align-items:center}
+  color:var(--ink-mute);min-height:44px;display:flex;align-items:center}  /* RUN 4.5 · D11 — was 40px */
 .bs-clip-tx summary::-webkit-details-marker{display:none}
 .bs-clip-tx summary::after{content:"+";color:var(--cyan);font-size:18px;line-height:1;margin-left:auto;transition:transform .2s var(--quiet-settle)}
 .bs-clip-tx[open] summary::after{transform:rotate(45deg)}
@@ -868,8 +875,15 @@ html[data-theme="light"] .bs-clip-scrub{background:rgba(16,19,26,.28)}
 .bs-social a:nth-of-type(4)::before{animation-delay:-3.3s}
 .bs-social a:nth-of-type(5)::before{animation-delay:-4.4s}
 .bs-social a:nth-of-type(6)::before{animation-delay:-5.5s}
+/* RUN 4.5 · D12 — five stacked navigational links measured 23.2px tall on an
+   8px grid gap: a 31px rhythm where the law is 44 + 8. These are not inline
+   links inside a sentence, so the inline exception does not apply. Each link
+   now carries its own 44px height and the 8px grid gap stays, so the pair of
+   rules the law actually states — 44px target, 8px spacing — both hold. It
+   costs the footer band height; a footer is where that is affordable. */
 .bs-news{display:grid;gap:8px}
-.bs-news a{font-size:14.5px;color:var(--g-read);text-decoration:none}
+.bs-news a{font-size:14.5px;color:var(--g-read);text-decoration:none;
+  min-height:44px;display:flex;align-items:center}
 .bs-news a:hover{color:var(--cyan)}
 .bs-sig{font-family:var(--g-mono);font-size:12px;letter-spacing:.22em;color:var(--ink-mute);
   text-align:center;margin:30px 0 0}

@@ -64,7 +64,10 @@
     .nav-links{display:none;gap:1.75rem;list-style:none}
     .nav-links a{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);font-weight:500}
     .nav-links a:hover{color:var(--ink)}
-    .nav-cta{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:8px 14px;border-radius:8px;background:var(--cyan);color:#000;transition:transform .15s,box-shadow .15s}
+    /* RUN 4.5 · D15 — measured 34.4px tall at 390; it is the only CTA in the
+       header and the law is >=44px. inline-flex + min-height, not more padding,
+       so the label stays optically centred. */
+    .nav-cta{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:8px 16px;border-radius:8px;background:var(--cyan);color:#000;transition:transform .15s,box-shadow .15s;display:inline-flex;align-items:center;min-height:44px}
     .nav-cta:hover{color:#000;transform:translateY(-1px);box-shadow:0 8px 24px var(--cyan-glow)}
     @media(min-width:880px){.nav-links{display:flex}}
 
