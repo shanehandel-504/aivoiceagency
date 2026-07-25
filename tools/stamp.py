@@ -213,6 +213,10 @@ PAGES = [
     dict(f='guides/furnace-short-cycling.html',            kind='circulant', trail=[('Insights', '/blog'), ('Furnace short cycling', None)]),
     dict(f='guides/ac-running-but-not-cooling.html',       kind='circulant', trail=[('Insights', '/blog'), ('AC running but not cooling', None)]),
     dict(f='videos/index.html',                            kind='circulant', trail=[('Videos', None)]),
+    # RUN 4 — the 16-agent theater MOVED here off the homepage. It is the deep
+    # page the compact Backstage 2.0 component links to; it owns the canonical
+    # agent roster and keeps its RUN 3.5 GLOSS treatment.
+    dict(f='backstage/index.html',                         kind='circulant', trail=[('Backstage', None)], jsonld=True),
     dict(f='overview.html',                                kind='insert',    trail=[('Overview', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'ovw')),
     dict(f='roi/index.html',                               kind='insert',    trail=[('ROI Calculator', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'roi')),
     dict(f='methodology.html',                             kind='legal',     trail=[('Methodology', None)], jsonld=True),
