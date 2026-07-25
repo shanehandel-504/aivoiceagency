@@ -237,6 +237,9 @@ VERSION_ONLY = [
     'booked/index.html',   # post-booking conversion page (noindex) — slim, dead-end
     'lsa/index.html',      # LSA campaign lander (RUN 5.5) — Shane-authored chrome, carries tracking.js
     'live/index.html',     # HEAR AVA LIVE test-drive page (RUN 1) — conversion surface, one exit by design
+    # RUN 3.5: /chauffeur was in NEITHER list, so its first-party assets never
+    # busted on a deploy. It carries its own nav by design -> VERSION_ONLY.
+    'chauffeur/index.html',
 ]
 
 

@@ -176,6 +176,14 @@
   --gx-edge:  inset 0 1px 0 rgba(255,255,255,0.04);
   /* the one accent a glass surface may take, on hover / focus only */
   --gx-line-hot: rgba(0,212,255,0.42);
+  /* RUN 3.5 · SEPARATORS. Structure carried by LIGHT, not by boxes: a 1px rule
+     that is fully opaque through the middle and fades to nothing at both ends,
+     so a column division never terminates in a hard corner. --gx-line-mid is
+     deliberately stronger than --gx-line: a separator has to be READ, a panel
+     hairline only has to be felt. */
+  --gx-line-mid: rgba(255,255,255,0.12);
+  --gx-sep-v: linear-gradient(180deg,transparent 0%,var(--gx-line-mid) 14%,var(--gx-line-mid) 86%,transparent 100%);
+  --gx-sep-h: linear-gradient(90deg,transparent 0%,var(--gx-line-mid) 14%,var(--gx-line-mid) 86%,transparent 100%);
 }
 
 /* Light twins. On paper the smoked panel becomes frosted white and the top
@@ -187,6 +195,7 @@ html[data-theme="light"]{
   --gx-line:  rgba(16,19,26,0.10);
   --gx-edge:  inset 0 1px 0 rgba(255,255,255,0.90);
   --gx-line-hot: rgba(0,116,156,0.45);
+  --gx-line-mid: rgba(16,19,26,0.16);
 }
 
 /* ---- GLASS-X utility (opt-in) ----------------------------------------- */

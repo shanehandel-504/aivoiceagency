@@ -52,6 +52,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- RUN 3.5 · this page WAS standalone. It now links the global stylesheet so the
+     GLASS-X recipe, the button physics and the self-hosted mono reach it. It loads
+     BEFORE this page's own <style>, so every local token below still wins. -->
+<link rel="stylesheet" href="/assets/circulant.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -114,8 +118,9 @@
     --cyan:#00D4FF;
     --green:#2EE6A8;
     --red:#FF3B4E;
-    /* RUN 3 · FINAL SKIN additions. /live is standalone (it does not link
-       circulant.css), so the run's tokens are declared locally.
+    /* RUN 3 · FINAL SKIN additions. Declared locally and kept as the source of
+       truth for this page (RUN 3.5 added the circulant.css link above, but these
+       local values load after it and deliberately still win).
        CYAN inspect · GREEN advance · AMBER cost-of-miss · RED the-miss.
        Text on any solid red fill = --canvas (#EEF0F4 on red is 3.07:1). */
     --canvas:#0A0A0F;
@@ -637,6 +642,49 @@
   @media(prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
     *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}
+  }
+
+  /* ============================================================
+     RUN 3.5 · GLOSS — the C1 recipe reaches /live.
+     Surfaces take GLASS-X; buttons take the physics (lift, inner
+     glow in their own colour, active press). Geometry is NOT
+     touched: this page's buttons are square by design (§ 3) and
+     they stay square — what ports is the physics, not the shape.
+     border-color is set only on the uniformly-bordered surfaces;
+     .card-note and .receipt carry semantic left hairlines
+     (red / amber / neutral) and are left alone.
+     ============================================================ */
+  .form-card,.term,.endcard{border-color:var(--gx-line);}
+  .form-card,.term,.endcard,.receipt,.card-note{
+    background:var(--gx-fill);
+    -webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));
+    box-shadow:var(--gx-edge);
+  }
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+    .form-card,.term,.endcard,.receipt,.card-note{background:var(--gx-solid);}
+  }
+  .btn{transition:transform .25s ease,box-shadow .25s ease,background .25s ease,
+       border-color .25s ease,color .25s ease;}
+  .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;}
+  .btn-primary{box-shadow:inset 0 1px 0 rgba(255,255,255,.25);}
+  /* the hover no longer swaps in a SECOND green (#4FF0BC was a second value in
+     the same hue slot) — the fill holds and the light moves inside it */
+  .btn-primary:hover{background:var(--green);border-color:var(--green);color:var(--canvas);
+    transform:translateY(-2px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 0 26px rgba(216,255,240,.50);}
+  .btn-primary:active{transform:translateY(1px);
+    box-shadow:inset 0 2px 9px rgba(0,44,30,.34),inset 0 1px 0 rgba(255,255,255,.10);}
+  .btn-ghost{background:var(--gx-fill);border-color:rgba(255,255,255,.12);box-shadow:var(--gx-edge);
+    -webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));}
+  .btn-ghost:hover{transform:translateY(-2px);border-color:var(--gx-line-hot);color:var(--text);
+    box-shadow:var(--gx-edge),inset 0 0 0 1px rgba(0,212,255,.20),inset 0 0 20px rgba(0,212,255,.10);}
+  .btn-ghost:active{transform:translateY(1px);box-shadow:inset 0 2px 9px rgba(0,0,0,.30);}
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+    .btn-ghost{background:var(--gx-solid);}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .btn{transition:none;}
+    .btn:hover,.btn:active{transform:none;}
   }
 </style>
 </head>

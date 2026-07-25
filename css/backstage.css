@@ -599,8 +599,24 @@ html[data-theme="light"] .bs-payoff{background:color-mix(in srgb,var(--e3) 96%,t
 @media(min-width:1024px){
   .bs-feed{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
   .bs-lane{display:flex;flex-direction:column;gap:10px;padding-top:26px;position:relative}
-  .bs-lane::before{content:"";position:absolute;top:14px;left:0;right:0;height:2px;border-radius:2px;
-    background:var(--lane-c,var(--line));opacity:.7}
+  /* RUN 3.5 · EDGES. The lane rule was a hard 2px bar that stopped dead at both
+     ends, and the four columns were divided by nothing but the boxes inside
+     them. Both are now 1px rules that fade to transparent at each end — the
+     grid is drawn by light, and no division ever terminates in a hard corner. */
+  .bs-lane::before{content:"";position:absolute;top:14px;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent 0%,var(--lane-c,var(--gx-line-mid)) 14%,var(--lane-c,var(--gx-line-mid)) 86%,transparent 100%);
+    opacity:.8}
+  .bs-lane+.bs-lane::after{content:"";position:absolute;left:-7px;top:0;bottom:0;width:1px;
+    background:var(--gx-sep-v);pointer-events:none}
+  /* ...and once the separators carry the grid, the CARD boxes are redundant.
+     Sixteen bordered rectangles inside four bordered columns is boxes inside
+     boxes. At >=1024 the card keeps ONLY its glass fill, its top-edge light and
+     its semantic left lane hairline — the thing that actually means something.
+     Mobile has no separator system, so mobile keeps its card border. */
+  .bs-card{border-top-color:transparent;border-right-color:transparent;border-bottom-color:transparent}
+  .bs-lane[data-lane="output"] .bs-card[data-state="done"]{
+    border-top-color:transparent;border-right-color:transparent;
+    border-bottom-color:color-mix(in srgb,var(--green) 40%,transparent)}
   .bs-lane[data-lane="intake"]{--lane-c:var(--lane-intake)}
   .bs-lane[data-lane="triage"]{--lane-c:var(--lane-triage)}
   .bs-lane[data-lane="tools"]{--lane-c:var(--lane-tools)}
@@ -611,12 +627,22 @@ html[data-theme="light"] .bs-payoff{background:color-mix(in srgb,var(--e3) 96%,t
   .bs-cchip{align-self:flex-start}
 }
 
-/* ---- objection strip ---- */
-.bs-objections{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 0}
-.bs-ob{background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+/* ---- objection strip ----
+   RUN 3.5 · two bordered, shadowed boxes in a grid is the template-card
+   reflex. These are two answers to two questions; what separates them is a
+   division, not a container. The boxes are gone and a faded 1px rule does
+   the job — vertical on desktop, horizontal once the grid collapses. */
+.bs-objections{display:grid;grid-template-columns:1fr 1fr;gap:0 44px;margin:26px 0 0}
+.bs-ob{position:relative;padding:4px 0}
+.bs-ob+.bs-ob::before{content:"";position:absolute;left:-22px;top:0;bottom:0;width:1px;
+  background:var(--gx-sep-v);pointer-events:none}
 .bs-ob h3{font-size:16.5px;color:var(--ink);margin:0 0 8px}
 .bs-ob p{font-size:15px;line-height:1.65;color:var(--g-read);margin:0}
-@media(max-width:760px){.bs-objections{grid-template-columns:1fr}}
+@media(max-width:760px){
+  .bs-objections{grid-template-columns:1fr;gap:26px 0}
+  .bs-ob+.bs-ob::before{left:0;right:0;top:-13px;bottom:auto;width:auto;height:1px;
+    background:var(--gx-sep-h)}
+}
 
 /* ---- pricing ---- */
 .bs-ptabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}

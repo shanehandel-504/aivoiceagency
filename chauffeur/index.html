@@ -16,6 +16,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- RUN 3.5 · this page WAS standalone. It now links the global stylesheet so the
+       GLASS-X recipe and the button physics reach it. It loads BEFORE this page's
+       own <style>, so every local token below still wins. This also DEFINES
+       --green, which this page referenced in .live-badge and .badge-green but
+       never declared — both rules were silently broken. -->
+  <link rel="stylesheet" href="/assets/circulant.css">
 
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Organization","name":"AI Chauffeur","url":"https://aichauffeur.ai","description":"Limo dispatch AI and black car reservation automation. AVA answers the dispatch line, captures trip details, and routes airport transfer bookings into your workflow.","areaServed":{"@type":"Country","name":"United States"}}
@@ -283,6 +289,54 @@
     @media (prefers-reduced-motion: reduce){
       .hero-console [data-hc-stage],.hero-console .hc-line{opacity:1;transform:none;transition:none}
       .hero-console .hc-state.ringing{animation:none}
+    }
+
+    /* ============================================================
+       RUN 3.5 · GLOSS — the C1 recipe reaches /chauffeur.
+       This page already blurred, but every surface used a DIFFERENT
+       fill, a different blur radius and its own drop shadow, so the
+       cards read as six unrelated pieces of glass stacked on a
+       shadow ladder. One recipe now, one blur, no outer shadows.
+       Nav glass is grandfathered and left exactly as authored.
+       ============================================================ */
+    .console,.pain-card,.setup-card,.step,.feat,details{
+      background:var(--gx-fill);
+      -webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));
+      border:1px solid var(--gx-line);
+      box-shadow:var(--gx-edge);
+    }
+    @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+      .console,.pain-card,.setup-card,.step,.feat,details{background:var(--gx-solid)}
+    }
+    /* BUTTON PHYSICS — the primary threw `0 8px 32px var(--cyan-glow)`, an outer
+       halo on the button's own box. Cyan is this page's advance colour, so it
+       glows cyan from within. Same gesture, inside the box. */
+    .btn{transition:transform .25s ease,box-shadow .25s ease,background .25s ease,border-color .25s ease}
+    .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+    .btn-primary{box-shadow:inset 0 1px 0 rgba(255,255,255,.30)}
+    .btn-primary:hover{transform:translateY(-2px);color:#000;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.40),inset 0 0 26px rgba(200,248,255,.55)}
+    .btn-primary:active{transform:translateY(1px);
+      box-shadow:inset 0 2px 9px rgba(0,32,44,.34),inset 0 1px 0 rgba(255,255,255,.12)}
+    .btn-ghost{background:var(--gx-fill);border:1px solid rgba(255,255,255,.12);box-shadow:var(--gx-edge);
+      -webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur))}
+    .btn-ghost:hover{background:var(--gx-fill);border-color:var(--gx-line-hot);transform:translateY(-2px);
+      box-shadow:var(--gx-edge),inset 0 0 0 1px rgba(0,212,255,.20),inset 0 0 20px rgba(0,212,255,.10)}
+    .btn-ghost:active{transform:translateY(1px);box-shadow:inset 0 2px 9px rgba(0,0,0,.30)}
+    @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+      .btn-ghost,.btn-ghost:hover{background:var(--gx-solid)}
+    }
+    /* REFINEMENT (self-review at 1440): .circulant-ring wrapped the primary CTA
+       in a rotating conic arc + a pulsing halo, both painted OUTSIDE the button
+       at inset:-6px with a 14px radius against a 10px pill. At rest it renders
+       as a hard rectangle floating a few pixels off the button — it reads as
+       broken chrome, not as a halo. It is also precisely the outer ring the
+       button recipe bans. Retired here; the CTA now carries its own inner cyan
+       light, which is the same idea done in one layer instead of three. */
+    .circulant-ring::before,.circulant-ring::after{display:none}
+    @media (prefers-reduced-motion: reduce){
+      .btn{transition:none}
+      .btn:hover,.btn:active{transform:none}
     }
   </style>
 </head>
