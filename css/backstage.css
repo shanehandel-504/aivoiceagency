@@ -25,7 +25,10 @@ body.backstage::before{content:"";position:fixed;inset:0;pointer-events:none;z-i
   .bs-section--tight{padding:24px 0}
   .bs-hero{padding:28px 0 6px}
 }
-.bs-h2{font-size:clamp(26px,4.4vw,38px);line-height:1.12;letter-spacing:-.015em;color:var(--ink);margin:0 0 12px}
+/* RUN 4.5 · D8 — `balance` evens the two lines instead of stranding the last
+   word ("...booked the / job.") on a line of its own at 390. Words untouched. */
+.bs-h2{font-size:clamp(26px,4.4vw,38px);line-height:1.12;letter-spacing:-.015em;color:var(--ink);margin:0 0 12px;
+  text-wrap:balance}
 
 /* ---- visually-hidden live region (payoff announced to screen readers) ---- */
 .bs-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
@@ -197,8 +200,18 @@ body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
    until the 3AM STRIP, which owns the miss moment. */
 .bs-sub{font-size:clamp(17px,2.9vw,22px);line-height:1.4;color:var(--text);font-weight:600;
   max-width:30ch;margin:0 auto 14px;letter-spacing:-.005em}
+/* RUN 4.5 · D7 — THE MOVED-COMPONENT SEAM.
+   `margin:0 auto` is correct inside .bs-hero, which is text-align:center: the
+   measure is capped and the block centres under a centred headline. /backstage
+   reuses .bs-support in a LEFT-aligned section, where the same auto margin
+   centres a 715px measure inside a 1160px column and produces a 222px hanging
+   indent under an eyebrow and an H1 that both sit flush at x=140. It reads as
+   a broken layout, and it is the first thing on the deep page.
+   The centring is now scoped to the hero that actually wants it; everywhere
+   else the paragraph starts where its own headline starts. */
 .bs-support{font-size:clamp(14.5px,2vw,16.5px);line-height:1.6;color:var(--body-dim);
-  max-width:58ch;margin:0 auto 22px}
+  max-width:58ch;margin:0 0 22px;text-wrap:pretty}
+.bs-hero .bs-support{margin-left:auto;margin-right:auto}
 .bs-hcta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 /* P2: at 390 the fixed-content CTAs (362px) overran the 350 column — stack them
    full-width so they fit instead of getting clipped by the overflow belt */
@@ -236,7 +249,8 @@ body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
   .bs-hero h1{font-size:clamp(5.5rem,7vw,6.5rem);line-height:.95;letter-spacing:-.03em;
     max-width:17ch;margin:0 auto .19em}
   .bs-sub{font-size:26px;line-height:1.3;max-width:34ch;margin:0 auto 10px}
-  .bs-support{font-size:18px;line-height:1.55;max-width:62ch;margin:0 auto 22px}
+  .bs-support{font-size:18px;line-height:1.55;max-width:62ch;margin:0 0 22px}
+  .bs-hero .bs-support{margin-left:auto;margin-right:auto}
   .bs-hcta{gap:14px}
   .bs-hcta .cta,.bs-hcta .cta--quiet{min-height:60px;padding:0 34px;font-size:16.5px}
   .bs-micro{font-size:12.5px;margin:12px 0 14px}
@@ -350,8 +364,13 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
    above it — problem upstream, resolution downstream, never
    adjacent. No red background wash: red is a 2px rule + a dot.
    ============================================================ */
+/* RUN 4.5 · D14 — latent, not live: this <a> declared no colour, so it computed
+   to the UA default link blue (#0000EE). Both its children set their own
+   colour today, so nothing renders blue — but any bare text or currentColor
+   child added to this strip would come out browser-blue on a CIRCULANT
+   surface. Naming the inherited colour closes the trap. */
 .bs-3am{display:flex;align-items:center;justify-content:center;gap:8px 18px;flex-wrap:wrap;
-  padding:13px 20px;text-align:center;text-decoration:none;
+  padding:13px 20px;text-align:center;text-decoration:none;color:var(--text);
   background:var(--panel);
   border-top:1px solid var(--line);border-bottom:1px solid var(--line);
   border-left:2px solid var(--red);
@@ -374,7 +393,10 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
   text-decoration:none;color:var(--ink);transition:border-color .25s var(--quiet-settle),box-shadow .25s ease}
 .bs-result:hover{border-color:var(--gx-line-hot);
   box-shadow:var(--gx-edge),inset 0 0 24px rgba(0,212,255,.08)}
-.bs-result-line{font-family:var(--g-mono);font-size:13px;letter-spacing:.06em;color:var(--ink-mute)}
+/* RUN 4.5 · D6 — was breaking as "...TUE 7:00 / AM", leaving the meridiem
+   centred on a line by itself directly under the hero's one proof element. */
+.bs-result-line{font-family:var(--g-mono);font-size:13px;letter-spacing:.06em;color:var(--ink-mute);
+  text-wrap:balance}
 .bs-result-line b{color:var(--live-green);font-weight:700}
 .bs-chipsrow{list-style:none;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
   padding:0;margin:18px 0 0}
@@ -397,7 +419,8 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
 .bs-cutaway{color:var(--ink-mute);font-size:15px;margin:0 0 22px}
 /* trade chips */
 .bs-trades{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
-.bs-trade{font-family:var(--g-mono);font-size:12px;letter-spacing:.08em;padding:9px 14px;min-height:40px;
+/* RUN 4.5 · D10 — 40px measured on all six trade tabs; the law is >=44px. */
+.bs-trade{font-family:var(--g-mono);font-size:12px;letter-spacing:.08em;padding:9px 14px;min-height:44px;
   border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-mute);cursor:pointer;
   transition:color .2s var(--quiet-settle),border-color .2s var(--quiet-settle)}
 .bs-trade.is-on{border-color:var(--cyan);color:var(--cyan)}
@@ -777,8 +800,9 @@ html[data-theme="light"] .bs-tier .bs-cta-cyan:hover{background:transparent;bord
    ============================================================ */
 /* RUN 3 · one featured record, two compact ones ------------------------- */
 .bs-cliptabs{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 12px}
+/* RUN 4.5 · D10 — 40px measured; the law is >=44px. */
 .bs-cliptab{background:transparent;border:1px solid var(--line);border-radius:999px;
-  min-height:40px;padding:0 16px;color:var(--neutral);cursor:pointer;
+  min-height:44px;padding:0 16px;color:var(--neutral);cursor:pointer;
   font-family:var(--g-mono);font-size:11.5px;letter-spacing:.14em;font-weight:600;
   transition:border-color .18s var(--quiet-settle),color .18s var(--quiet-settle)}
 .bs-cliptab:hover{color:var(--text);border-color:rgba(255,255,255,.22)}
@@ -818,7 +842,7 @@ html[data-theme="light"] .bs-clip-scrub{background:rgba(16,19,26,.28)}
 .bs-clip.is-playing .bs-clip-play{color:var(--live-green);border-color:color-mix(in srgb,var(--live-green) 45%,transparent)}
 .bs-clip-tx{margin-top:12px;border-top:1px solid var(--line);padding-top:6px}
 .bs-clip-tx summary{cursor:pointer;list-style:none;font-family:var(--g-mono);font-size:12px;letter-spacing:.08em;
-  color:var(--ink-mute);min-height:40px;display:flex;align-items:center}
+  color:var(--ink-mute);min-height:44px;display:flex;align-items:center}  /* RUN 4.5 · D11 — was 40px */
 .bs-clip-tx summary::-webkit-details-marker{display:none}
 .bs-clip-tx summary::after{content:"+";color:var(--cyan);font-size:18px;line-height:1;margin-left:auto;transition:transform .2s var(--quiet-settle)}
 .bs-clip-tx[open] summary::after{transform:rotate(45deg)}
@@ -851,8 +875,15 @@ html[data-theme="light"] .bs-clip-scrub{background:rgba(16,19,26,.28)}
 .bs-social a:nth-of-type(4)::before{animation-delay:-3.3s}
 .bs-social a:nth-of-type(5)::before{animation-delay:-4.4s}
 .bs-social a:nth-of-type(6)::before{animation-delay:-5.5s}
+/* RUN 4.5 · D12 — five stacked navigational links measured 23.2px tall on an
+   8px grid gap: a 31px rhythm where the law is 44 + 8. These are not inline
+   links inside a sentence, so the inline exception does not apply. Each link
+   now carries its own 44px height and the 8px grid gap stays, so the pair of
+   rules the law actually states — 44px target, 8px spacing — both hold. It
+   costs the footer band height; a footer is where that is affordable. */
 .bs-news{display:grid;gap:8px}
-.bs-news a{font-size:14.5px;color:var(--g-read);text-decoration:none}
+.bs-news a{font-size:14.5px;color:var(--g-read);text-decoration:none;
+  min-height:44px;display:flex;align-items:center}
 .bs-news a:hover{color:var(--cyan)}
 .bs-sig{font-family:var(--g-mono);font-size:12px;letter-spacing:.22em;color:var(--ink-mute);
   text-align:center;margin:30px 0 0}

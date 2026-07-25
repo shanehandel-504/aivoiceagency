@@ -18,13 +18,25 @@
    page's one green CTA (the hero's CALL AVA LIVE) stays the only green CTA.
    ============================================================================ */
 
+/* RUN 4.5 · D9 — THE JUNCTION.
+   34px at every viewport was a mobile number applied everywhere. At 390 it is
+   deliberate and stays: the entire point of RUN 4 was getting this component
+   into the same screen as the hero, and the page's other sections run 38px, so
+   34 reads as one rhythm. At 1440 the page steps every .bs-section up to 64px
+   and this !important rule was the only thing that did not follow — so the
+   flagship sat 34px under the 3AM strip while its neighbours breathed at 110px
+   and 140px. Not "too tight" in the abstract: out of step with its own page.
+   Now it follows. */
 .fd-sec { padding: 34px 0 !important; }
+@media (min-width: 1024px) {
+  .fd-sec { padding: 64px 0 !important; }
+}
 
 .fd {
   position: relative;
   max-width: 640px;
   margin: 0 auto;
-  padding: 16px 16px 14px;
+  padding: 16px 16px 12px;
   border-radius: 18px;
   background: var(--gx-fill);
   -webkit-backdrop-filter: blur(var(--gx-blur));
@@ -40,14 +52,22 @@
 /* ---- head: anchor + the pinned result chip -------------------------------- */
 .fd-top {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 8px; flex-wrap: wrap; margin-bottom: 10px;
+  gap: 8px; flex-wrap: wrap; margin-bottom: 8px;
 }
+/* RUN 4.5 · D5. At 390 this broke as `SYSTEM REPLAY · 2:14 AM · "WATER HEATER`
+   / `LEAKING"`, stranding one word and a dangling close-quote on line two.
+   `pretty` moves the break so the timestamp holds one line and the quote holds
+   the next, which is where the sentence wanted to break anyway. */
 .fd-anchor {
   font-family: var(--g-mono); font-size: 10px; letter-spacing: .07em;
   color: var(--neutral); text-transform: uppercase; line-height: 1.3;
   min-width: 0; flex: 1 1 auto;
+  text-wrap: pretty;
 }
-.fd-anchor b { color: var(--body-dim); font-weight: 400; }
+/* the caller's words are one unit — never break `“water heater leaking”` across
+   two lines. The <b> already wraps exactly that phrase, so this needs no markup
+   and no &nbsp; in the copy. */
+.fd-anchor b { color: var(--body-dim); font-weight: 400; white-space: nowrap; }
 .fd-dot {
   display: inline-block; width: 6px; height: 6px; border-radius: 50%;
   background: var(--cyan); margin-right: 7px; vertical-align: middle; flex: none;
@@ -71,9 +91,13 @@
   100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 0%, transparent); }
 }
 
+/* RUN 4.5 · D3. `balance` instead of a hard &nbsp;: the words are untouched, so
+   nothing that string-matches this headline can break, and the two lines come
+   out even instead of stranding `job.` alone under a full-width first line. */
 .fd-h {
   font-size: clamp(21px, 5.4vw, 27px); line-height: 1.18; letter-spacing: -.015em;
   color: var(--text); margin: 0 0 10px; font-weight: 700;
+  text-wrap: balance;
 }
 
 /* ---- crew cluster + status line ------------------------------------------ */
@@ -119,7 +143,7 @@
 }
 
 /* ---- the four phase rows ------------------------------------------------- */
-.fd-phases { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 5px; }
+.fd-phases { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 4px; }
 .fd-phase {
   display: grid; grid-template-columns: 62px 1fr; align-items: baseline; gap: 4px 12px;
   padding: 5px 0 5px 12px;
@@ -153,17 +177,21 @@
 
 /* ---- outcome strip — permanent ------------------------------------------- */
 .fd-outcome {
+  /* RUN 4.5 · D4 — this is the payoff line; it was stranding `board` alone. */
   transition: opacity .4s cubic-bezier(.2,.8,.2,1);
   font-size: 13.5px; line-height: 1.4; font-weight: 600; color: var(--text);
+  text-wrap: pretty;
   border-top: 1px solid var(--gx-line);
-  padding-top: 10px; margin: 0 0 10px;
+  padding-top: 10px; margin: 0 0 8px;
 }
 .fd-outcome b { color: var(--green); font-weight: 700; }
 
 /* ---- AUDIO ZONE. Exists only in audio mode. ------------------------------
    Hidden with [hidden] in every summary state, so there is physically no
    timer, waveform or playhead in the DOM's rendered box during a summary. -- */
-.fd-audio { margin: 0 0 14px; }
+/* RUN 4.5: 14px -> 8px. Audio mode is the tallest of the four; this gap is
+   what buys the 12px footer back inside the height law. */
+.fd-audio { margin: 0 0 8px; }
 .fd-wave {
   position: relative; height: 44px; width: 100%;
   border: 1px solid var(--gx-line); border-radius: 10px;
@@ -220,8 +248,11 @@ html[data-theme="light"] .fd-cta--cyan  { color: #FFFFFF; }
      exceeds ~680px" true rather than aspirational: with the phases collapsed
      the rest of the component measures ~452px at 390, so the roster gets what
      is left and scrolls for the remainder. Tap targets stay >=44px — the list
-     scrolls, it does not shrink. */
-  margin: 0 0 10px; max-height: 226px; overflow-y: auto;
+     scrolls, it does not shrink.
+     RUN 4.5: 226px -> 218px. The 12px footer costs the component height in
+     every mode, and this cap is where the roster modes pay for it. The list
+     scrolls, so a shorter cap costs a few pixels of preview, never a row. */
+  margin: 0 0 8px; max-height: 218px; overflow-y: auto;
   border-top: 1px solid var(--gx-line); padding-top: 12px;
   overscroll-behavior: contain;
   /* the list is capped by the height law, so say so: the last visible row
@@ -249,15 +280,28 @@ html[data-theme="light"] .fd-cta--cyan  { color: #FFFFFF; }
 .fd-agent span { font-size: 11.5px; line-height: 1.3; color: var(--neutral); }
 
 /* ---- footer -------------------------------------------------------------- */
+/* RUN 4.5 · D1+D2. Two things were wrong here and they were the same thing.
+   The disclosure line — the one line on this component whose entire job is to
+   be believed — rendered at 9.5px, the smallest type on the page. And the deep
+   link to /backstage rendered at that same 9.5px with text-decoration:none, so
+   the only door out of the component read as fine print: a 127x15.2px target
+   with no affordance at all. Both are now 12px (the floor), and the link
+   carries weight, a persistent underline and vertical padding so it reads as a
+   door instead of a footnote.
+   The height law paid for it: see the reclaim note in the 430px block. */
 .fd-foot {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  flex-wrap: wrap;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px 12px; flex-wrap: wrap;
   border-top: 1px solid var(--gx-line); padding-top: 9px; margin: 0;
-  font-family: var(--g-mono); font-size: 9.5px; letter-spacing: .04em;
+  font-family: var(--g-mono); font-size: 12px; letter-spacing: .04em;
   color: var(--neutral); text-transform: uppercase;
 }
-.fd-foot a { color: var(--cyan); text-decoration: none; }
-.fd-foot a:hover { text-decoration: underline; }
+.fd-foot a {
+  color: var(--cyan); font-weight: 700;
+  text-decoration: underline; text-underline-offset: 3px;
+  text-decoration-thickness: 1px; padding: 6px 0;
+}
+.fd-foot a:hover { text-decoration-thickness: 2px; }
 
 /* ==========================================================================
    STATE RENDERING. One attribute on .fd drives every state; the CSS below is
