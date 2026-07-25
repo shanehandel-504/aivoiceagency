@@ -76,11 +76,31 @@ export const PAGES_FIVE = [
   '/index.html#pricing',
 ];
 
+/* RUN 4.7 · THE REMAINDER — 10 stamped pages that belonged to NO named gate set.
+   five (4 unique pages) + city (25) + landers (22) = 51 unique, but stamp.py stamps
+   61 (PAGES 56 + VERSION_ONLY 5). These ten were never swept by any gate. Content
+   pages and legal pages still carry bridge.css, so a sitewide token change reaches
+   them exactly like everything else. */
+export const PAGES_REST = [
+  '/blog/what-happens-when-you-call-ava/index.html',
+  '/blog/wisconsin-limo-crush/index.html',
+  '/blog/home-services-30-percent-missed/index.html',
+  '/guides/furnace-short-cycling.html',
+  '/guides/ac-running-but-not-cooling.html',
+  '/videos/index.html',
+  '/methodology.html',
+  '/privacy.html',
+  '/terms.html',
+  '/sms-policy.html',
+];
+
 export const SETS = {
   city: PAGES_CITY,
   landers: PAGES_LANDERS,
   five: PAGES_FIVE,
-  all: [...PAGES_FIVE, ...PAGES_CITY, ...PAGES_LANDERS],
+  rest: PAGES_REST,
+  /* every stamped page exactly once — 61 pages, 244 checks */
+  all: [...PAGES_FIVE.filter((p) => !p.includes('#')), ...PAGES_CITY, ...PAGES_LANDERS, ...PAGES_REST],
 };
 
 /* one page = 2 viewports x 2 themes */
@@ -94,6 +114,8 @@ const ASSERT = [
   ['PAGES_CITY', PAGES_CITY, 25, 100],
   ['PAGES_LANDERS', PAGES_LANDERS, 22, 88],
   ['PAGES_FIVE', PAGES_FIVE, 5, 20],
+  ['PAGES_REST', PAGES_REST, 10, 40],
+  ['SETS.all', SETS.all, 61, 244],
 ];
 for (const [name, list, pages, checks] of ASSERT) {
   if (list.length !== pages) throw new Error(`gate-pages: ${name} has ${list.length} pages, expected ${pages}`);

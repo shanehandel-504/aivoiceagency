@@ -30,6 +30,13 @@
   --font-body:'DM Sans',sans-serif;
   --font-mono:'JetBrains Mono',monospace;
 }
+/* RUN 4.7 · LIGHT-THEME INK — see methodology.html. --soft and --muted are
+   page-local DARK-theme values the shared light block cannot reach, so in light
+   mode these terms rendered #EEF0F4 on #F4F6FA = 1.05:1 and were unreadable. */
+html[data-theme="light"]{
+  --soft:rgba(16,19,26,.88);   /* 12.2:1 on #F4F6FA ✓ */
+  --muted:rgba(16,19,26,.64);  /*  5.27:1 on #F4F6FA ✓ */
+}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 body{background:var(--void);color:var(--soft);font-family:var(--font-body);font-size:16px;line-height:1.75;overflow-x:hidden}
 a{color:var(--cyan);text-decoration:none;transition:color .2s}

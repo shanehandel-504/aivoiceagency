@@ -30,6 +30,13 @@
   --font-body:'DM Sans',sans-serif;
   --font-mono:'JetBrains Mono',monospace;
 }
+/* RUN 4.7 · LIGHT-THEME INK — see methodology.html. --soft and --muted are
+   page-local DARK-theme values the shared light block cannot reach, so in light
+   mode this policy rendered #EEF0F4 on #F4F6FA = 1.05:1 and was unreadable. */
+html[data-theme="light"]{
+  --soft:rgba(16,19,26,.88);   /* 12.2:1 on #F4F6FA ✓ */
+  --muted:rgba(16,19,26,.64);  /*  5.27:1 on #F4F6FA ✓ */
+}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 body{background:var(--void);color:var(--soft);font-family:var(--font-body);font-size:16px;line-height:1.75;overflow-x:hidden}
 a{color:var(--cyan);text-decoration:none;transition:color .2s}
@@ -49,6 +56,11 @@ p{margin-bottom:1rem;color:var(--soft)}
 ul{padding-left:1.5rem;margin-bottom:1rem}
 ul li{margin-bottom:.4rem;color:var(--soft)}
 .compliance-callout{border:1px solid rgba(0,212,255,.35);background:#14141C;padding:1.5rem 1.75rem;border-radius:4px;margin:1.5rem 0;font-family:var(--font-mono);font-size:.82rem;line-height:1.7;color:var(--ink)}
+/* RUN 4.7 · this callout hardcodes a DARK fill, but --ink correctly flips to
+   #10131A in light mode — so the panel was dark-on-dark at 1.01:1, and the STOP
+   and HELP keywords sat at 3.47:1. The fill flips with the theme; on white the
+   same tokens measure ~17.9:1 body and ~5.3:1 keywords. */
+html[data-theme="light"] .compliance-callout{background:#FFFFFF;border-color:rgba(0,116,156,.35)}
 .compliance-callout strong{color:var(--cyan)}
 
 footer{border-top:1px solid var(--glass-border);padding:2rem;margin-top:4rem;text-align:center}
