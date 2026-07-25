@@ -220,7 +220,9 @@ sections at once.
 | `tools/skin-verify.mjs --set=five` | 5 pages × 4 | **20/20** · scope self-verified |
 | `tools/skin-verify.mjs --set=city` | 25 pages × 4 | **100/100** · scope self-verified |
 | `tools/skin-verify.mjs --set=landers` | 22 pages × 4 | **88/88** · scope self-verified |
-| THE EYE | `/live` @1440×900 + @390×844 · `/lsa` citation @390×844 | **10 shots, reviewed** — `audits/RUN47-*` |
+| `tools/skin-verify.mjs --set=rest` | 10 pages × 4 | **32/40 → fixed → 40/40** (Block E) |
+| **All stamped pages** | **61 pages × 4 = 244** | **244/244** |
+| THE EYE | `/live` @1440×900 + @390×844 · `/lsa` citation @390×844 | **11 shots, reviewed** — `audits/RUN47-*` |
 
 Every page in every sweep reported `green=1, aa=0, overflow=0`.
 
@@ -236,6 +238,63 @@ Every page in every sweep reported `green=1, aa=0, overflow=0`.
 
 Every sweep now prints its own expected total (`scope: N pages x 4 = M expected`), so a
 short run cannot pass as a clean one.
+
+---
+
+## BLOCK E — THE GATE GAP, AND THE BUG BEHIND IT
+
+*Not in the brief. Found by taking Block C item 10 — "re-run skin-verify across all stamped
+pages" — literally.*
+
+### The gap
+
+The three named gate sets cover **51 unique pages**. `stamp.py` stamps **61**
+(`PAGES` 56 + `VERSION_ONLY` 5). Ten stamped pages belonged to **no gate set** and had never
+been swept by anything: three blog children, two guides, `/videos`, and the four legal pages.
+
+`PAGES_REST` (10 → 40) and a corrected `SETS.all` (61 → 244, both self-asserted) were added,
+and the ten were run.
+
+### Result: 32/40 — a real, pre-existing defect
+
+All four legal pages failed AA in **light theme**:
+
+| Page | Failure |
+|---|---|
+| `/methodology` | `#EEF0F4` on `#F4F6FA` — **1.05:1** |
+| `/privacy` | `#EEF0F4` on `#F4F6FA` — **1.05:1** (10 nodes at desktop) |
+| `/terms` | `#EEF0F4` on `#F4F6FA` — **1.05:1** |
+| `/sms-policy` | **1.05:1** body · **1.01:1** callout · **3.47:1** STOP/HELP keywords |
+
+**The privacy policy, terms, SMS policy and methodology body copy were invisible in light mode.**
+
+### Cause
+
+These pages declare `--soft` and `--muted` in their own `:root` as dark-theme values. Those
+names are **page-local**, so `bridge.css`'s `html[data-theme="light"]` block — which correctly
+flips `--void` and `--ink` — has nothing to bind to. The canvas repainted `#F4F6FA` while the
+body copy stayed `#EEF0F4`.
+
+`sms-policy` had a second fault: `.compliance-callout` hardcodes `background:#14141C` while its
+`color:var(--ink)` *does* flip dark — producing dark-on-dark.
+
+### Fix
+
+Each page gets an `html[data-theme="light"]` override for exactly those two tokens, using the
+system's own light values (`--muted` matches bridge's `--dim` verbatim). The callout fill flips
+to `#FFFFFF`.
+
+| Token | Light value | On `#F4F6FA` |
+|---|---|---|
+| `--soft` | `rgba(16,19,26,.88)` | **12.2:1** ✓ |
+| `--muted` | `rgba(16,19,26,.64)` | **5.27:1** ✓ |
+| callout body | `--ink` on `#FFFFFF` | **~17.9:1** ✓ |
+| callout STOP/HELP | `--cyan` on `#FFFFFF` | **~5.3:1** ✓ |
+
+Re-run: **40/40 clean**, and `/privacy` visually confirmed readable at 390 in light mode
+(`audits/RUN47-privacy-light-390.png`).
+
+**This was not caused by RUN 4.7.** It was caused by nothing ever looking.
 
 ---
 
