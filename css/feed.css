@@ -42,12 +42,20 @@
   display: flex; align-items: center; justify-content: space-between;
   gap: 8px; flex-wrap: wrap; margin-bottom: 8px;
 }
+/* RUN 4.5 · D5. At 390 this broke as `SYSTEM REPLAY · 2:14 AM · "WATER HEATER`
+   / `LEAKING"`, stranding one word and a dangling close-quote on line two.
+   `pretty` moves the break so the timestamp holds one line and the quote holds
+   the next, which is where the sentence wanted to break anyway. */
 .fd-anchor {
   font-family: var(--g-mono); font-size: 10px; letter-spacing: .07em;
   color: var(--neutral); text-transform: uppercase; line-height: 1.3;
   min-width: 0; flex: 1 1 auto;
+  text-wrap: pretty;
 }
-.fd-anchor b { color: var(--body-dim); font-weight: 400; }
+/* the caller's words are one unit — never break `“water heater leaking”` across
+   two lines. The <b> already wraps exactly that phrase, so this needs no markup
+   and no &nbsp; in the copy. */
+.fd-anchor b { color: var(--body-dim); font-weight: 400; white-space: nowrap; }
 .fd-dot {
   display: inline-block; width: 6px; height: 6px; border-radius: 50%;
   background: var(--cyan); margin-right: 7px; vertical-align: middle; flex: none;
@@ -71,9 +79,13 @@
   100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 0%, transparent); }
 }
 
+/* RUN 4.5 · D3. `balance` instead of a hard &nbsp;: the words are untouched, so
+   nothing that string-matches this headline can break, and the two lines come
+   out even instead of stranding `job.` alone under a full-width first line. */
 .fd-h {
   font-size: clamp(21px, 5.4vw, 27px); line-height: 1.18; letter-spacing: -.015em;
   color: var(--text); margin: 0 0 10px; font-weight: 700;
+  text-wrap: balance;
 }
 
 /* ---- crew cluster + status line ------------------------------------------ */
@@ -153,8 +165,10 @@
 
 /* ---- outcome strip — permanent ------------------------------------------- */
 .fd-outcome {
+  /* RUN 4.5 · D4 — this is the payoff line; it was stranding `board` alone. */
   transition: opacity .4s cubic-bezier(.2,.8,.2,1);
   font-size: 13.5px; line-height: 1.4; font-weight: 600; color: var(--text);
+  text-wrap: pretty;
   border-top: 1px solid var(--gx-line);
   padding-top: 10px; margin: 0 0 8px;
 }

@@ -25,7 +25,10 @@ body.backstage::before{content:"";position:fixed;inset:0;pointer-events:none;z-i
   .bs-section--tight{padding:24px 0}
   .bs-hero{padding:28px 0 6px}
 }
-.bs-h2{font-size:clamp(26px,4.4vw,38px);line-height:1.12;letter-spacing:-.015em;color:var(--ink);margin:0 0 12px}
+/* RUN 4.5 · D8 — `balance` evens the two lines instead of stranding the last
+   word ("...booked the / job.") on a line of its own at 390. Words untouched. */
+.bs-h2{font-size:clamp(26px,4.4vw,38px);line-height:1.12;letter-spacing:-.015em;color:var(--ink);margin:0 0 12px;
+  text-wrap:balance}
 
 /* ---- visually-hidden live region (payoff announced to screen readers) ---- */
 .bs-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
@@ -374,7 +377,10 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
   text-decoration:none;color:var(--ink);transition:border-color .25s var(--quiet-settle),box-shadow .25s ease}
 .bs-result:hover{border-color:var(--gx-line-hot);
   box-shadow:var(--gx-edge),inset 0 0 24px rgba(0,212,255,.08)}
-.bs-result-line{font-family:var(--g-mono);font-size:13px;letter-spacing:.06em;color:var(--ink-mute)}
+/* RUN 4.5 · D6 — was breaking as "...TUE 7:00 / AM", leaving the meridiem
+   centred on a line by itself directly under the hero's one proof element. */
+.bs-result-line{font-family:var(--g-mono);font-size:13px;letter-spacing:.06em;color:var(--ink-mute);
+  text-wrap:balance}
 .bs-result-line b{color:var(--live-green);font-weight:700}
 .bs-chipsrow{list-style:none;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
   padding:0;margin:18px 0 0}
