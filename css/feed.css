@@ -18,7 +18,19 @@
    page's one green CTA (the hero's CALL AVA LIVE) stays the only green CTA.
    ============================================================================ */
 
+/* RUN 4.5 · D9 — THE JUNCTION.
+   34px at every viewport was a mobile number applied everywhere. At 390 it is
+   deliberate and stays: the entire point of RUN 4 was getting this component
+   into the same screen as the hero, and the page's other sections run 38px, so
+   34 reads as one rhythm. At 1440 the page steps every .bs-section up to 64px
+   and this !important rule was the only thing that did not follow — so the
+   flagship sat 34px under the 3AM strip while its neighbours breathed at 110px
+   and 140px. Not "too tight" in the abstract: out of step with its own page.
+   Now it follows. */
 .fd-sec { padding: 34px 0 !important; }
+@media (min-width: 1024px) {
+  .fd-sec { padding: 64px 0 !important; }
+}
 
 .fd {
   position: relative;
