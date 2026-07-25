@@ -639,6 +639,22 @@
     .form-card,.endcard{padding:var(--s12);}
     .lfoot{margin-top:var(--s24);}
   }
+  /* RUN 4.7 · DESKTOP RECLAIM (>=1280px only — mobile and tablet byte-untouched).
+     .col was pinned at 680px with NO auto margin, so on a 1440px screen it sat
+     hard left inside the 1280px wrap and left ~600px of dead canvas to its right.
+     The homepage's post-Run-3.5 answer to the same problem is a capped, CENTRED
+     container (max-width + margin:0 auto), but it is written inline on that
+     component and exposes no reusable token — so /live takes the same SHAPE
+     locally rather than importing a token that does not exist.
+     Widening is measure-safe: every prose block here is already capped in em
+     (.hero p.sub 34 · .sec-head p 36 · .faq .a 40 · .endcard p 34), so the wider
+     column cannot stretch the line length. .step .b p was the one uncapped
+     paragraph and is given a cap here so it cannot run past ~70 characters. */
+  @media(min-width:1280px){
+    :root{--col:960px;}
+    .col{margin-left:auto;margin-right:auto;}
+    .step .b p{max-width:44em;}
+  }
   @media(prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
     *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}
