@@ -325,7 +325,10 @@
     padding-top:14px;
     border-top:1px solid #D8DCE4;
   }
-  .gdoc-attr a{color:#00688F;text-decoration:underline;font-weight:600;}
+  /* RUN 4.7 · the citation is now the deep article path, not the hub. That URL is
+     44 mono characters — wider than the card interior at 390px, and it is a single
+     unbreakable token. Without this it pushes horizontal scroll onto the page. */
+  .gdoc-attr a{color:#00688F;text-decoration:underline;font-weight:600;overflow-wrap:anywhere;}
   .gdoc-attr a:hover{color:#004E6B;}
   .gdoc-gloss{font-size:15px;line-height:1.6;color:#3A4150;margin-top:14px;}
   .gdoc-gloss b{color:#14161C;font-weight:700;}
@@ -660,7 +663,7 @@
       <blockquote class="gdoc-quote">“Missed calls may negatively affect your responsiveness.”</blockquote>
       <figcaption class="gdoc-attr">
         Google Local Services Ads documentation ·
-        <a href="https://support.google.com/localservices" target="_blank" rel="noopener">support.google.com/localservices</a>
+        <a href="https://support.google.com/localservices/answer/7527305" target="_blank" rel="noopener">support.google.com/localservices/answer/7527305</a>
       </figcaption>
       <p class="gdoc-gloss">Those are Google's words, not ours. <b>Responsiveness is one of the inputs Google names</b> — so an unanswered call is not just a lost lead, it is a signal fed back into the system that decides who gets shown next.</p>
     </figure>
