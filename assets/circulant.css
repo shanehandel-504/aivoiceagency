@@ -138,6 +138,50 @@
   --glow-violet: 0 0 40px rgba(139,92,246,0.35);
   --glow-gold:   0 0 30px rgba(255,184,0,0.30);
   --glow-green:  0 0 14px rgba(34,197,94,0.55);
+
+  /* ============================================================
+     RUN 3.5 · GLASS-X — the ONE glass recipe for new surfaces.
+     ------------------------------------------------------------
+     The legacy `--glass-*` set above is a CYAN-bordered, drop-shadowed
+     card and stays exactly where it already ships. GLASS-X is the
+     RUN 3.5 recipe: a smoked panel over the void, a hairline that is
+     LIGHT not accent, and a single 1px top edge highlight. No outer
+     shadow — depth comes from the blur and the top edge, never from
+     an elevation ladder (CLAUDE.md § 3).
+     `--gx-solid` is the fallback painted where backdrop-filter is
+     unsupported; it is the composite of --gx-fill over --canvas, so
+     the surface never changes contrast between the two paths.
+     ============================================================ */
+  --gx-fill:  rgba(18,18,26,0.70);
+  --gx-solid: #0F0F16;                        /* rgba(18,18,26,.7) over #0A0A0F */
+  --gx-blur:  12px;
+  --gx-line:  rgba(255,255,255,0.05);
+  --gx-edge:  inset 0 1px 0 rgba(255,255,255,0.04);
+  /* the one accent a glass surface may take, on hover / focus only */
+  --gx-line-hot: rgba(0,212,255,0.42);
+}
+
+/* Light twins. On paper the smoked panel becomes frosted white and the top
+   edge flips from a highlight to a bright rim; the hairline becomes ink.
+   Measured on #F4F6FA: --neutral 5.86:1 on the composite ✓ */
+html[data-theme="light"]{
+  --gx-fill:  rgba(255,255,255,0.72);
+  --gx-solid: #FBFCFD;                        /* rgba(255,255,255,.72) over #F4F6FA */
+  --gx-line:  rgba(16,19,26,0.10);
+  --gx-edge:  inset 0 1px 0 rgba(255,255,255,0.90);
+  --gx-line-hot: rgba(0,116,156,0.45);
+}
+
+/* ---- GLASS-X utility (opt-in) ----------------------------------------- */
+.glass-x{
+  background: var(--gx-fill);
+  -webkit-backdrop-filter: blur(var(--gx-blur));
+          backdrop-filter: blur(var(--gx-blur));
+  border: 1px solid var(--gx-line);
+  box-shadow: var(--gx-edge);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+  .glass-x{ background: var(--gx-solid); }
 }
 
 /* ---- Glass card recipe (opt-in) --------------------------------------- */
@@ -203,12 +247,31 @@
                  border, which reads as "this could become the next step".
    Both are 52px min-height (>=44px touch law) and carry a cyan focus ring.
    ============================================================================ */
-.cta{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:999px;background:var(--green);color:var(--canvas);font:700 15px/1 "Space Grotesk",sans-serif;border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 24px rgba(46,230,168,.18);transition:transform .18s cubic-bezier(.16,1,.3,1),box-shadow .18s ease}
-.cta:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 14px 38px rgba(46,230,168,.27)}
-.cta:active{transform:translateY(0);transition-duration:.09s}
+/* RUN 3.5 · BUTTON PHYSICS. The old build lifted on hover and threw a green
+   DROP SHADOW onto the void — an outer ring, which is an elevation cue and is
+   banned. The lift stays; the light moves INSIDE. A green button glows green
+   from within, the quiet button takes a faint cyan edge (cyan = inspect the
+   system, which is what a secondary action does). :active presses down through
+   the resting plane. Nothing paints outside the button's own box, ever. */
+.cta{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:999px;background:var(--green);color:var(--canvas);font:700 15px/1 "Space Grotesk",sans-serif;border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.cta:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 0 26px rgba(216,255,240,.50)}
+.cta:active{transform:translateY(1px);
+  box-shadow:inset 0 2px 9px rgba(0,44,30,.34),inset 0 1px 0 rgba(255,255,255,.10);transition-duration:.09s}
 .cta:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
-.cta--quiet{background:rgba(18,18,26,.72);color:var(--text);border:1px solid rgba(255,255,255,.14);box-shadow:none}
-.cta--quiet:hover{border-color:rgba(46,230,168,.5)}
+/* REFINEMENT (C1 self-review): a PANEL hairline is 0.05 because a panel is
+   scenery. A BUTTON is a control and has to read as one at rest — at 0.05 the
+   quiet pill dissolved into the void and looked like a floating label. Controls
+   get 0.12; panels keep 0.05. Same glass, different job. */
+.cta--quiet{background:var(--gx-fill);color:var(--text);border:1px solid rgba(255,255,255,.12);box-shadow:var(--gx-edge);
+  -webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur))}
+.cta--quiet:hover{border-color:var(--gx-line-hot);
+  box-shadow:var(--gx-edge),inset 0 0 0 1px rgba(0,212,255,.20),inset 0 0 20px rgba(0,212,255,.10)}
+.cta--quiet:active{transform:translateY(1px);
+  box-shadow:inset 0 2px 9px rgba(0,0,0,.30);transition-duration:.09s}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .cta--quiet{background:var(--gx-solid)}
+}
 
 /* Shared geometry. .cta--quiet is usable BOTH as a modifier (class="cta cta--quiet")
    and standalone (class="cta--quiet") — the sitewide sweep uses it standalone, so
@@ -227,12 +290,21 @@
    white on the light-green fill = 5.08:1 ✓ (ink on that green is 3.66:1 — FAILS,
    so the green label stays white in light, unlike dark where it is --canvas). */
 html[data-theme="light"] .cta--quiet{background:#FFFFFF;color:var(--text);border-color:rgba(16,19,26,.20)}
-html[data-theme="light"] .cta--quiet:hover{border-color:var(--green)}
+html[data-theme="light"] .cta--quiet:hover{border-color:var(--gx-line-hot);
+  box-shadow:inset 0 0 0 1px rgba(0,116,156,.22),inset 0 0 20px rgba(0,116,156,.08)}
 html[data-theme="light"] .cta,
 html[data-theme="light"] .cta:hover{color:#FFFFFF}
+/* RUN 3.5 · the inner glow INVERTS on paper. Dark-theme green carries a near-black
+   label, so a light inner bloom raises contrast. Light-theme green (#0B7E56)
+   carries a WHITE label at 5.08:1 — a light bloom would eat that margin, so the
+   light theme glows green by going DEEPER, not brighter. Same gesture, measured. */
+html[data-theme="light"] .cta:hover{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 0 26px rgba(3,54,35,.55)}
+html[data-theme="light"] .cta:active{
+  box-shadow:inset 0 2px 9px rgba(2,40,26,.46)}
 @media(prefers-reduced-motion:reduce){
   .cta,.cta--quiet{transition:none}
-  .cta:hover,.cta--quiet:hover{transform:none}
+  .cta:hover,.cta--quiet:hover,.cta:active,.cta--quiet:active{transform:none}
 }
 
 /* ---- Global keyboard focus (a11y) ------------------------------------- */

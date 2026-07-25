@@ -202,13 +202,16 @@ body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
   height:var(--rail-h);box-sizing:border-box;overflow:hidden;
   display:flex;align-items:center;gap:18px;
   padding:0 max(16px,env(safe-area-inset-left));
-  background:rgba(18,18,26,.72);
-  border-bottom:1px solid rgba(255,255,255,.06);
+  background:var(--gx-fill);
+  border-bottom:1px solid var(--gx-line);
+  box-shadow:var(--gx-edge);
   font-family:var(--g-mono);font-variant-numeric:tabular-nums}
 @supports ((backdrop-filter:blur(6px)) or (-webkit-backdrop-filter:blur(6px))){
-  .bs-rail{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .bs-rail{backdrop-filter:blur(var(--gx-blur));-webkit-backdrop-filter:blur(var(--gx-blur))}
 }
-html[data-theme="light"] .bs-rail{background:rgba(255,255,255,.72);border-bottom-color:rgba(16,19,26,.10)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .bs-rail{background:var(--gx-solid)}
+}
 .bs-rail-head{display:flex;align-items:center;gap:8px;flex:none}
 .bs-rail-label{font-size:10.5px;letter-spacing:.16em;color:var(--neutral);font-weight:600;white-space:nowrap}
 /* honesty chip — this is a replay, not a socket */
@@ -305,14 +308,25 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
 }
 /* poster result strip (pre-tap) */
 .bs-result{display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;
-  padding:10px 18px 10px 12px;border-radius:16px;background:var(--e1);box-shadow:var(--e1-sh);
-  border:1px solid var(--g-line-cyan);text-decoration:none;color:var(--ink)}
+  padding:10px 18px 10px 12px;border-radius:16px;
+  background:var(--gx-fill);-webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));
+  border:1px solid var(--gx-line);box-shadow:var(--gx-edge);
+  text-decoration:none;color:var(--ink);transition:border-color .25s var(--quiet-settle),box-shadow .25s ease}
+.bs-result:hover{border-color:var(--gx-line-hot);
+  box-shadow:var(--gx-edge),inset 0 0 24px rgba(0,212,255,.08)}
 .bs-result-line{font-family:var(--g-mono);font-size:13px;letter-spacing:.06em;color:var(--ink-mute)}
 .bs-result-line b{color:var(--live-green);font-weight:700}
 .bs-chipsrow{list-style:none;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
   padding:0;margin:18px 0 0}
-.bs-chipsrow li{font-family:var(--g-mono);font-size:12px;letter-spacing:.05em;color:var(--ink-mute);
-  border:1px solid var(--line);border-radius:999px;padding:7px 14px}
+/* RUN 3.5 · hero chips are glass, and their label moves --ink-mute -> --neutral:
+   over the smoked fill the old muted grey measured 4.73:1, inside the margin but
+   not comfortably. --neutral is the canonical label token and clears 6:1. */
+.bs-chipsrow li{font-family:var(--g-mono);font-size:12px;letter-spacing:.05em;color:var(--neutral);
+  background:var(--gx-fill);-webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));
+  border:1px solid var(--gx-line);box-shadow:var(--gx-edge);border-radius:999px;padding:7px 14px}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .bs-result,.bs-chipsrow li{background:var(--gx-solid)}
+}
 
 /* ============================================================
    HOMEPAGE — LAYER 2 · THE THEATER (Run 1.5 · GROK PASS)
@@ -329,8 +343,12 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
 .bs-trade.is-on{border-color:var(--cyan);color:var(--cyan)}
 
 /* the stage — overflow visible so the sticky result strip can pin */
-.bs-stage{position:relative;background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);
-  border-radius:18px;padding:20px}
+.bs-stage{position:relative;border-radius:18px;padding:20px;
+  background:var(--gx-fill);-webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));
+  border:1px solid var(--gx-line);box-shadow:var(--gx-edge)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .bs-stage{background:var(--gx-solid)}
+}
 .bs-stagetop{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
 .bs-caller{flex:1;min-width:min(100%,320px);margin:0;max-width:none}
 .bs-start{font-family:var(--g-mono);font-size:12px;letter-spacing:.12em;padding:10px 18px;min-height:44px;flex:none;
@@ -339,11 +357,16 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
 
 /* stacked-orb signal pill — the feed header */
 .bs-pill{display:flex;align-items:center;width:100%;max-width:440px;margin:0 0 16px;
-  padding:8px 16px 8px 10px;border-radius:999px;background:var(--e2);box-shadow:var(--e2-sh);border:1px solid var(--line)}
+  padding:8px 16px 8px 10px;border-radius:999px;
+  background:var(--gx-fill);-webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));
+  border:1px solid var(--gx-line);box-shadow:var(--gx-edge)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .bs-pill{background:var(--gx-solid)}
+}
 .bs-pill-orbs{display:inline-flex;align-items:center;flex:none}
 .bs-pill-orbs .orb{--size:28px}
 .bs-pill-orbs .orb+.orb{margin-left:calc(28px*-.32);
-  box-shadow:inset 0 1px 1px rgba(255,255,255,.28),inset 0 calc(28px*-.09) calc(28px*.18) rgba(0,0,0,.38),0 0 0 2px var(--e2)}
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.28),inset 0 calc(28px*-.09) calc(28px*.18) rgba(0,0,0,.38),0 0 0 2px var(--gx-solid)}
 .bs-pill-label{font-family:var(--g-mono);font-size:11px;letter-spacing:.14em;color:var(--ink-mute);margin-left:14px}
 .bs-pill-secs{font-family:var(--g-mono);font-size:15px;font-weight:600;color:var(--ink);
   font-variant-numeric:tabular-nums;min-width:5ch;text-align:right;margin-left:auto;padding-left:12px;contain:layout paint}
@@ -377,9 +400,17 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
 .bs-lanelabel{display:none}
 
 /* glass agent card — ghost at rest (AA-safe ghost color, not opacity), ignites on fire */
+/* RUN 3.5 · cards take the glass FILL + hairline + top edge unconditionally, but
+   the backdrop blur waits behind body.glow-ready (GLOW GATE). Sixteen blurred
+   layers competing with the LCP paint is exactly the cost that gate exists to
+   stop; the fill alone already reads correct, and the blur arrives on load. */
 .bs-card{position:relative;display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:14px;
-  background:var(--e1);box-shadow:var(--e1-sh);border:1px solid var(--line);border-left:2px solid var(--lane-c,var(--line));
+  background:var(--gx-fill);box-shadow:var(--gx-edge);border:1px solid var(--gx-line);border-left:2px solid var(--lane-c,var(--gx-line));
   cursor:default;--card-ink:#79818F;transition:border-color .3s var(--quiet-settle)}
+body.glow-ready .bs-card{-webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur))}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .bs-card{background:var(--gx-solid)}
+}
 html[data-theme="light"] .bs-card{--card-ink:#5A6272}
 .bs-card[data-lane="intake"]{--lane-c:var(--lane-intake)}
 .bs-card[data-lane="triage"]{--lane-c:var(--lane-triage)}
@@ -540,10 +571,11 @@ html[data-theme="light"] .bs-payoff{background:color-mix(in srgb,var(--e3) 96%,t
    ============================================================ */
 .bs-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch;
   position:relative;max-width:1080px;margin:0 auto}
+/* RUN 3.5 · the backdrop wash was VIOLET over cyan — two hues, and violet is
+   banned. It also now sits BEHIND real glass, so a second hue would smear
+   through the blur. One hue, one wash: cyan, the inspect-the-system colour. */
 .bs-tiers::before{content:"";position:absolute;inset:-80px 0;pointer-events:none;z-index:0;
-  background:
-    radial-gradient(ellipse 52% 54% at 50% 44%,color-mix(in srgb,var(--violet) 16%,transparent),transparent 70%),
-    radial-gradient(ellipse 74% 64% at 50% 56%,color-mix(in srgb,var(--cyan) 7%,transparent),transparent 72%)}
+  background:radial-gradient(ellipse 68% 60% at 50% 48%,color-mix(in srgb,var(--cyan) 9%,transparent),transparent 72%)}
 @media(max-width:900px){.bs-tiers{grid-template-columns:1fr;gap:16px}.bs-tiers::before{inset:-24px 0}}
 /* RUN 3 · PRICING SYSTEM. Every card is the SAME surface — panel + one
    hairline. The old build gave each tier its own accent hue (cyan / violet /
@@ -555,12 +587,15 @@ html[data-theme="light"] .bs-payoff{background:color-mix(in srgb,var(--e3) 96%,t
   --accent-soft:color-mix(in srgb,var(--cyan) 12%,transparent);
   --accent-glow:color-mix(in srgb,var(--cyan) 35%,transparent);
   position:relative;z-index:1;display:flex;flex-direction:column;border-radius:20px;padding:34px 26px 26px;
-  background:var(--panel);
-  border:1px solid rgba(255,255,255,.06);
+  background:var(--gx-fill);
+  -webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));
+  border:1px solid var(--gx-line);
   border-left:2px solid transparent;
-  box-shadow:none;
-  transition:border-color .25s var(--quiet-settle)}
-html[data-theme="light"] .bs-tier{background:#FFFFFF;border-color:rgba(16,19,26,.10)}
+  box-shadow:var(--gx-edge);
+  transition:border-color .25s var(--quiet-settle),box-shadow .25s ease}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .bs-tier{background:var(--gx-solid)}
+}
 /* the selected card — a subtle green left hairline, nothing more. It carries
    the page's one solid green on its CTA (see .is-picked .bs-cta below). */
 .bs-tier.is-picked{border-left-color:var(--green)}
@@ -577,10 +612,15 @@ html[data-theme="light"] .bs-tier{background:#FFFFFF;border-color:rgba(16,19,26,
    nth-of-type stagger can't reach them) */
 .bs-tier[data-tier="growth"] .ava-lap::before{animation-delay:-1.7s}
 .bs-tier[data-tier="operations"] .ava-lap::before{animation-delay:-2.9s}
-/* light theme: glass → clean white card */
-html[data-theme="light"] .bs-tier{background:#FFFFFF;box-shadow:var(--e2-sh);
-  border-color:color-mix(in srgb,var(--accent) 34%,transparent)}
-html[data-theme="light"] .bs-tier[data-tier="growth"]{background:#FFFFFF;box-shadow:var(--e3-sh)}
+/* RUN 3.5 · light theme is the SAME glass recipe, frosted white — not a second
+   design. The old pair of rules here re-introduced an e2/e3 elevation ladder
+   (banned, § 3) AND a per-card accent border, which is the exact "the cards
+   argue about which plan matters" problem RUN 3 removed in dark only. */
+html[data-theme="light"] .bs-tier{background:var(--gx-fill);box-shadow:var(--gx-edge);
+  border-color:var(--gx-line)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  html[data-theme="light"] .bs-tier{background:var(--gx-solid)}
+}
 /* RUN 3 · SELECTION RING. Green, not cyan: selection is what will advance the
    sale, and this card is the one carrying the solid green CTA. A flat 2px ring
    (§ 3 bans elevation) with no layout shift.
@@ -588,7 +628,7 @@ html[data-theme="light"] .bs-tier[data-tier="growth"]{background:#FFFFFF;box-sha
    border-color, which would otherwise reset the green left hairline. */
 .bs-tier.is-reco,
 .bs-tier[data-tier="growth"].is-reco{border-color:color-mix(in srgb,var(--green) 34%,transparent);
-  box-shadow:0 0 0 2px color-mix(in srgb,var(--green) 22%,transparent)}
+  box-shadow:var(--gx-edge),0 0 0 2px color-mix(in srgb,var(--green) 22%,transparent)}
 .bs-tier.is-picked,
 .bs-tier.is-reco.is-picked{border-left-color:var(--green);border-left-width:2px}
 @media(hover:hover){.bs-tier:hover{border-color:var(--accent)}}
@@ -597,7 +637,7 @@ html[data-theme="light"] .bs-tier[data-tier="growth"]{background:#FFFFFF;box-sha
 html[data-theme="light"] .bs-tier.is-reco,
 html[data-theme="light"] .bs-tier[data-tier="growth"].is-reco{
   border-color:color-mix(in srgb,var(--green) 40%,transparent);
-  box-shadow:0 0 0 2px color-mix(in srgb,var(--green) 24%,transparent)}
+  box-shadow:var(--gx-edge),0 0 0 2px color-mix(in srgb,var(--green) 24%,transparent)}
 html[data-theme="light"] .bs-tier.is-picked{border-left-color:var(--green)}
 @media(hover:hover){html[data-theme="light"] .bs-tier:hover{border-color:var(--accent)}}
 /* label / price / setup */
