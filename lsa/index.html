@@ -25,7 +25,7 @@
      GLASS-X recipe and the button physics reach it. It loads BEFORE this page's
      own <style>, so every local token below (including --mono: Space Mono, which
      is this lander's authored voice) still wins. Copy and layout are untouched. -->
-<link rel="stylesheet" href="/assets/circulant.css">
+<link rel="stylesheet" href="/assets/circulant.css?v=3e0a5a5">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -54,7 +54,7 @@
   ]
 }
 </script>
-<script src="/js/tracking.js?v=cca67f9" async></script>
+<script src="/js/tracking.js?v=3e0a5a5" async></script>
 <style>
   :root{
     --void:#0A0A0F;
@@ -68,8 +68,9 @@
     --red-dim:rgba(255,59,78,.12);
     --line:rgba(238,240,244,.08);
     --mono:'Space Mono', ui-monospace, monospace;
-    /* RUN 3 · FINAL SKIN. /lsa is standalone (no circulant.css), so the run's
-       tokens are declared locally. All measured on the #0A0A0F void:
+    /* RUN 3 · FINAL SKIN. Declared locally and kept as the source of truth for
+       this page (RUN 3.5 added the circulant.css link above, but these local
+       values load after it and deliberately still win). Measured on the #0A0A0F void:
        CYAN inspect · GREEN advance · AMBER the cost of the miss · RED the miss. */
     --green:#2EE6A8;     /* 12.23:1 ✓ — the one solid CTA               */
     --amber:#FFB020;     /* 10.80:1 ✓ — $28,458, the cost of the miss   */
