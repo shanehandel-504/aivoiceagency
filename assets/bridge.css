@@ -61,6 +61,21 @@ html[data-theme="light"]{
   --bz-line:rgba(0,116,156,.28); --bz-surface:rgba(255,255,255,.88);
   --ink-2:#5A6272;
   --bz-pulse:#00A6CC;  /* deeper cyan — reads on paper */
+  /* RUN 3.5 · the RUN 3 FINAL SKIN twins. guide.css already carried these, but
+     guide.css only loads on the homepage and the guide family — the 40 city x
+     trade pages and the vertical hubs link bridge.css WITHOUT it, so on those
+     pages --canvas/--panel/--text/--body-dim/--neutral/--green/--amber/--red
+     all stayed at their DARK values when the toggle flipped. bridge.css is the
+     ONE site-wide light theme (see the header above), so they belong here.
+     Values are the measured ones from guide.css; lowest is green at 4.70:1. */
+  --canvas:#F4F6FA;    /* —                        */
+  --panel:#FFFFFF;     /* —                        */
+  --text:#10131A;      /* 17.17:1 ✓                */
+  --body-dim:#3A4150;  /*  9.46:1 ✓                */
+  --neutral:#5A6272;   /*  5.67:1 ✓                */
+  --green:#0B7E56;     /*  4.70:1 ✓  advance       */
+  --amber:#8A5A00;     /*  5.48:1 ✓  cost of miss  */
+  --red:#C2182A;       /*  5.61:1 ✓  the miss      */
   color-scheme:light;
 }
 html[data-theme="light"] body{background:var(--bz-void)}
@@ -379,17 +394,39 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
     transition:transform .22s var(--ease-brand),border-color .22s var(--ease-brand),box-shadow .22s var(--ease-brand)}
 }
 
-/* 4B.4 — one button system (canonical classes; legacy classes are visually aliased) */
+/* 4B.4 — one button system (canonical classes; legacy classes are visually aliased)
+   RUN 3.5 · PHYSICS. This block loads AFTER styles.css, so it is what actually
+   renders .btn-primary on every stamped page — and it hovered with
+   `scale(1.02)` plus `0 0 24px rgba(0,212,255,.25)`, an OUTER glow on a CTA.
+   That is the elevation cue the button recipe bans. The gesture is now the
+   canonical one: a 2px LIFT and an inner cyan light, .25s ease, with an active
+   press. The FILL is deliberately unchanged — recolouring ~60 pages' primary
+   action is a semantic decision, not a physics fix. */
 .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:var(--tap);
   padding:0 20px;border-radius:10px;border:1px solid transparent;background:var(--bz-cyan);color:#03151B;
   font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;
-  transition:transform .2s var(--ease-brand),box-shadow .2s var(--ease-brand)}
-.btn-primary:hover{transform:scale(1.02);box-shadow:0 0 24px rgba(0,212,255,.25);color:#03151B}
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28);
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.btn-primary:hover{transform:translateY(-2px);color:#03151B;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 0 26px rgba(200,248,255,.55)}
+.btn-primary:active{transform:translateY(1px);
+  box-shadow:inset 0 2px 9px rgba(0,32,44,.34),inset 0 1px 0 rgba(255,255,255,.12)}
 .btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:var(--tap);
-  padding:0 20px;border-radius:10px;background:transparent;color:var(--bz-ink);
-  border:1px solid rgba(0,212,255,.35);font-weight:600;font-size:15px;cursor:pointer;text-decoration:none;
-  transition:border-color .2s var(--ease-brand),transform .2s var(--ease-brand)}
-.btn-ghost:hover{border-color:var(--bz-cyan)}
+  padding:0 20px;border-radius:10px;color:var(--bz-ink);
+  background:var(--gx-fill);-webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));
+  border:1px solid rgba(0,212,255,.35);box-shadow:var(--gx-edge);
+  font-weight:600;font-size:15px;cursor:pointer;text-decoration:none;
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.btn-ghost:hover{transform:translateY(-2px);border-color:var(--bz-cyan);
+  box-shadow:var(--gx-edge),inset 0 0 0 1px rgba(0,212,255,.20),inset 0 0 20px rgba(0,212,255,.10)}
+.btn-ghost:active{transform:translateY(1px);box-shadow:inset 0 2px 9px rgba(0,0,0,.30)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .btn-ghost{background:var(--gx-solid)}
+}
+@media(prefers-reduced-motion:reduce){
+  .btn-primary,.btn-ghost{transition:none}
+  .btn-primary:hover,.btn-ghost:hover,.btn-primary:active,.btn-ghost:active{transform:none}
+}
 /* legacy circulant buttons take the same look */
 .btn-outline,.btn-secondary,.contact-cta-btn{border-radius:10px}
 .btn-outline:hover,.contact-cta-btn:hover{border-color:var(--bz-cyan)}

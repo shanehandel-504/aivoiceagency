@@ -3,8 +3,16 @@
    aivoiceagency.ai · Wisconsin-built
    ============================================================ */
 
+/* RUN 3.5 · LIGHT-MODE DEBT. These 40 city x trade pages + /ground-transportation
+   link circulant.css and bridge.css, and bridge.css remaps every CIRCULANT token
+   under html[data-theme="light"]. But this file painted several surfaces with
+   LITERAL hex instead of tokens, so when the toggle flipped, those surfaces
+   stayed dark while the text on them turned to ink: measured 1.01:1. Every
+   hardcoded value below is now a token that flips. */
 :root {
   --void: #0A0A0F;
+  --void-raise: #14141C;   /* raised panel — bridge.css flips this to #FFFFFF   */
+  --light-link: #00688F;   /* headline / body links ON PAPER — never flips      */
   --ink: #EEF0F4;
   --ink-mute: #808088;
   --cyan: #00D4FF;
@@ -73,7 +81,7 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
    inner counter-row / counter-live-dot / counter-value / counter-caption
    rules below are unchanged so the bleedCounter() animation in site.js
    continues to fire on #bleed-counter / #bleed-value without edits. */
-.signal-loss-meter { position: relative; max-width: 360px; margin: 32px 0 28px; padding: 22px 24px 20px; background: #14141C; border: 1px solid var(--cyan); border-radius: 4px; overflow: hidden; isolation: isolate; transition: border-color 0.4s ease, box-shadow 0.4s ease; }
+.signal-loss-meter { position: relative; max-width: 360px; margin: 32px 0 28px; padding: 22px 24px 20px; background: var(--void-raise); border: 1px solid var(--cyan); border-radius: 4px; overflow: hidden; isolation: isolate; transition: border-color 0.4s ease, box-shadow 0.4s ease; }
 .signal-loss-meter::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(0,212,255,0.07) 1px, transparent 1px); background-size: 8px 8px; pointer-events: none; z-index: 0; }
 .signal-loss-meter::after { content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,229,255,0.55), transparent); animation: meterScan 7s linear infinite; pointer-events: none; z-index: 1; }
 .signal-loss-meter > * { position: relative; z-index: 2; }
@@ -112,29 +120,56 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .hero-ctas { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 
 /* RUN 3 · FINAL SKIN — the legacy pair maps onto the canonical button system.
-   .btn-primary IS the one solid green per page on the 40 stamped SEO pages
-   (each carries exactly one; verified by count before this edit). .btn-outline
-   is quiet. Pages that declare their own .btn-primary locally — /chauffeur
-   (Brand B, never cross tokens), /intake, /chatgpt-example, /live — are
-   untouched by this rule and keep their own treatment. */
-.btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; background: var(--green); color: var(--canvas); border: 1px solid rgba(255,255,255,0.16); border-radius: 999px; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; text-transform: none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 24px rgba(46,230,168,0.18); transition: transform 0.18s cubic-bezier(.16,1,.3,1), box-shadow 0.18s ease; }
-.btn-primary:hover { transform: translateY(-2px); background: var(--green); color: var(--canvas); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 14px 38px rgba(46,230,168,0.27); }
-.btn-primary:active { transform: translateY(0); transition-duration: 0.09s; }
+   .btn-outline is quiet. Pages that declare their own .btn-primary locally —
+   /chauffeur, /intake, /chatgpt-example, /live — keep their own treatment.
+
+   RUN 3.5 CORRECTION — the original note here claimed ".btn-primary IS the one
+   solid green per page on the 40 stamped SEO pages". Measured on a rendered
+   page, it is not: assets/bridge.css loads AFTER this file and redeclares
+   .btn-primary with background:var(--bz-cyan), so on every STAMPED page the
+   primary renders CYAN and the green rule below never reaches the paint. The
+   green fill still applies on any page that links styles.css without bridge.css.
+   The fill was left alone on purpose — recolouring ~60 pages' primary action is
+   a semantic call for Shane, not a side effect of a gloss pass. Only the
+   PHYSICS were unified (see the bridge.css 4B.4 block). */
+/* RUN 3.5 · this pair was a hand-copied clone of the OLD .cta / .cta--quiet,
+   frozen at the values those classes had before the physics rebuild — including
+   .btn-primary's green DROP SHADOW and .btn-outline's HARDCODED dark fill
+   `rgba(18,18,26,.72)`. That literal fill is why these pills stayed dark on
+   paper. Both now ride the shared GLASS-X tokens and the C1 physics: lift +
+   inner light, nothing painted outside the box. */
+.btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; background: var(--green); color: var(--canvas); border: 1px solid rgba(255,255,255,0.16); border-radius: 999px; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; text-transform: none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; }
+.btn-primary:hover { transform: translateY(-2px); background: var(--green); color: var(--canvas); border-color: rgba(255,255,255,0.28); box-shadow: inset 0 1px 0 rgba(255,255,255,0.34), inset 0 0 26px rgba(216,255,240,0.50); }
+.btn-primary:active { transform: translateY(1px); box-shadow: inset 0 2px 9px rgba(0,44,30,0.34), inset 0 1px 0 rgba(255,255,255,0.10); transition-duration: 0.09s; }
 .btn-primary:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; background: var(--green); color: var(--canvas); }
-.btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; background: rgba(18,18,26,0.72); color: var(--text); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; text-transform: none; transition: transform 0.18s cubic-bezier(.16,1,.3,1), border-color 0.18s ease; }
-.btn-outline:hover { transform: translateY(-2px); background: rgba(18,18,26,0.72); color: var(--text); border-color: rgba(46,230,168,0.5); }
-.btn-outline:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; background: rgba(18,18,26,0.72); color: var(--text); }
+html[data-theme="light"] .btn-primary:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), inset 0 0 26px rgba(3,54,35,0.55); }
+html[data-theme="light"] .btn-primary:active { box-shadow: inset 0 2px 9px rgba(2,40,26,0.46); }
+.btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; background: var(--gx-fill); -webkit-backdrop-filter: blur(var(--gx-blur)); backdrop-filter: blur(var(--gx-blur)); color: var(--text); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; box-shadow: var(--gx-edge); font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; text-transform: none; transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; }
+.btn-outline:hover { transform: translateY(-2px); background: var(--gx-fill); color: var(--text); border-color: var(--gx-line-hot); box-shadow: var(--gx-edge), inset 0 0 0 1px rgba(0,212,255,0.20), inset 0 0 20px rgba(0,212,255,0.10); }
+.btn-outline:active { transform: translateY(1px); box-shadow: inset 0 2px 9px rgba(0,0,0,0.30); transition-duration: 0.09s; }
+.btn-outline:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; background: var(--gx-fill); color: var(--text); }
+html[data-theme="light"] .btn-outline,
+html[data-theme="light"] .btn-outline:hover,
+html[data-theme="light"] .btn-outline:focus-visible { background: #FFFFFF; color: var(--text); border-color: rgba(16,19,26,0.20); }
+html[data-theme="light"] .btn-outline:hover { border-color: var(--gx-line-hot); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .btn-outline, .btn-outline:hover, .btn-outline:focus-visible { background: var(--gx-solid); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary, .btn-outline { transition: none; }
+  .btn-primary:hover, .btn-outline:hover, .btn-primary:active, .btn-outline:active { transform: none; }
+}
 .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--line); padding: 4px 0; transition: color 0.15s, border-color 0.15s; }
 .btn-secondary:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
 
 /* SYSTEM SPEC PANEL — hero RIGHT instrument tile.
    Same frame chrome as .signal-loss-meter (rectangular, cyan border,
-   #14141C interior, subtle dot grid) so the two panels read as a
+   --void-raise interior, subtle dot grid) so the two panels read as a
    paired cockpit. Inner .meta-block left bars stay as gauge dividers,
    softened to rgba(0,212,255,0.4) so they don't compete with the
    outer frame. No scan line on this panel — the meter is the "live"
    instrument; this is the static spec readout. */
-.hero-meta { position: relative; padding: 22px 20px 20px; background: #14141C; border: 1px solid var(--cyan); border-radius: 4px; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: 22px; }
+.hero-meta { position: relative; padding: 22px 20px 20px; background: var(--void-raise); border: 1px solid var(--cyan); border-radius: 4px; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: 22px; }
 .hero-meta::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(0,212,255,0.07) 1px, transparent 1px); background-size: 8px 8px; pointer-events: none; z-index: 0; }
 .hero-meta > * { position: relative; z-index: 1; }
 .meta-block { border-left: 1px solid rgba(0,212,255,0.4); padding-left: 14px; }
@@ -251,8 +286,8 @@ footer.main-footer { border-top: 1px solid var(--line); padding: 64px 32px 32px;
 
 /* POLISH PASS — authority cues */
 .nav-left { display: flex; align-items: center; }
-.nav-signal-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at center, #FFFFFF 0%, #00E5FF 25%, #00D4FF 55%, transparent 80%); margin-right: 10px; vertical-align: middle; animation: navPulse 2.4s ease-in-out infinite; box-shadow: 0 0 4px rgba(0,229,255,0.6), 0 0 10px rgba(0,212,255,0.4), 0 0 20px rgba(0,212,255,0.2); }
-.nav-signal-label { color: #6B7280; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; margin-right: 16px; }
+.nav-signal-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at center, #FFFFFF 0%, var(--cyan-bright) 25%, var(--cyan) 55%, transparent 80%); margin-right: 10px; vertical-align: middle; animation: navPulse 2.4s ease-in-out infinite; box-shadow: 0 0 4px rgba(0,229,255,0.6), 0 0 10px rgba(0,212,255,0.4), 0 0 20px rgba(0,212,255,0.2); }
+.nav-signal-label { color: var(--neutral); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; margin-right: 16px; }
 @media (max-width: 768px) { .nav-signal-label { display: none; } }
 
 @keyframes navPulse {
@@ -295,9 +330,35 @@ body.hero-animate .hero-line-cyan.flicker {
   animation-fill-mode: forwards;
 }
 
+/* RUN 3.5 · this keyframe ran with animation-fill-mode:forwards, so its 100%
+   frame PINNED the headline accent at a literal #00D4FF for the life of the
+   page — the single worst light-mode failure on the site at 1.64:1 on paper.
+   It is now driven by two custom properties. An animation-set colour beats a
+   plain `color` declaration, so a light-theme override on the element would
+   have lost; the flip has to happen INSIDE the keyframe, and it does. On paper
+   both stops resolve to --light-link (#00688F, 5.51:1) — the headline-on-paper
+   colour this run specifies — so the flicker survives without the neon. */
+:root { --flicker-a: var(--cyan); --flicker-b: var(--cyan-bright); }
+html[data-theme="light"] { --flicker-a: var(--light-link); --flicker-b: var(--light-link); }
 @keyframes cyanFlicker {
-  0%, 100% { color: #00D4FF; text-shadow: none; }
-  50% { color: #00E5FF; text-shadow: 0 0 9px rgba(0,229,255,0.6); }
+  0%, 100% { color: var(--flicker-a); text-shadow: none; }
+  50% { color: var(--flicker-b); text-shadow: 0 0 9px rgba(0,229,255,0.6); }
+}
+/* headline accents set on paper take --light-link, not the generic link cyan */
+html[data-theme="light"] .hero h1 .accent,
+html[data-theme="light"] .hero-sub .accent,
+html[data-theme="light"] .section-title .accent { color: var(--light-link); text-shadow: none; }
+
+/* REFINEMENT (C4 self-review, city hero at 1440 light): with the panels finally
+   flipping to white, their full-saturation 1px cyan border became the only hard,
+   fully-saturated box on the page — it out-shouted the headline it sits beside.
+   On the dark void that border IS the instrument-tile signature and it stays at
+   full strength; on paper it drops to 45%, which still reads as a frame without
+   competing. Dark is untouched. */
+html[data-theme="light"] .signal-loss-meter,
+html[data-theme="light"] .hero-meta,
+html[data-theme="light"] .live-call-widget {
+  border-color: color-mix(in srgb, var(--cyan) 45%, transparent);
 }
 
 @keyframes accentBreath {
@@ -324,8 +385,8 @@ body.hero-animate .hero-line-cyan.flicker {
   border-radius: inherit;
 }
 
-.system-status { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: #6B7280; }
-.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #00D4FF; animation: statusPulse 2.4s ease-in-out infinite; flex-shrink: 0; box-shadow: 0 0 6px rgba(0,212,255,0.5); }
+.system-status { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--neutral); }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); animation: statusPulse 2.4s ease-in-out infinite; flex-shrink: 0; box-shadow: 0 0 6px rgba(0,212,255,0.5); }
 @keyframes statusPulse {
   0%, 100% { opacity: 0.55; box-shadow: 0 0 0 0 rgba(0,212,255,0.5); }
   50% { opacity: 1; box-shadow: 0 0 0 4px rgba(0,212,255,0); }
@@ -548,7 +609,7 @@ body.hero-animate .hero-line-cyan.flicker {
 /* Calendar booking wrap — cyan-border box around the homepage // Book sub-block.
    Booking still opens in a new tab (no iframe by design — kept lighter for PR #25). */
 .contact-block.calendar-wrap {
-  background: #14141C;
+  background: var(--void-raise);
   border: 1px solid rgba(0,212,255,0.3);
   border-radius: 8px;
   padding: 24px;
@@ -703,7 +764,7 @@ body.hero-animate .hero-line-cyan.flicker {
 
 /* ============================================================
    LIVE CALL WIDGET — hero centerpiece (homepage + ground-transportation).
-   Mirrors .signal-loss-meter chrome (cyan border, #14141C interior,
+   Mirrors .signal-loss-meter chrome (cyan border, --void-raise interior,
    dot grid) so it reads as a paired instrument with .hero-meta. v1
    ships with a mock backend (state machine in site.js); real Retell
    wiring lands in a followup push.
@@ -715,7 +776,7 @@ body.hero-animate .hero-line-cyan.flicker {
   box-sizing: border-box;
   margin: 28px 0 32px;
   padding: 22px 24px 24px;
-  background: #14141C;
+  background: var(--void-raise);
   border: 1px solid var(--cyan);
   border-radius: 4px;
   overflow: hidden;
@@ -774,7 +835,7 @@ body.hero-animate .hero-line-cyan.flicker {
 .lcw-chip {
   flex: 0 0 auto;
   white-space: nowrap;
-  background: rgba(10,10,15,0.6);
+  background: var(--gx-fill);
   color: var(--ink-mute);
   border: 1px solid rgba(0,212,255,0.18);
   border-radius: 999px;
@@ -791,7 +852,7 @@ body.hero-animate .hero-line-cyan.flicker {
 .lcw-inputs { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; margin-bottom: 14px; }
 @media (max-width: 540px) { .lcw-inputs { grid-template-columns: 1fr; } }
 .lcw-input {
-  background: rgba(10,10,15,0.6);
+  background: var(--gx-fill);
   border: 1px solid rgba(0,212,255,0.22);
   color: var(--ink);
   padding: 12px 14px;
@@ -802,7 +863,7 @@ body.hero-animate .hero-line-cyan.flicker {
   transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
   width: 100%;
 }
-.lcw-input::placeholder { color: #5A5A66; }
+.lcw-input::placeholder { color: var(--neutral); }
 .lcw-input:focus {
   outline: none;
   border-color: var(--cyan-bright);
@@ -824,8 +885,8 @@ select.lcw-select:focus {
   background-repeat: no-repeat;
   background-position: right 14px center;
 }
-select.lcw-select:invalid { color: #5A5A66; } /* placeholder option state matches input placeholders */
-select.lcw-select option { color: var(--ink); background: #0A0A0F; }
+select.lcw-select:invalid { color: var(--neutral); } /* placeholder option state matches input placeholders */
+select.lcw-select option { color: var(--ink); background: var(--void); }
 
 /* TCPA consent — checkbox left, statement right; CIRCULANT cyan accent. */
 .ava-consent {
@@ -947,7 +1008,7 @@ select.lcw-select option { color: var(--ink); background: #0A0A0F; }
   50%      { opacity: 1;   box-shadow: 0 0 0 6px rgba(0,229,255,0),   0 0 14px var(--cyan-bright); }
 }
 
-.lcw-meta { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; color: #5A5A66; margin-top: 12px; text-align: center; text-transform: uppercase; }
+.lcw-meta { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; color: var(--neutral); margin-top: 12px; text-align: center; text-transform: uppercase; }
 .lcw-error { color: #FF6B6B; }
 
 @media (prefers-reduced-motion: reduce) {
