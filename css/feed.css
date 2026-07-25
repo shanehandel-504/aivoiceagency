@@ -1,0 +1,336 @@
+/* ============================================================================
+   RUN 4 · BACKSTAGE 2.0 — the result-first compact component.
+   ----------------------------------------------------------------------------
+   Replaces the homepage 16-agent theater (~1,201px / 3 screens @390) with ONE
+   component that answers the hero's fear inside a single screen.
+
+   HEIGHT LAW: .fd never exceeds 680px at 390x844. The budget is spent like this
+   and tools/feed-verify.mjs measures it on every commit:
+     head 44 · headline 60 · crew 32 · summary label 20 · 4 phases 216
+     outcome 40 · CTAs 104 · footer 36 · padding 40   =  ~592
+   When the roster opens, the four phase rows collapse to one strip and the
+   summary artifacts hide, which buys back ~200px for the roster; the roster
+   itself is capped and scrolls so the total can never drift past the law.
+
+   COLOUR LAW: --green is the BOOKED OUTCOME and nothing else on this component.
+   It paints the result chip, the locked OUTPUT phase and the outcome strip.
+   It never paints a button here — the primary CTA is cyan by design, so the
+   page's one green CTA (the hero's CALL AVA LIVE) stays the only green CTA.
+   ============================================================================ */
+
+.fd-sec { padding: 34px 0 !important; }
+
+.fd {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px 16px 14px;
+  border-radius: 18px;
+  background: var(--gx-fill);
+  -webkit-backdrop-filter: blur(var(--gx-blur));
+          backdrop-filter: blur(var(--gx-blur));
+  border: 1px solid var(--gx-line);
+  box-shadow: var(--gx-edge);
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .fd { background: var(--gx-solid); }
+}
+
+/* ---- head: anchor + the pinned result chip -------------------------------- */
+.fd-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap; margin-bottom: 10px;
+}
+.fd-anchor {
+  font-family: var(--g-mono); font-size: 10px; letter-spacing: .07em;
+  color: var(--neutral); text-transform: uppercase; line-height: 1.3;
+  min-width: 0; flex: 1 1 auto;
+}
+.fd-anchor b { color: var(--body-dim); font-weight: 400; }
+.fd-dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--cyan); margin-right: 7px; vertical-align: middle; flex: none;
+}
+/* the result chip — GREEN, and green means booked. Not a button, never a CTA. */
+.fd-chip {
+  flex: none;
+  font-family: var(--g-mono); font-size: 10.5px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--green);
+  border: 1px solid color-mix(in srgb, var(--green) 45%, transparent);
+  border-radius: 999px; padding: 6px 12px;
+  background: color-mix(in srgb, var(--green) 9%, transparent);
+  transition: opacity .25s ease;
+}
+/* pulses exactly ONCE, at booking lock */
+.fd-chip.is-lock { animation: fdChipPulse .62s cubic-bezier(.2,.8,.2,1) 1; }
+@keyframes fdChipPulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 42%, transparent); }
+  60%  { box-shadow: 0 0 0 9px color-mix(in srgb, var(--green) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 0%, transparent); }
+}
+
+.fd-h {
+  font-size: clamp(21px, 5.4vw, 27px); line-height: 1.18; letter-spacing: -.015em;
+  color: var(--text); margin: 0 0 10px; font-weight: 700;
+}
+
+/* ---- crew cluster + status line ------------------------------------------ */
+.fd-crew { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; min-height: 24px; }
+.fd-glyphs { display: inline-flex; align-items: center; flex: none; }
+.fd-glyph {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--g-mono); font-size: 9px; font-weight: 700; letter-spacing: 0;
+  color: var(--neutral);
+  background: var(--panel);
+  border: 1px solid var(--gx-line);
+  box-shadow: 0 0 0 2px var(--gx-solid);
+  transition: color .3s ease, border-color .3s ease;
+}
+.fd-glyph + .fd-glyph { margin-left: -6px; }
+.fd-glyph.is-on { color: var(--cyan); border-color: color-mix(in srgb, var(--cyan) 45%, transparent); }
+/* +N badge — never present at frame zero; JS reveals it with a 120ms overshoot */
+.fd-more {
+  flex: none; margin-left: 4px;
+  font-family: var(--g-mono); font-size: 10px; font-weight: 700; letter-spacing: .04em;
+  color: var(--body-dim);
+  border: 1px solid var(--gx-line); border-radius: 999px;
+  padding: 3px 7px; background: var(--panel);
+  transform: scale(0); opacity: 0;
+}
+.fd-more.is-in { animation: fdPop 320ms cubic-bezier(.34,1.56,.64,1) forwards; }
+@keyframes fdPop { to { transform: scale(1); opacity: 1; } }
+.fd-status {
+  font-family: var(--g-mono); font-size: 11px; letter-spacing: .02em;
+  color: var(--body-dim); min-width: 0; flex: 1 1 auto;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ---- the static summary label. SUMMARY MODE ONLY. ------------------------
+   This is the whole DUAL-MODE HONESTY LAW in one element: in summary mode the
+   component states in plain words that it is a summary, and shows NO timer, NO
+   waveform and NO playhead. Those exist only in audio mode, where they are
+   driven by a real file. ------------------------------------------------- */
+.fd-sum {
+  font-family: var(--g-mono); font-size: 10.5px; letter-spacing: .07em;
+  color: var(--neutral); margin: 0 0 8px; text-transform: uppercase;
+}
+
+/* ---- the four phase rows ------------------------------------------------- */
+.fd-phases { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 5px; }
+.fd-phase {
+  display: grid; grid-template-columns: 62px 1fr; align-items: baseline; gap: 4px 12px;
+  padding: 5px 0 5px 12px;
+  border-left: 2px solid var(--gx-line);
+  opacity: .18; transform: translateY(6px);
+  transition: opacity .34s cubic-bezier(.2,.8,.2,1),
+              transform .34s cubic-bezier(.2,.8,.2,1),
+              border-color .3s ease;
+}
+.fd-phase.is-in { opacity: 1; transform: none; }
+.fd-phase.is-done { border-left-color: color-mix(in srgb, var(--cyan) 55%, transparent); }
+/* only the OUTPUT phase resolves green — it is the one that is the outcome */
+.fd-phase[data-phase="output"].is-done { border-left-color: var(--green); }
+.fd-ph-eyebrow {
+  font-family: var(--g-mono); font-size: 9.5px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--neutral); grid-row: 1 / span 2;
+}
+.fd-phase.is-done .fd-ph-eyebrow { color: var(--cyan); }
+.fd-phase[data-phase="output"].is-done .fd-ph-eyebrow { color: var(--green); }
+.fd-ph-line   { font-size: 14.5px; line-height: 1.3; color: var(--text); font-weight: 600; }
+.fd-ph-detail { font-family: var(--g-mono); font-size: 11px; letter-spacing: .03em;
+                color: var(--neutral); line-height: 1.4; }
+
+/* ---- the collapsed strip that replaces the phases while the roster is open -- */
+.fd-strip {
+  display: none;
+  font-family: var(--g-mono); font-size: 11px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--green);
+  border-left: 2px solid var(--green); padding: 8px 0 8px 12px; margin: 0 0 12px;
+}
+
+/* ---- outcome strip — permanent ------------------------------------------- */
+.fd-outcome {
+  transition: opacity .4s cubic-bezier(.2,.8,.2,1);
+  font-size: 13.5px; line-height: 1.4; font-weight: 600; color: var(--text);
+  border-top: 1px solid var(--gx-line);
+  padding-top: 10px; margin: 0 0 10px;
+}
+.fd-outcome b { color: var(--green); font-weight: 700; }
+
+/* ---- AUDIO ZONE. Exists only in audio mode. ------------------------------
+   Hidden with [hidden] in every summary state, so there is physically no
+   timer, waveform or playhead in the DOM's rendered box during a summary. -- */
+.fd-audio { margin: 0 0 14px; }
+.fd-wave {
+  position: relative; height: 44px; width: 100%;
+  border: 1px solid var(--gx-line); border-radius: 10px;
+  background: color-mix(in srgb, var(--cyan) 4%, transparent);
+  overflow: hidden;
+}
+.fd-wave canvas { display: block; width: 100%; height: 100%; }
+.fd-arow { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.fd-time {
+  font-family: var(--g-mono); font-size: 11.5px; color: var(--body-dim);
+  font-variant-numeric: tabular-nums; flex: none;
+}
+.fd-scrub { flex: 1 1 auto; min-width: 0; accent-color: var(--cyan); height: 22px; }
+
+/* ---- CTAs ---------------------------------------------------------------- */
+.fd-ctas { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.fd-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 44px; padding: 0 16px; border-radius: 999px;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 13.5px; font-weight: 700; letter-spacing: .01em;
+  cursor: pointer; text-decoration: none; box-sizing: border-box;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.fd-cta:active { transform: translateY(1px); box-shadow: inset 0 2px 9px rgba(0,0,0,.3); }
+.fd-cta:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+/* primary is CYAN — inspect the system. Green is reserved for the outcome. */
+.fd-cta--cyan {
+  background: var(--cyan); color: #03181E; border: 1px solid transparent;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.30);
+}
+.fd-cta--cyan:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.40), inset 0 0 26px rgba(200,248,255,.55);
+}
+.fd-cta--ghost {
+  background: var(--gx-fill); color: var(--text);
+  border: 1px solid rgba(255,255,255,.12); box-shadow: var(--gx-edge);
+  -webkit-backdrop-filter: blur(var(--gx-blur)); backdrop-filter: blur(var(--gx-blur));
+}
+.fd-cta--ghost:hover {
+  transform: translateY(-2px); border-color: var(--gx-line-hot);
+  box-shadow: var(--gx-edge), inset 0 0 0 1px rgba(0,212,255,.20), inset 0 0 20px rgba(0,212,255,.10);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .fd-cta--ghost { background: var(--gx-solid); }
+}
+html[data-theme="light"] .fd-cta--ghost { background: #FFFFFF; border-color: rgba(16,19,26,.20); }
+html[data-theme="light"] .fd-cta--cyan  { color: #FFFFFF; }
+
+/* ---- roster -------------------------------------------------------------- */
+.fd-roster {
+  /* HEIGHT LAW ENFORCEMENT POINT. This cap is what makes "component never
+     exceeds ~680px" true rather than aspirational: with the phases collapsed
+     the rest of the component measures ~452px at 390, so the roster gets what
+     is left and scrolls for the remainder. Tap targets stay >=44px — the list
+     scrolls, it does not shrink. */
+  margin: 0 0 10px; max-height: 226px; overflow-y: auto;
+  border-top: 1px solid var(--gx-line); padding-top: 12px;
+  overscroll-behavior: contain;
+  /* the list is capped by the height law, so say so: the last visible row
+     fades out instead of being guillotined at the container edge. */
+  -webkit-mask-image: linear-gradient(180deg,#000 0,#000 calc(100% - 26px),transparent 100%);
+          mask-image: linear-gradient(180deg,#000 0,#000 calc(100% - 26px),transparent 100%);
+}
+.fd-lane + .fd-lane { margin-top: 12px; }
+.fd-lane-label {
+  display: block; font-family: var(--g-mono); font-size: 9.5px; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--neutral); margin-bottom: 6px;
+}
+.fd-lane[data-lane="intake"] .fd-lane-label { color: var(--lane-intake); }
+.fd-lane[data-lane="triage"] .fd-lane-label { color: var(--lane-triage); }
+.fd-lane[data-lane="tools"]  .fd-lane-label { color: var(--lane-tools); }
+.fd-lane[data-lane="output"] .fd-lane-label { color: var(--lane-output); }
+.fd-agents { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; grid-template-columns: repeat(2, 1fr); }
+.fd-agent {
+  display: flex; flex-direction: column; justify-content: center; gap: 2px;
+  min-height: 44px; padding: 7px 10px;
+  border-radius: 10px; border: 1px solid var(--gx-line); background: var(--panel);
+}
+.fd-agent b { font-family: var(--g-mono); font-size: 9.5px; font-weight: 700;
+              letter-spacing: .1em; color: var(--body-dim); }
+.fd-agent span { font-size: 11.5px; line-height: 1.3; color: var(--neutral); }
+
+/* ---- footer -------------------------------------------------------------- */
+.fd-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--gx-line); padding-top: 9px; margin: 0;
+  font-family: var(--g-mono); font-size: 9.5px; letter-spacing: .04em;
+  color: var(--neutral); text-transform: uppercase;
+}
+.fd-foot a { color: var(--cyan); text-decoration: none; }
+.fd-foot a:hover { text-decoration: underline; }
+
+/* ==========================================================================
+   STATE RENDERING. One attribute on .fd drives every state; the CSS below is
+   the entire "what is visible when" table. No state may show a summary timer.
+   ========================================================================== */
+
+/* audio artifacts are hidden in EVERY non-audio state */
+.fd:not([data-state^="audio"]) .fd-audio { display: none !important; }
+/* ...and the summary label is hidden in every audio state */
+.fd[data-state^="audio"] .fd-sum { display: none; }
+
+/* The outcome strip is specified to appear at summary lock, AFTER the audio,
+   and in the static state — not DURING playback, where the call is still
+   telling you the outcome itself. Standing it down while the file plays is
+   also what keeps audio mode inside the 680px law: the waveform and playhead
+   cost ~84px, and this is the ~61px that pays for them. It returns the moment
+   the call ends (audio-ended-closedloop), which is the closed loop. */
+.fd[data-state="audio-loading"] .fd-outcome,
+.fd[data-state="audio-playing"] .fd-outcome,
+.fd[data-state="audio-paused"] .fd-outcome,
+.fd[data-state="roster-open-during-play"] .fd-outcome { display: none; }
+
+/* boot: nothing has arrived yet. Phases are present but not yet in. */
+.fd[data-state="boot"] .fd-outcome { opacity: .18; }
+
+/* autoplay-summary: the outcome strip waits for the lock */
+.fd[data-state="autoplay-summary"] .fd-outcome { opacity: .18; }
+
+/* roster open (either variant): phases collapse to the strip and the summary
+   artifacts stand down, which is what keeps the whole thing under 680px */
+.fd.is-roster .fd-phases { display: none; }
+.fd.is-roster .fd-strip  { display: block; }
+.fd.is-roster .fd-sum    { display: none; }
+.fd.is-roster .fd-crew   { display: none; }
+
+/* reduced motion / no-JS final: everything locked, nothing animating */
+.fd[data-state="reduced-motion-final"] .fd-phase,
+.fd[data-state="final"] .fd-phase { opacity: 1; transform: none; }
+
+/* ---- desktop ------------------------------------------------------------- */
+/* At 390 the crew cluster + the +N badge leave ~194px for the status line, and
+   the end verb "Job on the board · customer texted" needs ~214px. Shrinking the
+   type to fit would have made the payoff line the smallest text in the
+   component. It gets its own full-width row instead, and the gaps below pay
+   for it — a truncated payoff is worse than a tighter rhythm. */
+@media (max-width: 430px) {
+  .fd-crew { flex-wrap: wrap; row-gap: 4px; min-height: 0; }
+  .fd-status {
+    flex: 1 1 100%; font-size: 10.5px;
+    white-space: normal; overflow: visible; text-overflow: clip;
+  }
+  .fd-h       { margin-bottom: 8px; }
+  .fd-outcome { padding-top: 8px; }
+  .fd-ctas    { margin-bottom: 8px; }
+  .fd-foot    { padding-top: 8px; }
+}
+
+@media (min-width: 900px) {
+  .fd { max-width: 780px; padding: 24px 26px 20px; }
+  .fd-h { font-size: 30px; }
+  .fd-phases { grid-template-columns: 1fr 1fr; gap: 8px 22px; }
+  .fd-roster { max-height: none; overflow: visible;
+    -webkit-mask-image: none; mask-image: none; }
+  .fd-status { font-size: 12px; }
+  .fd-agents { grid-template-columns: repeat(4, 1fr); }
+  .fd-lane { display: grid; grid-template-columns: 78px 1fr; gap: 12px; align-items: start; }
+  .fd-lane-label { margin-bottom: 0; padding-top: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fd-phase { opacity: 1 !important; transform: none !important; transition: none; }
+  .fd-more, .fd-more.is-in { transform: scale(1); opacity: 1; animation: none; }
+  .fd-chip.is-lock { animation: none; }
+  .fd-cta { transition: none; }
+  .fd-cta:hover, .fd-cta:active { transform: none; }
+}

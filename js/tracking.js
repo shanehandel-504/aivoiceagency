@@ -93,6 +93,15 @@
     if (NOTRACK) return;
     try { if (window.gtag) window.gtag('event', event, params || {}); } catch (e) {}
   }
+
+  /* RUN 4 · the ONE public event API. Components with programmatic events (the
+     Backstage 2.0 state machine fires backstage_view and
+     backstage_summary_complete, which are not clicks) must route through HERE
+     rather than calling window.gtag themselves — otherwise they bypass the
+     NOTRACK self-tag above and every headless gate run and every operator
+     device would land in GA4 as real traffic. tracking.js stays the ONE
+     tracking file; this is its front door, not a second snippet. */
+  window.AVA_TRACK = window.AVA_TRACK || { event: ga };
   /* --------------------------------------------------------- PAGE UTILS -- */
   function pagePath() {
     var p = location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
