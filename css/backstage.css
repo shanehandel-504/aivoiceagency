@@ -200,8 +200,18 @@ body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
    until the 3AM STRIP, which owns the miss moment. */
 .bs-sub{font-size:clamp(17px,2.9vw,22px);line-height:1.4;color:var(--text);font-weight:600;
   max-width:30ch;margin:0 auto 14px;letter-spacing:-.005em}
+/* RUN 4.5 · D7 — THE MOVED-COMPONENT SEAM.
+   `margin:0 auto` is correct inside .bs-hero, which is text-align:center: the
+   measure is capped and the block centres under a centred headline. /backstage
+   reuses .bs-support in a LEFT-aligned section, where the same auto margin
+   centres a 715px measure inside a 1160px column and produces a 222px hanging
+   indent under an eyebrow and an H1 that both sit flush at x=140. It reads as
+   a broken layout, and it is the first thing on the deep page.
+   The centring is now scoped to the hero that actually wants it; everywhere
+   else the paragraph starts where its own headline starts. */
 .bs-support{font-size:clamp(14.5px,2vw,16.5px);line-height:1.6;color:var(--body-dim);
-  max-width:58ch;margin:0 auto 22px}
+  max-width:58ch;margin:0 0 22px;text-wrap:pretty}
+.bs-hero .bs-support{margin-left:auto;margin-right:auto}
 .bs-hcta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 /* P2: at 390 the fixed-content CTAs (362px) overran the 350 column — stack them
    full-width so they fit instead of getting clipped by the overflow belt */
@@ -239,7 +249,8 @@ body:has(.bnav-burger[aria-expanded="true"]) .bs-callbar{visibility:hidden}
   .bs-hero h1{font-size:clamp(5.5rem,7vw,6.5rem);line-height:.95;letter-spacing:-.03em;
     max-width:17ch;margin:0 auto .19em}
   .bs-sub{font-size:26px;line-height:1.3;max-width:34ch;margin:0 auto 10px}
-  .bs-support{font-size:18px;line-height:1.55;max-width:62ch;margin:0 auto 22px}
+  .bs-support{font-size:18px;line-height:1.55;max-width:62ch;margin:0 0 22px}
+  .bs-hero .bs-support{margin-left:auto;margin-right:auto}
   .bs-hcta{gap:14px}
   .bs-hcta .cta,.bs-hcta .cta--quiet{min-height:60px;padding:0 34px;font-size:16.5px}
   .bs-micro{font-size:12.5px;margin:12px 0 14px}
