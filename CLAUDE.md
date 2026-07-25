@@ -120,6 +120,9 @@ the color gold on AVA surfaces · emoji used as icons · placeholder-only form l
 - **No fabricated stats, testimonials, metrics, ROI, or proof.** Ever. If it isn't sourced or recorded, it doesn't ship. Sourced set in use: AgentZap 47% / 73%-higher · ServiceTitan 10–14.1% · ~50→~3 shops 2PM-vs-2AM.
 - **Pricing surfaces anchor on $497.** Never "100 free minutes." Never a free-trial claim.
 - **Grade 5–7 readability** on all public copy. Zero jargon. A plumber reads it at 2AM on a cracked phone screen.
+- **Orphan fixes are CSS line-breaking only — never `&nbsp;`.** Use `text-wrap:balance`/`pretty`, a `max-width` in `ch`/`em`, or an explicit `<br>` at a chosen breakpoint. A hard space is invisible in the source, survives copy-paste into a CRM, and welds two words together at every viewport to fix one.
+- **Homepage component height law: ≤680px is the HARD CEILING.** The four mode numbers are *targets*, not the law — a mode may land under its target, but nothing may exceed 680. Measure the rendered component, do not compute it from the CSS.
+- **Homepage desktop section rhythm = 64px** (ratified 2026-07-25). This is the homepage's own ratified value and it *overrides* the ≥96px general section rhythm in § 3 for that page only. Every other surface stays on 96px desktop / 48px mobile.
 
 ---
 

@@ -8,17 +8,43 @@
  *   4. zero horizontal overflow
  *   5. every text node >= 4.5:1 against its painted backdrop (AA sweep)
  *
- * Usage: node tools/skin-verify.mjs [baseUrl] [--pages a,b,c]
+ * Usage: node tools/skin-verify.mjs [baseUrl] [--pages=a,b,c | --set=city|landers|five|all]
+ *
+ * PREFER --set=. It pulls a pinned list from tools/gate-pages.mjs, so the scope
+ * of the gate is version-controlled data instead of a hand-typed shell string.
+ *   --set=five     5 pages ->  20 checks   (canonical five)
+ *   --set=city    25 pages -> 100 checks   (city x trade)
+ *   --set=landers 22 pages ->  88 checks   (landers/hubs/backstage/chauffeur)
+ *
+ * RUN 4.7 · SANITY CHECK. Every page is 4 checks (2 viewports x 2 themes). A page
+ * that fails to navigate used to `continue` WITHOUT incrementing `checks`, so the
+ * run printed "96/100 clean" and exited 0 — an under-count that reads as a pass.
+ * The total is now asserted against pages x 4 and the run FAILS if any page was
+ * skipped.
+ *
+ * !! GIT BASH ON WINDOWS !! MSYS path conversion rewrites the FIRST /-prefixed
+ * item of --pages= into `C:/Program Files/Git/...`. Prefix any bash invocation:
+ *     MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*' node tools/skin-verify.mjs ...
+ * PowerShell is unaffected. --set= sidesteps the problem entirely.
  */
 import { createRequire } from 'node:module';
+import { SETS, expectedChecks, CHECKS_PER_PAGE } from './gate-pages.mjs';
 const require = createRequire('C:/Users/offic/Desktop/AVA-factory/adstage/package.json');
 const { chromium } = require('playwright');
 
 const BASE = (process.argv[2] || 'http://localhost:8847').replace(/\/$/, '');
 const argPages = (process.argv.find((a) => a.startsWith('--pages=')) || '').split('=')[1];
-const PAGES = argPages ? argPages.split(',') : [
-  '/index.html', '/live/index.html', '/book/index.html', '/lsa/index.html', '/index.html#pricing',
-];
+const argSet = (process.argv.find((a) => a.startsWith('--set=')) || '').split('=')[1];
+if (argSet && !SETS[argSet]) {
+  console.error(`unknown --set=${argSet}. known: ${Object.keys(SETS).join(', ')}`);
+  process.exit(2);
+}
+const PAGES = argSet ? SETS[argSet] : argPages ? argPages.split(',') : SETS.five;
+if (argPages && argPages.split(',').some((p) => /^[A-Za-z]:[\\/]/.test(p))) {
+  console.error('MSYS path conversion detected in --pages= (a page was rewritten to a Windows path).');
+  console.error("Re-run with: MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'   — or use --set=.");
+  process.exit(2);
+}
 
 const GREENS = ['#2ee6a8', '#0b7e56'];               // dark + light advance-the-sale
 const REDS   = ['#ff3b4e', '#c2182a'];
@@ -103,6 +129,7 @@ const AUDIT = `(${function () {
 }})()`;
 
 let fail = 0, checks = 0;
+const skipped = [];
 const br = await chromium.launch();
 for (const path of PAGES) {
   for (const [w, h, vp] of [[390, 844, 'mobile'], [1440, 900, 'desktop']]) {
@@ -111,7 +138,7 @@ for (const path of PAGES) {
       if (theme === 'light') await ctx.addInitScript(() => { try { localStorage.setItem('bs-theme', 'light'); } catch (e) {} });
       const page = await ctx.newPage();
       const url = BASE + path + (path.includes('?') ? '&' : '?') + 'notrack=1';
-      try { await page.goto(url, { waitUntil: 'networkidle', timeout: 45000 }); } catch (e) { console.log(`  SKIP ${path} — ${e.message.slice(0, 50)}`); await ctx.close(); continue; }
+      try { await page.goto(url, { waitUntil: 'networkidle', timeout: 45000 }); } catch (e) { console.log(`  SKIP ${path} ${vp} ${theme} — ${e.message.slice(0, 50)}`); skipped.push(`${path} ${vp} ${theme}`); await ctx.close(); continue; }
       await page.waitForTimeout(500);
       const r = await page.evaluate(AUDIT);
       await ctx.close();
@@ -132,5 +159,17 @@ for (const path of PAGES) {
   }
 }
 await br.close();
+
+/* RUN 4.7 · pages x 4 SANITY CHECK — a skipped page must never read as a pass. */
+const want = expectedChecks(PAGES);
 console.log(`\n=== ${checks - fail}/${checks} viewport checks clean ===`);
-process.exit(fail ? 1 : 0);
+console.log(`=== scope: ${PAGES.length} pages x ${CHECKS_PER_PAGE} = ${want} expected ===`);
+let short = 0;
+if (checks !== want) {
+  short = 1;
+  console.log(`\nUNDER-COUNT: ran ${checks} of ${want} checks — ${want - checks} never executed.`);
+  if (skipped.length) skipped.forEach((s) => console.log(`  skipped: ${s}`));
+  console.log('A short run is a FAILED run. Check the base URL, the page list, and (from');
+  console.log("Git Bash) MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'.");
+}
+process.exit(fail || short ? 1 : 0);
