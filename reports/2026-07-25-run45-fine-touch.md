@@ -240,6 +240,24 @@ quietly under-count.**
 
 ---
 
+## VERIFIED LIVE ON PRODUCTION
+
+Not "merged and assumed" — re-measured against `https://aivoiceagency.ai` after the deploy landed.
+
+| Check | Production result |
+|---|---|
+| Asset version on the wire | `feed.css?v=f6fdc22` |
+| `tools/feed-verify.mjs` against prod | **17/17 ALL CLEAN** |
+| `tools/skin-verify.mjs` — the five in-scope surfaces against prod | **20/20** |
+| `.fd-foot` computed font-size | **12px** (was 9.5px) |
+| `.fd-foot a` computed | **12px · 700 · underline · 31.2px tall** (was 9.5px / 400 / none / 15.2px) |
+| Component height, `summary-locked` | **677.2px** — matches local, law 672, ≤680 |
+| `/backstage/` · `/live/` · `/chauffeur/` | 200 · 200 · 200 |
+
+Production proof shot: `audits/RUN45-08-production.png`.
+
+---
+
 ## OPEN FOR SHANE — deliberately not fixed
 
 Both are design decisions, not polish edits. This run did not make them unilaterally.
