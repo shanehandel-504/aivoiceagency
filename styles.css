@@ -124,14 +124,21 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
    /chauffeur, /intake, /chatgpt-example, /live — keep their own treatment.
 
    RUN 3.5 CORRECTION — the original note here claimed ".btn-primary IS the one
-   solid green per page on the 40 stamped SEO pages". Measured on a rendered
-   page, it is not: assets/bridge.css loads AFTER this file and redeclares
-   .btn-primary with background:var(--bz-cyan), so on every STAMPED page the
-   primary renders CYAN and the green rule below never reaches the paint. The
-   green fill still applies on any page that links styles.css without bridge.css.
-   The fill was left alone on purpose — recolouring ~60 pages' primary action is
-   a semantic call for Shane, not a side effect of a gloss pass. Only the
-   PHYSICS were unified (see the bridge.css 4B.4 block). */
+   solid green per page on the 40 stamped SEO pages". At the time it was not:
+   assets/bridge.css loads AFTER this file and redeclared .btn-primary with
+   background:var(--bz-cyan), so the primary rendered CYAN on every stamped page
+   and the green rule below never reached the paint. Only the PHYSICS were
+   unified in that pass (see the bridge.css 4B.4 block); the fill was deferred
+   because recolouring ~60 pages' primary action is a semantic call, not a side
+   effect of a gloss pass.
+
+   RUN 4 RIDER — that call was made and the cyan fill is GONE. bridge.css 4B.4
+   now declares .btn-primary with background:var(--green), so green is what the
+   stamped pages actually paint and this file's green rule agrees with the
+   cascade instead of losing to it. Label colour is per-theme and has to be:
+   dark green #2EE6A8 takes --canvas ink (12.23:1) because white on it measures
+   1.62:1; light green #0B7E56 takes white (5.08:1). White never sits on #2EE6A8.
+   RUN 4.7 re-verified this on the rendered pages — see the skin-verify gate. */
 /* RUN 3.5 · this pair was a hand-copied clone of the OLD .cta / .cta--quiet,
    frozen at the values those classes had before the physics rebuild — including
    .btn-primary's green DROP SHADOW and .btn-outline's HARDCODED dark fill
