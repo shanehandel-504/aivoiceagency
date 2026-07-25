@@ -239,14 +239,42 @@ short run cannot pass as a clean one.
 
 ---
 
+## VERIFIED LIVE ON PRODUCTION
+
+Not "pushed and assumed" — re-measured against `https://aivoiceagency.ai` after the deploy landed.
+
+| Check | Production reading |
+|---|---|
+| `/lsa` citation href | `https://support.google.com/localservices/answer/7527305` |
+| `/lsa` visible link text | `support.google.com/localservices/answer/7527305` — `textMatchesDest: true` |
+| `/lsa` quote | `"Missed calls may negatively affect your responsiveness."` — byte-identical |
+| `/lsa` citation @390 | `linkFitsCard: true` · `hOverflow: 0` |
+| `/live` @1440×900 | `--col` **960px** · col **960px** · left **240** / right **240** · `hOverflow: 0` |
+| `/live` @390×844 | `--col` **680px** · `margin-left: 0px` · `.step .b p` `max-width: none` · `hOverflow: 0` |
+| `.step .b p` cap @1440 | **660px** (44em × 15px) — measure held |
+| `/milwaukee-hvac` `.btn-primary` dark | `#2EE6A8` on `#0A0A0F` — **12.23:1** |
+| `/milwaukee-hvac` `.btn-primary` light | `#0B7E56` on `#FFFFFF` — **5.08:1** |
+| white-on-`#2EE6A8` | `false` in both themes |
+| Cache armor | `/live` serves `circulant.css?v=a3a252b` |
+| **Production `skin-verify --set=five`** | **20/20 clean** · scope self-verified |
+
+Filed to the Notion RUN REPORTS INBOX:
+<https://app.notion.com/p/3a8581219cb2817ba990c12b2381dbb0>
+
+---
+
 ## ROLLBACK
 
-| Unit | Rollback |
-|---|---|
-| Block A — citation | `git revert <sha>` |
-| Block B — /live | `git revert <sha>` |
-| Block C — comment | `git revert <sha>` |
-| Block D — rails | `git revert <sha>` |
+| Unit | Commit | Rollback |
+|---|---|---|
+| Block A — citation | `da36a2f` | `git revert da36a2f` |
+| Block B — /live | `b4e87ec` | `git revert b4e87ec` |
+| Block C — comment | `177995e` | `git revert 177995e` |
+| Block D — rails | `a3a252b` | `git revert a3a252b` |
+| Stamp + board + report | `15fcff3` | `git revert 15fcff3` |
+
+Revert newest first. Block D is the only one another gate run depends on — reverting it
+restores the silent-under-count behaviour, so re-run the sweeps by hand if you do.
 
 ---
 
