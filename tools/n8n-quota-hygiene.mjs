@@ -9,21 +9,32 @@
 
    This tool:
      --audit  list every ACTIVE workflow + every schedule trigger + its interval,
-              compute projected monthly executions, flag anything under 30 min.
-     --fix    retune every sub-30-minute schedule trigger to 30 minutes.
-              IDEMPOTENT: a trigger already at >=30 min is left untouched, and
+              compute projected monthly executions, flag anything under the floor.
+     --fix    retune every sub-floor schedule trigger up to the floor.
+              IDEMPOTENT: a trigger already at >= the floor is left untouched, and
               re-running after a fix is a no-op.
      --stats  execution success/fail counts since the PRO upgrade.
 
+   RUN 6: the floor is configurable with --target=<minutes> (default 30).
+   When the target is a whole number of hours the rule is written as
+   field:'hours' + triggerAtMinute:0 — i.e. ON THE HOUR. A plain
+   minutesInterval:60 is NOT the same thing: it fires 60 minutes after
+   activation and drifts off the hour forever after.
+
    USAGE (always through Doppler):
      doppler run --project ava-prod --config prd -- node tools/n8n-quota-hygiene.mjs --audit
+     doppler run --project ava-prod --config prd -- node tools/n8n-quota-hygiene.mjs --fix --target=60
 
    Build-time only. tools/ is never deployed (see .vercelignore).
    ========================================================================== */
 
 const HOST = 'https://circulant.app.n8n.cloud';
 const KEY = process.env.N8N_API_KEY;
-const TARGET_MIN = 30;          // floor, in minutes
+const targetArg = process.argv.find((a) => a.startsWith('--target='));
+const TARGET_MIN = targetArg ? parseInt(targetArg.split('=')[1], 10) : 30;   // floor, in minutes
+if (!Number.isFinite(TARGET_MIN) || TARGET_MIN < 1) {
+  console.error(`bad --target=${targetArg}`); process.exit(2);
+}
 const QUOTA = 10000;            // plan allowance / month
 const HEADROOM = 0.30;          // must land >=30% under the cap
 
@@ -134,17 +145,29 @@ if (mode === '--audit' || mode === '--fix') {
         totalBefore += perMonth(before);
 
         if (before < TARGET_MIN) {
+          // A whole number of hours is written as an ON-THE-HOUR rule; anything
+          // else stays a plain minutes interval.
+          const onTheHour = TARGET_MIN % 60 === 0;
+          const afterDesc = onTheHour
+            ? `every ${TARGET_MIN / 60} hour(s) on the hour`
+            : `every ${TARGET_MIN} minutes`;
           if (mode === '--fix') {
-            // Collapse whatever shape it was into a clean minutes rule.
+            // Collapse whatever shape it was into one clean rule.
             for (const k of Object.keys(entry)) delete entry[k];
-            entry.field = 'minutes';
-            entry.minutesInterval = TARGET_MIN;
+            if (onTheHour) {
+              entry.field = 'hours';
+              entry.hoursInterval = TARGET_MIN / 60;
+              entry.triggerAtMinute = 0;
+            } else {
+              entry.field = 'minutes';
+              entry.minutesInterval = TARGET_MIN;
+            }
             dirty = true;
           }
           totalAfter += perMonth(TARGET_MIN);
-          changes.push({ wf: wf.name, id: wf.id, before: beforeDesc, beforeMin: before, after: `every ${TARGET_MIN} minutes` });
+          changes.push({ wf: wf.name, id: wf.id, before: beforeDesc, beforeMin: before, after: afterDesc });
           console.log(`  SCHEDULE: ${beforeDesc}  [${perMonth(before).toLocaleString()}/mo]  -> UNDER ${TARGET_MIN}min ` +
-                      `${mode === '--fix' ? '· RETUNED to 30 minutes' : '· NEEDS RETUNE'}`);
+                      `${mode === '--fix' ? `· RETUNED to ${afterDesc}` : '· NEEDS RETUNE'}`);
         } else {
           totalAfter += perMonth(before);
           console.log(`  SCHEDULE: ${beforeDesc}  [${perMonth(before).toLocaleString()}/mo]  · OK (>= ${TARGET_MIN}min)`);
