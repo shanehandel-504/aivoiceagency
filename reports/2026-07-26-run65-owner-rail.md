@@ -262,6 +262,52 @@ text**, not 1,416.
 
 ---
 
+## STEP 6 — ONE-CALL PROOF ✅ **ALL GREEN — 12 PASSED, 0 FAILED**
+
+A real inbound call landed on 414-240-8930 and the whole rail was verified end to end
+with `tools/run65-proof.mjs`.
+
+| # | Check | Result |
+|---|---|---|
+| 1 | Inbound call on the live line | `call_c898f73e36cf331e82a1305b6a4` · 180s · `agent_hangup` |
+| 2 | Served by the frozen agent | **v37** ✅ |
+| 3 | `ava-postcall` execution | **4840 · success** ✅ |
+| 4 | Contact resolved | `matnQ6JbrPiXOQrrR5Kw` — a real lead, **not** the owner row, **not** the zz-test sink ✅ |
+| 5 | GHL call note | `vRnNF1usyxYz9ZaBc6oV` · 2,962 chars · **recording URL included** ✅ |
+| 6 | Owner SMS dispatched | `fZtotjF06TdCYizqx7lJ` ✅ |
+| 7 | Owner SMS **delivered** | `AVA call: +1305…6506 · 3m 0s · Chris called AI Voice Agency to see a demo for his plumbing service…` ✅ |
+| 8 | Owner email sent | Gmail `19f9fb6e36f57e42` ✅ |
+| 9 | `Caller Send?` gate | correctly **allowed** demo copy (real lead, not internal) ✅ |
+| 10 | Owner contact reachable | `AVA Ops Alerts` · tags intact ✅ |
+| 11 | **Owner row uncorrupted after the call** | name / email / tags intact ✅ |
+| 12 | Owner contact id resolved from n8n config | `UtKrbSG01tWotCzc7Jes` ✅ |
+
+### The RUN 5 `cell` defect — fixed, proven on a real call
+
+The call also booked, so `book_appointment` ran for real (execution **4839**, success):
+
+| | |
+|---|---|
+| `Is Our Number?` | **false** branch — real upsert path taken ✅ |
+| Contact phone written | **the caller's number**, `+1305…6506` — **not** AVA's published line ✅ |
+| Appointment | `zWAdbE9q4SQ62OUGWcjL` · **Mon 2026-07-27 14:00** · `aCIv7rUnCGrysobt6Mlg` AVA Demo Call · assigned `riVdJngF0dT6xbEmvvFg` Shane Handel · `confirmed` |
+
+RUN 5 shipped `"cell": "+14142408930"` — AVA's own line — into the lead's phone field. On this
+call the resolver rejected every number we own and fell through to the real caller ID. **The
+defect is closed against live traffic, not a fixture.**
+
+### Two honest notes on the proof
+
+1. **The contact was matched, not created.** `matnQ6JbrPiXOQrrR5Kw` already existed (added
+   2026-07-07 — the same tester's earlier demo call), so the upsert returned `new: false` and
+   correctly merged by identity. The brief asked for "a NEW lead"; what it got is a *correctly
+   identified returning lead*. The load-bearing assertion — that the write did **not** land on
+   the owner row — holds either way.
+2. **A real appointment now exists**: Mon 27 Jul, 2:00 PM CT, under "Chris" /
+   `scottroes762@gmail.com` (AVA mis-transcribed the address by one letter — the tester's is
+   `scottrose762@`). The hourly Booking Receipt poller will send that contact a receipt and
+   send you a `BOOKED:` owner alert on the hour. Delete the appointment if you do not want it.
+
 ## WHAT CHANGED LIVE
 
 | Change | Surface | State |
