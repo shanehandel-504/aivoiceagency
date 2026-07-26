@@ -160,6 +160,31 @@ A1 + A2 read as a pair and are the intended homepage hero for the pending X-Ray 
 
 ---
 
+## § 9 · OWNER RAIL LAW (ratified 2026-07-26, RUN 6.5)
+
+- **Owner-alert contacts are never upsert targets.** The GHL row the system alerts
+  Shane on is dedicated, tagged `zz-internal` / `owner-alerts` / `do-not-drip`, and no
+  code path may upsert into it. **Every GHL-touching run asserts this before it finishes.**
+  RUN 6 found the alert target and a demo-lead row were the *same record*: a lead could
+  redirect the owner's alerts, and lead-facing copy was reaching the owner.
+- **Before any upsert, our own numbers route to the zz-test contact.** `OUR_NUMBERS`
+  covers every Retell line, the published SMS line, and both owner cells. A call from
+  one of them never creates or mutates a real lead.
+- **Opaque IDs are re-fetched from the API, never trusted from pasted text.** This
+  includes contact ids, calendar ids, agent ids, and workflow ids. A brief that quotes an
+  id is a hint, not a source. RUN 6 caught `aCIv7rUnCGrysobt6MIg` vs `…Mlg`; RUN 6.5
+  caught a brief that named the wrong phone on the right contact. **Verify the value,
+  not just the id.**
+- **Sensitive automation values live in n8n Variables, never in the repo and never in a
+  node body.** Keys in use: `OWNER_ALERT_CONTACT_ID` · `ZZ_TEST_CONTACT_ID` ·
+  `OWNER_SMS_FROM` · `OWNER_ALERT_EMAIL` · `OUR_NUMBERS`. Tools name the KEY only.
+- **Every active n8n workflow carries an error workflow.** `OPS — Error Sentry`
+  (`SlnAeMrVRORsF0w7`) is attached to all of them and **must stay ACTIVE** — an inactive
+  error workflow is silently never invoked, which is the exact failure mode it exists to
+  prevent. Alerts dedupe to one per workflow per 6h.
+
+---
+
 ## § 8 · BRAND B — AI CHAUFFEUR
 
 **Direction for future builds** (not yet on the wire):
