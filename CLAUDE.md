@@ -128,17 +128,20 @@ the color gold on AVA surfaces · emoji used as icons · placeholder-only form l
 
 ## § 5 · PROTECTED ANCHORS
 
-Verbatim. Never touch without a CEO order. Verified locations as of 2026-07-22:
+Verbatim. Never touch without a CEO order. **Re-verified against production 2026-07-29
+(RUN 9.5)** — every row below was confirmed by fetching the live page, not by reading the repo.
 
-| # | Anchor | Status |
+| # | Anchor | Where it lives — verified on prod |
 |---|---|---|
-| A1 | `3AM. Google Was Listening.` | **LIVE** — `/lsa` `<title>` + OG/meta. On-page H1 reads "Your phone went to voicemail. *Google was listening.*" |
-| A2 | `Every missed call hands the job to the next name on the map →` | ⚠ **RESERVED — NOT PRESENT IN REPO.** Protected as future hero copy. Do not invent a variant; use this string exactly when the slot is built. |
-| A3 | `One call. Sixteen agents.` | **LIVE** — `index.html:148` (`.bs-theater-sub`), also `/watch`, `/staging/xray`. |
-| A4 | `AVA answers calls and books jobs.` | **LIVE** — `index.html:115` (homepage `<h1>`), also `/staging/xray`. |
+| A1 | `3AM. GOOGLE WAS LISTENING.` | **LIVE — homepage `<h1>`**, `index.html:148`. Also `/lsa` `<title>` + OG/meta; the `/lsa` on-page H1 is its own line, "Your phone went to voicemail. *Google was listening.*" **Frozen through Aug 27 2026** under HOMEPAGE FREEZE LAW. |
+| A2 | `Every missed call hands the job to the next name on the map →` | **LIVE — homepage hero sub**, `index.html:149` (`.bs-sub`). No longer reserved; the slot is built. Frozen with A1. |
+| A3 | `One call. Sixteen agents.` | **LIVE — `/backstage`, `/watch`, `/staging/xray`** (`.bs-theater-sub`). **Not on the homepage** — the 16-agent theater moved off it in RUN 4. Any claim that A3 sits in `index.html` is stale. |
+| A4 | `AVA answers calls and books jobs.` | **LIVE — homepage metadata only**: `meta[name=description]`, `og:title`, `twitter:title` (`index.html:7,15,21`). It is **not** the homepage `<title>` (that reads "AI Receptionist That Books Appointments 24/7 \| AI Voice Agency") and **not** the H1. The `<h1>` form survives only at `/staging/xray.html:116`. |
 
-A1 + A2 read as a pair and are the intended homepage hero for the pending X-Ray swap
-(`/staging/xray.html`, fires only on **GO SWAP**). The current homepage hero is A4.
+A1 + A2 are the homepage hero pair and are **already on the wire** — the X-Ray swap
+(`/staging/xray.html`, fires only on **GO SWAP**) is what still carries the A4 H1.
+Anchor drift is a real failure mode: this table was wrong for a week before RUN 9.5.
+**Re-verify against prod before citing a row, and stamp the date when you do.**
 
 ---
 
@@ -303,7 +306,7 @@ It self-tags as internal (`NOTRACK`) on webdriver / `ava_internal` / `?notrack=1
 - Traffic lights: green / yellow / red — action / consider / stop
 - Tag markers: `[CREATIVE]` `[SPEC]` `[INNOVATION]` `[META]`
 - Solution first, zero filler, developer-grade output only
-- Every response ends with: how could this prompt be better? — placed **inside** the readback block, since nothing may follow it.
+- See **PROMPT-FOOTER KILL** — no run, report, or response carries a prompt-critique tail.
 
 ## CONTROL PHRASES
 
@@ -316,8 +319,9 @@ It self-tags as internal (`NOTRACK`) on webdriver / `ava_internal` / `?notrack=1
 ## SHANE READBACK LAW
 
 - Every run ends with ONE fenced block: `===== SHANE READBACK — COPY ALL =====`
-- Contents: plain-English summary a non-coder can follow · DONE table (what shipped, live, proof) · IDs / one-line rollback per checkpoint · what's next · gotchas · how could this prompt be better.
+- Contents: plain-English summary a non-coder can follow · DONE table (what shipped, live, proof) · IDs / one-line rollback per checkpoint · what's next · gotchas.
 - **NOTHING comes after the block.** Mirror it to `/reports/YYYY-MM-DD-<mission>.md`.
+- The block **ends on the last gotcha.** See PROMPT-FOOTER KILL — no critique tail.
 
 ## ONE-REPO-LANE LAW
 
@@ -378,6 +382,23 @@ silences internal traffic.
   bug, not a redesign.
 - This freeze is narrower than § POLISH FREEZE and does not replace it. Where both apply, both
   must be satisfied.
+
+## PROMPT-FOOTER KILL (Jul 29 2026)
+
+**Never end any run, report, receipt, or prompt with "how could this prompt be better" or any
+prompt-critique section. Banned on all surfaces.**
+
+Ratified RUN 9.5, CEO order. Scope is total: the SHANE READBACK block, `/reports/*.md` mirrors,
+Notion receipts, commit bodies, and ordinary chat replies. It also covers every rewording of the
+same move — "how could this prompt be better," "prompt feedback," "to get a better result next
+time," "what would have helped," a "meta" note grading the brief. The readback ends on the last
+gotcha. Nothing follows it.
+
+This supersedes the OUTPUT FORMAT and SHANE READBACK LAW lines that previously required it.
+Older files under `/reports/` still carry the section as authored — they are the historical
+record and are **not** retro-edited. Every report from 2026-07-29 forward ships clean.
+
+---
 
 ## APPENDIX A — FOLDED STRUCTURAL RULES
 

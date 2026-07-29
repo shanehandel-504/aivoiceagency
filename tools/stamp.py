@@ -156,7 +156,7 @@ FOOTER = '''<!-- BRIDGE:FOOTER -->
           <a href="/overview">Overview</a>
           <a href="/roi">ROI Calculator</a>
           <a href="/methodology.html">Methodology</a>
-          <a href="/privacy.html">Privacy</a>
+          <a href="/privacy">Privacy</a>
           <a href="/terms.html">Terms</a>
           <a href="/sms-policy.html">SMS Policy</a>
         </div>
@@ -220,7 +220,10 @@ PAGES = [
     dict(f='overview.html',                                kind='insert',    trail=[('Overview', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'ovw')),
     dict(f='roi/index.html',                               kind='insert',    trail=[('ROI Calculator', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'roi')),
     dict(f='methodology.html',                             kind='legal',     trail=[('Methodology', None)], jsonld=True),
-    dict(f='privacy.html',                                 kind='legal',     trail=[('Privacy', None)], jsonld=True),
+    # RUN 9.5: the privacy policy MOVED privacy.html -> /privacy/ (SMS/TCR rebuild).
+    # privacy.html is deleted and 301s to /privacy in vercel.json — do not re-add it here
+    # or the site ships two indexable copies of the same policy.
+    dict(f='privacy/index.html',                           kind='legal',     trail=[('Privacy', None)], jsonld=True),
     dict(f='terms.html',                                   kind='legal',     trail=[('Terms', None)], jsonld=True),
     dict(f='sms-policy.html',                              kind='legal',     trail=[('SMS Policy', None)], jsonld=True),
 ]
