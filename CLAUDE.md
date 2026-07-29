@@ -333,6 +333,28 @@ un-freeze from Shane. `/lsa` is likewise frozen as authored.
 
 ---
 
+## MESSAGE FORMAT LAW (Jul 28 2026)
+
+Governs every outbound message — SMS, email, owner alert, booking receipt, post-call summary.
+Ratified RUN 7-CODE.
+
+- **Every outbound message does ONE job.** One ask, one outcome. If it needs two, it is two messages.
+- **Owner alerts open status-led.** First line is the outcome — `BOOKED` / `MISSED` / `VOICEMAIL` /
+  `FOLLOW-UP` — details after. The status is readable from a lock screen without opening anything.
+- **One canonical name on every surface: "AVA strategy call."** **15 minutes, never 30.** Not
+  "demo," not "intro call," not "30-minute call." The GHL `AVA Demo Call` calendar
+  (`aCIv7rUnCGrysobt6Mlg`) is set to a 15-minute slot to match — copy and booking system agree.
+- **Booking receipts include:** `Hear AVA anytime: 414-240-8930.`
+- **SMS:** `Reply STOP to opt out` on **first touch only** — never on every message in a sequence.
+- **CTA phrasing varies across any sequence.** No two messages in the same sequence share an
+  identical CTA sentence.
+- **Never fabricate stats, dollar amounts, or testimonials.** Never "100 free minutes." Never
+  "locked in." **Caller-facing copy never says "Shane"** — the owner is named only in owner-facing
+  messages.
+
+Nav and footer CTAs are stamp.py-owned. Change the string in `tools/stamp.py`, then re-stamp —
+an inline edit is reverted on the next stamp run.
+
 ## APPENDIX A — FOLDED STRUCTURAL RULES
 
 Surveyed from [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) (`664b3e7`,

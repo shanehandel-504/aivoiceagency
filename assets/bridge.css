@@ -168,7 +168,11 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
 .bnav-tel{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 12px;
   color:var(--bz-cyan);font-weight:700;font-size:14.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .bnav-tel:hover{color:#5ee6ff}
-@media(max-width:1120px){.bnav-top{padding:0 10px;font-size:14px}.bnav-cta{padding:0 13px;font-size:13.5px}}
+/* RUN 7-CODE: raised 1120 -> 1200. The canonical CTA "Book the AVA strategy call"
+   is 32px wider than the old "Book a 30-minute call", so the full-width nav row
+   needs ~1170px. At the old breakpoint, 1121-1170 pushed the phone number off
+   the right edge. Measured, not guessed. */
+@media(max-width:1200px){.bnav-top{padding:0 10px;font-size:14px}.bnav-cta{padding:0 13px;font-size:13.5px}}
 @media(max-width:820px){
   /* B1 ROOT FIX: backdrop-filter on .bnav made it the containing block for its
      fixed child menu, trapping the overlay inside the 60px nav bar (so it never
