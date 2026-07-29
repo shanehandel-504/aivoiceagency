@@ -108,7 +108,7 @@ WebKit-390 rendered in **both dark and light** — iOS Safari is a permanent gat
 |---|---|
 | Was | `https://aivoiceagency.ai/privacy.html` — indexed, in the sitemap, linked from 70 pages |
 | Now | `https://aivoiceagency.ai/privacy` |
-| Old URL | **301 permanent** → `/privacy`, both hosts, in `vercel.json` |
+| Old URL | **308 Permanent Redirect** → `/privacy`, both hosts, in `vercel.json`. Vercel emits 308 for `"permanent": true`, not 301 — same permanence, same ranking transfer, method preserved. |
 | Link sweep | 56 pages via stamp.py footer · 11 hand-authored files swept directly (`book`, `booked`, `chauffeur`, `intake`, `live` ×2, `sms-policy`, `staging/xray`, `templates/city`, `templates/vertical`, `watch`, `sitemap.xml`) |
 | `privacy.html` | **Deleted.** Shipping both would have put two indexable copies of the same policy on the site. |
 
@@ -116,7 +116,7 @@ WebKit-390 rendered in **both dark and light** — iOS Safari is a permanent gat
 
 **This was a judgment call beyond the literal brief.** The brief assumed no privacy page existed;
 one did, at `/privacy.html`, live and indexed. Creating `/privacy/index.html` alongside it would
-have shipped duplicate content and split the canonical. Migrating with a 301 was the only version
+have shipped duplicate content and split the canonical. Migrating with a 308 was the only version
 of "build `/privacy/index.html`" that doesn't damage the site.
 
 ---
@@ -281,5 +281,5 @@ https://aivoiceagency.ai/24-hour-answering-service
 
 - Submit the sitemap in Search Console and request indexing for `/privacy` and `/deck`.
 - Point the TCR / carrier campaign registration at `https://aivoiceagency.ai/privacy`.
-- Watch for `/privacy.html` 404s in Search Console — there should be none; the 301 covers it.
+- Watch for `/privacy.html` 404s in Search Console — there should be none; the 308 covers it.
 - Homepage stays frozen through **Aug 27 2026**. Changes come from the four conversion events.
