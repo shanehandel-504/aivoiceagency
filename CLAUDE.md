@@ -355,6 +355,30 @@ Ratified RUN 7-CODE.
 Nav and footer CTAs are stamp.py-owned. Change the string in `tools/stamp.py`, then re-stamp —
 an inline edit is reverted on the next stamp run.
 
+## HOMEPAGE FREEZE LAW (Jul 28 2026)
+
+After RUN 9's claim fix, **homepage copy and design are frozen for 30 days — through
+Aug 27 2026.** Changes come only from measured behavior on the four conversion events:
+
+| Event | Fires on |
+|---|---|
+| `hero_call_ava` | tel: click on CALL AVA LIVE |
+| `hero_watch_demo` | WATCH AVA BOOK IT click |
+| `pricing_cta_click` | any CTA inside the pricing section |
+| `booking_complete` | `/booked` — already imported to Google Ads. **Never duplicate it.** |
+
+All four are wired in `js/tracking.js` to GA4 (`G-ZJZD091SMC`) and Meta Pixel
+(`1029719056532809`), routed through `ga()` / `fbCustom()` so the `NOTRACK` self-tag
+silences internal traffic.
+
+- **No taste-driven homepage edits during the freeze.** "It would read better" is not a
+  reason; a number is.
+- A change requires a named event, a measured problem, and the expected direction of movement.
+- Bug fixes, security fixes and factual corrections are always allowed — a false claim is a
+  bug, not a redesign.
+- This freeze is narrower than § POLISH FREEZE and does not replace it. Where both apply, both
+  must be satisfied.
+
 ## APPENDIX A — FOLDED STRUCTURAL RULES
 
 Surveyed from [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) (`664b3e7`,

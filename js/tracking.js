@@ -259,6 +259,58 @@
     ga('health_check_complete', { page: PATH, score: d.score, of: d.of });
   });
 
+  /* ============= 8 · RUN 9 CONVERSION EVENTS (GA4 + Meta) =============== */
+  /* The four events the homepage freeze reads from. All delegated, all routed
+   * through ga()/fb() so the NOTRACK self-tag silences them like the rest of
+   * the spine, and all keyed off markup that ALREADY EXISTS — no homepage edit,
+   * which matters because the homepage is frozen the moment this run lands.
+   *
+   *   hero_call_ava     — tel: click on CALL AVA LIVE  (data-event=tel_tap_hero)
+   *   hero_watch_demo   — WATCH AVA BOOK IT            (data-event=watch_tap_hero)
+   *   pricing_cta_click — any CTA inside the pricing section
+   *   booking_complete  — /booked. ALREADY LIVE and imported to Google Ads.
+   *                       NOT re-fired here. See the block below, untouched.
+   *
+   * hero_call_ava is ADDITIVE. The generic tel: handler (#1) already fires
+   * click_to_call + Meta 'Contact' for every tel: link on the site; this adds
+   * the named hero-specific event on top rather than replacing it, so no
+   * existing report loses its series. Meta gets a custom event via trackCustom
+   * so these never collide with the standard Contact/Schedule events.         */
+  function fbCustom(event, params) {
+    if (NOTRACK) return;
+    try { if (window.fbq) window.fbq('trackCustom', event, params || {}); } catch (e) {}
+  }
+
+  document.addEventListener('click', function (e) {
+    try {
+      var t = e.target;
+      if (!t || !t.closest) return;
+
+      if (t.closest('[data-event="tel_tap_hero"]')) {
+        ga('hero_call_ava', { page: PATH });
+        fbCustom('hero_call_ava', { page: PATH });
+        return;
+      }
+      if (t.closest('[data-event="watch_tap_hero"],[data-event="result_tap_hero"],[data-watch]')) {
+        ga('hero_watch_demo', { page: PATH });
+        fbCustom('hero_watch_demo', { page: PATH });
+        return;
+      }
+      /* Pricing CTA: match the section by containment so a future CTA inside
+       * #pricing is covered without touching this file, and fall back to the
+       * data-event naming convention for pricing CTAs that sit outside it. */
+      var inPricing = t.closest('#pricing, [id*="pricing" i], .bs-tiers, .pricing');
+      var cta = t.closest('a, button');
+      var named = t.closest('[data-event$="_pricing"]');
+      if (cta && (inPricing || named)) {
+        var label = (named && named.getAttribute('data-event'))
+          || (cta.getAttribute('data-event') || cta.textContent || '').trim().slice(0, 60);
+        ga('pricing_cta_click', { page: PATH, cta: label });
+        fbCustom('pricing_cta_click', { page: PATH, cta: label });
+      }
+    } catch (err) {}
+  }, true);
+
   /* ==================== BOOKING CONVERSION (the money) ================== */
   /* Primary: /booked thank-you page (GHL post-booking redirect).           */
   /* Fallback: GHL widget postMessage on /book.                             */
