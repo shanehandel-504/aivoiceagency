@@ -2,11 +2,16 @@
 
 **Date:** 2026-07-29 · **Brief:** `runs/2026-07-29-aic-verified-loop.md` · **Lane:** repo + GHL API + Retell API (n8n untouched)
 
-**RUN INCOMPLETE — STEP R and STEP 3 did not ship. STEP R halts on three inputs only Shane can
-supply (agent prompt text, `write_reservation` webhook URL, model choice); STEP 3 cannot run before
-STEP R. STEP 1 shipped in full. STEP 2 shipped its 23 fields; its pipeline is blocked on a token
-scope. STEP 2B audited and mapped in full; the disable half is UI-only because the GHL workflow
-API is read-only.**
+**STEP R AND STEP 3 SHIPPED. The 775 agent is PUBLISHED and serving v12, verified 11/11 against the
+published version. The STEP 3 slate then found TWO REAL DEFECTS in the reservation endpoint (the
+architect's n8n lane), one of them serious: the endpoint reports `CRM_VERIFIED` while writing NONE
+of the 23 `aic_*` fields — it verifies that the contact exists, not that the reservation landed.
+Every trip ticket rendered from these records would print "— NOT PROVIDED" for the whole trip.**
+
+**Still outstanding and NOT in this lane:** the GHL pipeline (PIT scope, Shane UI), the 4 workflow
+disable/scope actions (workflow API is read-only, Shane UI), the two endpoint defects (architect),
+and conversational behavior — Retell exposes no API-key text simulation, so mid-call correction,
+readback protocol and the ACT 2 tour remain unproven until one real dial.
 
 ---
 
@@ -21,8 +26,8 @@ API is read-only.**
 | 2 | Pipeline "AI Chauffeur Reservations" | **BLOCKED — needs Shane** | `POST /opportunities/pipelines` → 401 "token is not authorized for this scope" |
 | 2B | Widget → calendar → workflow map | **SHIPPED** `4638a5b` | `tools/ghl-booking-map.mjs --audit --probe`, map below |
 | 2B | Disable duplicate booking notifications | **BLOCKED — UI only** | Workflow write routes all 404 ROUTE ABSENT (measured twice) |
-| R | Retell 775 agent deploy | **HALTED** | 3 inputs required — see HALT |
-| 3 | Verify slate (4 trip types + failures) | **NOT RUN** | Blocked by STEP R |
+| R | Retell 775 agent deploy | **SHIPPED + PUBLISHED** `58e4377` | Published v12; 11/11 checks against the **published** version (prompt byte-match 6598/6598, voice, model, begin_message, 18 keys, `write_reservation` + its 18 params + URL) |
+| 3 | Verify slate (4 trip types + failures) | **RUN — 2 DEFECTS FOUND** | 4/4 trip types written + read back from GHL; missing-flight and vague-address cases were NOT rejected; zero `aic_*` fields populated |
 
 ---
 
@@ -198,17 +203,98 @@ gemini-3.1-flash-lite, gemini-3.5-flash`
 v12 snapshot, captured today by the prior session, redaction verified (3 `[REDACTED]` markers, zero
 keys, zero URLs).
 
-### THE HALT — three inputs
+### All three inputs supplied — DEPLOYED AND PUBLISHED
 
-1. **Agent prompt text.** PROMPT AUTHORITY: this lane never authors agent prompt text.
-   → **PASTE AGENT PROMPT NOW** and it deploys verbatim to `agent_8e9e7d477949c6babcbdcc756d`.
-2. **`write_reservation` webhook URL.** Owned by the architect chat (n8n). The function's shape is
-   settled by the addendum — 18 parameters identical to the `custom_analysis_data` keys, returning
-   `{crm_status, record_id, intake_id, message}` — but a realtime custom function cannot be
-   registered without its URL.
-3. **Model choice.** Grok is absent. Both live agents (AVA production v39 and the 775 AIC agent)
-   currently run `gpt-4.1`; the board's "gpt-5.5" note is stale. Highest available tiers are
-   `gpt-5.6-terra` / `gpt-5.6-luna` / `claude-5-sonnet`.
+Shane supplied the prompt (v3 Closer OS), the webhook URL, and the model. Deployed via
+`tools/retell-aic-agent.mjs`, which ships `docs/aic-agent-prompt.md` between `PROMPT:BEGIN/END`
+byte-for-byte and never edits prompt text.
+
+| Field | Before | After (published v12) |
+|---|---|---|
+| prompt | 3,553 chars | **6,598 chars, byte-match PASS** |
+| voice | `retell-Brynne` | `custom_voice_705a2cb49b0413f7fc1c456d02` |
+| model | `gpt-4.1` | `claude-5-sonnet` |
+| begin_message | no `{{company_name}}` | OPENING line, carries `{{company_name}}` |
+| capture keys | 7 | 21 = the 18 + 3 preserved presets |
+| boosted keywords | none | 11, from the prompt's TUNING section |
+| `write_reservation` | absent | registered, 18 params, → the architect webhook |
+| published | v11 | **v12 — the phone serves this** |
+
+The **publish gate** was proven to hold before the URL existed: `--publish` refused with exit 1,
+nothing published, agent still draft v12, published set still v0–v11. It only went through after
+`write_reservation` was registered. The gate exists because the prompt tells the agent to say the
+reservation is "written … and I verified the record" — with no tool registered that sentence is a
+phantom booking, the same shape as the `trigger_dashboard_sms` risk the board recorded in RUN 1.6.
+
+**Scope law held on every call:** the target is resolved from `+14147750019`, never from a pasted
+agent id, and the tool aborts if that resolves to the agent serving `414-240-8930`
+(`agent_d5ada9f774fe3ae7f034d2c677`). Asserted distinct on every invocation.
+
+---
+
+## STEP 3 — VERIFY SLATE (`tools/aic-verify-slate.mjs`)
+
+Seven cases driven through `write_reservation`, each claimed record then read back **independently
+out of GHL** — the loop is only "verified" if the CRM agrees with what the endpoint said. Caller
+numbers are all in the NANP-reserved `555-01xx` fictional range, which cannot ring a real person.
+
+| Case | crm_status | record_id | Verdict |
+|---|---|---|---|
+| A · AIRPORT_ARR | `CRM_VERIFIED` | `HgWUGKGNndrGV3Fn7nuD` | written, contact readable |
+| B · P2P | `CRM_VERIFIED` | `ag7C5YtVU5guUik2mo7i` | written, contact readable |
+| C · HOURLY | `CRM_VERIFIED` | `y2oADWKZxEpMb6dzyYuO` | written, contact readable |
+| D · ROADSHOW | `CRM_VERIFIED` | `vW7Sv2pHDeZ1aWzfpdTS` | written, contact readable |
+| E · missing flight | `CRM_VERIFIED` | `meTGXYdYcduth7Sa8mgn` | **DEFECT — should not have written** |
+| F · vague address | `CRM_VERIFIED` | `kafOU4EQ6THubwhQvwye` | written (see note) |
+| G · nothing captured | `FAILED_VALIDATION` | *(none)* | correct — rejected cleanly, no record id |
+
+**Passing:** the 4-key contract on every response · an `intake_id` on every response, including
+failures · **zero premature "booked / confirmed / guaranteed" language anywhere** · the total-failure
+case rejects cleanly and does **not** hand back a record id it never created · all four trip types
+write and read back · stored phone is the reserved test number in every case.
+
+### DEFECT 1 (SERIOUS) — `CRM_VERIFIED` is claimed while zero reservation data is stored
+
+Every written contact comes back from GHL with **`customFields: []`**. Name, phone, tags
+(`aichauffeur-lead`, `aic-demo-call`) and source are set; **none of the 23 `aic_*` fields carry a
+value.** So the endpoint's "written to the CRM and verified after write" is verifying that a
+*contact* exists, not that a *reservation* landed. A trip ticket rendered from one of these records
+would print "— NOT PROVIDED" for pickup, vehicle, flight, times — the entire job.
+
+This is the exact false-verification the mission was built to prevent, and the agent speaks that
+claim to the caller. **Likely cause:** the endpoint was built before the 23 field ids existed —
+they were created earlier in this same run. The ids the architect needs are in the STEP 2 table
+above and in `schema/aic-reservation-v1.json` under `x-ghl-field-map`. Architect's lane.
+
+### DEFECT 2 — the endpoint does not enforce the required-slot matrix
+
+Case E sent an `AIRPORT_ARR` with `airline`, `flight_number` and `meet_style` all empty and it was
+written as `CRM_VERIFIED`. The brief's REQUIRED-SLOT MATRIX makes flight plus meet style mandatory
+for airport runs, and `schema/aic-reservation-v1.json` already encodes it (`allOf` → if
+`trip_type == AIRPORT_ARR` then `flight` required). Only the all-empty case G is rejected, so
+validation is currently "did we get anything at all" rather than the matrix. A chauffeur dispatched
+on case E has no flight to track. Server-side enforceable; architect's lane.
+
+**Case F is a weaker finding and is called out as such.** "somewhere downtown" is a plausible string;
+no endpoint can reasonably judge address quality. That one is genuinely prompt-level — the ADDRESS &
+READBACK PROTOCOL is what prevents it, and the test expectation was stricter than fair.
+
+### NOT TESTED — conversational behavior
+
+**Retell exposes no API-key-accessible text simulation.** `/simulate-conversation` returns
+`401 Unauthorized: Invalid JWT` (route exists, dashboard-only auth); `/v2/simulate-conversation`,
+`/create-simulation` and `/test-agent` are 404; `/v2/create-web-call` needs a browser WebRTC client
+and `/v2/create-phone-call` would place a real call. `simulate_conversation` is an **ElevenLabs** MCP
+tool — the brief conflated providers. So mid-call correction, the readback protocol, latency cover,
+the recap-before-close and the ACT 2 tour are all **unproven** and need one real dial to
+`+14147750019`.
+
+### 6 test contacts to delete (I do not delete CRM data)
+
+`HgWUGKGNndrGV3Fn7nuD` · `ag7C5YtVU5guUik2mo7i` · `y2oADWKZxEpMb6dzyYuO` · `vW7Sv2pHDeZ1aWzfpdTS` ·
+`meTGXYdYcduth7Sa8mgn` · `kafOU4EQ6THubwhQvwye` — all named `* Testcase`, all tagged
+`aichauffeur-lead`, `special_notes` = `ZZ-TEST STEP3 SLATE`. The slate is **not idempotent**: each
+run creates up to 6 more.
 
 ---
 
