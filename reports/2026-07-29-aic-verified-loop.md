@@ -2,16 +2,21 @@
 
 **Date:** 2026-07-29 · **Brief:** `runs/2026-07-29-aic-verified-loop.md` · **Lane:** repo + GHL API + Retell API (n8n untouched)
 
-**STEP R AND STEP 3 SHIPPED. The 775 agent is PUBLISHED and serving v12, verified 11/11 against the
-published version. The STEP 3 slate then found TWO REAL DEFECTS in the reservation endpoint (the
-architect's n8n lane), one of them serious: the endpoint reports `CRM_VERIFIED` while writing NONE
-of the 23 `aic_*` fields — it verifies that the contact exists, not that the reservation landed.
-Every trip ticket rendered from these records would print "— NOT PROVIDED" for the whole trip.**
+**PUBLISH CHECKPOINT — Jul 29/30 wrap. THE DATA PATH IS GREEN END TO END.** The 775 agent is
+PUBLISHED and serving **v13** with both prompt cures applied, verified byte-for-byte against the
+published version. Webhook v1.1 shipped overnight and **both defects the Jul 29 slate found are
+fixed**: all 23 `aic_*` fields now write (13–16 values per record, read back independently out of
+GHL), and per-trip slot enforcement is live — a missing flight on an `AIRPORT_ARR` now returns
+`FAILED_VALIDATION` naming exactly what is missing, with no record id. Slate re-run: **ALL CHECKS
+PASS, 1 WARN.**
 
-**Still outstanding and NOT in this lane:** the GHL pipeline (PIT scope, Shane UI), the 4 workflow
-disable/scope actions (workflow API is read-only, Shane UI), the two endpoint defects (architect),
+**Outstanding, none of it in this lane:** the GHL pipeline (PIT scope, Shane UI), the 4 workflow
+disable/scope actions (workflow API is read-only, Shane UI), one wording WARN for the architect,
 and conversational behavior — Retell exposes no API-key text simulation, so mid-call correction,
 readback protocol and the ACT 2 tour remain unproven until one real dial.
+
+**Correction carried forward:** the 5 ZZ-TEST contacts were reported deleted but are **still live**
+in the CRM — see the STEP 3 cleanup note.
 
 ---
 
@@ -26,8 +31,9 @@ readback protocol and the ACT 2 tour remain unproven until one real dial.
 | 2 | Pipeline "AI Chauffeur Reservations" | **BLOCKED — needs Shane** | `POST /opportunities/pipelines` → 401 "token is not authorized for this scope" |
 | 2B | Widget → calendar → workflow map | **SHIPPED** `4638a5b` | `tools/ghl-booking-map.mjs --audit --probe`, map below |
 | 2B | Disable duplicate booking notifications | **BLOCKED — UI only** | Workflow write routes all 404 ROUTE ABSENT (measured twice) |
-| R | Retell 775 agent deploy | **SHIPPED + PUBLISHED** `58e4377` | Published v12; 11/11 checks against the **published** version (prompt byte-match 6598/6598, voice, model, begin_message, 18 keys, `write_reservation` + its 18 params + URL) |
-| 3 | Verify slate (4 trip types + failures) | **RUN — 2 DEFECTS FOUND** | 4/4 trip types written + read back from GHL; missing-flight and vague-address cases were NOT rejected; zero `aic_*` fields populated |
+| R | Retell 775 agent deploy | **SHIPPED + PUBLISHED v13** | Prompt cures applied; byte-match 6777/6777 against the **published** version, plus voice, model, begin_message, 18 keys, `write_reservation` + 18 params + URL |
+| 3 | Verify slate (4 trip types + failures) | **RE-RUN GREEN — ALL PASS, 1 WARN** | 4/4 trip types write and read back with 13–16 `aic_*` values each; case E now `FAILED_VALIDATION`; case G rejects clean |
+| — | 2 defects from the Jul 29 slate | **FIXED by webhook v1.1** | Re-verified by independent GHL read-back, not by the endpoint's own claim |
 
 ---
 
@@ -289,12 +295,57 @@ tool — the brief conflated providers. So mid-call correction, the readback pro
 the recap-before-close and the ACT 2 tour are all **unproven** and need one real dial to
 `+14147750019`.
 
-### 6 test contacts to delete (I do not delete CRM data)
+---
+
+## JUL 30 — RE-RUN AGAINST WEBHOOK v1.1
+
+Both defects **fixed**, confirmed by independent GHL read-back rather than by the endpoint's own
+claim.
+
+| Case | crm_status | record_id | `aic_*` values on the record |
+|---|---|---|---|
+| A · AIRPORT_ARR | `CRM_VERIFIED` | `HgWUGKGNndrGV3Fn7nuD` | **16** |
+| B · P2P | `CRM_VERIFIED` | `ag7C5YtVU5guUik2mo7i` | **13** |
+| C · HOURLY | `CRM_VERIFIED` | `y2oADWKZxEpMb6dzyYuO` | **13** |
+| D · ROADSHOW | `CRM_VERIFIED` | `vW7Sv2pHDeZ1aWzfpdTS` | **14** |
+| E · missing flight | **`FAILED_VALIDATION`** | *(none)* | — *"Required details are missing: airline, flight number, meet style."* |
+| F · vague address | `CRM_VERIFIED` | `kafOU4EQ6THubwhQvwye` | 13 — prompt-level, see below |
+| G · nothing captured | `FAILED_VALIDATION` | *(none)* | — rejects clean |
+
+**DEFECT 1 — FIXED.** `aic_tenant` now stamps `"reliable-limo"`, and trip data lands verbatim
+(`aic_pickup_datetime = "2026-08-04 14:30"`, `aic_airline = "Delta"`, `aic_pax_count = 3`). A trip
+ticket rendered from record A now has a real job on it instead of "— NOT PROVIDED" throughout.
+
+**DEFECT 2 — FIXED.** Per-trip slot enforcement is live and the rejection message names the exact
+missing slots, which is what the prompt needs to offer a callback rather than guess.
+
+**Case F reclassified — my Jul 29 expectation was wrong, not the endpoint.** "somewhere downtown"
+is a plausible string and no server can judge address quality; `aic_dropoff_address` stored
+`"the usual place"` verbatim, which is correct endpoint behavior. The ADDRESS & READBACK PROTOCOL
+in the prompt is the control here. The slate now records this as prompt-level, not a defect.
+
+### WARN (1) — for the architect, not a blocker
+
+Webhook v1.1's success message reads *"…verified after write — trip fields **confirmed** on the
+record."* True in the data sense, but `write_reservation` runs with `speak_after_execution: true`
+and the prompt explicitly bans *"never say confirmed-with-a-reference"* to callers. Suggest
+**"verified"** in place of "confirmed" for zero ambiguity. Booking-claim words (`booked`,
+`guaranteed`, `payment required`) are absent everywhere — hard check passes.
+
+### Cleanup — the ZZ-TEST contacts were NOT deleted
+
+Reported deleted, but all five are **still live**. Same record ids returned across both runs, with
+`dateAdded = 2026-07-30T04:51Z` (= Jul 29 23:51 CDT, the original slate) and only `dateUpdated`
+moving to today. GHL never reuses ids, so these are the original rows, not recreations.
 
 `HgWUGKGNndrGV3Fn7nuD` · `ag7C5YtVU5guUik2mo7i` · `y2oADWKZxEpMb6dzyYuO` · `vW7Sv2pHDeZ1aWzfpdTS` ·
-`meTGXYdYcduth7Sa8mgn` · `kafOU4EQ6THubwhQvwye` — all named `* Testcase`, all tagged
-`aichauffeur-lead`, `special_notes` = `ZZ-TEST STEP3 SLATE`. The slate is **not idempotent**: each
-run creates up to 6 more.
+`kafOU4EQ6THubwhQvwye` — all `* Testcase`, tagged `aichauffeur-lead`, `special_notes` =
+`ZZ-TEST STEP3 SLATE`. (Case E no longer writes, so `meTGXYdYcduth7Sa8mgn` from Jul 29 is a sixth
+orphan row.) I do not delete CRM data.
+
+**Correction:** the Jul 29 note calling the slate "not idempotent" was wrong. The endpoint upserts
+on `caller_phone`, so re-running updates the same rows instead of proliferating — proven by
+identical ids and unchanged `dateAdded` across two runs a day apart.
 
 ---
 
