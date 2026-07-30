@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aichauffeur.ai/schema/aic-reservation-v1.json",
+  "title": "AIC Reservation v1",
+  "description": "Canonical AI Chauffeur reservation object. One captured demo call produces exactly one of these. CAPTURE ONLY — no pricing, no payment, no provider submission. Tenant #1 = Todd (config only).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["trip_type", "passenger", "vehicle", "pickup", "billing", "pricing", "source", "ids", "status"],
+
+  "properties": {
+    "trip_type": {
+      "description": "Shape of the trip. Drives which conditional blocks are required.",
+      "enum": ["HOURLY", "ROADSHOW", "AIRPORT_ARR", "P2P"]
+    },
+
+    "booker": {
+      "description": "Who placed the reservation. Often an assistant or coordinator, not the rider.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "company": { "type": ["string", "null"] }
+      }
+    },
+
+    "passenger": {
+      "description": "Who actually rides.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["first", "last", "mobile_e164", "pax_count"],
+      "properties": {
+        "first": { "type": "string", "minLength": 1 },
+        "last": { "type": "string", "minLength": 1 },
+        "mobile_e164": {
+          "description": "E.164. Normalized before write; never stored as spoken digits.",
+          "type": "string",
+          "pattern": "^\\+[1-9]\\d{7,14}$"
+        },
+        "email": { "type": ["string", "null"], "format": "email" },
+        "pax_count": { "type": "integer", "minimum": 1, "maximum": 60 }
+      }
+    },
+
+    "vehicle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class"],
+      "properties": {
+        "class": { "enum": ["SEDAN", "SUV", "STRETCH", "MINIBUS", "LIMOBUS", "SPRINTER", "COACH"] },
+        "luggage_count": { "type": ["integer", "null"], "minimum": 0, "maximum": 99 }
+      }
+    },
+
+    "pickup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["datetime_local", "tz", "address"],
+      "properties": {
+        "datetime_local": {
+          "description": "Local wall-clock pickup time, ISO 8601 without offset (e.g. 2026-08-04T14:30). Paired with tz — never stored as UTC alone, because a chauffeur reads local time.",
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
+        },
+        "tz": { "description": "IANA zone, e.g. America/Chicago.", "type": "string", "minLength": 3 },
+        "address": { "type": "string", "minLength": 1 },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+
+    "dropoff": {
+      "description": "null for HOURLY (open-ended as-directed). Required in practice for P2P and AIRPORT_ARR.",
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "address": { "type": ["string", "null"] }
+      }
+    },
+
+    "stops": {
+      "description": "Ordered intermediate stops. ROADSHOW normally carries 2+.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["address"],
+        "properties": {
+          "address": { "type": "string", "minLength": 1 },
+          "notes": { "type": ["string", "null"] }
+        }
+      }
+    },
+
+    "hours_booked": {
+      "description": "Required for HOURLY and ROADSHOW; null otherwise.",
+      "type": ["number", "null"],
+      "minimum": 0.5,
+      "maximum": 24
+    },
+
+    "flight": {
+      "description": "Required for AIRPORT_ARR; null otherwise.",
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "airline": { "type": ["string", "null"] },
+        "number": { "type": ["string", "null"] },
+        "meet_style": { "enum": ["CURBSIDE", "BAGGAGE", "PLANESIDE", null] }
+      }
+    },
+
+    "billing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["CC_ON_FILE", "DIRECT_BILL", "NEW_ACCOUNT"] }
+      }
+    },
+
+    "pricing": {
+      "description": "Demo-mode guard. CAPTURE_ONLY is the only legal value in v1 — no quote, no total, no dollar amount may be attached to a reservation or spoken on a call.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "const": "CAPTURE_ONLY" }
+      }
+    },
+
+    "special_notes": { "type": ["string", "null"] },
+
+    "source": {
+      "description": "Provenance of the capture. consent must be true before any reservation is written.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["call_id", "agent_id", "consent", "captured_at"],
+      "properties": {
+        "call_id": { "type": "string", "minLength": 1 },
+        "agent_id": { "type": "string", "minLength": 1 },
+        "recording_url": { "type": ["string", "null"] },
+        "consent": { "type": "boolean" },
+        "captured_at": { "description": "UTC instant of capture, ISO 8601 with Z.", "type": "string", "format": "date-time" }
+      }
+    },
+
+    "ids": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenant_id", "intake_id"],
+      "properties": {
+        "tenant_id": { "description": "Tenant scope. Todd = tenant #1.", "type": "string", "minLength": 1 },
+        "intake_id": { "description": "Idempotency key for the whole loop — one call, one intake_id.", "type": "string", "minLength": 1 }
+      }
+    },
+
+    "status": {
+      "description": "Loop position. Mirrors the GHL pipeline stages of AI Chauffeur Reservations.",
+      "enum": ["CAPTURED", "CRM_VERIFIED", "TICKET_SENT", "FAILED"]
+    }
+  },
+
+  "allOf": [
+    {
+      "if": { "properties": { "trip_type": { "const": "AIRPORT_ARR" } }, "required": ["trip_type"] },
+      "then": { "required": ["flight"], "properties": { "flight": { "type": "object" } } }
+    },
+    {
+      "if": { "properties": { "trip_type": { "enum": ["HOURLY", "ROADSHOW"] } }, "required": ["trip_type"] },
+      "then": { "required": ["hours_booked"], "properties": { "hours_booked": { "type": "number" } } }
+    }
+  ],
+
+  "x-retell-flat-map": {
+    "description": "The 18 custom_analysis_data keys on the 775 agent — identical to the write_reservation function parameters. Flat key -> canonical path. Anything not in this list is derived server-side, never spoken.",
+    "trip_type": "trip_type",
+    "caller_first": "passenger.first",
+    "caller_last": "passenger.last",
+    "caller_phone": "passenger.mobile_e164",
+    "caller_email": "passenger.email",
+    "pax_count": "passenger.pax_count",
+    "luggage_count": "vehicle.luggage_count",
+    "vehicle_class": "vehicle.class",
+    "pickup_address": "pickup.address",
+    "dropoff_address": "dropoff.address",
+    "pickup_date": "pickup.datetime_local (date half)",
+    "pickup_time": "pickup.datetime_local (time half)",
+    "hours_booked": "hours_booked",
+    "airline": "flight.airline",
+    "flight_number": "flight.number",
+    "meet_style": "flight.meet_style",
+    "special_notes": "special_notes",
+    "consent": "source.consent"
+  },
+
+  "x-retell-function-response": {
+    "description": "What write_reservation returns to the agent mid-call. The agent may confirm capture from crm_status; it may never invent a record_id or claim a booking the endpoint did not acknowledge.",
+    "crm_status": "string",
+    "record_id": "string",
+    "intake_id": "string",
+    "message": "string"
+  },
+
+  "x-render-labels": {
+    "description": "Human labels for enums that appear on a printed dispatch ticket. The renderer supplies trip_type_label from this map; the raw enum still prints in the ticket footer so the machine value is never lost.",
+    "trip_type": {
+      "HOURLY": "Hourly · as directed",
+      "ROADSHOW": "Roadshow",
+      "AIRPORT_ARR": "Airport arrival",
+      "P2P": "Point to point"
+    },
+    "meet_style": {
+      "CURBSIDE": "Curbside",
+      "BAGGAGE": "Baggage claim",
+      "PLANESIDE": "Planeside"
+    },
+    "billing_type": {
+      "CC_ON_FILE": "Card on file",
+      "DIRECT_BILL": "Direct bill",
+      "NEW_ACCOUNT": "New account"
+    }
+  },
+
+  "x-ghl-field-map": {
+    "description": "The 23 aic_* GHL contact custom fields -> canonical path. Derived fields (crm_status, payload_hash, tenant) are written by the automation, never captured on the call.",
+    "aic_trip_type": "trip_type",
+    "aic_pickup_datetime": "pickup.datetime_local + pickup.tz",
+    "aic_pickup_address": "pickup.address",
+    "aic_dropoff_address": "dropoff.address",
+    "aic_stops": "stops (joined)",
+    "aic_pax_count": "passenger.pax_count",
+    "aic_luggage_count": "vehicle.luggage_count",
+    "aic_vehicle_class": "vehicle.class",
+    "aic_hours_booked": "hours_booked",
+    "aic_airline": "flight.airline",
+    "aic_flight_number": "flight.number",
+    "aic_meet_style": "flight.meet_style",
+    "aic_special_notes": "special_notes",
+    "aic_booker_name": "booker.name",
+    "aic_booker_company": "booker.company",
+    "aic_billing_type": "billing.type",
+    "aic_intake_id": "ids.intake_id",
+    "aic_call_id": "source.call_id",
+    "aic_recording_url": "source.recording_url",
+    "aic_crm_status": "derived — endpoint crm_status",
+    "aic_payload_hash": "derived — hash of the canonical object",
+    "aic_consent": "source.consent",
+    "aic_tenant": "ids.tenant_id"
+  }
+}

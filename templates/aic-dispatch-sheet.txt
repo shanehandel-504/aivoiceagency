@@ -1,0 +1,64 @@
+============================================================
+{{company_name}} DISPATCH — TRIP TICKET
+============================================================
+
+CRM WRITE VERIFIED
+
+  Call captured......... {{aic_call_id}}
+  Consent on record..... {{aic_consent}}
+  CRM write accepted.... {{aic_crm_status}}
+  Record read back...... {{record_id}}
+  Ticket rendered....... yes
+
+  Record id............. {{record_id}}
+  Intake id............. {{aic_intake_id}}
+  Payload hash.......... {{aic_payload_hash}}
+  Verified at........... {{verified_at}}
+
+------------------------------------------------------------
+TRIP
+------------------------------------------------------------
+
+  Trip type............. {{trip_type_label}} ({{aic_trip_type}})
+
+CUSTOMER
+
+  Passenger............. {{caller_first}} {{caller_last}}
+  Mobile................ {{caller_phone}}
+  Email................. {{#if caller_email}}{{caller_email}}{{else}}— NOT PROVIDED{{/if}}
+  Passengers............ {{aic_pax_count}}
+  Booked by............. {{#if aic_booker_name}}{{aic_booker_name}}{{else}}— NOT PROVIDED{{/if}}
+  Company............... {{#if aic_booker_company}}{{aic_booker_company}}{{else}}— NOT PROVIDED{{/if}}
+
+ROUTING & TIME WINDOWS
+
+  Pickup time........... {{aic_pickup_datetime}}
+  Pickup address........ {{aic_pickup_address}}
+  Stops................. {{#if aic_stops}}{{aic_stops}}{{else}}— NOT PROVIDED{{/if}}
+  Dropoff............... {{#if aic_dropoff_address}}{{aic_dropoff_address}}{{else}}— NOT PROVIDED · as directed{{/if}}
+  Hours booked.......... {{#if aic_hours_booked}}{{aic_hours_booked}}{{else}}— NOT PROVIDED{{/if}}
+
+FLIGHT TRACKING
+
+  Airline............... {{#if aic_airline}}{{aic_airline}}{{else}}— NOT PROVIDED{{/if}}
+  Flight................ {{#if aic_flight_number}}{{aic_flight_number}}{{else}}— NOT PROVIDED{{/if}}
+  Meet style............ {{#if aic_meet_style}}{{aic_meet_style}}{{else}}— NOT PROVIDED{{/if}}
+
+VEHICLE & BILLING
+
+  Class................. {{aic_vehicle_class}}
+  Luggage............... {{#if aic_luggage_count}}{{aic_luggage_count}}{{else}}— NOT PROVIDED{{/if}}
+  Billing............... {{aic_billing_type}}
+  Rate.................. dispatch confirms
+
+SPECIAL INSTRUCTIONS
+
+  {{#if aic_special_notes}}{{aic_special_notes}}{{else}}— NOT PROVIDED{{/if}}
+
+------------------------------------------------------------
+
+  Provider.............. Limo Anywhere — Not submitted, demo mode
+
+— {{company_name}} Dispatch
+
+  Ticket {{aic_intake_id}} · Tenant {{aic_tenant}} · Status {{status}}

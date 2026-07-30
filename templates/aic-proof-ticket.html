@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<!-- ============================================================================
+     templates/aic-proof-ticket.html · AIC VERIFIED RESERVATION LOOP v1
+     ----------------------------------------------------------------------------
+     Two documents in one page, in this order:
+       1. PROOF HEADER  — the reservation is only real if the CRM write is proven.
+       2. TRIP TICKET   — what a dispatcher actually reads to run the job.
+
+     RENDER CONTRACT (Handlebars-compatible):
+       · Optional fields are wrapped in an if/else pair whose else branch is the
+         literal em-dashed string "NOT PROVIDED".
+         An absent field must PRINT that string. It must never print blank, and
+         it must never be filled with a guess.
+       · No mustache syntax appears in these comments on purpose — an empty or
+         example expression inside a comment is still parsed by the renderer.
+       · trip_type_label is the HUMAN label ("Airport arrival"), not the enum. A
+         dispatcher reads this on paper; AIRPORT_ARR is not a headline. The raw
+         enum still prints in the footer metadata line so the machine value is
+         never lost. Label strings: schema x-render-labels.
+       · ZERO dollar amounts anywhere. Rate always reads "dispatch confirms".
+       · The provider line is fixed: not submitted, demo mode.
+       · Data source: schema/aic-reservation-v1.json (x-ghl-field-map).
+
+     DESIGN: § 8 AI Chauffeur — void #06080F, ink #EEF2FA, Electric Blue #3B82F6.
+     Paper body because a dispatcher prints this. Sharp 90° corners (§ 3).
+     Blue is large-text/hairline only (3.68:1 on white); body ink is #14161C.
+     Verified-green #2EE6A8 appears on the dark band only (12.39:1) and only
+     when the write is genuinely verified — semantic, never decorative.
+     ========================================================================= -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<title>Trip Ticket {{aic_intake_id}} — {{company_name}} Dispatch</title>
+<style>
+  body { margin:0; padding:0; width:100% !important; background:#E9EDF2; -webkit-text-size-adjust:100%; }
+  table { border-collapse:collapse; mso-table-lspace:0; mso-table-rspace:0; }
+  .mono { font-family:'JetBrains Mono',Consolas,'Courier New',monospace; }
+  .sans { font-family:Inter,'Helvetica Neue',Helvetica,Arial,sans-serif; }
+  .disp { font-family:'Instrument Serif',Georgia,'Times New Roman',serif; }
+  .lbl  { font-size:11px; letter-spacing:.10em; text-transform:uppercase; color:#495060; }
+  .val  { font-size:15px; line-height:1.5; color:#14161C; }
+  /* the absent-marker reads identically in every field, numeric or text */
+  .na   { color:#495060; font-style:italic; font-family:Inter,'Helvetica Neue',Helvetica,Arial,sans-serif; letter-spacing:0; }
+  @media only screen and (max-width:660px) {
+    .container { width:100% !important; }
+    .px { padding-left:20px !important; padding-right:20px !important; }
+    .stack { display:block !important; width:100% !important; padding-bottom:14px !important; }
+  }
+  @media print {
+    body { background:#FFFFFF; }
+    .container { width:100% !important; }
+    .noprint { display:none !important; }
+  }
+</style>
+</head>
+<body>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#E9EDF2;">
+<tr><td align="center" style="padding:24px 12px;">
+
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" border="0" class="container" style="width:640px; max-width:640px; background:#FFFFFF;">
+
+  <!-- ══ 1 · PROOF HEADER ══════════════════════════════════════════════ -->
+  <tr>
+    <td style="background:#06080F; padding:22px 32px 0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="sans" style="font-size:13px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#EEF2FA;">
+            {{company_name}} <span style="color:#3B82F6;">Dispatch</span>
+          </td>
+          <td class="mono" align="right" style="font-size:11px; letter-spacing:.08em; color:#8A93A6; white-space:nowrap;">
+            AI CHAUFFEUR
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td style="background:#06080F; padding:18px 32px 6px;">
+      <div class="mono" style="font-size:15px; font-weight:700; letter-spacing:.10em; color:#2EE6A8;">
+        &#10003;&nbsp; CRM WRITE VERIFIED
+      </div>
+      <div class="sans" style="padding-top:6px; font-size:13px; line-height:1.5; color:#8A93A6;">
+        This ticket was not generated from the call alone. It was generated after the
+        record was written and read back.
+      </div>
+    </td>
+  </tr>
+
+  <!-- execution chain checklist -->
+  <tr>
+    <td style="background:#06080F; padding:14px 32px 20px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+             style="border-top:1px solid #3B82F6; border-bottom:1px solid #23232E;">
+        <tr><td class="mono" style="padding:12px 0 4px; font-size:12px; line-height:1.9; color:#EEF2FA;">
+          <span style="color:#2EE6A8;">&#10003;</span>&nbsp; CALL CAPTURED &nbsp;<span style="color:#8A93A6;">{{aic_call_id}}</span><br>
+          <span style="color:#2EE6A8;">&#10003;</span>&nbsp; CONSENT ON RECORD &nbsp;<span style="color:#8A93A6;">{{aic_consent}}</span><br>
+          <span style="color:#2EE6A8;">&#10003;</span>&nbsp; CRM WRITE ACCEPTED &nbsp;<span style="color:#8A93A6;">{{aic_crm_status}}</span><br>
+          <span style="color:#2EE6A8;">&#10003;</span>&nbsp; RECORD READ BACK &nbsp;<span style="color:#8A93A6;">{{record_id}}</span><br>
+          <span style="color:#2EE6A8;">&#10003;</span>&nbsp; TICKET RENDERED
+        </td></tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="mono" style="padding-top:12px; font-size:11px; line-height:1.8; color:#8A93A6;">
+            RECORD ID &nbsp;<span style="color:#EEF2FA;">{{record_id}}</span><br>
+            INTAKE ID &nbsp;<span style="color:#EEF2FA;">{{aic_intake_id}}</span><br>
+            PAYLOAD HASH &nbsp;<span style="color:#EEF2FA;">{{aic_payload_hash}}</span><br>
+            VERIFIED AT &nbsp;<span style="color:#EEF2FA;">{{verified_at}}</span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ══ 2 · TRIP TICKET ═══════════════════════════════════════════════ -->
+  <tr>
+    <td class="px" style="padding:30px 32px 0;">
+      <div class="lbl">Dispatch trip ticket</div>
+      <div class="disp" style="padding-top:6px; font-size:31px; line-height:1.15; color:#14161C;">
+        {{trip_type_label}}
+      </div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="padding-top:14px;">
+        <tr><td style="border-top:2px solid #3B82F6; font-size:0; line-height:0;">&nbsp;</td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- customer info -->
+  <tr>
+    <td class="px" style="padding:26px 32px 0;">
+      <div class="lbl" style="padding-bottom:12px;">Customer</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="stack" width="50%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Passenger</div>
+            <div class="val sans">{{caller_first}} {{caller_last}}</div>
+          </td>
+          <td class="stack" width="50%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Mobile</div>
+            <div class="val mono">{{caller_phone}}</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="stack" width="50%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Email</div>
+            <div class="val sans">{{#if caller_email}}{{caller_email}}{{else}}<span class="na">&mdash; NOT PROVIDED</span>{{/if}}</div>
+          </td>
+          <td class="stack" width="50%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Passengers</div>
+            <div class="val mono">{{aic_pax_count}}</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="stack" width="50%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Booked by</div>
+            <div class="val sans">{{#if aic_booker_name}}{{aic_booker_name}}{{else}}<span class="na">&mdash; NOT PROVIDED</span>{{/if}}</div>
+          </td>
+          <td class="stack" width="50%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Company</div>
+            <div class="val sans">{{#if aic_booker_company}}{{aic_booker_company}}{{else}}<span class="na">&mdash; NOT PROVIDED</span>{{/if}}</div>
+          </td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr><td style="border-top:1px solid #D5DBE4; font-size:0; line-height:0;">&nbsp;</td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- routing & time windows -->
+  <tr>
+    <td class="px" style="padding:22px 32px 0;">
+      <div class="lbl" style="padding-bottom:12px;">Routing &amp; time windows</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Pickup</div>
+            <div class="val mono" style="font-weight:700;">{{aic_pickup_datetime}}</div>
+            <div class="val sans">{{aic_pickup_address}}</div>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Stops</div>
+            <div class="val sans">{{#if aic_stops}}{{aic_stops}}{{else}}<span class="na">&mdash; NOT PROVIDED</span>{{/if}}</div>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Dropoff</div>
+            <div class="val sans">{{#if aic_dropoff_address}}{{aic_dropoff_address}}{{else}}<span class="na">&mdash; NOT PROVIDED &middot; as directed</span>{{/if}}</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="stack" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Hours booked</div>
+            <div class="val mono">{{#if aic_hours_booked}}{{aic_hours_booked}}{{else}}<span class="na">&mdash; NOT PROVIDED</span>{{/if}}</div>
+          </td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr><td style="border-top:1px solid #D5DBE4; font-size:0; line-height:0;">&nbsp;</td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- flight tracking -->
+  <tr>
+    <td class="px" style="padding:22px 32px 0;">
+      <div class="lbl" style="padding-bottom:12px;">Flight tracking</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="stack" width="34%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Airline</div>
+            <div class="val sans">{{#if aic_airline}}{{aic_airline}}{{else}}<span class="na">&mdash; NOT PROVIDED</span>{{/if}}</div>
+          </td>
+          <td class="stack" width="33%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Flight</div>
+            <div class="val mono">{{#if aic_flight_number}}{{aic_flight_number}}{{else}}<span class="na">&mdash; NOT PROVIDED</span>{{/if}}</div>
+          </td>
+          <td class="stack" width="33%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Meet style</div>
+            <div class="val sans">{{#if aic_meet_style}}{{aic_meet_style}}{{else}}<span class="na">&mdash; NOT PROVIDED</span>{{/if}}</div>
+          </td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr><td style="border-top:1px solid #D5DBE4; font-size:0; line-height:0;">&nbsp;</td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- vehicle & billing -->
+  <tr>
+    <td class="px" style="padding:22px 32px 0;">
+      <div class="lbl" style="padding-bottom:12px;">Vehicle &amp; billing</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="stack" width="34%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Class</div>
+            <div class="val sans">{{aic_vehicle_class}}</div>
+          </td>
+          <td class="stack" width="33%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Luggage</div>
+            <div class="val mono">{{#if aic_luggage_count}}{{aic_luggage_count}}{{else}}<span class="na">&mdash; NOT PROVIDED</span>{{/if}}</div>
+          </td>
+          <td class="stack" width="33%" valign="top" style="padding-bottom:14px;">
+            <div class="lbl">Billing</div>
+            <div class="val sans">{{aic_billing_type}}</div>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" colspan="3" style="padding-bottom:14px;">
+            <div class="lbl">Rate</div>
+            <div class="val sans" style="font-weight:600;">dispatch confirms</div>
+          </td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr><td style="border-top:1px solid #D5DBE4; font-size:0; line-height:0;">&nbsp;</td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- special instructions -->
+  <tr>
+    <td class="px" style="padding:22px 32px 0;">
+      <div class="lbl" style="padding-bottom:10px;">Special instructions</div>
+      <div class="val sans" style="background:#F2F5F9; border-left:3px solid #3B82F6; padding:14px 16px;">
+        {{#if aic_special_notes}}{{aic_special_notes}}{{else}}<span class="na">&mdash; NOT PROVIDED</span>{{/if}}
+      </div>
+    </td>
+  </tr>
+
+  <!-- provider line -->
+  <tr>
+    <td class="px" style="padding:24px 32px 0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #D5DBE4;">
+        <tr>
+          <td class="mono" style="padding:12px 16px; font-size:12px; line-height:1.6; color:#495060;">
+            PROVIDER &nbsp;&middot;&nbsp; Limo Anywhere &mdash; Not submitted, demo mode
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- signature -->
+  <tr>
+    <td class="px" style="padding:24px 32px 34px;">
+      <div class="sans" style="font-size:14px; line-height:1.6; color:#14161C;">
+        &mdash; {{company_name}} Dispatch
+      </div>
+      <div class="mono" style="padding-top:10px; font-size:11px; line-height:1.7; color:#495060;">
+        TICKET {{aic_intake_id}} &nbsp;&middot;&nbsp; TENANT {{aic_tenant}} &nbsp;&middot;&nbsp;
+        TRIP {{aic_trip_type}} &nbsp;&middot;&nbsp; STATUS {{status}}
+      </div>
+    </td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>
