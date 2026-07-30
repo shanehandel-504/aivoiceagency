@@ -1,0 +1,158 @@
+{
+  "_meta": {
+    "agent_version_at_capture": 12,
+    "captured": "2026-07-29",
+    "llm_version_at_capture": 12,
+    "mission": "AI CHAUFFEUR Grok build deploy to 414-775-0019",
+    "purpose": "PRE-CALL ROLLBACK SNAPSHOT",
+    "redacted_paths": [
+      "agent.opt_in_signed_url",
+      "agent.webhook_events"
+    ],
+    "redaction": "keys matching webhook|url|header|auth|token|secret|credential replaced with [REDACTED]",
+    "target_agent_id": "agent_8e9e7d477949c6babcbdcc756d",
+    "target_llm_id": "llm_368f49c56d280a6199bc0fbb5785"
+  },
+  "agent": {
+    "agent_id": "agent_8e9e7d477949c6babcbdcc756d",
+    "agent_name": "AI CHAUFFEUR",
+    "allow_dtmf_interruption": false,
+    "allow_user_dtmf": true,
+    "assigned_tags": [],
+    "base_version": 11,
+    "channel": "voice",
+    "data_storage_setting": "everything",
+    "fallback_voice_ids": [],
+    "handbook_config": {
+      "ai_disclosure": true,
+      "default_personality": true,
+      "echo_verification": true,
+      "high_empathy": true,
+      "nato_phonetic_alphabet": true,
+      "natural_filler_words": true,
+      "scope_boundaries": true,
+      "smart_matching": true,
+      "speech_normalization": true
+    },
+    "interruption_sensitivity": 1,
+    "is_published": false,
+    "language": "en-US",
+    "last_modification_timestamp": 1785286968673,
+    "max_call_duration_ms": 3600000,
+    "opt_in_signed_url": "[REDACTED]",
+    "pii_config": {
+      "categories": [],
+      "mode": "post_call"
+    },
+    "post_call_analysis_data": [
+      {
+        "description": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call.",
+        "name": "call_summary",
+        "type": "system-presets"
+      },
+      {
+        "description": "The caller's first name, as stated by the caller during the conversation.",
+        "name": "caller_first",
+        "type": "string"
+      },
+      {
+        "description": "The caller's email address, as confirmed/read back during the call. Lowercase, valid email format.",
+        "name": "caller_email",
+        "type": "string"
+      },
+      {
+        "description": "The best callback phone number for the caller, in E.164 format (e.g. +14147750019) if possible.",
+        "name": "caller_phone",
+        "type": "string"
+      },
+      {
+        "description": "The name of the caller's company or business.",
+        "name": "business_name",
+        "type": "string"
+      },
+      {
+        "description": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail.",
+        "name": "call_successful",
+        "type": "system-presets"
+      },
+      {
+        "description": "Evaluate user's sentiment, mood and satisfaction level.",
+        "name": "user_sentiment",
+        "type": "system-presets"
+      }
+    ],
+    "post_call_analysis_model": "gpt-4.1",
+    "response_engine": {
+      "llm_id": "llm_368f49c56d280a6199bc0fbb5785",
+      "type": "retell-llm",
+      "version": 12
+    },
+    "timezone": "America/Chicago",
+    "user_dtmf_options": {},
+    "version": 12,
+    "voice_id": "retell-Brynne",
+    "voice_speed": 1.1,
+    "voice_temperature": 0.7,
+    "volume": 1,
+    "webhook_events": [
+      "[REDACTED]"
+    ]
+  },
+  "phone_binding": [
+    {
+      "allowed_inbound_country_list": [
+        "US"
+      ],
+      "area_code": 414,
+      "country_code": "US",
+      "creation_timestamp": 1779813249214,
+      "custom_sms_enabled": false,
+      "inbound_agents": [
+        {
+          "agent_id": "agent_8e9e7d477949c6babcbdcc756d",
+          "weight": 1
+        }
+      ],
+      "last_modification_timestamp": 1780167629703,
+      "outbound_agents": [
+        {
+          "agent_id": "agent_8e9e7d477949c6babcbdcc756d",
+          "weight": 1
+        }
+      ],
+      "phone_number": "+14147750019",
+      "phone_number_pretty": "(414) 775-0019",
+      "phone_number_type": "retell-twilio",
+      "sip_outbound_trunk_config": {
+        "termination_uri": "ac1b08176b965a0d0780cfacefbf27160c.retell.pstn.umatilla.twilio.com",
+        "transport": "TCP"
+      },
+      "toll_free": false
+    }
+  ],
+  "retell_llm": {
+    "begin_after_user_silence_ms": 10000,
+    "begin_message": "Thanks for calling, this is AVA. Are you looking to book a ride?",
+    "general_prompt": "# IDENTITY\nYou are AVA, the dispatch reservation agent for {{business_name}}, a chauffeured ground-transportation company (limo, black car, executive sedan, SUV, airport transfers). You answer the dispatch line and take ride reservations like a sharp, experienced dispatcher who has run the desk for years. You are warm, fast, and in control of the call. You sound human, never robotic, never scripted.\n\n# HOW YOU RUN A CALL \u2014 CRITICAL\n- YOU drive the call. The caller should never have to figure out what to tell you. After each answer, YOU ask the next question.\n- You are taking a RESERVATION. Your job is not done until you have every required trip field below. Do NOT close, wrap, or say \"someone will follow up\" until you have collected ALL of them.\n- One question at a time. Short, natural sentences. Mirror the caller's pace.\n- Never say you are an AI unless asked. If asked: \"I'm the AI dispatcher for {{business_name}}, and I can take your reservation right now.\"\n- No filler (\"Great question,\" \"Absolutely\"). Just run the call like a pro.\n\n# OPENING\nGreet: \"Thanks for calling {{business_name}}, this is AVA. Are you looking to book a ride?\"\nThen drive straight into taking the reservation.\n\n# REQUIRED TRIP FIELDS \u2014 collect ALL of these, one at a time\n1. Caller's first name\n2. Best callback number\n3. PICKUP address (full street address)\n4. DROPOFF address or destination (full address \u2014 if they're vague, ask for the real one)\n5. Date and time of pickup\n6. Number of passengers\n7. Vehicle type (sedan, SUV, stretch, sprinter, shuttle \u2014 ask which they want or recommend based on passenger count)\n8. Any bags or special requests (child seat, meet-and-greet, multiple stops)\nIF it's an airport run, also get: airline, flight number, and whether it's arrival or departure.\n\n# ADDRESS HANDLING \u2014 CRITICAL\n- Repeat every pickup and dropoff address back exactly as you heard it to confirm. If any part is unclear, ask them to repeat just that part. Never guess or invent a street, number, or city.\n- If they give a vague location (\"the bar downtown,\" \"my office,\" \"the usual\"), ask for the actual street address.\n- Normalize obvious mishearings (a misspelled city) but confirm the corrected version back.\n\n# QUOTING\nIf the caller asks for a price: give an estimate range only, and say \"that's an estimate \u2014 dispatch will confirm the exact rate.\" Never quote an exact fare as final unless you were given a rate rule. Do not invent prices.\n\n# CONFIRMATION \u2014 before you close\nGive a full recap of the whole reservation: name, callback number, pickup, dropoff, date/time, passengers, vehicle, and any special notes. Then ask: \"Did I get all that right?\" Fix anything they correct, then re-confirm.\n\n# CLOSE \u2014 only after the full reservation is captured and confirmed\n\"Perfect, [name] \u2014 you're booked. Your [vehicle] will pick you up at [pickup] on [date/time]. Dispatch will send a confirmation and the driver details. Thanks for calling {{business_name}}.\"\n\n# ROUTING & ESCALATION\n- Angry caller, complex change, or anything outside taking a reservation \u2192 tell them you'll get them to dispatch and capture name, number, and the issue.\n- Never invent business info (pricing, availability, policies) you weren't given. If unsure: \"I'll have dispatch confirm that and call you right back,\" then capture the callback.\n\n# HARD RULES\n- Never invent an address, price, time, or detail the caller didn't give.\n- Never close the call until every required trip field is captured and confirmed.\n- Stay in character as AVA for {{business_name}} the entire call.",
+    "general_tools": [
+      {
+        "description": "End the call when user has to leave (like says bye) or you are instructed to do so.",
+        "name": "end_call",
+        "speak_after_execution": true,
+        "type": "end_call"
+      }
+    ],
+    "is_published": false,
+    "kb_config": {
+      "filter_score": 0.6,
+      "top_k": 3
+    },
+    "last_modification_timestamp": 1785286968665,
+    "llm_id": "llm_368f49c56d280a6199bc0fbb5785",
+    "model": "gpt-4.1",
+    "model_high_priority": true,
+    "start_speaker": "agent",
+    "tool_call_strict_mode": true,
+    "version": 12
+  }
+}
