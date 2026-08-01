@@ -4,9 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0A0A0F">
-<title>AIChauffeur — Live Dispatch Demo</title>
-<meta name="description" content="Watch AIChauffeur capture a ride request live. Pick a scenario, hit start, see the reservation build itself.">
-<meta name="robots" content="noindex">
+<title>Watch AVA Capture a Ride — Live Dispatch Demo | AI Chauffeur</title>
+<meta name="description" content="Pick a scenario and watch the trip ticket build itself as AVA takes the call — airport run, mid-call change, hourly charter. Real recorded audio.">
+
+<!-- AIC SITE RUN 1 · D1/D2 — this page carried <meta name="robots" content="noindex">
+     while the run's own spec lists /demo/ in the chauffeur sitemap. A noindexed URL
+     inside a submitted sitemap is a contradiction Search Console reports as an error
+     ("Submitted URL marked noindex"), so one of the two had to go. The demo is a real,
+     linked product surface reached from the homepage CTA, not a staging prototype —
+     the noindex was the stale half. Removed, canonical added.
+     Brand string also corrected: "AIChauffeur" -> "AI Chauffeur". -->
+<link rel="canonical" href="https://aichauffeur.ai/demo/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Watch AVA Capture a Ride — Live Dispatch Demo">
+<meta property="og:description" content="Pick a scenario and watch the trip ticket build itself as AVA takes the call. Real recorded audio.">
+<meta property="og:url" content="https://aichauffeur.ai/demo/">
+<!-- summary, not summary_large_image: no og:image asset exists for the AI Chauffeur
+       brand yet, and declaring a large card with no image renders as a broken card.
+       Upgrade this line the same day a real OG image ships. -->
+  <meta name="twitter:card" content="summary">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,6 +54,13 @@ nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;displ
 .brand-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,var(--cyan),var(--cyan-bright));display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px var(--line-hot),0 6px 24px var(--cyan-glow)}
 .brand-mark svg{width:14px;height:14px}
 .nav-back{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500;color:var(--ink-mute)}
+/* AIC SITE RUN 1 — tap-to-call in the demo header, matching the homepage nav CTA. */
+.nav-cta-tel{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:500;padding:8px 16px;border-radius:8px;background:var(--cyan);color:#000;
+  display:inline-flex;align-items:center;min-height:44px;text-decoration:none;
+  font-variant-numeric:tabular-nums;transition:transform .15s,box-shadow .15s}
+.nav-cta-tel:hover{color:#000;transform:translateY(-1px);box-shadow:0 8px 24px var(--cyan-glow)}
+.nav-cta-tel:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .nav-back:hover{color:var(--ink)}
 
 .head{padding:120px 0 30px;text-align:center}
@@ -96,13 +119,26 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
 .f-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:.3rem;display:flex;justify-content:space-between;align-items:center}
 .f-label .think{font-family:var(--mono);font-size:.58rem;color:var(--cyan-bright);opacity:0;transition:opacity .2s}
 .f-label .think.show{opacity:1}
-.f-value{color:var(--ink-mute);font-weight:400;font-size:.95rem;min-height:1.2em;font-style:italic}
+/* AIC SITE RUN 1 · B3 — tabular figures on every ticket value. Times, quote
+   ranges, passenger counts and flight numbers rewrite themselves live as the
+   scenario fills; with proportional digits each rewrite shifts the column a
+   few px and the ticket visibly jitters. tabular-nums pins the advance width. */
+.f-value{color:var(--ink-mute);font-weight:400;font-size:.95rem;min-height:1.2em;font-style:italic;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
 .f-value.has{color:var(--ink);font-weight:600;font-style:normal}
 .field.flash .f-value.has{color:var(--cyan-bright);text-shadow:0 0 16px var(--cyan-glow),0 0 4px rgba(0,212,255,.5)}
 .f-value .sub{display:block;font-family:var(--mono);font-size:.74rem;color:var(--ink-mute);font-weight:400;margin-top:.2rem;font-style:normal}
 
 .transcript{background:rgba(10,10,15,.5);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;margin-top:1rem;min-height:120px;max-height:240px;overflow-y:auto;font-family:var(--mono);font-size:.78rem;line-height:1.7}
 .transcript-empty{color:var(--ink-dim);font-style:italic}
+/* B2 · replay affordance on the resting ticket */
+.demo-rest{display:inline-flex;align-items:center;gap:.5rem;margin-top:1rem;padding:.6rem .95rem;
+  min-height:44px;border:1px solid var(--line);border-radius:8px;background:transparent;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-mute);cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.demo-rest:hover{color:var(--ink);border-color:var(--cyan);background:rgba(0,212,255,.06)}
+.demo-rest:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.demo-rest svg{width:10px;height:10px;color:var(--cyan-bright);flex-shrink:0}
+.console.active .demo-rest{opacity:.35;pointer-events:none}
 .tr-line{margin-bottom:.45rem;opacity:0;animation:slidein .3s ease forwards;display:flex;align-items:flex-start;gap:.5rem}
 @keyframes slidein{to{opacity:1}}
 .tr-caller{color:var(--ink-soft)}
@@ -110,7 +146,13 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
 .tr-ai{color:var(--cyan-bright)}
 .tr-ai::before{content:'AI · ';color:var(--cyan);font-weight:600;letter-spacing:.06em;text-shadow:0 0 6px var(--cyan-glow);flex-shrink:0}
 .tr-text{flex:1}
-.tr-play{flex-shrink:0;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cyan);font-size:8px;line-height:1;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px}
+/* AIC SITE RUN 1 · the mark stays 20px so the transcript line keeps its
+   rhythm, but the HIT AREA is expanded to 44x44 with a centred ::before.
+   The visual dot was the whole target before — under the 44px touch law. */
+.tr-play{position:relative;flex-shrink:0;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cyan);line-height:1;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px}
+.tr-play::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
+.tr-play svg{width:9px;height:9px;display:block}
+.tr-play:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .tr-play:hover:not(:disabled){background:var(--cyan);color:#000;border-color:var(--cyan-bright);box-shadow:0 0 8px var(--cyan-glow)}
 .tr-play:disabled{opacity:.3;cursor:not-allowed}
 .tr-play.playing{background:var(--cyan);color:#000;border-color:var(--cyan-bright);box-shadow:0 0 10px var(--cyan-glow)}
@@ -148,7 +190,7 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
 <body>
 
 <nav class="top">
-  <a href="https://aichauffeur.ai/" class="brand">
+  <a href="/" class="brand">
     <span class="brand-mark">
       <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M5 17h14M6 17l-1-5h14l-1 5M7 12V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/>
@@ -156,9 +198,12 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
         <circle cx="16" cy="17" r="2" fill="#000"/>
       </svg>
     </span>
-    AIChauffeur
+    AI Chauffeur
   </a>
-  <a href="https://aichauffeur.ai/" class="nav-back">← Home</a>
+  <!-- AIC SITE RUN 1 — the demo's only header control was "← Home", which on a
+       phone is the one place an operator cannot do the thing the page is about.
+       The line is now reachable from the demo too, same as every other page. -->
+  <a href="tel:+14147750019" class="nav-cta-tel" data-event="tel_tap_nav">(414) 775-0019</a>
 </nav>
 
 <section class="head">
@@ -197,7 +242,7 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
       </button>
       <button class="btn-play-full" id="btnPlayFull" type="button" title="Play full call audio for the active scenario">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <span id="playFullText">Play full call</span>
+        <span id="playFullText">Play the call</span>
       </button>
       <button class="btn-reset" id="resetBtn">Reset</button>
     </div>
@@ -208,48 +253,65 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
           <div class="dots"><span></span><span></span><span></span></div>
           Dispatch Console
         </div>
-        <span class="live-badge" id="liveBadge">Standby</span>
+        <span class="live-badge" id="liveBadge">Captured</span>
       </div>
 
+      <!-- ══ B2 · RESTING STATE ═══════════════════════════════════════════
+           This console used to render seven labelled boxes all reading
+           "awaiting" plus an empty transcript — a full screen of blanks for
+           anyone who scrolled past without pressing Start. It showed nothing.
+
+           At rest it is now a FINISHED trip ticket: the 5:45 AM airport run.
+           An operator who never taps still sees exactly what the product
+           produces. Pressing Start (or the first scroll into view) clears it
+           and rebuilds it live. Replayable, and the values below are written
+           into the HTML — with JS off the finished ticket still renders. -->
       <div class="fields" id="fields">
         <div class="field" data-key="caller">
           <div class="f-label">Inbound caller <span class="think">listening...</span></div>
-          <div class="f-value">awaiting</div>
+          <div class="f-value has">James R.<span class="sub">+1 (414) 555-0182 · Inbound</span></div>
         </div>
         <div class="field" data-key="trip">
           <div class="f-label">Trip type <span class="think">parsing...</span></div>
-          <div class="f-value">awaiting</div>
+          <div class="f-value has">Airport run · MKE<span class="sub">Terminal C · departs 7:20 AM</span></div>
         </div>
         <div class="field" data-key="route">
           <div class="f-label">Pickup → Dropoff <span class="think">geocoding...</span></div>
-          <div class="f-value">awaiting</div>
+          <div class="f-value has">Downtown MKE Hotel → MKE Airport T-C<span class="sub">18.4 mi</span></div>
         </div>
         <div class="field" data-key="time">
           <div class="f-label">Pickup time <span class="think">confirming...</span></div>
-          <div class="f-value">awaiting</div>
+          <div class="f-value has">5:45 AM</div>
         </div>
         <div class="field" data-key="vehicle">
           <div class="f-label">Vehicle <span class="think">matching...</span></div>
-          <div class="f-value">awaiting</div>
+          <div class="f-value has">Executive Sedan</div>
         </div>
         <div class="field" data-key="pax">
           <div class="f-label">Passengers <span class="think">counting...</span></div>
-          <div class="f-value">awaiting</div>
+          <div class="f-value has">1</div>
         </div>
         <div class="field" data-key="quote">
           <div class="f-label">Quote range <span class="think">calculating...</span></div>
-          <div class="f-value">awaiting</div>
+          <div class="f-value has">$65 – $85 est.<span class="sub">18.4 mi · tolls included</span></div>
         </div>
       </div>
 
       <div class="transcript" id="transcript">
-        <div class="transcript-empty">Live transcript will appear here when scenario starts</div>
+        <div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">AI Chauffeur, this is AVA — where are you headed?</span></div>
+        <div class="tr-line tr-caller" style="opacity:1"><span class="tr-text">Downtown Marriott to MKE, five forty-five tomorrow morning.</span></div>
+        <div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">One passenger, executive sedan. Sending confirmation now.</span></div>
       </div>
 
       <div class="status-row">
-        <span>RES <span class="ticket" id="ticketId">—</span></span>
-        <span class="status-tag" id="statusTag">Standby</span>
+        <span>RES <span class="ticket" id="ticketId">AC-2026-0392</span></span>
+        <span class="status-tag complete" id="statusTag">Reservation written</span>
       </div>
+
+      <button type="button" class="demo-rest" id="watchItFill">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+        Watch it fill
+      </button>
     </div>
 
     <div class="complete-banner" id="completeBanner">
@@ -264,12 +326,23 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
     <p class="note">Scripted demo · audio is real AVA voice · no real ride is booked through this demo</p>
 
     <!-- ════════════════════════════════════════════
-         AUDIO ASSETS · 22-file Rachel drop
+         AUDIO ASSETS · 11 files, all present and all consumed.
            8x ava-call snippets       → /audio/ava/
-           3x ava-greeting cues       → /audio/
-           2x chauffeur brand reads   → /audio/
-           6x chauffeur-ride samples  → /audio/
            3x full demo conversations → /audio/demo/
+
+         AIC SITE RUN 1 — these now resolve. aichauffeur.ai is a
+         SEPARATE Vercel project rooted at /chauffeur/, so a
+         repo-root path like /audio/... 404s on this host. The
+         clips were copied to chauffeur/audio/ and every src here
+         is host-relative to that root.
+
+         Also removed in RUN 1: 11 <audio> elements pointing at
+         ava-greeting-1..3, chauffeur-intro, chauffeur-pitch and
+         chauffeur-ride-1..6. Those files exist NOWHERE in the
+         repo and had ZERO consumers — neither scenarioAudioMap
+         nor transcriptAudioMap ever referenced them. They were
+         22 declared assets over 11 real ones.
+
          All preload="none" — zero perf cost until invoked.
          Per-line transcript mapping (.tr-play data-audio) is
          set in transcriptAudioMap below; remap any time.
@@ -282,17 +355,6 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
     <audio id="ava-call-6" src="/audio/ava/ava-call-6.mp3" preload="none"></audio>
     <audio id="ava-call-7" src="/audio/ava/ava-call-7.mp3" preload="none"></audio>
     <audio id="ava-call-8" src="/audio/ava/ava-call-8.mp3" preload="none"></audio>
-    <audio id="ava-greeting-1" src="/audio/ava-greeting-1.mp3" preload="none"></audio>
-    <audio id="ava-greeting-2" src="/audio/ava-greeting-2.mp3" preload="none"></audio>
-    <audio id="ava-greeting-3" src="/audio/ava-greeting-3.mp3" preload="none"></audio>
-    <audio id="chauffeur-intro" src="/audio/chauffeur-intro.mp3" preload="none"></audio>
-    <audio id="chauffeur-pitch" src="/audio/chauffeur-pitch.mp3" preload="none"></audio>
-    <audio id="chauffeur-ride-1" src="/audio/chauffeur-ride-1.mp3" preload="none"></audio>
-    <audio id="chauffeur-ride-2" src="/audio/chauffeur-ride-2.mp3" preload="none"></audio>
-    <audio id="chauffeur-ride-3" src="/audio/chauffeur-ride-3.mp3" preload="none"></audio>
-    <audio id="chauffeur-ride-4" src="/audio/chauffeur-ride-4.mp3" preload="none"></audio>
-    <audio id="chauffeur-ride-5" src="/audio/chauffeur-ride-5.mp3" preload="none"></audio>
-    <audio id="chauffeur-ride-6" src="/audio/chauffeur-ride-6.mp3" preload="none"></audio>
     <audio id="demo-1" src="/audio/demo/demo-1.mp3" preload="none"></audio>
     <audio id="demo-2" src="/audio/demo/demo-2.mp3" preload="none"></audio>
     <audio id="demo-3" src="/audio/demo/demo-3.mp3" preload="none"></audio>
@@ -433,7 +495,7 @@ function setScenario(name) {
   if (isRunning) return;
   activeScenario = name;
   $$('.scenario').forEach(s => s.classList.toggle('active', s.dataset.scenario === name));
-  reset();
+  restIdle();
   // Auto-scroll to put the start button in view (mobile especially)
   setTimeout(() => {
     const startRow = document.querySelector('.start-row');
@@ -469,6 +531,45 @@ function reset() {
   startBtn.classList.remove('running');
   startText.textContent = 'Start scenario';
   $$('.scenario').forEach(s => s.disabled = false);
+}
+
+/* ══ B2 · RESTING TICKET ═══════════════════════════════════════════════
+   reset() empties the console to "awaiting" — correct immediately BEFORE a
+   run, because the fields have to be blank to visibly fill. It is wrong as
+   a resting state: it is the dead zone this run exists to remove.
+   restIdle() puts the finished 5:45 AM airport ticket back, and is what the
+   Reset button and a scenario switch now call. The markup ships with these
+   same values, so the ticket is complete even with JS disabled. */
+const RESTING = {
+  caller:  {main:'James R.', sub:'+1 (414) 555-0182 · Inbound'},
+  trip:    {main:'Airport run · MKE', sub:'Terminal C · departs 7:20 AM'},
+  route:   {main:'Downtown MKE Hotel → MKE Airport T-C', sub:'18.4 mi'},
+  time:    {main:'5:45 AM'},
+  vehicle: {main:'Executive Sedan'},
+  pax:     {main:'1'},
+  quote:   {main:'$65 – $85 est.', sub:'18.4 mi · tolls included'}
+};
+const RESTING_TRANSCRIPT =
+  '<div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">AI Chauffeur, this is AVA — where are you headed?</span></div>' +
+  '<div class="tr-line tr-caller" style="opacity:1"><span class="tr-text">Downtown Marriott to MKE, five forty-five tomorrow morning.</span></div>' +
+  '<div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">One passenger, executive sedan. Sending confirmation now.</span></div>';
+
+function restIdle() {
+  reset();
+  Object.keys(RESTING).forEach(key => {
+    const f = document.querySelector('.field[data-key="' + key + '"]');
+    if (!f) return;
+    const v = f.querySelector('.f-value');
+    if (!v) return;
+    const r = RESTING[key];
+    v.innerHTML = r.main + (r.sub ? '<span class="sub">' + r.sub + '</span>' : '');
+    v.classList.add('has');
+  });
+  transcript.innerHTML = RESTING_TRANSCRIPT;
+  ticketIdEl.textContent = 'AC-2026-0392';
+  statusTag.textContent = 'Reservation written';
+  statusTag.classList.add('complete');
+  liveBadge.textContent = 'Captured';
 }
 
 function runScenario() {
@@ -516,7 +617,10 @@ function executeStep(step) {
     playBtn.className = 'tr-play';
     playBtn.setAttribute('aria-label', audioId ? 'Play this line' : 'Audio coming soon');
     playBtn.dataset.audio = audioId;
-    playBtn.textContent = '▶';
+    /* AIC SITE RUN 1 · B1 — was the bare character "▶", which renders as a
+       colour emoji on iOS/Android and as a tofu box on any font that lacks
+       U+25B6. Inline SVG inherits currentColor and is identical everywhere. */
+    playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
     playBtn.disabled = !audioId;
     playBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -570,7 +674,47 @@ function executeStep(step) {
 
 $$('.scenario').forEach(s => s.addEventListener('click', () => setScenario(s.dataset.scenario)));
 startBtn.addEventListener('click', runScenario);
-resetBtn.addEventListener('click', reset);
+resetBtn.addEventListener('click', restIdle);
+
+/* B2 · the resting ticket is replayable two ways: the affordance under it,
+   and scrolling to it and STOPPING.
+
+   Two guards, both load-bearing, because running the scenario necessarily
+   blanks the fields to "awaiting" — which is the very dead zone this section
+   exists to remove. It must only happen for someone who chose to watch:
+
+     1. hasScrolled — never auto-run on arrival. On a tall desktop the console
+        can already be in view at load; without this the page would greet the
+        visitor with seven empty boxes instead of the finished ticket.
+     2. a dwell timer — someone flicking past the console keeps the completed
+        ticket. The run only starts if it is still in view ~900ms later.
+
+   Fires once, then disconnects; a console that restarts on every re-entry is
+   a distraction, not a demo. Reduced-motion never auto-runs at all. */
+(function(){
+  const watch = document.getElementById('watchItFill');
+  if (watch) watch.addEventListener('click', runScenario);
+
+  const consoleEl = document.querySelector('.console');
+  if (!consoleEl || !('IntersectionObserver' in window)) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let hasScrolled = false;
+  window.addEventListener('scroll', function(){ hasScrolled = true; }, { passive: true, once: true });
+
+  let dwell = null;
+  const io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (!entry.isIntersecting || !hasScrolled) { clearTimeout(dwell); return; }
+      clearTimeout(dwell);
+      dwell = setTimeout(function(){
+        io.disconnect();
+        if (!isRunning) runScenario();
+      }, 900);
+    });
+  }, { threshold: 0.55 });
+  io.observe(consoleEl);
+})();
 
 btnPlayFull.addEventListener('click', () => {
   const audioId = scenarioAudioMap[activeScenario];

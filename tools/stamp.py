@@ -247,6 +247,18 @@ VERSION_ONLY = [
     # RUN 3.5: /chauffeur was in NEITHER list, so its first-party assets never
     # busted on a deploy. It carries its own nav by design -> VERSION_ONLY.
     'chauffeur/index.html',
+    # AIC SITE RUN 1: the rest of the chauffeur host. These are served by a
+    # SEPARATE Vercel project rooted at chauffeur/, so their "/assets/..." paths
+    # resolve to chauffeur/assets/... . They carry their own nav and footer by
+    # design, exactly like chauffeur/index.html -> VERSION_ONLY, never PAGES.
+    # (PAGES would inject the AVA site's shared nav/footer/breadcrumbs onto a
+    # different brand's host.)
+    'chauffeur/demo/index.html',
+    'chauffeur/limo-answering-service/index.html',
+    'chauffeur/after-hours-limo-dispatch/index.html',
+    'chauffeur/milwaukee-limo-answering-service/index.html',
+    'chauffeur/privacy/index.html',
+    'chauffeur/terms/index.html',
 ]
 
 

@@ -4,14 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0A0A0F">
-  <title>AI Chauffeur — Limo Dispatch AI &amp; Black Car Reservation Automation</title>
-  <meta name="description" content="AVA answers the dispatch line for limo, black car, and chauffeur operators — capturing reservations, quoting airport transfers, and routing flight-status concierge requests 24/7.">
+  <title>Limo Answering Service — AI Dispatch That Books the Ride | AI Chauffeur</title>
+  <meta name="description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket. Built by an operator. Call (414) 775-0019.">
 
   <link rel="canonical" href="https://aichauffeur.ai/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="AI Chauffeur — Limo Dispatch AI &amp; Black Car Reservation Automation">
-  <meta property="og:description" content="AVA answers the dispatch line for limo and black car operators — capturing reservations, quoting airport transfers, and routing flight-status concierge requests 24/7.">
+  <meta property="og:site_name" content="AI Chauffeur">
+  <meta property="og:title" content="Limo Answering Service — AI Dispatch That Books the Ride">
+  <meta property="og:description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket. Built by an operator.">
   <meta property="og:url" content="https://aichauffeur.ai/">
+  <!-- summary, not summary_large_image: no og:image asset exists for the AI Chauffeur
+       brand yet, and declaring a large card with no image renders as a broken card.
+       Upgrade this line the same day a real OG image ships. -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Limo Answering Service — AI Dispatch That Books the Ride">
+  <meta name="twitter:description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,16 +30,27 @@
        never declared — both rules were silently broken. -->
   <link rel="stylesheet" href="/assets/circulant.css?v=f76cc32">
 
+  <!-- AIC SITE RUN 1 · D4 — Organization + LocalBusiness + Service.
+       NOTE: no postalAddress / streetAddress is emitted. AI Chauffeur has no
+       public storefront, and inventing one is exactly the false-LocalBusiness
+       pattern that had to be stripped from the AVA site in RUN 9. areaServed
+       and telephone are true and verifiable; a street address would not be. -->
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Organization","name":"AI Chauffeur","url":"https://aichauffeur.ai","description":"Limo dispatch AI and black car reservation automation. AVA answers the dispatch line, captures trip details, and routes airport transfer bookings into your workflow.","areaServed":{"@type":"Country","name":"United States"}}
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"Organization","@id":"https://aichauffeur.ai/#org","name":"AI Chauffeur","url":"https://aichauffeur.ai/","telephone":"+1-414-775-0019","description":"AI answering and dispatch intake for limo, black car, and chauffeured transportation operators. AVA answers the line, captures the full trip, and hands the dispatcher a clean trip ticket.","areaServed":{"@type":"Country","name":"United States"},"parentOrganization":{"@type":"Organization","name":"AI Voice Agency","url":"https://aivoiceagency.ai/"}},
+    {"@type":"LocalBusiness","@id":"https://aichauffeur.ai/#business","name":"AI Chauffeur","url":"https://aichauffeur.ai/","telephone":"+1-414-775-0019","priceRange":"Custom per operation","description":"Limo answering service and after-hours dispatch intake, built by a 30-year operator in Wisconsin and run for operators nationwide.","areaServed":[{"@type":"State","name":"Wisconsin"},{"@type":"Country","name":"United States"}],"parentOrganization":{"@id":"https://aichauffeur.ai/#org"}},
+    {"@type":"Service","@id":"https://aichauffeur.ai/#service","name":"Limo answering and dispatch intake","serviceType":"Limo answering service","provider":{"@id":"https://aichauffeur.ai/#org"},"areaServed":{"@type":"Country","name":"United States"},"description":"AVA answers every inbound call at once, 24/7, captures pickup, dropoff, time, vehicle class, passenger and bag count and flight details, and routes a structured trip ticket to the dispatcher for confirmation."}
+  ]}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
     {"@type":"Question","name":"Is this just basic call coverage?","acceptedAnswer":{"@type":"Answer","text":"No. AI Chauffeur is dispatch intake software for limo and black car operators. AVA captures ride requests, organizes trip details, estimates the quote range, and routes the request into your workflow."}},
     {"@type":"Question","name":"Does it replace my dispatcher?","acceptedAnswer":{"@type":"Answer","text":"No. It handles the first layer of intake so your dispatcher is not buried by missed calls, repeated questions, after-hours requests, and basic confirmation work."}},
     {"@type":"Question","name":"Can it quote rides?","acceptedAnswer":{"@type":"Answer","text":"Yes, when your rate rules are configured. The page demo uses illustrative quote ranges only."}},
-    {"@type":"Question","name":"Does it work with my CRM or dispatch software?","acceptedAnswer":{"@type":"Answer","text":"Setup is custom. We connect AI Chauffeur to your existing dispatch workflow — Limo Anywhere, FASTTRAK, or your CRM — so trip requests land where your team already works."}},
-    {"@type":"Question","name":"How fast can it go live?","acceptedAnswer":{"@type":"Answer","text":"Local setup is founder-led right now. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented."}}
+    {"@type":"Question","name":"Does it work with my CRM or dispatch software?","acceptedAnswer":{"@type":"Answer","text":"Yes. The call comes back as a clean trip ticket your dispatcher confirms in the software you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox. Nothing gets ripped out and nothing gets replaced."}},
+    {"@type":"Question","name":"How fast can it go live?","acceptedAnswer":{"@type":"Answer","text":"Local setup is founder-led right now. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented."}},
+    {"@type":"Question","name":"What about pricing?","acceptedAnswer":{"@type":"Answer","text":"Every build is custom to your operation — your rates, your service area, your vehicle classes. We scope it on the intro call, once we know your call volume, fleet size, and how you dispatch. That call runs 20 minutes."}},
+    {"@type":"Question","name":"Can I just hear it first?","acceptedAnswer":{"@type":"Answer","text":"Call (414) 775-0019 and AVA picks up. That is the same line an operator's caller would reach — no booking, no form, no salesperson. Listen to how it handles you, then decide."}}
   ]}
   </script>
 
@@ -44,6 +62,8 @@
       --cyan:#00D4FF; --cyan-bright:#00E5FF; --cyan-glow:rgba(0,212,255,.35); --cyan-dim:rgba(0,212,255,.18);
       --line:rgba(0,212,255,.14); --line-hot:rgba(0,212,255,.42);
       --alarm:#FF3B30; --amber:#FBBF24;
+      /* CIRCULANT-X Booked-Green — 12.23:1 on void. Success only, never decoration. */
+      --booked:#2EE6A8;
       --serif:'Space Grotesk',sans-serif; --sans:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
     }
     html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;background:var(--void)}
@@ -188,8 +208,11 @@
     .foot-tagline{font-size:.92rem;color:var(--ink-mute);max-width:38ch;margin-bottom:1rem}
     .foot-phone{font-family:var(--mono);font-size:.95rem;color:var(--ink);letter-spacing:.04em}
     .foot-links{display:flex;flex-direction:column;gap:.6rem}
-    .foot-links a{font-family:var(--mono);font-size:.74rem;color:var(--ink-mute);letter-spacing:.1em;text-transform:uppercase}
+    /* min-height 44: these were 19px-tall tap targets stacked 0.6rem apart. */
+    .foot-links a{font-family:var(--mono);font-size:.74rem;color:var(--ink-mute);letter-spacing:.1em;text-transform:uppercase;
+      min-height:44px;display:inline-flex;align-items:center}
     .foot-links a:hover{color:var(--cyan-bright)}
+    .foot-links a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
     .foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;padding-top:2rem;margin-top:2rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);letter-spacing:.08em;text-transform:uppercase}
 
     @media(max-width:600px){
@@ -341,6 +364,161 @@
       .btn{transition:none}
       .btn:hover,.btn:active{transform:none}
     }
+
+    /* ════════════════════════════════════════════════════════════════
+       AIC SITE RUN 1 · "OPERATOR CUT"
+       Radius note: CIRCULANT-X calls for 0px corners on NEW surfaces, but
+       this page is a touchup, not a rebuild, and every existing surface on
+       it is 10-18px. Sharp corners on the new CTA stack alone would read as
+       a broken graft. Matching the page's own idiom; the corner law applies
+       when this page is genuinely rebuilt.
+       ════════════════════════════════════════════════════════════════ */
+
+    /* --- HERO GRID ----------------------------------------------------- */
+    /* Single column by default (mobile-first). At 1020px the console moves
+       beside the CTA stack instead of below it — the stack caps at 520px, so
+       one column wasted the right half of a desktop fold. align-items:start
+       keeps the console at its natural height instead of stretching. */
+    @media(min-width:1020px){
+      .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+        gap:3rem;align-items:start}
+      .hero .hero-left{min-width:0}
+      .hero .hero-console{margin-top:0;position:sticky;top:96px}
+      .hero h1.hero-h{font-size:clamp(2.5rem,4.4vw,4rem)}
+      .cta-stack{margin-bottom:0}
+    }
+
+    /* --- A2 · CTA STACK ------------------------------------------------ */
+    .cta-stack{display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:0 0 3rem}
+
+    /* PRIMARY — tap to call. The phone IS the product, so it is the largest,
+       highest-contrast object in the fold and it is a real tel: link. */
+    .tel-btn{display:flex;flex-direction:column;align-items:flex-start;gap:.25rem;
+      padding:1.15rem 1.5rem;border-radius:12px;background:var(--cyan);color:#000;
+      min-height:44px;text-decoration:none;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.30);transition:transform .2s ease,box-shadow .2s ease}
+    .tel-btn:hover{color:#000;transform:translateY(-2px);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.40),inset 0 0 26px rgba(200,248,255,.55)}
+    .tel-btn:active{transform:translateY(1px);box-shadow:inset 0 2px 9px rgba(0,32,44,.34)}
+    .tel-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+    .tel-main{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);
+      font-size:.95rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+      font-variant-numeric:tabular-nums;line-height:1.15}
+    .tel-main svg{width:17px;height:17px;flex-shrink:0}
+    .tel-sub{font-family:var(--sans);font-size:.85rem;font-weight:500;
+      letter-spacing:.01em;text-transform:none;color:rgba(0,0,0,.72)}
+    @media(max-width:600px){
+      .tel-main{font-size:.86rem;letter-spacing:.04em}
+      .tel-btn{padding:1rem 1.15rem}
+    }
+
+    /* SECONDARY — "AVA CALLS YOU". Same rail as the AVA site's live-call
+       widget (site.js), re-implemented inline because site.js lives at the
+       repo root and 404s on the aichauffeur host. */
+    .cb-form{background:var(--gx-fill,rgba(20,20,28,.62));border:1px solid var(--line-hot);
+      border-radius:12px;padding:1.25rem;
+      -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
+    .cb-head{display:flex;align-items:center;gap:.55rem;font-family:var(--mono);font-size:.7rem;
+      letter-spacing:.16em;text-transform:uppercase;color:var(--cyan-bright);margin-bottom:.35rem}
+    .cb-head::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan-bright);
+      box-shadow:0 0 8px var(--cyan-bright);flex-shrink:0}
+    .cb-sub{font-size:.9rem;color:var(--ink-mute);margin-bottom:.9rem;line-height:1.5}
+    .cb-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.75rem}
+    .cb-field{flex:1 1 150px;display:flex;flex-direction:column;gap:.3rem}
+    /* Visible labels always — never placeholder-only (CLAUDE.md, Forms). */
+    .cb-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;
+      text-transform:uppercase;color:var(--ink-dim)}
+    .cb-input{width:100%;min-height:44px;padding:.7rem .85rem;border-radius:8px;
+      background:rgba(10,10,15,.55);border:1px solid var(--line);color:var(--ink);
+      font-family:var(--sans);font-size:1rem;transition:border-color .15s,box-shadow .15s}
+    .cb-input::placeholder{color:var(--ink-dim)}
+    .cb-input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.18)}
+    .cb-input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+    .cb-input[aria-invalid="true"]{border-color:var(--alarm)}
+    .cb-consent{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.85rem;cursor:pointer}
+    .cb-consent input{flex-shrink:0;width:20px;height:20px;margin-top:2px;accent-color:var(--cyan);cursor:pointer}
+    .cb-consent input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+    .cb-consent span{font-size:.78rem;line-height:1.45;color:var(--ink-mute)}
+    .cb-consent a{color:var(--cyan-bright);text-decoration:underline}
+    .cb-submit{width:100%;min-height:44px;padding:.85rem 1.2rem;border:1px solid var(--cyan);
+      border-radius:10px;background:rgba(0,212,255,.10);color:var(--ink);
+      font-family:var(--mono);font-size:.8rem;font-weight:500;letter-spacing:.1em;
+      text-transform:uppercase;cursor:pointer;transition:background .15s,transform .15s,color .15s}
+    .cb-submit:hover:not(:disabled){background:var(--cyan);color:#000;transform:translateY(-1px)}
+    .cb-submit:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+    .cb-submit:disabled{opacity:.55;cursor:default}
+    /* Errors sit next to the control that caused them, never only at the top. */
+    .cb-note{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;
+      color:var(--ink-dim);margin-top:.6rem;line-height:1.5;min-height:1.2em}
+    .cb-note.is-err{color:var(--alarm)}
+    .cb-note.is-ok{color:var(--booked)}
+    .cb-form.is-done .cb-row,.cb-form.is-done .cb-consent,.cb-form.is-done .cb-submit{display:none}
+
+    /* TERTIARY — quiet text link. Lowest weight of the three on purpose. */
+    .cta-tertiary{display:flex;flex-direction:column;gap:.2rem}
+    .cta-tertiary a{font-family:var(--mono);font-size:.76rem;letter-spacing:.1em;
+      text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--line-hot);
+      align-self:flex-start;padding:.5rem 0;min-height:44px;display:inline-flex;align-items:center}
+    .cta-tertiary a:hover{color:var(--cyan-bright);border-color:var(--cyan-bright)}
+    .cta-note{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);letter-spacing:.06em}
+
+    /* --- B3 · tabular figures on every ticket/quote/time value --------- */
+    .c-main,.c-sub,.c-meta,.hc-line,.tel-main,.int-pill,.setup-note,.nav-cta,.foot-nap{
+      font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+    .hc-ico{width:12px;height:12px;color:var(--cyan-bright);margin-right:.45rem;
+      display:inline-block;vertical-align:-1px;flex-shrink:0}
+
+    /* --- B1 · play control -------------------------------------------- */
+    .demo-play-btn svg,.demo-call-btn svg{width:14px;height:14px;flex-shrink:0}
+    .demo-play-btn,.demo-call-btn{min-height:44px}
+
+    /* --- B2 · resting ticket + "watch it fill" ------------------------- */
+    /* The console is COMPLETE at rest. An operator who never taps still sees
+       a finished trip ticket. Only on replay do the fields clear and rebuild. */
+    .demo-rest{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);
+      font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);
+      margin-top:.9rem;padding-top:.85rem;border-top:1px solid var(--line)}
+    .demo-rest svg{width:10px;height:10px;color:var(--cyan-bright);flex-shrink:0}
+    #demo-console.demo-armed [data-reveal]{opacity:.28;transition:opacity .35s ease}
+    #demo-console.demo-armed [data-reveal].on{opacity:1}
+    @media (prefers-reduced-motion:reduce){
+      #demo-console.demo-armed [data-reveal]{opacity:1;transition:none}
+    }
+
+    /* --- B6 · the visitor's own clock --------------------------------- */
+    /* The dot is INLINE-BLOCK inside the text flow, not a flex sibling. As a
+       flex item it anchored to the container's left edge and, once the line
+       wrapped inside the centred .crush card, floated away from the words as
+       a stray amber mark. Inline-block keeps it welded to the first word. */
+    .crush-now{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;
+      text-transform:uppercase;color:var(--amber);margin:0 auto 1rem;max-width:44ch;
+      line-height:1.7;position:relative;font-variant-numeric:tabular-nums}
+    .crush-now::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
+      background:var(--amber);box-shadow:0 0 8px var(--amber);margin-right:.5rem;
+      vertical-align:middle;animation:pulse 2s ease-in-out infinite}
+    @media (prefers-reduced-motion:reduce){.crush-now::before{animation:none}}
+
+    /* --- B5 · founder ------------------------------------------------- */
+    .founder-card{border:1px solid var(--line-hot);border-radius:18px;padding:2.5rem 2rem;
+      background:var(--gx-fill,rgba(20,20,28,.62));
+      -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
+    @media(min-width:760px){.founder-card{padding:3rem}}
+    .founder-h{font-family:var(--sans);font-size:clamp(1.7rem,3.2vw,2.6rem);color:var(--ink);
+      font-weight:400;line-height:1.1;margin-bottom:1.1rem;max-width:20ch}
+    .founder-h em{font-style:italic;color:var(--cyan)}
+    .founder-p{font-size:1.05rem;color:var(--ink-soft);line-height:1.65;max-width:64ch;margin-bottom:1rem}
+    .founder-p:last-child{margin-bottom:0}
+
+    /* --- B7 · footer NAP ---------------------------------------------- */
+    .foot-nap{font-family:var(--mono);font-size:.8rem;color:var(--ink-soft);
+      letter-spacing:.05em;line-height:1.8;margin-bottom:.75rem;font-variant-numeric:tabular-nums}
+    /* The footer phone was an 18px-tall tap target. On a phone-first site the
+       number IS the conversion — full 44px target, same as every other CTA. */
+    .foot-nap a{color:var(--ink);border-bottom:1px solid var(--line-hot);
+      display:inline-flex;align-items:center;min-height:44px}
+    .foot-nap a:hover{color:var(--cyan-bright)}
+    .foot-nap a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+    .brand{min-height:44px}
   </style>
 </head>
 <body>
@@ -358,26 +536,78 @@
   </a>
   <ul class="nav-links">
     <li><a href="#how">How it works</a></li>
-    <li><a href="#features">Features</a></li>
+    <li><a href="/demo/">Demo</a></li>
     <li><a href="#faq">FAQ</a></li>
+    <li><a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener">Request setup</a></li>
   </ul>
-  <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="nav-cta">Request setup</a>
+  <!-- AIC SITE RUN 1 · the nav CTA is now the line itself. .nav-links is
+       display:none under 880px, so on a phone this is the ONLY persistent
+       control in the header — a booking widget there is a dead end when the
+       operator is holding a phone. Tap-to-call is the whole product. -->
+  <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_nav">(414) 775-0019</a>
 </nav>
 
 <section class="hero">
-  <div class="wrap">
+  <!-- Two columns from 1020px: the CTA stack is max-width 520px, so on a wide
+       screen a single column left the entire right half of the fold empty and
+       pushed the dispatch console — the thing that shows what AVA does —
+       below it. Console sits beside the stack now and both are in the fold.
+       One column below 1020px, unchanged. -->
+  <div class="wrap hero-grid">
+    <div class="hero-left">
     <span class="kicker">Limo Dispatch AI · Black Car Reservations · Airport Transfers</span>
     <h1 class="hero-h">Book the ride before they <em>call someone else.</em></h1>
-    <p class="hero-sub">AVA answers the dispatch line, captures reservations, estimates airport transfers, and writes the trip into your existing limo software — without burying your team.</p>
+    <p class="hero-sub">AVA answers the dispatch line, takes the whole trip — pickup, dropoff, vehicle, flight — and hands your dispatcher a clean ticket to confirm. Nobody sits on hold. Nobody hangs up.</p>
 
-    <div class="ctas">
-      <a href="/demo/" class="btn btn-primary circulant-ring">
-        See the live demo
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
+    <!-- ══ A2 · CTA STACK ═══════════════════════════════════════════════
+         Order is deliberate: call, be called, book a setup. The phone is
+         first because hearing AVA answer IS the demonstration. -->
+    <div class="cta-stack">
+
+      <!-- PRIMARY -->
+      <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_hero">
+        <span class="tel-main">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call the line — (414) 775-0019
+        </span>
+        <span class="tel-sub">AVA answers. Hear it yourself.</span>
       </a>
-      <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn btn-ghost">Request local setup</a>
+
+      <!-- SECONDARY — AVA calls you -->
+      <form class="cb-form" id="ava-callback" data-cb-form novalidate>
+        <div class="cb-head">AVA calls you</div>
+        <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
+
+        <div class="cb-row">
+          <div class="cb-field">
+            <label class="cb-label" for="cb-name">First name</label>
+            <input class="cb-input" id="cb-name" name="first_name" type="text" data-cb-name
+                   autocomplete="given-name" maxlength="60" placeholder="Mike">
+          </div>
+          <div class="cb-field">
+            <label class="cb-label" for="cb-cell">Cell</label>
+            <input class="cb-input" id="cb-cell" name="phone" type="tel" data-cb-cell
+                   autocomplete="tel" inputmode="tel" maxlength="20" placeholder="(414) 555-0182">
+          </div>
+        </div>
+
+        <label class="cb-consent" for="cb-consent">
+          <input type="checkbox" id="cb-consent" name="tcpa_consent" value="true" data-cb-consent>
+          <span>I agree to get an automated demo call and follow-up texts from AI Chauffeur at this number. Saying yes is not required to buy anything. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy/">See our Privacy Policy</a>.</span>
+        </label>
+
+        <button type="submit" class="cb-submit" id="cb-submit" data-cb-submit>Have AVA call me</button>
+        <p class="cb-note" id="cb-note" data-cb-note role="status" aria-live="polite"></p>
+      </form>
+
+      <!-- TERTIARY -->
+      <div class="cta-tertiary">
+        <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" data-event="book_click_hero">Request local setup →</a>
+        <span class="cta-note">Schedules a 20-min intro call.</span>
+      </div>
+
     </div>
+    </div><!-- /.hero-left -->
 
     <div class="console hero-console" id="hero-console">
       <div class="console-bar">
@@ -388,7 +618,9 @@
         <span class="live-badge">Live intake</span>
       </div>
       <div class="hc-transcript" id="hc-transcript" aria-live="polite">
-        <span class="hc-line" data-hc-line="0">📞 Inbound call · +1 (414) 555-0182</span>
+        <!-- B1 · emoji-as-icon is banned (CLAUDE.md § 3). Inline SVG inherits
+             currentColor and renders identically on every platform. -->
+        <span class="hc-line" data-hc-line="0"><svg class="hc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Inbound call · +1 (414) 555-0182</span>
         <span class="hc-line" data-hc-line="1"><span class="hc-who">AVA:</span> AI Chauffeur, this is AVA — where are you headed today?</span>
         <span class="hc-line" data-hc-line="2"><span class="hc-who">Caller:</span> Downtown Marriott to MKE airport, 5:45 AM tomorrow.</span>
         <span class="hc-line" data-hc-line="3"><span class="hc-who">AVA:</span> Got it — one passenger, executive sedan. Sending confirmation now.</span>
@@ -442,12 +674,12 @@
 
     <div class="demo-play-bar">
       <button type="button" id="demo-play-btn" class="demo-play-btn" data-state="idle" aria-controls="demo-audio">
-        <span class="play-glyph" aria-hidden="true">▶</span>
-        <span class="play-label">Play mock demo</span>
+        <span class="play-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+        <span class="play-label">Play the call</span>
       </button>
       <a href="/demo/" class="demo-call-btn">
-        <span class="play-glyph" aria-hidden="true">▶</span>
-        <span>See the live demo</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        <span>Run it yourself</span>
       </a>
       <audio id="demo-audio" preload="metadata" src="/audio/demos-v2/maxim-v2.mp3?v=f76cc32"></audio>
     </div>
@@ -516,19 +748,25 @@
 
 <section id="integrations">
   <div class="wrap">
-    <div class="sec-kicker">Writes into your stack</div>
-    <h2 class="sec-h">AVA writes into the dispatch <em>you already run.</em></h2>
-    <p class="sec-sub">No rip-and-replace. AVA captures the call and writes a clean reservation straight into your existing dispatch platform — then farms overflow to your affiliate network when you're booked solid.</p>
+    <!-- ══ B4 · COMPATIBILITY, NOT INTEGRATION ═══════════════════════════
+         This section previously claimed AVA "writes into" and "writes a clean
+         reservation straight into" the operator's dispatch platform, and that
+         it "passes the trip to your affiliate network automatically." Those
+         are write-integration claims. What actually ships is capture: the
+         call becomes a structured trip ticket a dispatcher confirms. Reworded
+         to compatibility framing — the honest claim, and the one we can keep. -->
+    <div class="sec-kicker">No rip-out</div>
+    <h2 class="sec-h">Works with <em>what you already run.</em></h2>
+    <p class="sec-sub">The reservation lands as a clean trip ticket your dispatcher confirms in the software you already use — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox. No switch, no rip-out.</p>
 
     <div class="int-pills">
       <span class="int-pill">Limo Anywhere</span>
       <span class="int-pill">FASTTRAK</span>
-      <span class="int-pill">SantaCruz / GroundWidgets</span>
-      <span class="int-pill">Ground Alliance</span>
-      <span class="int-pill">iCabbi</span>
+      <span class="int-pill">Santa Cruz</span>
+      <span class="int-pill">Shared inbox</span>
     </div>
-    <p class="int-muted">Integration scoped per platform during setup.</p>
-    <p class="int-mini">Booked solid? AVA passes the trip to your affiliate network automatically — the ride still gets covered, the revenue still gets tracked.</p>
+    <p class="int-muted">Scoped to your setup on the intro call.</p>
+    <p class="int-mini">Booked solid? The ticket still gets written, so you can farm it out to an affiliate instead of losing the call. Your dispatcher makes that call, not AVA.</p>
   </div>
 </section>
 
@@ -556,7 +794,7 @@
       <div class="step">
         <div class="step-num">04 · Route</div>
         <h3 class="step-h">Hand off to your team</h3>
-        <p class="step-p">Clean reservation lands in your CRM, dispatch software, or shared inbox. Your dispatcher confirms instead of taking it from scratch.</p>
+        <p class="step-p">Your dispatcher picks up a finished trip ticket instead of a voicemail. Confirm it and move — nothing gets rebuilt from scratch.</p>
       </div>
     </div>
   </div>
@@ -593,8 +831,8 @@
         <p class="feat-p">ORD, JFK, LAX, ATL, and your local hubs. Captures flight number, terminal, departure time, and adjusts pickup buffer accordingly.</p>
       </div>
       <div class="feat">
-        <div class="feat-h">Writes to your workflow</div>
-        <p class="feat-p">Reservation lands in your dispatch platform — Limo Anywhere, FASTTRAK, SantaCruz, and more. We connect to where your team already works.</p>
+        <div class="feat-h">Fits your workflow</div>
+        <p class="feat-p">The trip ticket arrives in a form your dispatcher can confirm in the tools you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox.</p>
       </div>
       <div class="feat">
         <div class="feat-h">Confirmation loop</div>
@@ -608,6 +846,12 @@
   <div class="wrap">
     <div class="crush">
       <div class="sec-kicker" style="position:relative">The Crush</div>
+      <!-- ══ B6 · the visitor's OWN clock ═══════════════════════════════
+           Rendered client-side from the device time. No stat, no claim, no
+           invented number — just the hour the operator is actually reading
+           this at, mapped to the window it belongs to. Empty (and fully
+           hidden) with JS off, so nothing renders as a blank line. -->
+      <p class="crush-now" id="crush-now" hidden></p>
       <h2 class="crush-h">When three calls hit at once and the next ride goes to <em>whoever answers first.</em></h2>
       <p class="crush-p">The Crush is what limo and black car operators call those moments — Friday airport rush, prom night, Super Bowl weekend, every concert that ends at 11 PM. AI Chauffeur is built to absorb those windows; AVA never lets a call sit on hold. The everyday value is cleaner intake, quoting, confirmations, and follow-through. The Crush is when it earns the keep.</p>
       <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn btn-primary">
@@ -626,15 +870,35 @@
         <div class="sec-kicker">Founder-led setup</div>
         <h3 class="setup-h">Local setup, <em>handled directly.</em></h3>
         <p class="setup-p">First operators get founder-led setup — your rate rules, service area, vehicle types, and dispatch process documented and configured directly. A few slots open at a time.</p>
+        <!-- B8 · pricing POSTURE only. No dollar figure appears anywhere on
+             any chauffeur page, by instruction. -->
+        <p class="setup-p" style="margin-top:1rem;color:var(--ink-mute)">Every build is custom to your operation — your rates, your service area, your vehicle classes. We scope it on the intro call.</p>
       </div>
       <div class="setup-cta">
-        <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn btn-primary">
+        <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn btn-primary" data-event="book_click_setup">
           Request local setup
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
         </a>
-        <span class="setup-note">Schedules a 20-min intro call</span>
+        <span class="setup-note">Schedules a 20-min intro call.</span>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ B5 · OPERATOR-BUILT ═══════════════════════════════════════════════
+     Spec said "move the founder section above the FAQ." There was no founder
+     section to move — the only founder material on the page was one sentence
+     buried in the footer tagline and a kicker on the setup card. Built here,
+     above the FAQ, which is where the spec wanted it. -->
+<section id="founder">
+  <div class="wrap">
+    <div class="founder-card">
+      <div class="sec-kicker">Operator-built</div>
+      <h2 class="founder-h">Built by someone who <em>ran the phones.</em></h2>
+      <p class="founder-p">Thirty years running businesses. Seventeen of them running a chauffeured transportation company — the same phones, the same board, the same nights you work.</p>
+      <p class="founder-p">That means the Friday crush is a memory here, not a market segment. So is the 5 AM airport push, the third call that comes in while you're still writing down the second, and what it costs when a ring goes unanswered and the fare dials the next name on the map.</p>
+      <p class="founder-p">This was built to answer that phone. Nothing else.</p>
     </div>
   </div>
 </section>
@@ -658,61 +922,67 @@
     </details>
     <details>
       <summary>Does it work with my CRM or dispatch software?</summary>
-      <div>Setup is custom. We connect AI Chauffeur to your existing dispatch workflow — Limo Anywhere, FASTTRAK, or your CRM — so trip requests land where your team already works.</div>
+      <div>Yes. The call comes back as a clean trip ticket your dispatcher confirms in the software you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox. Nothing gets ripped out and nothing gets replaced.</div>
     </details>
     <details>
       <summary>How fast can it go live?</summary>
       <div>Local setup is founder-led right now. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented.</div>
     </details>
+    <!-- AIC SITE RUN 1 — this answer read "The AVA strategy call is 15 minutes"
+         while the setup card three sections up read "Schedules a 20-min intro
+         call." The page contradicted itself on the same scroll. "AVA strategy
+         call" is also the AVA parent brand's calendar name, not this one's. -->
     <details>
       <summary>What about pricing?</summary>
-      <div>Pricing is set during the local setup call once we understand your call volume, fleet size, and dispatch process. The AVA strategy call is 15 minutes.</div>
+      <div>Every build is custom to your operation — your rates, your service area, your vehicle classes. We scope it on the intro call, once we know your call volume, fleet size, and how you dispatch. That call runs 20 minutes.</div>
+    </details>
+    <details>
+      <summary>Can I just hear it first?</summary>
+      <div>Call <a href="tel:+14147750019">(414) 775-0019</a> and AVA picks up. That is the same line an operator's caller would reach — no booking, no form, no salesperson. Listen to how it handles you, then decide.</div>
     </details>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
+    <!-- ══ B7 · FOOTER REBUILD ═══════════════════════════════════════════
+         NAP block replaces the tagline paragraph. The large cyan cross-link
+         row to aivoiceagency.ai and ai100x.ai is REMOVED by instruction —
+         the two brands run as separate sites, and that row was the loudest
+         thing in the footer, pointing away from this one. The single quiet
+         attribution line in foot-bottom is the only remaining acknowledgement.
+         Terms now points at /terms (this host), not /terms.html (which is a
+         repo-root path and 404s on aichauffeur.ai). -->
     <div class="foot">
       <div class="foot-brand">
         <div class="foot-mark">AI <em>Chauffeur</em></div>
-        <p class="foot-tagline">Limo dispatch AI and black car reservation automation. AVA answers the dispatch line for chauffeured operators. Built by a 30-year business owner — 17 years running a chauffeured transportation company.</p>
+        <p class="foot-nap">
+          AI CHAUFFEUR · Wisconsin-built<br>
+          <a href="tel:+14147750019" data-event="tel_tap_footer">(414) 775-0019</a><br>
+          Serving operators nationwide
+        </p>
       </div>
       <div class="foot-links">
         <a href="#how">How it works</a>
-        <a href="#features">Features</a>
+        <a href="/demo/">Demo</a>
         <a href="#faq">FAQ</a>
-        <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener">Request setup</a>
       </div>
       <div class="foot-links">
-        <a href="/privacy">Privacy</a>
-        <a href="/terms.html">Terms</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+        <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" data-event="book_click_footer">Request setup</a>
       </div>
     </div>
-    <div class="foot-mesh">
-      <a href="https://aivoiceagency.ai">AI Voice Agency · Voice Operations System</a>
-      <span class="sep">·</span>
-      <a href="https://ai100x.ai">AI100X · Operator Dashboard</a>
-    </div>
     <div class="foot-bottom">
-      <span>© 2026 AI Chauffeur · An AI Voice Agency property</span>
+      <span>© 2026 AI Chauffeur · an AI Voice Agency property</span>
       <span>United States · Built for high-volume operators</span>
     </div>
   </div>
 </footer>
 
 <script>
-const nav = document.querySelector('nav.top');
-let ticking = false;
-window.addEventListener('scroll', () => {
-  if (!ticking) {
-    requestAnimationFrame(() => {
-      nav.style.background = window.scrollY > 40 ? 'rgba(10,10,15,.92)' : 'rgba(10,10,15,.72)';
-      ticking = false;
-    });
-    ticking = true;
-  }
-});
+/* nav tint + the AVA-calls-you rail now live in /assets/aic.js */
+
 
 /* Live audio-synced dispatch demo (Pass 1) */
 (function(){
@@ -727,7 +997,11 @@ window.addEventListener('scroll', () => {
   const reveals = Array.from(card.querySelectorAll('[data-reveal]'));
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const setLabel = (txt, glyphChar) => { label.textContent = txt; if (glyphChar) glyph.textContent = glyphChar; };
+  /* B1 · the glyph is an inline SVG now, so the old textContent swap would
+     have wiped the icon out of the button on the first state change. */
+  const PLAY_SVG  = '<svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+  const PAUSE_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  const setLabel = (txt, glyphSvg) => { label.textContent = txt; if (glyphSvg) glyph.innerHTML = glyphSvg; };
 
   function showAll(){
     reveals.forEach(r => r.classList.add('on'));
@@ -744,10 +1018,10 @@ window.addEventListener('scroll', () => {
   if (reduced){
     showAll();
     btn.addEventListener('click', () => {
-      if (audio.paused){ audio.play(); btn.setAttribute('data-state','playing'); setLabel('Playing…','❚❚'); }
-      else { audio.pause(); btn.setAttribute('data-state','idle'); setLabel('Play mock demo','▶'); }
+      if (audio.paused){ audio.play(); btn.setAttribute('data-state','playing'); setLabel('Playing…', PAUSE_SVG); }
+      else { audio.pause(); btn.setAttribute('data-state','idle'); setLabel('Play the call', PLAY_SVG); }
     });
-    audio.addEventListener('ended', () => { btn.setAttribute('data-state','idle'); setLabel('Play mock demo','▶'); audio.currentTime = 0; });
+    audio.addEventListener('ended', () => { btn.setAttribute('data-state','idle'); setLabel('Play the call', PLAY_SVG); audio.currentTime = 0; });
     return;
   }
 
@@ -778,16 +1052,16 @@ window.addEventListener('scroll', () => {
     if (t >= metaAt) card.classList.add('show-meta');
   });
 
-  audio.addEventListener('play', () => { btn.setAttribute('data-state','playing'); setLabel('Playing…','❚❚'); });
+  audio.addEventListener('play', () => { btn.setAttribute('data-state','playing'); setLabel('Playing…', PAUSE_SVG); });
   audio.addEventListener('pause', () => {
     if (audio.ended) return;
     btn.setAttribute('data-state','idle');
-    setLabel('Play mock demo','▶');
+    setLabel('Play the call', PLAY_SVG);
   });
   audio.addEventListener('ended', () => {
     showAll();
     btn.setAttribute('data-state','idle');
-    setLabel('Play mock demo','▶');
+    setLabel('Play the call', PLAY_SVG);
     audio.currentTime = 0;
   });
 
@@ -796,7 +1070,7 @@ window.addEventListener('scroll', () => {
     audio.currentTime = 0;
     arm();
     const p = audio.play();
-    if (p && typeof p.catch === 'function') p.catch(() => { setLabel('Tap to retry','▶'); });
+    if (p && typeof p.catch === 'function') p.catch(() => { setLabel('Tap to play', PLAY_SVG); });
   });
 })();
 
@@ -837,7 +1111,46 @@ window.addEventListener('scroll', () => {
   }
   run();
 })();
+
+
+
+/* ══ B6 · THE VISITOR'S OWN CLOCK ════════════════════════════════════════
+   Renders the reader's real local day and time, then names the dispatch
+   window that hour belongs to. The time and day are mechanical fact from the
+   device. The second clause characterises the window — it is NOT a statistic,
+   a volume claim, or an event we assert is happening. Nothing here is
+   fabricated and nothing is sourced, because nothing is claimed. */
+(function crushClock(){
+  var el = document.getElementById('crush-now');
+  if (!el) return;
+  try {
+    var now  = new Date();
+    var hour = now.getHours();
+    var day  = now.getDay();               // 0 Sun … 6 Sat
+    var weekend = (day === 0 || day === 6);
+
+    var window_;
+    if (hour >= 21 || hour < 4)       window_ = 'Bar, event and late-flight hours.';
+    else if (hour < 9)                window_ = 'The airport push.';
+    else if (hour < 17)               window_ = weekend ? 'Weddings and group moves.'
+                                                        : 'Quotes and next-week bookings.';
+    else                              window_ = 'Dinner and hotel runs.';
+
+    var time = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    var name = now.toLocaleDateString([], { weekday: 'long' });
+
+    el.textContent = 'It’s ' + time + ' on a ' + name + '. ' + window_;
+    el.hidden = false;
+  } catch (err) {
+    /* Any locale/Date oddity leaves the line hidden rather than half-rendered. */
+    el.hidden = true;
+  }
+})();
 </script>
+
+<!-- Shared rail: nav tint + the "AVA calls you" form. Endpoint lives ONLY in
+     this file, so a future endpoint swap is one edit, not six. -->
+<script src="/assets/aic.js"></script>
 
 </body>
 </html>
