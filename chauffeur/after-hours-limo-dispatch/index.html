@@ -13,10 +13,12 @@
   <meta property="og:title" content="After-Hours Limo Dispatch — Nights, Weekends, Surges">
   <meta property="og:description" content="Nights, weekends, and event surges get answered. AVA takes every after-hours call and hands your dispatcher a clean trip ticket.">
   <meta property="og:url" content="https://aichauffeur.ai/after-hours-limo-dispatch/">
-  <!-- summary, not summary_large_image: no og:image asset exists for the AI Chauffeur
-       brand yet, and declaring a large card with no image renders as a broken card.
-       Upgrade this line the same day a real OG image ships. -->
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AI Chauffeur - the limo answering service that never puts a caller on hold. (414) 775-0019">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
   <meta name="twitter:title" content="After-Hours Limo Dispatch — Nights, Weekends, Surges">
   <meta name="twitter:description" content="Nights, weekends, and event surges get answered. AVA takes every after-hours call and hands your dispatcher a clean trip ticket.">
 
@@ -187,6 +189,48 @@
     <p class="sec-sub">The mechanic is simple, and you already know it. Somebody needs a car. They call. If nobody picks up, they do not sit and wait — they go back to the map and call the next name on it. The ride does not disappear. It moves.</p>
     <p class="sec-sub">That is the whole cost of after hours. Not a statistic. A transfer.</p>
     <p class="sec-sub">Answering is what stops the transfer. AVA picks up at 2 AM the same as it does at 2 PM. It takes the entire trip and puts it on the board. The run stays with you, and your dispatcher decides what happens to it next.</p>
+
+    <!-- ══ MISSED-NIGHT CALCULATOR ══════════════════════════════════════
+         Deliberately placed directly under the paragraph that refuses to
+         invent a percentage. We do not have a number for the operator, so
+         we hand him the arithmetic and let him supply both figures. Both
+         inputs ship EMPTY. `hidden` is removed by aic.js, so with JS off
+         this never renders as a dead form. -->
+    <div class="calc" id="missed-night" data-calc hidden>
+      <div class="sec-kicker" style="margin-bottom:.35rem">Run your own number</div>
+      <p class="sec-sub" style="margin-bottom:1.4rem;max-width:52ch">Two figures only you know. Nothing is saved and nothing is sent — this runs in your browser and disappears when you close the tab.</p>
+
+      <div class="calc-row">
+        <div class="calc-field">
+          <label class="calc-label" for="calc-fare">Your average fare</label>
+          <input class="calc-input" id="calc-fare" data-calc-fare type="number"
+                 inputmode="decimal" min="0" step="1" placeholder="$" autocomplete="off">
+        </div>
+        <div class="calc-field">
+          <label class="calc-label" for="calc-missed">Calls you miss in a week</label>
+          <input class="calc-input" id="calc-missed" data-calc-missed type="number"
+                 inputmode="numeric" min="0" step="1" placeholder="#" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="calc-out">
+        <div class="calc-cell">
+          <div class="calc-k">A week</div>
+          <div class="calc-v" data-calc-out="week" data-empty="true" role="status" aria-live="polite">—</div>
+        </div>
+        <div class="calc-cell">
+          <div class="calc-k">A month</div>
+          <div class="calc-v" data-calc-out="month" data-empty="true">—</div>
+        </div>
+        <div class="calc-cell">
+          <div class="calc-k">A year</div>
+          <div class="calc-v" data-calc-out="year" data-empty="true">—</div>
+        </div>
+      </div>
+
+      <p class="calc-note">Your numbers. Your math.</p>
+      <p class="calc-basis">Weekly is your fare times your missed calls. Monthly is the weekly figure times 52 divided by 12. Yearly is times 52. That is the whole calculation — no assumptions of ours in it anywhere.</p>
+    </div>
   </div>
 </section>
 
@@ -201,7 +245,7 @@
       <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_cta">
         <span class="tel-main">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call the line — (414) 775-0019
+          Call (414) 775-0019
         </span>
         <span class="tel-sub">AVA answers. Hear it yourself.</span>
       </a>
@@ -308,7 +352,6 @@
     </div>
     <div class="foot-bottom">
       <span>© 2026 AI Chauffeur · an AI Voice Agency property</span>
-      <span>United States · Built for high-volume operators</span>
     </div>
   </div>
 </footer>

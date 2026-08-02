@@ -24,13 +24,41 @@
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
+/* ── COLOR LAW · CIRCULANT-X ───────────────────────────────────────────────
+   Every value below is MEASURED against the void (#0A0A0F), not eyeballed.
+   A semantic colour may only appear where its meaning is literally true on
+   screen: green is never "a nice green", amber is never "an attention colour".
+   Max 2 accents per section. 60% void / 30% panel / 10% accent.
+
+     --booked-green  12.23:1   win · answered · captured
+     --amber         10.80:1   urgency · loss · the clock
+     --miss-red       5.63:1   missed · at risk   (use sparingly)
+     --neutral        6.40:1   inactive · not-yet · n/a
+     --cyan          11.16:1   brand
+     --ink           17.31:1   body
+
+   --ink-dim WAS rgba(238,240,244,.34), which measures 2.79:1 on the void and
+   FAILED AA on every mono label using it (ticket labels, form labels, card
+   numbers, footer, legal meta, comparison keys). It is now an alias of
+   --neutral, so one line repairs all of them at once and the muted label
+   colour becomes semantically correct rather than merely faint.
+   ────────────────────────────────────────────────────────────────────────── */
 :root{
   --void:#0A0A0F; --void-2:#14141C; --void-card:rgba(20,20,28,.62);
-  --ink:#EEF0F4; --ink-soft:rgba(238,240,244,.78); --ink-mute:rgba(238,240,244,.55); --ink-dim:rgba(238,240,244,.34);
+  --ink:#EEF0F4; --ink-soft:rgba(238,240,244,.78); --ink-mute:rgba(238,240,244,.55);
+
+  /* canonical semantic tokens */
+  --booked-green:#2EE6A8;
+  --amber:#FFB020;
+  --miss-red:#FF3B4E;
+  --neutral:#8A93A6;
+
+  --ink-dim:var(--neutral);               /* was 2.79:1 — now 6.40:1 */
+  --booked:var(--booked-green);           /* back-compat alias */
+  --alarm:var(--miss-red);                /* back-compat alias */
+
   --cyan:#00D4FF; --cyan-bright:#00E5FF; --cyan-glow:rgba(0,212,255,.35); --cyan-dim:rgba(0,212,255,.18);
   --line:rgba(0,212,255,.14); --line-hot:rgba(0,212,255,.42);
-  --alarm:#FF3B30; --amber:#FBBF24;
-  --booked:#2EE6A8;                       /* CIRCULANT-X Booked-Green, 12.23:1 on void */
   --sans:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
 }
 
@@ -86,7 +114,10 @@ h1.page-h em{font-style:italic;color:var(--cyan)}
   line-height:1.55;margin-bottom:2.25rem;text-wrap:pretty}
 
 /* ── SECTIONS ────────────────────────────────────────────────────────────── */
-section{padding:80px 0;position:relative;z-index:1}
+/* Section rhythm: 96px desktop / 56px mobile. Was 80px desktop, under the
+   >=96px floor. The 64px homepage exception is the AVA homepage's own ratified
+   value and does not reach this host. */
+section{padding:96px 0;position:relative;z-index:1}
 @media(max-width:600px){section{padding:56px 0}}
 .sec-kicker{font-family:var(--mono);font-size:.68rem;font-weight:500;letter-spacing:.18em;
   text-transform:uppercase;color:var(--cyan-bright);margin-bottom:1rem}
@@ -97,6 +128,15 @@ section{padding:80px 0;position:relative;z-index:1}
 .sec-sub{font-size:1.08rem;color:var(--ink-soft);max-width:64ch;line-height:1.65;
   margin-bottom:1.25rem;text-wrap:pretty}
 .sec-sub:last-child{margin-bottom:0}
+
+/* Inline links inside a block of prose must be distinguishable by something
+   other than colour. Cyan on soft-ink is only 1.21:1 against the surrounding
+   text — well under the 3:1 WCAG needs when colour is the ONLY signal — so a
+   colour-blind reader cannot see where the link is. An underline is the
+   signal; the colour stays as reinforcement. (Links that are their own block
+   — .rel cards, nav, footer, CTAs — are exempt: position identifies them.) */
+.sec-sub a,.page-sub a,.card-p a,.vs-b a,.tk-sub a,.calc-basis a,.ticket-foot a{
+  text-decoration:underline;text-underline-offset:.18em;text-decoration-thickness:1px}
 
 /* ── CARD GRID (3-up → 2-up → 1-up) ──────────────────────────────────────── */
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1rem;margin-top:2rem}
@@ -167,9 +207,11 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.40),inset 0 0 26px rgba(200,248,255,.55)}
 .tel-btn:active{transform:translateY(1px);box-shadow:inset 0 2px 9px rgba(0,32,44,.34)}
 .tel-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+/* white-space:nowrap — the number was breaking after "775-" and orphaning
+   "0019" onto its own line at narrow widths. A phone number is one token. */
 .tel-main{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.95rem;
   font-weight:600;letter-spacing:.06em;text-transform:uppercase;line-height:1.15;
-  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;white-space:nowrap}
 .tel-main svg{width:17px;height:17px;flex-shrink:0}
 .tel-sub{font-family:var(--sans);font-size:.85rem;font-weight:500;letter-spacing:.01em;
   text-transform:none;color:rgba(0,0,0,.72)}
@@ -222,6 +264,46 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
 .cta-tertiary a:hover{color:var(--cyan-bright);border-color:var(--cyan-bright)}
 .cta-tertiary a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .cta-note{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);letter-spacing:.06em}
+
+/* ── MISSED-NIGHT CALCULATOR ──────────────────────────────────────────────
+   The only number an operator believes is the one he typed in himself. Both
+   inputs ship EMPTY — no seeded "average fare", no assumed miss rate, nothing
+   for us to be accused of inventing. Nothing is stored and nothing is sent.
+   Outputs are --amber because they represent loss, and tabular-nums so the
+   figures do not jitter as they recompute on every keystroke.
+   ────────────────────────────────────────────────────────────────────────── */
+.calc{background:var(--gx-fill,rgba(20,20,28,.62));border:1px solid var(--line-hot);
+  border-radius:16px;padding:1.6rem;margin-top:2rem;
+  -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
+@media(min-width:760px){.calc{padding:2rem}}
+.calc-row{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem}
+.calc-field{flex:1 1 190px;display:flex;flex-direction:column;gap:.35rem}
+.calc-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--neutral)}
+.calc-input{width:100%;min-height:44px;padding:.7rem .85rem;border-radius:8px;
+  background:rgba(10,10,15,.55);border:1px solid var(--line);color:var(--ink);
+  font-family:var(--mono);font-size:1.15rem;font-variant-numeric:tabular-nums;
+  transition:border-color .15s,box-shadow .15s}
+.calc-input::placeholder{color:var(--neutral);opacity:.6}
+.calc-input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.18)}
+.calc-input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+/* number spinners removed — they invite fiddling and misalign the mono figures */
+.calc-input::-webkit-outer-spin-button,.calc-input::-webkit-inner-spin-button{
+  -webkit-appearance:none;margin:0}
+.calc-input[type=number]{-moz-appearance:textfield;appearance:textfield}
+
+.calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.85rem;
+  padding-top:1.4rem;border-top:1px solid var(--line)}
+.calc-cell{background:rgba(10,10,15,.4);border:1px solid var(--line);border-radius:10px;
+  padding:1rem}
+.calc-k{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--neutral);margin-bottom:.45rem}
+.calc-v{font-family:var(--mono);font-size:1.5rem;font-weight:500;color:var(--amber);
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;line-height:1.1}
+.calc-v[data-empty="true"]{color:var(--neutral);opacity:.5}
+.calc-note{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;color:var(--neutral);
+  margin-top:1.1rem;text-transform:uppercase}
+.calc-basis{font-size:.85rem;color:var(--ink-mute);margin-top:.6rem;line-height:1.55}
 
 /* ── RELATED / INTERNAL LINKS ────────────────────────────────────────────── */
 .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.85rem;margin-top:2rem}

@@ -259,6 +259,11 @@ VERSION_ONLY = [
     'chauffeur/milwaukee-limo-answering-service/index.html',
     'chauffeur/privacy/index.html',
     'chauffeur/terms/index.html',
+    # AIC SITE RUN 2 — four more on the same host, same reasoning.
+    'chauffeur/works-with-your-software/index.html',
+    'chauffeur/airport-transfer-booking/index.html',
+    'chauffeur/how-setup-works/index.html',
+    'chauffeur/madison-limo-answering-service/index.html',
 ]
 
 

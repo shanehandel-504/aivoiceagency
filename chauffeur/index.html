@@ -13,10 +13,12 @@
   <meta property="og:title" content="Limo Answering Service — AI Dispatch That Books the Ride">
   <meta property="og:description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket. Built by an operator.">
   <meta property="og:url" content="https://aichauffeur.ai/">
-  <!-- summary, not summary_large_image: no og:image asset exists for the AI Chauffeur
-       brand yet, and declaring a large card with no image renders as a broken card.
-       Upgrade this line the same day a real OG image ships. -->
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AI Chauffeur - the limo answering service that never puts a caller on hold. (414) 775-0019">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
   <meta name="twitter:title" content="Limo Answering Service — AI Dispatch That Books the Ride">
   <meta name="twitter:description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket.">
 
@@ -58,12 +60,22 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --void:#0A0A0F; --void-2:#14141C; --void-card:rgba(20,20,28,.62);
-      --ink:#EEF0F4; --ink-soft:rgba(238,240,244,.78); --ink-mute:rgba(238,240,244,.55); --ink-dim:rgba(238,240,244,.34);
+      --ink:#EEF0F4; --ink-soft:rgba(238,240,244,.78); --ink-mute:rgba(238,240,244,.55);
       --cyan:#00D4FF; --cyan-bright:#00E5FF; --cyan-glow:rgba(0,212,255,.35); --cyan-dim:rgba(0,212,255,.18);
       --line:rgba(0,212,255,.14); --line-hot:rgba(0,212,255,.42);
-      --alarm:#FF3B30; --amber:#FBBF24;
-      /* CIRCULANT-X Booked-Green — 12.23:1 on void. Success only, never decoration. */
-      --booked:#2EE6A8;
+      /* ── COLOR LAW · CIRCULANT-X — measured on the void, not eyeballed.
+           A semantic colour appears only where its meaning is literally true.
+             --booked-green 12.23:1 · --amber 10.80:1 · --miss-red 5.63:1
+             --neutral 6.40:1 · --cyan 11.16:1 · --ink 17.31:1
+           --ink-dim was rgba(ink,.34) = 2.79:1 and FAILED AA on every mono
+           label. It is now an alias of --neutral: one line, all of them fixed. */
+      --booked-green:#2EE6A8;
+      --amber:#FFB020;
+      --miss-red:#FF3B4E;
+      --neutral:#8A93A6;
+      --ink-dim:var(--neutral);
+      --booked:var(--booked-green);
+      --alarm:var(--miss-red);
       --serif:'Space Grotesk',sans-serif; --sans:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
     }
     html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;background:var(--void)}
@@ -125,11 +137,11 @@
     .console-title{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)}
     .dots{display:flex;gap:5px}
     .dots span{width:10px;height:10px;border-radius:50%}
-    .dots span:nth-child(1){background:rgba(251,191,36,.45)}
+    .dots span:nth-child(1){background:rgba(255,176,32,.45)}
     .dots span:nth-child(2){background:rgba(0,212,255,.45)}
-    .dots span:nth-child(3){background:rgba(52,211,153,.45)}
-    .live-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
-    .live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 1.6s ease-in-out infinite}
+    .dots span:nth-child(3){background:rgba(46,230,168,.45)}
+    .live-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--booked-green)}
+    .live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--booked-green);box-shadow:0 0 6px var(--booked-green);animation:pulse 1.6s ease-in-out infinite}
 
     .console-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.85rem;margin-bottom:.85rem}
     .c-card{background:rgba(10,10,15,.4);border:1px solid var(--line);border-radius:10px;padding:.95rem 1.05rem}
@@ -141,8 +153,8 @@
     .c-meta{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);text-align:center;padding-top:.85rem;border-top:1px solid var(--line)}
 
     .badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;border-radius:99px}
-    .badge-green{background:rgba(52,211,153,.12);color:var(--green);border:1px solid rgba(52,211,153,.3)}
-    .badge-amber{background:rgba(251,191,36,.12);color:var(--amber);border:1px solid rgba(251,191,36,.3)}
+    .badge-green{background:rgba(46,230,168,.12);color:var(--booked-green);border:1px solid rgba(46,230,168,.3)}
+    .badge-amber{background:rgba(255,176,32,.12);color:var(--amber);border:1px solid rgba(255,176,32,.3)}
     .badge-blue{background:var(--cyan-dim);color:var(--cyan-bright);border:1px solid var(--line-hot)}
     .badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
 
@@ -182,6 +194,12 @@
     .crush-h{font-family:var(--sans);font-size:clamp(1.8rem,3.6vw,2.8rem);color:var(--ink);font-weight:400;margin-bottom:1rem;line-height:1.1;position:relative}
     .crush-h em{font-style:italic;color:var(--cyan)}
     .crush-p{font-size:1.05rem;color:var(--ink-soft);max-width:62ch;margin:0 auto 2rem;line-height:1.6;position:relative}
+    .crush-calc-link{position:relative;margin-top:1.4rem}
+    .crush-calc-link a{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;
+      text-transform:uppercase;color:var(--amber);border-bottom:1px solid rgba(255,176,32,.4);
+      display:inline-flex;align-items:center;min-height:44px}
+    .crush-calc-link a:hover{color:var(--ink);border-color:var(--ink)}
+    .crush-calc-link a:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
     .crush .btn-primary{position:relative}
 
     .setup-card{background:var(--void-card);border:1px solid var(--line-hot);border-radius:18px;padding:2.5rem 2rem;display:grid;gap:1.5rem;align-items:center;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:relative;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.25),0 0 0 1px rgba(0,212,255,.08)}
@@ -304,7 +322,7 @@
     .hero-console [data-hc-stage]{opacity:0;transform:translateY(4px);transition:opacity .55s ease,transform .55s ease}
     .hero-console [data-hc-stage].on{opacity:1;transform:translateY(0)}
     .hero-console .hc-state{display:inline-flex;align-items:center;font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;margin-left:.7rem;padding:3px 9px;border-radius:99px;text-transform:uppercase;transition:color .25s,background .25s,border-color .25s}
-    .hero-console .hc-state.ringing{color:var(--amber);background:rgba(251,191,36,.10);border:1px solid rgba(251,191,36,.45);animation:hc-ring 1s ease-in-out infinite}
+    .hero-console .hc-state.ringing{color:var(--amber);background:rgba(255,176,32,.10);border:1px solid rgba(255,176,32,.45);animation:hc-ring 1s ease-in-out infinite}
     .hero-console .hc-state.live{color:var(--cyan-bright);background:rgba(0,212,255,.12);border:1px solid var(--line-hot)}
     .hero-console .hc-state.complete{color:var(--ink);background:rgba(0,212,255,.18);border:1px solid var(--cyan-bright)}
     @keyframes hc-ring{0%,100%{opacity:.55}50%{opacity:1}}
@@ -401,9 +419,11 @@
       box-shadow:inset 0 1px 0 rgba(255,255,255,.40),inset 0 0 26px rgba(200,248,255,.55)}
     .tel-btn:active{transform:translateY(1px);box-shadow:inset 0 2px 9px rgba(0,32,44,.34)}
     .tel-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+    /* white-space:nowrap — the number was breaking after "775-" and orphaning
+       "0019" onto its own line at narrow widths. A phone number is one token. */
     .tel-main{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);
       font-size:.95rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-      font-variant-numeric:tabular-nums;line-height:1.15}
+      font-variant-numeric:tabular-nums;line-height:1.15;white-space:nowrap}
     .tel-main svg{width:17px;height:17px;flex-shrink:0}
     .tel-sub{font-family:var(--sans);font-size:.85rem;font-weight:500;
       letter-spacing:.01em;text-transform:none;color:rgba(0,0,0,.72)}
@@ -568,7 +588,7 @@
       <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_hero">
         <span class="tel-main">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call the line — (414) 775-0019
+          Call (414) 775-0019
         </span>
         <span class="tel-sub">AVA answers. Hear it yourself.</span>
       </a>
@@ -623,7 +643,7 @@
         <span class="hc-line" data-hc-line="0"><svg class="hc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Inbound call · +1 (414) 555-0182</span>
         <span class="hc-line" data-hc-line="1"><span class="hc-who">AVA:</span> AI Chauffeur, this is AVA — where are you headed today?</span>
         <span class="hc-line" data-hc-line="2"><span class="hc-who">Caller:</span> Downtown Marriott to MKE airport, 5:45 AM tomorrow.</span>
-        <span class="hc-line" data-hc-line="3"><span class="hc-who">AVA:</span> Got it — one passenger, executive sedan. Sending confirmation now.</span>
+        <span class="hc-line" data-hc-line="3"><span class="hc-who">AVA:</span> Got it — one passenger, executive sedan. I have it all down for your dispatcher.</span>
       </div>
       <div class="console-grid">
         <div class="c-card">
@@ -653,12 +673,12 @@
       </div>
       <div class="console-grid">
         <div class="c-card">
-          <div class="c-label">Passenger</div>
-          <span class="badge badge-green" data-hc-stage="7">Confirmation sent</span>
+          <div class="c-label">Intake</div>
+          <span class="badge badge-green" data-hc-stage="7">Trip captured</span>
         </div>
         <div class="c-card">
-          <div class="c-label">Driver</div>
-          <span class="badge badge-amber" data-hc-stage="8">Driver requested</span>
+          <div class="c-label">Handoff</div>
+          <span class="badge badge-amber" data-hc-stage="8">Ready for dispatch</span>
         </div>
       </div>
       <div class="c-meta" data-hc-stage="9">Call received · 05:45 AM · Intake complete</div>
@@ -733,31 +753,34 @@
       <div class="console-grid">
         <div class="c-card" data-reveal="8">
           <div class="c-label">Status</div>
-          <span class="badge badge-blue">Reservation written</span>
+          <span class="badge badge-blue">Ticket complete</span>
         </div>
         <div class="c-card" data-reveal="9">
-          <div class="c-label">Confirmation</div>
-          <span class="badge badge-green">SMS sent to caller</span>
+          <div class="c-label">Caller</div>
+          <span class="badge badge-green">Callback number captured</span>
         </div>
       </div>
       <div class="c-meta">Captured 2:14 · Routed to dispatch · Awaiting confirmation</div>
-      <div id="demo-final-badge" role="status" aria-live="polite">Confirmation texted · Driver notified · Ride logged</div>
+      <div id="demo-final-badge" role="status" aria-live="polite">Trip captured · Ticket ready · Dispatcher notified</div>
     </div>
   </div>
 </section>
 
 <section id="integrations">
   <div class="wrap">
-    <!-- ══ B4 · COMPATIBILITY, NOT INTEGRATION ═══════════════════════════
-         This section previously claimed AVA "writes into" and "writes a clean
-         reservation straight into" the operator's dispatch platform, and that
-         it "passes the trip to your affiliate network automatically." Those
-         are write-integration claims. What actually ships is capture: the
-         call becomes a structured trip ticket a dispatcher confirms. Reworded
-         to compatibility framing — the honest claim, and the one we can keep. -->
+    <!-- ══ COMPATIBILITY, NOT INTEGRATION ════════════════════════════════
+         Phase 1 is capture only. This section is worded so it cannot be read
+         as AVA delivering records into dispatch software, routing drivers, or
+         passing work to affiliates. It captures; a human confirms.
+
+         NOTE TO FUTURE EDITORS: do not restate the old wording here, even to
+         explain what was removed. RUN 1 spelled the retired phrases out in a
+         comment, and because comments ship, a later grep-based audit matched
+         them in the live HTML and reported the page as still carrying claims
+         it had not carried for a day. Describe the rule, never quote it. -->
     <div class="sec-kicker">No rip-out</div>
     <h2 class="sec-h">Works with <em>what you already run.</em></h2>
-    <p class="sec-sub">The reservation lands as a clean trip ticket your dispatcher confirms in the software you already use — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox. No switch, no rip-out.</p>
+    <p class="sec-sub">You get a clean trip ticket your dispatcher confirms in whatever you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox. AVA takes the call; your dispatcher makes the booking. No switch, no rip-out.</p>
 
     <div class="int-pills">
       <span class="int-pill">Limo Anywhere</span>
@@ -804,7 +827,12 @@
   <div class="wrap">
     <div class="sec-kicker">Why this matters</div>
     <h2 class="sec-h">Every missed call is a ride going to <em>someone else.</em></h2>
-    <p class="sec-sub" style="max-width:54ch;font-size:1.15rem">Voicemail, after-hours, the same five questions every call, three calls hitting at once on a busy night. AVA picks up all of them and writes a clean reservation your dispatcher confirms instead of building from scratch.</p>
+    <!-- CLAIM SAFETY (RUN 2): this sentence survived RUN 1's integrations
+         rewrite and still described AVA producing a reservation record in the
+         operator's system. Phase 1 is capture only. Corrected to the same
+         language every interior page uses: AVA captures, the dispatcher
+         confirms. -->
+    <p class="sec-sub" style="max-width:54ch;font-size:1.15rem">Voicemail, after-hours, the same five questions every call, three calls hitting at once on a busy night. AVA picks up all of them and takes the whole trip down, so your dispatcher confirms a finished ticket instead of building one from scratch.</p>
   </div>
 </section>
 
@@ -835,8 +863,8 @@
         <p class="feat-p">The trip ticket arrives in a form your dispatcher can confirm in the tools you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox.</p>
       </div>
       <div class="feat">
-        <div class="feat-h">Confirmation loop</div>
-        <p class="feat-p">Sends confirmation to the passenger and routes the request to your driver pool — closing both sides of the booking.</p>
+        <div class="feat-h">Nothing gets re-asked</div>
+        <p class="feat-p">Name, number, route, time, vehicle, bags, flight — all of it on the ticket. Your dispatcher confirms from what is already there instead of calling back for the basics.</p>
       </div>
     </div>
   </div>
@@ -853,12 +881,16 @@
            hidden) with JS off, so nothing renders as a blank line. -->
       <p class="crush-now" id="crush-now" hidden></p>
       <h2 class="crush-h">When three calls hit at once and the next ride goes to <em>whoever answers first.</em></h2>
-      <p class="crush-p">The Crush is what limo and black car operators call those moments — Friday airport rush, prom night, Super Bowl weekend, every concert that ends at 11 PM. AI Chauffeur is built to absorb those windows; AVA never lets a call sit on hold. The everyday value is cleaner intake, quoting, confirmations, and follow-through. The Crush is when it earns the keep.</p>
+      <!-- "confirmations" was in this list as an everyday AVA value. Phase 1 is
+           capture only — a human confirms. Replaced with what actually happens. -->
+      <p class="crush-p">The Crush is what limo and black car operators call those moments — Friday airport rush, prom night, the concert that ends at 11 PM. AI Chauffeur is built to absorb those windows; AVA never lets a call sit on hold. The everyday value is cleaner intake: the whole trip taken down the first time, so your dispatcher is confirming instead of chasing. The Crush is when it earns the keep.</p>
       <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn btn-primary">
         Request local setup
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
       </a>
+      <!-- entry point to the missed-night calculator (TASK C) -->
+      <p class="crush-calc-link"><a href="/after-hours-limo-dispatch/#missed-night">Work out what a missed night costs you →</a></p>
     </div>
   </div>
 </section>
@@ -945,14 +977,12 @@
 
 <footer>
   <div class="wrap">
-    <!-- ══ B7 · FOOTER REBUILD ═══════════════════════════════════════════
-         NAP block replaces the tagline paragraph. The large cyan cross-link
-         row to aivoiceagency.ai and ai100x.ai is REMOVED by instruction —
-         the two brands run as separate sites, and that row was the loudest
-         thing in the footer, pointing away from this one. The single quiet
-         attribution line in foot-bottom is the only remaining acknowledgement.
-         Terms now points at /terms (this host), not /terms.html (which is a
-         repo-root path and 404s on aichauffeur.ai). -->
+    <!-- ══ FOOTER ════════════════════════════════════════════════════════
+         NAP block, not a tagline paragraph. The cross-brand promo row was
+         removed in RUN 1 — the brands run as separate sites, and it was the
+         loudest thing in the footer while pointing away from this one. The
+         single quiet attribution line below is all that remains.
+         Legal links are directory paths, which is what resolves on this host. -->
     <div class="foot">
       <div class="foot-brand">
         <div class="foot-mark">AI <em>Chauffeur</em></div>
@@ -975,7 +1005,6 @@
     </div>
     <div class="foot-bottom">
       <span>© 2026 AI Chauffeur · an AI Voice Agency property</span>
-      <span>United States · Built for high-volume operators</span>
     </div>
   </div>
 </footer>

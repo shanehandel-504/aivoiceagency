@@ -19,10 +19,12 @@
 <meta property="og:title" content="Watch AVA Capture a Ride — Live Dispatch Demo">
 <meta property="og:description" content="Pick a scenario and watch the trip ticket build itself as AVA takes the call. Real recorded audio.">
 <meta property="og:url" content="https://aichauffeur.ai/demo/">
-<!-- summary, not summary_large_image: no og:image asset exists for the AI Chauffeur
-       brand yet, and declaring a large card with no image renders as a broken card.
-       Upgrade this line the same day a real OG image ships. -->
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AI Chauffeur - the limo answering service that never puts a caller on hold. (414) 775-0019">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,10 +34,13 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --void:#0A0A0F; --void-2:#14141C; --void-card:rgba(20,20,28,.62);
-  --ink:#EEF0F4; --ink-soft:rgba(238,240,244,.78); --ink-mute:rgba(238,240,244,.55); --ink-dim:rgba(238,240,244,.34);
+  --ink:#EEF0F4; --ink-soft:rgba(238,240,244,.78); --ink-mute:rgba(238,240,244,.55);
   --cyan:#00D4FF; --cyan-bright:#00E5FF; --cyan-glow:rgba(0,212,255,.35); --cyan-glow-strong:rgba(0,229,255,.5); --cyan-dim:rgba(0,212,255,.18);
   --line:rgba(0,212,255,.14); --line-hot:rgba(0,212,255,.42);
-  --alarm:#FF3B30; --amber:#FBBF24;
+  /* COLOR LAW · CIRCULANT-X. --ink-dim was rgba(ink,.34) = 2.79:1 on the void
+     and failed AA on every mono label; it is now an alias of --neutral (6.40:1). */
+  --booked-green:#2EE6A8; --amber:#FFB020; --miss-red:#FF3B4E; --neutral:#8A93A6;
+  --ink-dim:var(--neutral); --booked:var(--booked-green); --alarm:var(--miss-red);
   --serif:'Space Grotesk',sans-serif; --sans:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
 }
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;background:var(--void)}
@@ -102,13 +107,13 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
 .console-title{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)}
 .dots{display:flex;gap:5px}
 .dots span{width:10px;height:10px;border-radius:50%}
-.dots span:nth-child(1){background:rgba(251,191,36,.45)}
+.dots span:nth-child(1){background:rgba(255,176,32,.45)}
 .dots span:nth-child(2){background:rgba(0,212,255,.45)}
-.dots span:nth-child(3){background:rgba(52,211,153,.45)}
+.dots span:nth-child(3){background:rgba(46,230,168,.45)}
 .live-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);transition:color .3s,text-shadow .3s}
-.live-badge.live{color:var(--green);text-shadow:0 0 8px rgba(52,211,153,.5)}
+.live-badge.live{color:var(--booked-green);text-shadow:0 0 8px rgba(46,230,168,.5)}
 .live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;transition:box-shadow .3s}
-.live-badge.live::before{background:var(--green);box-shadow:0 0 0 4px rgba(52,211,153,.18),0 0 14px var(--green);animation:pulse-dot 1.2s ease-in-out infinite}
+.live-badge.live::before{background:var(--booked-green);box-shadow:0 0 0 4px rgba(46,230,168,.18),0 0 14px var(--booked-green);animation:pulse-dot 1.2s ease-in-out infinite}
 
 .fields{display:grid;gap:.65rem}
 .field{background:rgba(10,10,15,.4);border:1px solid var(--line);border-radius:10px;padding:.85rem 1.05rem;transition:border-color .35s,background .35s,box-shadow .35s;position:relative;overflow:hidden}
@@ -166,9 +171,9 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
 .status-row{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;margin-top:1rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);flex-wrap:wrap;gap:.5rem}
 .status-row .ticket{color:var(--cyan-bright);text-shadow:0 0 6px var(--cyan-glow)}
 .status-tag{padding:4px 10px;border-radius:99px;border:1px solid var(--line);background:var(--void-card)}
-.status-tag.complete{color:var(--green);border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.08)}
+.status-tag.complete{color:var(--booked-green);border-color:rgba(46,230,168,.4);background:rgba(46,230,168,.08)}
 
-.complete-banner{background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(0,212,255,.04));border:1px solid rgba(52,211,153,.3);border-radius:14px;padding:1.4rem 1.2rem;text-align:center;margin-top:1.2rem;display:none}
+.complete-banner{background:linear-gradient(135deg,rgba(46,230,168,.08),rgba(0,212,255,.04));border:1px solid rgba(46,230,168,.3);border-radius:14px;padding:1.4rem 1.2rem;text-align:center;margin-top:1.2rem;display:none}
 .complete-banner.show{display:block;animation:slidein .4s ease forwards}
 .complete-h{font-family:var(--sans);font-size:1.3rem;color:var(--ink);font-weight:400;margin-bottom:.35rem}
 .complete-h em{color:var(--cyan);font-style:italic}
@@ -300,12 +305,12 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
       <div class="transcript" id="transcript">
         <div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">AI Chauffeur, this is AVA — where are you headed?</span></div>
         <div class="tr-line tr-caller" style="opacity:1"><span class="tr-text">Downtown Marriott to MKE, five forty-five tomorrow morning.</span></div>
-        <div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">One passenger, executive sedan. Sending confirmation now.</span></div>
+        <div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">One passenger, executive sedan. I have it all down for your dispatcher.</span></div>
       </div>
 
       <div class="status-row">
         <span>RES <span class="ticket" id="ticketId">AC-2026-0392</span></span>
-        <span class="status-tag complete" id="statusTag">Reservation written</span>
+        <span class="status-tag complete" id="statusTag">Ticket complete</span>
       </div>
 
       <button type="button" class="demo-rest" id="watchItFill">
@@ -552,7 +557,7 @@ const RESTING = {
 const RESTING_TRANSCRIPT =
   '<div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">AI Chauffeur, this is AVA — where are you headed?</span></div>' +
   '<div class="tr-line tr-caller" style="opacity:1"><span class="tr-text">Downtown Marriott to MKE, five forty-five tomorrow morning.</span></div>' +
-  '<div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">One passenger, executive sedan. Sending confirmation now.</span></div>';
+  '<div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">One passenger, executive sedan. I have it all down for your dispatcher.</span></div>';
 
 function restIdle() {
   reset();
@@ -567,7 +572,7 @@ function restIdle() {
   });
   transcript.innerHTML = RESTING_TRANSCRIPT;
   ticketIdEl.textContent = 'AC-2026-0392';
-  statusTag.textContent = 'Reservation written';
+  statusTag.textContent = 'Ticket complete';
   statusTag.classList.add('complete');
   liveBadge.textContent = 'Captured';
 }

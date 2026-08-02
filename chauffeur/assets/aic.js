@@ -118,4 +118,59 @@
 
   var forms = document.querySelectorAll('[data-cb-form]');
   for (var i = 0; i < forms.length; i++) wireForm(forms[i]);
+
+  /* ── MISSED-NIGHT CALCULATOR ─────────────────────────────────────────────
+     Entirely client-side. Nothing is stored, nothing is sent, and neither
+     input carries a default — the whole point is that every figure on screen
+     came from the operator. We supply the arithmetic and nothing else.
+
+     Basis: weekly = fare x missed calls. Monthly = weekly x 52 / 12 (not x 4,
+     which quietly under-reports by roughly a week every quarter).
+     Yearly = weekly x 52. The basis is stated on the page, not just here.
+
+     The section is markup-hidden and revealed here, so with JS disabled it
+     never renders as a dead set of inputs.
+     ──────────────────────────────────────────────────────────────────────── */
+  (function missedNightCalculator() {
+    var calc = document.querySelector('[data-calc]');
+    if (!calc) return;
+
+    var fareEl = calc.querySelector('[data-calc-fare]');
+    var missEl = calc.querySelector('[data-calc-missed]');
+    var outs   = calc.querySelectorAll('[data-calc-out]');
+    if (!fareEl || !missEl || !outs.length) return;
+
+    var money = (typeof Intl !== 'undefined' && Intl.NumberFormat)
+      ? new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
+      : null;
+
+    function fmt(n) {
+      if (money) return money.format(n);
+      return '$' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function recompute() {
+      var fare = parseFloat(fareEl.value);
+      var miss = parseFloat(missEl.value);
+      var ok = isFinite(fare) && isFinite(miss) && fare > 0 && miss > 0;
+      var weekly = ok ? fare * miss : 0;
+      var vals = { week: weekly, month: weekly * 52 / 12, year: weekly * 52 };
+
+      for (var i = 0; i < outs.length; i++) {
+        var key = outs[i].getAttribute('data-calc-out');
+        if (ok) {
+          outs[i].textContent = fmt(vals[key]);
+          outs[i].setAttribute('data-empty', 'false');
+        } else {
+          outs[i].textContent = '—';
+          outs[i].setAttribute('data-empty', 'true');
+        }
+      }
+    }
+
+    fareEl.addEventListener('input', recompute);
+    missEl.addEventListener('input', recompute);
+    recompute();
+    calc.hidden = false;
+  })();
 })();
