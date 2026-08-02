@@ -333,6 +333,67 @@ async function report() {
   }
 }
 
+/* ------------------------------------------------------- RUN 10 · LIVE GATES
+
+   RUN 10 found the owner SMS had been dead for days while every check above
+   still reported green. Two blind spots did it, and both are now assertions
+   that EXIT NON-ZERO rather than lines of console output.
+
+   GATE 1 — the value, not the reference. report() only proves a node says
+   `$vars.OWNER_ALERT_CONTACT_ID`. It never asked whether that variable points
+   at a contact that still exists. It did not: the GHL row had been rebuilt and
+   the variable still held the deleted id, so every send answered
+   400 CONVERSATIONS_CONTACT_NOT_FOUND — swallowed by neverError:true, which
+   exists to stop an owner-alert failure from breaking the caller path. §9
+   already says "verify the VALUE, not just the id"; this enforces it.
+
+   GATE 2 — draft vs published. An ACTIVE n8n workflow keeps serving
+   `activeVersionId`. Writes land on the draft, and GET /workflows/{id} returns
+   the DRAFT nodes at the top level — so a structural check against the API
+   passes while production still runs the old code. Only publishing swaps it.
+   Same shape as the Retell trap: what you read is not what answers the phone. */
+
+async function liveGates() {
+  let failed = 0;
+
+  console.log('\n=== GATE 1 — do the owner-rail VALUES resolve in GHL? ===');
+  const PIT = process.env.GHL_PIT;
+  if (!PIT) {
+    console.log('  SKIPPED — GHL_PIT not in env. This gate is the one that catches a');
+    console.log('  deleted alert contact; run through Doppler so it actually runs.');
+    failed++;
+  } else {
+    const vs = (await api('GET', '/variables')).data || [];
+    for (const key of ['OWNER_ALERT_CONTACT_ID', 'ZZ_TEST_CONTACT_ID']) {
+      const row = vs.find((v) => v.key === key);
+      if (!row || !row.value) { console.log(`  ${key}: UNSET ***`); failed++; continue; }
+      const r = await fetch(`https://services.leadconnectorhq.com/contacts/${row.value}`, {
+        headers: { Authorization: `Bearer ${PIT}`, Version: '2021-07-28', accept: 'application/json' },
+      });
+      if (r.status !== 200) { console.log(`  ${key} = ${row.value} -> DEAD (${r.status}) ***`); failed++; continue; }
+      const ct = (await r.json()).contact || {};
+      const tags = ct.tags || [];
+      /* an alert target that is not tagged internal is an upsert target waiting
+         to happen — that is the RUN 6 defect, not a style preference */
+      const safe = tags.includes('zz-internal') || tags.includes('do-not-drip');
+      const who = `${ct.firstName || ''} ${ct.lastName || ''}`.trim() || '(unnamed)';
+      console.log(`  ${key} = ${row.value} -> resolves ("${who}", tags ${tags.join('/') || 'none'})${safe ? '' : '  *** NOT TAGGED INTERNAL'}`);
+      if (!safe) failed++;
+    }
+  }
+
+  console.log('\n=== GATE 2 — is the draft actually PUBLISHED? ===');
+  for (const [k, id] of Object.entries(WF)) {
+    const w = await get(id);
+    if (!w.active) { console.log(`  ${k.padEnd(11)} inactive — skipped`); continue; }
+    const live = w.versionId === w.activeVersionId;
+    console.log(`  ${k.padEnd(11)} ${live ? 'published' : 'DRAFT NOT PUBLISHED *** production still runs ' + w.activeVersionId}`);
+    if (!live) failed++;
+  }
+
+  return failed;
+}
+
 console.log(`n8n OWNER RAIL — mode: ${MODE.toUpperCase()}`);
 const vars = (await api('GET', '/variables')).data || [];
 const need = ['OWNER_ALERT_CONTACT_ID', 'ZZ_TEST_CONTACT_ID', 'OWNER_SMS_FROM', 'OWNER_ALERT_EMAIL', 'OUR_NUMBERS'];
@@ -344,6 +405,13 @@ await repoint();
 await postcall();
 await book();
 await report();
+const gateFailures = await liveGates();
 
 console.log(`\n${MODE === 'apply' ? 'APPLIED' : 'AUDIT ONLY'} — ${changes.length} change(s).`);
 if (MODE !== 'apply') console.log('re-run with --apply to write.');
+
+if (gateFailures) {
+  console.error(`\nRAIL GATE FAILED — ${gateFailures} problem(s) above. The owner alert is NOT trustworthy.`);
+  process.exit(1);
+}
+console.log('RAIL GATE PASSED — owner-alert values resolve live and every active workflow is published.');
