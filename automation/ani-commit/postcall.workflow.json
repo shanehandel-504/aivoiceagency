@@ -1,0 +1,1174 @@
+{
+  "name": "AVA Post-Call to GHL (Demo Send)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ava-postcall",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "8e4a952b-e56e-4705-af25-420d45d6fab3",
+      "name": "Retell Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        96
+      ],
+      "webhookId": "16275d59-c234-411a-ba9b-cc1202290395"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.event }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "call_analyzed"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0b5961bc-a8f5-49be-b3a5-21917f08d144",
+      "name": "Is Call Analyzed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f1",
+              "name": "first_name",
+              "type": "string",
+              "value": "={{ $json.body.call.call_analysis.custom_analysis_data.caller_first }}"
+            },
+            {
+              "id": "f2",
+              "name": "email",
+              "type": "string",
+              "value": "={{ $json.body.call.call_analysis.custom_analysis_data.caller_email }}"
+            },
+            {
+              "id": "f3",
+              "name": "phone",
+              "type": "string",
+              "value": "={{ $json.body.call.call_analysis.custom_analysis_data.caller_phone }}"
+            },
+            {
+              "id": "f4",
+              "name": "company",
+              "type": "string",
+              "value": "={{ $json.body.call.call_analysis.custom_analysis_data.business_name }}"
+            },
+            {
+              "id": "f5",
+              "name": "summary",
+              "type": "string",
+              "value": "={{ $json.body.call.call_analysis.call_summary }}"
+            },
+            {
+              "id": "f6",
+              "name": "call_id",
+              "type": "string",
+              "value": "={{ $json.body.call.call_id }}"
+            },
+            {
+              "id": "f7",
+              "name": "sms_message",
+              "type": "string",
+              "value": "={{ $json.body.call.agent_id === \"agent_8e9e7d477949c6babcbdcc756d\" ? \"Hi \" + $json.body.call.call_analysis.custom_analysis_data.caller_first + \", this is AVA. Got your ride request and we'll text your trip details shortly. Reply STOP to opt out.\" : \"Hi \" + $json.body.call.call_analysis.custom_analysis_data.caller_first + \", AVA here from AI Voice Agency. Your strategy-call link: https://aivoiceagency.ai/book . Reply STOP to opt out.\" }}"
+            },
+            {
+              "id": "f8",
+              "name": "email_subject",
+              "type": "string",
+              "value": "Your AVA strategy call"
+            },
+            {
+              "id": "f9",
+              "name": "email_html",
+              "type": "string",
+              "value": "=<p>Hi {{ $json.body.call.call_analysis.custom_analysis_data.caller_first }},</p><p>Great talking with you. Book your strategy call here: <a href='https://aivoiceagency.ai/book'>Book now</a>.</p><p>— AVA, AI Voice Agency</p>"
+            },
+            {
+              "id": "f10",
+              "name": "agent_id",
+              "type": "string",
+              "value": "={{ $json.body.call.agent_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1b50ce0b-8dfb-4890-8be4-8791cfa261ae",
+      "name": "Normalize",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://services.leadconnectorhq.com/contacts/upsert",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.ghl_body }}",
+        "options": {}
+      },
+      "id": "b3d062fd-525e-4db5-855e-f83dcd410bbb",
+      "name": "GHL Upsert Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        980,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "jsonBody": "={{ (() => { const c = $('Retell Webhook').item.json.body.call; const s = $('Normalize').item.json; const secs = (c.end_timestamp && c.start_timestamp) ? Math.round((c.end_timestamp - c.start_timestamp)/1000) : null; const dur = secs !== null ? Math.floor(secs/60) + 'm ' + (secs%60) + 's' : 'n/a'; const full = c.transcript || ''; const t = full.slice(0, 3500); return { \"body\": 'AVA CALL LOG — ' + ((c.call_analysis && c.call_analysis.user_sentiment) ? c.call_analysis.user_sentiment : 'n/a') + ' · ' + dur + '\\nFrom: ' + (c.from_number || 'web') + ' · Call ID: ' + (s.call_id || 'n/a') + '\\n\\nSUMMARY\\n' + (s.summary || 'n/a') + '\\n\\nRECORDING\\n' + (c.recording_url || 'n/a') + '\\n\\nTRANSCRIPT\\n' + t + (full.length > 3500 ? '\\n…[truncated — full audio at recording link]' : '') }; })() }}",
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $json.contact.id }}/notes"
+      },
+      "id": "3d444553-f312-475d-ab05-fd9dcf58a0c4",
+      "name": "GHL Call Note",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1150,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "disabled": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/conversations/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"type\": \"Email\", \"contactId\": $('Contact Ref').item.json.contact_id, \"subject\": $('Normalize').item.json.email_subject, \"html\": $('Normalize').item.json.email_html } }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "6ac5d401-6d9f-4f75-8325-82096a4a5f9a",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1320,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"ok\" } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "39577dda-ff93-471d-9bf0-b784073e1728",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1490,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"ignored\" } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "8f19cb2c-6e04-47b6-807c-4dfcc94d8ced",
+      "name": "Respond Ignored",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        448,
+        192
+      ]
+    },
+    {
+      "id": "12c28cab-ea11-488c-96e1-954e764b67c2",
+      "name": "Send SMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        896,
+        176
+      ],
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "jsonBody": "={{ { \"type\": \"SMS\", \"contactId\": $('Contact Ref').item.json.contact_id, \"message\": $('Normalize').item.json.sms_message } }}",
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "url": "https://services.leadconnectorhq.com/conversations/messages"
+      },
+      "disabled": true
+    },
+    {
+      "id": "9f1dfbf5-7792-40d1-ab08-9bca6875d696",
+      "name": "Format Call Log",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1096,
+        320
+      ],
+      "parameters": {
+        "jsCode": "/* AVA POST-CALL — owner alert formatter.\r\n   RUN 11: the owner email is now an HTML call report on the CIRCULANT light\r\n   shell, and the owner SMS is a five-line brief. Every field is guarded — a\r\n   value absent from the payload is never invented. Compact metadata cells\r\n   collapse to an em-dash; content blocks say EMPTY — NO RESULT out loud, so a\r\n   silent block is never mistaken for \"nothing happened\". */\r\n\r\nconst EMPTY = 'EMPTY — NO RESULT';\r\nconst DASH = '—';\r\n\r\nconst c = $('Retell Webhook').item.json.body.call || {};\r\nconst b = $('Retell Webhook').item.json.body || {};\r\nconst s = $('Normalize').item.json;\r\nconst an = c.call_analysis || {};\r\nconst cad = an.custom_analysis_data || {};\r\n\r\nconst val = (v) => {\r\n  if (v === null || v === undefined) return null;\r\n  const t = (v + '').trim();\r\n  return (t && t !== 'undefined' && t !== 'null') ? t : null;\r\n};\r\nconst esc = (v) => String(v === null || v === undefined ? '' : v)\r\n  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\r\n\r\n/* duration: the payload carries duration_ms directly; timestamps are the\r\n   fallback. Neither present -> say so rather than printing 0m 0s. */\r\nlet secs = null;\r\nif (typeof c.duration_ms === 'number' && c.duration_ms >= 0) secs = Math.round(c.duration_ms / 1000);\r\nelse if (c.end_timestamp && c.start_timestamp) secs = Math.round((c.end_timestamp - c.start_timestamp) / 1000);\r\nconst durationRaw = secs !== null ? (Math.floor(secs / 60) + 'm ' + (secs % 60) + 's') : null;\r\n\r\nconst numberRaw = val(c.from_number);\r\nconst outcomeRaw = [\r\n  val(an.user_sentiment),\r\n  (an.call_successful === true ? 'successful' : an.call_successful === false ? 'unsuccessful' : null),\r\n  val(c.disconnection_reason)\r\n].filter(Boolean).join(' · ') || null;\r\n\r\n/* --- BOOKED (RUN 6.6-C, logic unchanged) --------------------------------- */\r\nconst tw = Array.isArray(c.transcript_with_tool_calls) ? c.transcript_with_tool_calls : [];\r\nconst results = new Map();\r\nfor (const e of tw) { if (e && e.role === 'tool_call_result') results.set(e.tool_call_id, e); }\r\nconst attempts = tw.filter(e => e && e.role === 'tool_call_invocation' && e.name === 'book_appointment');\r\n\r\nlet booked = 'no';\r\nlet apptId = null;\r\nlet apptWhen = null;\r\nlet note = 'no booking attempted';\r\n\r\nif (attempts.length) {\r\n  let sawResult = false;\r\n  note = null;\r\n  for (const a of attempts) {\r\n    const r = results.get(a.tool_call_id);\r\n    if (!r) continue;\r\n    sawResult = true;\r\n    let p = null;\r\n    try { p = JSON.parse(r.content || ''); } catch (err) { p = null; }\r\n    if (p && p.success === true) {\r\n      booked = 'yes'; apptId = p.appointment_id || null;\r\n      apptWhen = p.start_time_human || p.start_time || null; note = null; break;\r\n    }\r\n    if (p && p.success === false) { booked = 'no'; note = p.reason || p.error || 'booking declined'; }\r\n    else { booked = 'unknown'; note = 'unreadable booking result'; }\r\n  }\r\n  if (!sawResult) { booked = 'unknown'; note = 'booking attempted, no tool result recorded'; }\r\n}\r\nif (!tw.length && Array.isArray(c.tool_calls)) {\r\n  const tried = c.tool_calls.some(t => t && t.name === 'book_appointment');\r\n  booked = tried ? 'unknown' : 'no';\r\n  note = tried ? 'booking attempted, transcript unavailable' : 'no booking attempted';\r\n}\r\nif (cad.booked === true || cad.booked_appointment === true) { booked = 'yes'; note = null; }\r\n\r\n/* --- STATUS (RUN 7-CODE) — owner alerts open status-led ------------------ */\r\nlet status = 'FOLLOW-UP';\r\nif (booked === 'yes') status = 'BOOKED';\r\nelse if (an.in_voicemail === true) status = 'VOICEMAIL';\r\nelse if (secs !== null && secs < 20) status = 'MISSED';\r\nelse if (c.disconnection_reason === 'dial_no_answer' || c.disconnection_reason === 'dial_busy' || c.disconnection_reason === 'voicemail_reached') status = 'MISSED';\r\n\r\n/* --- SPEAKER-LABELLED TRANSCRIPT ------------------------------------------\r\n   transcript_object is the structured record. The flat transcript string is the\r\n   fallback and is RELABELLED, never re-derived. Absent -> EMPTY, never\r\n   reconstructed from the summary, because a summary is not a transcript. */\r\nconst label = (role) => {\r\n  const r = ((role == null ? '' : role) + '').toLowerCase();\r\n  if (r === 'agent' || r === 'assistant') return 'AVA';\r\n  if (r === 'user' || r === 'caller' || r === 'human') return 'CALLER';\r\n  return r ? r.toUpperCase() : 'UNKNOWN';\r\n};\r\n\r\nlet turns = [];\r\nconst tobj = Array.isArray(c.transcript_object) ? c.transcript_object : null;\r\nif (tobj && tobj.length) {\r\n  turns = tobj.map((e) => {\r\n    const t = val(e && e.content);\r\n    return t ? { who: label(e && e.role), text: t.replace(/\\s+/g, ' ').trim() } : null;\r\n  }).filter(Boolean);\r\n}\r\nif (!turns.length) {\r\n  const flat = val(c.transcript);\r\n  if (flat) {\r\n    turns = flat.split('\\n').map((ln) => {\r\n      const m = ln.match(/^\\s*(Agent|Assistant|User|Caller|Human)\\s*:\\s*(.*)$/i);\r\n      if (m && val(m[2])) return { who: label(m[1]), text: m[2].trim() };\r\n      const t = val(ln);\r\n      return t ? { who: 'UNKNOWN', text: t } : null;\r\n    }).filter(Boolean);\r\n  }\r\n}\r\nconst transcriptText = turns.length\r\n  ? turns.map((t) => (t.who === 'AVA' ? 'AGENT' : t.who) + ': ' + t.text).join('\\n')\r\n  : EMPTY;\r\n\r\n/* --- shared values -------------------------------------------------------- */\r\nconst when = DateTime.now().setZone('America/Chicago').toFormat('LLL d, yyyy · h:mm a') + ' CT';\r\nconst callId = val(s.call_id || c.call_id);\r\nconst recording = val(c.recording_url);\r\nconst summaryFull = val(an.call_summary) ? an.call_summary.replace(/\\s+/g, ' ').trim() : null;\r\n\r\nlet summaryShort = summaryFull;\r\nif (summaryShort && summaryShort.length > 220) summaryShort = summaryShort.slice(0, 217) + '…';\r\n\r\nconst bookedLine = booked + (apptId ? ' · appt ' + apptId + (apptWhen ? ' · ' + apptWhen : '') : (note ? ' · ' + note : ''));\r\nconst title = status + ' · ' + (numberRaw || DASH) + ' · ' + (durationRaw || DASH) + ' · ' + when;\r\n\r\n/* --- OWNER SMS -----------------------------------------------------------\r\n   Exactly five lines. `booked` can legitimately be 'unknown' (an attempt whose\r\n   tool result was unreadable) and is reported as-is — collapsing it to 'no'\r\n   would invent an outcome. */\r\nlet smsSummary = summaryFull;\r\nif (!smsSummary) smsSummary = EMPTY;\r\nelse if (smsSummary.length > 80) smsSummary = smsSummary.slice(0, 77).trimEnd() + '…';\r\n\r\nconst headline = (booked === 'yes') ? 'AVA CALL — BOOKED 🔥' : ('AVA CALL — ' + status);\r\nconst ownerSms = [\r\n  headline,\r\n  (numberRaw || EMPTY) + ' · ' + (durationRaw || EMPTY),\r\n  'Booked: ' + booked,\r\n  smsSummary,\r\n  'Full report emailed.'\r\n].join('\\n');\r\n\r\n/* --- OWNER EMAIL · CIRCULANT light shell ---------------------------------\r\n   Table-based, 600px, all-inline CSS, zero images (so images-off is identical\r\n   to images-on). Explicit bgcolor attributes alongside inline background so\r\n   Gmail's dark-mode inversion keeps every text/surface pair legible. Sharp\r\n   corners and no shadows per the flat-UI law. */\r\nconst PILL = { BOOKED: '#2EE6A8', MISSED: '#FF3B4E', VOICEMAIL: '#FFB020', 'FOLLOW-UP': '#FFB020' };\r\nconst pillBg = PILL[status] || '#8A93A6';\r\n\r\nconst F = \"'Space Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif\";\r\nconst INK = '#14161C';\r\nconst MUTED = '#5C6573';\r\nconst ACCENT = '#0090C8';\r\nconst LINE = '#DDE3EA';\r\n/* deeper shade of the same hue: #0090C8 on the AVA row tint measures 3.23:1 and\r\n   fails AA at label size. #00688F on #EAF4FA measures 5.57:1. */\r\nconst ACCENT_DEEP = '#00688F';\r\n\r\nconst row = (k, v, isLast) => {\r\n  const bd = isLast ? '' : 'border-bottom:1px solid ' + LINE + ';';\r\n  return '<tr>'\r\n    + '<td width=\"34%\" style=\"' + bd + 'padding:13px 0;font-family:' + F + ';font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:' + MUTED + ';font-weight:700;\">' + esc(k) + '</td>'\r\n    + '<td align=\"right\" style=\"' + bd + 'padding:13px 0;font-family:' + F + ';font-size:15px;color:' + INK + ';font-weight:600;\">' + esc(v || DASH) + '</td>'\r\n    + '</tr>';\r\n};\r\n\r\nconst block = (heading, inner) =>\r\n  '<tr><td style=\"padding:26px 32px 0;font-family:' + F + ';font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:' + MUTED + ';font-weight:700;\">' + heading + '</td></tr>'\r\n  + '<tr><td style=\"padding:10px 32px 0;\">' + inner + '</td></tr>';\r\n\r\nconst summaryBlock = block('Summary',\r\n  '<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#FFFFFF\" style=\"background:#FFFFFF;border:1px solid ' + LINE + ';\">'\r\n  + '<tr><td style=\"padding:16px 18px;font-family:' + F + ';font-size:15px;line-height:1.6;color:' + (summaryFull ? INK : MUTED) + ';\">'\r\n  + esc(summaryFull || EMPTY) + '</td></tr></table>');\r\n\r\nlet transcriptInner;\r\nif (turns.length) {\r\n  transcriptInner = '<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border:1px solid ' + LINE + ';\">';\r\n  for (const t of turns) {\r\n    const isAva = t.who === 'AVA';\r\n    const bg = isAva ? '#EAF4FA' : '#FFFFFF';\r\n    const who = isAva ? ACCENT_DEEP : MUTED;\r\n    transcriptInner += '<tr>'\r\n      + '<td bgcolor=\"' + bg + '\" style=\"background:' + bg + ';padding:14px 18px;border-bottom:1px solid ' + LINE + ';font-family:' + F + ';\">'\r\n      + '<div style=\"font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:' + who + ';font-weight:700;padding-bottom:5px;\">' + esc(t.who) + '</div>'\r\n      + '<div style=\"font-size:15px;line-height:1.6;color:' + INK + ';\">' + esc(t.text) + '</div>'\r\n      + '</td></tr>';\r\n  }\r\n  transcriptInner += '</table>';\r\n} else {\r\n  transcriptInner = '<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#FFFFFF\" style=\"background:#FFFFFF;border:1px solid ' + LINE + ';\">'\r\n    + '<tr><td style=\"padding:16px 18px;font-family:' + F + ';font-size:15px;color:' + MUTED + ';\">' + EMPTY + '</td></tr></table>';\r\n}\r\n\r\n/* Buttons. A button is rendered only when it has a real destination — a link to\r\n   nowhere is worse than no link. ChatDash uses $vars.CHATDASH_URL when set and\r\n   falls back to the provider call log the payload already carries. */\r\nconst chatdashBase = val(typeof $vars !== 'undefined' ? $vars.CHATDASH_URL : null);\r\nconst chatdashUrl = chatdashBase\r\n  ? (chatdashBase.replace(/\\/+$/, '') + (callId ? '/' + encodeURIComponent(callId) : ''))\r\n  : val(b.chatdash_url) || val(c.public_log_url);\r\nconst chatdashLabel = chatdashBase ? 'Open in ChatDash' : 'Open call log';\r\n\r\nconst btn = (href, text, solid) => {\r\n  const bg = solid ? ACCENT : '#FFFFFF';\r\n  const fg = INK;\r\n  return '<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"display:inline-block;margin:0 6px 10px 0;\">'\r\n    + '<tr><td bgcolor=\"' + bg + '\" style=\"background:' + bg + ';border:1px solid ' + (solid ? ACCENT : LINE) + ';\">'\r\n    + '<a href=\"' + esc(href) + '\" style=\"display:block;padding:14px 26px;font-family:' + F + ';font-size:15px;font-weight:700;color:' + fg + ';text-decoration:none;\">' + esc(text) + '</a>'\r\n    + '</td></tr></table>';\r\n};\r\n\r\nlet buttons = '';\r\nif (recording) buttons += btn(recording, 'Listen to Recording', true);\r\nif (chatdashUrl) buttons += btn(chatdashUrl, chatdashLabel, false);\r\nconst buttonsRow = buttons\r\n  ? '<tr><td style=\"padding:26px 32px 0;\">' + buttons + '</td></tr>'\r\n  : '<tr><td style=\"padding:26px 32px 0;font-family:' + F + ';font-size:13px;color:' + MUTED + ';\">Recording: ' + EMPTY + '</td></tr>';\r\n\r\nconst html = '<!DOCTYPE html><html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"><head>'\r\n  + '<meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">'\r\n  + '<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">'\r\n  + '<meta name=\"x-apple-disable-message-reformatting\">'\r\n  /* light ONLY. Every text element below carries an explicit colour, so telling\r\n     a client we also support dark would just invite it to paint un-styled text\r\n     white on a white surface. This keeps clients that honour the hint from\r\n     inverting; the ones that invert anyway (Gmail app) still land on dark\r\n     surface + light text, which stays legible. */\r\n  + '<meta name=\"color-scheme\" content=\"light only\"><meta name=\"supported-color-schemes\" content=\"light only\">'\r\n  + '<title>' + esc(title) + '</title>'\r\n  + '<style>:root{color-scheme:light only;supported-color-schemes:light only;}'\r\n  + 'body{margin:0;padding:0;width:100%!important;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}'\r\n  + 'table{border-collapse:collapse;mso-table-lspace:0;mso-table-rspace:0;}a{text-decoration:none;}'\r\n  + '@media only screen and (max-width:620px){.container{width:100%!important;}.px{padding-left:20px!important;padding-right:20px!important;}}'\r\n  + '</style></head>'\r\n  + '<body bgcolor=\"#F7F8FA\" style=\"margin:0;padding:0;background:#F7F8FA;\">'\r\n  /* preheader: what the phone shows before opening */\r\n  + '<div style=\"display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#F7F8FA;opacity:0;\">'\r\n  + esc(status + ' · ' + (numberRaw || DASH) + ' · ' + (durationRaw || DASH) + ' · Booked: ' + booked)\r\n  + '&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;</div>'\r\n  + '<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#F7F8FA\" style=\"background:#F7F8FA;\">'\r\n  + '<tr><td align=\"center\" style=\"padding:24px 12px;\">'\r\n  + '<table role=\"presentation\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"container\" bgcolor=\"#FFFFFF\" style=\"width:600px;max-width:600px;background:#FFFFFF;border:1px solid ' + LINE + ';\">'\r\n\r\n  /* header bar */\r\n  + '<tr><td bgcolor=\"' + INK + '\" style=\"background:' + INK + ';padding:18px 32px;font-family:' + F + ';font-size:14px;font-weight:700;letter-spacing:.14em;color:#FFFFFF;\">'\r\n  + 'AVA ' + DASH + ' CALL REPORT</td></tr>'\r\n\r\n  /* outcome pill */\r\n  + '<tr><td class=\"px\" style=\"padding:28px 32px 0;\">'\r\n  + '<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr>'\r\n  + '<td bgcolor=\"' + pillBg + '\" style=\"background:' + pillBg + ';padding:9px 20px;font-family:' + F + ';font-size:14px;font-weight:700;letter-spacing:.1em;color:#14161C;\">'\r\n  + esc(status) + '</td></tr></table></td></tr>'\r\n\r\n  /* label / value rows */\r\n  + '<tr><td class=\"px\" style=\"padding:22px 32px 0;\">'\r\n  + '<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">'\r\n  + row('From', numberRaw)\r\n  + row('Duration', durationRaw)\r\n  + row('Date / Time', when)\r\n  + row('Booked', bookedLine)\r\n  + row('Outcome', outcomeRaw, true)\r\n  + '</table></td></tr>'\r\n\r\n  + summaryBlock\r\n  + block('Transcript', transcriptInner)\r\n  + buttonsRow\r\n\r\n  /* footer */\r\n  + '<tr><td class=\"px\" style=\"padding:26px 32px 30px;border-top:1px solid ' + LINE + ';margin-top:20px;font-family:' + F + ';font-size:12px;line-height:1.6;color:' + MUTED + ';\">'\r\n  + 'Call ID: ' + esc(callId || EMPTY) + '<br>Internal operational alert · AI Voice Agency</td></tr>'\r\n\r\n  + '</table></td></tr></table></body></html>';\r\n\r\n/* plain-text part — kept so the alert stays readable if HTML is stripped */\r\nconst bodyText = 'Outcome: ' + (outcomeRaw || EMPTY)\r\n  + '\\nBooked: ' + bookedLine\r\n  + '\\nSummary: ' + (summaryShort || EMPTY)\r\n  + '\\nRecording: ' + (recording || EMPTY)\r\n  + '\\nCall ID: ' + (callId || EMPTY)\r\n  + '\\n\\n----- TRANSCRIPT -----\\n' + transcriptText;\r\n\r\nreturn [{ json: {\r\n  log_title: title,\r\n  log_html: html,\r\n  log_body: bodyText,\r\n  log_status: status,\r\n  booked: booked,\r\n  appointment_id: apptId,\r\n  appointment_when: apptWhen,\r\n  owner_sms: ownerSms,\r\n  transcript_lines: turns.length\r\n} }];\r\n"
+      }
+    },
+    {
+      "id": "4c39b0ce-b309-4312-adc4-e75075bee282",
+      "name": "Notion Call Log Append",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1296,
+        320
+      ],
+      "parameters": {
+        "authentication": "apiKey",
+        "blockUi": {
+          "blockValues": [
+            {
+              "richText": false,
+              "textContent": "={{ $json.log_body }}",
+              "type": "paragraph"
+            }
+          ]
+        },
+        "operation": "create",
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "39a581219cb281529c13efecdb977efb"
+        },
+        "resource": "page",
+        "simple": true,
+        "title": "={{ $json.log_title }}"
+      },
+      "disabled": true
+    },
+    {
+      "id": "098f80a3-82df-4882-9a21-eca458a29e5d",
+      "name": "Build GHL Body",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// RUN 1.7 — build the GHL upsert body HERE, not in an inline expression.\n// Retell can deliver call_analyzed with an entirely empty custom_analysis_data\n// (caller hangs up during the greeting). caller_phone is then '', the body goes\n// out with no phone and no email, and GHL /contacts/upsert answers\n// 400 \"Pass at least one of number, email query parameter\".\n// The telephony ANI (call.from_number) is in the same payload — use it.\nconst s = $('Normalize').first().json;\nconst c = $('Retell Webhook').first().json.body.call || {};\n\nconst CHAUFFEUR = 'agent_8e9e7d477949c6babcbdcc756d';\n// RUN 6.5 — OUR OWN numbers come from config (every Retell line, the published\n// SMS line, both owner cells). A call from one of them is never a lead.\nconst OUR_NUMBERS = String($vars.OUR_NUMBERS || '').split(',').map((x) => ((x == null ? '' : x) + '').replace(/[^0-9]/g, '').slice(-10)).filter((x) => x.length === 10);\n\nconst toE164 = (raw) => {\n  const d = ((raw == null ? '' : raw) + '').replace(/[^0-9]/g, '');\n  if (d.length < 10) return '';\n  const last10 = d.slice(-10);\n  if (new Set(last10.split('')).size === 1) return ''; // 0000000000 etc\n  if (OUR_NUMBERS.indexOf(last10) !== -1) return '';\n  return d.length === 10 ? ('+1' + d) : ('+' + d);\n};\n\nconst spoken = toE164(s.phone);\nconst ani    = toE164(c.from_number);\nconst phone  = spoken || ani;\nconst email  = ((s.email == null ? '' : s.email) + '').trim();\nconst isChauffeur = s.agent_id === CHAUFFEUR;\n\nconst tags = [isChauffeur ? 'aichauffeur-lead' : 'ava-demo-hot'];\n// RUN 3 QUARANTINE - a synthetic write is legible as synthetic in the CRM\n// itself, not only in the logs, so nobody works it as a real lead.\nconst q = $('Quarantine Gate').first().json;\nif (q && q.is_test) { tags.push('TEST'); tags.push('zz-internal'); }\nif (!spoken && ani) tags.push('phone-from-ani');\nif (!phone) tags.push('phone-unresolved');\n\n// RUN 6 - NAME HYGIENE. Retell hands us whatever the caller said plus whatever\n// the analyser appended, e.g. \"Robert - Owner\" with an em dash. That reached GHL\n// unsanitised; GHL then splits the string on the first space, so the CRM stored\n// firstName \"Robert\" / lastName \"\\uFFFD Owner\" - a replacement character sitting\n// in a customer record. Strip the junk BEFORE the upsert, not after.\nconst cleanName = (v) => ((v == null ? '' : v) + '')\n  .replace(/[\\uFFFD]/g, ' ')            // U+FFFD replacement char (the actual bug)\n  .replace(/[\\u2013\\u2014\\u00B7|]/g, ' ') // en/em dash, middot, pipe -> space\n  .replace(/[^\\x20-\\x7E]/g, '')         // anything else outside printable ASCII\n  .replace(/\\s+/g, ' ')\n  .trim();\n\nconst body = {\n  locationId: 'sdShCZCaxce8DHKbYcIl',\n  firstName: cleanName(s.first_name) || 'Unknown Caller',\n  source: isChauffeur ? 'AI Chauffeur Demo Call' : 'AVA Inbound Demo Call',\n  tags: tags\n};\nif (phone) body.phone = phone;\nif (email) body.email = email;\nif (s.company) body.companyName = s.company;\n\n// RUN 6.5 — an internal test call still needs a destination, so it reports an\n// identifier and is routed to the zz-test contact instead of upserting a lead.\nconst isInternal = OUR_NUMBERS.indexOf(((c.from_number == null ? '' : c.from_number) + '').replace(/[^0-9]/g, '').slice(-10)) !== -1;\nreturn [{ json: { ghl_body: body, is_internal: isInternal, has_identifier: !!(phone || email) || isInternal } }];"
+      }
+    },
+    {
+      "id": "ae97b940-84ab-45d5-9cb6-4af2c7699272",
+      "name": "Has Identifier",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "hasid",
+              "leftValue": "={{ $json.has_identifier }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "876e7548-86d3-4048-b37c-10f9d4d44ac2",
+      "name": "Respond No Identifier",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        640,
+        190
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"no_identifier\" } }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "r65if1",
+      "name": "Is Our Number?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        980,
+        -190
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.is_internal ? 'YES' : 'NO' }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "YES"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          }
+        }
+      }
+    },
+    {
+      "id": "r65set1",
+      "name": "Test Contact",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1150,
+        -280
+      ],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "tc1",
+              "name": "contact",
+              "type": "object",
+              "value": "={{ { id: $vars.ZZ_TEST_CONTACT_ID } }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "r65set2",
+      "name": "Contact Ref",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1150,
+        -60
+      ],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cr1",
+              "name": "contact",
+              "type": "object",
+              "value": "={{ $json.contact }}"
+            },
+            {
+              "id": "cr2",
+              "name": "contact_id",
+              "type": "string",
+              "value": "={{ $json.contact.id }}"
+            },
+            {
+              "id": "cr3",
+              "name": "is_internal",
+              "type": "boolean",
+              "value": "={{ $('Build GHL Body').item.json.is_internal }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "r65if2",
+      "name": "Caller Send?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1150,
+        176
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ ($('Contact Ref').item.json.is_internal || $('Normalize').item.json.agent_id === 'agent_8e9e7d477949c6babcbdcc756d') ? 'NO' : 'YES' }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "YES"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          }
+        }
+      }
+    },
+    {
+      "id": "r65sms",
+      "name": "Owner Alert SMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1540,
+        -220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/conversations/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { type: 'SMS', contactId: $vars.OWNER_ALERT_CONTACT_ID, fromNumber: $vars.OWNER_SMS_FROM, message: $('Inject Quote Block').first().json.owner_sms } }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "r65mail",
+      "name": "Owner Alert Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        -220
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "75yoiG46HfIX5VkQ",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "webhookId": "r65-owner-mail",
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $vars.OWNER_ALERT_EMAIL }}",
+        "subject": "={{ $('Inject Quote Block').first().json.log_title }}",
+        "emailType": "html",
+        "message": "={{ $('Inject Quote Block').first().json.log_html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "g4tjdTKEwDjnojQU"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "call_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Normalize').first().json.call_id }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1,
+        "orderBy": true,
+        "orderByColumn": "ts",
+        "orderByDirection": "DESC",
+        "options": {}
+      },
+      "id": "f73dbfe2-78e6-409e-9b9a-12633f29a1ac",
+      "name": "Load Quote For SMS",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1150,
+        400
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const CHAUFFEUR_AGENT = 'agent_8e9e7d477949c6babcbdcc756d';\n\nconst wh = ($('Retell Webhook').first().json || {}).body || {};\nconst call = wh.call || {};\nconst ca = call.call_analysis || {};\nconst cad = ca.custom_analysis_data || {};\nconst nz = $('Normalize').first().json || {};\nconst cr = $('Contact Ref').first().json || {};\n\nlet should_send = true;\nlet skip_reason = '';\nconst stop = (r) => { if (should_send) { should_send = false; skip_reason = r; } };\n\nconst contact_id = cr.contact_id || '';\nif (!contact_id) stop('no GHL contact id on this call');\nif (cr.is_internal === true || String(cr.is_internal) === 'true') stop('internal number, suppressed by the owner rail');\n\nlet dur_ms = Number(call.duration_ms || 0);\nif (!dur_ms && call.end_timestamp && call.start_timestamp) dur_ms = Number(call.end_timestamp) - Number(call.start_timestamp);\nif (dur_ms > 0 && dur_ms < 10000) stop('call ran ' + Math.round(dur_ms / 1000) + 's, under the 10s floor');\n\nconst dir = String(call.direction || '').toLowerCase();\nif (dir && dir !== 'inbound') stop('direction is ' + dir + ', text-back is inbound only');\n\nconst dispo = String(cad.disposition || '') + ' ' + String(cad.spam || '') + ' ' + String(ca.call_summary || '');\nif (cad.spam === true || String(cad.spam) === 'true') stop('spam flag on the call analysis');\nif (call.in_voicemail === true || String(call.in_voicemail) === 'true') stop('call reached voicemail');\nif (/\\b(spam|robocall|telemarket|wrong number)\\b/i.test(dispo)) stop('spam disposition in the call analysis');\n\nconst isChauffeur = String(nz.agent_id || '') === CHAUFFEUR_AGENT;\n\nconst qrows = [];\ntry {\n  const all = $('Load Quote For SMS').all();\n  for (let i = 0; i < all.length; i++) {\n    const j = all[i].json || {};\n    if (j && j.quote_id) qrows.push(j);\n  }\n} catch (e) { /* no quote node output */ }\n\nconst q = qrows.length ? qrows[0] : null;\nconst qStatus = q ? String(q.status || '') : '';\nconst hasQuote = !!(q && qStatus === 'QUOTED' && Number(q.all_in_total) > 0);\n\nlet vehicle = '';\nlet basis = '';\nif (q) {\n  try {\n    const bd = JSON.parse(String(q.breakdown || '[]'));\n    if (Array.isArray(bd) && bd.length) {\n      vehicle = String(bd[0].label || '').replace(/ - (airport transfer|hourly)$/, '');\n      basis = String(bd[0].detail || '');\n    }\n  } catch (e) { /* leave blank */ }\n}\n\nconst STATUS_LINE = {\n  QUOTED: 'Dispatch will confirm the details with you.',\n  NO_ROUTE_FOUND: 'Dispatch will confirm the price for that route.',\n  HUMAN_REVIEW_REQUIRED: 'Dispatch is setting the rate and will confirm it with you.',\n  CORPORATE_RATE_REQUIRED: 'Your account is on contract pricing; dispatch will confirm that rate.',\n  CAPTURE_ONLY: 'Dispatch will confirm the rate with you.'\n};\n\nlet message = '';\n\nif (isChauffeur && hasQuote) {\n  const statusLine = STATUS_LINE[qStatus] || 'Dispatch will confirm the details with you.';\n  message = 'AI Chauffeur — your quote: ' + vehicle + ', ' + basis + '. '\n          + 'Gratuity & service included. All-in $' + Number(q.all_in_total) + '. '\n          + statusLine + ' — AI Chauffeur Dispatch. Reply STOP to opt out.';\n} else if (isChauffeur) {\n  const statusLine = (q && STATUS_LINE[qStatus]) ? STATUS_LINE[qStatus] : 'Dispatch will confirm your rate shortly.';\n  message = 'AI Chauffeur — thanks for calling. We have your trip details. '\n          + statusLine + ' Call us back any time. — AI Chauffeur Dispatch. Reply STOP to opt out.';\n} else {\n  message = 'AVA here from AI Voice Agency — thanks for calling. '\n          + '$497/mo, done-for-you, answers every call 24/7. '\n          + 'Book a walkthrough: book.aivoiceagency.ai — AVA Team. Reply STOP to opt out.';\n}\n\nreturn [{\n  json: {\n    should_send: should_send,\n    skip_reason: skip_reason,\n    line: isChauffeur ? 'chauffeur' : 'ava',\n    contact_id: contact_id,\n    message: message,\n    has_quote: hasQuote,\n    quote_id: q ? String(q.quote_id) : '',\n    quote_status: qStatus,\n    quote_total: q ? Number(q.all_in_total) : null,\n    vehicle: vehicle,\n    basis: basis,\n    duration_ms: dur_ms,\n    direction: dir || 'unknown',\n    call_id: nz.call_id || ''\n  }\n}];\n"
+      },
+      "id": "a160cc18-6660-4668-82d4-25cd99394d2b",
+      "name": "Build Text Back",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1370,
+        400
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c288f05a-3dd3-4238-8880-83d26fbdd6c1",
+              "leftValue": "={{ ($json.should_send && !$(\"Quarantine Gate\").first().json.is_test) ? \"YES\" : \"NO\" }}",
+              "rightValue": "YES",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "94029f4c-f3b1-42a9-93c9-b5cf054e95a8",
+      "name": "Text Back Gate?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1590,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/conversations/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { type: 'SMS', contactId: $('Build Text Back').first().json.contact_id, fromNumber: $vars.OWNER_SMS_FROM, message: $('Build Text Back').first().json.message } }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "8a36c088-ce5a-41b4-889c-e05ca1c4643d",
+      "name": "Text Back SMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1810,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "g4tjdTKEwDjnojQU"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "call_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Normalize').first().json.call_id }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1,
+        "orderBy": true,
+        "orderByColumn": "ts",
+        "orderByDirection": "DESC",
+        "options": {}
+      },
+      "id": "4ff8fe8a-fb8a-46c1-9067-93921368eb1d",
+      "name": "Load Quote For Owner",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        -220
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const src = $('Format Call Log').first().json || {};\n\nconst F = \"'Space Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif\";\nconst INK = '#14161C';\nconst MUTED = '#5C6573';\nconst LINE = '#DDE3EA';\nconst ACCENT_DEEP = '#00688F';\nconst EMPTY = 'EMPTY — NO RESULT';\n\nconst esc = (v) => String(v === undefined || v === null ? '' : v)\n  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\n\nconst block = (heading, inner) =>\n  '<tr><td style=\"padding:26px 32px 0;font-family:' + F + ';font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:' + MUTED + ';font-weight:700;\">' + heading + '</td></tr>' +\n  '<tr><td style=\"padding:10px 32px 0;\">' + inner + '</td></tr>';\n\nconst rows = [];\ntry {\n  const all = $('Load Quote For Owner').all();\n  for (let i = 0; i < all.length; i++) {\n    const j = all[i].json || {};\n    if (j && j.quote_id) rows.push(j);\n  }\n} catch (e) { /* no quote */ }\n\nconst q = rows.length ? rows[0] : null;\n\nconst shell = (innerRows) =>\n  '<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" bgcolor=\"#FFFFFF\" ' +\n  'style=\"width:100%;background:#FFFFFF;border:1px solid ' + LINE + ';border-collapse:collapse;\">' + innerRows + '</table>';\n\nconst line = (k, v, bold, isLast) =>\n  '<tr>' +\n  '<td style=\"padding:14px 18px;font-family:' + F + ';font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:' + MUTED + ';font-weight:700;' + (isLast ? '' : 'border-bottom:1px solid ' + LINE + ';') + '\">' + esc(k) + '</td>' +\n  '<td align=\"right\" style=\"padding:14px 18px;font-family:' + F + ';font-size:' + (bold ? '18px' : '15px') + ';color:' + (bold ? ACCENT_DEEP : INK) + ';font-weight:' + (bold ? '700' : '600') + ';' + (isLast ? '' : 'border-bottom:1px solid ' + LINE + ';') + '\">' + esc(v) + '</td>' +\n  '</tr>';\n\nlet quoteInner;\nlet quote_text;\n\nif (!q) {\n  quoteInner = shell('<tr><td style=\"padding:16px 18px;font-family:' + F + ';font-size:15px;line-height:1.6;color:' + MUTED + ';\">No quote was generated on this call.</td></tr>');\n  quote_text = 'Quote: none generated on this call.';\n} else {\n  const money = (n) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });\n  const status = String(q.status || EMPTY);\n  const parts = [];\n  const txt = [];\n\n  let bd = [];\n  try { const p = JSON.parse(String(q.breakdown || '[]')); if (Array.isArray(p)) bd = p; } catch (e) { bd = []; }\n\n  let baseRow = null;\n  let scRow = null;\n  const addons = [];\n  for (let i = 0; i < bd.length; i++) {\n    const b = bd[i];\n    const label = String(b.label || '');\n    if (i === 0) baseRow = b;\n    else if (/gratuity/i.test(label)) scRow = b;\n    else addons.push(b);\n  }\n\n  if (baseRow) {\n    parts.push(line('Base — ' + String(baseRow.label || ''), money(baseRow.amount), false, false));\n    txt.push('Base (' + String(baseRow.label || '') + '): ' + money(baseRow.amount));\n    if (baseRow.detail) {\n      parts.push('<tr><td colspan=\"2\" style=\"padding:0 18px 14px;font-family:' + F + ';font-size:13px;line-height:1.6;color:' + MUTED + ';border-bottom:1px solid ' + LINE + ';\">' + esc(String(baseRow.detail)) + '</td></tr>');\n      txt.push('  ' + String(baseRow.detail));\n    }\n    if (baseRow.billable_hours !== undefined) {\n      parts.push(line('Billable hours', String(baseRow.billable_hours) + ' (requested ' + String(baseRow.requested_hours) + ', minimum ' + String(baseRow.minimum_hours) + ')', false, false));\n      txt.push('Billable hours: ' + String(baseRow.billable_hours) + ' (requested ' + String(baseRow.requested_hours) + ', minimum ' + String(baseRow.minimum_hours) + ')');\n    }\n  }\n  if (scRow) {\n    parts.push(line(String(scRow.label || 'service charge'), money(scRow.amount), false, false));\n    txt.push(String(scRow.label || 'service charge') + ': ' + money(scRow.amount));\n  }\n  for (let i = 0; i < addons.length; i++) {\n    const a = addons[i];\n    const lbl = String(a.label || '') + (a.detail ? ' (' + String(a.detail) + ')' : '');\n    parts.push(line(lbl, money(a.amount), false, false));\n    txt.push(lbl + ': ' + money(a.amount));\n  }\n\n  const total = (q.all_in_total === null || q.all_in_total === undefined || Number(q.all_in_total) === 0) ? null : Number(q.all_in_total);\n  if (total !== null) {\n    parts.push(line('All-in total', money(total), true, false));\n    txt.push('ALL-IN TOTAL: ' + money(total));\n  } else {\n    parts.push(line('All-in total', 'no retail number — ' + status, false, false));\n    txt.push('ALL-IN TOTAL: no retail number (' + status + ')');\n  }\n\n  parts.push(line('Status', status, false, false));\n  parts.push(line('Quote ID', String(q.quote_id || EMPTY), false, true));\n  txt.push('Status: ' + status);\n  txt.push('Quote ID: ' + String(q.quote_id || EMPTY));\n\n  quoteInner = shell(parts.join(''));\n  quote_text = txt.join('\\n');\n}\n\nconst quoteBlock = block('Quote', quoteInner);\n\nlet html = String(src.log_html || '');\nconst anchor = '<tr><td style=\"padding:26px 32px 0;font-family:' + F + ';font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:' + MUTED + ';font-weight:700;\">Transcript</td></tr>';\nconst idx = html.indexOf(anchor);\nlet injected = false;\nif (idx >= 0) {\n  html = html.slice(0, idx) + quoteBlock + html.slice(idx);\n  injected = true;\n} else {\n  const fallback = html.lastIndexOf('</table>');\n  if (fallback >= 0) { html = html.slice(0, fallback) + quoteBlock + html.slice(fallback); injected = true; }\n}\n\nreturn [{\n  json: {\n    log_title: src.log_title,\n    log_html: html,\n    log_body: String(src.log_body || '') + '\\n\\n----- QUOTE -----\\n' + quote_text,\n    log_status: src.log_status,\n    booked: src.booked,\n    appointment_id: src.appointment_id,\n    appointment_when: src.appointment_when,\n    owner_sms: src.owner_sms,\n    transcript_lines: src.transcript_lines,\n    quote_injected: injected,\n    quote_present: !!q,\n    quote_id: q ? String(q.quote_id) : ''\n  }\n}];\n"
+      },
+      "id": "90b9f6c0-b27a-4c99-9ebd-b8e959f85501",
+      "name": "Inject Quote Block",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1430,
+        -220
+      ],
+      "executeOnce": true
+    },
+    {
+      "id": "n_qgate",
+      "name": "Quarantine Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        628,
+        160
+      ],
+      "parameters": {
+        "jsCode": "// AVA Post-Call · node \"Quarantine Gate\"\n// RUN 3. THE single place this workflow decides a call is synthetic.\n//\n// It sits directly after Normalize and BEFORE the fork to Build GHL Body /\n// Format Call Log, so both the lead branch and the owner-alert branch inherit one\n// decision. The owner-alert branch previously forked off Normalize and never passed\n// through any internal check at all — a test call still paged the owner.\n//\n//   is_test = NANP-reserved 555 caller (spoken number or telephony ANI)\n//          OR an explicit test_mode flag on the payload\n//          OR the caller is one of OUR OWN lines (OUR_NUMBERS)\n//\n// A REAL person dialling the demo line from an unknown public number is NOT a test.\n// They keep the full receipt — the receipt IS the demo. Only synthetic and internal\n// traffic is quarantined.\nconst s = $('Normalize').first().json;\nconst body = $('Retell Webhook').first().json.body || {};\nconst c = body.call || {};\n\nconst d10 = (v) => String(v == null ? '' : v).replace(/[^0-9]/g, '').slice(-10);\n\nconst OUR = String(($vars && $vars.OUR_NUMBERS) || '')\n  .split(',')\n  .map((x) => d10(x))\n  .filter((x) => x.length === 10);\n\nconst spoken = d10(s.phone);\nconst ani = d10(c.from_number);\n\nconst is555 = (n) => n.length === 10 && n.slice(0, 3) === '555';\nconst isOurs = (n) => n.length === 10 && OUR.indexOf(n) !== -1;\n\nconst is_555 = is555(spoken) || is555(ani);\nconst is_our_number = isOurs(spoken) || isOurs(ani);\nconst test_mode = (body.test_mode === true ||\n                   String(body.test_mode).toLowerCase() === 'true' ||\n                   (c.metadata && c.metadata.test_mode === true));\n\nconst is_test = !!(is_555 || test_mode || is_our_number);\n\nlet test_reason = '';\nif (is_555) test_reason = 'caller is a NANP-reserved 555 test number';\nelse if (test_mode) test_reason = 'payload carried test_mode';\nelse if (is_our_number) test_reason = 'caller is one of OUR_NUMBERS';\n\n// Pass the Normalize payload straight through so downstream nodes that read\n// $json keep working unchanged; the quarantine fields ride alongside.\nreturn [{\n  json: Object.assign({}, s, {\n    is_test: is_test,\n    test_reason: test_reason,\n    is_our_number: is_our_number,\n    quarantine_note: is_test\n      ? ('QUARANTINED — ' + test_reason + '; owner alert and text-back suppressed')\n      : ''\n  })\n}];\n"
+      }
+    },
+    {
+      "id": "n_ownergate",
+      "name": "Owner Alert Allowed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1610,
+        -220
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c_owner",
+              "leftValue": "={{ $(\"Quarantine Gate\").first().json.is_test ? \"NO\" : \"YES\" }}",
+              "rightValue": "YES",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Retell Webhook": {
+      "main": [
+        [
+          {
+            "node": "Is Call Analyzed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Call Analyzed": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Ignored",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHL Upsert Contact": {
+      "main": [
+        [
+          {
+            "node": "Contact Ref",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send SMS": {
+      "main": [
+        [
+          {
+            "node": "Caller Send?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Call Log": {
+      "main": [
+        [
+          {
+            "node": "Load Quote For Owner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Call Log Append": {
+      "main": [
+        [
+          {
+            "node": "Send SMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "Quarantine Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build GHL Body": {
+      "main": [
+        [
+          {
+            "node": "Has Identifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Identifier": {
+      "main": [
+        [
+          {
+            "node": "Is Our Number?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond No Identifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Our Number?": {
+      "main": [
+        [
+          {
+            "node": "Test Contact",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GHL Upsert Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Contact": {
+      "main": [
+        [
+          {
+            "node": "Contact Ref",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contact Ref": {
+      "main": [
+        [
+          {
+            "node": "GHL Call Note",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Load Quote For SMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Caller Send?": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Owner Alert SMS": {
+      "main": [
+        [
+          {
+            "node": "Owner Alert Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHL Call Note": {
+      "main": [
+        [
+          {
+            "node": "Notion Call Log Append",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Quote For SMS": {
+      "main": [
+        [
+          {
+            "node": "Build Text Back",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Text Back": {
+      "main": [
+        [
+          {
+            "node": "Text Back Gate?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Back Gate?": {
+      "main": [
+        [
+          {
+            "node": "Text Back SMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Quote For Owner": {
+      "main": [
+        [
+          {
+            "node": "Inject Quote Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inject Quote Block": {
+      "main": [
+        [
+          {
+            "node": "Owner Alert Allowed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quarantine Gate": {
+      "main": [
+        [
+          {
+            "node": "Build GHL Body",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format Call Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Owner Alert Allowed?": {
+      "main": [
+        [
+          {
+            "node": "Owner Alert SMS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "SlnAeMrVRORsF0w7"
+  }
+}

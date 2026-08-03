@@ -86,6 +86,8 @@ const email_html =
 
 const response = {
   trip_id: v.trip_id,
+  is_test: !!n.is_test,
+  test_reason: n.test_reason || '',
   reservation_state: v.reservation_state,
   crm_write_status: v.crm_write_status,
   provider_reservation_id: v.provider_reservation_id,
@@ -111,7 +113,11 @@ return [{
     owner_sms: owner_sms,
     email_subject: email_subject,
     email_html: email_html,
-    send_ticket: v.crm_write_status !== 'WRITE_FAILED',
+    // RUN 3 QUARANTINE: a synthetic call never pages the owner. Suppression is
+    // total — no SMS, no email — and is decided by the single is_test flag minted
+    // at the ingress node, never re-derived here.
+    send_ticket: v.crm_write_status !== 'WRITE_FAILED' && !n.is_test,
+    suppressed_reason: n.is_test ? ('owner alerts suppressed — ' + (n.test_reason || 'test call')) : '',
     caller_mobile: r.mobile_e164 || '',
     caller_email: r.email || ''
   })

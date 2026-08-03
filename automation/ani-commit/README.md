@@ -147,6 +147,48 @@ owner-alert contact `pWm6s2wCWu8rMlDxmhcW` tagged `owner-alerts` / `zz-internal`
 and distinct from the zz-test sink; `OWNER_ALERT_CONTACT_ID` appears only in the two Ticket Owner
 messaging nodes, never in an upsert.
 
+### RUN 3 QUARANTINE RAIL — test traffic never pages the owner
+
+`is_test` is minted **once**, at the single ingress node of each path, and every
+suppression downstream reads that one flag. Same shape as the § 9 gate, for the same
+reason: a decision made in one place cannot be edited out of one branch and left live in
+another.
+
+| | Ingress node | Node id |
+|---|---|---|
+| WF-COMMIT `O1fX0FpbT0qqMnqJ` | `Verify + Normalize` | `n_verify__normalize` |
+| AVA Post-Call `6r8YHuMEJbxeDyT5` | `Quarantine Gate` | `n_qgate` |
+
+```
+is_test =  caller is +1555*            (NANP-reserved, cannot ring anyone)
+        OR payload test_mode == true
+        OR tenant is "demo" AND the caller is one of OUR_NUMBERS
+```
+
+The third clause is deliberately narrow. **A real person dialling the demo line from an
+unknown public number is NOT a test** — they keep the full receipt, because the receipt
+*is* the demo. Only synthetic and internal traffic is quarantined.
+
+When `is_test`:
+- the GHL contact is written **tagged `TEST` + `zz-internal`** (GHL lowercases tags on
+  write, so they read `test` / `zz-internal` in the CRM) and `source` is marked quarantined
+- the reservation record carries `is_test: "TEST"`
+- the commit-ledger row carries `is_test: "TEST"`
+- **owner SMS and owner email are suppressed entirely** — gated at
+  `Send Ticket?` (WF-COMMIT) and `Owner Alert Allowed?` `n_ownergate` (post-call)
+- the text-back is suppressed — `Text Back Gate?` now requires `should_send && !is_test`
+
+Our own lines additionally never reach an upsert at all (§ 9): they route to the zz-test
+contact. The owner-alert branch on the post-call path was previously **ungated entirely** —
+it forked off `Normalize` and never passed through any internal check, so a test call paged
+the owner. `Quarantine Gate` now sits before that fork.
+
+Batteries: `quarantine_battery.py` (post-call path, 23/23) and `gate_proof.py`
+(our-number proof against WF-COMMIT, 27/27). `quarantine_sweep.py [--apply]` finds and
+quarantines test-created CRM data; it tags and flags, and **never hard-deletes** — the
+ledger is the idempotency spine and a deleted row would let an old `call_id` write a
+second reservation.
+
 ### Commit-success also fires the quote-ticket path
 `Respond Commit` → `Send Ticket?` → owner SMS + owner email, reusing the Run 1 GHL messaging
 branch. Additive: the response is already returned before the ticket path runs, so messaging

@@ -207,6 +207,37 @@ for (let i = 0; i < OURS.length; i++) {
 }
 const zz = str(($vars && $vars.ZZ_TEST_CONTACT_ID) || '');
 
+// --- RUN 3 QUARANTINE RAIL -------------------------------------------------
+// THE single place WF-COMMIT decides a call is synthetic. Every suppression and
+// every TEST tag downstream reads is_test from here — same one-node shape as the
+// § 9 gate, so it cannot be edited out of one branch and left live in another.
+//
+//   is_test = NANP-reserved 555-01xx caller
+//          OR an explicit test_mode flag on the payload
+//          OR (tenant "demo" AND the caller is one of OUR OWN lines)
+//
+// The third clause is deliberately narrow. A REAL person dialling the demo line
+// from an unknown public number is NOT a test — the receipt is the demo, and
+// suppressing it would break the product. Only our own lines are quarantined.
+// Area code 555 is NANP-reserved and can never be a real dialable line, so the
+// prefix test is exact — no real caller is ever caught by it.
+const d10 = digits10(res.mobile_e164);
+const is_555 = d10.length === 10 && d10.slice(0, 3) === '555';
+const test_mode = (args.test_mode === true || body.test_mode === true ||
+                   String(args.test_mode).toLowerCase() === 'true');
+const is_test = !!(is_555 || test_mode || (tenant_id === 'demo' && is_our_number));
+
+let test_reason = '';
+if (is_555) test_reason = 'caller is a NANP-reserved 555 test number';
+else if (test_mode) test_reason = 'payload carried test_mode';
+else if (is_test) test_reason = 'demo tenant calling from one of OUR_NUMBERS';
+
+// Tags live here, not in a node expression, so the TEST marker is version-controlled
+// and reviewable. A quarantined write is legible as synthetic in the CRM itself —
+// not only in the ledger — so nobody works it as a real lead.
+const tags = ['aichauffeur-lead', 'aic-reservation'];
+if (is_test) { tags.push('TEST'); tags.push('zz-internal'); }
+
 // Reservation custom-object record properties (object 6a70df48cf83fcd4097d738a).
 const properties = {
   trip_id: trip_id, tenant_id: tenant_id, intake_id: intake_id, call_id: call_id,
@@ -218,6 +249,9 @@ const properties = {
   airline: res.airline, flight_number: res.flight_number, meet_style: res.meet_style,
   payload_hash: payload_hash, captured_at: new Date().toISOString()
 };
+// RUN 3: the record says so itself, so a reservation is legible as synthetic without
+// cross-referencing the ledger.
+if (is_test) properties.is_test = 'TEST';
 if (quote_id) properties.quote_id = quote_id;
 if (res.pax_count !== null) properties.pax_count = res.pax_count;
 if (res.luggage_count !== null) properties.luggage_count = res.luggage_count;
@@ -238,6 +272,7 @@ return [{
     missing_sentence: missing.length ? ('Required details are missing: ' + missing.join(', ') + '.') : '',
     res: res, cf: cf, properties: properties,
     is_our_number: is_our_number, zz_test_contact_id: zz,
+    is_test: is_test, test_reason: test_reason, tags: tags,
     started_ms: Date.now()
   }
 }];
