@@ -371,7 +371,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ locationId: \"sdShCZCaxce8DHKbYcIl\", associationId: \"6a70e026747242cebef44955\", firstRecordId: $(\"GHL Upsert Contact\").first().json.contact.id, secondRecordId: $(\"Create Reservation Record\").first().json.record.id }) }}"
+        "jsonBody": "={{ JSON.stringify({ locationId: \"sdShCZCaxce8DHKbYcIl\", associationId: \"6a70e026747242cebef44955\", firstRecordId: $(\"Resolve Contact\").first().json.contact_id, secondRecordId: $(\"Create Reservation Record\").first().json.record.id }) }}"
       }
     },
     {
@@ -393,7 +393,7 @@
       "onError": "continueRegularOutput",
       "parameters": {
         "method": "POST",
-        "url": "=https://services.leadconnectorhq.com/contacts/{{ $(\"GHL Upsert Contact\").first().json.contact.id }}/notes",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $(\"Resolve Contact\").first().json.contact_id }}/notes",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendHeaders": true,
@@ -477,7 +477,7 @@
         -240
       ],
       "parameters": {
-        "jsCode": "// WF-COMMIT · node \"Verify + Status\"\n// READ-AFTER-WRITE. The record is re-fetched from GHL and hash-compared against what we\n// intended to store. crm_write_status is decided by what the CRM actually returned, never\n// by what the write call claimed. A write that 201s but reads back wrong is UNVERIFIED.\nconst crypto = require('crypto');\n\nconst n = $('Verify + Normalize').first().json;\nconst up = $('GHL Upsert Contact').first().json || {};\nconst rec = $('Create Reservation Record').first().json || {};\nconst assoc = $('Associate To Contact').first().json || {};\nconst note = $('GHL Trip Note').first().json || {};\nconst rb = $input.first().json || {};\n\nconst bad = (r) => {\n  const sc = Number((r || {}).statusCode || (r || {}).status || 0);\n  return !!((r || {}).error || (sc && (sc < 200 || sc >= 300)));\n};\n\nconst contact_id = ((up.contact || {}).id) || '';\nconst record_id = ((rec.record || {}).id) || rec.id || '';\nconst assoc_id = assoc.id || '';\nconst note_ok = !!((note.note && note.note.id) || note.id);\n\nconst rbRec = rb.record || {};\nconst stored = rbRec.properties || {};\n\n// --- field-by-field comparison against the intended properties -------------\nconst intended = n.properties || {};\nconst keys = Object.keys(intended);\nconst mismatches = [];\nlet compared = 0, matched = 0;\nfor (let i = 0; i < keys.length; i++) {\n  const k = keys[i];\n  if (k === 'captured_at') continue; // server clock, not a caller fact\n  compared++;\n  const want = String(intended[k] === null || intended[k] === undefined ? '' : intended[k]).trim();\n  const got = String(stored[k] === null || stored[k] === undefined ? '' : stored[k]).trim();\n  if (want === got) matched++;\n  else mismatches.push(k + ': wrote \"' + want + '\", CRM holds \"' + got + '\"');\n}\n\n// Hash both sides over the same key order so the comparison is one value, not a vibe.\nconst hashOf = (obj) => {\n  const ks = keys.slice().sort();\n  const parts = [];\n  for (let i = 0; i < ks.length; i++) {\n    if (ks[i] === 'captured_at') continue;\n    const v = obj[ks[i]];\n    parts.push(ks[i] + '=' + String(v === null || v === undefined ? '' : v).trim());\n  }\n  return crypto.createHash('sha256').update(parts.join('|')).digest('hex');\n};\nconst intended_hash = hashOf(intended);\nconst stored_hash = hashOf(stored);\nconst hash_match = intended_hash === stored_hash;\n\n// --- crm_write_status ------------------------------------------------------\nconst writeFailed = bad(up) || bad(rec) || !contact_id || !record_id;\nlet crm_write_status;\nif (writeFailed) {\n  crm_write_status = 'WRITE_FAILED';\n} else if (bad(rb) || !rbRec.id) {\n  crm_write_status = 'WRITE_UNVERIFIED';   // wrote, but could not read it back\n} else if (hash_match && assoc_id) {\n  crm_write_status = 'CRM_VERIFIED';\n} else {\n  crm_write_status = 'WRITE_UNVERIFIED';\n}\n\n// --- reservation state policy ---------------------------------------------\n// demo tenant may say CONFIRMED, and only on CRM_VERIFIED. Every other tenant is\n// CAPTURE_ONLY and is hard-capped at REQUEST_RECEIVED no matter how clean the write was.\nconst CONFIRM_TENANTS = ['demo'];\nconst mayConfirm = CONFIRM_TENANTS.indexOf(String(n.tenant_id)) >= 0;\n\nlet reservation_state;\nif (crm_write_status === 'WRITE_FAILED') reservation_state = 'FAILED';\nelse if (crm_write_status === 'CRM_VERIFIED' && mayConfirm) reservation_state = 'CONFIRMED';\nelse reservation_state = 'REQUEST_RECEIVED';\n\nconst capped = (crm_write_status === 'CRM_VERIFIED' && !mayConfirm);\n\nlet message;\nif (reservation_state === 'CONFIRMED') {\n  message = 'Your trip is set. Reference ' + n.trip_id +\n            ' — every detail was checked against the stored record.';\n} else if (reservation_state === 'REQUEST_RECEIVED') {\n  message = 'Your request is in, reference ' + n.trip_id +\n            '. Dispatch will confirm the details with you.';\n} else {\n  message = 'I could not store that reservation. Dispatch will call you back to take it directly.';\n}\n\nconst reason = crm_write_status === 'CRM_VERIFIED'\n  ? (capped ? 'record verified; tenant is CAPTURE_ONLY so state is capped at REQUEST_RECEIVED'\n            : 'record written and verified by read-after-write hash compare')\n  : (crm_write_status === 'WRITE_FAILED'\n     ? ('write failed — contact_id=' + (contact_id || 'none') + ' record_id=' + (record_id || 'none'))\n     : ('written but not verified — ' + (mismatches.length ? mismatches.join(' · ')\n                                        : 'record could not be read back')));\n\nreturn [{\n  json: {\n    trip_id: n.trip_id,\n    reservation_state: reservation_state,\n    crm_write_status: crm_write_status,\n    provider_reservation_id: null,           // Phase 2: no provider submission yet\n    ghl_contact_id: contact_id || null,\n    reservation_record_id: record_id || null,\n    association_id: assoc_id || null,\n    note_written: note_ok,\n    quote_id: n.quote_id,\n    intake_id: n.intake_id,\n    call_id: n.call_id,\n    tenant_id: n.tenant_id,\n    payload_hash: n.payload_hash,\n    intended_hash: intended_hash,\n    stored_hash: stored_hash,\n    hash_match: hash_match,\n    fields_compared: compared,\n    fields_matched: matched,\n    mismatches: mismatches,\n    capture_only_capped: capped,\n    reason: reason,\n    message: message,\n    commit_ms: Date.now() - (n.started_ms || Date.now())\n  }\n}];\n"
+        "jsCode": "// WF-COMMIT · node \"Verify + Status\"\n// READ-AFTER-WRITE. The record is re-fetched from GHL and hash-compared against what we\n// intended to store. crm_write_status is decided by what the CRM actually returned, never\n// by what the write call claimed. A write that 201s but reads back wrong is UNVERIFIED.\nconst crypto = require('crypto');\n\nconst n = $('Verify + Normalize').first().json;\nconst up = $('Resolve Contact').first().json.upsert_raw || {};\nconst resolved = $('Resolve Contact').first().json || {};\nconst rec = $('Create Reservation Record').first().json || {};\nconst assoc = $('Associate To Contact').first().json || {};\nconst note = $('GHL Trip Note').first().json || {};\nconst rb = $input.first().json || {};\n\nconst bad = (r) => {\n  const sc = Number((r || {}).statusCode || (r || {}).status || 0);\n  return !!((r || {}).error || (sc && (sc < 200 || sc >= 300)));\n};\n\nconst contact_id = resolved.contact_id || ((up.contact || {}).id) || '';\nconst record_id = ((rec.record || {}).id) || rec.id || '';\nconst assoc_id = assoc.id || '';\nconst note_ok = !!((note.note && note.note.id) || note.id);\n\nconst rbRec = rb.record || {};\nconst stored = rbRec.properties || {};\n\n// --- field-by-field comparison against the intended properties -------------\nconst intended = n.properties || {};\nconst keys = Object.keys(intended);\nconst mismatches = [];\nlet compared = 0, matched = 0;\nfor (let i = 0; i < keys.length; i++) {\n  const k = keys[i];\n  if (k === 'captured_at') continue; // server clock, not a caller fact\n  compared++;\n  const want = String(intended[k] === null || intended[k] === undefined ? '' : intended[k]).trim();\n  const got = String(stored[k] === null || stored[k] === undefined ? '' : stored[k]).trim();\n  if (want === got) matched++;\n  else mismatches.push(k + ': wrote \"' + want + '\", CRM holds \"' + got + '\"');\n}\n\n// Hash both sides over the same key order so the comparison is one value, not a vibe.\nconst hashOf = (obj) => {\n  const ks = keys.slice().sort();\n  const parts = [];\n  for (let i = 0; i < ks.length; i++) {\n    if (ks[i] === 'captured_at') continue;\n    const v = obj[ks[i]];\n    parts.push(ks[i] + '=' + String(v === null || v === undefined ? '' : v).trim());\n  }\n  return crypto.createHash('sha256').update(parts.join('|')).digest('hex');\n};\nconst intended_hash = hashOf(intended);\nconst stored_hash = hashOf(stored);\nconst hash_match = intended_hash === stored_hash;\n\n// --- crm_write_status ------------------------------------------------------\n// On the zz-test path there is no upsert response to judge, so only the record matters.\nconst writeFailed = (!resolved.is_our_number && bad(up)) || bad(rec)\n                    || !contact_id || !record_id;\nlet crm_write_status;\nif (writeFailed) {\n  crm_write_status = 'WRITE_FAILED';\n} else if (bad(rb) || !rbRec.id) {\n  crm_write_status = 'WRITE_UNVERIFIED';   // wrote, but could not read it back\n} else if (hash_match && assoc_id) {\n  crm_write_status = 'CRM_VERIFIED';\n} else {\n  crm_write_status = 'WRITE_UNVERIFIED';\n}\n\n// --- reservation state policy ---------------------------------------------\n// demo tenant may say CONFIRMED, and only on CRM_VERIFIED. Every other tenant is\n// CAPTURE_ONLY and is hard-capped at REQUEST_RECEIVED no matter how clean the write was.\nconst CONFIRM_TENANTS = ['demo'];\nconst mayConfirm = CONFIRM_TENANTS.indexOf(String(n.tenant_id)) >= 0;\n\nlet reservation_state;\nif (crm_write_status === 'WRITE_FAILED') reservation_state = 'FAILED';\nelse if (crm_write_status === 'CRM_VERIFIED' && mayConfirm) reservation_state = 'CONFIRMED';\nelse reservation_state = 'REQUEST_RECEIVED';\n\nconst capped = (crm_write_status === 'CRM_VERIFIED' && !mayConfirm);\n\nlet message;\nif (reservation_state === 'CONFIRMED') {\n  message = 'Your trip is set. Reference ' + n.trip_id +\n            ' — every detail was checked against the stored record.';\n} else if (reservation_state === 'REQUEST_RECEIVED') {\n  message = 'Your request is in, reference ' + n.trip_id +\n            '. Dispatch will confirm the details with you.';\n} else {\n  message = 'I could not store that reservation. Dispatch will call you back to take it directly.';\n}\n\nconst reason = crm_write_status === 'CRM_VERIFIED'\n  ? (capped ? 'record verified; tenant is CAPTURE_ONLY so state is capped at REQUEST_RECEIVED'\n            : 'record written and verified by read-after-write hash compare')\n  : (crm_write_status === 'WRITE_FAILED'\n     ? ('write failed — contact_id=' + (contact_id || 'none') + ' record_id=' + (record_id || 'none'))\n     : ('written but not verified — ' + (mismatches.length ? mismatches.join(' · ')\n                                        : 'record could not be read back')));\n\nreturn [{\n  json: {\n    trip_id: n.trip_id,\n    reservation_state: reservation_state,\n    crm_write_status: crm_write_status,\n    provider_reservation_id: null,           // Phase 2: no provider submission yet\n    ghl_contact_id: contact_id || null,\n    reservation_record_id: record_id || null,\n    association_id: assoc_id || null,\n    note_written: note_ok,\n    quote_id: n.quote_id,\n    intake_id: n.intake_id,\n    call_id: n.call_id,\n    tenant_id: n.tenant_id,\n    payload_hash: n.payload_hash,\n    intended_hash: intended_hash,\n    stored_hash: stored_hash,\n    hash_match: hash_match,\n    fields_compared: compared,\n    fields_matched: matched,\n    mismatches: mismatches,\n    capture_only_capped: capped,\n    reason: reason,\n    message: message,\n    commit_ms: Date.now() - (n.started_ms || Date.now())\n  }\n}];\n"
       }
     },
     {
@@ -678,6 +678,98 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ type: \"Email\", contactId: $vars.OWNER_ALERT_CONTACT_ID, subject: $(\"Build Response + Ticket\").first().json.email_subject, html: $(\"Build Response + Ticket\").first().json.email_html }) }}"
       }
+    },
+    {
+      "id": "n_ournum",
+      "name": "Our Number?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        280,
+        -380
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c_our",
+              "leftValue": "={{ $(\"Verify + Normalize\").first().json.is_our_number }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "n_zz",
+      "name": "Load ZZ Test Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        480,
+        -440
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "method": "GET",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $vars.ZZ_TEST_CONTACT_ID }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 12000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "n_resolve",
+      "name": "Resolve Contact",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        -380
+      ],
+      "parameters": {
+        "jsCode": "// WF-COMMIT · node \"Resolve Contact\"\n// § 9 OWNER RAIL LAW enforcement point. Downstream nodes read the contact id from HERE,\n// never from the upsert node directly, so the guard cannot be bypassed by a later edit.\n//\n// A call placed from one of OUR OWN numbers (every Retell line, the published SMS line,\n// both owner cells — n8n Variable OUR_NUMBERS) must never create or mutate a real lead.\n// On that path the upsert is skipped entirely and the reservation is associated to the\n// dedicated zz-test contact instead.\nconst n = $('Verify + Normalize').first().json;\nconst inbound = $input.first().json || {};\n\nlet contact_id = '';\nlet route = '';\n\nif (n.is_our_number) {\n  contact_id = n.zz_test_contact_id || '';\n  route = 'zz-test — caller is one of OUR_NUMBERS, upsert skipped (§ 9)';\n} else {\n  contact_id = ((inbound.contact || {}).id) || '';\n  route = 'caller upsert';\n}\n\nreturn [{\n  json: {\n    contact_id: contact_id,\n    route: route,\n    is_our_number: !!n.is_our_number,\n    upsert_raw: inbound\n  }\n}];\n"
+      }
     }
   ],
   "connections": {
@@ -765,7 +857,7 @@
       "main": [
         [
           {
-            "node": "GHL Upsert Contact",
+            "node": "Our Number?",
             "type": "main",
             "index": 0
           }
@@ -783,7 +875,7 @@
       "main": [
         [
           {
-            "node": "Create Reservation Record",
+            "node": "Resolve Contact",
             "type": "main",
             "index": 0
           }
@@ -895,6 +987,46 @@
         [
           {
             "node": "Ticket Owner Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Our Number?": {
+      "main": [
+        [
+          {
+            "node": "Load ZZ Test Contact",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GHL Upsert Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load ZZ Test Contact": {
+      "main": [
+        [
+          {
+            "node": "Resolve Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Contact": {
+      "main": [
+        [
+          {
+            "node": "Create Reservation Record",
             "type": "main",
             "index": 0
           }

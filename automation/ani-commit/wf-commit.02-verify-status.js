@@ -5,7 +5,8 @@
 const crypto = require('crypto');
 
 const n = $('Verify + Normalize').first().json;
-const up = $('GHL Upsert Contact').first().json || {};
+const up = $('Resolve Contact').first().json.upsert_raw || {};
+const resolved = $('Resolve Contact').first().json || {};
 const rec = $('Create Reservation Record').first().json || {};
 const assoc = $('Associate To Contact').first().json || {};
 const note = $('GHL Trip Note').first().json || {};
@@ -16,7 +17,7 @@ const bad = (r) => {
   return !!((r || {}).error || (sc && (sc < 200 || sc >= 300)));
 };
 
-const contact_id = ((up.contact || {}).id) || '';
+const contact_id = resolved.contact_id || ((up.contact || {}).id) || '';
 const record_id = ((rec.record || {}).id) || rec.id || '';
 const assoc_id = assoc.id || '';
 const note_ok = !!((note.note && note.note.id) || note.id);
@@ -55,7 +56,9 @@ const stored_hash = hashOf(stored);
 const hash_match = intended_hash === stored_hash;
 
 // --- crm_write_status ------------------------------------------------------
-const writeFailed = bad(up) || bad(rec) || !contact_id || !record_id;
+// On the zz-test path there is no upsert response to judge, so only the record matters.
+const writeFailed = (!resolved.is_our_number && bad(up)) || bad(rec)
+                    || !contact_id || !record_id;
 let crm_write_status;
 if (writeFailed) {
   crm_write_status = 'WRITE_FAILED';

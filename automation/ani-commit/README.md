@@ -16,6 +16,7 @@ change into the node — there is no automatic sync.
 | `wf-commit.02-verify-status.js` | WF-COMMIT `O1fX0FpbT0qqMnqJ` | `Verify + Status` |
 | `wf-commit.03-build-response.js` | WF-COMMIT `O1fX0FpbT0qqMnqJ` | `Build Response + Ticket` |
 | `wf-commit.04-duplicate-response.js` | WF-COMMIT `O1fX0FpbT0qqMnqJ` | `Build Duplicate Response` |
+| `wf-commit.05-resolve-contact.js` | WF-COMMIT `O1fX0FpbT0qqMnqJ` | `Resolve Contact` |
 
 `wf-ani.workflow.json` / `wf-commit.workflow.json` are the full node+connection graphs as created.
 `aic_call.py` is the signed caller; `ani_battery.py` and `commit_battery.py` are the test batteries.
@@ -129,6 +130,23 @@ original response verbatim** — no second contact upsert, no second record, no 
 immediately after a successful 201 write** (index lag, measured 2026-08-03). Search cannot back
 idempotency. The Data Table is immediately consistent — the same reason `quote_audit` backs WF-RATE.
 
+### § 9 OWNER RAIL enforcement
+
+`Our Number?` gates the upsert. A call placed from one of `OUR_NUMBERS` (every Retell line, the
+published SMS line, both owner cells) **skips the contact upsert entirely** and the reservation is
+associated to the dedicated zz-test contact instead — a call from one of our own lines never
+creates or mutates a real lead.
+
+Every downstream node reads the contact id from **`Resolve Contact`**, never from the upsert node,
+so the guard cannot be bypassed by a later edit that forgets it exists. The first build of this
+workflow *computed* `is_our_number` and never used it; the § 9 assertion at the end of the run is
+what caught it.
+
+Asserted live 2026-08-03: Error Sentry `SlnAeMrVRORsF0w7` **active**, attached to both workflows;
+owner-alert contact `pWm6s2wCWu8rMlDxmhcW` tagged `owner-alerts` / `zz-internal` / `do-not-drip`
+and distinct from the zz-test sink; `OWNER_ALERT_CONTACT_ID` appears only in the two Ticket Owner
+messaging nodes, never in an upsert.
+
 ### Commit-success also fires the quote-ticket path
 `Respond Commit` → `Send Ticket?` → owner SMS + owner email, reusing the Run 1 GHL messaging
 branch. Additive: the response is already returned before the ticket path runs, so messaging
@@ -146,7 +164,7 @@ python automation/ani-commit/ani_battery.py
 python automation/ani-commit/commit_battery.py
 ```
 
-Last run 2026-08-03: **WF-ANI 27/27 PASS · WF-COMMIT 36/36 PASS.**
+Last run 2026-08-03: **WF-ANI 27/27 PASS · WF-COMMIT 40/40 PASS.**
 
 Both batteries seed their own fixtures on NANP-reserved `555-01xx` numbers (which cannot ring a
 real person), read every claim back independently out of GHL rather than trusting the endpoint's

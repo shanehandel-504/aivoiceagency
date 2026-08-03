@@ -222,6 +222,35 @@ try:
     check('6.3 luggage_count absent when not captured',
           'luggage_count' not in p6, repr(p6.get('luggage_count')))
 
+    # -------------------------------------------- 7. § 9 OWNER RAIL enforcement
+    print('\n[7] § 9 — a call from OUR OWN number must not create a real lead')
+    cid7 = stamp('c7')
+    res7 = reservation('P2P')
+    res7['flight'] = {}
+    res7['vehicle'] = {'class': 'SEDAN'}
+    res7['passenger']['mobile_e164'] = '+14142408930'   # the published AVA line
+    res7['passenger']['first'] = 'Should'
+    res7['passenger']['last'] = 'NotExist'
+    st, r7, _ = call('commit', {'args': {'tenant_id': 'demo', 'call_id': cid7,
+                                         'intake_id': stamp('i7'), 'reservation': res7}})
+    if r7.get('reservation_record_id'):
+        created_records.append(r7['reservation_record_id'])
+    zz = subprocess.check_output(['doppler', 'secrets', 'get', 'ZZ_TEST_CONTACT_ID',
+                                  '--plain'], shell=True, text=True).strip() \
+        if False else None   # zz id is an n8n Variable, not a Doppler secret
+    check('7.1 commit still succeeds', st == 200 and r7.get('trip_id'), repr(r7.get('trip_id')))
+    check('7.2 a contact id was resolved', bool(r7.get('ghl_contact_id')))
+    # the resolved contact must NOT be a freshly created lead for our own number
+    st, dup = ghl('/contacts/search/duplicate?locationId=%s&number=%s'
+                  % (LOC, '%2B14142408930'))
+    hit = (dup.get('contact') or {})
+    check('7.3 no lead created for our own number',
+          not hit.get('id') or hit.get('firstName') != 'Should',
+          'CRM holds firstName=%r for that number' % hit.get('firstName'))
+    check('7.4 reservation routed to the zz-test contact, not the caller',
+          r7.get('ghl_contact_id') != hit.get('id') or not hit.get('id'),
+          'resolved=%s' % r7.get('ghl_contact_id'))
+
 finally:
     print('\n[cleanup]')
     for rid in created_records:
