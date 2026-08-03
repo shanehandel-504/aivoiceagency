@@ -1,0 +1,809 @@
+{
+  "name": "WF-RATE \u2014 AI Chauffeur Rate Engine v1.0",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tools/rate-lookup",
+        "authentication": "none",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "ed3ed6ef-f0c8-45c4-a7cd-3d85a9c7e01b",
+      "name": "Rate Lookup Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -460,
+        300
+      ],
+      "webhookId": "a5e07f17-0065-462c-ace3-a8b8ab6f409e"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const crypto = require('crypto');\n\nconst item = $input.first().json || {};\nconst headers = item.headers || {};\nconst body = item.body || {};\n\nconst SECRET = ($vars && $vars.RATE_SHARED_SECRET) || '';\n\nconst hdr = (k) => {\n  const lk = String(k).toLowerCase();\n  const keys = Object.keys(headers);\n  for (let i = 0; i < keys.length; i++) {\n    if (String(keys[i]).toLowerCase() === lk) return String(headers[keys[i]] == null ? '' : headers[keys[i]]);\n  }\n  return '';\n};\n\nconst ctEq = (a, b) => {\n  if (typeof a !== 'string' || typeof b !== 'string') return false;\n  const ba = Buffer.from(a, 'utf8');\n  const bb = Buffer.from(b, 'utf8');\n  if (ba.length !== bb.length) return false;\n  return crypto.timingSafeEqual(ba, bb);\n};\n\nlet auth_ok = false;\nlet auth_mode = 'none';\nlet auth_reason = '';\n\nif (!SECRET) {\n  auth_reason = 'RATE_SHARED_SECRET is not set in n8n Variables';\n} else {\n  const sig = hdr('x-retell-signature');\n  const shared = hdr('x-rate-secret');\n  if (sig) {\n    auth_mode = 'hmac';\n    const expected = crypto.createHmac('sha256', SECRET).update(JSON.stringify(body)).digest('hex');\n    const parts = String(sig).split(/[,;\\s]+/);\n    for (let i = 0; i < parts.length; i++) {\n      const p = parts[i];\n      if (!p) continue;\n      const eq = p.indexOf('=');\n      const cand = eq >= 0 ? p.slice(eq + 1).trim() : p.trim();\n      if (ctEq(cand.toLowerCase(), expected)) { auth_ok = true; break; }\n    }\n    if (!auth_ok) auth_reason = 'x-retell-signature did not match HMAC-SHA256 of the request body';\n  } else if (shared) {\n    auth_mode = 'shared';\n    auth_ok = ctEq(shared, SECRET);\n    if (!auth_ok) auth_reason = 'x-rate-secret did not match the shared secret';\n  } else {\n    auth_reason = 'neither x-retell-signature nor x-rate-secret was supplied';\n  }\n}\n\nconst args = body.args || body.arguments || body.parameters || body;\nconst call = body.call || {};\n\nconst str = (v) => (v === undefined || v === null) ? '' : String(v).trim();\nconst num = (v) => {\n  if (v === undefined || v === null || v === '') return null;\n  const n = Number(v);\n  return isNaN(n) ? null : n;\n};\n\nconst call_id = str(args.call_id || body.call_id || call.call_id);\nconst tenant_id = str(args.tenant_id || body.tenant_id) || 'demo';\n\nlet addons_in = args.addons || args.add_ons || [];\nif (!Array.isArray(addons_in)) {\n  if (addons_in && typeof addons_in === 'object') {\n    const conv = [];\n    const ks = Object.keys(addons_in);\n    for (let i = 0; i < ks.length; i++) {\n      const v = addons_in[ks[i]];\n      if (v === false || v === 0 || v === null || v === undefined) continue;\n      conv.push({ key: ks[i], qty: (typeof v === 'number' ? v : 1) });\n    }\n    addons_in = conv;\n  } else if (typeof addons_in === 'string' && addons_in) {\n    const parts = addons_in.split(',');\n    const conv = [];\n    for (let i = 0; i < parts.length; i++) { const t = parts[i].trim(); if (t) conv.push({ key: t, qty: 1 }); }\n    addons_in = conv;\n  } else {\n    addons_in = [];\n  }\n}\n\nconst norm_addons = [];\nfor (let i = 0; i < addons_in.length; i++) {\n  const a = addons_in[i] || {};\n  const key = str(a.key || a.addon_key || a.name).toLowerCase().replace(/[\\s-]+/g, '_');\n  if (!key) continue;\n  const qty = num(a.qty || a.quantity) || 1;\n  norm_addons.push({ key: key, qty: qty, seat_type: str(a.seat_type || a.type) });\n}\nnorm_addons.sort((x, y) => (x.key < y.key ? -1 : x.key > y.key ? 1 : 0));\n\nconst inputs = {\n  trip_type: str(args.trip_type || args.tripType).toLowerCase(),\n  vehicle_key: str(args.vehicle_key || args.vehicle || args.vehicle_class).toLowerCase().replace(/[\\s-]+/g, '_'),\n  pickup_at: str(args.pickup_at || args.pickup_time || args.pickup_datetime || args.datetime),\n  requested_hours: num(args.requested_hours || args.hours || args.duration_hours),\n  origin: str(args.origin || args.pickup_city || args.from),\n  airport: str(args.airport || args.airport_code || args.to).toUpperCase(),\n  direction: str(args.direction).toLowerCase(),\n  stops_count: num(args.stops_count || args.stops) || 0,\n  account_type: (str(args.account_type || args.rate_type) || 'retail').toLowerCase(),\n  corporate_flag: (args.corporate === true || args.affiliate === true || args.farm_out === true || args.is_corporate === true) ? true : false,\n  addons: norm_addons,\n  pricing_mode_req: str(args.pricing_mode).toUpperCase()\n};\n\nconst canonical = JSON.stringify([\n  tenant_id,\n  inputs.trip_type,\n  inputs.vehicle_key,\n  inputs.pickup_at,\n  inputs.requested_hours,\n  inputs.origin.toLowerCase().replace(/[^a-z0-9]/g, ''),\n  inputs.airport,\n  inputs.stops_count,\n  inputs.account_type,\n  inputs.corporate_flag,\n  inputs.addons,\n  inputs.pricing_mode_req\n]);\n\nconst input_hash = crypto.createHash('sha256').update(tenant_id + '|' + call_id + '|' + canonical).digest('hex');\n\nreturn [{\n  json: {\n    auth_ok: auth_ok,\n    auth_mode: auth_mode,\n    auth_reason: auth_reason,\n    call_id: call_id,\n    tenant_id: tenant_id,\n    inputs: inputs,\n    canonical: canonical,\n    input_hash: input_hash,\n    prior_quote_id: str(args.prior_quote_id || args.supersedes),\n    received_at: new Date().toISOString()\n  }\n}];\n"
+      },
+      "id": "4ce97c39-77b3-4970-96f3-2129f5b56ea0",
+      "name": "Verify + Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8cd9ddd4-5441-437d-ae88-b08a141b4118",
+              "leftValue": "={{ $json.auth_ok }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6d7e0cb3-e0bf-41eb-8255-2cc0f892a5ee",
+      "name": "Authorized?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -20,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ status: \"UNAUTHORIZED\", reason: $json.auth_reason, quote_id: null, all_in_total: null, breakdown: [], gratuity_included: true }) }}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "cbcae917-2238-4c17-9b10-41f79ef54d68",
+      "name": "Respond Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        200,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dofpCkfUf9u13OCt"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "43fd1582-76ff-4ed7-8606-f7650aa55768",
+      "name": "Load Vehicle Classes",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        200
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dhypYajHbsOUqua6"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "13843989-058c-48e1-bc82-570012dab3ba",
+      "name": "Load Hourly Rates",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        200
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ffdnELJPWfa3yLsj"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "c829bdfd-bd94-4bfa-a6d8-20736d0e222c",
+      "name": "Load Airport Zones",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        200
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "KQQy3fSHRlnWKmHQ"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "77a37b90-9f8d-476d-aeca-4e54230cf56b",
+      "name": "Load Airport Adjust",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        200
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "sjmTvvww3QwueBCA"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "216a09b2-ba0b-468a-b4f4-d22cb9c3fac8",
+      "name": "Load Addons",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        200
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "MQSD2rRYt5POaFYK"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "22271015-f42e-4b6a-a2d6-b685a5874f4f",
+      "name": "Load Pricing Policy",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        200
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "KNVXERtLOqHrmSzr"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "c0e60d02-7bf2-4c83-a046-402ad093b96b",
+      "name": "Load Holidays",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        200
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "g4tjdTKEwDjnojQU"
+        },
+        "returnAll": true,
+        "options": {},
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "call_id",
+              "condition": "eq",
+              "keyValue": "={{ $(\"Verify + Normalize\").first().json.call_id }}"
+            }
+          ]
+        }
+      },
+      "id": "94654f45-fc6e-4997-88e1-174b4ceafa80",
+      "name": "Load Prior Quotes",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        200
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const crypto = require('crypto');\n\nconst RATE_CARD_VERSION = 'RCv1.0';\n\nconst rows = (nodeName) => {\n  try {\n    const all = $(nodeName).all();\n    const out = [];\n    for (let i = 0; i < all.length; i++) {\n      const j = all[i].json || {};\n      if (j && Object.keys(j).length) out.push(j);\n    }\n    return out;\n  } catch (e) {\n    return [];\n  }\n};\n\nconst round5 = (x) => Math.round(x / 5) * 5;\nconst money = (x) => Math.round(x * 100) / 100;\nconst slug = (s) => String(s == null ? '' : s).toLowerCase().replace(/[^a-z0-9]/g, '');\n\nconst v = $('Verify + Normalize').first().json;\nconst inp = v.inputs || {};\n\nconst out = {\n  quote_id: null,\n  all_in_total: null,\n  breakdown: [],\n  gratuity_included: true,\n  status: 'RATE_ENGINE_FAILED',\n  rate_source: 'none',\n  rate_card_version: RATE_CARD_VERSION,\n  currency: 'USD',\n  tenant_id: v.tenant_id,\n  call_id: v.call_id,\n  quote_only_vehicle: false,\n  superseded_quote_id: null,\n  reason: '',\n  message: '',\n  http_status: 200,\n  write_audit: false,\n  supersede_call_id: '',\n  input_hash: v.input_hash,\n  input_snapshot: v.canonical\n};\n\ntry {\n  if (!v.auth_ok) {\n    out.status = 'UNAUTHORIZED';\n    out.http_status = 401;\n    out.reason = v.auth_reason || 'authentication failed';\n    out.message = 'Unauthorized.';\n    return [{ json: out }];\n  }\n\n  const policies = rows('Load Pricing Policy');\n  let policy = null;\n  for (let i = 0; i < policies.length; i++) {\n    if (String(policies[i].tenant_id) === String(v.tenant_id)) { policy = policies[i]; break; }\n  }\n  if (!policy && policies.length) policy = policies[0];\n  if (!policy) {\n    out.status = 'RATE_ENGINE_FAILED';\n    out.reason = 'pricing_policies has no row for tenant ' + v.tenant_id;\n    out.message = 'Let me have dispatch confirm that rate and call you right back.';\n    return [{ json: out }];\n  }\n\n  const SC_PCT = Number(policy.service_charge_percent);\n  const SC_LABEL = String(policy.service_charge_label || 'chauffeur gratuity & service');\n  const TZ = String(policy.timezone || 'America/Chicago');\n  out.currency = String(policy.currency || 'USD');\n\n  const mode = inp.pricing_mode_req || String(policy.pricing_mode || 'QUOTE_ENABLED').toUpperCase();\n  if (mode === 'CAPTURE_ONLY') {\n    out.status = 'CAPTURE_ONLY';\n    out.rate_source = 'none';\n    out.reason = 'pricing_mode is CAPTURE_ONLY for this tenant';\n    out.message = 'I have the trip details. Dispatch will confirm the rate with you.';\n    out.write_audit = true;\n    out.quote_id = 'q_' + crypto.randomUUID();\n    return [{ json: out }];\n  }\n\n  if (inp.corporate_flag || inp.account_type === 'corporate' || inp.account_type === 'affiliate' || inp.account_type === 'farm_out') {\n    out.status = 'CORPORATE_RATE_REQUIRED';\n    out.rate_source = 'none';\n    out.reason = 'account_type ' + inp.account_type + ' is not priced on the retail card';\n    out.message = 'That account is on contract pricing, so I will not quote a retail rate. Dispatch will confirm your contract rate.';\n    out.write_audit = true;\n    out.quote_id = 'q_' + crypto.randomUUID();\n    return [{ json: out }];\n  }\n\n  const trip = inp.trip_type;\n  if (trip !== 'hourly' && trip !== 'airport') {\n    out.status = 'INPUT_INCOMPLETE';\n    out.reason = 'trip_type must be \"hourly\" or \"airport\"; received \"' + trip + '\"';\n    out.message = 'Is this an airport transfer or an hourly charter?';\n    return [{ json: out }];\n  }\n\n  const vclasses = rows('Load Vehicle Classes');\n  let vc = null;\n  for (let i = 0; i < vclasses.length; i++) {\n    if (slug(vclasses[i].vehicle_key) === slug(inp.vehicle_key) && String(vclasses[i].tenant_id) === String(v.tenant_id)) { vc = vclasses[i]; break; }\n  }\n  if (!vc) {\n    out.status = 'INPUT_INCOMPLETE';\n    out.reason = 'vehicle_key \"' + inp.vehicle_key + '\" is not in vehicle_classes for tenant ' + v.tenant_id;\n    out.message = 'Which vehicle would you like? I can check sedans, SUVs, sprinters, limos, party buses and coaches.';\n    return [{ json: out }];\n  }\n\n  if (!inp.pickup_at) {\n    out.status = 'INPUT_INCOMPLETE';\n    out.reason = 'pickup_at is required to determine weekday vs weekend pricing';\n    out.message = 'What date and time do you need the pickup?';\n    return [{ json: out }];\n  }\n\n  let dt = DateTime.fromISO(inp.pickup_at, { zone: TZ });\n  if (!dt.isValid) dt = DateTime.fromFormat(inp.pickup_at, 'yyyy-MM-dd HH:mm', { zone: TZ });\n  if (!dt.isValid) dt = DateTime.fromFormat(inp.pickup_at, 'yyyy-MM-dd h:mm a', { zone: TZ });\n  if (!dt.isValid) {\n    out.status = 'INPUT_INCOMPLETE';\n    out.reason = 'pickup_at \"' + inp.pickup_at + '\" could not be parsed as a date/time';\n    out.message = 'What date and time do you need the pickup?';\n    return [{ json: out }];\n  }\n  if (String(inp.pickup_at).indexOf('Z') >= 0 || /[+-]\\d{2}:?\\d{2}$/.test(String(inp.pickup_at))) dt = dt.setZone(TZ);\n\n  const pickup_date = dt.toFormat('yyyy-MM-dd');\n  const pickup_hour = dt.hour;\n  const wd = dt.weekday;\n  const day_type = (wd === 5 || wd === 6 || wd === 7) ? 'weekend' : 'weekday';\n\n  const holidays = rows('Load Holidays');\n  for (let i = 0; i < holidays.length; i++) {\n    const h = holidays[i];\n    if (String(h.holiday_date) === pickup_date && String(h.tenant_id) === String(v.tenant_id)) {\n      out.status = 'HUMAN_REVIEW_REQUIRED';\n      out.reason = 'pickup date ' + pickup_date + ' is a holiday (' + String(h.label) + '); holiday pricing is not on the rate card';\n      out.message = 'That date is a holiday, so dispatch sets the rate. They will confirm it with you.';\n      out.write_audit = true;\n      out.quote_id = 'q_' + crypto.randomUUID();\n      return [{ json: out }];\n    }\n  }\n\n  if (vc.quote_only === true || String(vc.quote_only) === 'true') {\n    out.status = 'HUMAN_REVIEW_REQUIRED';\n    out.quote_only_vehicle = true;\n    out.reason = String(vc.name) + ' is a quote-only vehicle on RCv1.0';\n    out.message = 'The ' + String(vc.name) + ' is quoted by dispatch. They will confirm the rate with you.';\n    out.write_audit = true;\n    out.quote_id = 'q_' + crypto.randomUUID();\n    return [{ json: out }];\n  }\n\n  if (inp.stops_count > 3) {\n    out.status = 'HUMAN_REVIEW_REQUIRED';\n    out.reason = 'stops_count ' + inp.stops_count + ' exceeds 3; multi-stop routing is priced by dispatch';\n    out.message = 'With more than three stops dispatch prices the run. They will confirm it with you.';\n    out.write_audit = true;\n    out.quote_id = 'q_' + crypto.randomUUID();\n    return [{ json: out }];\n  }\n\n  const bd = [];\n  let base = 0;\n  let basis_label = '';\n\n  if (trip === 'hourly') {\n    if (vc.hourly_enabled === false || String(vc.hourly_enabled) === 'false') {\n      out.status = 'HUMAN_REVIEW_REQUIRED';\n      out.reason = String(vc.name) + ' is not enabled for hourly charter';\n      out.message = 'Dispatch will confirm hourly availability for that vehicle.';\n      out.write_audit = true;\n      out.quote_id = 'q_' + crypto.randomUUID();\n      return [{ json: out }];\n    }\n    const hrates = rows('Load Hourly Rates');\n    let hr = null;\n    for (let i = 0; i < hrates.length; i++) {\n      if (slug(hrates[i].vehicle_key) === slug(inp.vehicle_key) && String(hrates[i].tenant_id) === String(v.tenant_id)) { hr = hrates[i]; break; }\n    }\n    if (!hr) {\n      out.status = 'RATE_ENGINE_FAILED';\n      out.reason = 'no hourly_rates row for ' + inp.vehicle_key;\n      out.message = 'Let me have dispatch confirm that rate and call you right back.';\n      return [{ json: out }];\n    }\n    const rate = Number(day_type === 'weekend' ? hr.weekend : hr.weekday);\n    const minimum = Number(day_type === 'weekend' ? vc.min_wkend : vc.min_wkday);\n    const requested = inp.requested_hours;\n    if (requested === null) {\n      out.status = 'INPUT_INCOMPLETE';\n      out.reason = 'requested_hours is required for an hourly charter';\n      out.message = 'How many hours do you need the vehicle for?';\n      return [{ json: out }];\n    }\n    const billable = Math.max(requested, minimum);\n    base = round5(rate * billable);\n    basis_label = billable + ' hours at $' + rate + '/hr (' + day_type + ')';\n    out.rate_source = 'hourly';\n    bd.push({ label: String(vc.name) + ' - hourly', amount: money(base), detail: basis_label, billable_hours: billable, hourly_rate: rate, minimum_hours: minimum, requested_hours: requested, day_type: day_type });\n  } else {\n    if (!inp.origin || !inp.airport) {\n      out.status = 'INPUT_INCOMPLETE';\n      out.reason = 'both origin and airport are required for an airport transfer';\n      out.message = 'Which city are we picking up in, and which airport?';\n      return [{ json: out }];\n    }\n    const zones = rows('Load Airport Zones');\n    let zone = null;\n    for (let i = 0; i < zones.length; i++) {\n      const z = zones[i];\n      if (String(z.tenant_id) !== String(v.tenant_id)) continue;\n      if (slug(z.origin) === slug(inp.origin) && slug(z.airport) === slug(inp.airport)) { zone = z; break; }\n    }\n    if (!zone) {\n      out.status = 'NO_ROUTE_FOUND';\n      out.reason = 'no airport_zones row for origin \"' + inp.origin + '\" to airport \"' + inp.airport + '\"; the engine never estimates and never substitutes a nearest city';\n      out.message = 'I do not have a set rate for that route, so dispatch will confirm the price with you.';\n      out.write_audit = true;\n      out.quote_id = 'q_' + crypto.randomUUID();\n      return [{ json: out }];\n    }\n    const adjusts = rows('Load Airport Adjust');\n    let adj = null;\n    for (let i = 0; i < adjusts.length; i++) {\n      if (slug(adjusts[i].vehicle_key) === slug(inp.vehicle_key) && String(adjusts[i].tenant_id) === String(v.tenant_id)) { adj = adjusts[i]; break; }\n    }\n    if (!adj) {\n      out.status = 'RATE_ENGINE_FAILED';\n      out.reason = 'no airport_vehicle_adjust row for ' + inp.vehicle_key;\n      out.message = 'Let me have dispatch confirm that rate and call you right back.';\n      return [{ json: out }];\n    }\n    if (adj.review_required === true || String(adj.review_required) === 'true') {\n      out.status = 'HUMAN_REVIEW_REQUIRED';\n      out.reason = String(vc.name) + ' has no airport multiplier on RCv1.0; stretch, party bus and coach classes are priced by dispatch for airport runs';\n      out.message = 'For an airport run in the ' + String(vc.name) + ', dispatch sets the rate. They will confirm it with you.';\n      out.write_audit = true;\n      out.quote_id = 'q_' + crypto.randomUUID();\n      return [{ json: out }];\n    }\n    const basis = String(adj.basis);\n    const basis_base = Number(basis === 'sedan' ? zone.sedan_base : zone.suv_base);\n    const mult = Number(adj.multiplier);\n    base = round5(basis_base * mult);\n    basis_label = String(zone.origin) + ' to ' + String(zone.airport) + ', ' + basis + ' base $' + basis_base + (mult === 1 ? '' : ' x ' + mult);\n    out.rate_source = 'airport';\n    bd.push({ label: String(vc.name) + ' - airport transfer', amount: money(base), detail: basis_label, zone_origin: String(zone.origin), zone_airport: String(zone.airport), basis: basis, basis_base: basis_base, multiplier: mult, zone_review_status: String(zone.review_status), day_type: day_type });\n  }\n\n  const sc = money(base * (SC_PCT / 100));\n  bd.push({ label: SC_LABEL, amount: sc, detail: SC_PCT + '% of $' + money(base) + ', included in the total' });\n\n  const addonDefs = rows('Load Addons');\n  const findAddon = (k) => {\n    for (let i = 0; i < addonDefs.length; i++) {\n      if (slug(addonDefs[i].addon_key) === slug(k) && String(addonDefs[i].tenant_id) === String(v.tenant_id)) return addonDefs[i];\n    }\n    return null;\n  };\n\n  const requested_addons = [];\n  for (let i = 0; i < inp.addons.length; i++) requested_addons.push(inp.addons[i]);\n\n  const isLate = (pickup_hour >= 23 || pickup_hour < 5);\n  let hasLate = false;\n  for (let i = 0; i < requested_addons.length; i++) if (slug(requested_addons[i].key) === 'latenight') hasLate = true;\n  if (isLate && !hasLate) requested_addons.push({ key: 'late_night', qty: 1, seat_type: '', auto: true });\n\n  let addon_total = 0;\n  for (let i = 0; i < requested_addons.length; i++) {\n    const req = requested_addons[i];\n    const def = findAddon(req.key);\n    if (!def) {\n      out.status = 'HUMAN_REVIEW_REQUIRED';\n      out.reason = 'add-on \"' + req.key + '\" is not on the rate card';\n      out.message = 'Dispatch will confirm the price for that extra.';\n      out.write_audit = true;\n      out.quote_id = 'q_' + crypto.randomUUID();\n      return [{ json: out }];\n    }\n    if (def.review_required === true || String(def.review_required) === 'true') {\n      out.status = 'HUMAN_REVIEW_REQUIRED';\n      out.reason = 'add-on \"' + String(def.addon_key) + '\" routes to human review: ' + String(def.condition_note);\n      out.message = 'Dispatch will confirm the price for that extra.';\n      out.write_audit = true;\n      out.quote_id = 'q_' + crypto.randomUUID();\n      return [{ json: out }];\n    }\n    if (String(def.requires_input) === 'seat_type' && !req.seat_type) {\n      out.status = 'INPUT_INCOMPLETE';\n      out.reason = 'child_seat requires seat_type (infant, convertible, or booster)';\n      out.message = 'What kind of child seat do you need: infant, convertible, or booster?';\n      return [{ json: out }];\n    }\n    const unit = String(def.unit);\n    const qty = unit === 'each' ? (req.qty || 1) : 1;\n    const amt = money(Number(def.amount) * qty);\n    addon_total = money(addon_total + amt);\n    const detailBits = [];\n    if (unit === 'each') detailBits.push(qty + ' x $' + Number(def.amount));\n    if (req.seat_type) detailBits.push(String(req.seat_type));\n    if (req.auto) detailBits.push('auto-applied, pickup ' + dt.toFormat('HH:mm'));\n    bd.push({ label: String(def.label), amount: amt, detail: detailBits.join(', '), addon_key: String(def.addon_key), qty: qty });\n  }\n\n  const all_in = money(base + sc + addon_total);\n\n  out.quote_id = 'q_' + crypto.randomUUID();\n  out.all_in_total = all_in;\n  out.breakdown = bd;\n  out.status = 'QUOTED';\n  out.write_audit = true;\n  out.base_amount = money(base);\n  out.service_charge_amount = sc;\n  out.addons_amount = addon_total;\n  out.day_type = day_type;\n  out.pickup_local = dt.toFormat('yyyy-MM-dd HH:mm ZZZZ');\n  out.vehicle_name = String(vc.name);\n  out.basis_label = basis_label;\n  out.tax_amount = Number(policy.tax_amount);\n  out.fuel_included = policy.fuel_included === true || String(policy.fuel_included) === 'true';\n  out.tolls_included = policy.tolls_included === true || String(policy.tolls_included) === 'true';\n  out.reason = 'priced from ' + out.rate_source + ' card ' + RATE_CARD_VERSION;\n  out.message = String(vc.name) + ', ' + basis_label + '. Gratuity and service are included. All in, that is $' + all_in + '.';\n\n  const priors = rows('Load Prior Quotes');\n  let live_match = null;\n  let newest_prior = null;\n  for (let i = 0; i < priors.length; i++) {\n    const p = priors[i];\n    if (String(p.call_id) !== String(v.call_id) || !v.call_id) continue;\n    if (String(p.status) === 'SUPERSEDED') continue;\n    if (String(p.input_hash) === String(v.input_hash)) live_match = p;\n    newest_prior = p;\n  }\n\n  if (live_match) {\n    out.quote_id = String(live_match.quote_id);\n    out.write_audit = false;\n    out.reason = 'idempotent replay: identical inputs already quoted on this call';\n    try {\n      const prevBd = JSON.parse(String(live_match.breakdown));\n      if (Array.isArray(prevBd)) out.breakdown = prevBd;\n      out.all_in_total = Number(live_match.all_in_total);\n    } catch (e) { /* keep freshly computed values */ }\n  } else if (newest_prior) {\n    out.superseded_quote_id = String(newest_prior.quote_id);\n    out.supersede_call_id = String(v.call_id);\n  }\n\n  return [{ json: out }];\n} catch (err) {\n  out.status = 'RATE_ENGINE_FAILED';\n  out.all_in_total = null;\n  out.breakdown = [];\n  out.write_audit = false;\n  out.reason = 'engine exception: ' + String(err && err.message ? err.message : err);\n  out.message = 'Let me have dispatch confirm that rate and call you right back.';\n  return [{ json: out }];\n}\n"
+      },
+      "id": "815bc252-99d1-42b3-bede-8061c43147ba",
+      "name": "Compute Quote",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f44f5c3c-9014-4c94-8a04-23a651cec138",
+              "leftValue": "={{ $json.write_audit }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a7acd89e-99de-4f25-a7a3-f25cf265acf5",
+      "name": "Write Audit?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "869233d7-2193-42d5-a6b5-2cc7c427f6ff",
+              "leftValue": "={{ $json.supersede_call_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e7dac92a-721b-495f-9f38-fd8e980a7948",
+      "name": "Needs Supersede?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "g4tjdTKEwDjnojQU"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "call_id",
+              "condition": "eq",
+              "keyValue": "={{ $(\"Compute Quote\").first().json.supersede_call_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "SUPERSEDED"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b5694a03-dd30-4fba-b8ae-6b5d4d105e80",
+      "name": "Supersede Priors",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2400,
+        20
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "g4tjdTKEwDjnojQU"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "quote_id": "={{ $(\"Compute Quote\").first().json.quote_id }}",
+            "tenant_id": "={{ $(\"Compute Quote\").first().json.tenant_id }}",
+            "call_id": "={{ $(\"Compute Quote\").first().json.call_id }}",
+            "rate_card_version": "={{ $(\"Compute Quote\").first().json.rate_card_version }}",
+            "input_snapshot": "={{ $(\"Compute Quote\").first().json.input_snapshot }}",
+            "input_hash": "={{ $(\"Compute Quote\").first().json.input_hash }}",
+            "breakdown": "={{ JSON.stringify($(\"Compute Quote\").first().json.breakdown) }}",
+            "all_in_total": "={{ $(\"Compute Quote\").first().json.all_in_total === null ? 0 : $(\"Compute Quote\").first().json.all_in_total }}",
+            "status": "={{ $(\"Compute Quote\").first().json.status }}",
+            "superseded_quote_id": "={{ $(\"Compute Quote\").first().json.superseded_quote_id || \"\" }}",
+            "ts": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "quote_id",
+              "displayName": "quote_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tenant_id",
+              "displayName": "tenant_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "call_id",
+              "displayName": "call_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "rate_card_version",
+              "displayName": "rate_card_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "input_snapshot",
+              "displayName": "input_snapshot",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "input_hash",
+              "displayName": "input_hash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "breakdown",
+              "displayName": "breakdown",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "all_in_total",
+              "displayName": "all_in_total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "superseded_quote_id",
+              "displayName": "superseded_quote_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ts",
+              "displayName": "ts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "date",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "76f8ea34-d0b4-4b0c-bae5-5198a13a3ba5",
+      "name": "Write Quote Audit",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2600,
+        100
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const q = $('Compute Quote').first().json;\n\nconst contract = {\n  quote_id: q.quote_id || null,\n  status: q.status,\n  all_in_total: (q.all_in_total === undefined ? null : q.all_in_total),\n  currency: q.currency || 'USD',\n  gratuity_included: true,\n  breakdown: Array.isArray(q.breakdown) ? q.breakdown : [],\n  rate_source: q.rate_source || 'none',\n  rate_card_version: q.rate_card_version || 'RCv1.0',\n  superseded_quote_id: q.superseded_quote_id || null,\n  reason: q.reason || '',\n  message: q.message || '',\n  call_id: q.call_id || '',\n  tenant_id: q.tenant_id || ''\n};\n\nif (q.status === 'QUOTED') {\n  contract.vehicle = q.vehicle_name || '';\n  contract.basis = q.basis_label || '';\n  contract.day_type = q.day_type || '';\n  contract.pickup_local = q.pickup_local || '';\n  contract.base_amount = q.base_amount;\n  contract.service_charge_amount = q.service_charge_amount;\n  contract.addons_amount = q.addons_amount;\n  contract.tax_amount = q.tax_amount;\n  contract.fuel_included = q.fuel_included;\n  contract.tolls_included = q.tolls_included;\n}\n\nreturn [{ json: contract }];\n"
+      },
+      "id": "d5b61b58-5c24-48ae-a704-ad32857cf3fe",
+      "name": "Build Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2800,
+        200
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "1e3e90ca-ff7f-46dc-8816-586e378c0f5e",
+      "name": "Respond Quote",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3000,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Rate Lookup Webhook": {
+      "main": [
+        [
+          {
+            "node": "Verify + Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify + Normalize": {
+      "main": [
+        [
+          {
+            "node": "Authorized?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Authorized?": {
+      "main": [
+        [
+          {
+            "node": "Load Vehicle Classes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Vehicle Classes": {
+      "main": [
+        [
+          {
+            "node": "Load Hourly Rates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Hourly Rates": {
+      "main": [
+        [
+          {
+            "node": "Load Airport Zones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Airport Zones": {
+      "main": [
+        [
+          {
+            "node": "Load Airport Adjust",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Airport Adjust": {
+      "main": [
+        [
+          {
+            "node": "Load Addons",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Addons": {
+      "main": [
+        [
+          {
+            "node": "Load Pricing Policy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Pricing Policy": {
+      "main": [
+        [
+          {
+            "node": "Load Holidays",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Holidays": {
+      "main": [
+        [
+          {
+            "node": "Load Prior Quotes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Prior Quotes": {
+      "main": [
+        [
+          {
+            "node": "Compute Quote",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Quote": {
+      "main": [
+        [
+          {
+            "node": "Write Audit?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Audit?": {
+      "main": [
+        [
+          {
+            "node": "Needs Supersede?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs Supersede?": {
+      "main": [
+        [
+          {
+            "node": "Supersede Priors",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Write Quote Audit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supersede Priors": {
+      "main": [
+        [
+          {
+            "node": "Write Quote Audit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Quote Audit": {
+      "main": [
+        [
+          {
+            "node": "Build Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Response": {
+      "main": [
+        [
+          {
+            "node": "Respond Quote",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "SlnAeMrVRORsF0w7",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
+}
