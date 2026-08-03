@@ -7,3 +7,10 @@ __pycache__/
 *.backup
 .ava_build_tmp/
 voice-stack/**
+
+# RUN 2: the WF-RATE / WF-ANI / WF-COMMIT shared secret. The test harnesses read it
+# from here; it lives in the n8n Variable RATE_SHARED_SECRET and must never be
+# committed (§ 9). It was untracked-but-unignored until now — one `git add` away
+# from landing in history.
+automation/rate-engine/rate_secret.txt
+**/rate_secret.txt

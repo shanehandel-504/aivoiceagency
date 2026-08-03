@@ -1,0 +1,296 @@
+{
+  "name": "WF-ANI — AI Chauffeur Caller Lookup v1.0",
+  "nodes": [
+    {
+      "id": "n_hook",
+      "name": "ANI Lookup Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -460,
+        0
+      ],
+      "webhookId": "ani-lookup-run2",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tools/ani-lookup",
+        "authentication": "none",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "n_norm",
+      "name": "Verify + Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// WF-ANI · node \"Verify + Normalize\"\n// Auth is byte-identical to WF-RATE: HMAC-SHA256 of the exact body under RATE_SHARED_SECRET,\n// or the shared secret verbatim. Both compared with timingSafeEqual. Neither => 401.\nconst crypto = require('crypto');\n\nconst item = $input.first().json || {};\nconst headers = item.headers || {};\nconst body = item.body || {};\n\nconst SECRET = ($vars && $vars.RATE_SHARED_SECRET) || '';\n\nconst hdr = (k) => {\n  const lk = String(k).toLowerCase();\n  const keys = Object.keys(headers);\n  for (let i = 0; i < keys.length; i++) {\n    if (String(keys[i]).toLowerCase() === lk) return String(headers[keys[i]] == null ? '' : headers[keys[i]]);\n  }\n  return '';\n};\n\nconst ctEq = (a, b) => {\n  if (typeof a !== 'string' || typeof b !== 'string') return false;\n  const ba = Buffer.from(a, 'utf8');\n  const bb = Buffer.from(b, 'utf8');\n  if (ba.length !== bb.length) return false;\n  return crypto.timingSafeEqual(ba, bb);\n};\n\nlet auth_ok = false;\nlet auth_mode = 'none';\nlet auth_reason = '';\n\nif (!SECRET) {\n  auth_reason = 'RATE_SHARED_SECRET is not set in n8n Variables';\n} else {\n  const sig = hdr('x-retell-signature');\n  const shared = hdr('x-rate-secret');\n  if (sig) {\n    auth_mode = 'hmac';\n    const expected = crypto.createHmac('sha256', SECRET).update(JSON.stringify(body)).digest('hex');\n    const parts = String(sig).split(/[,;\\s]+/);\n    for (let i = 0; i < parts.length; i++) {\n      const p = parts[i];\n      if (!p) continue;\n      const eq = p.indexOf('=');\n      const cand = eq >= 0 ? p.slice(eq + 1).trim() : p.trim();\n      if (ctEq(cand.toLowerCase(), expected)) { auth_ok = true; break; }\n    }\n    if (!auth_ok) auth_reason = 'x-retell-signature did not match HMAC-SHA256 of the request body';\n  } else if (shared) {\n    auth_mode = 'shared';\n    auth_ok = ctEq(shared, SECRET);\n    if (!auth_ok) auth_reason = 'x-rate-secret did not match the shared secret';\n  } else {\n    auth_reason = 'neither x-retell-signature nor x-rate-secret was supplied';\n  }\n}\n\nconst args = body.args || body.arguments || body.parameters || body;\nconst call = body.call || {};\n\nconst str = (v) => (v === undefined || v === null) ? '' : String(v).trim();\n\n// E.164 normalization. NANP numbers arrive as digits, +1XXXXXXXXXX, or spoken-with-punctuation.\nconst rawPhone = str(args.phone_e164 || args.phone || args.from_number || call.from_number);\nlet digits = rawPhone.replace(/[^0-9]/g, '');\nif (digits.length === 10) digits = '1' + digits;\nconst phone_e164 = digits ? ('+' + digits) : '';\nconst phone_valid = /^\\+[1-9]\\d{7,14}$/.test(phone_e164);\n\nreturn [{\n  json: {\n    auth_ok: auth_ok,\n    auth_mode: auth_mode,\n    auth_reason: auth_reason,\n    phone_e164: phone_e164,\n    phone_valid: phone_valid,\n    phone_query: encodeURIComponent(phone_e164),\n    tenant_id: str(args.tenant_id || body.tenant_id) || 'demo',\n    call_id: str(args.call_id || body.call_id || call.call_id),\n    started_ms: Date.now()\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "n_auth",
+      "name": "Authorized?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -20,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c_auth",
+              "leftValue": "={{ $json.auth_ok }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "n_401",
+      "name": "Respond Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        160
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ known_caller: false, first_name: null, company_name: null, account_type: null, last_trip: null, rate_plan: null, ghl_contact_id: null, data_verified: false, reason: $json.auth_reason }) }}",
+        "options": {
+          "responseCode": 401
+        }
+      }
+    },
+    {
+      "id": "n_ghl",
+      "name": "GHL Contact By Phone",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        310,
+        -180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "alwaysOutputData": true,
+      "parameters": {
+        "method": "GET",
+        "url": "https://services.leadconnectorhq.com/contacts/search/duplicate",
+        "authentication": "genericCredentialType",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 360,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "locationId",
+              "value": "sdShCZCaxce8DHKbYcIl"
+            },
+            {
+              "name": "number",
+              "value": "={{ $json.phone_e164 }}"
+            }
+          ]
+        },
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "n_build",
+      "name": "Build ANI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        530,
+        -80
+      ],
+      "parameters": {
+        "jsCode": "// WF-ANI · node \"Build ANI Response\"\n// One GHL round trip only. /contacts/search/duplicate carries customFields (measured\n// 2026-08-03: median ~200ms, cf present), so identity + last trip + billing all come\n// from a single call and the 400ms budget holds. A second fetch would blow it.\nconst n = $('Verify + Normalize').first().json;\nconst res = $input.first().json || {};\n\n// Hard endpoint budget. The GHL node's own timeout is set below this so a slow CRM\n// degrades to a fast-miss instead of holding the agent on a silent line.\nconst BUDGET_MS = 400;\n\n// GHL contact custom-field ids (contact model). Verified against the live location.\nconst F = {\n  trip_type: 'qta1B3kERujMTLNDlj66',\n  pickup_datetime: 'HOfBlSbheMOtChBuK0vU',\n  pickup_address: 'L9FS4ZqII0OvQe5KESh7',\n  dropoff_address: 'ISMLWbZhk0V9eVHXut86',\n  vehicle_class: 'OtmDBeaHItbSvOUHRTGY',\n  billing_type: 'Z36xyFEoF9brVdNeKAIP',\n  tenant: '16MIe7L45qETn9TtcOK5'\n};\n\nconst elapsed = Date.now() - (n.started_ms || Date.now());\n\n// neverError is on the HTTP node, so a timeout / 401 / 5xx arrives as an ITEM, not a throw.\n// A failed lookup must never be reported as a verified \"not a customer\" — that is the\n// false-verification shape this endpoint exists to avoid. Any non-2xx, any error field,\n// or a body with neither `contact` nor a trace id counts as a failure, not a miss.\nconst sc = Number(res.statusCode || res.status || 0);\nconst httpFailed = !!(\n  res.error ||\n  res.message === 'error' ||\n  res.code ||\n  (sc && (sc < 200 || sc >= 300)) ||\n  (!Object.prototype.hasOwnProperty.call(res, 'contact') && !res.traceId)\n);\nconst contact = (!httpFailed && res && res.contact) ? res.contact : null;\n\nconst cfMap = {};\nconst cfArr = (contact && Array.isArray(contact.customFields)) ? contact.customFields : [];\nfor (let i = 0; i < cfArr.length; i++) {\n  const f = cfArr[i] || {};\n  const id = f.id || f.fieldId || '';\n  const v = (f.value !== undefined && f.value !== null) ? f.value : f.field_value;\n  if (id) cfMap[id] = (v === undefined || v === null) ? '' : String(v);\n}\nconst cf = (k) => (cfMap[F[k]] || '').trim();\n\nconst nn = (v) => {\n  const s = (v === undefined || v === null) ? '' : String(v).trim();\n  return s === '' ? null : s;\n};\n\nlet reason = '';\nlet data_verified = false;\nlet known = false;\n\nif (!n.auth_ok) {\n  reason = 'unauthorized';\n} else if (!n.phone_valid) {\n  reason = 'NO_ANI — caller id was absent or not a dialable number';\n} else if (httpFailed) {\n  reason = 'FAST_MISS — CRM lookup failed or did not answer inside the ' + BUDGET_MS +\n           'ms budget (http ' + (sc || 'n/a') + ')';\n} else if (!contact || !contact.id) {\n  reason = 'NO_MATCH — no CRM record for this number';\n  data_verified = true; // the lookup completed; \"not a customer\" is a verified answer\n} else {\n  known = true;\n  data_verified = true;\n  reason = 'MATCH';\n}\n\n// account_type: corporate when the CRM says so (direct bill / new account) or a company\n// is on file. Never guessed from the area code.\nconst billing = cf('billing_type').toUpperCase();\nlet account_type = null;\nif (known) {\n  if (billing === 'DIRECT_BILL' || billing === 'NEW_ACCOUNT') account_type = 'corporate';\n  else if (billing === 'CC_ON_FILE') account_type = 'retail';\n  else account_type = nn(contact.companyName) ? 'corporate' : 'retail';\n}\n\n// last_trip is only reported when the CRM actually holds one. Never invented.\nlet last_trip = null;\nif (known) {\n  const when = cf('pickup_datetime');\n  const what = cf('trip_type');\n  const from = cf('pickup_address');\n  const to = cf('dropoff_address');\n  const veh = cf('vehicle_class');\n  if (when || what || from) {\n    last_trip = {\n      trip_type: nn(what),\n      pickup_datetime: nn(when),\n      pickup_address: nn(from),\n      dropoff_address: nn(to),\n      vehicle_class: nn(veh)\n    };\n  }\n}\n\n// rate_plan mirrors the billing arrangement on the record. Null when unset — a\n// missing plan prints \"— NOT PROVIDED\" rather than defaulting a customer onto retail.\nconst rate_plan = known ? (nn(billing) ? billing : null) : null;\n\nreturn [{\n  json: {\n    known_caller: known,\n    first_name: known ? nn(contact.firstName) : null,\n    company_name: known ? nn(contact.companyName) : null,\n    account_type: account_type,\n    last_trip: last_trip,\n    rate_plan: rate_plan,\n    ghl_contact_id: known ? nn(contact.id) : null,\n    data_verified: data_verified,\n    reason: reason,\n    phone_e164: n.phone_e164 || null,\n    tenant_id: n.tenant_id,\n    call_id: n.call_id,\n    lookup_ms: elapsed\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "n_resp",
+      "name": "Respond ANI",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        750,
+        -80
+      ],
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "n_hasani",
+      "name": "Has ANI?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        90,
+        -80
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c_ani",
+              "leftValue": "={{ $json.phone_valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "ANI Lookup Webhook": {
+      "main": [
+        [
+          {
+            "node": "Verify + Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify + Normalize": {
+      "main": [
+        [
+          {
+            "node": "Authorized?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Authorized?": {
+      "main": [
+        [
+          {
+            "node": "Has ANI?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHL Contact By Phone": {
+      "main": [
+        [
+          {
+            "node": "Build ANI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build ANI Response": {
+      "main": [
+        [
+          {
+            "node": "Respond ANI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has ANI?": {
+      "main": [
+        [
+          {
+            "node": "GHL Contact By Phone",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build ANI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "SlnAeMrVRORsF0w7",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  }
+}

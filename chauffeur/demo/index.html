@@ -1,198 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0A0A0F">
-<title>Watch AVA Capture a Ride — Live Dispatch Demo | AI Chauffeur</title>
-<meta name="description" content="Pick a scenario and watch the trip ticket build itself as AVA takes the call — airport run, mid-call change, hourly charter. Real recorded audio.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A0A0F">
+  <title>Hear AVA Take a Trip — Call the Demo Line | AI Chauffeur</title>
+  <meta name="description" content="The demo is a phone call. Dial (414) 775-0019 and give AVA a real trip — airport run, hourly charter, point to point. No signup, no menu.">
 
-<!-- AIC SITE RUN 1 · D1/D2 — this page carried <meta name="robots" content="noindex">
-     while the run's own spec lists /demo/ in the chauffeur sitemap. A noindexed URL
-     inside a submitted sitemap is a contradiction Search Console reports as an error
-     ("Submitted URL marked noindex"), so one of the two had to go. The demo is a real,
-     linked product surface reached from the homepage CTA, not a staging prototype —
-     the noindex was the stale half. Removed, canonical added.
-     Brand string also corrected: "AIChauffeur" -> "AI Chauffeur". -->
-<link rel="canonical" href="https://aichauffeur.ai/demo/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Watch AVA Capture a Ride — Live Dispatch Demo">
-<meta property="og:description" content="Pick a scenario and watch the trip ticket build itself as AVA takes the call. Real recorded audio.">
-<meta property="og:url" content="https://aichauffeur.ai/demo/">
+  <!-- RUN 2 · CALL-FIRST CONVERSION (2026-08-03)
+       This page was a scripted scenario replay: three canned trips, a ticket that
+       filled itself, and 11 recorded AVA clips. It worked — it was not a dead
+       LiveKit surface, and no web session was ever wired here. It was replaced on
+       a CEO ruling because the demo that converts is the one where the operator
+       hears AVA handle THEIR OWN trip on the line that answers.
+       Prior page preserved verbatim at infra/backups/chauffeur-demo-20260803.html.
+       The audio assets under chauffeur/audio/ are untouched and still serve
+       /booked and the audio wall. -->
+  <link rel="canonical" href="https://aichauffeur.ai/demo/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AI Chauffeur">
+  <meta property="og:title" content="Hear AVA Take a Trip — Call the Demo Line">
+  <meta property="og:description" content="The demo is a phone call. Dial (414) 775-0019 and give AVA a real trip. No signup, no menu.">
+  <meta property="og:url" content="https://aichauffeur.ai/demo/">
   <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="AI Chauffeur - the limo answering service that never puts a caller on hold. (414) 775-0019">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta name="twitter:title" content="Hear AVA Take a Trip — Call the Demo Line">
+  <meta name="twitter:description" content="The demo is a phone call. Dial (414) 775-0019 and give AVA a real trip. No signup, no menu.">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/circulant.css?v=cbdf741">
+  <link rel="stylesheet" href="/assets/aic.css?v=cbdf741">
 
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --void:#0A0A0F; --void-2:#14141C; --void-card:rgba(20,20,28,.62);
-  --ink:#EEF0F4; --ink-soft:rgba(238,240,244,.78); --ink-mute:rgba(238,240,244,.55);
-  --cyan:#00D4FF; --cyan-bright:#00E5FF; --cyan-glow:rgba(0,212,255,.35); --cyan-glow-strong:rgba(0,229,255,.5); --cyan-dim:rgba(0,212,255,.18);
-  --line:rgba(0,212,255,.14); --line-hot:rgba(0,212,255,.42);
-  /* COLOR LAW · CIRCULANT-X. --ink-dim was rgba(ink,.34) = 2.79:1 on the void
-     and failed AA on every mono label; it is now an alias of --neutral (6.40:1). */
-  --booked-green:#2EE6A8; --amber:#FFB020; --miss-red:#FF3B4E; --neutral:#8A93A6;
-  --ink-dim:var(--neutral); --booked:var(--booked-green); --alarm:var(--miss-red);
-  --serif:'Space Grotesk',sans-serif; --sans:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
-}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;background:var(--void)}
-body{background:var(--void);color:var(--ink-soft);font-family:var(--sans);font-size:16px;line-height:1.6;overflow-x:hidden;min-height:100vh}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 20% 0%,rgba(0,212,255,.10) 0%,transparent 45%),radial-gradient(circle at 80% 100%,rgba(0,212,255,.06) 0%,transparent 50%);pointer-events:none;z-index:0}
-body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.025) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;z-index:0;mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%)}
+  <style>
+    /* The shared .cta-tertiary renders 26px tall — fine as an inline text link,
+       under the 44px touch minimum when it is one of only two CTAs on a
+       call-first page. Scoped here rather than patched into aic.css, which
+       eight other live chauffeur pages share and none of them were re-rendered
+       in this run. */
+    .cta-stack .cta-tertiary{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:44px;
+      padding:10px 18px;
+      border:1px solid var(--line,#23232E);
+    }
+    .cta-stack .cta-tertiary:hover{ border-color:var(--cyan,#00D4FF); }
+  </style>
 
-a{color:var(--cyan-bright);text-decoration:none;transition:color .15s}
-a:hover{color:var(--ink)}
-::selection{background:var(--cyan-glow);color:var(--ink)}
-
-.wrap{max-width:880px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
-
-nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,15,.72);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.78rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
-.brand-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,var(--cyan),var(--cyan-bright));display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px var(--line-hot),0 6px 24px var(--cyan-glow)}
-.brand-mark svg{width:14px;height:14px}
-.nav-back{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500;color:var(--ink-mute)}
-/* AIC SITE RUN 1 — tap-to-call in the demo header, matching the homepage nav CTA. */
-.nav-cta-tel{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
-  font-weight:500;padding:8px 16px;border-radius:8px;background:var(--cyan);color:#000;
-  display:inline-flex;align-items:center;min-height:44px;text-decoration:none;
-  font-variant-numeric:tabular-nums;transition:transform .15s,box-shadow .15s}
-.nav-cta-tel:hover{color:#000;transform:translateY(-1px);box-shadow:0 8px 24px var(--cyan-glow)}
-.nav-cta-tel:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-.nav-back:hover{color:var(--ink)}
-
-.head{padding:120px 0 30px;text-align:center}
-.kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan-bright);padding:6px 12px;border-radius:99px;background:var(--cyan-dim);border:1px solid var(--line-hot);margin-bottom:1.5rem}
-.kicker::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan-bright);box-shadow:0 0 8px var(--cyan-bright);animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
-
-h1.demo-h{font-family:var(--sans);font-size:clamp(2rem,4.5vw,3.4rem);line-height:1.05;letter-spacing:-.015em;color:var(--ink);font-weight:400;margin-bottom:1rem}
-h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan-glow-strong),0 0 8px var(--cyan-glow)}
-.demo-sub{font-size:1.05rem;color:var(--ink-soft);max-width:54ch;margin:0 auto;line-height:1.55}
-
-.controls{padding:30px 0 20px}
-
-.scenarios{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem;margin-bottom:1.4rem}
-.scenario{background:var(--void-card);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1rem;cursor:pointer;text-align:left;transition:border-color .2s,transform .2s,background .2s;font-family:inherit}
-.scenario:hover:not(:disabled){border-color:var(--line-hot);transform:translateY(-2px)}
-.scenario.active{border-color:var(--cyan-bright);background:rgba(0,212,255,.1);box-shadow:0 0 0 1px rgba(0,212,255,.25),0 0 24px rgba(0,212,255,.15)}
-.scenario:disabled{opacity:.5;cursor:not-allowed}
-.scenario-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan-bright);margin-bottom:.4rem}
-.scenario-name{color:var(--ink);font-weight:600;font-size:.95rem;margin-bottom:.3rem}
-.scenario-sub{font-family:var(--mono);font-size:.7rem;color:var(--ink-mute)}
-
-.start-row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-bottom:2rem}
-.btn-start{flex:1;min-width:200px;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:1.1rem 1.4rem;border-radius:12px;font-family:var(--mono);font-size:.82rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:var(--cyan);color:#000;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s,opacity .2s;box-shadow:0 0 0 1px var(--cyan-bright),0 0 36px rgba(0,212,255,.45),0 12px 40px var(--cyan-glow)}
-.btn-start:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 0 1px var(--cyan-bright),0 0 48px rgba(0,212,255,.6),0 16px 50px var(--cyan-glow)}
-.btn-start:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.btn-start.running{background:rgba(0,212,255,.06);color:var(--cyan-bright);border:1px solid var(--cyan-dim);text-shadow:0 0 8px var(--cyan-glow);box-shadow:0 0 0 1px var(--cyan-dim),0 0 28px rgba(0,212,255,.3)}
-.btn-start.running #startText::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cyan);margin-right:10px;vertical-align:middle;animation:pulse-dot 1.2s ease-in-out infinite;box-shadow:0 0 12px var(--cyan)}
-@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,.5),0 0 8px var(--cyan)}50%{box-shadow:0 0 0 10px rgba(0,212,255,0),0 0 18px var(--cyan)}}
-.btn-start svg{width:14px;height:14px}
-.btn-reset{padding:1.1rem 1.2rem;border-radius:12px;font-family:var(--mono);font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--ink);border:1px solid var(--line);cursor:pointer;transition:all .15s}
-.btn-reset:hover{border-color:var(--line-hot);color:var(--cyan-bright);text-shadow:0 0 6px var(--cyan-glow)}
-
-.console{background:linear-gradient(180deg,rgba(20,20,28,.65) 0%,rgba(10,10,15,.4) 100%);border:1px solid var(--line-hot);border-radius:18px;padding:1.4rem;backdrop-filter:blur(16px) saturate(120%);-webkit-backdrop-filter:blur(16px) saturate(120%);box-shadow:0 30px 80px rgba(0,0,0,.4),0 0 0 1px rgba(0,212,255,.06),0 0 60px rgba(0,212,255,.06);position:relative;overflow:hidden;margin-bottom:1rem;transition:box-shadow .6s ease}
-.console.active{box-shadow:0 30px 80px rgba(0,0,0,.4),0 0 0 1px rgba(0,212,255,.2),0 0 80px rgba(0,212,255,.18)}
-.console::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan-bright),transparent);opacity:.6;transition:opacity .6s ease,box-shadow .6s ease}
-.console.active::before{opacity:1;box-shadow:0 0 14px var(--cyan-bright)}
-.console-bar{display:flex;align-items:center;justify-content:space-between;padding-bottom:1rem;margin-bottom:1.2rem;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:.5rem}
-.console-title{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)}
-.dots{display:flex;gap:5px}
-.dots span{width:10px;height:10px;border-radius:50%}
-.dots span:nth-child(1){background:rgba(255,176,32,.45)}
-.dots span:nth-child(2){background:rgba(0,212,255,.45)}
-.dots span:nth-child(3){background:rgba(46,230,168,.45)}
-.live-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);transition:color .3s,text-shadow .3s}
-.live-badge.live{color:var(--booked-green);text-shadow:0 0 8px rgba(46,230,168,.5)}
-.live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;transition:box-shadow .3s}
-.live-badge.live::before{background:var(--booked-green);box-shadow:0 0 0 4px rgba(46,230,168,.18),0 0 14px var(--booked-green);animation:pulse-dot 1.2s ease-in-out infinite}
-
-.fields{display:grid;gap:.65rem}
-.field{background:rgba(10,10,15,.4);border:1px solid var(--line);border-radius:10px;padding:.85rem 1.05rem;transition:border-color .35s,background .35s,box-shadow .35s;position:relative;overflow:hidden}
-.field.fill{border-color:var(--line-hot);background:rgba(0,212,255,.05)}
-.field.flash{border-color:var(--cyan-bright);background:rgba(0,212,255,.12);box-shadow:0 0 0 1px var(--cyan-bright),0 0 24px rgba(0,212,255,.25)}
-.field.flash::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cyan-bright);box-shadow:0 0 10px var(--cyan);animation:fill-line .5s ease}
-@keyframes fill-line{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-.f-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:.3rem;display:flex;justify-content:space-between;align-items:center}
-.f-label .think{font-family:var(--mono);font-size:.58rem;color:var(--cyan-bright);opacity:0;transition:opacity .2s}
-.f-label .think.show{opacity:1}
-/* AIC SITE RUN 1 · B3 — tabular figures on every ticket value. Times, quote
-   ranges, passenger counts and flight numbers rewrite themselves live as the
-   scenario fills; with proportional digits each rewrite shifts the column a
-   few px and the ticket visibly jitters. tabular-nums pins the advance width. */
-.f-value{color:var(--ink-mute);font-weight:400;font-size:.95rem;min-height:1.2em;font-style:italic;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
-.f-value.has{color:var(--ink);font-weight:600;font-style:normal}
-.field.flash .f-value.has{color:var(--cyan-bright);text-shadow:0 0 16px var(--cyan-glow),0 0 4px rgba(0,212,255,.5)}
-.f-value .sub{display:block;font-family:var(--mono);font-size:.74rem;color:var(--ink-mute);font-weight:400;margin-top:.2rem;font-style:normal}
-
-.transcript{background:rgba(10,10,15,.5);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;margin-top:1rem;min-height:120px;max-height:240px;overflow-y:auto;font-family:var(--mono);font-size:.78rem;line-height:1.7}
-.transcript-empty{color:var(--ink-dim);font-style:italic}
-/* B2 · replay affordance on the resting ticket */
-.demo-rest{display:inline-flex;align-items:center;gap:.5rem;margin-top:1rem;padding:.6rem .95rem;
-  min-height:44px;border:1px solid var(--line);border-radius:8px;background:transparent;
-  font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--ink-mute);cursor:pointer;transition:color .15s,border-color .15s,background .15s}
-.demo-rest:hover{color:var(--ink);border-color:var(--cyan);background:rgba(0,212,255,.06)}
-.demo-rest:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.demo-rest svg{width:10px;height:10px;color:var(--cyan-bright);flex-shrink:0}
-.console.active .demo-rest{opacity:.35;pointer-events:none}
-.tr-line{margin-bottom:.45rem;opacity:0;animation:slidein .3s ease forwards;display:flex;align-items:flex-start;gap:.5rem}
-@keyframes slidein{to{opacity:1}}
-.tr-caller{color:var(--ink-soft)}
-.tr-caller::before{content:'CALLER · ';color:var(--amber);font-weight:600;letter-spacing:.06em;flex-shrink:0}
-.tr-ai{color:var(--cyan-bright)}
-.tr-ai::before{content:'AI · ';color:var(--cyan);font-weight:600;letter-spacing:.06em;text-shadow:0 0 6px var(--cyan-glow);flex-shrink:0}
-.tr-text{flex:1}
-/* AIC SITE RUN 1 · the mark stays 20px so the transcript line keeps its
-   rhythm, but the HIT AREA is expanded to 44x44 with a centred ::before.
-   The visual dot was the whole target before — under the 44px touch law. */
-.tr-play{position:relative;flex-shrink:0;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cyan);line-height:1;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px}
-.tr-play::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
-.tr-play svg{width:9px;height:9px;display:block}
-.tr-play:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.tr-play:hover:not(:disabled){background:var(--cyan);color:#000;border-color:var(--cyan-bright);box-shadow:0 0 8px var(--cyan-glow)}
-.tr-play:disabled{opacity:.3;cursor:not-allowed}
-.tr-play.playing{background:var(--cyan);color:#000;border-color:var(--cyan-bright);box-shadow:0 0 10px var(--cyan-glow)}
-
-.btn-play-full{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 1.3rem;border-radius:10px;font-family:var(--mono);font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:var(--cyan);border:1px solid var(--cyan);cursor:pointer;transition:all .15s}
-.btn-play-full:hover:not(:disabled){background:var(--cyan);color:#000;box-shadow:0 0 16px var(--cyan-glow)}
-.btn-play-full:disabled{opacity:.4;cursor:not-allowed}
-.btn-play-full.playing{background:var(--cyan);color:#000;box-shadow:0 0 16px var(--cyan-glow)}
-.btn-play-full svg{width:12px;height:12px}
-
-.status-row{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;margin-top:1rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);flex-wrap:wrap;gap:.5rem}
-.status-row .ticket{color:var(--cyan-bright);text-shadow:0 0 6px var(--cyan-glow)}
-.status-tag{padding:4px 10px;border-radius:99px;border:1px solid var(--line);background:var(--void-card)}
-.status-tag.complete{color:var(--booked-green);border-color:rgba(46,230,168,.4);background:rgba(46,230,168,.08)}
-
-.complete-banner{background:linear-gradient(135deg,rgba(46,230,168,.08),rgba(0,212,255,.04));border:1px solid rgba(46,230,168,.3);border-radius:14px;padding:1.4rem 1.2rem;text-align:center;margin-top:1.2rem;display:none}
-.complete-banner.show{display:block;animation:slidein .4s ease forwards}
-.complete-h{font-family:var(--sans);font-size:1.3rem;color:var(--ink);font-weight:400;margin-bottom:.35rem}
-.complete-h em{color:var(--cyan);font-style:italic}
-.complete-p{font-size:.92rem;color:var(--ink-mute);margin-bottom:1rem}
-.btn-book{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 1.3rem;border-radius:10px;font-family:var(--mono);font-size:.74rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;background:var(--cyan);color:#000;text-decoration:none;transition:transform .15s,box-shadow .15s;box-shadow:0 0 0 1px var(--cyan-bright),0 6px 24px var(--cyan-glow)}
-.btn-book:hover{color:#000;transform:translateY(-2px);box-shadow:0 0 0 1px var(--cyan-bright),0 10px 32px var(--cyan-glow)}
-.btn-book svg{width:13px;height:13px}
-
-.note{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);text-align:center;margin-top:1.2rem;letter-spacing:.04em;line-height:1.6}
-
-@media(max-width:600px){
-  .head{padding:90px 0 20px}
-  .console{padding:1rem}
-  .start-row{flex-direction:column;align-items:stretch}
-  .btn-reset{width:100%}
-}
-</style>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"How do I try the demo?","acceptedAnswer":{"@type":"Answer","text":"Call (414) 775-0019 from any phone. AVA answers and takes the trip the way it would on your line. There is nothing to install and no form in front of it."}},
+    {"@type":"Question","name":"What should I say when AVA picks up?","acceptedAnswer":{"@type":"Answer","text":"Give it a real trip. An airport run with a flight number, an hourly charter, or a point-to-point ride. Change your mind partway through if you want — that is the part worth hearing."}},
+    {"@type":"Question","name":"Does the demo put a real car on the road?","acceptedAnswer":{"@type":"Answer","text":"No. The demo line captures the trip and shows you the ticket it would hand a dispatcher. No vehicle is dispatched and no charge is made."}},
+    {"@type":"Question","name":"What happens to the trip after I hang up?","acceptedAnswer":{"@type":"Answer","text":"It comes back as a written ticket — pickup, dropoff, vehicle, passengers, flight, notes. A detail you never gave is marked missing rather than guessed, and your dispatcher confirms every trip before a car moves."}}
+  ]}
+  </script>
 </head>
 <body>
+
+<a class="skip" href="#main">Skip to content</a>
 
 <nav class="top">
   <a href="/" class="brand">
@@ -205,541 +78,139 @@ h1.demo-h em{font-style:italic;color:var(--cyan);text-shadow:0 0 24px var(--cyan
     </span>
     AI Chauffeur
   </a>
-  <!-- AIC SITE RUN 1 — the demo's only header control was "← Home", which on a
-       phone is the one place an operator cannot do the thing the page is about.
-       The line is now reachable from the demo too, same as every other page. -->
-  <a href="tel:+14147750019" class="nav-cta-tel" data-event="tel_tap_nav">(414) 775-0019</a>
+  <ul class="nav-links">
+    <li><a href="/">How it works</a></li>
+    <li><a href="/demo/">Demo</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener">Request setup</a></li>
+  </ul>
+  <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_nav">(414) 775-0019</a>
 </nav>
 
-<section class="head">
+<main id="main">
+
+<section class="phead">
   <div class="wrap">
-    <span class="kicker">Live dispatch demo · Scripted call replay</span>
-    <h1 class="demo-h">Watch a ride get <em>captured.</em></h1>
-    <p class="demo-sub">Pick a scenario and hit start. The reservation builds itself in real time as AVA captures the call — then play the recorded audio line by line.</p>
-  </div>
-</section>
+    <span class="kicker">The demo · one phone call</span>
+    <h1 class="page-h">The demo is a phone call. <em>Give AVA a real trip.</em></h1>
+    <p class="page-sub">Dial the line and talk like a customer would. Airport run, hourly charter, point to point — whatever you get most. AVA takes the whole trip and reads it back before you hang up.</p>
 
-<section class="controls">
-  <div class="wrap">
-
-    <div class="scenarios" id="scenarios">
-      <button class="scenario active" data-scenario="airport">
-        <div class="scenario-label">01 · Airport</div>
-        <div class="scenario-name">MKE → ORD shuttle</div>
-        <div class="scenario-sub">3 pax · early flight</div>
-      </button>
-      <button class="scenario" data-scenario="correction">
-        <div class="scenario-label">02 · Correction</div>
-        <div class="scenario-name">Sedan to Sprinter mid-call</div>
-        <div class="scenario-sub">Vehicle change · 6 pax</div>
-      </button>
-      <button class="scenario" data-scenario="charter">
-        <div class="scenario-label">03 · Charter</div>
-        <div class="scenario-name">Wedding party hourly</div>
-        <div class="scenario-sub">8 hr block · 2 vehicles</div>
-      </button>
-    </div>
-
-    <div class="start-row">
-      <button class="btn-start" id="startBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <span id="startText">Start scenario</span>
-      </button>
-      <button class="btn-play-full" id="btnPlayFull" type="button" title="Play full call audio for the active scenario">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <span id="playFullText">Play the call</span>
-      </button>
-      <button class="btn-reset" id="resetBtn">Reset</button>
-    </div>
-
-    <div class="console">
-      <div class="console-bar">
-        <div class="console-title">
-          <div class="dots"><span></span><span></span><span></span></div>
-          Dispatch Console
-        </div>
-        <span class="live-badge" id="liveBadge">Captured</span>
-      </div>
-
-      <!-- ══ B2 · RESTING STATE ═══════════════════════════════════════════
-           This console used to render seven labelled boxes all reading
-           "awaiting" plus an empty transcript — a full screen of blanks for
-           anyone who scrolled past without pressing Start. It showed nothing.
-
-           At rest it is now a FINISHED trip ticket: the 5:45 AM airport run.
-           An operator who never taps still sees exactly what the product
-           produces. Pressing Start (or the first scroll into view) clears it
-           and rebuilds it live. Replayable, and the values below are written
-           into the HTML — with JS off the finished ticket still renders. -->
-      <div class="fields" id="fields">
-        <div class="field" data-key="caller">
-          <div class="f-label">Inbound caller <span class="think">listening...</span></div>
-          <div class="f-value has">James R.<span class="sub">+1 (414) 555-0182 · Inbound</span></div>
-        </div>
-        <div class="field" data-key="trip">
-          <div class="f-label">Trip type <span class="think">parsing...</span></div>
-          <div class="f-value has">Airport run · MKE<span class="sub">Terminal C · departs 7:20 AM</span></div>
-        </div>
-        <div class="field" data-key="route">
-          <div class="f-label">Pickup → Dropoff <span class="think">geocoding...</span></div>
-          <div class="f-value has">Downtown MKE Hotel → MKE Airport T-C<span class="sub">18.4 mi</span></div>
-        </div>
-        <div class="field" data-key="time">
-          <div class="f-label">Pickup time <span class="think">confirming...</span></div>
-          <div class="f-value has">5:45 AM</div>
-        </div>
-        <div class="field" data-key="vehicle">
-          <div class="f-label">Vehicle <span class="think">matching...</span></div>
-          <div class="f-value has">Executive Sedan</div>
-        </div>
-        <div class="field" data-key="pax">
-          <div class="f-label">Passengers <span class="think">counting...</span></div>
-          <div class="f-value has">1</div>
-        </div>
-        <div class="field" data-key="quote">
-          <div class="f-label">Quote range <span class="think">calculating...</span></div>
-          <div class="f-value has">$65 – $85 est.<span class="sub">18.4 mi · tolls included</span></div>
-        </div>
-      </div>
-
-      <div class="transcript" id="transcript">
-        <div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">AI Chauffeur, this is AVA — where are you headed?</span></div>
-        <div class="tr-line tr-caller" style="opacity:1"><span class="tr-text">Downtown Marriott to MKE, five forty-five tomorrow morning.</span></div>
-        <div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">One passenger, executive sedan. I have it all down for your dispatcher.</span></div>
-      </div>
-
-      <div class="status-row">
-        <span>RES <span class="ticket" id="ticketId">AC-2026-0392</span></span>
-        <span class="status-tag complete" id="statusTag">Ticket complete</span>
-      </div>
-
-      <button type="button" class="demo-rest" id="watchItFill">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="6 4 20 12 6 20 6 4"/></svg>
-        Watch it fill
-      </button>
-    </div>
-
-    <div class="complete-banner" id="completeBanner">
-      <div class="complete-h">Reservation captured · <em>routed to dispatch.</em></div>
-      <div class="complete-p">A real call would land in your CRM, dispatch software, or shared inbox. Your dispatcher confirms instead of starting from scratch.</div>
-      <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn-book">
-        Request local setup
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    <div class="cta-stack cta-stack--wide">
+      <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_hero">
+        <span class="tel-main">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call (414) 775-0019
+        </span>
+        <span class="tel-sub">AVA answers. Hear it yourself.</span>
       </a>
+      <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="cta-tertiary" data-event="book_click_hero">Book a 15-minute AVA strategy call →</a>
     </div>
-
-    <p class="note">Scripted demo · audio is real AVA voice · no real ride is booked through this demo</p>
-
-    <!-- ════════════════════════════════════════════
-         AUDIO ASSETS · 11 files, all present and all consumed.
-           8x ava-call snippets       → /audio/ava/
-           3x full demo conversations → /audio/demo/
-
-         AIC SITE RUN 1 — these now resolve. aichauffeur.ai is a
-         SEPARATE Vercel project rooted at /chauffeur/, so a
-         repo-root path like /audio/... 404s on this host. The
-         clips were copied to chauffeur/audio/ and every src here
-         is host-relative to that root.
-
-         Also removed in RUN 1: 11 <audio> elements pointing at
-         ava-greeting-1..3, chauffeur-intro, chauffeur-pitch and
-         chauffeur-ride-1..6. Those files exist NOWHERE in the
-         repo and had ZERO consumers — neither scenarioAudioMap
-         nor transcriptAudioMap ever referenced them. They were
-         22 declared assets over 11 real ones.
-
-         All preload="none" — zero perf cost until invoked.
-         Per-line transcript mapping (.tr-play data-audio) is
-         set in transcriptAudioMap below; remap any time.
-         ════════════════════════════════════════════ -->
-    <audio id="ava-call-1" src="/audio/ava/ava-call-1.mp3" preload="none"></audio>
-    <audio id="ava-call-2" src="/audio/ava/ava-call-2.mp3" preload="none"></audio>
-    <audio id="ava-call-3" src="/audio/ava/ava-call-3.mp3" preload="none"></audio>
-    <audio id="ava-call-4" src="/audio/ava/ava-call-4.mp3" preload="none"></audio>
-    <audio id="ava-call-5" src="/audio/ava/ava-call-5.mp3" preload="none"></audio>
-    <audio id="ava-call-6" src="/audio/ava/ava-call-6.mp3" preload="none"></audio>
-    <audio id="ava-call-7" src="/audio/ava/ava-call-7.mp3" preload="none"></audio>
-    <audio id="ava-call-8" src="/audio/ava/ava-call-8.mp3" preload="none"></audio>
-    <audio id="demo-1" src="/audio/demo/demo-1.mp3" preload="none"></audio>
-    <audio id="demo-2" src="/audio/demo/demo-2.mp3" preload="none"></audio>
-    <audio id="demo-3" src="/audio/demo/demo-3.mp3" preload="none"></audio>
-
+    <p class="cta-note">Open any hour. No signup, no menu, no hold. The demo line captures the trip — it does not put a car on the road.</p>
   </div>
 </section>
 
-<script>
-const SCENARIOS = {
-  airport: {
-    ticketId: 'AC-2026-0418',
-    steps: [
-      {at: 400, type:'transcript', who:'caller', text:'Hey — I need a ride to Chicago O\'Hare.'},
-      {at: 1200, type:'transcript', who:'ai', text:'Got it. What time does your flight depart?'},
-      {at: 2000, type:'field', key:'caller', main:'Maria T.', sub:'+1 (262) 555-0144 · Inbound · Repeat caller'},
-      {at: 2500, type:'transcript', who:'caller', text:'Seven-fifteen PM. United flight 414.'},
-      {at: 3400, type:'field', key:'trip', main:'Airport drop · ORD', sub:'Departure 7:15 PM · United 414'},
-      {at: 3900, type:'transcript', who:'ai', text:'Picking you up where?'},
-      {at: 4600, type:'transcript', who:'caller', text:'The Riverwalk Hotel in Milwaukee. There\'s three of us, four bags.'},
-      {at: 5500, type:'field', key:'route', main:'Riverwalk Hotel → ORD', sub:'142 N. Riverwalk Way · Milwaukee WI'},
-      {at: 6100, type:'field', key:'pax', main:'3 · 4 bags'},
-      {at: 6700, type:'transcript', who:'ai', text:'For a 7:15 flight you\'ll want to leave by 3:30 PM. SUV work for three plus bags?'},
-      {at: 7700, type:'transcript', who:'caller', text:'Yeah, SUV is good.'},
-      {at: 8300, type:'field', key:'time', main:'3:30 PM · Wed Apr 15'},
-      {at: 8900, type:'field', key:'vehicle', main:'Black SUV'},
-      {at: 9500, type:'transcript', who:'ai', text:'Quote range 285 to 325. Texting confirmation. Dispatcher will reach out within fifteen minutes.'},
-      {at: 10400, type:'field', key:'quote', main:'$285 – $325', sub:'90 mi · est. 1h 50m drive · tolls included'},
-      {at: 11000, type:'complete'}
-    ]
-  },
-  correction: {
-    ticketId: 'AC-2026-0419',
-    steps: [
-      {at: 400, type:'transcript', who:'caller', text:'I need a sedan tomorrow morning, downtown to the airport.'},
-      {at: 1300, type:'transcript', who:'ai', text:'Sure — what time and how many passengers?'},
-      {at: 2100, type:'field', key:'caller', main:'James R.', sub:'+1 (414) 555-0182 · Inbound'},
-      {at: 2600, type:'transcript', who:'caller', text:'Six AM. Just me — actually wait, hold on.'},
-      {at: 3700, type:'transcript', who:'caller', text:'My team\'s coming. Make it a Sprinter, six of us, plus luggage.'},
-      {at: 4700, type:'field', key:'vehicle', main:'Sprinter van', sub:'Updated mid-call'},
-      {at: 5300, type:'field', key:'pax', main:'6 · with luggage', sub:'Updated mid-call'},
-      {at: 5900, type:'transcript', who:'ai', text:'Got it — switched to Sprinter for six passengers with luggage. Pickup address?'},
-      {at: 6900, type:'transcript', who:'caller', text:'The Pfister Hotel.'},
-      {at: 7600, type:'field', key:'route', main:'Pfister Hotel → MKE Airport', sub:'424 E. Wisconsin Ave · Milwaukee WI'},
-      {at: 8200, type:'field', key:'trip', main:'Airport drop · MKE'},
-      {at: 8800, type:'field', key:'time', main:'6:00 AM · Thu Apr 16'},
-      {at: 9400, type:'transcript', who:'ai', text:'Sprinter rate to MKE is 145 to 175. Confirmed for 6 AM. Sending text confirmation now.'},
-      {at: 10300, type:'field', key:'quote', main:'$145 – $175', sub:'18.4 mi · Sprinter class · airport drop'},
-      {at: 10900, type:'complete'}
-    ]
-  },
-  charter: {
-    ticketId: 'AC-2026-0420',
-    steps: [
-      {at: 400, type:'transcript', who:'caller', text:'Hey, I need transportation for my wedding next Saturday.'},
-      {at: 1300, type:'transcript', who:'ai', text:'Congratulations. Hourly charter or one-way?'},
-      {at: 2200, type:'field', key:'caller', main:'Sarah M.', sub:'+1 (262) 555-0207 · Inbound · New caller'},
-      {at: 2700, type:'transcript', who:'caller', text:'Hourly. We need two vehicles for eight hours.'},
-      {at: 3600, type:'transcript', who:'ai', text:'Got it. Eight hour block, two vehicles. How many passengers across both?'},
-      {at: 4500, type:'field', key:'trip', main:'Wedding · hourly charter', sub:'8 hour block · 2 vehicles'},
-      {at: 5100, type:'transcript', who:'caller', text:'Twelve people total. Pickup at the church then to the reception.'},
-      {at: 6000, type:'field', key:'pax', main:'12 across 2 vehicles'},
-      {at: 6500, type:'transcript', who:'ai', text:'Vehicle preference? Stretch limo, SUV, executive sedan?'},
-      {at: 7400, type:'transcript', who:'caller', text:'One stretch and one SUV.'},
-      {at: 8100, type:'field', key:'vehicle', main:'1× Stretch limo · 1× Black SUV'},
-      {at: 8700, type:'field', key:'route', main:'St. Mary\'s Church → Pier Wisconsin', sub:'Multi-stop · 4 mi between'},
-      {at: 9300, type:'field', key:'time', main:'2:00 PM · Sat Apr 18', sub:'8 hr block · pickup to release'},
-      {at: 9900, type:'transcript', who:'ai', text:'Charter rate 1,840 to 2,200 for the block. Sending text. Dispatcher will confirm vehicles in fifteen minutes.'},
-      {at: 10800, type:'field', key:'quote', main:'$1,840 – $2,200', sub:'8 hr × 2 vehicles · gratuity included'},
-      {at: 11400, type:'complete'}
-    ]
-  }
-};
+<!-- ══ 1 · WHAT TO SAY ═══════════════════════════════════════════════════ -->
+<section id="what-to-say">
+  <div class="wrap">
+    <div class="sec-kicker">What to say</div>
+    <h2 class="sec-h">Talk to it like <em>a customer in a hurry.</em></h2>
+    <p class="sec-sub">You do not need a script. The point is to hear how it handles a real call, so give it a real one — including the messy parts.</p>
 
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
+    <div class="cards">
+      <div class="card">
+        <div class="card-num">01</div>
+        <h3 class="card-h">Give it an airport run</h3>
+        <p class="card-p">A pickup address, a flight number, and how many people. Ask for a curbside meet, then switch to baggage claim halfway through and see whether it keeps up.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">02</div>
+        <h3 class="card-h">Change your mind</h3>
+        <p class="card-p">Move the time. Add a stop. Swap a sedan for an SUV. Mid-call corrections are where most phone systems fall apart, so this is the part worth testing.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">03</div>
+        <h3 class="card-h">Ask for the readback</h3>
+        <p class="card-p">Before you hang up, ask it to repeat the trip. You should hear every detail you gave — and nothing you did not. What it cannot fill in, it asks about.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-let activeScenario = 'airport';
-let isRunning = false;
-let timeouts = [];
+<!-- ══ 2 · WHAT HAPPENS AFTER ════════════════════════════════════════════ -->
+<section id="after">
+  <div class="wrap">
+    <div class="sec-kicker">After you hang up</div>
+    <h2 class="sec-h">The trip comes back as <em>a ticket, not a recording.</em></h2>
+    <p class="sec-sub">The call is only half of it. What your dispatcher needs is the trip written down the same way every time — pickup, dropoff, vehicle, passengers, flight, notes.</p>
+    <p class="sec-sub">A detail the caller never gave is marked as missing rather than guessed. Your dispatcher confirms every trip before a car moves. AVA captures the ride; a human on your side still says yes.</p>
+  </div>
+</section>
 
-const startBtn = $('#startBtn'), startText = $('#startText'), resetBtn = $('#resetBtn');
-const liveBadge = $('#liveBadge'), ticketIdEl = $('#ticketId'), statusTag = $('#statusTag');
-const transcript = $('#transcript'), completeBanner = $('#completeBanner');
-const btnPlayFull = $('#btnPlayFull'), playFullText = $('#playFullText');
+<!-- ══ 3 · FAQ ═══════════════════════════════════════════════════════════ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-kicker">FAQ</div>
+    <h2 class="sec-h">Straight answers.</h2>
 
-// ════════════════════════════════════════════
-// AUDIO WIRING · pending Rachel/Cowork drop
-// ════════════════════════════════════════════
-// scenario → full-conversation audio id
-const scenarioAudioMap = {
-  airport:    'demo-1',
-  correction: 'demo-2',
-  charter:    'demo-3'
-};
-// per-transcript-line audio id (by scenario + transcript-line index).
-// PLACEHOLDER mapping — all 8 ava-call files are referenced so every
-// audio asset has at least one live consumer. Shane remaps to the
-// correct line indices once he reviews the Rachel recordings.
-// Empty string = stub, button visible but disabled.
-const transcriptAudioMap = {
-  airport:    ['ava-call-1', 'ava-call-2', 'ava-call-3', '', '', '', '', '', ''],
-  correction: ['ava-call-4', 'ava-call-5', 'ava-call-6', '', '', '', '', '', ''],
-  charter:    ['ava-call-7', 'ava-call-8', '',           '', '', '', '', '', '']
-};
+    <div class="cards">
+      <div class="card">
+        <h3 class="card-h">Does the demo dispatch a car?</h3>
+        <p class="card-p">No. It captures the trip and shows the ticket it would hand a dispatcher. No vehicle goes out and nothing is charged.</p>
+      </div>
+      <div class="card">
+        <h3 class="card-h">Where did the scenario demo go?</h3>
+        <p class="card-p">It was retired. Hearing AVA handle your own trip on a real line tells you more than a scripted replay does, so the demo is the call now.</p>
+      </div>
+      <div class="card">
+        <h3 class="card-h">What if I want it on my own line?</h3>
+        <p class="card-p">Book the strategy call. Setup is founder-led and scoped to how your operation runs — your rate rules, your service area, your dispatch process.</p>
+      </div>
+    </div>
 
-let currentAudio = null;
-let currentPlayBtn = null;
+    <div class="cta-stack">
+      <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_cta">
+        <span class="tel-main">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call (414) 775-0019
+        </span>
+        <span class="tel-sub">Give it a trip and listen.</span>
+      </a>
+      <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="cta-tertiary" data-event="book_click_cta">Book a 15-minute AVA strategy call →</a>
+    </div>
+  </div>
+</section>
 
-function stopCurrentAudio() {
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
-    currentAudio = null;
-  }
-  if (currentPlayBtn) {
-    currentPlayBtn.classList.remove('playing');
-    currentPlayBtn = null;
-  }
-  btnPlayFull.classList.remove('playing');
-  playFullText.textContent = 'Play full call';
-}
+</main>
 
-function playAudio(audioId, btn) {
-  if (!audioId) return;
-  const audio = document.getElementById(audioId);
-  if (!audio) return;
-  stopCurrentAudio();
-  currentAudio = audio;
-  currentPlayBtn = btn || null;
-  if (btn) btn.classList.add('playing');
-  audio.currentTime = 0;
-  const p = audio.play();
-  if (p && p.catch) p.catch(() => stopCurrentAudio());
-  audio.onended = () => stopCurrentAudio();
-}
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-brand">
+        <div class="foot-mark">AI <em>Chauffeur</em></div>
+        <p class="foot-nap">
+          AI CHAUFFEUR · Wisconsin-built<br>
+          <a href="tel:+14147750019" data-event="tel_tap_footer">(414) 775-0019</a><br>
+          Serving operators nationwide
+        </p>
+      </div>
+      <div class="foot-links">
+        <a href="/">How it works</a>
+        <a href="/demo/">Demo</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="foot-links">
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+        <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" data-event="book_click_footer">Request setup</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 AI Chauffeur · an AI Voice Agency property</span>
+    </div>
+  </div>
+</footer>
 
-function setScenario(name) {
-  if (isRunning) return;
-  activeScenario = name;
-  $$('.scenario').forEach(s => s.classList.toggle('active', s.dataset.scenario === name));
-  restIdle();
-  // Auto-scroll to put the start button in view (mobile especially)
-  setTimeout(() => {
-    const startRow = document.querySelector('.start-row');
-    if (startRow) {
-      const rect = startRow.getBoundingClientRect();
-      const targetY = window.scrollY + rect.top - 90;
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
-    }
-  }, 80);
-}
+<script src="/assets/aic.js?v=cbdf741"></script>
 
-function reset() {
-  timeouts.forEach(t => clearTimeout(t));
-  timeouts = [];
-  isRunning = false;
-  stopCurrentAudio();
-  $$('.field').forEach(f => {
-    f.classList.remove('fill', 'flash');
-    const v = f.querySelector('.f-value');
-    v.classList.remove('has');
-    v.innerHTML = 'awaiting';
-    f.querySelector('.think').classList.remove('show');
-  });
-  transcript.innerHTML = '<div class="transcript-empty">Live transcript will appear here when scenario starts</div>';
-  ticketIdEl.textContent = '—';
-  statusTag.textContent = 'Standby';
-  statusTag.classList.remove('complete');
-  liveBadge.textContent = 'Standby';
-  liveBadge.classList.remove('live');
-  completeBanner.classList.remove('show');
-  document.querySelector('.console').classList.remove('active');
-  startBtn.disabled = false;
-  startBtn.classList.remove('running');
-  startText.textContent = 'Start scenario';
-  $$('.scenario').forEach(s => s.disabled = false);
-}
-
-/* ══ B2 · RESTING TICKET ═══════════════════════════════════════════════
-   reset() empties the console to "awaiting" — correct immediately BEFORE a
-   run, because the fields have to be blank to visibly fill. It is wrong as
-   a resting state: it is the dead zone this run exists to remove.
-   restIdle() puts the finished 5:45 AM airport ticket back, and is what the
-   Reset button and a scenario switch now call. The markup ships with these
-   same values, so the ticket is complete even with JS disabled. */
-const RESTING = {
-  caller:  {main:'James R.', sub:'+1 (414) 555-0182 · Inbound'},
-  trip:    {main:'Airport run · MKE', sub:'Terminal C · departs 7:20 AM'},
-  route:   {main:'Downtown MKE Hotel → MKE Airport T-C', sub:'18.4 mi'},
-  time:    {main:'5:45 AM'},
-  vehicle: {main:'Executive Sedan'},
-  pax:     {main:'1'},
-  quote:   {main:'$65 – $85 est.', sub:'18.4 mi · tolls included'}
-};
-const RESTING_TRANSCRIPT =
-  '<div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">AI Chauffeur, this is AVA — where are you headed?</span></div>' +
-  '<div class="tr-line tr-caller" style="opacity:1"><span class="tr-text">Downtown Marriott to MKE, five forty-five tomorrow morning.</span></div>' +
-  '<div class="tr-line tr-ai" style="opacity:1"><span class="tr-text">One passenger, executive sedan. I have it all down for your dispatcher.</span></div>';
-
-function restIdle() {
-  reset();
-  Object.keys(RESTING).forEach(key => {
-    const f = document.querySelector('.field[data-key="' + key + '"]');
-    if (!f) return;
-    const v = f.querySelector('.f-value');
-    if (!v) return;
-    const r = RESTING[key];
-    v.innerHTML = r.main + (r.sub ? '<span class="sub">' + r.sub + '</span>' : '');
-    v.classList.add('has');
-  });
-  transcript.innerHTML = RESTING_TRANSCRIPT;
-  ticketIdEl.textContent = 'AC-2026-0392';
-  statusTag.textContent = 'Ticket complete';
-  statusTag.classList.add('complete');
-  liveBadge.textContent = 'Captured';
-}
-
-function runScenario() {
-  if (isRunning) return;
-  reset();
-  setTimeout(() => {
-    const sc = SCENARIOS[activeScenario];
-    isRunning = true;
-    startBtn.disabled = true;
-    startBtn.classList.add('running');
-    startText.textContent = 'Capturing...';
-    liveBadge.textContent = 'Live intake';
-    liveBadge.classList.add('live');
-    statusTag.textContent = 'Capturing';
-    ticketIdEl.textContent = sc.ticketId;
-    transcript.innerHTML = '';
-    document.querySelector('.console').classList.add('active');
-    $$('.scenario').forEach(s => s.disabled = true);
-
-    // Auto-scroll console into view so user sees the action
-    const consoleEl = document.querySelector('.console');
-    if (consoleEl) {
-      const rect = consoleEl.getBoundingClientRect();
-      const targetY = window.scrollY + rect.top - 80;
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
-    }
-
-    sc.steps.forEach(step => {
-      timeouts.push(setTimeout(() => executeStep(step), step.at));
-    });
-  }, 50);
-}
-
-function executeStep(step) {
-  if (step.type === 'transcript') {
-    const line = document.createElement('div');
-    line.className = 'tr-line tr-' + step.who;
-
-    const lineIdx = transcript.children.length;
-    const mapForScenario = transcriptAudioMap[activeScenario] || [];
-    const audioId = mapForScenario[lineIdx] || '';
-
-    const playBtn = document.createElement('button');
-    playBtn.type = 'button';
-    playBtn.className = 'tr-play';
-    playBtn.setAttribute('aria-label', audioId ? 'Play this line' : 'Audio coming soon');
-    playBtn.dataset.audio = audioId;
-    /* AIC SITE RUN 1 · B1 — was the bare character "▶", which renders as a
-       colour emoji on iOS/Android and as a tofu box on any font that lacks
-       U+25B6. Inline SVG inherits currentColor and is identical everywhere. */
-    playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
-    playBtn.disabled = !audioId;
-    playBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (!playBtn.dataset.audio) return;
-      if (currentPlayBtn === playBtn) { stopCurrentAudio(); return; }
-      playAudio(playBtn.dataset.audio, playBtn);
-    });
-
-    const textSpan = document.createElement('span');
-    textSpan.className = 'tr-text';
-    textSpan.textContent = step.text;
-
-    line.appendChild(playBtn);
-    line.appendChild(textSpan);
-    transcript.appendChild(line);
-    transcript.scrollTop = transcript.scrollHeight;
-  } else if (step.type === 'field') {
-    const f = document.querySelector(`.field[data-key="${step.key}"]`);
-    if (!f) return;
-    const think = f.querySelector('.think');
-    think.classList.add('show');
-    setTimeout(() => {
-      f.classList.add('flash');
-      const v = f.querySelector('.f-value');
-      v.classList.add('has');
-      v.innerHTML = step.main + (step.sub ? `<span class="sub">${step.sub}</span>` : '');
-      setTimeout(() => {
-        f.classList.remove('flash');
-        f.classList.add('fill');
-        think.classList.remove('show');
-      }, 400);
-    }, 220);
-  } else if (step.type === 'complete') {
-    statusTag.textContent = 'RES captured';
-    statusTag.classList.add('complete');
-    liveBadge.textContent = 'Captured';
-    completeBanner.classList.add('show');
-    isRunning = false;
-    startBtn.disabled = false;
-    startBtn.classList.remove('running');
-    startText.textContent = 'Run again';
-    $$('.scenario').forEach(s => s.disabled = false);
-    // Scroll to complete banner so user sees the outcome and book CTA
-    setTimeout(() => {
-      const rect = completeBanner.getBoundingClientRect();
-      const targetY = window.scrollY + rect.top - 80;
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
-    }, 300);
-  }
-}
-
-$$('.scenario').forEach(s => s.addEventListener('click', () => setScenario(s.dataset.scenario)));
-startBtn.addEventListener('click', runScenario);
-resetBtn.addEventListener('click', restIdle);
-
-/* B2 · the resting ticket is replayable two ways: the affordance under it,
-   and scrolling to it and STOPPING.
-
-   Two guards, both load-bearing, because running the scenario necessarily
-   blanks the fields to "awaiting" — which is the very dead zone this section
-   exists to remove. It must only happen for someone who chose to watch:
-
-     1. hasScrolled — never auto-run on arrival. On a tall desktop the console
-        can already be in view at load; without this the page would greet the
-        visitor with seven empty boxes instead of the finished ticket.
-     2. a dwell timer — someone flicking past the console keeps the completed
-        ticket. The run only starts if it is still in view ~900ms later.
-
-   Fires once, then disconnects; a console that restarts on every re-entry is
-   a distraction, not a demo. Reduced-motion never auto-runs at all. */
-(function(){
-  const watch = document.getElementById('watchItFill');
-  if (watch) watch.addEventListener('click', runScenario);
-
-  const consoleEl = document.querySelector('.console');
-  if (!consoleEl || !('IntersectionObserver' in window)) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  let hasScrolled = false;
-  window.addEventListener('scroll', function(){ hasScrolled = true; }, { passive: true, once: true });
-
-  let dwell = null;
-  const io = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if (!entry.isIntersecting || !hasScrolled) { clearTimeout(dwell); return; }
-      clearTimeout(dwell);
-      dwell = setTimeout(function(){
-        io.disconnect();
-        if (!isRunning) runScenario();
-      }, 900);
-    });
-  }, { threshold: 0.55 });
-  io.observe(consoleEl);
-})();
-
-btnPlayFull.addEventListener('click', () => {
-  const audioId = scenarioAudioMap[activeScenario];
-  if (currentAudio && currentAudio.id === audioId) {
-    stopCurrentAudio();
-    return;
-  }
-  if (!audioId) return;
-  const audio = document.getElementById(audioId);
-  if (!audio) return;
-  stopCurrentAudio();
-  currentAudio = audio;
-  btnPlayFull.classList.add('playing');
-  playFullText.textContent = 'Stop';
-  audio.currentTime = 0;
-  const p = audio.play();
-  if (p && p.catch) p.catch(() => stopCurrentAudio());
-  audio.onended = () => stopCurrentAudio();
-});
-
-</script>
 </body>
 </html>
