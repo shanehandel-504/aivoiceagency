@@ -264,6 +264,9 @@ VERSION_ONLY = [
     'chauffeur/airport-transfer-booking/index.html',
     'chauffeur/how-setup-works/index.html',
     'chauffeur/madison-limo-answering-service/index.html',
+    # AIC RUN 5 — the booking surface. Same host, same reasoning: it carries the
+    # chauffeur nav/footer, so PAGES would inject the AVA site's chrome onto it.
+    'chauffeur/book/index.html',
 ]
 
 

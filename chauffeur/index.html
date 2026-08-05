@@ -37,7 +37,7 @@
        own <style>, so every local token below still wins. This also DEFINES
        --green, which this page referenced in .live-badge and .badge-green but
        never declared — both rules were silently broken. -->
-  <link rel="stylesheet" href="/assets/circulant.css?v=53c750a">
+  <link rel="stylesheet" href="/assets/circulant.css?v=0ce05772">
 
   <!-- AIC SITE RUN 1 · D4 — Organization + LocalBusiness + Service.
        NOTE: no postalAddress / streetAddress is emitted. AI Chauffeur has no
@@ -99,12 +99,19 @@
     nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,15,.72);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--line);transition:background .2s}
     /* AIC-BRAND-INSTALL · real lockup in the nav, no car glyph in a gradient chip.
        The wordmark lives inside lockup-short.svg, so the anchor holds no text.
-       Kit min for the short lockup is 120px wide; 30px tall renders 176px. Under
-       420px the compact mark (kit min 16px, used at 26px) takes over. */
+       Kit min for the short lockup is 120px wide; 30px tall renders 176px.
+       AIC RUN 5 · the lockup is now SCALED on phones instead of dropped — the
+       brand name has to be readable in the header on a phone-first audience.
+       25px tall renders 146.8px from the 446.1x76 viewBox: over the 120px kit
+       minimum, inside the 140-150px target, and at 360px it still leaves 20px
+       clear of the phone CTA. Below 360px the number wins and the compact mark
+       (kit min 16px, used at 26px) takes over. Mirrors aic.css — this page
+       carries its own embedded shell, so both copies must move together. */
     .brand{display:flex;align-items:center;min-height:44px;min-width:44px}
     .brand-lockup{display:block;height:30px;width:auto}
     .brand-compact{display:none;height:26px;width:26px}
-    @media (max-width:420px){.brand-lockup{display:none}.brand-compact{display:block}}
+    @media (max-width:600px){.brand-lockup{height:25px}}
+    @media (max-width:359.98px){.brand-lockup{display:none}.brand-compact{display:block}}
     .nav-links{display:none;gap:1.75rem;list-style:none}
     .nav-links a{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);font-weight:500}
     .nav-links a:hover{color:var(--ink)}
@@ -564,7 +571,7 @@
     <li><a href="#how">How it works</a></li>
     <li><a href="/demo/">Demo</a></li>
     <li><a href="#faq">FAQ</a></li>
-    <li><a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener">Request setup</a></li>
+    <li><a href="/book/">Request setup</a></li>
   </ul>
   <!-- AIC SITE RUN 1 · the nav CTA is now the line itself. .nav-links is
        display:none under 880px, so on a phone this is the ONLY persistent
@@ -628,7 +635,7 @@
 
       <!-- TERTIARY -->
       <div class="cta-tertiary">
-        <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" data-event="book_click_hero">Request local setup →</a>
+        <a href="/book/" data-event="book_click_hero">Request local setup →</a>
         <span class="cta-note">Schedules a 20-min intro call.</span>
       </div>
 
@@ -890,7 +897,7 @@
       <!-- "confirmations" was in this list as an everyday AVA value. Phase 1 is
            capture only — a human confirms. Replaced with what actually happens. -->
       <p class="crush-p">The Crush is what limo and black car operators call those moments — Friday airport rush, prom night, the concert that ends at 11 PM. AI Chauffeur is built to absorb those windows; AVA never lets a call sit on hold. The everyday value is cleaner intake: the whole trip taken down the first time, so your dispatcher is confirming instead of chasing. The Crush is when it earns the keep.</p>
-      <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn btn-primary">
+      <a href="/book/" class="btn btn-primary" data-event="book_click_crush">
         Request local setup
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
@@ -913,7 +920,7 @@
         <p class="setup-p" style="margin-top:1rem;color:var(--ink-mute)">Every build is custom to your operation — your rates, your service area, your vehicle classes. We scope it on the intro call.</p>
       </div>
       <div class="setup-cta">
-        <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" class="btn btn-primary" data-event="book_click_setup">
+        <a href="/book/" class="btn btn-primary" data-event="book_click_setup">
           Request local setup
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           <span class="signal-stack-v2" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="active"></span><span></span><span></span><span></span><span></span></span>
@@ -1006,7 +1013,7 @@
       <div class="foot-links">
         <a href="/privacy/">Privacy</a>
         <a href="/terms/">Terms</a>
-        <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" data-event="book_click_footer">Request setup</a>
+        <a href="/book/" data-event="book_click_footer">Request setup</a>
       </div>
     </div>
     <div class="foot-bottom">
@@ -1185,7 +1192,7 @@
 
 <!-- Shared rail: nav tint + the "AVA calls you" form. Endpoint lives ONLY in
      this file, so a future endpoint swap is one edit, not six. -->
-<script src="/assets/aic.js?v=53c750a"></script>
+<script src="/assets/aic.js?v=32c48996"></script>
 
 </body>
 </html>

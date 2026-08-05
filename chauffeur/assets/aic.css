@@ -86,14 +86,26 @@ nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;displ
    gradient chip. The wordmark is INSIDE lockup-short.svg, so the anchor holds no
    text — alt carries the name. min-height 44: it is a link to the homepage.
    Kit minimum for the short lockup is 120px wide; at 30px tall it renders 176px.
-   Below 420px that no longer clears the CTA, so the compact mark (kit min 16px,
-   used at 26px) takes over. */
+
+   AIC RUN 5 · the compact mark used to take over below 420px, which meant the
+   brand NAME was absent from the header on every phone — on a phone-first
+   audience that is the majority of sessions, and a bare bar mark identifies
+   nothing to a first-time visitor. The lockup is SCALED instead of dropped:
+   the 446.1x76 viewBox makes 25px tall render 146.8px wide, comfortably over
+   the kit's 120px minimum and inside the 140-150px target. Measured at 360px
+   (the narrowest viewport that still carries it) the lockup and the phone CTA
+   occupy 292px of 312px available, so the bar still does not wrap or overflow.
+   Below 360px there is no longer room for both, and the number wins — it is
+   the conversion — so mark-compact (kit min 16px, used at 26px) takes over. */
 /* min-width 44 as well as min-height: in the compact state the anchor wraps a
    26px mark, which is a 26px-wide tap target without it. */
 .brand{display:flex;align-items:center;min-height:44px;min-width:44px}
 .brand-lockup{display:block;height:30px;width:auto}
 .brand-compact{display:none;height:26px;width:26px}
-@media (max-width:420px){
+@media (max-width:600px){
+  .brand-lockup{height:25px}
+}
+@media (max-width:359.98px){
   .brand-lockup{display:none}
   .brand-compact{display:block}
 }
