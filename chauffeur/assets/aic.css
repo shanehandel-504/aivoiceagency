@@ -82,12 +82,21 @@ nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;displ
   align-items:center;justify-content:space-between;background:rgba(10,10,15,.82);
   backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
   border-bottom:1px solid var(--line)}
-/* min-height 44: the brand is a link to the homepage and was a 26px-tall target. */
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.78rem;
-  font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);min-height:44px}
-.brand-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,var(--cyan),var(--cyan-bright));
-  display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px var(--line-hot)}
-.brand-mark svg{width:14px;height:14px}
+/* AIC-BRAND-INSTALL · the nav carries the real lockup now, not a car glyph in a
+   gradient chip. The wordmark is INSIDE lockup-short.svg, so the anchor holds no
+   text — alt carries the name. min-height 44: it is a link to the homepage.
+   Kit minimum for the short lockup is 120px wide; at 30px tall it renders 176px.
+   Below 420px that no longer clears the CTA, so the compact mark (kit min 16px,
+   used at 26px) takes over. */
+/* min-width 44 as well as min-height: in the compact state the anchor wraps a
+   26px mark, which is a 26px-wide tap target without it. */
+.brand{display:flex;align-items:center;min-height:44px;min-width:44px}
+.brand-lockup{display:block;height:30px;width:auto}
+.brand-compact{display:none;height:26px;width:26px}
+@media (max-width:420px){
+  .brand-lockup{display:none}
+  .brand-compact{display:block}
+}
 .nav-links{display:none;gap:1.75rem;list-style:none}
 .nav-links a{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
   color:var(--ink-mute);font-weight:500}

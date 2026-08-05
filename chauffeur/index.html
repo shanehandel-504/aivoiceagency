@@ -7,6 +7,13 @@
   <title>Limo Answering Service — AI Dispatch That Books the Ride | AI Chauffeur</title>
   <meta name="description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket. Built by an operator. Call (414) 775-0019.">
 
+  <!-- AIC-BRAND-INSTALL · favicon set from mark-compact.svg, dark ground baked
+       in: the #EEF0F4 bars would disappear against a light-mode tab strip. -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
   <link rel="canonical" href="https://aichauffeur.ai/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="AI Chauffeur">
@@ -90,9 +97,14 @@
     .wrap{max-width:1180px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
 
     nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,15,.72);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--line);transition:background .2s}
-    .brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.78rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
-    .brand-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,var(--cyan),var(--cyan-bright));display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px var(--line-hot),0 6px 24px var(--cyan-glow)}
-    .brand-mark svg{width:14px;height:14px}
+    /* AIC-BRAND-INSTALL · real lockup in the nav, no car glyph in a gradient chip.
+       The wordmark lives inside lockup-short.svg, so the anchor holds no text.
+       Kit min for the short lockup is 120px wide; 30px tall renders 176px. Under
+       420px the compact mark (kit min 16px, used at 26px) takes over. */
+    .brand{display:flex;align-items:center;min-height:44px;min-width:44px}
+    .brand-lockup{display:block;height:30px;width:auto}
+    .brand-compact{display:none;height:26px;width:26px}
+    @media (max-width:420px){.brand-lockup{display:none}.brand-compact{display:block}}
     .nav-links{display:none;gap:1.75rem;list-style:none}
     .nav-links a{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);font-weight:500}
     .nav-links a:hover{color:var(--ink)}
@@ -544,15 +556,9 @@
 <body>
 
 <nav class="top">
-  <a href="/" class="brand">
-    <span class="brand-mark">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 17h14M6 17l-1-5h14l-1 5M7 12V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/>
-        <circle cx="8" cy="17" r="2" fill="#000"/>
-        <circle cx="16" cy="17" r="2" fill="#000"/>
-      </svg>
-    </span>
-    AI Chauffeur
+  <a href="/" class="brand" aria-label="AI Chauffeur — home">
+    <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    <img class="brand-compact" src="/assets/brand/mark-compact.svg" alt="" width="26" height="26" decoding="async">
   </a>
   <ul class="nav-links">
     <li><a href="#how">How it works</a></li>
