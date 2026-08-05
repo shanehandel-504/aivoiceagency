@@ -113,7 +113,7 @@ a defect in an emailed ticket. The battery asserts the sum on every `QUOTED` cas
 |---|---|---|
 | `vehicle_classes` | `dofpCkfUf9u13OCt` | 18 |
 | `hourly_rates` | `dhypYajHbsOUqua6` | 18 |
-| `airport_zones` | `ffdnELJPWfa3yLsj` | 32 |
+| `airport_zones` | `ffdnELJPWfa3yLsj` | 35 |
 | `airport_vehicle_adjust` | `KQQy3fSHRlnWKmHQ` | 18 |
 | `addons` | `sjmTvvww3QwueBCA` | 5 |
 | `pricing_policies` | `MQSD2rRYt5POaFYK` | 1 |
@@ -121,6 +121,19 @@ a defect in an emailed ticket. The battery asserts the sum on every `QUOTED` cas
 | `quote_audit` | `g4tjdTKEwDjnojQU` | write target |
 
 Every rate row carries `rate_card_version` `RCv1.0`, `tenant_id` `demo`, `effective_from` 2026-08-03.
+
+**2026-08-05 — demo-zone coverage for Shane's test area.** Three `DEMO_SEED` rows were appended to
+`airport_zones` (32 → 35), on RCv1.0 and consistent with the existing `WestBend`/`MKE` 125/165 ladder:
+
+| origin | airport | sedan_base | suv_base |
+|---|---|---|---|
+| `Kewaskum` | `MKE` | 135 | 180 |
+| `Kewaskum` | `ORD` | 265 | 335 |
+| `WestBend` | `ORD` | 255 | 320 |
+
+The stored origin spelling is `WestBend`, no space — matched to the existing row, and read back off the
+live endpoint before writing, not assumed. Zone rows are direction-agnostic: the same `(origin, airport)`
+row prices an MKE arrival dropping in Kewaskum and a Kewaskum pickup departing MKE.
 
 The brief listed `key` on `vehicle_classes` and `vehicle_key` on `hourly_rates`; both ship as
 **`vehicle_key`** so the join column has one name.
