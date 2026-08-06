@@ -28,10 +28,12 @@ const { chromium } = require(PW);
 const LH = 'C:/Users/offic/AppData/Local/npm-cache/_npx/8003d8991b0d346b/node_modules/lighthouse/cli/index.js';
 const CHROME = 'C:/Users/offic/AppData/Local/ms-playwright/chromium-1228/chrome-win64/chrome.exe';
 const TAG = process.argv[2];
-const PORTS = { before: 4178, after: 4177 };
-const PORT = PORTS[TAG];
-if (!PORT) { console.log('usage: run8_gate.js <before|after>'); process.exit(2); }
-const BASE = `http://127.0.0.1:${PORT}`;
+// `live` runs the identical gate against production. The local pair is what the
+// before/after comparison is built on; the live pass is what proves the thing
+// visitors actually get, which is not the same claim.
+const BASES = { before: 'http://127.0.0.1:4178', after: 'http://127.0.0.1:4177', live: 'https://aichauffeur.ai' };
+const BASE = BASES[TAG];
+if (!BASE) { console.log('usage: run8_gate.js <before|after|live>'); process.exit(2); }
 const OUT = path.join(__dirname, '..', 'audits', 'run8', 'lh-' + TAG);
 fs.mkdirSync(OUT, { recursive: true });
 
@@ -112,7 +114,7 @@ function assertThreeCopies() {
 
 (async () => {
   const summary = { tag: TAG, base: BASE, requests: {}, lh: {}, homeMedians: null };
-  summary.threeCopies = TAG === 'after' ? assertThreeCopies() : null;
+  summary.threeCopies = TAG === 'before' ? null : assertThreeCopies();
 
   // ---------- 1. network: any font request that leaves the origin ----------
   console.log('='.repeat(100));

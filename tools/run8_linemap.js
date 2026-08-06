@@ -19,7 +19,11 @@ const path = require('path');
 const PW = 'C:/Users/offic/Desktop/AVA-factory/adstage/node_modules/playwright';
 const { chromium } = require(PW);
 
-const PORTS = { before: 4178, after: 4177 };
+// `live` measures production. Byte-identity between the repo and the live HTML is
+// necessary but not sufficient: it says the markup matches, not that the CDN is
+// serving the font file the markup asks for. Measuring the real line boxes on the
+// real host closes that gap.
+const BASES = { before: 'http://127.0.0.1:4178', after: 'http://127.0.0.1:4177', live: 'https://aichauffeur.ai' };
 const PAGES = ['/', '/demo/', '/limo-answering-service/'];
 const WIDTHS = [360, 768, 1280];
 const FROZEN = Date.UTC(2026, 7, 5, 19, 30, 0); // 2026-08-05 14:30 CDT — fixed clock
@@ -113,8 +117,8 @@ const collect = () => {
 };
 
 async function capture(tag, outdir) {
-  const port = PORTS[tag];
-  if (!port) throw new Error('tag must be before|after');
+  const base = BASES[tag];
+  if (!base) throw new Error('tag must be before|after|live');
   // NEGATIVE CONTROL. A probe that reports "zero changes" is worthless until it
   // has been shown to report a change when there is one. With RUN8_BLOCK_FONTS=1
   // the woff2 files are refused, every glyph comes from the metric-matched
@@ -123,7 +127,7 @@ async function capture(tag, outdir) {
   const blockFonts = process.env.RUN8_BLOCK_FONTS === '1';
   fs.mkdirSync(outdir, { recursive: true });
   const browser = await chromium.launch();
-  const result = { tag, port, blockFonts, capturedPages: {}, unstable: [], fontState: {} };
+  const result = { tag, base, blockFonts, capturedPages: {}, unstable: [], fontState: {} };
 
   for (const url of PAGES) {
     for (const width of WIDTHS) {
@@ -135,7 +139,7 @@ async function capture(tag, outdir) {
       await ctx.addInitScript(freezeClock, FROZEN);
       const page = await ctx.newPage();
       if (blockFonts) await page.route('**/*.woff2', r => r.abort());
-      await page.goto(`http://127.0.0.1:${port}${url}`, { waitUntil: 'load', timeout: 45000 });
+      await page.goto(`${base}${url}`, { waitUntil: 'load', timeout: 45000 });
       await page.evaluate(() => document.fonts.ready);
       await page.waitForTimeout(1500);
       // Did the real face actually arrive? "It looks right" is not evidence.
@@ -208,7 +212,11 @@ function diff(beforeFile, afterFile) {
     }
     if (changed.length > 40) console.log(`   ... ${changed.length - 40} more`);
   }
-  const report = path.join(path.dirname(afterFile), 'linemap-diff.json');
+  // Name the artifact after BOTH inputs. A single linemap-diff.json gets silently
+  // overwritten by the next comparison, and then the file on disk no longer says
+  // which two builds it describes.
+  const nm = f => path.basename(f, '.json').replace(/^linemap-/, '');
+  const report = path.join(path.dirname(afterFile), `linemap-diff-${nm(beforeFile)}-vs-${nm(afterFile)}.json`);
   fs.writeFileSync(report, JSON.stringify({ views: keys.length, nodes: totalNodes, changed }, null, 1));
   console.log(`  wrote ${report}`);
   return changed.length;
