@@ -104,14 +104,23 @@ CLAIMS = {
          'Request founder-led setup. It is scoped to how your operation runs '
          '— your rate rules, your service area, your dispatch process.'),
     ],
+    # /book/ is the DESTINATION of the renamed CTA, so it owes the same name.
+    # A first pass only swapped "Setup Call" for "Founder-Led Setup" and left the
+    # verb, which meant a click on REQUEST FOUNDER-LED SETUP landed on a page
+    # titled "Book Founder-Led Setup" — one action, two verbs, and one of them
+    # only visible in a search result. Title, description, og, twitter and the H1
+    # all say Request now; "book" survives only where it means picking a slot on
+    # the calendar, which is a different act.
     'book/index.html': [
         ('<title>Book a Setup Call — AI Chauffeur | Limo Answering Service</title>',
-         '<title>Book Founder-Led Setup — AI Chauffeur | Limo Answering Service</title>'),
-        ('Book a Setup Call — AI Chauffeur', 'Book Founder-Led Setup — AI Chauffeur'),
+         '<title>Request Founder-Led Setup — AI Chauffeur | Limo Answering Service</title>'),
+        ('Book a Setup Call — AI Chauffeur', 'Request Founder-Led Setup — AI Chauffeur'),
+        ('content="Book a 20-minute setup call with the founder.',
+         'content="Request founder-led setup — a 20-minute call with the founder.'),
         ('<span class="kicker">Setup call · 20 minutes</span>',
          '<span class="kicker">Founder-led setup · 20 minutes</span>'),
         ('<h1 class="page-h">Book the <em>setup call.</em></h1>',
-         '<h1 class="page-h">Book the <em>founder-led setup call.</em></h1>'),
+         '<h1 class="page-h">Request <em>founder-led setup.</em></h1>'),
     ],
 }
 
