@@ -56,10 +56,30 @@ def blocks_of(msg):
 
 def is_real_user_turn(rec):
     """
-    True for a genuine human turn. Tool results also arrive as role=user, so a
-    record carrying any tool_result block is machine traffic, not Shane talking.
+    True for a genuine human turn — the boundary the current reply starts from.
+
+    Three different things arrive as role=user and only one of them is Shane:
+
+      1. tool results          -> carry a tool_result block
+      2. INJECTED CONTENT      -> carries isMeta:true. This is skill bodies loaded
+                                  by the Skill tool (also carrying sourceToolUseID),
+                                  system reminders, command expansions, and THIS
+                                  HOOK'S OWN feedback message.
+      3. an actual human turn  -> no isMeta; carries promptSource/origin.
+
+    Missing case 2 is what made this guard false-positive on 2026-08-06: invoking
+    the update-config skill mid-turn injected a role=user text record, which moved
+    the boundary past the reply's real `SKILLS:` opener and blocked a compliant
+    turn. Verified against the live transcript, not inferred.
+
+    Erring lenient is deliberate. If an unknown injection shape slips through as a
+    boundary, the guard checks a later slice of the same turn and at worst lets a
+    violation pass; treating a human turn as injected would only walk the boundary
+    further back, which also cannot manufacture a false block.
     """
     if rec.get("type") != "user":
+        return False
+    if rec.get("isMeta") or rec.get("sourceToolUseID"):
         return False
     bl = blocks_of(rec.get("message"))
     if any(b.get("type") == "tool_result" for b in bl):

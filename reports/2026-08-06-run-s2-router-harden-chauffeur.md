@@ -41,6 +41,10 @@ law is about what the user sees.
 `stop_hook_active` → exit 0, no block. `stop_hook_active` is the infinite-loop guard. The only
 block is a positively identified violation.
 
+> **Amended after ship — see § 8.** The turn-boundary rule described above was incomplete: injected
+> `role:user` records (skill bodies, this hook's own feedback) also had to be excluded. It
+> false-positived on its first live turn and was fixed in a follow-up commit.
+
 ### The deliberate violation test — 10/10
 
 ```
@@ -220,3 +224,55 @@ neither is correct — `chauffeur-design` is.
 | Token de-dup | `git checkout <prev> -- .claude/skills/circulant-design/SKILL.md .claude/skills/circulant-funnel/SKILL.md .claude/skills/circulant-landing/SKILL.md` |
 | chauffeur-design | `rm -r .claude/skills/chauffeur-design` + remove the chauffeur router row |
 | Board | `git checkout <prev> -- hq/board.json` |
+
+---
+
+## 8 · POST-SHIP FIX — the guard false-positived on its first live turn
+
+Committed separately, after `423eb32`. **The hook fired for real on the very turn that shipped
+it** — which is the proof the synthetic matrix could not give — but it blocked a **compliant** reply.
+
+### What it blocked
+
+```
+BLOCK   `/preflight` from RUN S1 registered and is live — first proof of that deliverable.
+```
+
+That line was an *intermediate* message inside the turn. The turn's actual opening line was
+`SKILLS: update-config …`, so the reply was compliant and the block was wrong.
+
+### Root cause — found in the live transcript, not inferred
+
+Three different things arrive as `role: user`, and the shipped detector only knew about two:
+
+| Record | Shape | Shipped guard saw it as |
+|---|---|---|
+| 3, 209 — Shane's actual briefs | `promptSource` + `origin`, **no** `isMeta` | real user turn ✓ |
+| tool results | carry a `tool_result` block | machine traffic ✓ |
+| **220 — the `update-config` skill body** | **`isMeta: true`** + `sourceToolUseID` | **real user turn ✗** |
+| **446 — this hook's own feedback** | **`isMeta: true`** | **real user turn ✗** |
+
+Invoking a skill mid-turn injects a `role:user` text record. That moved the turn boundary *past*
+the reply's real `SKILLS:` opener, so the guard checked the wrong slice of the turn.
+
+### The fix
+
+`is_real_user_turn()` now rejects any record carrying `isMeta` or `sourceToolUseID`. Erring lenient
+is deliberate and documented in the docstring: an unknown injection shape slipping through as a
+boundary at worst lets a violation pass, while misreading a human turn as injected only walks the
+boundary further back — neither direction can manufacture a false block.
+
+### Proof
+
+- **13/13** scenarios — the original 10 plus three regressions: the exact skill-injection shape
+  (11), the hook's own feedback message (12), and a real violation that must **still** block even
+  with an injection present (13).
+- **Replayed the real transcript** — the actual file that produced the false block — through the
+  fixed guard: exit 0, no block. Boundary now resolves to record 209 (*"CLAUDE CODE — RUN S2 ·
+  ROUTER HARDEN…"*) and the first surfaced line is `SKILLS: update-config …` → passes.
+
+### What this says about the hook
+
+It works. It caught a real behaviour on its first live turn, the failure was loud rather than
+silent, and it was diagnosable in minutes because the log records every decision. A guard that had
+failed the other way — quietly passing everything — would have looked perfect and been worthless.
