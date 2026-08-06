@@ -1,6 +1,6 @@
 ---
 name: social-post
-description: Caption and post construction for AVA social output — caption structures, the prove-work law, the pin-comment pattern, and the hashtag bank. Use when writing any social caption, post copy, or reel description for AI Voice Agency.
+description: MANDATORY before writing any outward-facing short copy for AI Voice Agency — load it before drafting the first word. Caption and post construction — the caption structures, the PROVE-WORK law (no claim ships without shown work), the pin-comment pattern, and the hashtag bank. Triggers on - social post, post, caption, hook, reel, Reel description, Short, TikTok, Instagram, LinkedIn post, X post, tweet, thread, thumbnail, thumbnail text, ad creative, ad copy, email, email copy, subject line, newsletter, promo copy, announcement, "write something for social", "make a post about this". Enforces CLAUDE.md § 4 HARD LAWS, § 6 COPY SOURCE and § FORBIDDEN WORDS — no fabricated stats or testimonials, never "she/her" for AVA, never "locked in". Rendering the actual video is ava-factory's lane; this skill is the words.
 ---
 
 # Social Post

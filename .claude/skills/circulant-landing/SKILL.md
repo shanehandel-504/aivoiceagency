@@ -1,6 +1,6 @@
 ---
 name: circulant-landing
-description: Landing-page anatomy for aivoiceagency.ai — section order, CTA patterns, the terminal-loader component, and the trust micro-copy row. Use when building or rebuilding any landing page, ad lander, city/trade page, or vertical hub on the AVA parent brand.
+description: MANDATORY for any visual work on the AVA parent brand — load it before writing a single line of HTML or CSS. Landing-page anatomy for aivoiceagency.ai — the fixed six sections and their order, CTA patterns and wording, the terminal-loader component, and the trust micro-copy row. Triggers on - reskin, re-skin, skin, restyle, redesign, landing page, lander, ad lander, city page, trade page, vertical hub, homepage, hero, section, fold, above the fold, page layout, mockup, artifact, deck, wireframe, component, CTA, button, "make it look better", "clean this up", "make it pop", "give it a refresh". If the task changes what a page LOOKS like, this skill fires. Pair with frontend-design + ui-ux-pro-max + taste per CLAUDE.md § SKILL ROUTER.
 ---
 
 # CIRCULANT Landing

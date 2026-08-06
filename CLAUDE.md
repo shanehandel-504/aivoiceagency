@@ -3,6 +3,72 @@
 Auto-read at every Claude Code session. Do not delete.
 This file is the repo's design brain. When anything else disagrees with it, this file wins.
 
+---
+
+## § SKILL ROUTER (ratified 2026-08-06, RUN S1)
+
+Skills stopped being suggestions. This section is the routing law; § 0 PRECEDENCE still
+ranks it — Shane's direct instruction beats it, and the rest of this file beats any skill
+it loads. Human-readable map of what's installed: `.claude/skills/SKILLS-INDEX.md`.
+
+**LAW — invocation is mandatory, not inferred.** If a task matches a row in the routing
+table, READ those `SKILL.md` files BEFORE producing any output. Not "consider." Not "if it
+seems relevant." Read them. If a listed file is missing, print
+`RUN INCOMPLETE — missing skill: [name]` and continue with what exists.
+
+**LAW — declare the loadout.** The FIRST LINE of every response states it:
+`SKILLS: [names loaded]`. No exceptions. When a turn genuinely loads nothing, the line
+reads `SKILLS: none — [why]`. A silent turn is a routing failure.
+
+### ROUTING TABLE
+
+| Task | Load — in this order | Notes |
+|---|---|---|
+| Any page, HTML, CSS, component, re-skin, visual change | `frontend-design` + `ui-ux-pro-max` + `taste` + `circulant-landing` | Then run § 1 ENGINE PIPELINE steps 3→5. |
+| Any new build, feature, or ambiguous request | `grilling` **FIRST** — cross-examine until intent is unambiguous — then the Superpowers set: `brainstorming` → `writing-plans` → `subagent-driven-development` / `dispatching-parallel-agents` | No code before shared understanding. |
+| Social post, caption, reel, thumbnail, ad creative | `social-post` (+ `ava-factory` when the reel is actually being rendered) | |
+| Before ANY commit | `verification-before-completion` + the self-review loop below | Non-negotiable. |
+| Voice agent / Retell prompt work | **STOP.** See PROMPT AUTHORITY LOCK below. | Claude Code does not author agent dialogue. |
+
+### TWO NAMES THAT DO NOT RESOLVE — read this before routing
+
+Both were verified against the filesystem on 2026-08-06. Routing to the wrong one is a
+silent no-op — the skill simply never loads and the run proceeds unguarded.
+
+- **There is no `superpowers` skill.** It was vendored as **14 flat skills** (Claude Code
+  only discovers skills one level under `.claude/skills/`). "Load superpowers" means load
+  the named ones: `brainstorming` · `writing-plans` · `executing-plans` ·
+  `subagent-driven-development` · `dispatching-parallel-agents` · `using-git-worktrees` ·
+  `test-driven-development` · `systematic-debugging` · `verification-before-completion` ·
+  `requesting-code-review` · `receiving-code-review` · `finishing-a-development-branch` ·
+  `writing-skills` · `using-superpowers`.
+- **`grill-me` cannot be model-invoked.** Its front-matter carries
+  `disable-model-invocation: true`, so it is a stub *Shane types* (`/grill-me`) and it is
+  absent from the model's own skill list. The model routes to **`grilling`** — same
+  interrogation, the door that opens. § 1 ENGINE PIPELINE row 1 lists both; the
+  model-side name is `grilling`.
+
+### SELF-REVIEW LOOP — before any commit
+
+Render, do not reason about it. Evidence before assertions.
+
+1. Render at **390×844 AND desktop**. Actually rendered, actually looked at.
+2. Verify the fold — what is above it, and does it state the page's one job.
+3. Verify contrast **≥4.5:1** on body text. Measured, not eyeballed.
+4. Verify spacing rhythm against § 3 (and § 4's 64px homepage override).
+5. Verify **no cancelled/overridden CSS selectors**, no console errors, no horizontal
+   overflow at 390px.
+6. Fix every defect found. **Then** commit.
+
+### PROMPT AUTHORITY LOCK
+
+Voice-agent dialogue — Retell prompts, AVA's spoken lines, greetings, objection handling,
+call scripts — is **not Claude Code's to author.** On any such request: stop, say so, and
+hand it back. Reading, auditing, diffing, version-checking, and reporting on an existing
+prompt are all fine. Writing or rewriting what AVA *says* is not.
+
+---
+
 ## § 0 · PRECEDENCE
 
 1. **Shane, in this conversation.** A direct instruction beats every line below.
@@ -206,6 +272,8 @@ AVA parent (cyan) and AI Chauffeur (blue) are separate brands. Never cross token
 
 Installed in `.claude/skills/` — vendored, not plugin-linked, so the brain survives a fresh clone.
 Provenance, licenses, and local modifications: `.claude/skills/VENDOR.md`.
+Plain-English map of all 24: `.claude/skills/SKILLS-INDEX.md`. **Firing is governed by
+§ SKILL ROUTER** — this table describes the stack, the router commands it.
 
 | Skill | Fires at | Note |
 |---|---|---|
