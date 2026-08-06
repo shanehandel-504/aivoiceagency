@@ -1,13 +1,17 @@
 # SKILLS INDEX — what's installed and when it fires
 
-Shane's map. One page, plain English. Written RUN S1 (2026-08-06).
+Shane's map. One page, plain English. Written RUN S1, updated RUN S2 (2026-08-06).
 
 A **skill** is a rulebook Claude reads before it works. It is not code and it does not run —
 it changes what Claude knows and what it is allowed to do. Provenance and licenses live in
 [`VENDOR.md`](VENDOR.md). The mandatory firing rules live in `/CLAUDE.md` § SKILL ROUTER —
 **this page describes, that section commands.**
 
-**24 skill folders installed. All present, none empty.**
+**25 skill folders installed. All present, none empty.**
+
+The loadout declaration is **machine-enforced** as of RUN S2: a `Stop` hook
+(`.claude/hooks/loadout-guard.py`, wired in `.claude/settings.json`) blocks any reply that does not
+open with `SKILLS:`. It fails open on its own errors and logs to `loadout-guard.log`.
 
 ---
 
@@ -29,16 +33,18 @@ These know AVA, the brands, and the laws. They are the ones that keep output on-
 
 | Skill | What it does, in one sentence | Fires when |
 |---|---|---|
-| `circulant-landing` | Says what goes on a landing page, in what order — the six required sections, the CTA wording, the terminal-loader, the trust row. | Any page, lander, city/trade page, hero, section, re-skin, or "make it look better" on the AVA parent brand. |
+| `circulant-landing` | Says what goes on a landing page, in what order — the six required sections, the CTA wording, the terminal-loader, the trust row. | Any page, lander, city/trade page, hero, section, re-skin, or "make it look better" **on the AVA parent brand**. |
+| `chauffeur-design` | The AI Chauffeur brand law — leather-black base, crisp white lettering, amber indicators, the Signal mark, the 414-775-0019 line, and the `/chauffeur/` hosting traps. | Any aichauffeur.ai surface: limo, black car, NEMT, charter, dispatch. **Never `circulant-landing` for these.** |
 | `social-post` | Says how a social caption is shaped — the hook structures, the rule that you must show real work, the pinned comment, the hashtag bank. | Any caption, post, reel description, thumbnail text, or ad copy. |
 | `ava-factory` | The full assembly line that turns a written script into a finished vertical video ready to post. | Rendering AVA reels or Shorts; the ElevenLabs → HeyGen → ffmpeg → GHL loop. |
-| `circulant-design` | The short colour-and-type reference card for the site. | Quick styling or theming questions. Superseded on new builds by `/CLAUDE.md` § 2. |
+| `circulant-design` | The house style rules that are *not* colours — one accent per site, no AI-slop aesthetics, the AVA Signal naming rule, spacing and breakpoints. | Quick styling or theming questions. Colours come from § 2, not from here. |
 | `circulant-funnel` | The conversion rulebook for lead-capture pages — forms, audio, honesty laws, speed, SEO checks. | Building or editing a funnel, demo pod, or any page whose job is capturing a lead. |
 
-> **Heads-up on the two older ones.** `circulant-design` and `circulant-funnel` still carry the
-> *pre-X* palette (`--panel:#10131A`, `--dim:#9AA1AD`, gold, green `#28D07A`). That is the paint
-> already on 55+ live pages, so the files are accurate history — but on a **new** surface,
-> `/CLAUDE.md` § 2 wins and those values are wrong. Read them for structure, not for colour.
+> **One token authority, as of RUN S2.** `circulant-design`, `circulant-funnel` and
+> `circulant-landing` no longer carry their own colour tables — they used to, and they had drifted to
+> *pre-X* values (`--panel:#10131A`, `--dim:#9AA1AD`, gold, green `#28D07A`) that were wrong for any
+> new surface. All three now defer to `/CLAUDE.md` § 2 and name colours by **role**, not hex.
+> When you patch a **legacy** section, match the page around you; anything **new** uses § 2.
 
 ---
 
@@ -109,7 +115,12 @@ prove it before claiming it. Vendored flat from `obra/superpowers`.
 Do not go looking for these in `.claude/skills/` — they live elsewhere and work differently.
 
 - **`/preflight`** — a slash command at `.claude/commands/preflight.md`. Prints the loadout,
-  the tokens, and the checklist for a task. Builds nothing.
+  the tokens, and the checklist for a task. Builds nothing. **Confirmed registered and live.**
+- **The loadout guard** — `.claude/hooks/loadout-guard.py`, a `Stop` hook wired in
+  `.claude/settings.json`. Not a skill; it is the machine that enforces the `SKILLS:` line.
+- **`anthropic-skills:circulant-design`** — a *plugin* skill with the same name as our local
+  `circulant-design`, claiming all three brands. **Different file, different content.** When you
+  route, say which one you mean. For chauffeur work neither is right — use `chauffeur-design`.
 - **`tools/stamp.py`** — a real Python script that owns the shared nav, footer, breadcrumbs,
   call bar, and cache-busting. Editing those regions by hand gets reverted on the next stamp.
 - **The Prompt Authority Lock** — voice-agent dialogue is not Claude Code's to write. See

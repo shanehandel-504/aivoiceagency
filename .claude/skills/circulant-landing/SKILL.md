@@ -5,8 +5,13 @@ description: MANDATORY for any visual work on the AVA parent brand — load it b
 
 # CIRCULANT Landing
 
-Tokens, colors, type, and every design constraint are **inherited from `/CLAUDE.md`** § 2 CIRCULANT
-TOKENS and § 3 DESIGN CONSTRAINTS. This skill does not restate them and does not get to override them.
+**TOKENS: CLAUDE.md § 2 is the SOLE token authority. Legacy pages may show PRE-X values — when
+patching a legacy section, match the surrounding page; anything NEW uses § 2.**
+
+Colors, type, and every design constraint are inherited from `/CLAUDE.md` § 2 CIRCULANT TOKENS and
+§ 3 DESIGN CONSTRAINTS. This skill does not restate them and does not get to override them. Where a
+component spec below needs to name a surface it uses the **role** — panel, hairline, muted, text,
+Booked-Green — never a hex. Resolve every role against § 2.
 It covers one thing: **what goes on a landing page, in what order, and in what shape.**
 
 Run the ENGINE PIPELINE (`/CLAUDE.md` § 1) around this. This skill is what pipeline step 3 lays out
@@ -34,8 +39,8 @@ owed a pixel. Verify by rendering, not by reading the CSS.
 **One H1 per page**, and it states the page's single job. Every section below it is `<h2>`.
 
 ### Section rhythm
-96px desktop / 48px mobile between sections. Sections separate by **surface change** (void → panel
-`#12121A`) or a `#23232E` hairline — never by a shadow, never by a rounded card float.
+96px desktop / 48px mobile between sections. Sections separate by **surface change** (void → panel)
+or a **hairline** rule — never by a shadow, never by a rounded card float.
 
 ---
 
@@ -89,16 +94,16 @@ place the page is allowed to be theatrical, so everything around it stays quiet.
   No animation, no delay, same height, fully readable.
 - **Space Grotesk only** (§ 2 — there is no mono family in this brand). Get the terminal read from
   `font-variant-numeric: tabular-nums` + `letter-spacing: 0.04em` + uppercase labels, not a second face.
-- Colors: label in muted `#7E8299`, payload in text `#EEF0F4`, status in its **semantic** color —
-  Booked-Green `#2EE6A8` only when the line genuinely reports a success.
-- Sharp corners, `#23232E` hairline border, panel `#12121A` fill. No glow, no scanline, no CRT filter.
+- Colors by ROLE, resolved against § 2: label in **muted**, payload in **text**, status in its
+  **semantic** color — Booked-Green only when the line genuinely reports a success.
+- Sharp corners, **hairline** border, **panel** fill. No glow, no scanline, no CRT filter.
 - Not decorative — if the log is not describing a real capability, delete the component.
 
 ---
 
 ## 4 · TRUST MICRO-COPY ROW
 
-One line directly under the primary CTA. Class `.bs-micro`. Muted `#7E8299`, small but ≥12px.
+One line directly under the primary CTA. Class `.bs-micro`. **Muted** role, small but ≥12px.
 
 Three to four fragments, separated by ` · `. Each fragment removes one reason to hesitate:
 

@@ -5,9 +5,9 @@ description: CIRCULANT FUNNEL design + conversion skill for AI Voice Agency land
 
 # CIRCULANT FUNNEL — design + conversion skill
 STACK LAW: vanilla HTML/CSS/JS only. No React, Tailwind, npm builds, frameworks, Framer. CDN scripts allowed (jsDelivr/cdnjs). Static HTML = SEO weapon.
-TOKENS (dark stage): --void:#0A0A0F; --panel:#10131A; --line:#23232E; --text:#EEF0F4; --dim:#9AA1AD; --cyan:#00D4FF; --green:#28D07A (live-status dots ONLY); --gold:#D4A94E (pricing scope note ONLY).
-TOKENS (light paper cards — pricing, forms, FAQ answers, receipts): --paper:#FFFFFF; --paper2:#F6F7F9; --ink:#10131A; --ink2:#4A5160; CTA on paper = ink button, cyan-tinted hover, white text (contrast ≥ 7:1).
-TYPE: Space Grotesk everywhere. Body 17px min mobile, weight 500 on dark backgrounds. H1 clamp(34px,7vw,64px), tight -0.02em. Serif-italic twist words in H1 only (Georgia italic).
+TOKENS: CLAUDE.md § 2 is the SOLE token authority. Legacy pages may show PRE-X values — when patching a legacy section, match the surrounding page; anything NEW uses § 2.
+SURFACES: this skill's own doctrine is dark stage + light paper cards (pricing, forms, FAQ answers, receipts). Which hexes those resolve to is § 2's call, including the single light surface. CTA on paper = ink button, cyan-tinted hover, white text.
+TYPE SCALE (not tokens — family and weights are § 2's): body 17px min mobile. H1 clamp(34px,7vw,64px), tight -0.02em. NOTE: this skill used to allow Georgia serif-italic twist words in H1; § 2 bans a second family and no Georgia is on the live homepage. Do not reintroduce it.
 DOCTRINE: dark theater, white paper. ONE focal element per viewport. Generous void. One accent. The demo is the hero — never bury it.
 CONVERSION LAWS: 5-second clarity (7th grade). CTA every viewport. Sticky bottom bar [Talk to AVA][Talk to a Human], 56px targets, never covering inputs. Trust Ladder order: Hear → Watch → Text → Try live → Book. Watching is free; touching AVA live costs a phone number. tel: 414-240-8930 stays ungated in hero.
 HONESTY LAWS: no fake liveness, counts, ratings, logos, testimonials. Sample data labeled "Sample" or "Demo call — AVA's real voice. Sample data." One speed claim sitewide: "one ring." AVA is never "she/her" in copy. No written free-minutes offers. Cold surfaces sign "AVA Team". Public numbers ONLY: 414-240-8930 (call), 350-220-5305 (text).

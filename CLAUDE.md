@@ -20,11 +20,26 @@ seems relevant." Read them. If a listed file is missing, print
 `SKILLS: [names loaded]`. No exceptions. When a turn genuinely loads nothing, the line
 reads `SKILLS: none — [why]`. A silent turn is a routing failure.
 
+**MACHINE-ENFORCED since RUN S2.** This is no longer discipline. `.claude/settings.json`
+runs a `Stop` hook — `.claude/hooks/loadout-guard.py` — that reads the turn's own
+transcript and **blocks the reply** if its first surfaced line does not open with
+`SKILLS:`. Thinking does not count; only text the user can see. The guard fails **open**
+on any unexpected condition (unreadable transcript, no assistant text, `stop_hook_active`)
+because a guard that halts the session over its own bug is worse than no guard. Audit
+trail: `.claude/hooks/loadout-guard.log` (gitignored, last 200 lines).
+
+**Name collision — be specific.** Two different skills answer to `circulant-design`: the
+local house one in `.claude/skills/`, and a plugin-provided `anthropic-skills:circulant-design`
+that claims all three brands. They are not the same file and do not say the same thing. When
+routing, name the scoped one you mean; for chauffeur work the correct skill is
+`chauffeur-design`, not either `circulant-design`.
+
 ### ROUTING TABLE
 
 | Task | Load — in this order | Notes |
 |---|---|---|
-| Any page, HTML, CSS, component, re-skin, visual change | `frontend-design` + `ui-ux-pro-max` + `taste` + `circulant-landing` | Then run § 1 ENGINE PIPELINE steps 3→5. |
+| Any page, HTML, CSS, component, re-skin, visual change **on the AVA parent** (aivoiceagency.ai) | `frontend-design` + `ui-ux-pro-max` + `taste` + `circulant-landing` | Then run § 1 ENGINE PIPELINE steps 3→5. |
+| Any **AI Chauffeur** surface (aichauffeur.ai, limo / black-car / NEMT / charter, "the blue brand") | `chauffeur-design` + `frontend-design` + `ui-ux-pro-max` + `taste` — **NOT `circulant-landing`** | Separate brand, separate Vercel project rooted at `/chauffeur/`. Never cross tokens or phone numbers between the two brands. |
 | Any new build, feature, or ambiguous request | `grilling` **FIRST** — cross-examine until intent is unambiguous — then the Superpowers set: `brainstorming` → `writing-plans` → `subagent-driven-development` / `dispatching-parallel-agents` | No code before shared understanding. |
 | Social post, caption, reel, thumbnail, ad creative | `social-post` (+ `ava-factory` when the reel is actually being rendered) | |
 | Before ANY commit | `verification-before-completion` + the self-review loop below | Non-negotiable. |
@@ -86,8 +101,8 @@ Strict order. Every build task. No skipping, no reordering, no "this one is simp
 
 | # | Stage | Skill | Gate — do not advance until |
 |---|---|---|---|
-| 1 | **Grill** | `grill-me` / `grilling` | Intent is unambiguous. Cross-examine objectives one question at a time, each with your recommended answer. Look up *facts* yourself (filesystem, git, live site); put *decisions* to Shane. **No code before shared understanding.** |
-| 2 | **Map** | `superpowers` (`brainstorming` → `writing-plans` → `subagent-driven-development` / `dispatching-parallel-agents`) | An execution map exists: task split, subagent boundaries, and a test plan with named verification commands. |
+| 1 | **Grill** | `grilling` *(`/grill-me` is a human-typed stub — `disable-model-invocation: true`, not model-loadable)* | Intent is unambiguous. Cross-examine objectives one question at a time, each with your recommended answer. Look up *facts* yourself (filesystem, git, live site); put *decisions* to Shane. **No code before shared understanding.** |
+| 2 | **Map** | superpowers stack — **see § SKILL ROUTER for the 14 explicit names** (entry path: `brainstorming` → `writing-plans` → `subagent-driven-development` / `dispatching-parallel-agents`) | An execution map exists: task split, subagent boundaries, and a test plan with named verification commands. |
 | 3 | **Reason** | `ui-ux-pro-max` | Layout + typography reasoning done — spacing scale, grid, fold order, hierarchy, touch targets, motion timing. **PHYSICALLY BOUND to § 2**: its palette, font, radius, and stack output is DISCARDED on sight. |
 | 4 | **Strip** | `taste` + `frontend-design` | AI-slop defaults removed: generic gradients, badge rows, template card grids, stock-illustration energy, centered-hero-over-mesh, numbered 01/02/03 markers that encode nothing. |
 | 5 | **Self-review** | `verification-before-completion` | Rendered at **390×844 AND desktop**. Checked: fold, contrast, spacing, broken tags, console errors, horizontal overflow. Defects fixed. **Then** commit. |
