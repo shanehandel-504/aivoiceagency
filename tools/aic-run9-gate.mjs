@@ -288,9 +288,22 @@ for (const [path, tag] of PAGES) {
     // page that had 72px of dead scroll a moment later. Two scrolls and a
     // settle: the first can change the document height, so the second lands on
     // the real bottom.
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(600);
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    // SCROLL UNTIL THE DOCUMENT STOPS GROWING, then measure. A fixed two-scroll
+    // settle was enough on localhost and NOT enough on production: at 360 the
+    // homepage is still getting taller ~1s in (fonts settle, the stage rail
+    // measures its own tail through a ResizeObserver, the console timeline runs),
+    // so scrollTo(scrollHeight) landed 800px short of the real bottom, the footer
+    // never intersected, and the probe reported 72px of dead scroll on a page
+    // that has none. Measured on prod: footer top was +811px at 900ms and -281px
+    // at 2.9s. The gate was impatient, not the page.
+    let lastH = -1;
+    for (let i = 0; i < 12; i++) {
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await page.waitForTimeout(350);
+      const h = await page.evaluate(() => document.documentElement.scrollHeight);
+      if (h === lastH && i >= 2) break;
+      lastH = h;
+    }
     await page.waitForTimeout(300);
     const bottom = await page.evaluate(() => {
       const f = document.querySelector('footer');
