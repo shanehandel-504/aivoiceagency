@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/circulant.css?v=0ce05772">
-  <link rel="stylesheet" href="/assets/aic.css?v=40e4dd88">
+  <link rel="stylesheet" href="/assets/aic.css?v=2640dbe4">
 
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
@@ -57,14 +57,14 @@
     <li><a href="/">How it works</a></li>
     <li><a href="/demo/">Demo</a></li>
     <li><a href="#faq">FAQ</a></li>
-    <li><a href="/book/">Request setup</a></li>
+    <li><a href="/book/">Request founder-led setup</a></li>
   </ul>
-  <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_nav">(414) 775-0019</a>
+  <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_nav" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(414) 775-0019</a>
 </nav>
 
 <main id="main">
 
-<section class="phead">
+<section class="phead" data-lit="bright" data-rail-after>
   <div class="wrap">
     <span class="kicker">Airport runs · flight details on the call</span>
     <h1 class="page-h">Airport runs, captured with the flight.</h1>
@@ -73,7 +73,7 @@
 </section>
 
 <!-- ══ 1 · THE FLIGHT DETAILS THAT MATTER ════════════════════════════════ -->
-<section id="fields">
+<section id="fields" data-lit="technical">
   <div class="wrap">
     <div class="sec-kicker">On the call</div>
     <h2 class="sec-h">Four details that decide <em>the whole run.</em></h2>
@@ -101,7 +101,7 @@
 </section>
 
 <!-- ══ 2 · THE PICKUP BUFFER ═════════════════════════════════════════════ -->
-<section id="buffer">
+<section id="buffer" data-lit="flat">
   <div class="wrap">
     <div class="sec-kicker">The buffer</div>
     <h2 class="sec-h">The buffer gets written down. <em>Your desk signs it off.</em></h2>
@@ -135,7 +135,7 @@
 </section>
 
 <!-- ══ 3 · THE HUBS ══════════════════════════════════════════════════════ -->
-<section id="hubs">
+<section id="hubs" data-lit="calm">
   <div class="wrap">
     <div class="sec-kicker">The hubs</div>
     <h2 class="sec-h">MKE, MSN, ORD, MDW <em>and whatever yours is.</em></h2>
@@ -166,7 +166,7 @@
 </section>
 
 <!-- ══ 4 · THE 5 AM PUSH ═════════════════════════════════════════════════ -->
-<section id="early">
+<section id="early" data-lit="technical">
   <div class="wrap">
     <div class="sec-kicker">5 AM</div>
     <h2 class="sec-h">Nobody is at the desk <em>when the 5 AM run calls.</em></h2>
@@ -224,12 +224,12 @@
       <div class="ticket-foot">Sample ticket · every value on it was captured on the call · the pickup time is set by your dispatcher</div>
     </div>
 
-    <p class="sec-sub">That is the whole job. The office was dark, the phone rang once, and the ride was captured. <a href="/demo/">Watch one get captured →</a></p>
+    <p class="sec-sub">That is the whole job. The office was dark, the phone rang once, and the ride was captured. <a href="/demo/">Call the line and hear one →</a></p>
   </div>
 </section>
 
 <!-- ══ CTA STACK — identical on every chauffeur page ══════════════════════ -->
-<section id="talk">
+<section id="talk" data-lit="bright">
   <div class="wrap">
     <div class="sec-kicker">Hear it first</div>
     <h2 class="sec-h">Give AVA a flight. <em>Hear what it asks next.</em></h2>
@@ -244,7 +244,7 @@
         <span class="tel-sub">AVA answers. Hear it yourself.</span>
       </a>
 
-      <form class="cb-form" data-cb-form novalidate>
+      <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
         <div class="cb-head">AVA calls you</div>
         <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
         <div class="cb-row">
@@ -268,15 +268,15 @@
       </form>
 
       <div class="cta-tertiary">
-        <a href="/book/" data-event="book_click_cta">Request local setup →</a>
-        <span class="cta-note">Schedules a 20-min intro call.</span>
+        <a href="/book/" data-event="book_click_cta">Request founder-led setup →</a>
+        <span class="cta-note">Schedules the 20-minute setup call.</span>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ══ FAQ ═══════════════════════════════════════════════════════════════ -->
-<section id="faq">
+<section id="faq" data-lit="flat">
   <div class="wrap">
     <div class="sec-kicker">FAQ</div>
     <h2 class="sec-h">Questions operators <em>actually ask.</em></h2>
@@ -300,7 +300,7 @@
 </section>
 
 <!-- ══ INTERNAL LINKS ════════════════════════════════════════════════════ -->
-<section id="more">
+<section id="more" data-lit="flat">
   <div class="wrap">
     <div class="sec-kicker">More</div>
     <div class="related">
@@ -314,7 +314,7 @@
       </a>
       <a class="rel" href="/demo/">
         <div class="rel-k">Demo</div>
-        <div class="rel-t">Watch a call become a trip ticket</div>
+        <div class="rel-t">Call the line and hear it captured</div>
       </a>
     </div>
   </div>
@@ -341,7 +341,7 @@
       <div class="foot-links">
         <a href="/privacy/">Privacy</a>
         <a href="/terms/">Terms</a>
-        <a href="/book/" data-event="book_click_footer">Request setup</a>
+        <a href="/book/" data-event="book_click_footer">Request founder-led setup</a>
       </div>
     </div>
     <div class="foot-bottom">
@@ -350,7 +350,13 @@
   </div>
 </footer>
 
-<script src="/assets/aic.js?v=32c48996"></script>
+<!-- RUN 7 · TASK A — mobile sticky action rail -->
+<div class="rail" data-rail>
+  <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call (414) 775-0019</a>
+  <a class="rail-cb" href="#ava-callback" data-event="call_me_rail">Call me</a>
+</div>
+
+<script src="/assets/aic.js?v=0f4c9f06"></script>
 
 </body>
 </html>

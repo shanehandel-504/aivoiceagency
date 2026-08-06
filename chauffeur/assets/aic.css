@@ -60,6 +60,34 @@
   --cyan:#00D4FF; --cyan-bright:#00E5FF; --cyan-glow:rgba(0,212,255,.35); --cyan-dim:rgba(0,212,255,.18);
   --line:rgba(0,212,255,.14); --line-hot:rgba(0,212,255,.42);
   --sans:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
+
+  /* ── RUN 7 · STATE COLOUR BY ROLE ────────────────────────────────────────
+     The hexes above are the canon. These aliases exist so a rule reads as the
+     STATE it paints, not as a colour someone liked. If a rule wants a colour
+     and cannot name the state it means, the rule is decoration and should not
+     ship. --state-fail is deliberately unused by any resting style: nothing on
+     these pages fails, so red never appears. */
+  --state-ringing:var(--amber);       /* ringing · pending · urgency · Crush   */
+  --state-listening:var(--cyan);      /* live system · interaction · CTAs      */
+  --state-captured:var(--booked-green); /* captured · confirmed · ready        */
+  --state-idle:var(--neutral);        /* not yet · inactive · n/a              */
+  --state-fail:var(--miss-red);       /* failure only                          */
+
+  /* ── RUN 7 · SECTION LIGHTING ────────────────────────────────────────────
+     Background tint only, and deliberately near-invisible: the brightest of
+     these lifts the void by ~2% luminance, which keeps every measured text
+     contrast in the table above intact. The rhythm is what separates one
+     section from the next now that prose no longer sits in cards. */
+  --lit-bright:rgba(0,212,255,.050);   /* hero — brightest                     */
+  --lit-technical:rgba(0,212,255,.028);/* dispatch flow — cool, instrument-like*/
+  --lit-calm:rgba(138,147,166,.030);   /* integrations — neutral, no advance   */
+  --lit-connected:rgba(0,212,255,.020);/* stages — faint, the rail carries it  */
+  --lit-dense:rgba(0,0,0,.34);         /* operator pain — denser, not louder   */
+  --lit-warm:rgba(255,176,32,.014);    /* founder — warmer, and a whisper: at
+                                          .026 it painted the same value as the
+                                          Crush's own wash on the homepage      */
+  --lit-flat:transparent;              /* FAQ — near-flat                      */
+
 }
 
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;background:var(--void)}
@@ -81,7 +109,7 @@ a:hover{color:var(--ink)}
 nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;display:flex;
   align-items:center;justify-content:space-between;background:rgba(10,10,15,.82);
   backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
-  border-bottom:1px solid var(--line)}
+  border-bottom:1px solid var(--line);transition:background .2s}
 /* AIC-BRAND-INSTALL · the nav carries the real lockup now, not a car glyph in a
    gradient chip. The wordmark is INSIDE lockup-short.svg, so the anchor holds no
    text — alt carries the name. min-height 44: it is a link to the homepage.
@@ -110,29 +138,67 @@ nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;displ
   .brand-compact{display:block}
 }
 .nav-links{display:none;gap:1.75rem;list-style:none}
+/* nowrap: "REQUEST FOUNDER-LED SETUP" is the RUN 7 name for the setup action
+   and it is the longest label in the bar. Without this the hyphen is a break
+   opportunity and the link wraps to two lines inside a 60px header. */
 .nav-links a{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink-mute);font-weight:500}
+  color:var(--ink-mute);font-weight:500;white-space:nowrap}
 .nav-links a:hover{color:var(--ink)}
 .nav-cta{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
   font-weight:500;padding:8px 16px;border-radius:8px;background:var(--cyan);color:#000;
-  display:inline-flex;align-items:center;min-height:44px;font-variant-numeric:tabular-nums;
-  transition:transform .15s,box-shadow .15s}
+  display:inline-flex;align-items:center;gap:.45rem;min-height:44px;font-variant-numeric:tabular-nums;
+  white-space:nowrap;transition:transform .15s,box-shadow .15s}
+.nav-cta svg{width:14px;height:14px;flex-shrink:0}
 .nav-cta:hover{color:#000;transform:translateY(-1px);box-shadow:0 8px 24px var(--cyan-glow)}
+.nav-cta:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 @media(min-width:880px){.nav-links{display:flex}}
 
+/* ── RUN 7 · TASK B — MOBILE HEADER COMPRESSION ──────────────────────────────
+   The header measured 72px on a phone: 14px padding + a 44px control + 14px.
+   That is a tenth of an iPhone SE viewport spent on chrome before the page
+   says anything. Trimmed to 8px + 44px + 8px = 60px, inside the 64px ceiling,
+   with the 44px touch minimum on the phone chip left intact — the height came
+   out of the padding, not out of the tap target.
+
+   The chip itself keeps the cyan fill (it is the conversion) but stops being a
+   slab: a phone glyph, tighter tracking, 6px corners. At 360px the lockup
+   (146.8px) and the chip (~136px) occupy 283px of the 328px available, so the
+   bar has ~45px of slack instead of the ~27px it had before.
+
+   12px FLOOR: the first cut of this took the chip type to 10.32-10.88px, under
+   the CLAUDE.md minimum, on the site's primary conversion control — and it was
+   never necessary. At 12px the chip is ~146px wide and the bar still has ~35px
+   of slack at 360, and nav.top stays at 61px because min-height:44px governs
+   the control's height, not its type. */
+@media (max-width:879.98px){
+  nav.top{padding:8px 1rem}
+  .nav-cta{padding:0 12px;font-size:.75rem;letter-spacing:.03em;border-radius:6px}
+  .nav-cta svg{width:13px;height:13px}
+}
+@media (max-width:400px){
+  .nav-cta{padding:0 9px;letter-spacing:.01em;gap:.35rem}
+}
+
 /* ── PAGE HEAD ───────────────────────────────────────────────────────────── */
+/* RUN 7 · the mobile top pad tracked a 72px header. The header is 60px now, so
+   this comes down with it rather than leaving 12px of dead air above the H1. */
 .phead{padding:140px 0 40px}
-@media(max-width:600px){.phead{padding:110px 0 32px}}
+@media(max-width:600px){.phead{padding:96px 0 32px}}
 .kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.7rem;
   font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan-bright);
   padding:6px 12px;border-radius:99px;background:var(--cyan-dim);border:1px solid var(--line-hot);
   margin-bottom:1.75rem}
-h1.page-h{font-family:var(--sans);font-size:clamp(2.25rem,5.6vw,4.25rem);line-height:1.04;
-  letter-spacing:-.02em;color:var(--ink);font-weight:400;margin-bottom:1.5rem;max-width:19ch;
+/* ── RUN 7 · TASK E — TYPE SCALE ─────────────────────────────────────────────
+   Measured targets, not vibes. Headline 40px at 390 and 64-72px on a desktop
+   fold; measure capped at ~16ch so a headline breaks into deliberate lines
+   instead of running the full 1180px wrap. Body settles at 17-18px on a 560px
+   measure — around 62 characters, inside the 60-75 band. */
+h1.page-h{font-family:var(--sans);font-size:clamp(2.5rem,5vw,4.5rem);line-height:1.03;
+  letter-spacing:-.022em;color:var(--ink);font-weight:400;margin-bottom:1.5rem;max-width:16ch;
   text-wrap:balance}
 h1.page-h em{font-style:italic;color:var(--cyan)}
-.page-sub{font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--ink-soft);max-width:62ch;
-  line-height:1.55;margin-bottom:2.25rem;text-wrap:pretty}
+.page-sub{font-size:clamp(1.0625rem,1.35vw,1.125rem);color:var(--ink-soft);max-width:560px;
+  line-height:1.58;margin-bottom:2.25rem;text-wrap:pretty}
 
 /* ── SECTIONS ────────────────────────────────────────────────────────────── */
 /* Section rhythm: 96px desktop / 56px mobile. Was 80px desktop, under the
@@ -140,15 +206,35 @@ h1.page-h em{font-style:italic;color:var(--cyan)}
    value and does not reach this host. */
 section{padding:96px 0;position:relative;z-index:1}
 @media(max-width:600px){section{padding:56px 0}}
-.sec-kicker{font-family:var(--mono);font-size:.68rem;font-weight:500;letter-spacing:.18em;
+/* .75rem, not .68rem — 10.88px was under the 12px floor in CLAUDE.md Appendix A
+   ("Nothing below 12px, ever"), on the label that opens every section. */
+.sec-kicker{font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
   text-transform:uppercase;color:var(--cyan-bright);margin-bottom:1rem}
-.sec-h{font-family:var(--sans);font-size:clamp(1.85rem,3.9vw,3rem);line-height:1.07;
-  letter-spacing:-.015em;color:var(--ink);font-weight:400;margin-bottom:1.25rem;max-width:24ch;
+.sec-h{font-family:var(--sans);font-size:clamp(2rem,3.6vw,3.25rem);line-height:1.06;
+  letter-spacing:-.018em;color:var(--ink);font-weight:400;margin-bottom:1.25rem;max-width:16ch;
   text-wrap:balance}
 .sec-h em{font-style:italic;color:var(--cyan)}
-.sec-sub{font-size:1.08rem;color:var(--ink-soft);max-width:64ch;line-height:1.65;
+.sec-sub{font-size:1.0625rem;color:var(--ink-soft);max-width:560px;line-height:1.58;
   margin-bottom:1.25rem;text-wrap:pretty}
 .sec-sub:last-child{margin-bottom:0}
+
+/* ── RUN 7 · TASK D — SECTION LIGHTING ───────────────────────────────────────
+   With prose out of cards, nothing was left to say "a new section started" but
+   a gap. These tints do that job — a change of surface, which APPENDIX A says
+   is the divider on a dark canvas. Applied as a data attribute so the value a
+   section carries names the mood it is supposed to have, and an editor cannot
+   quietly reach for a colour that means something else.
+
+   The seam is what reads, not the fill: 96px of a 2%-lifted surface meeting
+   96px of void is a visible edge without ever being a "coloured section". */
+section[data-lit]{background:var(--lit-flat)}
+section[data-lit="bright"]{background:var(--lit-bright)}
+section[data-lit="technical"]{background:var(--lit-technical)}
+section[data-lit="calm"]{background:var(--lit-calm)}
+section[data-lit="connected"]{background:var(--lit-connected)}
+section[data-lit="dense"]{background:var(--lit-dense)}
+section[data-lit="warm"]{background:var(--lit-warm)}
+section[data-lit="flat"]{background:var(--lit-flat)}
 
 /* Inline links inside a block of prose must be distinguishable by something
    other than colour. Cyan on soft-ink is only 1.21:1 against the surrounding
@@ -160,14 +246,35 @@ section{padding:96px 0;position:relative;z-index:1}
   text-decoration:underline;text-underline-offset:.18em;text-decoration-thickness:1px}
 
 /* ── CARD GRID (3-up → 2-up → 1-up) ──────────────────────────────────────── */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1rem;margin-top:2rem}
-.card{background:var(--gx-fill,rgba(20,20,28,.62));border:1px solid var(--gx-line,rgba(0,212,255,.22));
-  border-radius:14px;padding:1.6rem;
-  -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
+/* ── RUN 7 · TASK D — DE-CARD ────────────────────────────────────────────────
+   A card is a container that says "this is one discrete record." Every one of
+   these grids was three paragraphs of supporting prose wearing that container,
+   which made an explanation look like a data object and put six pieces of
+   glass on a page that only ever holds one real record — the trip ticket.
+   Chrome is off by default now; a hairline and space do the separating.
+
+   Chrome is KEPT in exactly two places, both of which are genuinely discrete
+   records rather than prose: a numbered stage in an ordered sequence
+   (.card--stage, applied in markup so this does not depend on :has support),
+   and a FAQ item, which is a question you open and close. */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.75rem 2.5rem;margin-top:2rem}
+.card{background:none;border:0;border-radius:0;padding:1.15rem 0 0;
+  border-top:1px solid var(--line);
+  -webkit-backdrop-filter:none;backdrop-filter:none}
 .card-h{color:var(--ink);font-weight:600;font-size:1.08rem;margin-bottom:.55rem}
-.card-p{font-size:.95rem;color:var(--ink-mute);line-height:1.6}
+.card-p{font-size:1.0625rem;color:var(--ink-mute);line-height:1.58;max-width:560px}
 .card-num{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
   color:var(--cyan-bright);margin-bottom:.85rem;font-variant-numeric:tabular-nums}
+
+/* the two kept-card cases */
+.card--stage,#faq .card{background:var(--gx-fill,rgba(20,20,28,.62));
+  border:1px solid var(--gx-line,rgba(0,212,255,.22));border-radius:14px;padding:1.3rem;
+  -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
+/* stays at the 17px body size — a card is a different container, not a
+   different reading experience, and 16px is under the RUN 7 body floor */
+.card--stage .card-p,#faq .card .card-p{font-size:1.0625rem}
+#faq .cards,.cards:has(.card--stage){gap:1rem}
 
 /* ── TRIP TICKET (the product, shown not described) ──────────────────────── */
 .ticket-card{background:var(--gx-fill,rgba(20,20,28,.62));border:1px solid var(--line-hot);
@@ -188,18 +295,26 @@ section{padding:96px 0;position:relative;z-index:1}
   font-feature-settings:"tnum" 1}
 .tk-sub{font-family:var(--mono);font-size:.74rem;color:var(--ink-mute);margin-top:.2rem;
   font-variant-numeric:tabular-nums}
-.ticket-foot{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--ink-dim);text-align:center;padding-top:1rem;margin-top:.85rem;
+/* RUN 7 · sans and 13px. This looked like a stamp on a record, which is why it
+   was left in mono at 10.56px on the first pass — but it is a 20-word
+   explanatory sentence about what the sample is, not a status, a field, a time,
+   a route or a quote. Mono is for the ticket's data, not for the caveat under
+   it, and 10.56px is under the 12px floor. */
+.ticket-foot{font-family:var(--sans);font-size:.8125rem;letter-spacing:0;text-transform:none;
+  color:var(--ink-mute);text-align:center;padding-top:1rem;margin-top:.85rem;line-height:1.5;
   border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
 
 /* ── COMPARISON ROWS ─────────────────────────────────────────────────────── */
-.vs{display:grid;gap:.6rem;margin-top:2rem}
-.vs-row{display:grid;grid-template-columns:1fr;gap:.35rem;padding:1.1rem 1.25rem;
-  border:1px solid var(--line);border-radius:12px;background:rgba(10,10,15,.35)}
+/* RUN 7 · a comparison is a TABLE, and a table's rows are separated by rules,
+   not boxed individually. Five stacked boxes read as five unrelated records;
+   five hairline rows read as one comparison, which is what they are. */
+.vs{display:grid;gap:0;margin-top:2rem;border-top:1px solid var(--line)}
+.vs-row{display:grid;grid-template-columns:1fr;gap:.35rem;padding:1.1rem 0;
+  border:0;border-bottom:1px solid var(--line);border-radius:0;background:none}
 @media(min-width:720px){.vs-row{grid-template-columns:1fr 1fr;gap:1.5rem;align-items:baseline}}
 .vs-a{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
   color:var(--ink-dim)}
-.vs-b{color:var(--ink);font-size:1rem;line-height:1.55}
+.vs-b{color:var(--ink);font-size:1.0625rem;line-height:1.58}
 .vs-b strong{color:var(--booked);font-weight:600}
 
 /* ── FAQ ─────────────────────────────────────────────────────────────────── */
@@ -241,8 +356,10 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
   .tel-btn{padding:1rem 1.15rem}
 }
 
+/* scroll-margin-top: the rail's CALL ME button targets #ava-callback, and a
+   fixed 60px header would otherwise land on the form's own heading. */
 .cb-form{background:var(--gx-fill,rgba(20,20,28,.62));border:1px solid var(--line-hot);
-  border-radius:12px;padding:1.25rem;
+  border-radius:12px;padding:1.25rem;scroll-margin-top:76px;
   -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
 .cb-head{display:flex;align-items:center;gap:.55rem;font-family:var(--mono);font-size:.7rem;
   letter-spacing:.16em;text-transform:uppercase;color:var(--cyan-bright);margin-bottom:.35rem}
@@ -272,19 +389,74 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
 .cb-submit:hover:not(:disabled){background:var(--cyan);color:#000;transform:translateY(-1px)}
 .cb-submit:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .cb-submit:disabled{opacity:.55;cursor:default}
-.cb-note{font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;color:var(--ink-dim);
+/* RUN 7 · sans, not mono — these are full sentences read by a person who just
+   made a mistake, not a machine readout. */
+.cb-note{font-family:var(--sans);font-size:.85rem;letter-spacing:0;color:var(--ink-mute);
   margin-top:.6rem;line-height:1.5;min-height:1.2em}
 .cb-note.is-err{color:var(--alarm)}
 .cb-note.is-ok{color:var(--booked)}
 .cb-form.is-done .cb-row,.cb-form.is-done .cb-consent,.cb-form.is-done .cb-submit{display:none}
 
 .cta-tertiary{display:flex;flex-direction:column;gap:.2rem}
-.cta-tertiary a{font-family:var(--mono);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;
+/* `a.cta-tertiary` as well as `.cta-tertiary a`: on /demo/ the class sits on
+   the anchor itself rather than on a wrapper, so the descendant selector never
+   matched and that page rendered the setup CTA in sentence-case Space Grotesk
+   at 16px while the other nine rendered uppercase mono at 12.16px. One name is
+   not one name if two of its thirty-six instances are typeset differently. */
+.cta-tertiary a,a.cta-tertiary{font-family:var(--mono);font-size:.76rem;letter-spacing:.1em;
+  text-transform:uppercase;white-space:nowrap;
   color:var(--ink);border-bottom:1px solid var(--line-hot);align-self:flex-start;padding:.5rem 0;
   min-height:44px;display:inline-flex;align-items:center}
-.cta-tertiary a:hover{color:var(--cyan-bright);border-color:var(--cyan-bright)}
-.cta-tertiary a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.cta-note{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);letter-spacing:.06em}
+.cta-tertiary a:hover,a.cta-tertiary:hover{color:var(--cyan-bright);border-color:var(--cyan-bright)}
+.cta-tertiary a:focus-visible,a.cta-tertiary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+/* RUN 7 · TASK E — this was mono. Mono is for operational data: a status, a
+   field, a time, a route, a quote. "The setup call is a conversation, not a
+   pitch." is a sentence, and mono makes a sentence read like a machine
+   readout. Sales prose is Space Grotesk here and everywhere. */
+.cta-note{font-family:var(--sans);font-size:.9rem;color:var(--ink-mute);letter-spacing:0;
+  line-height:1.55;max-width:560px}
+
+/* ── RUN 7 · TASK A — MOBILE STICKY ACTION RAIL ──────────────────────────────
+   Below the nav breakpoint the hero CTAs scroll away and the operator is left
+   with no control at all until the next section. The rail restores one: the
+   line on the left at 60%, the callback on the right at 40%, in the same order
+   and with the same two labels the page uses everywhere else.
+
+   It is hidden — not merely dimmed — whenever the callback form or the booking
+   calendar is on screen, so it can never sit on top of an input or a date
+   cell. `visibility` is part of the hidden state on purpose: a transformed-off
+   bar is still focusable, and a keyboard user would otherwise tab into a
+   control they cannot see. `body.rail-on` pays back the height at the foot of
+   the document so the rail cannot cover the last line of the page either. */
+.rail{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;
+  grid-template-columns:60fr 40fr;gap:8px;
+  padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));
+  background:rgba(10,10,15,.94);border-top:1px solid var(--line-hot);
+  -webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
+  transform:translateY(110%);visibility:hidden;
+  transition:transform .22s ease}
+.rail--solo{grid-template-columns:1fr}
+.rail.is-on{transform:translateY(0);visibility:visible}
+.rail a{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  min-height:56px;padding:0 .75rem;border-radius:10px;font-family:var(--mono);
+  font-size:.78rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.rail svg{width:15px;height:15px;flex-shrink:0}
+.rail-call{background:var(--cyan);color:#000;box-shadow:inset 0 1px 0 rgba(255,255,255,.30)}
+.rail-call:hover,.rail-call:active{color:#000}
+.rail-cb{background:rgba(0,212,255,.08);color:var(--ink);border:1px solid var(--cyan)}
+.rail-cb:hover{color:var(--ink);background:var(--cyan-dim)}
+.rail a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+@media (max-width:879.98px){
+  .rail{display:grid}
+  body.rail-on{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:359.98px){
+  .rail a{font-size:.7rem;letter-spacing:.02em}
+}
+@media (prefers-reduced-motion:reduce){
+  .rail{transition:visibility 0s linear .01s}
+}
 
 /* ── MISSED-NIGHT CALCULATOR ──────────────────────────────────────────────
    The only number an operator believes is the one he typed in himself. Both
@@ -328,9 +500,14 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
 
 /* ── RELATED / INTERNAL LINKS ────────────────────────────────────────────── */
 .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.85rem;margin-top:2rem}
-.rel{display:block;padding:1.15rem 1.25rem;border:1px solid var(--line);border-radius:12px;
-  background:rgba(10,10,15,.35);transition:border-color .18s,transform .18s}
-.rel:hover{border-color:var(--line-hot);transform:translateY(-2px)}
+/* RUN 7 · de-carded like everything else. These were the last four-sided boxes
+   outside the six families the brief allows, and the affordance survives the
+   change: the cyan eyebrow, the title weight and a hairline that lights up on
+   hover all still say "this is a link". */
+.rel{display:block;padding:1.15rem 0 0;border:0;border-top:1px solid var(--line);border-radius:0;
+  background:none;transition:border-color .18s,transform .18s}
+.rel:hover{border-top-color:var(--cyan-bright);transform:translateY(-2px)}
+.rel:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .rel-k{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
   color:var(--cyan-bright);margin-bottom:.4rem}
 .rel-t{color:var(--ink);font-weight:600;font-size:1rem;line-height:1.35}
@@ -342,9 +519,15 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
 .legal h2:first-child{margin-top:0}
 .legal h3{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
   color:var(--cyan-bright);margin:1.75rem 0 .6rem}
-.legal p{font-size:1rem;color:var(--ink-soft);line-height:1.75;margin-bottom:1rem}
-.legal ul{margin:0 0 1.25rem 1.25rem;color:var(--ink-soft);line-height:1.75}
-.legal li{margin-bottom:.5rem}
+/* RUN 7 · the .legal scope was the one prose surface no task owned, and it was
+   the widest text on the site: 16px at an uncapped measure rendered 92-95ch,
+   well past the 60-75ch rule. It is not only legal copy either — the "what we
+   need from you" list on /how-setup-works/ borrows this wrapper, so a sales
+   list was rendering smaller, looser and 200px wider than every other block on
+   its own page. Same 17px / 1.58 / 560px as the rest of the site now. */
+.legal p{font-size:1.0625rem;color:var(--ink-soft);line-height:1.58;margin-bottom:1rem;max-width:560px}
+.legal ul{margin:0 0 1.25rem 1.25rem;color:var(--ink-soft);line-height:1.58;max-width:560px}
+.legal li{margin-bottom:.5rem;font-size:1.0625rem}
 .legal a{color:var(--cyan-bright);text-decoration:underline}
 .legal strong{color:var(--ink);font-weight:600}
 .legal-meta{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;

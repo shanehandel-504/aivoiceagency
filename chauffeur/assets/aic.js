@@ -119,6 +119,81 @@
   var forms = document.querySelectorAll('[data-cb-form]');
   for (var i = 0; i < forms.length; i++) wireForm(forms[i]);
 
+  /* ── RUN 7 · TASK A — MOBILE STICKY ACTION RAIL ────────────────────────────
+     Two independent conditions, ANDed, both driven by IntersectionObserver so
+     nothing here runs on the scroll thread:
+
+       armed      the hero CTA cluster has left the top of the viewport, so the
+                  operator no longer has a control on screen.
+       suppressed the callback form or the booking calendar is on screen. The
+                  rail's own targets are visible, so a bar restating them would
+                  be noise at best and a lid over an input at worst.
+
+     Both observers are edge-triggered; `sync` is the only thing that touches
+     the DOM, and only when the resulting state actually changed. body.rail-on
+     reserves the rail's height at the foot of the document so the last line of
+     a page is never trapped underneath it.
+
+     rootMargin '-1px 0px 0px 0px' on the suppressor observer keeps a form that
+     is exactly flush with the fold from flickering the rail on and off.
+     ──────────────────────────────────────────────────────────────────────── */
+  (function stickyRail() {
+    var rail = document.querySelector('[data-rail]');
+    if (!rail || !('IntersectionObserver' in window)) return;
+
+    var trigger = document.querySelector('[data-rail-after]');
+    var suppressors = document.querySelectorAll('[data-rail-hide]');
+    var armed = false;
+    var visible = 0;
+    var on = false;
+
+    function sync() {
+      var next = armed && visible === 0;
+      if (next === on) return;
+      on = next;
+      rail.classList.toggle('is-on', on);
+      document.body.classList.toggle('rail-on', on);
+      /* No aria-hidden here on purpose. The hidden state is `visibility:hidden`
+         in CSS, which already takes the rail out of BOTH the accessibility tree
+         and the tab order. Adding aria-hidden on top would leave a container
+         marked hidden while still holding focusable links — the exact pattern
+         axe flags as aria-hidden-focus, and a guaranteed Lighthouse a11y miss
+         on a page the gate requires to score 100. */
+    }
+
+    if (trigger) {
+      new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          var e = entries[i];
+          /* Armed only when the cluster went UP and out. Scrolled off the
+             BOTTOM (someone deep-linking to an anchor above it) is not a
+             reason to show the rail — the CTAs are still ahead of them. */
+          armed = !e.isIntersecting && e.boundingClientRect.top < 0;
+        }
+        sync();
+      }, { threshold: 0 }).observe(trigger);
+    } else {
+      armed = true;
+    }
+
+    if (suppressors.length) {
+      var io = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          var e = entries[i];
+          var was = e.target.getAttribute('data-rail-seen') === '1';
+          if (e.isIntersecting === was) continue;
+          e.target.setAttribute('data-rail-seen', e.isIntersecting ? '1' : '0');
+          visible += e.isIntersecting ? 1 : -1;
+          if (visible < 0) visible = 0;
+        }
+        sync();
+      }, { threshold: 0, rootMargin: '-1px 0px 0px 0px' });
+      for (var s = 0; s < suppressors.length; s++) io.observe(suppressors[s]);
+    }
+
+    sync();
+  })();
+
   /* ── MISSED-NIGHT CALCULATOR ─────────────────────────────────────────────
      Entirely client-side. Nothing is stored, nothing is sent, and neither
      input carries a default — the whole point is that every figure on screen
