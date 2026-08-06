@@ -16,4 +16,14 @@
 User-agent: *
 Allow: /
 
+# RUN 9 · DESIGN-SYSTEM.md is the brand's engineering law and lives at the
+# chauffeur root because that is where a future run will look for it. The
+# chauffeur Vercel project has no .vercelignore of its own, so the file is
+# SERVED even though nothing links to it. It holds no keys and no private
+# numbers, so this is an indexing question rather than a security one — but a
+# design doc has no business in the search index for a marketing host.
+# If it should not be served at all, one line in a new chauffeur/.vercelignore
+# removes it from the bundle; that was not attempted mid-run against a live host.
+Disallow: /DESIGN-SYSTEM.md
+
 Sitemap: https://aichauffeur.ai/sitemap.xml

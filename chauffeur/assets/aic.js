@@ -33,6 +33,120 @@
     }, { passive: true });
   })();
 
+  /* ── § G · NAV LAYER — dropdowns + drawer ──────────────────────────────────
+     The links do not depend on any of this. Every anchor in the header, the
+     three group panels and the drawer is a real <a href> in the served HTML,
+     and the closed state is opacity + visibility, so a crawler with JS off
+     reads exactly what a person gets. What this adds is keyboard behaviour:
+     click-to-toggle, Escape, click-outside, and a focus trap while the drawer
+     owns the screen.
+
+     CSS already opens a panel on :hover and on :focus-within — focus-within
+     fires the moment the TRIGGER takes focus, which is what makes the panel
+     reachable by Tab before any of this runs. aria-expanded is kept truthful
+     alongside it so a screen reader is never told a menu is shut while it is
+     painted open.
+     ──────────────────────────────────────────────────────────────────────── */
+  (function navLayer() {
+    var groups = [].slice.call(document.querySelectorAll('[data-nav-group]'));
+
+    function closeGroups(except) {
+      for (var i = 0; i < groups.length; i++) {
+        if (groups[i] === except) continue;
+        groups[i].classList.remove('is-open');
+        var b = groups[i].querySelector('[aria-expanded]');
+        if (b) b.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    groups.forEach(function (g) {
+      var btn = g.querySelector('[aria-expanded]');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var open = g.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        closeGroups(open ? g : null);
+      });
+    });
+
+    if (groups.length) {
+      document.addEventListener('click', function (e) {
+        for (var i = 0; i < groups.length; i++) {
+          if (groups[i].contains(e.target)) return;
+        }
+        closeGroups(null);
+      });
+    }
+
+    /* ---- drawer ---------------------------------------------------------- */
+    var drawer = document.querySelector('[data-drawer]');
+    var burger = document.querySelector('[data-drawer-open]');
+    var closer = document.querySelector('[data-drawer-close]');
+    var lastFocus = null;
+
+    var FOCUSABLE = 'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
+
+    function setDrawer(open) {
+      if (!drawer || !burger) return;
+      drawer.classList.toggle('is-open', open);
+      document.body.classList.toggle('drawer-open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) {
+        lastFocus = document.activeElement;
+        var first = drawer.querySelector(FOCUSABLE);
+        if (first) first.focus();
+      } else if (lastFocus && lastFocus.focus) {
+        lastFocus.focus();
+      }
+    }
+
+    if (burger) burger.addEventListener('click', function () {
+      setDrawer(!drawer.classList.contains('is-open'));
+    });
+    if (closer) closer.addEventListener('click', function () { setDrawer(false); });
+
+    /* A link inside the drawer that points at an anchor on THIS page would
+       otherwise leave the sheet covering the thing it just scrolled to. */
+    if (drawer) drawer.addEventListener('click', function (e) {
+      var a = e.target.closest ? e.target.closest('a[href]') : null;
+      if (a) setDrawer(false);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        if (drawer && drawer.classList.contains('is-open')) { setDrawer(false); return; }
+        for (var i = 0; i < groups.length; i++) {
+          if (groups[i].classList.contains('is-open')) {
+            var b = groups[i].querySelector('[aria-expanded]');
+            closeGroups(null);
+            if (b) b.focus();
+            return;
+          }
+        }
+        return;
+      }
+      /* Focus trap. Only while the drawer is the thing on screen — it is a
+         full-viewport sheet, so tabbing out of it lands on controls the reader
+         cannot see. */
+      if (e.key !== 'Tab' || !drawer || !drawer.classList.contains('is-open')) return;
+      var items = [].slice.call(drawer.querySelectorAll(FOCUSABLE))
+        .filter(function (el) { return el.offsetParent !== null; });
+      if (!items.length) return;
+      var first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    /* Crossing the desktop breakpoint with the drawer open would leave the body
+       scroll-locked under a sheet CSS has just hidden. */
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(min-width:1024px)');
+      var onChange = function (ev) { if (ev.matches) setDrawer(false); };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
+  })();
+
   /* ── "AVA calls you" ───────────────────────────────────────────────────── */
 
   /* digits only; 10 -> +1XXXXXXXXXX; 11 leading 1 -> +...; already-+ kept. */

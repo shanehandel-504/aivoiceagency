@@ -1,58 +1,37 @@
 /* ============================================================================
-   CIRCULANT — AI Voice Agency design tokens & shared recipes
+   AI CHAUFFEUR — SHARED TOKENS + FONT LOCK          RUN 9 · "SIGNAL CUT v1.5"
    ----------------------------------------------------------------------------
-   SINGLE SOURCE OF TRUTH for the AVA parent brand.
-   Linked in every page <head> BEFORE that page's own styles, so every page can
-   consume the tokens and inherits the shared polish (focus, glass, LIVE dot).
+   THIS IS THE CHAUFFEUR COPY. It lives under chauffeur/ and is served only to
+   aichauffeur.ai, which is a separate Vercel project rooted at /chauffeur/. The
+   AVA parent keeps its own copy of this filename at the repo root and RUN 9 did
+   not touch it. The two files share a name and nothing else — do not sync them.
 
-   This file only defines :root tokens + OPT-IN utility classes + a global
-   keyboard-focus rule. It sets NO base/body styles, so linking it onto an
-   existing page can never cause a visual regression.
+   Linked in every chauffeur page <head> BEFORE that page's own styles, so every
+   page consumes the same tokens and the same keyboard-focus rule. It sets NO
+   base/body styles, so linking it onto a page can never cause a regression.
+
+   The palette law lives in the SIGNAL v1.1 TOKEN BLOCK below, which is
+   byte-identical here, in assets/aic.css and in the embedded <style> in
+   index.html. Read it there; it is not restated here, because a restated law is
+   a law with two versions.
+
+   WHAT USED TO BE HERE: the RUN 3 SEMANTIC LAW block, written when the accent
+   was cyan and money was gold. Both of those colours are retired on this brand
+   and neither hex appears in this file any more, so the block was describing a
+   site that no longer exists. Comments ship; a stale one is worse than none.
    ============================================================================ */
 
 /* ============================================================================
-   SEMANTIC LAW — RUN 3 · FINAL SKIN (2026-07-23)
-   ----------------------------------------------------------------------------
-   Enforced on every page this run touches. Supersedes the pre-X accent law
-   (cyan=brand · green=live · gold=money · violet=badge), which remains an
-   accurate description of untouched legacy surfaces only.
-
-   CYAN    = INSPECT THE SYSTEM.
-             Focus rings, links, technical states, the idle waveform.
-
-   GREEN   = ADVANCE THE SALE.
-             MAX ONE solid green CTA per viewport, sitewide. Selected slot,
-             final confirmation, result chip. Never decoration.
-
-   AMBER   = THE COST OF THE MISS.
-             Loss stats, pending states, urgency.
-
-   RED     = THE MISS ITSELF.
-             Missed calls, voicemail, validation errors.
-             NEVER adjacent to a primary CTA. NEVER a background wash.
-             Text on any solid red fill = #0A0A0F (never #EEF0F4 — fails AA).
-
-   NEUTRAL = inactive · not-yet · n/a. Never counts toward the
-             max-2-signal-colors-per-section cap.
-
-   Problem zone lives UPSTREAM (red/amber). Resolution zone lives DOWNSTREAM
-   (green/cyan). They do not share a viewport band.
-   ============================================================================ */
-
-/* ============================================================================
-   RUN 3.5 · SELF-HOSTED MONO. `--font-mono` / `--g-mono` / `--mono` have named
-   'JetBrains Mono' sitewide since the first build, but the homepage and every
-   other self-hosted-font page never LOADED it — the family silently fell
-   through to ui-monospace, so the whole technical voice of the site (rail,
-   chips, timestamps, agent names, eyebrows) rendered in whatever mono the OS
-   happened to ship. This is the latin subset, variable 400-700, from the
-   upstream OFL release. font-display:swap; no external round-trip.
+   SELF-HOSTED MONO. `--mono` has named 'JetBrains Mono' sitewide since the
+   first build, but the pages never LOADED it — the family silently fell through
+   to ui-monospace, so the whole technical voice of the site (rail, chips,
+   timestamps, eyebrows) rendered in whatever mono the OS happened to ship.
 
    RUN 8 SUPERSEDES THIS BLOCK. The mono face moved into the FONT LOCK block
-   below, which also brings Space Grotesk in from Google's CDN, gives both faces
-   Google's own unicode-range, and adds a metric-matched fallback for each. The
-   note above stays because it records why the mono was already local: measuring
-   this run found exactly ONE external font file left per page, not two.
+   below, which also self-hosts Space Grotesk, gives both faces their declared
+   unicode-range, and adds a metric-matched fallback for each. The note stays
+   because it records why the mono was already local: measuring that run found
+   exactly ONE external font file left per page, not two.
    ============================================================================ */
 
 /* ══ RUN 8 · FONT LOCK — SELF-HOSTED FACES ═══════════════════════════════════
@@ -129,292 +108,168 @@
 }
 /* ══ END RUN 8 · FONT LOCK ══════════════════════════════════════════════════ */
 
-:root {
-  /* ---- RUN 3 · FINAL SKIN TOKENS (law) --------------------------------- */
-  --canvas:     #0A0A0F;   /* page void                                    */
-  --panel:      #12121A;   /* panel surface on void                        */
-  --text:       #EEF0F4;   /* primary text            17.31:1 on canvas ✓ */
-  --body-dim:   #B7BFCE;   /* body copy / inclusions  11.19:1 on canvas ✓ */
-  --neutral:    #8A93A6;   /* inactive · not-yet · n/a  6.40:1 ✓          */
+/* ══ SIGNAL v1.1 · TOKEN BLOCK ═══════════════════════════════════════════════
+   CANONICAL BLOCK. Byte-identical in all three CSS homes on this site:
+   assets/circulant.css (all 12 pages), assets/aic.css (the 11 pages that load
+   it) and the embedded <style> in index.html (which loads no aic.css).
+   `node tools/aic_signal_gate.js` asserts the three copies match character for
+   character. Change one, change all three.
 
-  --cyan:       #00D4FF;   /* inspect the system      11.16:1 ✓           */
-  --green:      #2EE6A8;   /* advance the sale        12.23:1 ✓           */
-  --amber:      #FFB020;   /* the cost of the miss    10.80:1 ✓           */
-  --red:        #FF3B4E;   /* the miss itself          5.63:1 ✓           */
+   Every ratio below is MEASURED against the surface named, not eyeballed.
 
-  --paper:      #F7F8FA;   /* the ONLY light surface — Google's own words  */
-  --paper-ink:  #14161C;   /* text on paper           17.02:1 ✓           */
-  --light-link: #00688F;   /* body links on paper      5.51:1 ✓           */
-                           /* #0090C8 is 3.39:1 — LARGE TEXT (>=24px) ONLY */
+     --ink              16.74:1 on midnight  ·  15.70:1 on surface
+     --signal-blue       5.13:1 on midnight  ·   4.81:1 on surface
+     --sky               9.10:1 on midnight  ·   8.54:1 on surface
+     --success-green    12.18:1 on midnight  ·  11.42:1 on surface
+     --amber            10.76:1 on midnight  ·  10.09:1 on surface
+     --miss-red          5.61:1 on midnight  ·   5.26:1 on surface
+     --neutral           6.38:1 on midnight  ·   5.98:1 on surface
+     --ink-soft         10.21:1 on midnight  ·   9.78:1 on surface
+     --ink-mute          5.47:1 on midnight  ·   5.38:1 on surface
+     #FFFFFF on an --action-blue fill        6.25:1
+     --action-blue as a control on midnight  3.15:1  (non-text, needs 3)
 
-  /* NAME NOTE — RUN 3's spec calls the paper text colour `--ink`. `--ink` is
-     already load-bearing sitewide as CURRENT-THEME body text (#EEF0F4 dark /
-     #10131A light, remapped by assets/guide.css). Redefining it here would
-     paint near-black text on the dark void across 184 pages. The RUN 3 value
-     therefore ships as `--paper-ink`; the semantics are identical. */
+   ROLE, not decoration. A rule that wants a colour and cannot name the state it
+   paints is decoration and does not ship.
 
-  /* ---- Legacy palette (untouched surfaces) ----------------------------- */
-  /* ---- Palette --------------------------------------------------------- */
-  --void:        #0A0A0F;   /* background — never pure black            */
-  --void-raise:  #14141C;   /* raised surface (card on void)           */
-  --ink:         #EEF0F4;   /* body text — never pure white            */
-  --matter:      #EEF0F4;   /* alias (standalone pages use --matter)   */
-  --ink-mute:    #808088;   /* secondary text                          */
-  --dim:         rgba(238,240,244,0.64);
+     --signal-blue   live states, text links, focus rings, selected UI, console
+                     activity, and at most ONE highlighted headline phrase per
+                     section. It is a TEXT and LINE colour.
+     --action-blue   filled CTA buttons only, always with white lettering. It is
+                     a FILL colour and never sets type.
+     --sky           secondary highlight and eyebrow accent.
+     --success-green renders ONLY beside a label naming the action that
+                     succeeded. Label text and colour change on the same frame.
+                     A flow that merely ended is not a success.
+     --amber         ringing · pending · the cost of the miss.
+     --miss-red      failure only. Never "attention".
+     --neutral       inactive · not-yet · n/a.
 
-  --cyan:         #00D4FF;  /* PRIMARY — CTAs, links, everything else   */
-  --cyan-bright:  #00E5FF;  /* hover / active                           */
-  --cyan-active:  #00E5FF;  /* alias                                    */
+   --signal-blue is deliberately never used as a fill under small white type:
+   white on it lands under the body floor. Filled controls take --action-blue,
+   which measures 6.25:1 with white.
 
-  --live-green:        #22C55E;  /* LIVE status ONLY                    */
-  --live-green-bright: #4ADE80;
+   On a light or print surface the blue is --action-blue. The lighter blue
+   measures 3.61:1 on paper and is large-text only there.
 
-  --gold:        #FFB800;   /* MONEY — pricing links & figures ONLY     */
-  --gold-bright: #FFC94D;
+   The artwork under /assets/brand/ is EXEMPT and keeps its own values. Those
+   are supplied production files; a recolour run does not repaint a logo.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{
+  /* ---- surfaces ---------------------------------------------------------- */
+  --midnight:#070B14;
+  --surface:#0D1420;
+  --line:#1B2536;
+  --line-hot:rgba(61,123,255,.42);
 
-  --violet:        #8B5CF6; /* FEATURED / flagship ONLY                 */
-  --violet-bright: #A78BFA;
+  /* ---- type -------------------------------------------------------------- */
+  --ink:#E8EDF5;
+  --ink-soft:rgba(232,237,245,.78);
+  --ink-mute:rgba(232,237,245,.55);
 
-  --danger: #FF6B6B;
+  /* ---- the three blues --------------------------------------------------- */
+  --signal-blue:#3D7BFF;
+  --action-blue:#1E56D6;
+  --sky:#7FB2FF;
 
-  /* ---- Lines & surfaces ------------------------------------------------ */
-  --line:        rgba(255,255,255,0.10);
-  --line-strong: rgba(0,212,255,0.40);
+  /* ---- semantic ---------------------------------------------------------- */
+  --success-green:#2EE6A8;
+  --amber:#FFB020;
+  --miss-red:#FF3B4E;
+  --neutral:#8A93A6;
 
-  /* ---- Type families --------------------------------------------------- */
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body:    'Inter', system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, monospace;
+  /* ---- state by role ----------------------------------------------------- */
+  --state-ringing:var(--amber);
+  --state-listening:var(--signal-blue);
+  --state-captured:var(--success-green);
+  --state-idle:var(--neutral);
+  --state-fail:var(--miss-red);
 
-  /* ---- Spacing scale (8px base) --------------------------------------- */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 16px;
-  --space-4: 24px;
-  --space-5: 32px;
-  --space-6: 48px;
-  --space-7: 64px;
-  --space-8: 80px;
-  --space-9: 128px;
+  /* ---- grid · § B. Lines are one value; the ZONE sets how loud it is. ----- */
+  --grid-line:rgba(61,123,255,.05);
+  --grid-cell:64px;
+  --grid-page:.04;
+  --grid-console:.08;
 
-  /* ---- Fluid type scale ------------------------------------------------ */
-  --text-xs:      11px;
-  --text-sm:      13px;
-  --text-base:    clamp(15px, 1.2vw, 16px);
-  --text-lg:      clamp(17px, 2.5vw, 21px);
-  --text-xl:      clamp(20px, 3vw,   26px);
-  --text-2xl:     clamp(24px, 4vw,   34px);
-  --text-3xl:     clamp(28px, 5vw,   44px);
-  --text-display: clamp(32px, 6vw,   56px);
+  /* ---- elevation · § C. ONE shadow, no colour in it, one per raised panel.  */
+  --raise:0 8px 24px rgba(0,0,0,.45);
 
-  /* ---- Radii ----------------------------------------------------------- */
-  --radius-sm:   4px;
-  --radius-md:   12px;
-  --radius-lg:   20px;
-  --radius-pill: 999px;
+  /* ---- families ---------------------------------------------------------- */
+  --sans:'Space Grotesk','Space Grotesk Fallback',sans-serif;
+  --mono:'JetBrains Mono','JetBrains Mono Fallback',monospace;
 
-  /* ---- Prose measure (readable line length) --------------------------- */
-  --measure: 70ch;   /* sits inside the 65–75ch target band */
+  /* ---- back-compat aliases ----------------------------------------------- */
+  /* Every name below predates Signal and is still referenced by shipped rules.
+     They are ALIASES, not second definitions: the value lives once, above. */
+  --void:var(--midnight);
+  --void-2:var(--surface);
+  --void-raise:var(--surface);
+  --void-card:rgba(13,20,32,.62);
+  --canvas:var(--midnight);
+  --panel:var(--surface);
+  --text:var(--ink);
+  --matter:var(--ink);
+  --dim:var(--ink-soft);
+  --body-dim:var(--ink-soft);
+  --ink-dim:var(--neutral);
+  --booked-green:var(--success-green);
+  --booked:var(--success-green);
+  --green:var(--success-green);
+  --alarm:var(--miss-red);
+  --red:var(--miss-red);
+  --danger:var(--miss-red);
+  --cyan:var(--signal-blue);
+  --cyan-bright:var(--sky);
+  --cyan-active:var(--sky);
+  --cyan-dim:rgba(61,123,255,.18);
+  --line-strong:var(--line-hot);
 
-  /* ---- Glass recipe (values consumed by .glass below) ----------------- */
-  --glass-fill:     linear-gradient(165deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
-  --glass-border:   1px solid rgba(0,212,255,0.20);
-  --glass-blur:     18px;
-  --glass-shadow:   0 18px 60px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.07);
-  --glass-fallback: rgba(17,19,27,0.93);
+  /* ---- panel recipe ------------------------------------------------------ */
+  /* Flat. The hairline separates the panel from the void (panel-on-void is
+     1.07:1 and invisible without it); the shadow is the only elevation cue and
+     it carries no hue. */
+  --gx-fill:#0D1420;
+  --gx-solid:#0D1420;
+  --gx-line:var(--line);
+  --gx-line-hot:var(--line-hot);
+  --gx-line-mid:#243044;
+  --gx-blur:0px;
+  --gx-edge:none;
 
-  /* ---- Glow recipe ----------------------------------------------------- */
-  --glow-cyan:   0 0 32px rgba(0,212,255,0.40);
-  --glow-violet: 0 0 40px rgba(139,92,246,0.35);
-  --glow-gold:   0 0 30px rgba(255,184,0,0.30);
-  --glow-green:  0 0 14px rgba(34,197,94,0.55);
-
-  /* ============================================================
-     RUN 3.5 · GLASS-X — the ONE glass recipe for new surfaces.
-     ------------------------------------------------------------
-     The legacy `--glass-*` set above is a CYAN-bordered, drop-shadowed
-     card and stays exactly where it already ships. GLASS-X is the
-     RUN 3.5 recipe: a smoked panel over the void, a hairline that is
-     LIGHT not accent, and a single 1px top edge highlight. No outer
-     shadow — depth comes from the blur and the top edge, never from
-     an elevation ladder (CLAUDE.md § 3).
-     `--gx-solid` is the fallback painted where backdrop-filter is
-     unsupported; it is the composite of --gx-fill over --canvas, so
-     the surface never changes contrast between the two paths.
-     ============================================================ */
-  --gx-fill:  rgba(18,18,26,0.70);
-  --gx-solid: #0F0F16;                        /* rgba(18,18,26,.7) over #0A0A0F */
-  --gx-blur:  12px;
-  --gx-line:  rgba(255,255,255,0.05);
-  --gx-edge:  inset 0 1px 0 rgba(255,255,255,0.04);
-  /* the one accent a glass surface may take, on hover / focus only */
-  --gx-line-hot: rgba(0,212,255,0.42);
-  /* RUN 3.5 · SEPARATORS. Structure carried by LIGHT, not by boxes: a 1px rule
-     that is fully opaque through the middle and fades to nothing at both ends,
-     so a column division never terminates in a hard corner. --gx-line-mid is
-     deliberately stronger than --gx-line: a separator has to be READ, a panel
-     hairline only has to be felt. */
-  --gx-line-mid: rgba(255,255,255,0.12);
-  --gx-sep-v: linear-gradient(180deg,transparent 0%,var(--gx-line-mid) 14%,var(--gx-line-mid) 86%,transparent 100%);
-  --gx-sep-h: linear-gradient(90deg,transparent 0%,var(--gx-line-mid) 14%,var(--gx-line-mid) 86%,transparent 100%);
+  /* ---- light + print ----------------------------------------------------- */
+  --paper:#F7F8FA;
+  --paper-ink:#14161C;
+  --blue-on-paper:var(--action-blue);
 }
+/* ══ END SIGNAL v1.1 · TOKEN BLOCK ═════════════════════════════════════════ */
 
-/* Light twins. On paper the smoked panel becomes frosted white and the top
-   edge flips from a highlight to a bright rim; the hairline becomes ink.
-   Measured on #F4F6FA: --neutral 5.86:1 on the composite ✓ */
-html[data-theme="light"]{
-  --gx-fill:  rgba(255,255,255,0.72);
-  --gx-solid: #FBFCFD;                        /* rgba(255,255,255,.72) over #F4F6FA */
-  --gx-line:  rgba(16,19,26,0.10);
-  --gx-edge:  inset 0 1px 0 rgba(255,255,255,0.90);
-  --gx-line-hot: rgba(0,116,156,0.45);
-  --gx-line-mid: rgba(16,19,26,0.16);
-}
-
-/* ---- GLASS-X utility (opt-in) ----------------------------------------- */
+/* ---- Flat panel utility (opt-in) --------------------------------------- */
 .glass-x{
-  background: var(--gx-fill);
-  -webkit-backdrop-filter: blur(var(--gx-blur));
-          backdrop-filter: blur(var(--gx-blur));
-  border: 1px solid var(--gx-line);
-  box-shadow: var(--gx-edge);
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
-  .glass-x{ background: var(--gx-solid); }
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--raise);
 }
 
-/* ---- Glass card recipe (opt-in) --------------------------------------- */
-.glass {
-  background: var(--glass-fallback);
-  border: var(--glass-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--glass-shadow);
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .glass { background: var(--glass-fallback); }
-}
-
-/* ---- Glow utilities (opt-in) ------------------------------------------ */
-.glow-cyan   { box-shadow: var(--glow-cyan); }
-.glow-violet { box-shadow: var(--glow-violet); }
-.glow-gold   { box-shadow: var(--glow-gold); }
-
-/* ---- Semantic accent helpers (color law) ------------------------------ */
-.accent-cyan     { color: var(--cyan); }
-.accent-live     { color: var(--live-green); }
-.accent-money    { color: var(--gold); }
-.accent-featured { color: var(--violet); }
-
-/* ---- Readable prose measure ------------------------------------------- */
-.prose { max-width: var(--measure); }
-
-/* ---- LIVE status dot — green, pulsing, reduced-motion safe ------------ */
-.circ-live-dot {
-  display: inline-block;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--live-green);
-  margin-right: 8px;
-  box-shadow: var(--glow-green);
-  animation: circLivePulse 2s ease-in-out infinite;
-}
-@keyframes circLivePulse {
-  0%, 100% { box-shadow: 0 0 6px  rgba(34,197,94,0.5);  opacity: 0.85; }
-  50%      { box-shadow: 0 0 14px rgba(34,197,94,0.95); opacity: 1;    }
-}
-
-/* ---- Featured badge — violet (FLAGSHIP / MOST POPULAR) ---------------- */
-.circ-badge {
-  display: inline-block;
-  padding: 5px 14px;
-  border-radius: var(--radius-pill);
-  background: var(--violet);
-  color: var(--void);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  box-shadow: 0 0 24px rgba(139,92,246,0.55);
-}
-
-/* ============================================================================
-   RUN 3 · BUTTON SYSTEM — the canonical CTA pair. Sitewide.
-   ----------------------------------------------------------------------------
-   .cta        = ADVANCE THE SALE. Solid green. MAX ONE per viewport.
-   .cta--quiet = every other action. Never green fill; green only on hover
-                 border, which reads as "this could become the next step".
-   Both are 52px min-height (>=44px touch law) and carry a cyan focus ring.
-   ============================================================================ */
-/* RUN 3.5 · BUTTON PHYSICS. The old build lifted on hover and threw a green
-   DROP SHADOW onto the void — an outer ring, which is an elevation cue and is
-   banned. The lift stays; the light moves INSIDE. A green button glows green
-   from within, the quiet button takes a faint cyan edge (cyan = inspect the
-   system, which is what a secondary action does). :active presses down through
-   the resting plane. Nothing paints outside the button's own box, ever. */
-.cta{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:999px;background:var(--green);color:var(--canvas);font:700 15px/1 "Space Grotesk",sans-serif;border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
-.cta:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.28);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 0 26px rgba(216,255,240,.50)}
-.cta:active{transform:translateY(1px);
-  box-shadow:inset 0 2px 9px rgba(0,44,30,.34),inset 0 1px 0 rgba(255,255,255,.10);transition-duration:.09s}
-.cta:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
-/* REFINEMENT (C1 self-review): a PANEL hairline is 0.05 because a panel is
-   scenery. A BUTTON is a control and has to read as one at rest — at 0.05 the
-   quiet pill dissolved into the void and looked like a floating label. Controls
-   get 0.12; panels keep 0.05. Same glass, different job. */
-.cta--quiet{background:var(--gx-fill);color:var(--text);border:1px solid rgba(255,255,255,.12);box-shadow:var(--gx-edge);
-  -webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur))}
-.cta--quiet:hover{border-color:var(--gx-line-hot);
-  box-shadow:var(--gx-edge),inset 0 0 0 1px rgba(0,212,255,.20),inset 0 0 20px rgba(0,212,255,.10)}
-.cta--quiet:active{transform:translateY(1px);
-  box-shadow:inset 0 2px 9px rgba(0,0,0,.30);transition-duration:.09s}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  .cta--quiet{background:var(--gx-solid)}
-}
-
-/* Shared geometry. .cta--quiet is usable BOTH as a modifier (class="cta cta--quiet")
-   and standalone (class="cta--quiet") — the sitewide sweep uses it standalone, so
-   it has to carry the box on its own or it collapses to an inline link. */
-.cta,.cta--quiet{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
-  gap:10px;min-height:52px;padding:0 28px;border-radius:999px;max-width:100%;
-  font:700 15px/1 "Space Grotesk",sans-serif;letter-spacing:.02em;text-align:center;
-  text-decoration:none;cursor:pointer}
-.cta--quiet{transition:transform .18s cubic-bezier(.16,1,.3,1),border-color .18s ease}
-.cta--quiet:hover{transform:translateY(-2px)}
-.cta--quiet:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
-.cta svg,.cta--quiet svg{flex:none}
-
-/* Light theme. rgba(18,18,26,.72) is a DARK-theme fill — on paper it renders as a
-   grey slab with a near-invisible label. Measured: ink on white pill = 18.58:1 ✓,
-   white on the light-green fill = 5.08:1 ✓ (ink on that green is 3.66:1 — FAILS,
-   so the green label stays white in light, unlike dark where it is --canvas). */
-html[data-theme="light"] .cta--quiet{background:#FFFFFF;color:var(--text);border-color:rgba(16,19,26,.20)}
-html[data-theme="light"] .cta--quiet:hover{border-color:var(--gx-line-hot);
-  box-shadow:inset 0 0 0 1px rgba(0,116,156,.22),inset 0 0 20px rgba(0,116,156,.08)}
-html[data-theme="light"] .cta,
-html[data-theme="light"] .cta:hover{color:#FFFFFF}
-/* RUN 3.5 · the inner glow INVERTS on paper. Dark-theme green carries a near-black
-   label, so a light inner bloom raises contrast. Light-theme green (#0B7E56)
-   carries a WHITE label at 5.08:1 — a light bloom would eat that margin, so the
-   light theme glows green by going DEEPER, not brighter. Same gesture, measured. */
-html[data-theme="light"] .cta:hover{
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 0 26px rgba(3,54,35,.55)}
-html[data-theme="light"] .cta:active{
-  box-shadow:inset 0 2px 9px rgba(2,40,26,.46)}
-@media(prefers-reduced-motion:reduce){
-  .cta,.cta--quiet{transition:none}
-  .cta:hover,.cta--quiet:hover,.cta:active,.cta--quiet:active{transform:none}
-}
+/* ══ RUN 9 · WHAT THIS FILE NO LONGER CARRIES ════════════════════════════════
+   The legacy AVA-parent palette, the frosted-glass card recipe, the coloured
+   outer-glow utilities, the pill button pair and the pulsing status dot were
+   all deleted here rather than recoloured. Every one of them was referenced by
+   nothing in chauffeur/*.html — verified by grep across all twelve pages before
+   the cut — and between them they declared two colours § 3 bans outright plus
+   an elevation ladder § C removes. Recolouring dead rules would have carried
+   both problems forward under new hex values. This is the CHAUFFEUR copy of
+   this file; the AVA parent keeps its own at the repo root, untouched.
+   ══════════════════════════════════════════════════════════════════════════ */
 
 /* ---- Global keyboard focus (a11y) ------------------------------------- */
 /* Matches the proven rule in styles.css; extends it to standalone pages   */
 /* that do not link styles.css. Only visible on keyboard focus.            */
 *:focus-visible {
-  outline: 2px solid var(--cyan);
+  outline: 2px solid var(--signal-blue);
   outline-offset: 2px;
 }
 
 /* ---- Motion safety ---------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .circ-live-dot { animation: none; }
+  html { scroll-behavior: auto; }
 }

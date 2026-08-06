@@ -1,14 +1,21 @@
 /* ============================================================================
-   AI CHAUFFEUR · SHARED PAGE SHELL          AIC SITE RUN 1 — "OPERATOR CUT"
+   AI CHAUFFEUR · SHARED PAGE SHELL          RUN 9 — "SIGNAL CUT v1.5"
    ----------------------------------------------------------------------------
-   Loaded by every chauffeur page EXCEPT /index.html and /demo/, which carry
-   their own embedded <style> (they have console/theatre machinery these pages
-   do not need, and they were already working — reworking them to consume this
-   file would have risked a live surface for no gain).
+   Loaded by ELEVEN of the twelve chauffeur pages. The one exception is
+   /index.html, which carries its own embedded <style> because it holds console
+   machinery these pages do not need.
 
-   This is deliberately the SUBSET the content pages need: tokens, nav, the
-   Task-A CTA stack, section typography, FAQ, footer. It is not a copy of the
-   homepage stylesheet.
+   CORRECTED IN RUN 9: this header used to name /demo/ as a second exception. It
+   is not one and has not been since that page was rebuilt call-first — /demo/
+   links this file in its <head> like every other content page and adds a short
+   page-scoped block on top. Anyone reading the old note would have edited this
+   file believing /demo/ could not be affected by it, which is exactly the kind
+   of comment that turns a shared stylesheet into a trap. Verified by reading
+   the <head> of all twelve pages, not by trusting the note.
+
+   This is deliberately the SUBSET the content pages need: tokens, nav, the CTA
+   stack, section typography, FAQ, footer. It is not a copy of the homepage
+   stylesheet.
 
    HOST NOTE — aichauffeur.ai is a SEPARATE Vercel project whose Root Directory
    is /chauffeur/. Every absolute path here and in the pages that load it is
@@ -98,96 +105,196 @@
 }
 /* ══ END RUN 8 · FONT LOCK ══════════════════════════════════════════════════ */
 
-/* ── COLOR LAW · CIRCULANT-X ───────────────────────────────────────────────
-   Every value below is MEASURED against the void (#0A0A0F), not eyeballed.
-   A semantic colour may only appear where its meaning is literally true on
-   screen: green is never "a nice green", amber is never "an attention colour".
-   Max 2 accents per section. 60% void / 30% panel / 10% accent.
+/* ══ SIGNAL v1.1 · TOKEN BLOCK ═══════════════════════════════════════════════
+   CANONICAL BLOCK. Byte-identical in all three CSS homes on this site:
+   assets/circulant.css (all 12 pages), assets/aic.css (the 11 pages that load
+   it) and the embedded <style> in index.html (which loads no aic.css).
+   `node tools/aic_signal_gate.js` asserts the three copies match character for
+   character. Change one, change all three.
 
-     --booked-green  12.23:1   win · answered · captured
-     --amber         10.80:1   urgency · loss · the clock
-     --miss-red       5.63:1   missed · at risk   (use sparingly)
-     --neutral        6.40:1   inactive · not-yet · n/a
-     --cyan          11.16:1   brand
-     --ink           17.31:1   body
+   Every ratio below is MEASURED against the surface named, not eyeballed.
 
-   --ink-dim WAS rgba(238,240,244,.34), which measures 2.79:1 on the void and
-   FAILED AA on every mono label using it (ticket labels, form labels, card
-   numbers, footer, legal meta, comparison keys). It is now an alias of
-   --neutral, so one line repairs all of them at once and the muted label
-   colour becomes semantically correct rather than merely faint.
-   ────────────────────────────────────────────────────────────────────────── */
+     --ink              16.74:1 on midnight  ·  15.70:1 on surface
+     --signal-blue       5.13:1 on midnight  ·   4.81:1 on surface
+     --sky               9.10:1 on midnight  ·   8.54:1 on surface
+     --success-green    12.18:1 on midnight  ·  11.42:1 on surface
+     --amber            10.76:1 on midnight  ·  10.09:1 on surface
+     --miss-red          5.61:1 on midnight  ·   5.26:1 on surface
+     --neutral           6.38:1 on midnight  ·   5.98:1 on surface
+     --ink-soft         10.21:1 on midnight  ·   9.78:1 on surface
+     --ink-mute          5.47:1 on midnight  ·   5.38:1 on surface
+     #FFFFFF on an --action-blue fill        6.25:1
+     --action-blue as a control on midnight  3.15:1  (non-text, needs 3)
+
+   ROLE, not decoration. A rule that wants a colour and cannot name the state it
+   paints is decoration and does not ship.
+
+     --signal-blue   live states, text links, focus rings, selected UI, console
+                     activity, and at most ONE highlighted headline phrase per
+                     section. It is a TEXT and LINE colour.
+     --action-blue   filled CTA buttons only, always with white lettering. It is
+                     a FILL colour and never sets type.
+     --sky           secondary highlight and eyebrow accent.
+     --success-green renders ONLY beside a label naming the action that
+                     succeeded. Label text and colour change on the same frame.
+                     A flow that merely ended is not a success.
+     --amber         ringing · pending · the cost of the miss.
+     --miss-red      failure only. Never "attention".
+     --neutral       inactive · not-yet · n/a.
+
+   --signal-blue is deliberately never used as a fill under small white type:
+   white on it lands under the body floor. Filled controls take --action-blue,
+   which measures 6.25:1 with white.
+
+   On a light or print surface the blue is --action-blue. The lighter blue
+   measures 3.61:1 on paper and is large-text only there.
+
+   The artwork under /assets/brand/ is EXEMPT and keeps its own values. Those
+   are supplied production files; a recolour run does not repaint a logo.
+   ══════════════════════════════════════════════════════════════════════════ */
 :root{
-  --void:#0A0A0F; --void-2:#14141C; --void-card:rgba(20,20,28,.62);
-  --ink:#EEF0F4; --ink-soft:rgba(238,240,244,.78); --ink-mute:rgba(238,240,244,.55);
+  /* ---- surfaces ---------------------------------------------------------- */
+  --midnight:#070B14;
+  --surface:#0D1420;
+  --line:#1B2536;
+  --line-hot:rgba(61,123,255,.42);
 
-  /* canonical semantic tokens */
-  --booked-green:#2EE6A8;
+  /* ---- type -------------------------------------------------------------- */
+  --ink:#E8EDF5;
+  --ink-soft:rgba(232,237,245,.78);
+  --ink-mute:rgba(232,237,245,.55);
+
+  /* ---- the three blues --------------------------------------------------- */
+  --signal-blue:#3D7BFF;
+  --action-blue:#1E56D6;
+  --sky:#7FB2FF;
+
+  /* ---- semantic ---------------------------------------------------------- */
+  --success-green:#2EE6A8;
   --amber:#FFB020;
   --miss-red:#FF3B4E;
   --neutral:#8A93A6;
 
-  --ink-dim:var(--neutral);               /* was 2.79:1 — now 6.40:1 */
-  --booked:var(--booked-green);           /* back-compat alias */
-  --alarm:var(--miss-red);                /* back-compat alias */
+  /* ---- state by role ----------------------------------------------------- */
+  --state-ringing:var(--amber);
+  --state-listening:var(--signal-blue);
+  --state-captured:var(--success-green);
+  --state-idle:var(--neutral);
+  --state-fail:var(--miss-red);
 
-  --cyan:#00D4FF; --cyan-bright:#00E5FF; --cyan-glow:rgba(0,212,255,.35); --cyan-dim:rgba(0,212,255,.18);
-  --line:rgba(0,212,255,.14); --line-hot:rgba(0,212,255,.42);
-  /* RUN 8 · the Fallback face sits BETWEEN the real face and the generic. It is
-     metric-matched, so the pre-swap frame and the settled frame occupy the same
-     pixels. Both Fallback faces carry the real face's unicode-range, so a
-     character the webfont does not have (→, ✓) still falls through to the
-     generic exactly as it did before this run. */
+  /* ---- grid · § B. Lines are one value; the ZONE sets how loud it is. ----- */
+  --grid-line:rgba(61,123,255,.05);
+  --grid-cell:64px;
+  --grid-page:.04;
+  --grid-console:.08;
+
+  /* ---- elevation · § C. ONE shadow, no colour in it, one per raised panel.  */
+  --raise:0 8px 24px rgba(0,0,0,.45);
+
+  /* ---- families ---------------------------------------------------------- */
   --sans:'Space Grotesk','Space Grotesk Fallback',sans-serif;
   --mono:'JetBrains Mono','JetBrains Mono Fallback',monospace;
 
-  /* ── RUN 7 · STATE COLOUR BY ROLE ────────────────────────────────────────
-     The hexes above are the canon. These aliases exist so a rule reads as the
-     STATE it paints, not as a colour someone liked. If a rule wants a colour
-     and cannot name the state it means, the rule is decoration and should not
-     ship. --state-fail is deliberately unused by any resting style: nothing on
-     these pages fails, so red never appears. */
-  --state-ringing:var(--amber);       /* ringing · pending · urgency · Crush   */
-  --state-listening:var(--cyan);      /* live system · interaction · CTAs      */
-  --state-captured:var(--booked-green); /* captured · confirmed · ready        */
-  --state-idle:var(--neutral);        /* not yet · inactive · n/a              */
-  --state-fail:var(--miss-red);       /* failure only                          */
+  /* ---- back-compat aliases ----------------------------------------------- */
+  /* Every name below predates Signal and is still referenced by shipped rules.
+     They are ALIASES, not second definitions: the value lives once, above. */
+  --void:var(--midnight);
+  --void-2:var(--surface);
+  --void-raise:var(--surface);
+  --void-card:rgba(13,20,32,.62);
+  --canvas:var(--midnight);
+  --panel:var(--surface);
+  --text:var(--ink);
+  --matter:var(--ink);
+  --dim:var(--ink-soft);
+  --body-dim:var(--ink-soft);
+  --ink-dim:var(--neutral);
+  --booked-green:var(--success-green);
+  --booked:var(--success-green);
+  --green:var(--success-green);
+  --alarm:var(--miss-red);
+  --red:var(--miss-red);
+  --danger:var(--miss-red);
+  --cyan:var(--signal-blue);
+  --cyan-bright:var(--sky);
+  --cyan-active:var(--sky);
+  --cyan-dim:rgba(61,123,255,.18);
+  --line-strong:var(--line-hot);
 
-  /* ── RUN 7 · SECTION LIGHTING ────────────────────────────────────────────
-     Background tint only, and deliberately near-invisible: the brightest of
-     these lifts the void by ~2% luminance, which keeps every measured text
-     contrast in the table above intact. The rhythm is what separates one
-     section from the next now that prose no longer sits in cards. */
-  --lit-bright:rgba(0,212,255,.050);   /* hero — brightest                     */
-  --lit-technical:rgba(0,212,255,.028);/* dispatch flow — cool, instrument-like*/
-  --lit-calm:rgba(138,147,166,.030);   /* integrations — neutral, no advance   */
-  --lit-connected:rgba(0,212,255,.020);/* stages — faint, the rail carries it  */
-  --lit-dense:rgba(0,0,0,.34);         /* operator pain — denser, not louder   */
-  --lit-warm:rgba(255,176,32,.014);    /* founder — warmer, and a whisper: at
-                                          .026 it painted the same value as the
-                                          Crush's own wash on the homepage      */
-  --lit-flat:transparent;              /* FAQ — near-flat                      */
+  /* ---- panel recipe ------------------------------------------------------ */
+  /* Flat. The hairline separates the panel from the void (panel-on-void is
+     1.07:1 and invisible without it); the shadow is the only elevation cue and
+     it carries no hue. */
+  --gx-fill:#0D1420;
+  --gx-solid:#0D1420;
+  --gx-line:var(--line);
+  --gx-line-hot:var(--line-hot);
+  --gx-line-mid:#243044;
+  --gx-blur:0px;
+  --gx-edge:none;
 
+  /* ---- light + print ----------------------------------------------------- */
+  --paper:#F7F8FA;
+  --paper-ink:#14161C;
+  --blue-on-paper:var(--action-blue);
+}
+/* ══ END SIGNAL v1.1 · TOKEN BLOCK ═════════════════════════════════════════ */
+
+/* ── SECTION LIGHTING ────────────────────────────────────────────────────────
+   Background tint only, and deliberately near-invisible: the brightest of these
+   lifts midnight by ~2% luminance, which keeps every measured text contrast in
+   the block above intact. The rhythm is what separates one section from the
+   next now that prose no longer sits in cards. Applied as a data attribute so
+   the value a section carries names the mood it is supposed to have, and an
+   editor cannot quietly reach for a colour that means something else. */
+:root{
+  --lit-bright:rgba(61,123,255,.050);   /* hero — brightest                    */
+  --lit-technical:rgba(61,123,255,.028);/* dispatch flow — cool, instrumental  */
+  --lit-calm:rgba(138,147,166,.030);    /* integrations — neutral, no advance  */
+  --lit-connected:rgba(61,123,255,.020);/* stages — faint, the rail carries it */
+  --lit-dense:rgba(0,0,0,.34);          /* operator pain — denser, not louder  */
+  --lit-warm:rgba(255,176,32,.014);     /* operator story — a whisper under
+                                           the Crush's own amber floor         */
+  --lit-flat:transparent;               /* FAQ — near-flat                     */
 }
 
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;background:var(--void)}
-body{background:var(--void);color:var(--ink-soft);font-family:var(--sans);font-size:16px;
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;background:var(--midnight)}
+body{background:var(--midnight);color:var(--ink-soft);font-family:var(--sans);font-size:16px;
   line-height:1.6;overflow-x:hidden;min-height:100vh}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(circle at 20% 0%,rgba(0,212,255,.10) 0%,transparent 45%),
-             radial-gradient(circle at 80% 100%,rgba(0,212,255,.06) 0%,transparent 50%)}
 
-a{color:var(--cyan-bright);text-decoration:none;transition:color .15s}
-a:hover{color:var(--ink)}
-::selection{background:var(--cyan-glow);color:var(--ink)}
+/* ── § B · THE GRID ──────────────────────────────────────────────────────────
+   Two ambient radial washes used to sit here. They were the page's only light
+   source and they were cyan, so every surface on every page read as lit from
+   somewhere. § C keeps ambient light in exactly two scenes, neither of which is
+   a content page, so the washes are gone and the grid takes the job.
+
+   The mask is the point. It fades the grid OUT through the middle 56% of the
+   viewport, which is where the 560px prose measure lives, so no line ever runs
+   behind a line of body copy. On a phone the whole width is prose, so the grid
+   effectively stops existing there — which is also the cheapest thing it can do
+   on the device that can least afford it. Cell drops to 48px (x0.75) below 768
+   for the margins that do survive. */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  opacity:var(--grid-page);
+  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:var(--grid-cell) var(--grid-cell);
+  mask-image:linear-gradient(90deg,#000 0%,transparent 22%,transparent 78%,#000 100%);
+  -webkit-mask-image:linear-gradient(90deg,#000 0%,transparent 22%,transparent 78%,#000 100%)}
+@media(max-width:767.98px){body::after{--grid-cell:48px}}
+
+a{color:var(--signal-blue);text-decoration:none;transition:color .15s}
+a:hover{color:var(--sky)}
+::selection{background:rgba(61,123,255,.35);color:var(--ink)}
 
 .wrap{max-width:1180px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
 .skip{position:absolute;left:-9999px}
-.skip:focus{left:1rem;top:1rem;z-index:99;background:var(--cyan);color:#000;padding:.75rem 1rem;border-radius:8px}
+.skip:focus{left:1rem;top:1rem;z-index:99;background:var(--action-blue);color:#FFFFFF;
+  padding:.75rem 1rem;border-radius:8px;font-weight:500}
 
 /* ── NAV ─────────────────────────────────────────────────────────────────── */
 nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;display:flex;
-  align-items:center;justify-content:space-between;background:rgba(10,10,15,.82);
+  align-items:center;gap:1.25rem;background:rgba(7,11,20,.86);
   backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
   border-bottom:1px solid var(--line);transition:background .2s}
 /* AIC-BRAND-INSTALL · the nav carries the real lockup now, not a car glyph in a
@@ -211,52 +318,242 @@ nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;displ
 .brand-lockup{display:block;height:30px;width:auto}
 .brand-compact{display:none;height:26px;width:26px}
 @media (max-width:600px){
-  .brand-lockup{height:25px}
+  .brand-lockup{height:23px}
 }
 @media (max-width:359.98px){
   .brand-lockup{display:none}
   .brand-compact{display:block}
 }
-.nav-links{display:none;gap:1.75rem;list-style:none}
-/* nowrap: "REQUEST FOUNDER-LED SETUP" is the RUN 7 name for the setup action
-   and it is the longest label in the bar. Without this the hyphen is a break
-   opportunity and the link wraps to two lines inside a 60px header. */
-.nav-links a{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink-mute);font-weight:500;white-space:nowrap}
-.nav-links a:hover{color:var(--ink)}
-.nav-cta{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
-  font-weight:500;padding:8px 16px;border-radius:8px;background:var(--cyan);color:#000;
-  display:inline-flex;align-items:center;gap:.45rem;min-height:44px;font-variant-numeric:tabular-nums;
-  white-space:nowrap;transition:transform .15s,box-shadow .15s}
+/* ══ § G · THE NAV LAYER ═════════════════════════════════════════════════════
+   SHARED BLOCK. Byte-identical in assets/aic.css and the embedded <style> in
+   index.html. Two heads on one site is the defect RUN 7 shipped and RUN 8
+   chased; every rule the header and footer need lives in this one block so a
+   change cannot land in only one copy.
+
+   Every link in here is a real <a href> in the served HTML — nothing is
+   injected, nothing waits for JS, and the closed state uses opacity plus
+   visibility rather than display:none, so the markup a crawler reads is the
+   markup a person gets. JS adds keyboard behaviour on top; it is not what makes
+   the links exist.
+
+   BREAKPOINT. The desktop groups appear at 1024px, not at the old 880px. Three
+   group triggers, a call chip and a filled primary need about 880px of bar on
+   their own, and at 880 exactly they were touching the lockup. Below 1024 the
+   whole thing becomes one full-height drawer.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── the bar ────────────────────────────────────────────────────────────────
+   `gap` plus `margin-right:auto` on the group list, rather than
+   space-between: with five children space-between spread them evenly and the
+   two right-hand controls drifted apart from each other. */
+.nav-main{display:none;align-items:center;gap:.15rem;margin:0 auto 0 .5rem;
+  padding:0;list-style:none}
+.nav-right{display:flex;align-items:center;gap:.5rem;margin-left:auto;flex:none}
+@media(min-width:1024px){.nav-main{display:flex}}
+/* flex:none on BOTH ends of the bar. Without it the lockup is the only
+   shrinkable child, so when the bar ran out of room at 390 it did not overflow
+   — it squeezed the mark and clipped the wordmark to "AI CHAUFFEU" under the
+   call chip. The overflow probe read clean the whole time, because nothing
+   overflowed: the brand just got smaller. A bar that cannot fit should fail
+   loudly at the document edge where a gate can see it. */
+.brand{flex:none}
+
+/* ── group trigger + panel ─────────────────────────────────────────────────── */
+.nav-group{position:relative}
+/* invisible hover bridge across the 12px gap between trigger and panel, so the
+   pointer does not fall through the gap and close the menu on the way down */
+.nav-group::before{content:'';position:absolute;top:100%;left:0;right:0;height:12px}
+.nav-trigger{display:inline-flex;align-items:center;gap:.4rem;min-height:44px;
+  padding:0 .7rem;background:none;border:0;border-radius:8px;cursor:pointer;
+  font-family:var(--sans);font-size:.9375rem;font-weight:500;letter-spacing:.005em;
+  color:var(--ink-mute);white-space:nowrap;transition:color .15s}
+.nav-group:hover .nav-trigger,
+.nav-group:focus-within .nav-trigger,
+.nav-trigger[aria-expanded="true"]{color:var(--ink)}
+.nav-trigger svg{width:10px;height:10px;flex:none;transition:transform .18s ease}
+.nav-trigger[aria-expanded="true"] svg{transform:rotate(180deg)}
+.nav-trigger:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
+
+.nav-panel{position:absolute;top:calc(100% + 12px);left:0;min-width:274px;margin:0;
+  padding:.4rem;list-style:none;background:var(--surface);
+  border:1px solid var(--line);border-radius:12px;box-shadow:var(--raise);
+  opacity:0;visibility:hidden;transform:translateY(-4px);
+  transition:opacity .16s ease,transform .16s ease,visibility 0s linear .16s}
+.nav-group:hover .nav-panel,
+.nav-group:focus-within .nav-panel,
+.nav-group.is-open .nav-panel{opacity:1;visibility:visible;transform:translateY(0);
+  transition-delay:0s,0s,0s}
+.nav-panel a{display:flex;align-items:center;min-height:44px;padding:.5rem .7rem;
+  border-radius:8px;font-family:var(--sans);font-size:.9375rem;font-weight:500;
+  color:var(--ink);transition:background .12s,color .12s}
+.nav-panel a:hover{background:rgba(61,123,255,.10);color:var(--sky)}
+.nav-panel a[aria-current="page"]{color:var(--sky)}
+.nav-panel a:focus-visible{outline:2px solid var(--signal-blue);outline-offset:-2px}
+
+/* ── the two right-hand controls ─────────────────────────────────────────────
+   ONE PRIMARY PER VIEWPORT. On desktop the filled control is "Book the setup
+   call" and the number is a line button beside it. Below 1024 the book button
+   moves into the drawer, so the number is the only control left in the bar and
+   it becomes the filled one. The rule is not "the phone is secondary" — it is
+   that exactly one thing in the header is filled at any width. */
+.nav-cta{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;
+  padding:0 .85rem;border-radius:8px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);
+  font-family:var(--sans);font-size:.9375rem;font-weight:500;letter-spacing:.005em;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;
+  white-space:nowrap;transition:border-color .15s,color .15s,transform .15s}
 .nav-cta svg{width:14px;height:14px;flex-shrink:0}
-.nav-cta:hover{color:#000;transform:translateY(-1px);box-shadow:0 8px 24px var(--cyan-glow)}
-.nav-cta:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-@media(min-width:880px){.nav-links{display:flex}}
+.nav-cta:hover{color:var(--sky);border-color:var(--sky);transform:translateY(-1px)}
+.nav-cta:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 
-/* ── RUN 7 · TASK B — MOBILE HEADER COMPRESSION ──────────────────────────────
-   The header measured 72px on a phone: 14px padding + a 44px control + 14px.
-   That is a tenth of an iPhone SE viewport spent on chrome before the page
-   says anything. Trimmed to 8px + 44px + 8px = 60px, inside the 64px ceiling,
-   with the 44px touch minimum on the phone chip left intact — the height came
-   out of the padding, not out of the tap target.
-
-   The chip itself keeps the cyan fill (it is the conversion) but stops being a
-   slab: a phone glyph, tighter tracking, 6px corners. At 360px the lockup
-   (146.8px) and the chip (~136px) occupy 283px of the 328px available, so the
-   bar has ~45px of slack instead of the ~27px it had before.
-
-   12px FLOOR: the first cut of this took the chip type to 10.32-10.88px, under
-   the CLAUDE.md minimum, on the site's primary conversion control — and it was
-   never necessary. At 12px the chip is ~146px wide and the bar still has ~35px
-   of slack at 360, and nav.top stays at 61px because min-height:44px governs
-   the control's height, not its type. */
-@media (max-width:879.98px){
-  nav.top{padding:8px 1rem}
-  .nav-cta{padding:0 12px;font-size:.75rem;letter-spacing:.03em;border-radius:6px}
-  .nav-cta svg{width:13px;height:13px}
+.nav-book{display:none;align-items:center;min-height:44px;padding:0 1rem;
+  border-radius:8px;background:var(--action-blue);color:#FFFFFF;
+  box-shadow:inset 0 1px 0 rgba(127,178,255,.35);
+  font-family:var(--sans);font-size:.9375rem;font-weight:500;letter-spacing:.005em;
+  white-space:nowrap;transition:transform .15s,filter .15s}
+.nav-book:hover{color:#FFFFFF;transform:translateY(-1px);filter:brightness(1.08)}
+.nav-book:active{transform:translateY(0);filter:brightness(.96)}
+.nav-book:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
+@media(min-width:1024px){
+  .nav-book{display:inline-flex}
+  .nav-cta{background:var(--surface)}
 }
+@media(max-width:1023.98px){
+  .nav-cta{background:var(--action-blue);color:#FFFFFF;border-color:transparent;
+    box-shadow:inset 0 1px 0 rgba(127,178,255,.35)}
+  .nav-cta:hover{color:#FFFFFF;border-color:transparent;filter:brightness(1.08)}
+}
+
+/* ── the drawer trigger ─────────────────────────────────────────────────────
+   44x44 and it carries visible text ("Menu") down to 400px, where the bar runs
+   out of room and the glyph carries it alone. aria-label is only present in the
+   icon-only state, and where both exist the label CONTAINS the visible word —
+   a label that replaces the visible text breaks voice control. */
+.nav-burger{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  min-height:44px;min-width:44px;padding:0 .7rem;flex:none;cursor:pointer;
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--ink);
+  font-family:var(--sans);font-size:.9375rem;font-weight:500;letter-spacing:.005em;
+  transition:border-color .15s,color .15s}
+.nav-burger:hover{color:var(--sky);border-color:var(--sky)}
+.nav-burger:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
+.nav-burger svg{width:18px;height:18px;flex:none}
+@media(min-width:1024px){.nav-burger{display:none}}
+@media(max-width:400px){.nav-burger{padding:0;min-width:44px}.nav-burger .nav-burger-t{display:none}}
+
+/* ── the drawer ─────────────────────────────────────────────────────────────
+   One full-height sheet carrying EVERY indexable page. visibility, not
+   display:none, so the links are in the DOM at all times; visibility also takes
+   the closed sheet out of the tab order, which display:none would do but a
+   transform alone would not. */
+.nav-drawer{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;
+  background:var(--midnight);overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  opacity:0;visibility:hidden;transform:translateY(-6px);
+  transition:opacity .2s ease,transform .2s ease,visibility 0s linear .2s}
+.nav-drawer.is-open{opacity:1;visibility:visible;transform:none;
+  transition-delay:0s,0s,0s}
+@media(min-width:1024px){.nav-drawer{display:none}}
+body.drawer-open{overflow:hidden}
+
+.dw-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:8px 1rem;min-height:60px;border-bottom:1px solid var(--line);flex:none}
+.dw-close{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  min-height:44px;min-width:44px;padding:0 .7rem;cursor:pointer;
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--ink);
+  font-family:var(--sans);font-size:.9375rem;font-weight:500}
+.dw-close:hover{color:var(--sky);border-color:var(--sky)}
+.dw-close:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
+.dw-close svg{width:16px;height:16px;flex:none}
+
+.dw-body{padding:1.25rem 1rem 2rem;display:flex;flex-direction:column;gap:1.75rem}
+.dw-group h2{font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--neutral);margin:0 0 .35rem}
+.dw-group ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.dw-group li{border-bottom:1px solid var(--line)}
+.dw-group a{display:flex;align-items:center;min-height:52px;
+  font-family:var(--sans);font-size:1.0625rem;font-weight:500;color:var(--ink)}
+.dw-group a:hover{color:var(--sky)}
+.dw-group a[aria-current="page"]{color:var(--sky)}
+.dw-actions{display:flex;flex-direction:column;gap:.75rem}
+.dw-actions .nav-book{display:inline-flex;justify-content:center;min-height:52px;font-size:1rem}
+.dw-actions .nav-cta{justify-content:center;min-height:52px;font-size:1rem;
+  background:var(--surface);color:var(--ink);border-color:var(--line);box-shadow:none}
+.dw-actions .nav-cta:hover{color:var(--sky);border-color:var(--sky);filter:none}
+
+@media (prefers-reduced-motion:reduce){
+  .nav-panel,.nav-drawer{transition:visibility 0s linear .01s}
+  .nav-trigger svg{transition:none}
+  .nav-cta:hover,.nav-book:hover,.nav-burger:hover{transform:none}
+}
+
+/* ── § G · BREADCRUMBS ─────────────────────────────────────────────────────── */
+.crumbs{margin:0 0 1.1rem}
+.crumbs ol{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin:0;padding:0;
+  list-style:none;font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;
+  text-transform:uppercase}
+.crumbs li{display:inline-flex;align-items:center}
+.crumbs li+li::before{content:'/';color:var(--neutral);margin-right:.4rem}
+.crumbs a{color:var(--neutral);text-decoration:none}
+.crumbs a:hover{color:var(--sky);text-decoration:underline;text-underline-offset:.2em}
+.crumbs [aria-current="page"]{color:var(--ink-mute)}
+
+/* ── § G · THE FAT FOOTER ───────────────────────────────────────────────────
+   Four columns plus the brand block. This is the only place on the site where
+   every indexable page is reachable from every other one, which is what closes
+   the orphan gap: before this run /airport-transfer-booking/ and
+   /madison-limo-answering-service/ each had ZERO incoming internal links. */
+/* MEASURED. The first cut put the brand block in the same row as the four
+   columns at 1.5fr + 4x1fr. At 1024 that left each column about 150px against a
+   185px label and four of them wrapped onto two lines — visible in the gate at
+   exactly one viewport band and nowhere else. The brand block takes its own row
+   from 900 up, which hands the columns the full width, and the links sit at
+   14px because they are secondary navigation, not body copy. Measured after the
+   change: the longest label runs 172px into 195px at 900, the tightest point. */
+.foot-grid{display:grid;grid-template-columns:1fr;gap:2rem 1.5rem;align-items:start}
+@media(min-width:600px){.foot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:900px){
+  .foot-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .foot-brand{grid-column:1/-1;padding-bottom:1.25rem;border-bottom:1px solid var(--line)}
+}
+.foot-col h2{font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--neutral);margin:0 0 .25rem}
+.foot-col ul{list-style:none;margin:0;padding:0}
+.foot-col a{display:inline-flex;align-items:center;min-height:44px;
+  font-family:var(--sans);font-size:.875rem;font-weight:400;color:var(--ink-mute);
+  transition:color .15s}
+.foot-col a:hover{color:var(--sky)}
+.foot-col a[aria-current="page"]{color:var(--sky)}
+
+/* ── MOBILE HEADER, STILL <=64px ─────────────────────────────────────────────
+   8 + 44 + 8 = 60px plus the 1px border. The height comes out of the PADDING,
+   never out of the 44px tap targets, and adding the drawer trigger did not
+   change that: the bar holds the lockup, the call chip and a 44px button, and
+   the two labels give up tracking rather than type size as the viewport
+   narrows. 12px is the floor and nothing here goes under it. */
+/* MEASURED AT 360/375/390/430. Three controls have to share a 328px row at the
+   narrowest supported width. What gave was the word "Call" in front of the
+   number, not the number and not the wordmark: the chip is a filled blue button
+   with a phone glyph on a tel: link, so the verb is carried by the affordance,
+   and aria-label keeps the full "Call (414) 775-0019" as the accessible name —
+   which still CONTAINS the visible text, so voice control matches on it.
+   The lockup goes to 23px tall = 135px wide from the 446.1x76 viewBox, over the
+   kit's 120px minimum for the short lockup, so the brand NAME stays in the
+   header on every phone. That was a deliberate RUN 5 decision and this run does
+   not undo it. */
+@media (max-width:1023.98px){
+  nav.top{padding:8px 1rem;gap:.5rem}
+  .nav-cta{padding:0 .7rem;font-size:.875rem}
+  .nav-cta svg{width:13px;height:13px}
+  .nav-cta-verb{display:none}
+}
+/* 21px tall renders the short lockup at 123.3px from its 446.1x76 viewBox —
+   over the kit's 120px floor, and the 12px it gives back is what puts the whole
+   row inside the nav's content box at 360 instead of 6px past it. Measured:
+   123 + 8 + 147 + 8 + 44 = 330 into 336 available. */
 @media (max-width:400px){
-  .nav-cta{padding:0 9px;letter-spacing:.01em;gap:.35rem}
+  nav.top{padding:8px .75rem}
+  .nav-cta{padding:0 .55rem;gap:.35rem}
+  .brand-lockup{height:21px}
 }
 
 /* ── PAGE HEAD ───────────────────────────────────────────────────────────── */
@@ -264,9 +561,21 @@ nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;displ
    this comes down with it rather than leaving 12px of dead air above the H1. */
 .phead{padding:140px 0 40px}
 @media(max-width:600px){.phead{padding:96px 0 32px}}
-.kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.7rem;
-  font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan-bright);
-  padding:6px 12px;border-radius:99px;background:var(--cyan-dim);border:1px solid var(--line-hot);
+/* ── § C/D · THE KICKER, DE-PILLED ───────────────────────────────────────────
+   This was a filled pill with a hairline border and a dot that pulsed forever.
+   Three problems in one 40px object: § 3 bans pills used as ornament, the dot
+   named no state (nothing on a content page is ringing, live, or captured), and
+   an infinite animation ran whether or not it was on screen.
+
+   The brief asked for a reduced-motion guard and an offscreen pause on that
+   pulse. Removing the dot is the stronger version of the same fix — a pulse
+   that does not exist cannot run offscreen and cannot fight reduced motion —
+   and it leaves the element doing the one job it is good at: an eyebrow. Mono,
+   because § D gives eyebrows to the mono face, and --sky, because § A gives
+   eyebrow accents to --sky. Pulses that DO name a state are kept, guarded, in
+   the two scenes § C allows. Size stays at 12px, the floor. */
+.kicker{display:inline-block;font-family:var(--mono);font-size:.75rem;
+  font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--sky);
   margin-bottom:1.75rem}
 /* ── RUN 7 · TASK E — TYPE SCALE ─────────────────────────────────────────────
    Measured targets, not vibes. Headline 40px at 390 and 64-72px on a desktop
@@ -276,7 +585,7 @@ nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;displ
 h1.page-h{font-family:var(--sans);font-size:clamp(2.5rem,5vw,4.5rem);line-height:1.03;
   letter-spacing:-.022em;color:var(--ink);font-weight:400;margin-bottom:1.5rem;max-width:16ch;
   text-wrap:balance}
-h1.page-h em{font-style:italic;color:var(--cyan)}
+h1.page-h em{font-style:italic;color:var(--signal-blue)}
 .page-sub{font-size:clamp(1.0625rem,1.35vw,1.125rem);color:var(--ink-soft);max-width:560px;
   line-height:1.58;margin-bottom:2.25rem;text-wrap:pretty}
 
@@ -289,11 +598,11 @@ section{padding:96px 0;position:relative;z-index:1}
 /* .75rem, not .68rem — 10.88px was under the 12px floor in CLAUDE.md Appendix A
    ("Nothing below 12px, ever"), on the label that opens every section. */
 .sec-kicker{font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--cyan-bright);margin-bottom:1rem}
+  text-transform:uppercase;color:var(--sky);margin-bottom:1rem}
 .sec-h{font-family:var(--sans);font-size:clamp(2rem,3.6vw,3.25rem);line-height:1.06;
   letter-spacing:-.018em;color:var(--ink);font-weight:400;margin-bottom:1.25rem;max-width:16ch;
   text-wrap:balance}
-.sec-h em{font-style:italic;color:var(--cyan)}
+.sec-h em{font-style:italic;color:var(--signal-blue)}
 .sec-sub{font-size:1.0625rem;color:var(--ink-soft);max-width:560px;line-height:1.58;
   margin-bottom:1.25rem;text-wrap:pretty}
 .sec-sub:last-child{margin-bottom:0}
@@ -316,13 +625,29 @@ section[data-lit="dense"]{background:var(--lit-dense)}
 section[data-lit="warm"]{background:var(--lit-warm)}
 section[data-lit="flat"]{background:var(--lit-flat)}
 
-/* Inline links inside a block of prose must be distinguishable by something
-   other than colour. Cyan on soft-ink is only 1.21:1 against the surrounding
-   text — well under the 3:1 WCAG needs when colour is the ONLY signal — so a
-   colour-blind reader cannot see where the link is. An underline is the
-   signal; the colour stays as reinforcement. (Links that are their own block
-   — .rel cards, nav, footer, CTAs — are exempt: position identifies them.) */
-.sec-sub a,.page-sub a,.card-p a,.vs-b a,.tk-sub a,.calc-basis a,.ticket-foot a{
+/* ══ INLINE PROSE LINKS · SHARED BLOCK ═══════════════════════════════════════
+   Byte-identical in assets/aic.css and the embedded <style> in index.html.
+
+   An inline link inside a paragraph must be distinguishable by something other
+   than colour. --signal-blue on --ink-soft is only 1.99:1 against the text
+   around it, well under the 3:1 WCAG asks for when colour is the ONLY signal,
+   so a colour-blind reader cannot see where the link is. The underline is the
+   signal; the colour is reinforcement. Links that are their OWN block — .rel
+   cards, nav, drawer, footer, CTAs — are exempt, because position identifies
+   them.
+
+   RUN 9 CAUGHT THIS THE HARD WAY. The rule existed in aic.css and nowhere else,
+   so the eleven pages that load aic.css were fine and the homepage — which
+   carries its own embedded copy of the shell — was not. This run added in-body
+   links to the homepage for the first time, and Lighthouse dropped its
+   accessibility score to 96 on `link-in-text-block` with six offenders, every
+   one of them a link added an hour earlier. Exactly the three-CSS-homes defect
+   the token block and the nav layer are guarded against; the guard just did not
+   cover this rule yet. It does now.
+   ══════════════════════════════════════════════════════════════════════════ */
+.sec-sub a,.page-sub a,.card-p a,.vs-b a,.tk-sub a,.calc-basis a,.ticket-foot a,
+.feat-p a,.pain-p a,.step-p a,.setup-p a,.int-mini a,.crush-p a,.operators-p a,
+.hero-sub a,.cta-note a,.legal p a,.legal li a{
   text-decoration:underline;text-underline-offset:.18em;text-decoration-thickness:1px}
 
 /* ── CARD GRID (3-up → 2-up → 1-up) ──────────────────────────────────────── */
@@ -347,28 +672,46 @@ section[data-lit="flat"]{background:var(--lit-flat)}
 .card-num{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
   color:var(--cyan-bright);margin-bottom:.85rem;font-variant-numeric:tabular-nums}
 
-/* the two kept-card cases */
-.card--stage,#faq .card{background:var(--gx-fill,rgba(20,20,28,.62));
-  border:1px solid var(--gx-line,rgba(0,212,255,.22));border-radius:14px;padding:1.3rem;
-  -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
+/* ── § C · THE ONE RAISED-PANEL RECIPE ───────────────────────────────────────
+   Every panel on this site used to carry its own fill, its own blur radius and
+   its own coloured halo, which is six pieces of glass on a shadow ladder. One
+   recipe now: a solid surface, one hairline, one black shadow. No backdrop
+   blur anywhere except the two fixed overlay bars (nav and rail), which is
+   what keeps the sitewide blur count inside the budget. */
+.card--stage,#faq .card,.ticket-card,.calc,.cb-form{
+  background:var(--surface);border:1px solid var(--line);
+  box-shadow:var(--raise);
+  -webkit-backdrop-filter:none;backdrop-filter:none}
+/* no --raise on a <details>: an accordion row is a list row, and the hairline is
+   what separates it. Shadows are for panels genuinely lifted off the page. */
+details{background:var(--surface);border:1px solid var(--line);
+  -webkit-backdrop-filter:none;backdrop-filter:none}
+.card--stage,#faq .card{border-radius:14px;padding:1.3rem}
 /* stays at the 17px body size — a card is a different container, not a
    different reading experience, and 16px is under the RUN 7 body floor */
 .card--stage .card-p,#faq .card .card-p{font-size:1.0625rem}
 #faq .cards,.cards:has(.card--stage){gap:1rem}
 
 /* ── TRIP TICKET (the product, shown not described) ──────────────────────── */
-.ticket-card{background:var(--gx-fill,rgba(20,20,28,.62));border:1px solid var(--line-hot);
-  border-radius:16px;padding:1.4rem;margin-top:2rem;
-  -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
+/* This is an instrument, so it is one of the two zones § B lets the grid speak
+   at .08 instead of .04. isolation + a masked ::before keeps the texture inside
+   the ticket's own rounded box and behind its contents. */
+.ticket-card{border-radius:16px;padding:1.4rem;margin-top:2rem;position:relative;isolation:isolate}
+.ticket-card::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:-1;
+  border-radius:inherit;opacity:var(--grid-console);
+  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:32px 32px}
 .ticket-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;
   padding-bottom:1rem;margin-bottom:1.1rem;border-bottom:1px solid var(--line);
   font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
   color:var(--ink-mute)}
 .ticket-live{display:inline-flex;align-items:center;gap:6px;color:var(--booked)}
-.ticket-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--booked);
-  box-shadow:0 0 6px var(--booked)}
+/* § A STATE LAW — the dot is green because the word beside it names the action
+   that succeeded. No halo: § C allows no coloured light outside the two scenes. */
+.ticket-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--success-green)}
 .ticket-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.85rem}
-.tk{background:rgba(10,10,15,.4);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem}
+.tk{background:rgba(7,11,20,.55);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem}
 .tk-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
   color:var(--ink-dim);margin-bottom:.4rem}
 .tk-val{color:var(--ink);font-weight:600;font-size:.98rem;font-variant-numeric:tabular-nums;
@@ -395,79 +738,95 @@ section[data-lit="flat"]{background:var(--lit-flat)}
 .vs-a{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
   color:var(--ink-dim)}
 .vs-b{color:var(--ink);font-size:1.0625rem;line-height:1.58}
-.vs-b strong{color:var(--booked);font-weight:600}
+/* § A STATE LAW — this is emphasis inside a comparison, not a captured
+   outcome, so it does not get the success colour. Weight and ink carry it. */
+.vs-b strong{color:var(--ink);font-weight:600}
 
 /* ── FAQ ─────────────────────────────────────────────────────────────────── */
-details{background:var(--gx-fill,rgba(20,20,28,.62));border:1px solid var(--line);border-radius:12px;
-  margin-bottom:.6rem;transition:border-color .2s;
-  -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
+details{border-radius:12px;margin-bottom:.6rem;transition:border-color .2s}
 details[open]{border-color:var(--line-hot)}
 summary{cursor:pointer;padding:1.1rem 1.4rem;color:var(--ink);font-weight:500;font-size:1rem;
   list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:44px}
 summary::-webkit-details-marker{display:none}
-summary::after{content:'+';color:var(--cyan-bright);font-size:1.4rem;font-family:var(--mono)}
+summary::after{content:'+';color:var(--sky);font-size:1.4rem;font-family:var(--mono)}
 details[open] summary::after{content:'−'}
-summary:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+summary:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 details > div{padding:0 1.4rem 1.2rem;color:var(--ink-mute);font-size:.95rem;line-height:1.65}
-details > div a{color:var(--cyan-bright);text-decoration:underline}
+details > div a{color:var(--signal-blue);text-decoration:underline}
 
 /* ── CTA STACK (Task A — identical to the homepage) ──────────────────────── */
 .cta-stack{display:flex;flex-direction:column;gap:1rem;max-width:520px;margin:0 0 1rem}
 .cta-stack--wide{max-width:560px}
 
+/* ══ § D · THE BUTTON SYSTEM ═════════════════════════════════════════════════
+   Three levels, one law, and the type face is the tell.
+
+     PRIMARY    filled --action-blue, white lettering, a 1px --sky bevel along
+                the top edge. Space Grotesk 500, sentence case.
+     SECONDARY  1px --line on --surface. Border and label go --sky on hover.
+     TERTIARY   a --sky text link with an arrow. No box at all.
+
+   Nothing paints outside its own box. The old primary threw a cyan halo and an
+   inner bloom; the lift stays, the light is a brightness filter on the fill
+   itself, and there is no shadow to leak onto the page.
+
+   Sentence case, not upper: § D gives buttons, nav and conversion copy to
+   Space Grotesk, and an uppercase mono button reads as a machine label rather
+   than something a person presses. Mono keeps the ticket, not the control.
+   ══════════════════════════════════════════════════════════════════════════ */
 .tel-btn{display:flex;flex-direction:column;align-items:flex-start;gap:.25rem;
-  padding:1.15rem 1.5rem;border-radius:12px;background:var(--cyan);color:#000;min-height:44px;
-  text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.30);
-  transition:transform .2s ease,box-shadow .2s ease}
-.tel-btn:hover{color:#000;transform:translateY(-2px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.40),inset 0 0 26px rgba(200,248,255,.55)}
-.tel-btn:active{transform:translateY(1px);box-shadow:inset 0 2px 9px rgba(0,32,44,.34)}
-.tel-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+  padding:1.15rem 1.5rem;border-radius:12px;background:var(--action-blue);color:#FFFFFF;
+  min-height:44px;text-decoration:none;box-shadow:inset 0 1px 0 rgba(127,178,255,.35);
+  transition:transform .2s ease,filter .2s ease}
+.tel-btn:hover{color:#FFFFFF;transform:translateY(-1px);filter:brightness(1.08)}
+.tel-btn:active{transform:translateY(0);filter:brightness(.96)}
+.tel-btn:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 /* white-space:nowrap — the number was breaking after "775-" and orphaning
    "0019" onto its own line at narrow widths. A phone number is one token. */
-.tel-main{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.95rem;
-  font-weight:600;letter-spacing:.06em;text-transform:uppercase;line-height:1.15;
+.tel-main{display:flex;align-items:center;gap:.6rem;font-family:var(--sans);font-size:1.0625rem;
+  font-weight:500;letter-spacing:.005em;line-height:1.2;
   font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;white-space:nowrap}
 .tel-main svg{width:17px;height:17px;flex-shrink:0}
-.tel-sub{font-family:var(--sans);font-size:.85rem;font-weight:500;letter-spacing:.01em;
-  text-transform:none;color:rgba(0,0,0,.72)}
+.tel-sub{font-family:var(--sans);font-size:.85rem;font-weight:400;letter-spacing:.01em;
+  text-transform:none;color:rgba(255,255,255,.82)}
 @media(max-width:600px){
-  .tel-main{font-size:.86rem;letter-spacing:.04em}
+  .tel-main{font-size:1rem}
   .tel-btn{padding:1rem 1.15rem}
 }
 
 /* scroll-margin-top: the rail's CALL ME button targets #ava-callback, and a
    fixed 60px header would otherwise land on the form's own heading. */
-.cb-form{background:var(--gx-fill,rgba(20,20,28,.62));border:1px solid var(--line-hot);
-  border-radius:12px;padding:1.25rem;scroll-margin-top:76px;
-  -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
-.cb-head{display:flex;align-items:center;gap:.55rem;font-family:var(--mono);font-size:.7rem;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--cyan-bright);margin-bottom:.35rem}
-.cb-head::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan-bright);
-  box-shadow:0 0 8px var(--cyan-bright);flex-shrink:0}
+.cb-form{border-radius:12px;padding:1.25rem;scroll-margin-top:76px}
+/* eyebrow -> mono + --sky (§ D, § A). The dot went with the kicker's: it named
+   no state and it carried a glow, which § C removes outside the two scenes. */
+.cb-head{font-family:var(--mono);font-size:.75rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--sky);margin-bottom:.35rem}
 .cb-sub{font-size:.9rem;color:var(--ink-mute);margin-bottom:.9rem;line-height:1.5}
 .cb-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.75rem}
 .cb-field{flex:1 1 150px;display:flex;flex-direction:column;gap:.3rem}
 .cb-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
   color:var(--ink-dim)}
 .cb-input{width:100%;min-height:44px;padding:.7rem .85rem;border-radius:8px;
-  background:rgba(10,10,15,.55);border:1px solid var(--line);color:var(--ink);
+  background:rgba(7,11,20,.70);border:1px solid var(--line);color:var(--ink);
   font-family:var(--sans);font-size:1rem;transition:border-color .15s,box-shadow .15s}
 .cb-input::placeholder{color:var(--ink-dim)}
-.cb-input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.18)}
-.cb-input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.cb-input:focus{outline:none;border-color:var(--signal-blue);box-shadow:0 0 0 3px rgba(61,123,255,.22)}
+.cb-input:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 .cb-input[aria-invalid="true"]{border-color:var(--alarm)}
 .cb-consent{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.85rem;cursor:pointer}
-.cb-consent input{flex-shrink:0;width:20px;height:20px;margin-top:2px;accent-color:var(--cyan);cursor:pointer}
-.cb-consent input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.cb-consent input{flex-shrink:0;width:20px;height:20px;margin-top:2px;
+  accent-color:var(--action-blue);cursor:pointer}
+.cb-consent input:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 .cb-consent span{font-size:.78rem;line-height:1.45;color:var(--ink-mute)}
-.cb-consent a{color:var(--cyan-bright);text-decoration:underline}
-.cb-submit{width:100%;min-height:44px;padding:.85rem 1.2rem;border:1px solid var(--cyan);
-  border-radius:10px;background:rgba(0,212,255,.10);color:var(--ink);font-family:var(--mono);
-  font-size:.8rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
-  transition:background .15s,transform .15s,color .15s}
-.cb-submit:hover:not(:disabled){background:var(--cyan);color:#000;transform:translateY(-1px)}
-.cb-submit:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.cb-consent a{color:var(--signal-blue);text-decoration:underline}
+/* SECONDARY (§ D): a line button, not a second filled control. One primary per
+   viewport, and on this stack the phone is it. */
+.cb-submit{width:100%;min-height:44px;padding:.85rem 1.2rem;border:1px solid var(--line);
+  border-radius:10px;background:var(--surface);color:var(--ink);font-family:var(--sans);
+  font-size:1rem;font-weight:500;letter-spacing:.005em;cursor:pointer;
+  transition:border-color .15s,color .15s,transform .15s}
+.cb-submit:hover:not(:disabled){border-color:var(--sky);color:var(--sky);transform:translateY(-1px)}
+.cb-submit:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 .cb-submit:disabled{opacity:.55;cursor:default}
 /* RUN 7 · sans, not mono — these are full sentences read by a person who just
    made a mistake, not a machine readout. */
@@ -483,12 +842,14 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
    matched and that page rendered the setup CTA in sentence-case Space Grotesk
    at 16px while the other nine rendered uppercase mono at 12.16px. One name is
    not one name if two of its thirty-six instances are typeset differently. */
-.cta-tertiary a,a.cta-tertiary{font-family:var(--mono);font-size:.76rem;letter-spacing:.1em;
-  text-transform:uppercase;white-space:nowrap;
-  color:var(--ink);border-bottom:1px solid var(--line-hot);align-self:flex-start;padding:.5rem 0;
+/* TERTIARY (§ D): --sky text link with an arrow. Sentence case Space Grotesk,
+   same as every other control on the page. */
+.cta-tertiary a,a.cta-tertiary{font-family:var(--sans);font-size:1rem;font-weight:500;
+  letter-spacing:.005em;white-space:nowrap;
+  color:var(--sky);border-bottom:1px solid var(--line-hot);align-self:flex-start;padding:.5rem 0;
   min-height:44px;display:inline-flex;align-items:center}
-.cta-tertiary a:hover,a.cta-tertiary:hover{color:var(--cyan-bright);border-color:var(--cyan-bright)}
-.cta-tertiary a:focus-visible,a.cta-tertiary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.cta-tertiary a:hover,a.cta-tertiary:hover{color:var(--ink);border-color:var(--sky)}
+.cta-tertiary a:focus-visible,a.cta-tertiary:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 /* RUN 7 · TASK E — this was mono. Mono is for operational data: a status, a
    field, a time, a route, a quote. "The setup call is a conversation, not a
    pitch." is a sentence, and mono makes a sentence read like a machine
@@ -511,28 +872,28 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
 .rail{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;
   grid-template-columns:60fr 40fr;gap:8px;
   padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));
-  background:rgba(10,10,15,.94);border-top:1px solid var(--line-hot);
+  background:rgba(7,11,20,.94);border-top:1px solid var(--line);
   -webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
   transform:translateY(110%);visibility:hidden;
   transition:transform .22s ease}
 .rail--solo{grid-template-columns:1fr}
 .rail.is-on{transform:translateY(0);visibility:visible}
 .rail a{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
-  min-height:56px;padding:0 .75rem;border-radius:10px;font-family:var(--mono);
-  font-size:.78rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
+  min-height:56px;padding:0 .75rem;border-radius:10px;font-family:var(--sans);
+  font-size:.9375rem;font-weight:500;letter-spacing:.005em;
   font-variant-numeric:tabular-nums;white-space:nowrap}
 .rail svg{width:15px;height:15px;flex-shrink:0}
-.rail-call{background:var(--cyan);color:#000;box-shadow:inset 0 1px 0 rgba(255,255,255,.30)}
-.rail-call:hover,.rail-call:active{color:#000}
-.rail-cb{background:rgba(0,212,255,.08);color:var(--ink);border:1px solid var(--cyan)}
-.rail-cb:hover{color:var(--ink);background:var(--cyan-dim)}
-.rail a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.rail-call{background:var(--action-blue);color:#FFFFFF;box-shadow:inset 0 1px 0 rgba(127,178,255,.35)}
+.rail-call:hover,.rail-call:active{color:#FFFFFF}
+.rail-cb{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.rail-cb:hover{color:var(--sky);border-color:var(--sky)}
+.rail a:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 @media (max-width:879.98px){
   .rail{display:grid}
   body.rail-on{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
 }
 @media (max-width:359.98px){
-  .rail a{font-size:.7rem;letter-spacing:.02em}
+  .rail a{font-size:.875rem}
 }
 @media (prefers-reduced-motion:reduce){
   .rail{transition:visibility 0s linear .01s}
@@ -545,21 +906,19 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
    Outputs are --amber because they represent loss, and tabular-nums so the
    figures do not jitter as they recompute on every keystroke.
    ────────────────────────────────────────────────────────────────────────── */
-.calc{background:var(--gx-fill,rgba(20,20,28,.62));border:1px solid var(--line-hot);
-  border-radius:16px;padding:1.6rem;margin-top:2rem;
-  -webkit-backdrop-filter:blur(var(--gx-blur,14px));backdrop-filter:blur(var(--gx-blur,14px))}
+.calc{border-radius:16px;padding:1.6rem;margin-top:2rem}
 @media(min-width:760px){.calc{padding:2rem}}
 .calc-row{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem}
 .calc-field{flex:1 1 190px;display:flex;flex-direction:column;gap:.35rem}
 .calc-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;
   text-transform:uppercase;color:var(--neutral)}
 .calc-input{width:100%;min-height:44px;padding:.7rem .85rem;border-radius:8px;
-  background:rgba(10,10,15,.55);border:1px solid var(--line);color:var(--ink);
+  background:rgba(7,11,20,.70);border:1px solid var(--line);color:var(--ink);
   font-family:var(--mono);font-size:1.15rem;font-variant-numeric:tabular-nums;
   transition:border-color .15s,box-shadow .15s}
 .calc-input::placeholder{color:var(--neutral);opacity:.6}
-.calc-input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.18)}
-.calc-input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.calc-input:focus{outline:none;border-color:var(--signal-blue);box-shadow:0 0 0 3px rgba(61,123,255,.22)}
+.calc-input:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 /* number spinners removed — they invite fiddling and misalign the mono figures */
 .calc-input::-webkit-outer-spin-button,.calc-input::-webkit-inner-spin-button{
   -webkit-appearance:none;margin:0}
@@ -567,7 +926,7 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
 
 .calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.85rem;
   padding-top:1.4rem;border-top:1px solid var(--line)}
-.calc-cell{background:rgba(10,10,15,.4);border:1px solid var(--line);border-radius:10px;
+.calc-cell{background:rgba(7,11,20,.55);border:1px solid var(--line);border-radius:10px;
   padding:1rem}
 .calc-k{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
   color:var(--neutral);margin-bottom:.45rem}
@@ -586,10 +945,11 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
    hover all still say "this is a link". */
 .rel{display:block;padding:1.15rem 0 0;border:0;border-top:1px solid var(--line);border-radius:0;
   background:none;transition:border-color .18s,transform .18s}
-.rel:hover{border-top-color:var(--cyan-bright);transform:translateY(-2px)}
-.rel:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.rel-k{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--cyan-bright);margin-bottom:.4rem}
+.rel:hover{border-top-color:var(--sky);transform:translateY(-2px)}
+.rel:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
+/* 12px floor: this eyebrow rendered at 9.92px. */
+.rel-k{font-family:var(--mono);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--sky);margin-bottom:.4rem}
 .rel-t{color:var(--ink);font-weight:600;font-size:1rem;line-height:1.35}
 
 /* ── LEGAL PAGES ─────────────────────────────────────────────────────────── */
@@ -598,7 +958,7 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
   margin:2.5rem 0 .85rem;line-height:1.2}
 .legal h2:first-child{margin-top:0}
 .legal h3{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--cyan-bright);margin:1.75rem 0 .6rem}
+  color:var(--sky);margin:1.75rem 0 .6rem}
 /* RUN 7 · the .legal scope was the one prose surface no task owned, and it was
    the widest text on the site: 16px at an uncapped measure rendered 92-95ch,
    well past the 60-75ch rule. It is not only legal copy either — the "what we
@@ -608,7 +968,7 @@ details > div a{color:var(--cyan-bright);text-decoration:underline}
 .legal p{font-size:1.0625rem;color:var(--ink-soft);line-height:1.58;margin-bottom:1rem;max-width:560px}
 .legal ul{margin:0 0 1.25rem 1.25rem;color:var(--ink-soft);line-height:1.58;max-width:560px}
 .legal li{margin-bottom:.5rem;font-size:1.0625rem}
-.legal a{color:var(--cyan-bright);text-decoration:underline}
+.legal a{color:var(--signal-blue);text-decoration:underline}
 .legal strong{color:var(--ink);font-weight:600}
 .legal-meta{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
   color:var(--ink-dim);margin-bottom:2.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--line)}
@@ -618,25 +978,23 @@ footer{padding:60px 0 40px;border-top:1px solid var(--line);margin-top:80px}
 .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1.5rem;align-items:flex-start}
 .foot-brand{flex:1;min-width:240px}
 .foot-mark{font-family:var(--sans);font-size:1.5rem;color:var(--ink);font-weight:400;margin-bottom:.5rem}
-.foot-mark em{font-style:italic;color:var(--cyan)}
+.foot-mark em{font-style:italic;color:var(--signal-blue)}
 .foot-nap{font-family:var(--mono);font-size:.8rem;color:var(--ink-soft);letter-spacing:.05em;
   line-height:1.8;margin-bottom:.75rem;font-variant-numeric:tabular-nums}
 /* The footer phone was an 18px-tall tap target. On a phone-first site the number
    IS the conversion — it gets a full 44px target like every other CTA. */
 .foot-nap a{color:var(--ink);border-bottom:1px solid var(--line-hot);
   display:inline-flex;align-items:center;min-height:44px}
-.foot-nap a:hover{color:var(--cyan-bright)}
-.foot-nap a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-.foot-links{display:flex;flex-direction:column;gap:.6rem}
-.foot-links a{font-family:var(--mono);font-size:.74rem;color:var(--ink-mute);letter-spacing:.1em;
-  text-transform:uppercase;min-height:44px;display:inline-flex;align-items:center}
-.foot-links a:hover{color:var(--cyan-bright)}
+.foot-nap a:hover{color:var(--sky)}
+.foot-nap a:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 .foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;padding-top:2rem;
   margin-top:2rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.7rem;
   color:var(--ink-dim);letter-spacing:.08em;text-transform:uppercase}
 
 /* ── MOTION ──────────────────────────────────────────────────────────────── */
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+/* `@keyframes pulse` used to live here. Nothing in this file referenced it once
+   the kicker lost its dot, and a keyframe with no caller is a rule that ships
+   bytes and reads as an affordance the site does not have. */
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
