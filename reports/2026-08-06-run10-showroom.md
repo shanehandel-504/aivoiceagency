@@ -392,3 +392,23 @@ are byte-unchanged.
    token sweeps.
 7. **Structured data is not authored here any more.** If you add a Q&A, run
    `python tools/aic-run10-faq-mirror.py`.
+
+---
+
+## 9 · LIVE VERIFICATION
+
+Pushed as `a531d20`. Verified against production, not against the repo.
+
+| Check | Result |
+|---|---|
+| `aic-run9-livediff.mjs` — 12 pages + 3 CSS homes + JS + sitemap + robots + manifest | **PASS — 18/18 byte-identical, 2 stamped assets 200** |
+| `https://aichauffeur.ai/llms.txt` | **200** (was 404) |
+| `https://aichauffeur.ai/DESIGN-SYSTEM.md` | **404** (was served) |
+| favicon knot renders cyan | **Y** — `fill="#00d4ff"` on the wire |
+| GOOGLE LEAD PROTECTION on the homepage | **Y**, 3 occurrences (eyebrow, schema-free copy, comment) |
+| non-affiliation line | **Y** — "not affiliated with or endorsed by Google" |
+| Production render vs local build | identical at 390 and 1440; shots at `audits/run10/live/` |
+
+Asset tokens on the wire: `circulant.css?v=74c973d7` · `aic.css?v=d684cd5f` ·
+`aic.js?v=ec781407` — content hashes, so they change when and only when the file
+does.
