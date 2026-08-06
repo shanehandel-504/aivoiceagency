@@ -29,15 +29,19 @@
   <meta name="twitter:title" content="Limo Answering Service — AI Dispatch That Takes the Whole Trip">
   <meta name="twitter:description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket.">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- RUN 8 · FONT LOCK — self-hosted. The @font-face lives in the stylesheet,
+       so without a preload the browser cannot discover either file until the CSS
+       has parsed and matched a rule against it. The href must be the SAME STRING
+       as the src, and crossorigin is required even same-origin because fonts are
+       always fetched in CORS mode — miss either and the file is fetched twice. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
   <!-- RUN 3.5 · this page WAS standalone. It now links the global stylesheet so the
        GLASS-X recipe and the button physics reach it. It loads BEFORE this page's
        own <style>, so every local token below still wins. This also DEFINES
        --green, which this page referenced in .live-badge and .badge-green but
        never declared — both rules were silently broken. -->
-  <link rel="stylesheet" href="/assets/circulant.css?v=0ce05772">
+  <link rel="stylesheet" href="/assets/circulant.css?v=37aa25de">
 
   <!-- AIC SITE RUN 1 · D4 — Organization + LocalBusiness + Service.
        NOTE: no postalAddress / streetAddress is emitted. AI Chauffeur has no
@@ -65,6 +69,81 @@
 
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ══ RUN 8 · FONT LOCK — SELF-HOSTED FACES ═══════════════════════════════════
+   CANONICAL BLOCK. Byte-identical in all three CSS homes on this site:
+   assets/circulant.css (all 12 pages), assets/aic.css (the 11 pages that load
+   it) and the embedded <style> in index.html (which loads no aic.css). RUN 7
+   shipped a site with two heads because one rule landed in only one copy;
+   `node tools/run8_gate.js` asserts these three copies match character for
+   character. Change one, change all three.
+
+   THE FILES ARE GOOGLE'S FILES. chauffeur/fonts/space-grotesk.woff2 and
+   jetbrains-mono.woff2 are SHA-256 IDENTICAL to the files Google's font CDN
+   served for this site's exact request — verified, not assumed. (The hostname is
+   deliberately not written out anywhere on this site: the gate greps for it, and
+   a comment that quotes the banned string makes every future audit lie. RUN 7
+   learned that one the hard way.) Nothing about the
+   rendered face changes; only where it is fetched from. That is why no line
+   break on the site moves, and why that claim is a measurement rather than a
+   hope: a subset that differed by one glyph would re-wrap every page.
+
+   unicode-range is Google's own declared latin range, VERBATIM. It is what
+   decides which family paints a character, so reproducing it exactly keeps
+   '→' (U+2192) and '✓' (U+2713) — present in NO subset of either family —
+   falling through to the system stack exactly as they already do. Widen it and
+   those two glyphs start coming from the fallback face at a different width.
+
+   The Fallback faces are metric-matched so the swap moves zero pixels:
+     Space Grotesk  <- Arial        size-adjust 108.9963%  (worst weight error 0.25%)
+     JetBrains Mono <- Courier New  size-adjust  99.9837%
+   Arial is the reference the brief names and it is right for the sans. It is
+   wrong for the mono: Arial's advances span 72% of an em while JetBrains Mono's
+   are every one 0.600, so an Arial-backed mono fallback re-flows every label the
+   moment the real face lands — the exact defect this run exists to remove.
+   Courier New measures 0.6001 em, a 0.02% match, and is monospace like the face
+   it stands in for.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@font-face{
+  font-family:'Space Grotesk';
+  font-style:normal;
+  font-weight:300 700;
+  font-display:swap;
+  src:url('/fonts/space-grotesk.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Space Grotesk Fallback';
+  font-style:normal;
+  font-weight:300 700;
+  src:local('Arial'),local('Helvetica Neue'),local('Liberation Sans');
+  size-adjust:108.9963%;
+  ascent-override:90.2783%;
+  descent-override:26.7899%;
+  line-gap-override:0%;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'JetBrains Mono';
+  font-style:normal;
+  font-weight:400 700;
+  font-display:swap;
+  src:url('/fonts/jetbrains-mono.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'JetBrains Mono Fallback';
+  font-style:normal;
+  font-weight:400 700;
+  src:local('Courier New'),local('Liberation Mono'),local('Nimbus Mono PS');
+  size-adjust:99.9837%;
+  ascent-override:102.0166%;
+  descent-override:30.0049%;
+  line-gap-override:0%;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+/* ══ END RUN 8 · FONT LOCK ══════════════════════════════════════════════════ */
+
     :root{
       --void:#0A0A0F; --void-2:#14141C; --void-card:rgba(20,20,28,.62);
       --ink:#EEF0F4; --ink-soft:rgba(238,240,244,.78); --ink-mute:rgba(238,240,244,.55);
@@ -83,7 +162,14 @@
       --ink-dim:var(--neutral);
       --booked:var(--booked-green);
       --alarm:var(--miss-red);
-      --serif:'Space Grotesk',sans-serif; --sans:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
+      /* RUN 8 · the Fallback face sits BETWEEN the real face and the generic. It
+         is metric-matched, so the pre-swap frame and the settled frame occupy the
+         same pixels. Both Fallback faces carry the real face's unicode-range, so
+         a character the webfont does not have (→, ✓) still falls through to the
+         generic exactly as it did before this run. */
+      --serif:'Space Grotesk','Space Grotesk Fallback',sans-serif;
+      --sans:'Space Grotesk','Space Grotesk Fallback',sans-serif;
+      --mono:'JetBrains Mono','JetBrains Mono Fallback',monospace;
     }
     html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;background:var(--void)}
     body{background:var(--void);color:var(--ink-soft);font-family:var(--sans);font-size:16px;line-height:1.6;overflow-x:hidden;min-height:100vh}

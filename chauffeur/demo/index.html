@@ -38,11 +38,15 @@
   <meta name="twitter:title" content="Hear AVA Take a Trip — Call the Demo Line">
   <meta name="twitter:description" content="The demo is a phone call. Dial (414) 775-0019 and give AVA a real trip. No signup, no menu.">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/circulant.css?v=0ce05772">
-  <link rel="stylesheet" href="/assets/aic.css?v=2640dbe4">
+  <!-- RUN 8 · FONT LOCK — self-hosted. The @font-face lives in the stylesheet,
+       so without a preload the browser cannot discover either file until the CSS
+       has parsed and matched a rule against it. The href must be the SAME STRING
+       as the src, and crossorigin is required even same-origin because fonts are
+       always fetched in CORS mode — miss either and the file is fetched twice. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/circulant.css?v=37aa25de">
+  <link rel="stylesheet" href="/assets/aic.css?v=5aa66089">
 
   <style>
     /* The shared .cta-tertiary renders 26px tall — fine as an inline text link,

@@ -24,6 +24,80 @@
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
+/* ══ RUN 8 · FONT LOCK — SELF-HOSTED FACES ═══════════════════════════════════
+   CANONICAL BLOCK. Byte-identical in all three CSS homes on this site:
+   assets/circulant.css (all 12 pages), assets/aic.css (the 11 pages that load
+   it) and the embedded <style> in index.html (which loads no aic.css). RUN 7
+   shipped a site with two heads because one rule landed in only one copy;
+   `node tools/run8_gate.js` asserts these three copies match character for
+   character. Change one, change all three.
+
+   THE FILES ARE GOOGLE'S FILES. chauffeur/fonts/space-grotesk.woff2 and
+   jetbrains-mono.woff2 are SHA-256 IDENTICAL to the files Google's font CDN
+   served for this site's exact request — verified, not assumed. (The hostname is
+   deliberately not written out anywhere on this site: the gate greps for it, and
+   a comment that quotes the banned string makes every future audit lie. RUN 7
+   learned that one the hard way.) Nothing about the
+   rendered face changes; only where it is fetched from. That is why no line
+   break on the site moves, and why that claim is a measurement rather than a
+   hope: a subset that differed by one glyph would re-wrap every page.
+
+   unicode-range is Google's own declared latin range, VERBATIM. It is what
+   decides which family paints a character, so reproducing it exactly keeps
+   '→' (U+2192) and '✓' (U+2713) — present in NO subset of either family —
+   falling through to the system stack exactly as they already do. Widen it and
+   those two glyphs start coming from the fallback face at a different width.
+
+   The Fallback faces are metric-matched so the swap moves zero pixels:
+     Space Grotesk  <- Arial        size-adjust 108.9963%  (worst weight error 0.25%)
+     JetBrains Mono <- Courier New  size-adjust  99.9837%
+   Arial is the reference the brief names and it is right for the sans. It is
+   wrong for the mono: Arial's advances span 72% of an em while JetBrains Mono's
+   are every one 0.600, so an Arial-backed mono fallback re-flows every label the
+   moment the real face lands — the exact defect this run exists to remove.
+   Courier New measures 0.6001 em, a 0.02% match, and is monospace like the face
+   it stands in for.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@font-face{
+  font-family:'Space Grotesk';
+  font-style:normal;
+  font-weight:300 700;
+  font-display:swap;
+  src:url('/fonts/space-grotesk.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Space Grotesk Fallback';
+  font-style:normal;
+  font-weight:300 700;
+  src:local('Arial'),local('Helvetica Neue'),local('Liberation Sans');
+  size-adjust:108.9963%;
+  ascent-override:90.2783%;
+  descent-override:26.7899%;
+  line-gap-override:0%;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'JetBrains Mono';
+  font-style:normal;
+  font-weight:400 700;
+  font-display:swap;
+  src:url('/fonts/jetbrains-mono.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'JetBrains Mono Fallback';
+  font-style:normal;
+  font-weight:400 700;
+  src:local('Courier New'),local('Liberation Mono'),local('Nimbus Mono PS');
+  size-adjust:99.9837%;
+  ascent-override:102.0166%;
+  descent-override:30.0049%;
+  line-gap-override:0%;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+/* ══ END RUN 8 · FONT LOCK ══════════════════════════════════════════════════ */
+
 /* ── COLOR LAW · CIRCULANT-X ───────────────────────────────────────────────
    Every value below is MEASURED against the void (#0A0A0F), not eyeballed.
    A semantic colour may only appear where its meaning is literally true on
@@ -59,7 +133,13 @@
 
   --cyan:#00D4FF; --cyan-bright:#00E5FF; --cyan-glow:rgba(0,212,255,.35); --cyan-dim:rgba(0,212,255,.18);
   --line:rgba(0,212,255,.14); --line-hot:rgba(0,212,255,.42);
-  --sans:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
+  /* RUN 8 · the Fallback face sits BETWEEN the real face and the generic. It is
+     metric-matched, so the pre-swap frame and the settled frame occupy the same
+     pixels. Both Fallback faces carry the real face's unicode-range, so a
+     character the webfont does not have (→, ✓) still falls through to the
+     generic exactly as it did before this run. */
+  --sans:'Space Grotesk','Space Grotesk Fallback',sans-serif;
+  --mono:'JetBrains Mono','JetBrains Mono Fallback',monospace;
 
   /* ── RUN 7 · STATE COLOUR BY ROLE ────────────────────────────────────────
      The hexes above are the canon. These aliases exist so a rule reads as the
