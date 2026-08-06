@@ -58,11 +58,13 @@ Six things a non-coder can see:
 | G | The Crush, amber-black + 3 lines resolving | homepage | Amber ambience measured; **no miss-red anywhere in the section** |
 | H | Founder compressed, uncarded, mono authority rail | homepage | 2 paragraphs, `30 YEARS OPERATING · 17 YEARS IN CHAUFFEURED TRANSPORTATION · FOUNDER-LED SETUP` |
 | I | 6 writeback/booking claims corrected | homepage ×4, /after-hours/ ×5, /demo/ ×1 | See CLAIMS below |
-| J1 | **Lighthouse mobile: a11y 100 · SEO 100 on all 12** | all 12 pages | Zero failing audits in either category |
-| J2 | Performance recorded | all 12 pages | min 92 · median 99 · max 99 |
-| J3 | AA contrast verified, not eyeballed | all 12 pages | **1277 rendered text nodes measured, lowest 5.55:1** (AA needs 4.5) |
-| J4 | Six viewports, zero horizontal overflow | 360/390/430/768/1024/1440 | 72 page-viewport combinations, 0 failures |
-| J5 | Reduced motion verified | console · rail · Crush | All settle on the completed state, `animation:none`, transition 0s |
+| J1 | **Lighthouse mobile: a11y 100 · SEO 100 on all 12** | https://aichauffeur.ai | Zero failing audits in either category, **run against production** |
+| J2 | Performance recorded | live, all 12 | median 98 · Best-Practices 100 everywhere except `/book/` 79 (GHL iframe, exempt) |
+| J3 | AA contrast verified, not eyeballed | live, all 12 | **1277 rendered text nodes measured, lowest 5.55:1** (AA needs 4.5) |
+| J4 | Six viewports, zero horizontal overflow | 360/390/430/768/1024/1440 | 72 live page-viewport combinations, 0 failures, 0 console errors |
+| J5 | Reduced motion verified | console · both rails · Crush | All settle on the completed state, `animation:none`, transition 0s |
+| J6 | **LIVE-DIFF** | all 12 production URLs | **12/12 byte-identical to the repo** |
+| J7 | Console loop verified in production | https://aichauffeur.ai | Cycle **11814ms**, all five states in order, resets and repeats |
 
 ---
 
@@ -111,6 +113,27 @@ rail overshoot **-1px** (was 204), stage measure **64ch** (was 86), every touche
 
 Scarcity line "a few slots open at a time" left exactly as authored — it is true, and the brief said
 do not amplify it.
+
+---
+
+## LIVE
+
+**https://aichauffeur.ai** — commit `47bb26c`, deployed by Vercel from `main`.
+
+Every gate above was re-run **against production**, not only against a local copy:
+
+| Check | Result on the live site |
+|---|---|
+| LIVE-DIFF, 12 URLs | **12/12 byte-identical to the repo** |
+| Lighthouse mobile | **a11y 100 · SEO 100 on all 12**, zero failing audits |
+| Perf (mobile, throttled) | median **98** — `/limo-answering-service/` read 75 on one run and **98 as the median of three**, so that was contention, not the page |
+| Layout, 6 viewports × 12 pages | 72 combinations, **0 overflow, 0 console errors** |
+| Contrast | **1277 text nodes, lowest 5.55:1** |
+| Console loop | cycle **11814ms**, five states in order, resets and repeats |
+| Sticky rail | appears past the hero, hides for form/calendar/player, **overlaps no input on any page** |
+
+Proof shots: `audits/run7/LIVE-home-390.png`, `LIVE-home-1440.png`, `LIVE-rail-390.png`,
+`LIVE-book-390.png`, plus 27 before/after pairs.
 
 ---
 

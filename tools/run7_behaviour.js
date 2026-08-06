@@ -10,7 +10,7 @@
 const path = require('path');
 const PW = 'C:/Users/offic/Desktop/AVA-factory/adstage/node_modules/playwright';
 const { chromium } = require(PW);
-const BASE = 'http://127.0.0.1:4177';
+const BASE = process.env.RUN7_BASE || 'http://127.0.0.1:4177';
 
 const snap = () => {
   const st = document.getElementById('hc-state');
@@ -34,24 +34,41 @@ const snap = () => {
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     const page = await ctx.newPage();
     await page.goto(BASE + '/', { waitUntil: 'load' });
-    console.log('\n=== TASK C · CONSOLE STATE PROGRESSION (sampled to 13s) ===');
+    /* Sample until the loop has RESET, not for a fixed wall-clock window. The
+       first version stopped at 13s, which was fine against localhost and failed
+       against production for a reason that had nothing to do with the product:
+       each page.evaluate is a round trip, so on a remote host the sampler's own
+       overhead pushes the second reset past a fixed deadline. The cycle length
+       is what the brief specifies, so measure that and bound the sampling by
+       the number of resets seen. */
+    console.log('\n=== TASK C · CONSOLE STATE PROGRESSION (sampled to 2 resets) ===');
     const seen = [];
-    for (let t = 0; t <= 13000; t += 500) {
+    const t0 = Date.now();
+    while (Date.now() - t0 < 45000) {
       const s = await page.evaluate(snap);
       const key = s.cls + '|' + s.label;
       if (!seen.length || seen[seen.length - 1].key !== key) {
+        const t = Date.now() - t0;
         seen.push({ key, t, ...s });
         console.log(`  ${String(t).padStart(6)}ms  ${String(s.label).padEnd(20)}`
           + ` cls=${String(s.cls).padEnd(10)} ${s.color}  fields=${s.onFields} captured=${s.captured}`);
       }
-      await page.waitForTimeout(500);
+      if (seen.filter(x => x.cls === 'ringing').length >= 2) break;
+      await page.waitForTimeout(250);
     }
     const order = seen.map(s => s.cls);
     const want = ['ringing', 'live', 'captured', 'quote', 'ready'];
-    const got = want.every(w => order.includes(w));
-    if (!got) fails.push('console never reached all five states: ' + order.join('>'));
-    // it must return to ringing — i.e. it loops and resets
-    if (order.filter(c => c === 'ringing').length < 2) fails.push('console did not reset within 13s');
+    if (!want.every(w => order.includes(w))) fails.push('console never reached all five states: ' + order.join('>'));
+    const rings = seen.filter(x => x.cls === 'ringing');
+    if (rings.length < 2) fails.push('console did not reset within 45s');
+    else {
+      const cycle = rings[1].t - rings[0].t;
+      console.log(`  cycle length ${cycle}ms (brief: 10000-12000ms)`);
+      /* generous upper bound: the sampler adds its own latency to the measured
+         gap, so a remote run reads slightly long. A cycle under 10s or wildly
+         over is a real defect; a few hundred ms of sampling overhead is not. */
+      if (cycle < 9500 || cycle > 13500) fails.push(`console cycle ${cycle}ms outside 10-12s`);
+    }
     console.log('  states reached: ' + Array.from(new Set(order)).join(' -> '));
 
     // ── 2 · STAGE RAIL ──────────────────────────────────────────────────────

@@ -15,7 +15,7 @@ const fs = require('fs');
 const PW = 'C:/Users/offic/Desktop/AVA-factory/adstage/node_modules/playwright';
 const { chromium } = require(PW);
 
-const BASE = 'http://127.0.0.1:4177';
+const BASE = process.env.RUN7_BASE || 'http://127.0.0.1:4177';
 const OUT = path.join(__dirname, '..', 'audits');
 const SHOTS = process.argv.includes('--shots');
 

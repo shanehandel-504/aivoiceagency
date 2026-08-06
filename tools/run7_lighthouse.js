@@ -16,7 +16,7 @@ const path = require('path');
 
 const LH = 'C:/Users/offic/AppData/Local/npm-cache/_npx/8003d8991b0d346b/node_modules/lighthouse/cli/index.js';
 const CHROME = 'C:/Users/offic/AppData/Local/ms-playwright/chromium-1228/chrome-win64/chrome.exe';
-const BASE = 'http://127.0.0.1:4177';
+const BASE = process.env.RUN7_BASE || 'http://127.0.0.1:4177';
 const OUT = path.join(__dirname, '..', 'audits', 'lh');
 
 const PAGES = [

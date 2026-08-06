@@ -14,7 +14,7 @@
  */
 const PW = 'C:/Users/offic/Desktop/AVA-factory/adstage/node_modules/playwright';
 const { chromium } = require(PW);
-const BASE = 'http://127.0.0.1:4177';
+const BASE = process.env.RUN7_BASE || 'http://127.0.0.1:4177';
 
 const PAGES = ['/', '/demo/', '/book/', '/how-setup-works/', '/works-with-your-software/',
   '/limo-answering-service/', '/after-hours-limo-dispatch/', '/airport-transfer-booking/',
