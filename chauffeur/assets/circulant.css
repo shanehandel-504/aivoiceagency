@@ -129,6 +129,34 @@
      #FFFFFF on an --action-blue fill        6.25:1
      --action-blue as a control on midnight  3.15:1  (non-text, needs 3)
 
+   RUN 10 adds a THIRD elevation and an input ground. Measured on those:
+
+     --ink              14.82:1 on surface-2 ·  16.18:1 on input-bg
+     --ink-soft          9.42:1 on surface-2 ·   9.98:1 on input-bg
+     --ink-mute          5.28:1 on surface-2 ·   5.47:1 on input-bg
+     --signal-blue       4.54:1 on surface-2 ·   4.96:1 on input-bg
+     --neutral           5.65:1 on surface-2 ·   6.16:1 on input-bg
+     #FFFFFF on --action-blue-hover          5.19:1
+     --action-blue-hover as a control        3.79:1 on midnight
+
+   CANVAS LAW. Page-depth treatment is allowed and REQUIRED: a wide horizon
+   band of the blue at 3-5% alpha rising out of the lower third, a corner
+   vignette around 6%, and a grid that is brighter at the top of the document
+   than at the foot of it. That is a PAGE layer — painted once, below every
+   section, naming no state. COMPONENT halos stay banned outright and § 4 GLOW
+   LAW is unchanged: a card separates from the canvas with a hairline and a step
+   of surface, never with light thrown outside its own box.
+
+   THE GRID TOKENS CHANGED SHAPE, and the reason is a measurement rather than a
+   preference. The line colour carried .05 alpha AND was multiplied by a zone
+   opacity of .04, so a rendered page line was 0.002 alpha of blue over
+   midnight: 61 x 0.002 + 7 x 0.998 = 7.1, which rounds to 7. Identical to the
+   background, on every channel. Every page zone on this site was drawing a grid
+   that could not produce one different pixel. The hue now lives at full
+   strength in --grid-line and the ZONE sets the alpha, so the two numbers below
+   are what actually paints. --grid-floor is the down-page multiplier: .05 at
+   the top of the document, .05 x .40 = .02 at the bottom of it.
+
    ROLE, not decoration. A rule that wants a colour and cannot name the state it
    paints is decoration and does not ship.
 
@@ -159,6 +187,8 @@
   /* ---- surfaces ---------------------------------------------------------- */
   --midnight:#070B14;
   --surface:#0D1420;
+  --surface-2:#111A2A;
+  --input-bg:#0A101C;
   --line:#1B2536;
   --line-hot:rgba(61,123,255,.42);
 
@@ -170,6 +200,7 @@
   /* ---- the three blues --------------------------------------------------- */
   --signal-blue:#3D7BFF;
   --action-blue:#1E56D6;
+  --action-blue-hover:#2A63E8;
   --sky:#7FB2FF;
 
   /* ---- semantic ---------------------------------------------------------- */
@@ -185,11 +216,12 @@
   --state-idle:var(--neutral);
   --state-fail:var(--miss-red);
 
-  /* ---- grid · § B. Lines are one value; the ZONE sets how loud it is. ----- */
-  --grid-line:rgba(61,123,255,.05);
+  /* ---- grid · § B. The HUE is one value; the ZONE sets the alpha. -------- */
+  --grid-line:#3D7BFF;
   --grid-cell:64px;
-  --grid-page:.04;
+  --grid-page:.05;
   --grid-console:.08;
+  --grid-floor:.40;
 
   /* ---- elevation · § C. ONE shadow, no colour in it, one per raised panel.  */
   --raise:0 8px 24px rgba(0,0,0,.45);
@@ -249,6 +281,43 @@
   border: 1px solid var(--line);
   box-shadow: var(--raise);
 }
+
+/* ══ § A2 · CANVAS LAW — THE PAGE LAYER ══════════════════════════════════════
+   ONE COPY, ON PURPOSE. This file is loaded by all twelve pages and by nothing
+   else, so a page-level layer declared here cannot drift the way a rule
+   duplicated into aic.css and the homepage's embedded <style> can — which is
+   exactly the defect § 1 of DESIGN-SYSTEM.md exists to describe. Nothing else
+   on this site declares body::before. The two ambient washes that used to live
+   there were deleted in RUN 9 and are NOT being restored: those were cyan, they
+   were the page's only light source, and they made every surface read as lit
+   from somewhere off-canvas.
+
+   This is not those. Two gradients, one fixed layer, zero images, zero blur():
+
+     1  HORIZON   the blue at .045, rising out of the lower third. The page
+                  reads as a room with a floor rather than a sheet of paint.
+     2  VIGNETTE  black at .06, corners only. It is what lets a panel with a
+                  hairline read as sitting ON something instead of being cut
+                  out of it — which is the acceptance bar for this run.
+
+   position:fixed, so it costs one composited layer and nothing at all on
+   scroll. pointer-events:none, z-index:0; .wrap and section both hold z-index:1
+   so no content is ever painted through it. NOTHING HERE ANIMATES, so there is
+   no motion for prefers-reduced-motion to switch off — the whole layer is
+   static by construction, which is also why it is free.
+
+   body{position:relative} is here because § B's grid moves from fixed to
+   absolute in this run so its depth fade can map to the DOCUMENT rather than to
+   the viewport. body is the containing block that makes that work. It changes
+   nothing else: every absolutely positioned rule on this site already sits
+   inside a positioned .wrap, section, .console or card, and position:fixed
+   elements are unaffected by it.
+   ══════════════════════════════════════════════════════════════════════════ */
+body{position:relative}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(120% 48% at 50% 100%,rgba(61,123,255,.045),rgba(61,123,255,0) 68%),
+    radial-gradient(118% 80% at 50% 44%,rgba(0,0,0,0) 54%,rgba(0,0,0,.06) 100%)}
 
 /* ══ RUN 9 · WHAT THIS FILE NO LONGER CARRIES ════════════════════════════════
    The legacy AVA-parent palette, the frosted-glass card recipe, the coloured

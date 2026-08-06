@@ -7,8 +7,18 @@
   <title>Airport Transfer Intake — Captured With the Flight | AI Chauffeur</title>
   <meta name="description" content="AVA answers every airport call and takes the flight number, airline and terminal on the call. Your dispatcher confirms the pickup.">
 
-  <!-- Favicon set from mark-compact.svg with a dark ground baked in: the bars
-       are near-white and would disappear against a light-mode tab strip. -->
+  <!-- Favicon set derived from mark-compact.svg with a dark ground baked in:
+       the bars are near-white and would disappear against a light-mode tab
+       strip. THE LOGO IS A CLOSED SYSTEM (RUN 10 amendment). Its bar and knot
+       values are the kit's, not the site's, and they are written down in exactly
+       two places on purpose — assets/brand/README.md and the LOGO CANON appendix
+       of DESIGN-SYSTEM.md. They are deliberately NOT quoted here: the knot's hex
+       is grep-gated to the brand folder and the root icon files, and a comment
+       that repeats a gated string makes every future audit report a clean page
+       as dirty. RUN 9 repainted these files to the site palette on the reasoning
+       that a derived favicon is not supplied artwork. That was wrong — a favicon
+       IS the mark at 16px — and it forked the brand from the lockup sitting 40px
+       away in the same header. Reverted. Do not harmonize them again. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
@@ -36,16 +46,11 @@
        always fetched in CORS mode — miss either and the file is fetched twice. -->
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/circulant.css?v=436cf8c">
-  <link rel="stylesheet" href="/assets/aic.css?v=436cf8c">
+  <link rel="stylesheet" href="/assets/circulant.css?v=74c973d7">
+  <link rel="stylesheet" href="/assets/aic.css?v=95a59edb">
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-    {"@type":"Question","name":"Does it get the flight number?","acceptedAnswer":{"@type":"Answer","text":"Yes. On an airport run AVA asks for it, then asks for the airline and the terminal, and reads all three back to the caller. They land in their own fields on the trip ticket instead of buried in a note at the bottom."}},
-    {"@type":"Question","name":"What happens if the flight is delayed?","acceptedAnswer":{"@type":"Answer","text":"AVA captures what the caller reports. If the caller says the flight is running late, that goes on the ticket and your dispatcher sees it. AVA does not watch live flight data today, so a delay nobody calls about is not something it can know. The pickup time stays your dispatcher's call either way."}},
-    {"@type":"Question","name":"Does it know which terminal?","acceptedAnswer":{"@type":"Answer","text":"It asks. The caller says the terminal, and the airline sits next to it on the ticket. A dispatcher who knows that airport can check the two against each other. AVA captures the terminal. It does not decide it."}},
-    {"@type":"Question","name":"Who confirms the pickup time?","acceptedAnswer":{"@type":"Answer","text":"Your dispatcher. Every trip, without exception. AVA writes down the time the caller wants, notes the flight it is measured against, and marks the buffer for review. Nothing reaches a run sheet and no car moves until a human on your side confirms it."}}
-  ]}
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does it get the flight number?","acceptedAnswer":{"@type":"Answer","text":"Yes. On an airport run AVA asks for it, then asks for the airline and the terminal, and reads all three back to the caller. They land in their own fields on the trip ticket instead of buried in a note at the bottom."}},{"@type":"Question","name":"What happens if the flight is delayed?","acceptedAnswer":{"@type":"Answer","text":"AVA captures what the caller reports. If the caller says the flight is running late, that goes on the ticket and your dispatcher sees it. AVA does not watch live flight data today, so a delay nobody calls about is not something it can know. The pickup time stays your dispatcher's call either way."}},{"@type":"Question","name":"Does it know which terminal?","acceptedAnswer":{"@type":"Answer","text":"It asks. The caller says the terminal, and the airline sits next to it on the ticket. A dispatcher who knows that airport can check the two against each other. AVA captures the terminal. It does not decide it."}},{"@type":"Question","name":"Who confirms the pickup time?","acceptedAnswer":{"@type":"Answer","text":"Your dispatcher. Every trip, without exception. AVA writes down the time the caller wants, notes the flight it is measured against, and marks the buffer for review. Nothing reaches a run sheet and no car moves until a human on your side confirms it."}}]}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
@@ -286,7 +291,8 @@
       </a>
 
       <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
-        <div class="cb-head">AVA calls you</div>
+        <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span></button>
+        <div class="cb-body" id="cb-body">
         <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
         <div class="cb-row">
           <div class="cb-field">
@@ -306,6 +312,7 @@
         </label>
         <button type="submit" class="cb-submit" data-cb-submit>Have AVA call me</button>
         <p class="cb-note" data-cb-note role="status" aria-live="polite"></p>
+        </div>
       </form>
 
       <div class="cta-tertiary">
@@ -478,7 +485,7 @@
   <a class="rail-cb" href="#ava-callback" data-event="call_me_rail" aria-label="Get a call back from AVA">Get a call back</a>
 </div>
 
-<script src="/assets/aic.js?v=436cf8c"></script>
+<script src="/assets/aic.js?v=ec781407"></script>
 
 </body>
 </html>

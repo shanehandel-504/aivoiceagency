@@ -126,6 +126,34 @@
      #FFFFFF on an --action-blue fill        6.25:1
      --action-blue as a control on midnight  3.15:1  (non-text, needs 3)
 
+   RUN 10 adds a THIRD elevation and an input ground. Measured on those:
+
+     --ink              14.82:1 on surface-2 ·  16.18:1 on input-bg
+     --ink-soft          9.42:1 on surface-2 ·   9.98:1 on input-bg
+     --ink-mute          5.28:1 on surface-2 ·   5.47:1 on input-bg
+     --signal-blue       4.54:1 on surface-2 ·   4.96:1 on input-bg
+     --neutral           5.65:1 on surface-2 ·   6.16:1 on input-bg
+     #FFFFFF on --action-blue-hover          5.19:1
+     --action-blue-hover as a control        3.79:1 on midnight
+
+   CANVAS LAW. Page-depth treatment is allowed and REQUIRED: a wide horizon
+   band of the blue at 3-5% alpha rising out of the lower third, a corner
+   vignette around 6%, and a grid that is brighter at the top of the document
+   than at the foot of it. That is a PAGE layer — painted once, below every
+   section, naming no state. COMPONENT halos stay banned outright and § 4 GLOW
+   LAW is unchanged: a card separates from the canvas with a hairline and a step
+   of surface, never with light thrown outside its own box.
+
+   THE GRID TOKENS CHANGED SHAPE, and the reason is a measurement rather than a
+   preference. The line colour carried .05 alpha AND was multiplied by a zone
+   opacity of .04, so a rendered page line was 0.002 alpha of blue over
+   midnight: 61 x 0.002 + 7 x 0.998 = 7.1, which rounds to 7. Identical to the
+   background, on every channel. Every page zone on this site was drawing a grid
+   that could not produce one different pixel. The hue now lives at full
+   strength in --grid-line and the ZONE sets the alpha, so the two numbers below
+   are what actually paints. --grid-floor is the down-page multiplier: .05 at
+   the top of the document, .05 x .40 = .02 at the bottom of it.
+
    ROLE, not decoration. A rule that wants a colour and cannot name the state it
    paints is decoration and does not ship.
 
@@ -156,6 +184,8 @@
   /* ---- surfaces ---------------------------------------------------------- */
   --midnight:#070B14;
   --surface:#0D1420;
+  --surface-2:#111A2A;
+  --input-bg:#0A101C;
   --line:#1B2536;
   --line-hot:rgba(61,123,255,.42);
 
@@ -167,6 +197,7 @@
   /* ---- the three blues --------------------------------------------------- */
   --signal-blue:#3D7BFF;
   --action-blue:#1E56D6;
+  --action-blue-hover:#2A63E8;
   --sky:#7FB2FF;
 
   /* ---- semantic ---------------------------------------------------------- */
@@ -182,11 +213,12 @@
   --state-idle:var(--neutral);
   --state-fail:var(--miss-red);
 
-  /* ---- grid · § B. Lines are one value; the ZONE sets how loud it is. ----- */
-  --grid-line:rgba(61,123,255,.05);
+  /* ---- grid · § B. The HUE is one value; the ZONE sets the alpha. -------- */
+  --grid-line:#3D7BFF;
   --grid-cell:64px;
-  --grid-page:.04;
+  --grid-page:.05;
   --grid-console:.08;
+  --grid-floor:.40;
 
   /* ---- elevation · § C. ONE shadow, no colour in it, one per raised panel.  */
   --raise:0 8px 24px rgba(0,0,0,.45);
@@ -274,13 +306,29 @@ body{background:var(--midnight);color:var(--ink-soft);font-family:var(--sans);fo
    effectively stops existing there — which is also the cheapest thing it can do
    on the device that can least afford it. Cell drops to 48px (x0.75) below 768
    for the margins that do survive. */
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+body::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
   opacity:var(--grid-page);
   background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),
                    linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
   background-size:var(--grid-cell) var(--grid-cell);
   mask-image:linear-gradient(90deg,#000 0%,transparent 22%,transparent 78%,#000 100%);
   -webkit-mask-image:linear-gradient(90deg,#000 0%,transparent 22%,transparent 78%,#000 100%)}
+/* RUN 10 · DEPTH. A second mask layer fades the grid down the DOCUMENT, from
+   --grid-page at the top to --grid-page x --grid-floor at the foot. It is
+   guarded because the fallback matters: with two mask layers and the default
+   `add` compositing the result is the UNION of the two, which would put grid
+   lines straight back behind the prose measure the horizontal mask exists to
+   protect. Inside the guard the masks INTERSECT and both laws hold; outside it,
+   the single horizontal mask above is what ships and only the depth is lost.
+   Never let a progressive enhancement fail into a rule violation. */
+@supports (mask-composite: intersect){
+  body::after{
+    mask-image:linear-gradient(90deg,#000 0%,transparent 22%,transparent 78%,#000 100%),
+               linear-gradient(180deg,#000 0%,#000 9%,rgba(0,0,0,var(--grid-floor)) 62%,rgba(0,0,0,var(--grid-floor)) 100%);
+    -webkit-mask-image:linear-gradient(90deg,#000 0%,transparent 22%,transparent 78%,#000 100%),
+               linear-gradient(180deg,#000 0%,#000 9%,rgba(0,0,0,var(--grid-floor)) 62%,rgba(0,0,0,var(--grid-floor)) 100%);
+    mask-composite:intersect;-webkit-mask-composite:source-in}
+}
 @media(max-width:767.98px){body::after{--grid-cell:48px}}
 
 a{color:var(--signal-blue);text-decoration:none;transition:color .15s}
@@ -1000,3 +1048,379 @@ footer{padding:60px 0 40px;border-top:1px solid var(--line);margin-top:80px}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rel:hover,.tel-btn:hover,.cb-submit:hover{transform:none!important}
 }
+
+/* ══ RUN 10 · SHOWROOM v2.0 ══════════════════════════════════════════════════
+   CANONICAL BLOCK. Byte-identical in assets/aic.css and in the embedded <style>
+   in index.html, and it is the LAST block in both files. That position is
+   load-bearing. The callback form, the button system and the card recipe each
+   already existed in two copies that were functionally equivalent by DIFFERENT
+   routes rather than textually equal, so a patch applied to one of them left
+   the other standing — which is § 1's THREE CSS HOMES trap in its most
+   expensive form. One trailing block beats both older copies at equal
+   specificity and can be byte-compared by a gate.
+
+   Where a rule here overrides one that lived inside a media query, the media
+   query is RESTATED below. A later unconditioned rule wins at every width, and
+   that is exactly how "fixed on desktop, broken on a phone" ships.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── B · SURFACE SEPARATION ──────────────────────────────────────────────────
+   The acceptance bar for this run is a phone at 50% brightness. --surface on
+   --midnight measures 1.07:1, which is why the hairline has always been
+   mandatory here; what was missing was the SECOND step. Nested and active
+   layers now sit on --surface-2 with a 1px top light, so a field inside a card
+   reads as sitting in the card rather than as a hole cut through it. The
+   nested layers used to be rgba(7,11,20,.55) — DARKER than their own parent,
+   which is the one direction that cannot read as depth on a dark ground. */
+.c-card,.tk{background:var(--surface-2);border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(127,178,255,.06)}
+
+/* ── C · BUTTON SYSTEM v2 ────────────────────────────────────────────────────
+   The fill changes on hover instead of a brightness filter. filter:brightness()
+   lightens the BEVEL and the border along with the fill, so the whole control
+   washed out by the same amount rather than reading as a state change; and on
+   a control that already carries an inset highlight it flattens the top edge
+   that gives the button its shape. An explicit hover fill plus a hotter border
+   moves only what should move. */
+.btn-primary,.tel-btn,.demo-play-btn,.rail-call,.nav-book{
+  background:var(--action-blue);color:#FFFFFF;
+  border:1px solid rgba(127,178,255,.30);
+  box-shadow:inset 0 1px 0 rgba(127,178,255,.35);
+  font-family:var(--sans);letter-spacing:.005em}
+.btn-primary,.demo-play-btn,.nav-book,.cb-submit{font-weight:600}
+.btn-primary:hover,.tel-btn:hover,.demo-play-btn:hover,.nav-book:hover{
+  background:var(--action-blue-hover);border-color:rgba(127,178,255,.55);
+  color:#FFFFFF;transform:translateY(-1px);filter:none}
+.btn-primary:active,.tel-btn:active,.demo-play-btn:active,.nav-book:active{
+  background:#1A4CC2;transform:translateY(0);filter:none}
+/* The rail is a fixed bar. A hover lift inside it would slide the control out
+   from under the finger that is already on it. */
+.rail-call:hover{background:var(--action-blue-hover);border-color:rgba(127,178,255,.55);color:#FFFFFF}
+.rail-call:active{background:#1A4CC2;color:#FFFFFF}
+
+/* Heights. 54 desktop, 56 on a phone, where the control is the whole width of
+   the screen and the thumb is the pointer. Nav and rail are chrome and stay on
+   44: the header is capped at 64px on a phone and 80 on desktop, and a 54px
+   control inside 14px of padding would put the desktop bar at 82. */
+.btn,.cb-submit,.demo-play-btn,.demo-call-btn{min-height:54px}
+@media(max-width:767.98px){.btn,.cb-submit,.demo-play-btn,.demo-call-btn{min-height:56px}}
+
+/* ── C · CTA DE-DUPLICATION ──────────────────────────────────────────────────
+   Three filled blue phone surfaces could land in one 390 viewport: the header
+   chip, the hero primary and the sticky rail. Measured on the 390 fold before
+   this run, two of them sat 40px apart and the eye had no idea which one was
+   the page's ask. The header chip is the OUTLINED utility at every width now
+   and keeps its digits; the hero keeps THE filled primary; the rail still arms
+   only once the hero cluster has left the top of the viewport, which is the
+   existing suppression rather than a new one.
+
+   The word "Call" survives down to 380px rather than 1024. Measured at 390:
+   123 lockup + 8 + 177 chip + 8 + 44 burger = 360 into 366 available. At 360 it
+   does not fit, so the verb drops there and the DIGITS still read — and the
+   aria-label still CONTAINS the visible text, which is what voice control
+   matches on. */
+.nav-cta{background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  box-shadow:none;font-weight:500}
+.nav-cta:hover{background:var(--surface);color:var(--sky);border-color:var(--sky);filter:none}
+@media(max-width:1023.98px){
+  .nav-cta{background:var(--surface);color:var(--ink);border-color:var(--line);box-shadow:none}
+  .nav-cta:hover{color:var(--sky);border-color:var(--sky);filter:none}
+}
+/* THE VERB STAYS HIDDEN BELOW 1024, and that is a measurement, not a
+   preference. Showing "Call" took the chip from 147px to 177px at 390 and to
+   185px at 430 — and 430 is the TIGHTEST width on this site, not 360, because
+   below 400 the bar drops to 12px padding AND the burger loses its "Menu"
+   label. Measured with the verb on: the nav row ran to 441.7px inside a 414px
+   content box on all twelve pages. The digits are what had to survive, and they
+   do; the aria-label still carries the full "Call (414) 775-0019" and still
+   CONTAINS the visible text, which is what voice control matches on. */
+
+/* ── D · THE CALLBACK CONSOLE ────────────────────────────────────────────────
+   The form was a card with a label on it. It is an instrument now, and it says
+   what it is doing: a 44px header row carrying the module name and its own
+   state, over a nested body on --surface-2. The hot top hairline is the only
+   place --line-hot appears on a resting panel, and it marks the one panel on
+   the fold that DOES something. */
+.cb-form{background:var(--surface);border:1px solid var(--line);
+  border-top:1px solid var(--line-hot);border-radius:8px;padding:0}
+.cb-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  width:100%;min-height:44px;padding:0 1rem;margin:0;
+  background:none;border:0;border-bottom:1px solid var(--line);cursor:pointer;
+  font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--sky);text-align:left}
+.cb-head:focus-visible{outline:2px solid var(--signal-blue);outline-offset:-2px}
+.cb-title{white-space:nowrap}
+/* STATE LAW. The dot and the word are one element, so they cannot disagree:
+   there is no colour transition on this rule, and the class that repaints it is
+   the same class that rewrites the word. A 450ms crossfade once left rows
+   reading one state while painted another in 18.6% of frames. */
+.cb-status{display:inline-flex;align-items:center;gap:.45rem;flex:none;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--neutral);white-space:nowrap;transition:none}
+.cb-status::before{content:'';width:6px;height:6px;border-radius:50%;
+  background:currentColor;flex:none}
+.cb-form.is-done .cb-status{color:var(--success-green)}
+.cb-body{padding:1rem;background:var(--surface-2);border-radius:0 0 7px 7px;
+  box-shadow:inset 0 1px 0 rgba(127,178,255,.06)}
+/* THE COLLAPSE IS CSS-FIRST, and that is a MEASURED requirement rather than a
+   preference. The first cut shipped the card open and let JS collapse it on
+   load. Measured on the homepage at mobile: CLS 0.130 in two of three runs —
+   everything below the hero jumped up the instant the script ran, and the
+   twelve-page median hid it at 0.000 because the shift did not fire every time.
+   An intermittent 0.13 is worse than a steady one; it passes review and fails
+   users. CSS now decides the initial state before first paint and JS only ever
+   writes an EXPLICIT override, so there is nothing left to shift. */
+@media(max-width:767.98px){
+  .cb-form:not([data-collapsed="false"]) .cb-body{display:none}
+  .cb-form:not([data-collapsed="false"]) .cb-head{border-bottom:0}
+}
+.cb-form[data-collapsed="true"] .cb-body{display:none}
+.cb-form[data-collapsed="true"] .cb-head{border-bottom:0}
+/* § D · buttons are Space Grotesk 600. .tel-main is the phone control's label
+   and was the one that kept 500. */
+.tel-main{font-weight:600}
+.cb-sub{margin-bottom:.9rem}
+
+/* 12px FLOOR. These labels rendered at 9.92px — .62rem — which is under the
+   hard floor § 3 sets and has been since the form shipped. A probe for it is
+   part of this run's gate so it cannot come back. */
+.cb-label{font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--neutral)}
+.cb-input{min-height:54px;background:var(--input-bg);border:1px solid var(--line);
+  border-radius:8px;box-shadow:none;color:var(--ink)}
+.cb-input::placeholder{color:var(--neutral)}
+.cb-input:focus{outline:none;border-color:var(--signal-blue);
+  box-shadow:0 0 0 3px rgba(61,123,255,.15)}
+
+/* THE NATIVE BOX IS GONE. A default checkbox paints a white 20px square, and on
+   this ground that was the single brightest object on the fold — brighter than
+   the primary CTA, attached to the one control on the page that is not an ask.
+   appearance:none plus a clip-path tick keeps the semantics and the keyboard
+   behaviour and gives back the hierarchy. */
+.cb-consent input{appearance:none;-webkit-appearance:none;position:relative;
+  width:20px;height:20px;margin-top:2px;flex:none;cursor:pointer;
+  background:var(--surface);border:1px solid #2A3650;border-radius:5px;
+  transition:background .12s,border-color .12s}
+.cb-consent input:checked{background:var(--action-blue);border-color:var(--action-blue)}
+.cb-consent input:checked::after{content:'';position:absolute;inset:0;background:#FFFFFF;
+  clip-path:polygon(14% 50%,24% 40%,38% 54%,76% 16%,86% 26%,38% 74%)}
+.cb-consent input:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
+
+/* The submit RESTS as a ghost and only takes the fill once both fields validate
+   and consent is ticked. Until then the hero's phone control is the one filled
+   thing on the fold; after then, the reader has already chosen this path. */
+.cb-submit{background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  box-shadow:none}
+.cb-submit:hover:not(:disabled){background:var(--surface);border-color:var(--sky);
+  color:var(--sky);transform:translateY(-1px)}
+.cb-form.is-ready .cb-submit{background:var(--action-blue);color:#FFFFFF;
+  border-color:rgba(127,178,255,.30);box-shadow:inset 0 1px 0 rgba(127,178,255,.35)}
+.cb-form.is-ready .cb-submit:hover:not(:disabled){background:var(--action-blue-hover);
+  border-color:rgba(127,178,255,.55);color:#FFFFFF}
+.cb-form.is-ready .cb-submit:active{background:#1A4CC2;transform:translateY(0)}
+
+/* ── E · THE DISPATCH LEDGER ─────────────────────────────────────────────────
+   The Crush claims three calls land at once and all three get taken. Three rows
+   labelled "Captured" asserted the end state without ever showing the middle of
+   it. The ledger shows the overlap: 01 finishing while 02 is on the call and 03
+   is ringing. Terminal state ships in the markup, so a screen reader, a JS-off
+   browser and a reduced-motion reader all get the true resting record and the
+   scene only ever rewinds it. */
+.ledger{max-width:560px;margin:1.9rem auto 2.1rem;text-align:left;
+  background:var(--surface-2);border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;position:relative}
+.lg-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  min-height:40px;padding:0 .9rem;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--neutral)}
+.lg-note{color:var(--neutral);white-space:nowrap}
+.lg-row{display:grid;grid-template-columns:2px auto 1fr auto;
+  align-items:center;column-gap:.75rem;row-gap:.2rem;
+  min-height:52px;padding:.5rem .9rem .5rem 0;
+  border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.lg-row:last-child{border-bottom:0}
+.lg-rail{grid-row:1/-1;align-self:stretch;width:2px;background:var(--neutral);
+  transition:none}
+.lg-time{color:var(--ink-mute)}
+.lg-id{color:var(--ink)}
+.lg-trip{color:var(--ink-mute);letter-spacing:.06em;text-transform:none;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lg-state{display:inline-flex;align-items:center;gap:.45rem;white-space:nowrap;
+  color:var(--neutral);transition:none}
+.lg-state::before{content:'';width:6px;height:6px;border-radius:50%;
+  background:currentColor;flex:none}
+.lg-row.is-ringing .lg-rail,.lg-row.is-ringing .lg-state{color:var(--state-ringing)}
+.lg-row.is-ringing .lg-rail{background:var(--state-ringing);opacity:.55}
+.lg-row.is-oncall .lg-rail,.lg-row.is-oncall .lg-state{color:var(--state-listening)}
+.lg-row.is-oncall .lg-rail{background:var(--state-listening);opacity:.55}
+.lg-row.is-captured .lg-rail,.lg-row.is-captured .lg-state{color:var(--state-captured)}
+.lg-row.is-captured .lg-rail{background:var(--state-captured);opacity:.55}
+.lg-row.is-done .lg-rail,.lg-row.is-done .lg-state{color:var(--state-captured)}
+.lg-row.is-done .lg-rail{background:var(--state-captured);opacity:1}
+/* ONE active pulse at a time, and only while the scene owns the screen. The
+   observer adds .is-live on entry and takes it off on exit, so an offscreen
+   ledger animates nothing at all. */
+.ledger.is-live .lg-row.is-ringing .lg-state::before{animation:pulse 1s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.lg-state::before{animation:none!important}}
+/* Below 560 the row stacks to two lines: the record on top, the state under it.
+   The rail spans both, which is what keeps it reading as one row. */
+@media(max-width:559.98px){
+  .lg-row{grid-template-columns:2px auto 1fr;padding:.6rem .8rem .6rem 0}
+  .lg-state{grid-column:2/-1;margin-top:.15rem}
+  .lg-trip{white-space:normal}
+}
+
+/* ── I · FOOTER + CHROME ─────────────────────────────────────────────────────
+   The mobile footer was one column of 44px rows: twelve links, 620px of
+   scroll, and the © line pushed so far down that the document appeared to end
+   in empty space. Two columns halves it. The links go --ink because at
+   --ink-mute they read as disabled on a phone at half brightness, and a footer
+   link is the only navigation left at the bottom of the page. */
+.foot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:900px){.foot-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.foot-col a{color:var(--ink)}
+.foot-col a:hover{color:var(--sky)}
+footer{padding-bottom:32px}
+.foot-bottom{padding-top:1.5rem;margin-top:1.5rem}
+
+/* ── D/E · LEDGER GRID, CORRECTED ────────────────────────────────────────────
+   Five children per row: rail, time, id, trip, state. The first cut declared
+   four columns and CSS Grid silently created an implicit fifth ROW rather than
+   erroring, which reads as a row that has quietly grown a second line. */
+.lg-row{grid-template-columns:2px auto auto 1fr auto}
+/* MEASURED AT 390. The trip cell carried "Airport run, 2 passengers" and wrapped
+   inside its own column, which made a stacked row THREE lines instead of two and
+   broke the ledger's rhythm on exactly the device this brand is read on. The
+   passenger count was the part that had to go: it is already in the console's
+   own PASSENGERS field two sections up, and repeating it here bought a wrap. */
+@media(max-width:559.98px){
+  .lg-row{grid-template-columns:2px auto auto 1fr}
+  .lg-state{grid-column:2/-1}
+}
+
+/* ── D · MOBILE FOLD ─────────────────────────────────────────────────────────
+   390x844 has to carry kicker, headline, ONE line of subhead, the phone control
+   and the callback module's header row. The subhead ran five lines on a phone
+   and pushed the primary control under the fold. It is one sentence there now
+   and the detail returns from 768 up. One DOM, one crawlable paragraph — the
+   alternative, a second copy of the sentence hidden at the other breakpoint,
+   ships duplicate copy for a crawler to read twice. */
+@media(max-width:767.98px){.hero-sub-more{display:none}}
+
+/* ── F · GOOGLE LEAD PROTECTION ──────────────────────────────────────────────
+   No card, no accent object, no second colour. This section is a claim about
+   what happens AFTER the click, so it is set as prose with the one control the
+   whole site uses, and the attribution line closes it. */
+.glp-fine{font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;
+  line-height:1.6;color:var(--neutral);margin-top:1.5rem;max-width:560px}
+#lead-protection .sec-sub{margin-bottom:1.75rem}
+
+/* ── I · FOOTER, MEASURED AND CORRECTED ──────────────────────────────────────
+   The two-column footer put the brand block and the Product column in the same
+   row, and the NAP paragraph ran straight through the link labels beside it.
+   The brand block takes a full row at EVERY width now — it did so from 900 up
+   already, and the rule simply never covered the widths where it mattered
+   most. A footer that overlaps itself on a phone is not a compact footer. */
+.foot-brand{grid-column:1/-1}
+@media(min-width:900px){.foot-brand{padding-bottom:1.25rem;border-bottom:1px solid var(--line)}}
+.foot-col a{display:flex;align-items:center;padding:.35rem 0}
+.foot-nap{max-width:38ch}
+
+/* ── G · THE INTEGRATION TABLE ───────────────────────────────────────────────
+   A real <table> with real header cells, because the content genuinely is
+   tabular: three facts about each of four systems. A screen reader can say
+   "Limo Anywhere, dispatcher action" and then read the cell. A card grid would
+   have looked the same and carried none of that, and an answer engine reading
+   the page gets a labelled row instead of three loose sentences.
+
+   It scrolls inside its OWN container under 720px. The page body never scrolls
+   sideways — that is a gate, and a wide table is the classic way to fail it. */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--line);border-radius:12px;background:var(--surface);
+  box-shadow:var(--raise)}
+.tbl{width:100%;border-collapse:collapse;min-width:620px;text-align:left}
+.tbl-cap{caption-side:top;padding:.85rem 1rem;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--neutral);text-align:left}
+.tbl th,.tbl td{padding:1rem;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl thead th{font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--neutral);background:var(--surface-2);
+  box-shadow:inset 0 1px 0 rgba(127,178,255,.06);white-space:nowrap}
+.tbl tbody th{font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--ink);
+  white-space:nowrap}
+.tbl td{font-size:.95rem;color:var(--ink-soft);line-height:1.55;max-width:34ch}
+.tbl tbody tr:last-child th,.tbl tbody tr:last-child td{border-bottom:0}
+
+/* ── H · THE BOOKING INSET ───────────────────────────────────────────────────
+   The scheduling widget is a white iframe on a midnight page and there is no
+   way to restyle the inside of it. Left bare it read as the site ending and
+   something else starting. A dark panel above it, in the site's own mono, ends
+   the page's voice deliberately — so the white box reads as an inset the page
+   put there rather than as a seam. The iframe, its loader and its routing are
+   untouched: § 10 trap 15 is why. */
+.book-inset{display:flex;flex-wrap:wrap;align-items:baseline;gap:.35rem 1rem;
+  margin:0 0 1rem;padding:.9rem 1rem;
+  background:var(--surface-2);border:1px solid var(--line);
+  border-top:1px solid var(--line-hot);border-radius:8px;
+  box-shadow:inset 0 1px 0 rgba(127,178,255,.06)}
+.book-inset b{font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--sky)}
+.book-inset span{font-size:.95rem;color:var(--ink-soft)}
+
+/* ── § 3 · THE 12px TYPE FLOOR, ENFORCED ─────────────────────────────────────
+   The brief named ONE violation — .cb-label at .62rem. A probe was written for
+   it, and the probe found NINE MORE that had been live for as long as the pages
+   have. Measured, in rendered pixels:
+
+     .tk-label   9.60   .calc-k     9.60   .calc-label 9.92
+     .hc-state  10.88*  .ticket-bar 10.88  .card-num  11.20
+     .console-title 11.20  .calc-note 11.20  .foot-bottom 11.20
+     .vs-a      11.52   .tk-sub     11.84
+     (* .6rem in one home and .7rem in the other — the same label at two sizes,
+        which is the THREE CSS HOMES trap wearing a typographic hat.)
+
+   Every one of them is mono, uppercase, wide-tracked operational text: field
+   names, ticket labels, calculator keys, the copyright line. That is exactly
+   the category the floor exists for — a dispatcher reads these at 2AM on a
+   cracked screen, and 9.6px of tracked uppercase is a smear.
+
+   All of them go to .75rem = 12px. That is the floor, not a target, and the
+   gate now fails the run if anything renders under it on any of twelve pages at
+   any of six viewports. This block is the ONE place the floor is set, so the
+   next rule that wants to be small has to argue with a single line of CSS.
+   ────────────────────────────────────────────────────────────────────────── */
+.card-num,.ticket-bar,.tk-label,.tk-sub,.vs-a,
+.calc-label,.calc-k,.calc-note,.legal-meta,
+.foot-bottom,.console-title,.hc-state,
+.hero-console .hc-state{font-size:.75rem}
+
+/* ── I · THE MOBILE FOOTER, SIZED FROM A MEASUREMENT ─────────────────────────
+   The two-column grid on its own put 84 wrapped labels on the site. Measured at
+   360: the column was 144px and the longest label ("Works with your software",
+   "After-hours limo dispatch") ran 169px. Three numbers had to move together,
+   and the fix is all three rather than a font size alone:
+
+     footer .wrap padding   1.5rem -> 1rem   (+16px of usable row)
+     .foot-grid column gap  1.5rem -> .5rem  (+16px)
+     .foot-col link         14px   -> 13px   (169px label -> 157px)
+
+   Which lands 157px into a 160px column at 360, and 157 into 175 at 390. 13px
+   is above the 12px floor with a pixel to spare and is the size a footer link
+   should be anyway — it is secondary navigation, not body copy. Re-measured
+   after the change: zero wrapped labels at 360, 390 and 430.
+   ────────────────────────────────────────────────────────────────────────── */
+@media(max-width:599.98px){
+  footer .wrap{padding:0 .75rem}
+  .foot-grid{gap:1.5rem .375rem}
+  .foot-col a{font-size:.8125rem}
+}
+/* RE-MEASURED, and the first cut missed by ONE PIXEL. At 1rem padding and a
+   .5rem gap the column was 160px and the wrapped label's two rects summed to
+   157 — which looks like it fits and does not, because the sum of the rects
+   EXCLUDES the space character the break consumed. The true single-line width
+   was ~161. The rects tell you where the text went, not how wide it wanted to
+   be; when a label wraps at all, add the space back before believing the
+   number. 12px padding and a 6px gap give a 165px column against 161px of
+   label, and the probe reads zero wraps at 360, 390 and 430. */

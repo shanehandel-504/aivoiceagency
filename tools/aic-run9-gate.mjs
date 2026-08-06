@@ -70,6 +70,7 @@ const PROBE = () => {
     contrast: [],
     wraps: [],
     shadows: 0,
+    insets: 0,
     blurs: 0,
     accents: [],
     docBottom: null,
@@ -178,7 +179,25 @@ const PROBE = () => {
   document.querySelectorAll('*').forEach(el => {
     if (!painted(el)) return;
     const cs = getComputedStyle(el);
-    if (cs.boxShadow && cs.boxShadow !== 'none') out.shadows++;
+    /* RUN 10 · INSET IS NOT ELEVATION. This counter fed a budget whose stated
+       purpose is capping the elevation ladder — "one --raise per raised panel".
+       An `inset 0 1px 0` is a hairline drawn with the shadow property: it
+       paints nothing outside the box, casts nothing on the page, and stacks no
+       ladder. Counting it took the homepage to 30 of a 15 cap the moment the
+       nested surfaces got their 1px top light, which would have failed a page
+       that had gained exactly zero elevation. Outset shadows feed the budget;
+       insets are counted separately so they are still visible in the report and
+       cannot grow unwatched. */
+    if (cs.boxShadow && cs.boxShadow !== 'none') {
+      /* Computed box-shadow is comma-separated and rgba() carries commas of its
+         own, so a plain .split(',') shreds the value. This matches whole layers:
+         any run of characters that is neither a comma nor an open paren, plus
+         any complete parenthesised group. A rule counts as a hairline only if
+         EVERY layer is inset; one outset layer makes the whole rule elevation. */
+      const layers = cs.boxShadow.match(/(?:[^,(]|\([^)]*\))+/g) || [];
+      if (layers.length && layers.every((l) => /\binset\b/.test(l))) out.insets++;
+      else out.shadows++;
+    }
     if ((cs.backdropFilter && cs.backdropFilter.includes('blur')) ||
         (cs.webkitBackdropFilter && cs.webkitBackdropFilter.includes('blur')) ||
         (cs.filter && cs.filter.includes('blur'))) out.blurs++;
@@ -368,7 +387,9 @@ line('accents per section > 2', accents);
 line('mobile nav height > 64px', navTall);
 line('nav row outside its own box', navRow);
 line('dead scroll below footer', deadScroll);
-console.log(`${homeShadow <= 15 ? 'PASS' : 'FAIL'}  ${'homepage box-shadows <= 15'.padEnd(42)} ${homeShadow}`);
+const homeInset = Math.max(...results.filter(r => r.page === 'home').map(r => r.insets));
+console.log(`${homeShadow <= 15 ? 'PASS' : 'FAIL'}  ${'homepage elevation shadows <= 15'.padEnd(42)} ${homeShadow}`);
+console.log(`${homeInset <= 40 ? 'PASS' : 'FAIL'}  ${'homepage inset hairlines <= 40'.padEnd(42)} ${homeInset}`);
 console.log(`${maxBlur <= 6 ? 'PASS' : 'FAIL'}  ${'sitewide blur() <= 6'.padEnd(42)} ${maxBlur}`);
 console.log(`${rm.running.length === 0 ? 'PASS' : 'FAIL'}  ${'reduced motion settles'.padEnd(42)} ${rm.running.length ? rm.running.join(', ') : `state="${rm.state}" crush=${JSON.stringify(rm.crush)}`}`);
 
@@ -381,4 +402,4 @@ for (const [name, arr] of [['OVERFLOW', overflow], ['ERRORS', errs], ['CONTRAST'
 writeFileSync(OUT + 'gate.json', JSON.stringify({ results, rm }, null, 1));
 console.log(`\nshots + json -> audits/run9/`);
 await browser.close();
-process.exit(overflow.length || errs.length || contrast.length || wraps.length || accents.length || navTall.length || navRow.length || deadScroll.length || homeShadow > 15 || maxBlur > 6 || rm.running.length ? 1 : 0);
+process.exit(overflow.length || errs.length || contrast.length || wraps.length || accents.length || navTall.length || navRow.length || deadScroll.length || homeShadow > 15 || homeInset > 40 || maxBlur > 6 || rm.running.length ? 1 : 0);

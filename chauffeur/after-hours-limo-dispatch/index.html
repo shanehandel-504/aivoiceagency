@@ -7,8 +7,18 @@
   <title>After-Hours Limo Dispatch — Nights, Weekends, Surges | AI Chauffeur</title>
   <meta name="description" content="Nights, weekends, and event surges get answered. AVA takes every after-hours call and hands your dispatcher a clean trip ticket. Call (414) 775-0019.">
 
-  <!-- Favicon set from mark-compact.svg with a dark ground baked in: the bars
-       are near-white and would disappear against a light-mode tab strip. -->
+  <!-- Favicon set derived from mark-compact.svg with a dark ground baked in:
+       the bars are near-white and would disappear against a light-mode tab
+       strip. THE LOGO IS A CLOSED SYSTEM (RUN 10 amendment). Its bar and knot
+       values are the kit's, not the site's, and they are written down in exactly
+       two places on purpose — assets/brand/README.md and the LOGO CANON appendix
+       of DESIGN-SYSTEM.md. They are deliberately NOT quoted here: the knot's hex
+       is grep-gated to the brand folder and the root icon files, and a comment
+       that repeats a gated string makes every future audit report a clean page
+       as dirty. RUN 9 repainted these files to the site palette on the reasoning
+       that a derived favicon is not supplied artwork. That was wrong — a favicon
+       IS the mark at 16px — and it forked the brand from the lockup sitting 40px
+       away in the same header. Reverted. Do not harmonize them again. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
@@ -36,16 +46,11 @@
        always fetched in CORS mode — miss either and the file is fetched twice. -->
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/circulant.css?v=436cf8c">
-  <link rel="stylesheet" href="/assets/aic.css?v=436cf8c">
+  <link rel="stylesheet" href="/assets/circulant.css?v=74c973d7">
+  <link rel="stylesheet" href="/assets/aic.css?v=95a59edb">
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-    {"@type":"Question","name":"Does it really run at 3 AM?","acceptedAnswer":{"@type":"Answer","text":"Yes. AVA answers at 3 AM the same way it answers at 3 PM. There is no hold music, no queue, and no voicemail box. Every inbound call gets picked up at once, and the trip comes back to your dispatcher as a structured trip ticket."}},
-    {"@type":"Question","name":"What happens on a holiday weekend?","acceptedAnswer":{"@type":"Answer","text":"Nothing changes. New Year's Eve, prom weekend, a snowstorm, the Sunday of a long weekend — AVA takes every call that comes in. That includes the ones that land in the same second. Your desk opens to a stack of trip tickets instead of a full voicemail box."}},
-    {"@type":"Question","name":"Can I have it answer only after hours?","acceptedAnswer":{"@type":"Answer","text":"Yes. AVA can take the line on a schedule — nights, weekends, holidays, lunch, whatever hours you pick — and hand it back when your desk opens. Or it can take all of it, around the clock. You choose the hours, and you can change them later."}},
-    {"@type":"Question","name":"Do I still get to confirm the trip?","acceptedAnswer":{"@type":"Answer","text":"Yes. AVA captures, a human confirms. The ticket carries pickup, dropoff, time, vehicle class, passenger and bag count, flight details and notes. AVA does not write into your dispatch software. Your dispatcher confirms the trip in whatever you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox."}}
-  ]}
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does it really run at 3 AM?","acceptedAnswer":{"@type":"Answer","text":"Yes. AVA answers at 3 AM the same way it answers at 3 PM. There is no hold music, no queue, and no voicemail box. Every inbound call gets picked up at once, and the trip comes back to your dispatcher as a structured trip ticket."}},{"@type":"Question","name":"What happens on a holiday weekend?","acceptedAnswer":{"@type":"Answer","text":"Nothing changes. New Year's Eve, prom weekend, a snowstorm, the Sunday of a long weekend — AVA takes every call that comes in. That includes the ones that land in the same second. Your desk opens to a stack of trip tickets instead of a full voicemail box."}},{"@type":"Question","name":"Can I have it answer only after hours?","acceptedAnswer":{"@type":"Answer","text":"Yes. AVA can take the line on a schedule — nights, weekends, holidays, lunch, whatever hours you pick — and hand it back when your desk opens. Or it can take all of it, around the clock. You choose the hours, and you can change them later."}},{"@type":"Question","name":"Do I still get to confirm the trip?","acceptedAnswer":{"@type":"Answer","text":"Yes. AVA captures, a human confirms. The ticket carries pickup, dropoff, time, vehicle class, passenger and bag count, flight details and notes. AVA does not write into your dispatch software. Your dispatcher confirms the trip in whatever you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox."}}]}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
@@ -294,7 +299,8 @@
       </a>
 
       <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
-        <div class="cb-head">AVA calls you</div>
+        <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span></button>
+        <div class="cb-body" id="cb-body">
         <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
         <div class="cb-row">
           <div class="cb-field">
@@ -314,6 +320,7 @@
         </label>
         <button type="submit" class="cb-submit" data-cb-submit>Have AVA call me</button>
         <p class="cb-note" data-cb-note role="status" aria-live="polite"></p>
+        </div>
       </form>
 
       <div class="cta-tertiary">
@@ -490,7 +497,7 @@
   <a class="rail-cb" href="#ava-callback" data-event="call_me_rail" aria-label="Get a call back from AVA">Get a call back</a>
 </div>
 
-<script src="/assets/aic.js?v=436cf8c"></script>
+<script src="/assets/aic.js?v=ec781407"></script>
 
 </body>
 </html>

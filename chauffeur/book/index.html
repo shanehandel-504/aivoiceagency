@@ -39,8 +39,8 @@
        always fetched in CORS mode — miss either and the file is fetched twice. -->
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/circulant.css?v=436cf8c">
-  <link rel="stylesheet" href="/assets/aic.css?v=436cf8c">
+  <link rel="stylesheet" href="/assets/circulant.css?v=74c973d7">
+  <link rel="stylesheet" href="/assets/aic.css?v=95a59edb">
 
   <style>
   /* ==========================================================================
@@ -170,6 +170,12 @@
 <!-- ══ THE CALENDAR ══════════════════════════════════════════════════════ -->
 <section class="cal-sec" aria-label="Booking calendar">
   <div class="wrap">
+    <!-- RUN 10 · TASK H. The panel only. The iframe, its JS loader, the
+         noscript fallback and the routing below are untouched by order. -->
+    <div class="book-inset">
+      <b>20-minute dispatch setup</b>
+      <span>Your rates &middot; routes &middot; vehicles &middot; call flow</span>
+    </div>
     <div class="cal-shell" data-rail-hide>
       <div class="cal-skel" data-cal-skel aria-hidden="true">
         <div class="sk-head"><span class="sk-bar"></span><span class="sk-bar"></span></div>
@@ -227,7 +233,8 @@
       </a>
 
       <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
-        <div class="cb-head">AVA calls you</div>
+        <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span></button>
+        <div class="cb-body" id="cb-body">
         <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
         <div class="cb-row">
           <div class="cb-field">
@@ -247,6 +254,7 @@
         </label>
         <button type="submit" class="cb-submit" data-cb-submit>Have AVA call me</button>
         <p class="cb-note" data-cb-note role="status" aria-live="polite"></p>
+        </div>
       </form>
     </div>
 
@@ -397,7 +405,7 @@
   <a class="rail-cb" href="#ava-callback" data-event="call_me_rail" aria-label="Get a call back from AVA">Get a call back</a>
 </div>
 
-<script src="/assets/aic.js?v=436cf8c"></script>
+<script src="/assets/aic.js?v=ec781407"></script>
 
 <!-- Calendar loader. Deferred fetch, one-way, and it always fires: the calendar
      IS the page, so "lazy" must never mean "sometimes absent". -->

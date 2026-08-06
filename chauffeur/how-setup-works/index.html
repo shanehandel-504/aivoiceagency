@@ -7,8 +7,18 @@
   <title>How Setup Works — Done for You, One to Two Weeks | AI Chauffeur</title>
   <meta name="description" content="Setup done for you in five steps: a 20-minute setup call, your rules written down, the build, test calls you listen to, then live. One to two weeks.">
 
-  <!-- Favicon set from mark-compact.svg with a dark ground baked in: the bars
-       are near-white and would disappear against a light-mode tab strip. -->
+  <!-- Favicon set derived from mark-compact.svg with a dark ground baked in:
+       the bars are near-white and would disappear against a light-mode tab
+       strip. THE LOGO IS A CLOSED SYSTEM (RUN 10 amendment). Its bar and knot
+       values are the kit's, not the site's, and they are written down in exactly
+       two places on purpose — assets/brand/README.md and the LOGO CANON appendix
+       of DESIGN-SYSTEM.md. They are deliberately NOT quoted here: the knot's hex
+       is grep-gated to the brand folder and the root icon files, and a comment
+       that repeats a gated string makes every future audit report a clean page
+       as dirty. RUN 9 repainted these files to the site palette on the reasoning
+       that a derived favicon is not supplied artwork. That was wrong — a favicon
+       IS the mark at 16px — and it forked the brand from the lockup sitting 40px
+       away in the same header. Reverted. Do not harmonize them again. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
@@ -36,17 +46,11 @@
        always fetched in CORS mode — miss either and the file is fetched twice. -->
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/circulant.css?v=436cf8c">
-  <link rel="stylesheet" href="/assets/aic.css?v=436cf8c">
+  <link rel="stylesheet" href="/assets/circulant.css?v=74c973d7">
+  <link rel="stylesheet" href="/assets/aic.css?v=95a59edb">
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-    {"@type":"Question","name":"How long does it take?","acceptedAnswer":{"@type":"Answer","text":"Typically one to two weeks, from the setup call to a live line. The build itself is the fast part. What sets the pace is how quickly your rate rules, service area, and dispatch process get written down, and that part is mostly you."}},
-    {"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"It depends on the operation, and that is not a dodge. Every build is custom to your rate rules, your service area, your vehicle classes, and the way your dispatcher works. There is no package to pick from, which is why there is no price list on this page. You get a real number on the setup call, before anything is built."}},
-    {"@type":"Question","name":"Do I have to change my phone number?","acceptedAnswer":{"@type":"Answer","text":"No. You keep the number your callers already dial. Setup is a forward from the line you have now, the same thing you already do when you send calls to an after-hours service. You control the forward and you can undo it."}},
-    {"@type":"Question","name":"What if it is not right for my operation?","acceptedAnswer":{"@type":"Answer","text":"Then you hear that on the setup call and you are out twenty minutes. Some operations do not need this. If your phone is covered at every hour and nothing gets missed, there is nothing here for you. We would rather say that than send a proposal."}},
-    {"@type":"Question","name":"Does AVA put the trip into my system for me?","acceptedAnswer":{"@type":"Answer","text":"No. AVA captures the trip and hands your dispatcher a clean ticket. AVA does not write into your dispatch software, text the passenger, or assign a driver. Your dispatcher confirms every trip. That does not change once you go live."}}
-  ]}
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does it take?","acceptedAnswer":{"@type":"Answer","text":"Typically one to two weeks, from the setup call to a live line. The build itself is the fast part. What sets the pace is how quickly your rate rules, service area, and dispatch process get written down, and that part is mostly you."}},{"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"It depends on the operation, and that is not a dodge. Every build is custom to your rate rules, your service area, your vehicle classes, and the way your dispatcher works. There is no package to pick from, which is why there is no price list on this page. You get a real number on the setup call, before anything is built."}},{"@type":"Question","name":"Do I have to change my phone number?","acceptedAnswer":{"@type":"Answer","text":"No. You keep the number your callers already dial. Setup is a forward from the line you have now, the same thing you already do when you send calls to an after-hours service. You control the forward and you can undo it."}},{"@type":"Question","name":"What if it is not right for my operation?","acceptedAnswer":{"@type":"Answer","text":"Then you hear that on the setup call and you are out twenty minutes. Some operations do not need this. If your phone is covered at every hour and nothing gets missed, there is nothing here for you. We would rather say that than send a proposal."}},{"@type":"Question","name":"Does AVA put the trip into my system for me?","acceptedAnswer":{"@type":"Answer","text":"No. AVA captures the trip and hands your dispatcher a clean ticket. AVA does not write into your dispatch software, text the passenger, or assign a driver. Your dispatcher confirms every trip. That does not change once you go live."}}]}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
@@ -222,7 +226,8 @@
       </a>
 
       <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
-        <div class="cb-head">AVA calls you</div>
+        <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span></button>
+        <div class="cb-body" id="cb-body">
         <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
         <div class="cb-row">
           <div class="cb-field">
@@ -242,6 +247,7 @@
         </label>
         <button type="submit" class="cb-submit" data-cb-submit>Have AVA call me</button>
         <p class="cb-note" data-cb-note role="status" aria-live="polite"></p>
+        </div>
       </form>
 
       <div class="cta-tertiary">
@@ -418,7 +424,7 @@
   <a class="rail-cb" href="#ava-callback" data-event="call_me_rail" aria-label="Get a call back from AVA">Get a call back</a>
 </div>
 
-<script src="/assets/aic.js?v=436cf8c"></script>
+<script src="/assets/aic.js?v=ec781407"></script>
 
 </body>
 </html>

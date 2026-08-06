@@ -1,0 +1,16 @@
+# ============================================================================
+# aichauffeur.ai — deploy exclusions
+# ----------------------------------------------------------------------------
+# The `aichauffeur` Vercel project has Root Directory = /chauffeur/, so this
+# file governs that project and only that project. The AVA parent deploys from
+# the repo root and never reads it.
+#
+# RUN 9 shipped DESIGN-SYSTEM.md into the bundle and blocked it in robots.txt
+# instead, because there was no .vercelignore to add a line to and the run was
+# not going to invent one against a live host mid-flight. robots.txt is a
+# request to well-behaved crawlers, not an access control: the file was still
+# fetchable by anyone who typed the path. It is the brand's engineering law —
+# no keys, no private numbers — so this was always an exposure of intent rather
+# than of secrets. It is now simply not deployed, which is the honest fix.
+# ============================================================================
+DESIGN-SYSTEM.md

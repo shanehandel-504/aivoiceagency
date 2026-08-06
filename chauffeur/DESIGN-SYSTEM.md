@@ -1,6 +1,9 @@
 # AI CHAUFFEUR — DESIGN SYSTEM
 
-**Signal v1.1** · ratified RUN 9 "SIGNAL CUT v1.5", 2026-08-06.
+**Signal v1.2** · ratified RUN 10 "SHOWROOM v2.0", 2026-08-06.
+Supersedes Signal v1.1 (RUN 9) — which is still correct about everything it
+covers; v1.2 adds a third elevation, a page-depth layer, a second-generation
+button system, the callback console, the dispatch ledger and the logo canon.
 
 Read this file **before** touching anything under `chauffeur/`. It is the brand's
 own law. Where it disagrees with a skill, this file wins. Where it disagrees with
@@ -60,12 +63,15 @@ Every ratio measured against the surface named. Not eyeballed.
 |---|---|---|---|
 | `--midnight` | `#070B14` | the page | — |
 | `--surface` | `#0D1420` | 1.07:1 (needs the hairline) | — |
+| `--surface-2` | `#111A2A` | 1.13:1 | 1.06:1 — nested + active only |
+| `--input-bg` | `#0A101C` | 1.03:1 | 1.03:1 — form fields only |
 | `--line` | `#1B2536` | hairline only | — |
 | `--ink` | `#E8EDF5` | **16.74:1** | 15.70:1 |
 | `--ink-soft` | `rgba(232,237,245,.78)` | 10.21:1 | 9.78:1 |
 | `--ink-mute` | `rgba(232,237,245,.55)` | 5.47:1 | 5.38:1 |
 | `--signal-blue` | `#3D7BFF` | **5.13:1** | 4.81:1 |
 | `--action-blue` | `#1E56D6` | 3.15:1 *(control, needs 3)* | — |
+| `--action-blue-hover` | `#2A63E8` | 3.79:1 *(control)* | white on it **5.19:1** |
 | `--sky` | `#7FB2FF` | 9.10:1 | 8.54:1 |
 | `--success-green` | `#2EE6A8` | 12.18:1 | 11.42:1 |
 | `--amber` | `#FFB020` | 10.76:1 | 10.09:1 |
@@ -103,6 +109,51 @@ CAPTURED, QUOTE RETURNED, READY FOR DISPATCH. Never because a flow ended.
 **Label text and colour change on the same frame.** A 450ms colour crossfade
 once left rows reading "Ringing" while still painted green, in 18.6% of frames.
 
+### CANVAS LAW (ratified RUN 10)
+
+**Page-depth treatment is allowed and required. Component halos stay banned.**
+The two are not the same rule and the difference is where the light is painted.
+
+- **The page** carries one fixed layer (`body::before`, declared once in
+  `assets/circulant.css`, which all twelve pages load): a horizon band of the
+  blue at **.045** rising out of the lower third, plus a corner vignette at
+  **.06**. No images, no `blur()`, nothing animated — so there is no motion for
+  reduced-motion to switch off.
+- **A component** separates from the canvas with a hairline and a step of
+  surface. Never with light thrown outside its own box. § 4 GLOW LAW is
+  unchanged and still allows ambient light in exactly two scenes.
+
+**The acceptance bar is a phone at 50% brightness.** `--surface` on `--midnight`
+is 1.07:1; that is why the hairline is mandatory and why nested layers now take
+`--surface-2` with `inset 0 1px 0 rgba(127,178,255,.06)`. Nested layers used to
+be `rgba(7,11,20,.55)` — **darker than their own parent**, which is the one
+direction that cannot read as depth on a dark ground.
+
+### THE GRID WAS INVISIBLE, and this is how it was proved
+
+`--grid-line` carried `.05` alpha *and* was multiplied by a zone opacity of
+`.04`. Rendered page line = 0.002 alpha of `#3D7BFF` over `#070B14`:
+
+```
+R 61x0.002 + 7x0.998  = 7.1  -> 7
+G 123x0.002 + 11x0.998 = 11.2 -> 11
+B 255x0.002 + 20x0.998 = 20.5 -> 20
+```
+
+Identical to the background on all three channels. **Every page zone on this
+site drew a grid that could not produce one different pixel.** The hue now lives
+at full strength in `--grid-line` and the ZONE sets the alpha: `--grid-page:.05`
+at the top of the document, fading to `--grid-page x --grid-floor` = **.02** at
+the foot, `--grid-console:.08` inside an instrument.
+
+The depth fade is a second mask layer under `@supports (mask-composite:
+intersect)`. **The guard is not politeness.** With two mask layers and the
+default `add` compositing, the result is the UNION of the two, which would put
+grid lines straight back behind the 560px prose measure the horizontal mask
+exists to protect. Outside the guard the single horizontal mask ships and only
+the depth is lost. *Never let a progressive enhancement fail into a rule
+violation.*
+
 ### 60-30-10 and the accent cap
 
 Midnight + surface ≈ 60 · ink + neutral + line ≈ 30 · all accents ≤ 10.
@@ -121,10 +172,20 @@ file.** The 24-file kit is supplied production artwork with its own README and a
 surface map; SVGO on it is render-gated because the default profile drifts pixels
 on all eleven outlined-type marks.
 
-The **root** icon set (`favicon.svg`, `favicon-*.png`, `apple-touch-icon-180.png`,
-`icon-192/512.png`) is **not** in that exemption. Those are derived favicons and
-RUN 9 redrew them in Signal from the mark's own geometry — colour-swapping them
-would have left antialiased cyan halos on the new ground.
+**CORRECTED IN RUN 10.** The **root** icon set (`favicon.svg`, `favicon-*.png`,
+`apple-touch-icon-180.png`, `icon-192/512.png`) **IS** in that exemption. RUN 9
+repainted it into Signal blue on the reasoning that a derived favicon is not
+supplied artwork. That reasoning was wrong, and `assets/brand/README.md` had said
+so in writing the whole time — its FAVICON SET section names those exact root
+paths as part of the kit. A favicon *is* the mark at 16px; repainting it forked
+the brand from the lockup sitting 40px away in the same header. The pre-RUN-9
+files are restored: bars `#EEF0F4`, knot `#00D4FF`.
+
+`site.webmanifest` is **not** reverted. Its only RUN 9 change was
+`theme_color` / `background_color` `#0A0A0F` → `#070B14`, which is the site's own
+background hex and carries no logo colour at all. Reverting it would put the AVA
+parent's void back on this brand's PWA and contradict the `theme-color` meta on
+all twelve pages. See the LOGO CANON appendix for why that line is drawn there.
 
 ---
 
@@ -147,17 +208,109 @@ not reintroduce a font CDN link. A metric-matched fallback **must carry the same
 preload `href` must be the **same string** as the `@font-face` `src`, with
 `crossorigin`, or the file is fetched twice.
 
-### The button system
+### The button system — v2 (ratified RUN 10)
 
 | Level | Recipe |
 |---|---|
-| **Primary** | filled `--action-blue`, `#FFFFFF` label, `inset 0 1px 0 rgba(127,178,255,.35)` bevel. Hover `translateY(-1px)` + `brightness(1.08)`. Active `translateY(0)`. **No halo.** |
+| **Primary** | filled `--action-blue`, `#FFFFFF` label, `1px solid rgba(127,178,255,.30)` border, `inset 0 1px 0 rgba(127,178,255,.35)` bevel. **Hover: `background:var(--action-blue-hover)`, border `rgba(127,178,255,.55)`, `translateY(-1px)`, `filter:none`.** Active `#1A4CC2`, `translateY(0)`. **No halo.** |
 | **Secondary** | 1px `--line` on `--surface`. Border and label go `--sky` on hover. |
 | **Tertiary** | `--sky` text link with an arrow. No box. |
 
-**One primary per viewport.** In the header that means: on desktop the filled
-control is "Book the setup call" and the number is a line button beside it; below
-1024 the book button moves into the drawer, so the number becomes the filled one.
+**`filter:brightness()` is retired on controls.** It lightens the bevel and the
+border along with the fill, so the whole control washed out by the same amount
+instead of reading as a state change — and on a button that already carries an
+inset highlight it flattens the top edge that gives the button its shape. An
+explicit hover fill moves only what should move.
+
+**Heights: 54px desktop / 56px on a phone**, Space Grotesk 600, sentence case.
+Applies to `.btn`, `.cb-submit`, `.demo-play-btn`, `.demo-call-btn`. **Nav and
+rail are chrome and stay at 44px** — the header is capped at 64px on a phone and
+80px on desktop, and a 54px control inside 14px of padding puts the desktop bar
+at 82.
+
+### CTA DE-DUPLICATION (ratified RUN 10)
+
+**Never three filled blue phone surfaces in one viewport.** Measured on the 390
+fold before this run, the header chip and the hero primary sat 40px apart, both
+filled, both dialling the same number, and the rail was a third once the reader
+scrolled.
+
+- **Header chip** — the OUTLINED utility variant at every width. Digits always
+  visible; the word "Call" survives to 380px and drops below it (measured at
+  390: 123 lockup + 8 + 177 chip + 8 + 44 burger = 360 into 366 available). The
+  `aria-label` still CONTAINS the visible text.
+- **Hero** — keeps THE filled primary.
+- **Rail** — arms only after the hero CTA cluster has left the top of the
+  viewport, and suppresses itself whenever the callback form, the booking
+  calendar or the footer is on screen.
+
+**One primary per viewport** still holds. The single exception is the callback
+console's submit, which is a ghost at rest and takes the fill only once both
+fields validate and consent is ticked — by which point the reader has chosen
+that path.
+
+---
+
+## 3.5 · COMPONENTS RATIFIED IN RUN 10
+
+### The callback console
+
+The form was a card with a label on it. It is an instrument now.
+
+- Card `--surface`, border `--line`, **`border-top: 1px var(--line-hot)`**,
+  radius 8. That hot hairline is the only place `--line-hot` appears on a
+  resting panel, and it marks the one panel on the fold that *does* something.
+- **Header row 44px**: mono module name left, status right — `● STANDING BY` in
+  `--neutral`, flipping to `--success-green` `● CALLING NOW` **on the same frame
+  as the submit succeeds**. The dot and the word are one element, so they cannot
+  disagree, and `transition:none` is declared on the rule.
+- Body nested on `--surface-2` with the 1px top light.
+- **Labels mono 12px.** They rendered at 9.92px (`.62rem`) from the day the form
+  shipped — under the § 3 floor. There is now a probe for it (§ 11).
+- **Inputs**: height 54, `background:var(--input-bg)`, border `--line`, focus
+  border `--signal-blue` + ring `0 0 0 3px rgba(61,123,255,.15)`, **no inset
+  shadows**.
+- **Submit** rests as a ghost, takes `--action-blue` only when both fields
+  validate and TCPA is ticked. It is a PAINT, not a gate — the button stays
+  enabled and the submit handler still explains what is wrong. *A disabled
+  control that will not say why is worse than an enabled one that will.*
+- **Mobile (<768px)** the card collapses to its header row and taps open. It
+  ships OPEN in the markup and JS collapses it, so a crawler and a no-JS reader
+  see the whole thing. That is honest here specifically because the form has no
+  `action` and could not submit without scripting anyway.
+
+### The checkbox
+
+**Never the native box.** A default checkbox paints a white 20px square, and on
+this ground that was measurably the brightest object on the fold — brighter than
+the primary CTA, attached to the one control on the page that is not an ask.
+
+```
+appearance:none · 20x20 · background var(--surface) · border 1px #2A3650 · radius 5
+:checked        -> background var(--action-blue), white clip-path tick
+:focus-visible  -> 2px solid var(--signal-blue), outline-offset 2
+```
+
+### The dispatch ledger
+
+Inside the Crush, container `--surface-2`, border `--line`, radius 12, **max
+560px**. Rows 52px desktop, stacked to two lines below 560. Hairline-separated,
+**no per-row shadow**. Mono, `tabular-nums`.
+
+`[2px state rail] [time] [INBOUND 0n] [trip type] [state chip]`
+
+Progression, IntersectionObserver-staggered, **one active pulse at a time**,
+**paused offscreen** (`.is-live` toggles in BOTH directions):
+
+`--amber RINGING → --signal-blue ON CALL → --success-green TRIP CAPTURED →
+READY FOR DISPATCH (rail solid green)`
+
+Row *n* starts at *n* × 900ms and has left Ringing before *n+1* arrives, so the
+rows overlap — three calls in flight, none on hold — while exactly one is
+ringing at any instant. **Terminal state ships in the markup**, so reduced
+motion, JS-off and a screen reader all get the true resting record and the scene
+only ever rewinds it. STATE LAW applies: the class swap and the label rewrite
+happen in one synchronous block.
 
 ---
 
@@ -231,6 +384,31 @@ Grep gates, all must read zero: `founder-led` · `request setup` ·
 `book the strategy` · `intro call`.
 
 The call is **20 minutes**. The demo is a **phone call** to 414-775-0019.
+
+### GOOGLE LEAD PROTECTION — copy law (ratified RUN 10)
+
+The homepage section under that eyebrow is **fixed copy**. It ships verbatim and
+takes no additions:
+
+> **Eyebrow** GOOGLE LEAD PROTECTION
+> **H2** Google found the rider. AVA finishes the handoff.
+> **Body** Search and ads can make the phone ring. They can't make your dispatch
+> line answer. AVA picks up every call and takes down the route, flight,
+> vehicle, passengers, bags, and callback number — before the rider dials the
+> next operator on the map. Every trip you capture is a booked ride, a
+> relationship, and a review your competitor never gets.
+> **CTA** Book the setup call → `/book/`
+> **Fine print** AI Chauffeur is not affiliated with or endorsed by Google.
+
+It describes a **mechanism** — search and ads make a phone ring; an unanswered
+phone hands the rider to the next operator — and never a ranking, a placement or
+an algorithmic outcome. Nothing here is attributed to Google as a quotation,
+because a paraphrase presented as "Google says" is attribution fraud (§ 6 of
+`/CLAUDE.md`). **The non-affiliation line is not decorative** and does not get
+dropped for space: this section names another company in its heading.
+
+**Sitewide greps, all must read zero:** `map ranking` · `local ranking` ·
+`Google tracks` · `Protection Plan`.
 
 ---
 
@@ -345,6 +523,9 @@ related pages, and the homepage links each one once in body.
 node tools/aic-run9-gate.mjs           # 12 pages x 6 viewports, render + a11y probes
 node tools/aic-run9-styleparity.mjs    # computed-style parity across the CSS homes
 node tools/aic-run9-lighthouse.js      # mobile LH, a11y/SEO 100, perf vs pre-run
+node tools/aic-run10-gate.mjs          # 12px floor, schema, CTA de-dup, canvas, llms.txt
+python tools/aic-run10-faq-mirror.py --check   # FAQPage mirrors visible copy
+node tools/aic-run10-shots.mjs after   # THE EYES GATE — shots that must be LOOKED AT
 ```
 
 The render gate checks: horizontal overflow · console and page errors · full
@@ -356,3 +537,96 @@ reduced motion settles on the outcome state.
 It runs five negative controls first — overflow, contrast, accent, wrap, nav-row —
 against a deliberately broken fixture, and **aborts the whole run if any control
 passes clean.**
+
+`aic-run10-gate.mjs` adds, on all twelve pages: the **12px type floor** on every
+rendered text node (the `.cb-label` violation had been live since the form
+shipped and no probe would have caught it); JSON-LD that parses, carries no `{{`
+or `REPLACE_`, and whose FAQPage mirrors the rendered Q&A; **at most one filled
+`--action-blue` control in the 390 fold**; the canvas layer present; and
+`/llms.txt` returning 200. It ships its own negative controls.
+
+**THE EYES GATE is not automatable and is not optional.** `aic-run10-shots.mjs`
+writes home / crush / form / footer at 390 and 1440 into `audits/run10/`, and the
+run reports one line per shot: *cards separate from canvas · wordmark whole · no
+void below © · one filled blue per viewport*. A run that lists those four
+without having opened the files is lying in a format that looks like evidence.
+
+---
+
+## APPENDIX A · THE LOGO CANON
+
+Ratified 2026-08-02 as **THE SIGNAL**; restated here in RUN 10 so no future run
+has to re-ask the question. The source of record is
+`chauffeur/assets/brand/README.md`, which ships with the kit.
+
+**The logo system is CLOSED.** `chauffeur/assets/brand/*` and the root raster set
+are never recoloured, redrawn, retyped, or "harmonized" to site tokens. If a
+surface needs something the kit does not have, **the kit gets a new file — the
+site does not get a hand-made one.**
+
+### Colour law
+
+| | Ground | Bars · type | Knot · accent |
+|---|---|---|---|
+| **Dark** — app, web, video, signage | `#0A0A0F` | `#EEF0F4` | `#00D4FF` |
+| **Light** — stationery, invoice, deck | `#F7F8FA` | `#14161C` | `#0090C8` |
+| **One colour** | — | `#000000` / `#FFFFFF` | no knot tint |
+
+Bright cyan is a **dark-surface** colour; on white it fails contrast, which is
+the entire reason the `-ink` variants exist. **Pick the file that already carries
+the right palette. Never recolour one to reach the other.**
+
+Clear space **X = one bar width**: lockups and wordmarks hold 3X, the mark alone
+holds 2X.
+
+### The grep gate, as amended
+
+`#00D4FF` may appear **only** under `/assets/brand/` **and in the root favicon
+files** (`favicon.svg`, `favicon-16.png`, `favicon-32.png`,
+`apple-touch-icon-180.png`, `icon-192.png`, `icon-512.png`). Case-insensitive —
+the SVG ships it lowercase. Anywhere else on this host it is the AVA parent's
+accent leaking across a brand boundary.
+
+`site.webmanifest` holds no logo colour. Its `theme_color` is the SITE's
+background and follows § 2, not this appendix. That is the whole line: **a file
+that paints the mark follows the canon; a file that paints the page follows the
+tokens.**
+
+### Surface map
+
+| Surface | File | Minimum |
+|---|---|---|
+| Web nav, product header | `lockup-short.svg` | 120px wide |
+| App icon, favicon | `mark-compact.svg` (root rasters derived from it) | 16px |
+| Social avatar, OG card | `lockup-stacked.svg` · `assets/og-card.png` | 96px |
+| Email template | `email-logo@2x.png` / `email-logo-white@2x.png` — **PNG, never SVG** | — |
+| Light UI, help centre, print | the `-ink` variants | 120px wide |
+| Letterhead, invoice | `lockup-horizontal-ink.svg` | 260px wide |
+| Embroidery, stamp, fax | `mark-black.svg` / `mark-white.svg` | 16px |
+| The mark with room to breathe | `mark-full.svg` — twelve bars, not six | **44px** |
+
+`mark-full` is **never** used at icon sizes. Below 44px its twelve bars collapse
+into a smear; that is what `mark-compact` exists for.
+
+`assets/aic-logo.png` sits one level up from the kit on purpose — the RUN 4 Slack
+rail checks that exact path, and moving it silently drops the logo out of Slack.
+
+### The five ways this breaks
+
+All five have been seen in the wild.
+
+1. **Bright cyan on white.** Fails contrast. Use the `-ink` variant.
+2. **Stretched.** Scale proportionally only. Never fit to a box by distorting.
+3. **Rotated.** The bars sit on the baseline. The mark does not tilt.
+4. **Mid-tone ground.** Full dark or full light. Nothing in between holds.
+5. **Hand-built lockup.** The mark-to-word gap and the rule weights are already
+   set. Use the supplied file.
+
+### And the sixth, which cost RUN 10 a revert
+
+6. **"Harmonizing" the mark to the site palette.** A recolour run does not
+   repaint a logo, and a *derived* raster of a logo is still the logo. RUN 9
+   swapped the knot from `#00D4FF` to `#3D7BFF` across the root favicon set while
+   leaving `lockup-short.svg` — 40px away in the same header — untouched. The
+   result was one brand wearing two accents, and no gate could see it because
+   every individual file was internally consistent.

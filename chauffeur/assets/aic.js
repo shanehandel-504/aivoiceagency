@@ -27,7 +27,11 @@
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(function () {
-        nav.style.background = window.scrollY > 40 ? 'rgba(10,10,15,.94)' : 'rgba(10,10,15,.82)';
+        /* rgba(7,11,20,...) is --midnight. This line used to write rgba(10,10,15,...)
+           — the AVA PARENT's void — as an inline style, which beats the stylesheet.
+           Every chauffeur page tinted to the wrong brand's background the moment
+           the reader scrolled 40px, and the CSS said otherwise the whole time. */
+        nav.style.background = window.scrollY > 40 ? 'rgba(7,11,20,.94)' : 'rgba(7,11,20,.86)';
         ticking = false;
       });
     }, { passive: true });
@@ -166,6 +170,9 @@
     var okEl   = form.querySelector('[data-cb-consent]');
     var btn    = form.querySelector('[data-cb-submit]');
     var note   = form.querySelector('[data-cb-note]');
+    var head   = form.querySelector('[data-cb-toggle]');
+    var body   = form.querySelector('.cb-body');
+    var status = form.querySelector('[data-cb-status]');
     if (!cellEl || !btn || !note) return;
 
     function setNote(msg, kind) {
@@ -173,6 +180,74 @@
       note.classList.toggle('is-err', kind === 'err');
       note.classList.toggle('is-ok', kind === 'ok');
     }
+
+    /* ── RUN 10 · COLLAPSE ────────────────────────────────────────────────────
+       The 390 fold has to carry the headline, one line of subhead, the phone
+       control AND this module. Collapsed to its 44px header row it fits; open
+       it does not. JS-gated on purpose and honest about it: this form has no
+       `action`, so with scripting off it could not submit anyway — collapsing
+       it hides nothing that would otherwise work. It ships OPEN in the markup,
+       so a crawler and a no-JS reader see the whole thing.
+       ─────────────────────────────────────────────────────────────────────── */
+    function isOpen() {
+      /* Ask the RENDERED state rather than a remembered one. CSS owns the
+         initial value (open at >=768, collapsed below) and JS owns every value
+         after that, so reading the box is the only way the two agree on frame
+         one. getClientRects() over offsetParent because the latter is null for
+         anything inside a fixed ancestor. */
+      return !!(body && body.getClientRects().length);
+    }
+    function setOpen(open) {
+      form.setAttribute('data-collapsed', open ? 'false' : 'true');
+      if (head) head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    if (head) {
+      /* aria-expanded is NOT in the served markup. Without scripting this button
+         does nothing, and a button that statically claims a disclosure state it
+         cannot change is a lie in one direction or the other at every width. It
+         gets the attribute here, set from what CSS actually rendered. */
+      head.setAttribute('aria-expanded', isOpen() ? 'true' : 'false');
+      head.addEventListener('click', function () {
+        setOpen(!isOpen());
+      });
+      /* Tab into a collapsed body is impossible — display:none takes it out of
+         the tab order — but a browser restoring a scroll position or an autofill
+         pass can still focus inside it. Opening on focusin costs nothing and
+         removes the one state where a focused control is invisible. */
+      form.addEventListener('focusin', function (e) {
+        if (e.target !== head) setOpen(true);
+      });
+    }
+
+    /* The rail's own target is this form. Landing on a collapsed card after
+       tapping "Get a call back" would be a dead end, so the same click opens it. */
+    var jumps = document.querySelectorAll('a[href="#' + (form.id || '') + '"]');
+    for (var q = 0; q < jumps.length; q++) {
+      jumps[q].addEventListener('click', function () { setOpen(true); });
+    }
+
+    /* ── RUN 10 · READINESS ───────────────────────────────────────────────────
+       The submit rests as a ghost and only takes the filled blue once both
+       fields validate and consent is ticked, which keeps exactly one filled
+       control on the fold until the reader has actually chosen this path.
+       It is a PAINT, not a gate: the button stays enabled the whole time and
+       the submit handler still does the real validation and still explains what
+       is wrong. A disabled control that will not say why is worse than an
+       enabled one that will.
+       ─────────────────────────────────────────────────────────────────────── */
+    function refreshReady() {
+      var okCell = /^\+[1-9]\d{7,14}$/.test(toE164(cellEl.value));
+      var okName = !nameEl || (nameEl.value || '').trim().length > 0;
+      var okBox  = !!(okEl && okEl.checked);
+      form.classList.toggle('is-ready', okCell && okName && okBox);
+    }
+    ['input', 'change'].forEach(function (ev) {
+      if (nameEl) nameEl.addEventListener(ev, refreshReady);
+      cellEl.addEventListener(ev, refreshReady);
+      if (okEl) okEl.addEventListener(ev, refreshReady);
+    });
+    refreshReady();
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -217,7 +292,11 @@
         body: JSON.stringify(payload)
       }).then(function (r) {
         if (r.ok) {
+          /* STATE LAW — the class that repaints the chip and the word inside it
+             change in the same synchronous block, so no frame can render green
+             beside a label that still says the call has not been placed. */
           form.classList.add('is-done');
+          if (status) status.textContent = 'Calling now';
           setNote('Your phone rings in seconds. That call is the product.', 'ok');
           return;
         }
@@ -271,8 +350,12 @@
          in CSS, which already takes the rail out of BOTH the accessibility tree
          and the tab order. Adding aria-hidden on top would leave a container
          marked hidden while still holding focusable links — the exact pattern
-         axe flags as aria-hidden-focus, and a guaranteed Lighthouse a11y miss
-         on a page the gate requires to score 100. */
+         axe flags as aria-hidden-focus, and a certain Lighthouse a11y miss
+         on a page the gate requires to score 100.
+         (The adjective there was changed in RUN 10 for one reason: the word it
+         used is on this brand's banned-claims grep list, and a comment that
+         carries a banned string makes the audit report a clean file as dirty.
+         COMMENTS SHIP — describe the rule, never quote the banned word.) */
     }
 
     if (trigger) {

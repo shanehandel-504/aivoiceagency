@@ -5,10 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#070B14">
   <title>Limo Answering Service — AI Dispatch That Takes the Whole Trip | AI Chauffeur</title>
-  <meta name="description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket. Built by an operator. Call (414) 775-0019.">
+  <meta name="description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket. Built by operators. Call (414) 775-0019.">
 
-  <!-- Favicon set from mark-compact.svg with a dark ground baked in: the bars
-       are near-white and would disappear against a light-mode tab strip. -->
+  <!-- Favicon set derived from mark-compact.svg with a dark ground baked in:
+       the bars are near-white and would disappear against a light-mode tab
+       strip. THE LOGO IS A CLOSED SYSTEM (RUN 10 amendment). Its bar and knot
+       values are the kit's, not the site's, and they are written down in exactly
+       two places on purpose — assets/brand/README.md and the LOGO CANON appendix
+       of DESIGN-SYSTEM.md. They are deliberately NOT quoted here: the knot's hex
+       is grep-gated to the brand folder and the root icon files, and a comment
+       that repeats a gated string makes every future audit report a clean page
+       as dirty. RUN 9 repainted these files to the site palette on the reasoning
+       that a derived favicon is not supplied artwork. That was wrong — a favicon
+       IS the mark at 16px — and it forked the brand from the lockup sitting 40px
+       away in the same header. Reverted. Do not harmonize them again. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
@@ -18,7 +28,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="AI Chauffeur">
   <meta property="og:title" content="Limo Answering Service — AI Dispatch That Takes the Whole Trip">
-  <meta property="og:description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket. Built by an operator.">
+  <meta property="og:description" content="AVA answers your dispatch line 24/7, takes the whole trip, and hands your dispatcher a clean ticket. Built by operators.">
   <meta property="og:url" content="https://aichauffeur.ai/">
   <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
   <meta property="og:image:width" content="1200">
@@ -41,30 +51,33 @@
        own <style>, so every local token below still wins. This also DEFINES
        --green, which this page referenced in .live-badge and .badge-green but
        never declared — both rules were silently broken. -->
-  <link rel="stylesheet" href="/assets/circulant.css?v=436cf8c">
+  <link rel="stylesheet" href="/assets/circulant.css?v=74c973d7">
 
-  <!-- AIC SITE RUN 1 · D4 — Organization + LocalBusiness + Service.
-       NOTE: no postalAddress / streetAddress is emitted. AI Chauffeur has no
-       public storefront, and inventing one is exactly the false-LocalBusiness
-       pattern that had to be stripped from the AVA site in RUN 9. areaServed
-       and telephone are true and verifiable; a street address would not be. -->
+  <!-- ══ RUN 10 · TASK G — THE AEO LAYER ═══════════════════════════════════
+       ONE @graph, five nodes, cross-referenced by @id. It replaced two separate
+       ld+json scripts that between them declared an Organization and a
+       LocalBusiness with different descriptions of the same company, one of
+       which carried an operating history that contradicts the page's own copy.
+       Two schema blocks on one page are two answers to the same question.
+
+       WHAT IS DELIBERATELY ABSENT, each for a reason:
+         · no streetAddress — there is no public storefront, and a fabricated
+           one is the false-LocalBusiness pattern this brand had to strip once
+           already. addressRegion WI / addressCountry US is true and checkable.
+         · no offers node — nothing on this site carries a price, so an offer
+           would be the only place a number appeared, and it would be invented.
+         · no sameAs to the parent brand. These are separate brands with
+           separate numbers, and linking them in schema is the same
+           cross-contamination the token law forbids in CSS.
+         · featureList is CAPTURE-ONLY. No writeback, no affiliate routing, no
+           passenger texting. AVA does not write into anyone's dispatch system
+           and the schema must not be the one surface that says it does.
+       The FAQPage node mirrors the visible Q&A on this page verbatim; it is
+       generated from the rendered copy by tools/aic-run10-faq-mirror.py so the
+       two cannot drift.
+       ═══════════════════════════════════════════════════════════════════════ -->
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@graph":[
-    {"@type":"Organization","@id":"https://aichauffeur.ai/#org","name":"AI Chauffeur","url":"https://aichauffeur.ai/","telephone":"+1-414-775-0019","description":"AI answering and dispatch intake for limo, black car, and chauffeured transportation operators. AVA answers the line, captures the full trip, and hands the dispatcher a clean trip ticket.","areaServed":{"@type":"Country","name":"United States"},"parentOrganization":{"@type":"Organization","name":"AI Voice Agency","url":"https://aivoiceagency.ai/"}},
-    {"@type":"LocalBusiness","@id":"https://aichauffeur.ai/#business","name":"AI Chauffeur","url":"https://aichauffeur.ai/","telephone":"+1-414-775-0019","priceRange":"Custom per operation","description":"Limo answering service and after-hours dispatch intake, built by a 30-year operator in Wisconsin and run for operators nationwide.","areaServed":[{"@type":"State","name":"Wisconsin"},{"@type":"Country","name":"United States"}],"parentOrganization":{"@id":"https://aichauffeur.ai/#org"}},
-    {"@type":"Service","@id":"https://aichauffeur.ai/#service","name":"Limo answering and dispatch intake","serviceType":"Limo answering service","provider":{"@id":"https://aichauffeur.ai/#org"},"areaServed":{"@type":"Country","name":"United States"},"description":"AVA answers every inbound call at once, 24/7, captures pickup, dropoff, time, vehicle class, passenger and bag count and flight details, and routes a structured trip ticket to the dispatcher for confirmation."}
-  ]}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-    {"@type":"Question","name":"Is this just basic call coverage?","acceptedAnswer":{"@type":"Answer","text":"No. AI Chauffeur is dispatch intake software for limo and black car operators. AVA captures ride requests, organizes trip details, estimates the quote range, and hands your dispatcher a finished trip ticket."}},
-    {"@type":"Question","name":"Does it replace my dispatcher?","acceptedAnswer":{"@type":"Answer","text":"No. It handles the first layer of intake so your dispatcher is not buried by missed calls, repeated questions, and after-hours requests."}},
-    {"@type":"Question","name":"Can it quote rides?","acceptedAnswer":{"@type":"Answer","text":"Yes, when your rate rules are configured. The page demo uses illustrative quote ranges only."}},
-    {"@type":"Question","name":"Does it work with my CRM or dispatch software?","acceptedAnswer":{"@type":"Answer","text":"Yes. The call comes back as a clean trip ticket your dispatcher confirms in the software you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox. Nothing gets ripped out and nothing gets replaced."}},
-    {"@type":"Question","name":"How fast can it go live?","acceptedAnswer":{"@type":"Answer","text":"Setup is done for you by our team. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented."}},
-    {"@type":"Question","name":"What about pricing?","acceptedAnswer":{"@type":"Answer","text":"Every build is custom to your operation — your rates, your service area, your vehicle classes. We scope it on the setup call, once we know your call volume, fleet size, and how you dispatch. That call runs 20 minutes."}},
-    {"@type":"Question","name":"Can I just hear it first?","acceptedAnswer":{"@type":"Answer","text":"Call (414) 775-0019 and AVA picks up. That is the same line an operator's caller would reach — no booking, no form, no salesperson. Listen to how it handles you, then decide."}}
-  ]}
+  {"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://aichauffeur.ai/#org","name":"AI Chauffeur","url":"https://aichauffeur.ai/","logo":"https://aichauffeur.ai/assets/brand/lockup-short.svg","email":"dispatch@aichauffeur.ai","telephone":"+1-414-775-0019","address":{"@type":"PostalAddress","addressRegion":"WI","addressCountry":"US"},"areaServed":{"@type":"Country","name":"United States"},"description":"AI answering and dispatch intake for limo, black car, and chauffeured transportation operators. AVA answers the line, captures the full trip, and hands the dispatcher a clean trip ticket."},{"@type":"WebSite","@id":"https://aichauffeur.ai/#site","url":"https://aichauffeur.ai/","name":"AI Chauffeur","publisher":{"@id":"https://aichauffeur.ai/#org"}},{"@type":"SoftwareApplication","@id":"https://aichauffeur.ai/#app","name":"AVA","applicationCategory":"BusinessApplication","operatingSystem":"Cloud, telephone","provider":{"@id":"https://aichauffeur.ai/#org"},"description":"AVA answers a chauffeured transportation operator's dispatch line 24/7, captures pickup, dropoff, time, vehicle class, passenger and bag count and flight details, estimates a quote range from the operator's own rate sheet, and delivers a dispatch-ready trip ticket that a human confirms in Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox.","featureList":["Answers every inbound call at once, 24/7, with no caller on hold","Captures pickup, dropoff, date and time for each trip","Captures vehicle class, passenger count and bag count","Captures flight number and terminal for airport transfers","Estimates a quote range from the operator's own rate sheet","Delivers a completed, dispatch-ready trip ticket for a human to confirm","Delivers that ticket in a form readable in Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox"]},{"@type":"Service","@id":"https://aichauffeur.ai/#service","name":"Dispatch intake implementation","serviceType":"Limo answering and dispatch intake","provider":{"@id":"https://aichauffeur.ai/#org"},"areaServed":{"@type":"Country","name":"United States"},"description":"Setup is done for the operator: rate rules, service area, vehicle classes and dispatch process are documented and configured, then tested on live calls before AVA answers the published line."},{"@type":"FAQPage","@id":"https://aichauffeur.ai/#faq","mainEntity":[{"@type":"Question","name":"Is this just basic call coverage?","acceptedAnswer":{"@type":"Answer","text":"No. AI Chauffeur is dispatch intake software for limo and black car operators. AVA captures ride requests, organizes trip details, estimates the quote range, and hands your dispatcher a finished trip ticket. Call coverage is a side effect, not the product."}},{"@type":"Question","name":"Does it replace my dispatcher?","acceptedAnswer":{"@type":"Answer","text":"No. It handles the first layer of intake so your dispatcher is not buried by missed calls, repeated questions, and after-hours requests. Your dispatcher confirms and runs the operation."}},{"@type":"Question","name":"What still requires dispatcher approval?","acceptedAnswer":{"@type":"Answer","text":"Every trip does. AVA captures the request and builds the ticket; a human confirms it, assigns the vehicle, and books it in your dispatch software. AVA does not write into Limo Anywhere, FASTTRAK, or Santa Cruz, does not take payment, and does not commit a vehicle on its own."}},{"@type":"Question","name":"How does AI Chauffeur handle multiple calls at once?","acceptedAnswer":{"@type":"Answer","text":"AVA answers every inbound line at the same time, so no caller waits on hold. Each call gets its own intake: pickup, dropoff, time, vehicle class, passengers, bags, and flight details. Every one ends as a separate trip ticket sitting in front of your dispatcher, ready to confirm."}},{"@type":"Question","name":"Can it quote rides?","acceptedAnswer":{"@type":"Answer","text":"Yes, when your rate rules are configured. The page demo uses illustrative quote ranges only. Live setup requires your real rate rules, service area, vehicle types, and dispatch process."}},{"@type":"Question","name":"Does it work with my CRM or dispatch software?","acceptedAnswer":{"@type":"Answer","text":"Yes. The call comes back as a clean trip ticket your dispatcher confirms in the software you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox. Nothing gets ripped out and nothing gets replaced."}},{"@type":"Question","name":"How fast can it go live?","acceptedAnswer":{"@type":"Answer","text":"Setup is done for you by our team. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented."}},{"@type":"Question","name":"What about pricing?","acceptedAnswer":{"@type":"Answer","text":"Every build is custom to your operation — your rates, your service area, your vehicle classes. We scope it on the setup call, once we know your call volume, fleet size, and how you dispatch. That call runs 20 minutes."}},{"@type":"Question","name":"Can I just hear it first?","acceptedAnswer":{"@type":"Answer","text":"Call (414) 775-0019 and AVA picks up. That is the same line an operator's caller would reach — no booking, no form, no salesperson. Listen to how it handles you, then decide."}}]}]}
   </script>
 
   <style>
@@ -165,6 +178,34 @@
      #FFFFFF on an --action-blue fill        6.25:1
      --action-blue as a control on midnight  3.15:1  (non-text, needs 3)
 
+   RUN 10 adds a THIRD elevation and an input ground. Measured on those:
+
+     --ink              14.82:1 on surface-2 ·  16.18:1 on input-bg
+     --ink-soft          9.42:1 on surface-2 ·   9.98:1 on input-bg
+     --ink-mute          5.28:1 on surface-2 ·   5.47:1 on input-bg
+     --signal-blue       4.54:1 on surface-2 ·   4.96:1 on input-bg
+     --neutral           5.65:1 on surface-2 ·   6.16:1 on input-bg
+     #FFFFFF on --action-blue-hover          5.19:1
+     --action-blue-hover as a control        3.79:1 on midnight
+
+   CANVAS LAW. Page-depth treatment is allowed and REQUIRED: a wide horizon
+   band of the blue at 3-5% alpha rising out of the lower third, a corner
+   vignette around 6%, and a grid that is brighter at the top of the document
+   than at the foot of it. That is a PAGE layer — painted once, below every
+   section, naming no state. COMPONENT halos stay banned outright and § 4 GLOW
+   LAW is unchanged: a card separates from the canvas with a hairline and a step
+   of surface, never with light thrown outside its own box.
+
+   THE GRID TOKENS CHANGED SHAPE, and the reason is a measurement rather than a
+   preference. The line colour carried .05 alpha AND was multiplied by a zone
+   opacity of .04, so a rendered page line was 0.002 alpha of blue over
+   midnight: 61 x 0.002 + 7 x 0.998 = 7.1, which rounds to 7. Identical to the
+   background, on every channel. Every page zone on this site was drawing a grid
+   that could not produce one different pixel. The hue now lives at full
+   strength in --grid-line and the ZONE sets the alpha, so the two numbers below
+   are what actually paints. --grid-floor is the down-page multiplier: .05 at
+   the top of the document, .05 x .40 = .02 at the bottom of it.
+
    ROLE, not decoration. A rule that wants a colour and cannot name the state it
    paints is decoration and does not ship.
 
@@ -195,6 +236,8 @@
   /* ---- surfaces ---------------------------------------------------------- */
   --midnight:#070B14;
   --surface:#0D1420;
+  --surface-2:#111A2A;
+  --input-bg:#0A101C;
   --line:#1B2536;
   --line-hot:rgba(61,123,255,.42);
 
@@ -206,6 +249,7 @@
   /* ---- the three blues --------------------------------------------------- */
   --signal-blue:#3D7BFF;
   --action-blue:#1E56D6;
+  --action-blue-hover:#2A63E8;
   --sky:#7FB2FF;
 
   /* ---- semantic ---------------------------------------------------------- */
@@ -221,11 +265,12 @@
   --state-idle:var(--neutral);
   --state-fail:var(--miss-red);
 
-  /* ---- grid · § B. Lines are one value; the ZONE sets how loud it is. ----- */
-  --grid-line:rgba(61,123,255,.05);
+  /* ---- grid · § B. The HUE is one value; the ZONE sets the alpha. -------- */
+  --grid-line:#3D7BFF;
   --grid-cell:64px;
-  --grid-page:.04;
+  --grid-page:.05;
   --grid-console:.08;
+  --grid-floor:.40;
 
   /* ---- elevation · § C. ONE shadow, no colour in it, one per raised panel.  */
   --raise:0 8px 24px rgba(0,0,0,.45);
@@ -293,13 +338,29 @@
    faded it at the edges, which is precisely where the 560px prose measure sits.
    It now fades OUT through the middle 56%, so no line ever runs behind a line
    of body copy. Cell drops to 48px (x0.75) below 768. Mirrors aic.css. */
-    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    body::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
       opacity:var(--grid-page);
       background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),
                        linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
       background-size:var(--grid-cell) var(--grid-cell);
       mask-image:linear-gradient(90deg,#000 0%,transparent 22%,transparent 78%,#000 100%);
       -webkit-mask-image:linear-gradient(90deg,#000 0%,transparent 22%,transparent 78%,#000 100%)}
+    /* RUN 10 · DEPTH. A second mask layer fades the grid down the DOCUMENT, from
+       --grid-page at the top to --grid-page x --grid-floor at the foot. It is
+       guarded because the fallback matters: with two mask layers and the default
+       `add` compositing the result is the UNION of the two, which would put grid
+       lines straight back behind the prose measure the horizontal mask exists to
+       protect. Inside the guard the masks INTERSECT and both laws hold; outside it,
+       the single horizontal mask above is what ships and only the depth is lost.
+       Never let a progressive enhancement fail into a rule violation. */
+    @supports (mask-composite: intersect){
+      body::after{
+        mask-image:linear-gradient(90deg,#000 0%,transparent 22%,transparent 78%,#000 100%),
+                   linear-gradient(180deg,#000 0%,#000 9%,rgba(0,0,0,var(--grid-floor)) 62%,rgba(0,0,0,var(--grid-floor)) 100%);
+        -webkit-mask-image:linear-gradient(90deg,#000 0%,transparent 22%,transparent 78%,#000 100%),
+                   linear-gradient(180deg,#000 0%,#000 9%,rgba(0,0,0,var(--grid-floor)) 62%,rgba(0,0,0,var(--grid-floor)) 100%);
+        mask-composite:intersect;-webkit-mask-composite:source-in}
+    }
     @media(max-width:767.98px){body::after{--grid-cell:48px}}
 
     a{color:var(--signal-blue);text-decoration:none;transition:color .15s}
@@ -1128,7 +1189,7 @@ body.drawer-open{overflow:hidden}
        not the layout. Left-aligning it as well left the right half of a 1440
        fold empty and read as a mistake rather than as negative space. */
     .crush{padding:0;text-align:center}
-    .crush-h,.crush-p,.crush-now,.crush-lines{margin-left:auto;margin-right:auto}
+    .crush-h,.crush-p,.crush-now,.ledger{margin-left:auto;margin-right:auto}
     .setup-card{padding:0;gap:2rem}
     @media(min-width:760px){.setup-card{padding:0}}
 
@@ -1164,26 +1225,13 @@ body.drawer-open{overflow:hidden}
     #crush .sec-kicker{color:var(--state-ringing)}
     .crush-now{margin:0 auto 1.1rem;max-width:560px}
 
-    .crush-lines{display:flex;flex-direction:column;max-width:420px;margin:1.9rem auto 2.1rem;
-      border-top:1px solid rgba(255,176,32,.18)}
-    .cl{display:flex;align-items:center;justify-content:space-between;gap:1rem;
-      padding:.7rem 0;border-bottom:1px solid rgba(255,176,32,.18)}
-    .cl-k{font-family:var(--mono);font-size:.75rem;letter-spacing:.13em;text-transform:uppercase;
-      color:var(--ink-soft);font-variant-numeric:tabular-nums}
-    /* NO colour transition. The label swaps on the same frame as the class, so
-       a 450ms crossfade left the row reading "Ringing" while it was still
-       painted Booked-Green — measured at 18.6% of the scene's frames, and both
-       proof screenshots caught three rows labelled RINGING in green. Under the
-       state-colour law green means captured, full stop; a hue that is halfway
-       between two states is a colour that is not true yet. Label and hue now
-       change together. */
-    .cl-s{font-family:var(--mono);font-size:.75rem;letter-spacing:.13em;text-transform:uppercase;
-      display:inline-flex;align-items:center;gap:.45rem;color:var(--state-captured)}
-    .cl-s::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;
-      flex-shrink:0}
-    .cl.is-ringing .cl-s{color:var(--state-ringing)}
-    .cl.is-ringing .cl-s::before{animation:pulse 1s ease-in-out infinite}
-    @media (prefers-reduced-motion:reduce){.cl-s::before{animation:none!important}}
+    /* THE THREE CRUSH ROWS ARE GONE, replaced by the dispatch ledger. Their
+       rules are deleted here rather than left behind: they matched nothing
+       after the swap, and dead CSS on the homepage is bytes on the critical
+       path for a component that no longer exists. The lesson they carried —
+       no colour transition on a state, because label and hue must change on
+       the same frame — moved with the component and is enforced on .lg-state
+       and .lg-rail in the SHOWROOM block. */
 
     /* ── THE OPERATOR SECTION ─────────────────────────────────────────────
        Uncarded. The rail is mono because those three items are entries on a
@@ -1397,6 +1445,351 @@ body.drawer-open{overflow:hidden}
        honesty chip. The state stays green — it really is captured — and the
        animation goes. */
     .live-badge::before{animation:none}
+
+/* ══ RUN 10 · SHOWROOM v2.0 ══════════════════════════════════════════════════
+   CANONICAL BLOCK. Byte-identical in assets/aic.css and in the embedded <style>
+   in index.html, and it is the LAST block in both files. That position is
+   load-bearing. The callback form, the button system and the card recipe each
+   already existed in two copies that were functionally equivalent by DIFFERENT
+   routes rather than textually equal, so a patch applied to one of them left
+   the other standing — which is § 1's THREE CSS HOMES trap in its most
+   expensive form. One trailing block beats both older copies at equal
+   specificity and can be byte-compared by a gate.
+
+   Where a rule here overrides one that lived inside a media query, the media
+   query is RESTATED below. A later unconditioned rule wins at every width, and
+   that is exactly how "fixed on desktop, broken on a phone" ships.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── B · SURFACE SEPARATION ──────────────────────────────────────────────────
+   The acceptance bar for this run is a phone at 50% brightness. --surface on
+   --midnight measures 1.07:1, which is why the hairline has always been
+   mandatory here; what was missing was the SECOND step. Nested and active
+   layers now sit on --surface-2 with a 1px top light, so a field inside a card
+   reads as sitting in the card rather than as a hole cut through it. The
+   nested layers used to be rgba(7,11,20,.55) — DARKER than their own parent,
+   which is the one direction that cannot read as depth on a dark ground. */
+.c-card,.tk{background:var(--surface-2);border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(127,178,255,.06)}
+
+/* ── C · BUTTON SYSTEM v2 ────────────────────────────────────────────────────
+   The fill changes on hover instead of a brightness filter. filter:brightness()
+   lightens the BEVEL and the border along with the fill, so the whole control
+   washed out by the same amount rather than reading as a state change; and on
+   a control that already carries an inset highlight it flattens the top edge
+   that gives the button its shape. An explicit hover fill plus a hotter border
+   moves only what should move. */
+.btn-primary,.tel-btn,.demo-play-btn,.rail-call,.nav-book{
+  background:var(--action-blue);color:#FFFFFF;
+  border:1px solid rgba(127,178,255,.30);
+  box-shadow:inset 0 1px 0 rgba(127,178,255,.35);
+  font-family:var(--sans);letter-spacing:.005em}
+.btn-primary,.demo-play-btn,.nav-book,.cb-submit{font-weight:600}
+.btn-primary:hover,.tel-btn:hover,.demo-play-btn:hover,.nav-book:hover{
+  background:var(--action-blue-hover);border-color:rgba(127,178,255,.55);
+  color:#FFFFFF;transform:translateY(-1px);filter:none}
+.btn-primary:active,.tel-btn:active,.demo-play-btn:active,.nav-book:active{
+  background:#1A4CC2;transform:translateY(0);filter:none}
+/* The rail is a fixed bar. A hover lift inside it would slide the control out
+   from under the finger that is already on it. */
+.rail-call:hover{background:var(--action-blue-hover);border-color:rgba(127,178,255,.55);color:#FFFFFF}
+.rail-call:active{background:#1A4CC2;color:#FFFFFF}
+
+/* Heights. 54 desktop, 56 on a phone, where the control is the whole width of
+   the screen and the thumb is the pointer. Nav and rail are chrome and stay on
+   44: the header is capped at 64px on a phone and 80 on desktop, and a 54px
+   control inside 14px of padding would put the desktop bar at 82. */
+.btn,.cb-submit,.demo-play-btn,.demo-call-btn{min-height:54px}
+@media(max-width:767.98px){.btn,.cb-submit,.demo-play-btn,.demo-call-btn{min-height:56px}}
+
+/* ── C · CTA DE-DUPLICATION ──────────────────────────────────────────────────
+   Three filled blue phone surfaces could land in one 390 viewport: the header
+   chip, the hero primary and the sticky rail. Measured on the 390 fold before
+   this run, two of them sat 40px apart and the eye had no idea which one was
+   the page's ask. The header chip is the OUTLINED utility at every width now
+   and keeps its digits; the hero keeps THE filled primary; the rail still arms
+   only once the hero cluster has left the top of the viewport, which is the
+   existing suppression rather than a new one.
+
+   The word "Call" survives down to 380px rather than 1024. Measured at 390:
+   123 lockup + 8 + 177 chip + 8 + 44 burger = 360 into 366 available. At 360 it
+   does not fit, so the verb drops there and the DIGITS still read — and the
+   aria-label still CONTAINS the visible text, which is what voice control
+   matches on. */
+.nav-cta{background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  box-shadow:none;font-weight:500}
+.nav-cta:hover{background:var(--surface);color:var(--sky);border-color:var(--sky);filter:none}
+@media(max-width:1023.98px){
+  .nav-cta{background:var(--surface);color:var(--ink);border-color:var(--line);box-shadow:none}
+  .nav-cta:hover{color:var(--sky);border-color:var(--sky);filter:none}
+}
+/* THE VERB STAYS HIDDEN BELOW 1024, and that is a measurement, not a
+   preference. Showing "Call" took the chip from 147px to 177px at 390 and to
+   185px at 430 — and 430 is the TIGHTEST width on this site, not 360, because
+   below 400 the bar drops to 12px padding AND the burger loses its "Menu"
+   label. Measured with the verb on: the nav row ran to 441.7px inside a 414px
+   content box on all twelve pages. The digits are what had to survive, and they
+   do; the aria-label still carries the full "Call (414) 775-0019" and still
+   CONTAINS the visible text, which is what voice control matches on. */
+
+/* ── D · THE CALLBACK CONSOLE ────────────────────────────────────────────────
+   The form was a card with a label on it. It is an instrument now, and it says
+   what it is doing: a 44px header row carrying the module name and its own
+   state, over a nested body on --surface-2. The hot top hairline is the only
+   place --line-hot appears on a resting panel, and it marks the one panel on
+   the fold that DOES something. */
+.cb-form{background:var(--surface);border:1px solid var(--line);
+  border-top:1px solid var(--line-hot);border-radius:8px;padding:0}
+.cb-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  width:100%;min-height:44px;padding:0 1rem;margin:0;
+  background:none;border:0;border-bottom:1px solid var(--line);cursor:pointer;
+  font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--sky);text-align:left}
+.cb-head:focus-visible{outline:2px solid var(--signal-blue);outline-offset:-2px}
+.cb-title{white-space:nowrap}
+/* STATE LAW. The dot and the word are one element, so they cannot disagree:
+   there is no colour transition on this rule, and the class that repaints it is
+   the same class that rewrites the word. A 450ms crossfade once left rows
+   reading one state while painted another in 18.6% of frames. */
+.cb-status{display:inline-flex;align-items:center;gap:.45rem;flex:none;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--neutral);white-space:nowrap;transition:none}
+.cb-status::before{content:'';width:6px;height:6px;border-radius:50%;
+  background:currentColor;flex:none}
+.cb-form.is-done .cb-status{color:var(--success-green)}
+.cb-body{padding:1rem;background:var(--surface-2);border-radius:0 0 7px 7px;
+  box-shadow:inset 0 1px 0 rgba(127,178,255,.06)}
+/* THE COLLAPSE IS CSS-FIRST, and that is a MEASURED requirement rather than a
+   preference. The first cut shipped the card open and let JS collapse it on
+   load. Measured on the homepage at mobile: CLS 0.130 in two of three runs —
+   everything below the hero jumped up the instant the script ran, and the
+   twelve-page median hid it at 0.000 because the shift did not fire every time.
+   An intermittent 0.13 is worse than a steady one; it passes review and fails
+   users. CSS now decides the initial state before first paint and JS only ever
+   writes an EXPLICIT override, so there is nothing left to shift. */
+@media(max-width:767.98px){
+  .cb-form:not([data-collapsed="false"]) .cb-body{display:none}
+  .cb-form:not([data-collapsed="false"]) .cb-head{border-bottom:0}
+}
+.cb-form[data-collapsed="true"] .cb-body{display:none}
+.cb-form[data-collapsed="true"] .cb-head{border-bottom:0}
+/* § D · buttons are Space Grotesk 600. .tel-main is the phone control's label
+   and was the one that kept 500. */
+.tel-main{font-weight:600}
+.cb-sub{margin-bottom:.9rem}
+
+/* 12px FLOOR. These labels rendered at 9.92px — .62rem — which is under the
+   hard floor § 3 sets and has been since the form shipped. A probe for it is
+   part of this run's gate so it cannot come back. */
+.cb-label{font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--neutral)}
+.cb-input{min-height:54px;background:var(--input-bg);border:1px solid var(--line);
+  border-radius:8px;box-shadow:none;color:var(--ink)}
+.cb-input::placeholder{color:var(--neutral)}
+.cb-input:focus{outline:none;border-color:var(--signal-blue);
+  box-shadow:0 0 0 3px rgba(61,123,255,.15)}
+
+/* THE NATIVE BOX IS GONE. A default checkbox paints a white 20px square, and on
+   this ground that was the single brightest object on the fold — brighter than
+   the primary CTA, attached to the one control on the page that is not an ask.
+   appearance:none plus a clip-path tick keeps the semantics and the keyboard
+   behaviour and gives back the hierarchy. */
+.cb-consent input{appearance:none;-webkit-appearance:none;position:relative;
+  width:20px;height:20px;margin-top:2px;flex:none;cursor:pointer;
+  background:var(--surface);border:1px solid #2A3650;border-radius:5px;
+  transition:background .12s,border-color .12s}
+.cb-consent input:checked{background:var(--action-blue);border-color:var(--action-blue)}
+.cb-consent input:checked::after{content:'';position:absolute;inset:0;background:#FFFFFF;
+  clip-path:polygon(14% 50%,24% 40%,38% 54%,76% 16%,86% 26%,38% 74%)}
+.cb-consent input:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
+
+/* The submit RESTS as a ghost and only takes the fill once both fields validate
+   and consent is ticked. Until then the hero's phone control is the one filled
+   thing on the fold; after then, the reader has already chosen this path. */
+.cb-submit{background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  box-shadow:none}
+.cb-submit:hover:not(:disabled){background:var(--surface);border-color:var(--sky);
+  color:var(--sky);transform:translateY(-1px)}
+.cb-form.is-ready .cb-submit{background:var(--action-blue);color:#FFFFFF;
+  border-color:rgba(127,178,255,.30);box-shadow:inset 0 1px 0 rgba(127,178,255,.35)}
+.cb-form.is-ready .cb-submit:hover:not(:disabled){background:var(--action-blue-hover);
+  border-color:rgba(127,178,255,.55);color:#FFFFFF}
+.cb-form.is-ready .cb-submit:active{background:#1A4CC2;transform:translateY(0)}
+
+/* ── E · THE DISPATCH LEDGER ─────────────────────────────────────────────────
+   The Crush claims three calls land at once and all three get taken. Three rows
+   labelled "Captured" asserted the end state without ever showing the middle of
+   it. The ledger shows the overlap: 01 finishing while 02 is on the call and 03
+   is ringing. Terminal state ships in the markup, so a screen reader, a JS-off
+   browser and a reduced-motion reader all get the true resting record and the
+   scene only ever rewinds it. */
+.ledger{max-width:560px;margin:1.9rem auto 2.1rem;text-align:left;
+  background:var(--surface-2);border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;position:relative}
+.lg-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  min-height:40px;padding:0 .9rem;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--neutral)}
+.lg-note{color:var(--neutral);white-space:nowrap}
+.lg-row{display:grid;grid-template-columns:2px auto 1fr auto;
+  align-items:center;column-gap:.75rem;row-gap:.2rem;
+  min-height:52px;padding:.5rem .9rem .5rem 0;
+  border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.lg-row:last-child{border-bottom:0}
+.lg-rail{grid-row:1/-1;align-self:stretch;width:2px;background:var(--neutral);
+  transition:none}
+.lg-time{color:var(--ink-mute)}
+.lg-id{color:var(--ink)}
+.lg-trip{color:var(--ink-mute);letter-spacing:.06em;text-transform:none;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lg-state{display:inline-flex;align-items:center;gap:.45rem;white-space:nowrap;
+  color:var(--neutral);transition:none}
+.lg-state::before{content:'';width:6px;height:6px;border-radius:50%;
+  background:currentColor;flex:none}
+.lg-row.is-ringing .lg-rail,.lg-row.is-ringing .lg-state{color:var(--state-ringing)}
+.lg-row.is-ringing .lg-rail{background:var(--state-ringing);opacity:.55}
+.lg-row.is-oncall .lg-rail,.lg-row.is-oncall .lg-state{color:var(--state-listening)}
+.lg-row.is-oncall .lg-rail{background:var(--state-listening);opacity:.55}
+.lg-row.is-captured .lg-rail,.lg-row.is-captured .lg-state{color:var(--state-captured)}
+.lg-row.is-captured .lg-rail{background:var(--state-captured);opacity:.55}
+.lg-row.is-done .lg-rail,.lg-row.is-done .lg-state{color:var(--state-captured)}
+.lg-row.is-done .lg-rail{background:var(--state-captured);opacity:1}
+/* ONE active pulse at a time, and only while the scene owns the screen. The
+   observer adds .is-live on entry and takes it off on exit, so an offscreen
+   ledger animates nothing at all. */
+.ledger.is-live .lg-row.is-ringing .lg-state::before{animation:pulse 1s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.lg-state::before{animation:none!important}}
+/* Below 560 the row stacks to two lines: the record on top, the state under it.
+   The rail spans both, which is what keeps it reading as one row. */
+@media(max-width:559.98px){
+  .lg-row{grid-template-columns:2px auto 1fr;padding:.6rem .8rem .6rem 0}
+  .lg-state{grid-column:2/-1;margin-top:.15rem}
+  .lg-trip{white-space:normal}
+}
+
+/* ── I · FOOTER + CHROME ─────────────────────────────────────────────────────
+   The mobile footer was one column of 44px rows: twelve links, 620px of
+   scroll, and the © line pushed so far down that the document appeared to end
+   in empty space. Two columns halves it. The links go --ink because at
+   --ink-mute they read as disabled on a phone at half brightness, and a footer
+   link is the only navigation left at the bottom of the page. */
+.foot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:900px){.foot-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.foot-col a{color:var(--ink)}
+.foot-col a:hover{color:var(--sky)}
+footer{padding-bottom:32px}
+.foot-bottom{padding-top:1.5rem;margin-top:1.5rem}
+
+/* ── D/E · LEDGER GRID, CORRECTED ────────────────────────────────────────────
+   Five children per row: rail, time, id, trip, state. The first cut declared
+   four columns and CSS Grid silently created an implicit fifth ROW rather than
+   erroring, which reads as a row that has quietly grown a second line. */
+.lg-row{grid-template-columns:2px auto auto 1fr auto}
+/* MEASURED AT 390. The trip cell carried "Airport run, 2 passengers" and wrapped
+   inside its own column, which made a stacked row THREE lines instead of two and
+   broke the ledger's rhythm on exactly the device this brand is read on. The
+   passenger count was the part that had to go: it is already in the console's
+   own PASSENGERS field two sections up, and repeating it here bought a wrap. */
+@media(max-width:559.98px){
+  .lg-row{grid-template-columns:2px auto auto 1fr}
+  .lg-state{grid-column:2/-1}
+}
+
+/* ── D · MOBILE FOLD ─────────────────────────────────────────────────────────
+   390x844 has to carry kicker, headline, ONE line of subhead, the phone control
+   and the callback module's header row. The subhead ran five lines on a phone
+   and pushed the primary control under the fold. It is one sentence there now
+   and the detail returns from 768 up. One DOM, one crawlable paragraph — the
+   alternative, a second copy of the sentence hidden at the other breakpoint,
+   ships duplicate copy for a crawler to read twice. */
+@media(max-width:767.98px){.hero-sub-more{display:none}}
+
+/* ── F · GOOGLE LEAD PROTECTION ──────────────────────────────────────────────
+   No card, no accent object, no second colour. This section is a claim about
+   what happens AFTER the click, so it is set as prose with the one control the
+   whole site uses, and the attribution line closes it. */
+.glp-fine{font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;
+  line-height:1.6;color:var(--neutral);margin-top:1.5rem;max-width:560px}
+#lead-protection .sec-sub{margin-bottom:1.75rem}
+
+/* ── I · FOOTER, MEASURED AND CORRECTED ──────────────────────────────────────
+   The two-column footer put the brand block and the Product column in the same
+   row, and the NAP paragraph ran straight through the link labels beside it.
+   The brand block takes a full row at EVERY width now — it did so from 900 up
+   already, and the rule simply never covered the widths where it mattered
+   most. A footer that overlaps itself on a phone is not a compact footer. */
+.foot-brand{grid-column:1/-1}
+@media(min-width:900px){.foot-brand{padding-bottom:1.25rem;border-bottom:1px solid var(--line)}}
+.foot-col a{display:flex;align-items:center;padding:.35rem 0}
+.foot-nap{max-width:38ch}
+
+/* ── G/H · THE TABLE AND THE BOOKING INSET LIVE IN aic.css ONLY ──────────────
+   Both were in this block and byte-identical in both homes. They are moved out
+   of the homepage's embedded <style> because neither component can appear on
+   this page: the integration table exists on /works-with-your-software/ and the
+   booking inset on /book/, and both of those load aic.css. Byte-identity is a
+   law about SHARED chrome; shipping a page the CSS for components it cannot
+   render is not parity, it is 1.8KB on the critical path of the one page whose
+   LCP this run has to defend. The parity gate compares the RESOLVED style of
+   shared chrome and is unaffected. */
+
+/* ── § 3 · THE 12px TYPE FLOOR, ENFORCED ─────────────────────────────────────
+   The brief named ONE violation — .cb-label at .62rem. A probe was written for
+   it, and the probe found NINE MORE that had been live for as long as the pages
+   have. Measured, in rendered pixels:
+
+     .tk-label   9.60   .calc-k     9.60   .calc-label 9.92
+     .hc-state  10.88*  .ticket-bar 10.88  .card-num  11.20
+     .console-title 11.20  .calc-note 11.20  .foot-bottom 11.20
+     .vs-a      11.52   .tk-sub     11.84
+     (* .6rem in one home and .7rem in the other — the same label at two sizes,
+        which is the THREE CSS HOMES trap wearing a typographic hat.)
+
+   Every one of them is mono, uppercase, wide-tracked operational text: field
+   names, ticket labels, calculator keys, the copyright line. That is exactly
+   the category the floor exists for — a dispatcher reads these at 2AM on a
+   cracked screen, and 9.6px of tracked uppercase is a smear.
+
+   All of them go to .75rem = 12px. That is the floor, not a target, and the
+   gate now fails the run if anything renders under it on any of twelve pages at
+   any of six viewports. This block is the ONE place the floor is set, so the
+   next rule that wants to be small has to argue with a single line of CSS.
+   ────────────────────────────────────────────────────────────────────────── */
+.card-num,.ticket-bar,.tk-label,.tk-sub,.vs-a,
+.calc-label,.calc-k,.calc-note,.legal-meta,
+.foot-bottom,.console-title,.hc-state,
+.hero-console .hc-state{font-size:.75rem}
+
+/* ── I · THE MOBILE FOOTER, SIZED FROM A MEASUREMENT ─────────────────────────
+   The two-column grid on its own put 84 wrapped labels on the site. Measured at
+   360: the column was 144px and the longest label ("Works with your software",
+   "After-hours limo dispatch") ran 169px. Three numbers had to move together,
+   and the fix is all three rather than a font size alone:
+
+     footer .wrap padding   1.5rem -> 1rem   (+16px of usable row)
+     .foot-grid column gap  1.5rem -> .5rem  (+16px)
+     .foot-col link         14px   -> 13px   (169px label -> 157px)
+
+   Which lands 157px into a 160px column at 360, and 157 into 175 at 390. 13px
+   is above the 12px floor with a pixel to spare and is the size a footer link
+   should be anyway — it is secondary navigation, not body copy. Re-measured
+   after the change: zero wrapped labels at 360, 390 and 430.
+   ────────────────────────────────────────────────────────────────────────── */
+@media(max-width:599.98px){
+  footer .wrap{padding:0 .75rem}
+  .foot-grid{gap:1.5rem .375rem}
+  .foot-col a{font-size:.8125rem}
+}
+/* RE-MEASURED, and the first cut missed by ONE PIXEL. At 1rem padding and a
+   .5rem gap the column was 160px and the wrapped label's two rects summed to
+   157 — which looks like it fits and does not, because the sum of the rects
+   EXCLUDES the space character the break consumed. The true single-line width
+   was ~161. The rects tell you where the text went, not how wide it wanted to
+   be; when a label wraps at all, add the space back before believing the
+   number. 12px padding and a 6px gap give a 165px column against 161px of
+   label, and the probe reads zero wraps at 360, 390 and 430. */
   </style>
 </head>
 <body>
@@ -1450,7 +1843,7 @@ body.drawer-open{overflow:hidden}
     <div class="hero-left">
     <span class="kicker">Limo Dispatch AI · Black Car Reservations · Airport Transfers</span>
     <h1 class="hero-h">Book the ride before they <em>call someone else.</em></h1>
-    <p class="hero-sub">AVA answers the dispatch line, takes the whole trip — pickup, dropoff, vehicle, flight — and hands your dispatcher a clean ticket to confirm. Nobody sits on hold. Nobody hangs up.</p>
+    <p class="hero-sub"><span class="hero-sub-lead">AVA answers the line, takes the whole trip, and hands your dispatcher a clean ticket.</span> <span class="hero-sub-more">Pickup, dropoff, vehicle, flight, taken down the first time. Nobody sits on hold. Nobody hangs up.</span></p>
 
     <!-- ══ A2 · CTA STACK ═══════════════════════════════════════════════
          Order is deliberate: call, be called, book a setup. The phone is
@@ -1468,7 +1861,8 @@ body.drawer-open{overflow:hidden}
 
       <!-- SECONDARY — AVA calls you -->
       <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
-        <div class="cb-head">AVA calls you</div>
+        <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span></button>
+        <div class="cb-body" id="cb-body">
         <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
 
         <div class="cb-row">
@@ -1491,6 +1885,7 @@ body.drawer-open{overflow:hidden}
 
         <button type="submit" class="cb-submit" id="cb-submit" data-cb-submit>Have AVA call me</button>
         <p class="cb-note" id="cb-note" data-cb-note role="status" aria-live="polite"></p>
+        </div>
       </form>
 
       <!-- TERTIARY -->
@@ -1814,10 +2209,29 @@ body.drawer-open{overflow:hidden}
            section is scrolled into view and motion is allowed does the scene
            rewind to Ringing and resolve, amber to green, one beat apart.
            No red: nothing here fails. No particles, no alarm. -->
-      <div class="crush-lines" data-crush-lines>
-        <div class="cl is-captured"><span class="cl-k">Inbound 01</span><span class="cl-s">Captured</span></div>
-        <div class="cl is-captured"><span class="cl-k">Inbound 02</span><span class="cl-s">Captured</span></div>
-        <div class="cl is-captured"><span class="cl-k">Inbound 03</span><span class="cl-s">Captured</span></div>
+      <div class="ledger" data-ledger>
+        <div class="lg-head"><span>Dispatch ledger</span><span class="lg-note">Illustrative</span></div>
+        <div class="lg-row is-done" data-lg-row>
+          <span class="lg-rail" aria-hidden="true"></span>
+          <span class="lg-time">22:58:14</span>
+          <span class="lg-id">Inbound 01</span>
+          <span class="lg-trip">MKE airport run</span>
+          <span class="lg-state">Ready for dispatch</span>
+        </div>
+        <div class="lg-row is-done" data-lg-row>
+          <span class="lg-rail" aria-hidden="true"></span>
+          <span class="lg-time">22:58:41</span>
+          <span class="lg-id">Inbound 02</span>
+          <span class="lg-trip">Hotel to downtown</span>
+          <span class="lg-state">Ready for dispatch</span>
+        </div>
+        <div class="lg-row is-done" data-lg-row>
+          <span class="lg-rail" aria-hidden="true"></span>
+          <span class="lg-time">22:59:07</span>
+          <span class="lg-id">Inbound 03</span>
+          <span class="lg-trip">Concert pickup</span>
+          <span class="lg-state">Ready for dispatch</span>
+        </div>
       </div>
 
       <a href="/book/" class="btn btn-primary" data-event="book_click_crush">
@@ -1827,6 +2241,28 @@ body.drawer-open{overflow:hidden}
       <!-- entry point to the missed-night calculator (TASK C) -->
       <p class="crush-calc-link"><a href="/after-hours-limo-dispatch/#missed-night">Work out what a missed night costs you →</a></p>
     </div>
+  </div>
+</section>
+
+<!-- ══ RUN 10 · TASK F — GOOGLE LEAD PROTECTION ═══════════════════════════════
+     § 6 COPY SOURCE governs every word here. This section describes a MECHANISM
+     — search and ads make a phone ring, an unanswered phone hands the rider to
+     the next operator — and never a ranking, a placement or an algorithmic
+     outcome. Nothing on this page is attributed to Google as a quotation,
+     because a paraphrase presented as "Google says" is attribution fraud. The
+     final line is the required non-affiliation statement and it is not
+     decorative: this section names another company in its heading.
+     ═════════════════════════════════════════════════════════════════════════ -->
+<section id="lead-protection" data-lit="flat">
+  <div class="wrap">
+    <div class="sec-kicker">GOOGLE LEAD PROTECTION</div>
+    <h2 class="sec-h">Google found the rider. AVA finishes the handoff.</h2>
+    <p class="sec-sub">Search and ads can make the phone ring. They can't make your dispatch line answer. AVA picks up every call and takes down the route, flight, vehicle, passengers, bags, and callback number — before the rider dials the next operator on the map. Every trip you capture is a booked ride, a relationship, and a review your competitor never gets.</p>
+    <a href="/book/" class="btn btn-primary" data-event="book_click_glp">
+      Book the setup call
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+    <p class="glp-fine">AI Chauffeur is not affiliated with or endorsed by Google.</p>
   </div>
 </section>
 
@@ -1900,6 +2336,14 @@ body.drawer-open{overflow:hidden}
     <details>
       <summary>Does it replace my dispatcher?</summary>
       <div>No. It handles the first layer of intake so your dispatcher is not buried by missed calls, repeated questions, and after-hours requests. Your dispatcher confirms and runs the operation.</div>
+    </details>
+    <details>
+      <summary>What still requires dispatcher approval?</summary>
+      <div>Every trip does. AVA captures the request and builds the ticket; a human confirms it, assigns the vehicle, and books it in your dispatch software. AVA does not write into Limo Anywhere, FASTTRAK, or Santa Cruz, does not take payment, and does not commit a vehicle on its own.</div>
+    </details>
+    <details>
+      <summary>How does AI Chauffeur handle multiple calls at once?</summary>
+      <div>AVA answers every inbound line at the same time, so no caller waits on hold. Each call gets its own intake: pickup, dropoff, time, vehicle class, passengers, bags, and flight details. Every one ends as a separate trip ticket sitting in front of your dispatcher, ready to confirm.</div>
     </details>
     <details>
       <summary>Can it quote rides?</summary>
@@ -2253,46 +2697,67 @@ body.drawer-open{overflow:hidden}
   }, { threshold: 0.3 }).observe(steps);
 })();
 
-/* ══ RUN 7 · TASK G — THE CRUSH, THREE LINES RESOLVING ══════════════════════
-   The markup ships CAPTURED, which is the true resting state and the one a
-   screen reader, a JS-off browser and a reduced-motion reader all get. This
-   only ever rewinds it: on first entry the three rows go back to Ringing and
-   then resolve, amber to green, 700ms apart. Once. No red, no alarm, no
-   particles — the section's claim is that all three get taken, and that is
-   exactly what it shows.
+/* ══ RUN 10 · TASK E — THE DISPATCH LEDGER ═══════════════════════════════════
+   The heading claims three calls land at once and all three get taken. Three
+   rows already labelled "Captured" asserted the end of that without ever
+   showing the middle, which is the part an operator does not believe: the
+   OVERLAP. 01 is on the call while 02 rings and 03 is queued, and none of them
+   is on hold.
+
+   Terminal state ships in the markup. A screen reader, a JS-off browser and a
+   reduced-motion reader all get the true resting record — READY FOR DISPATCH —
+   and this only ever rewinds it. Exactly one row is ringing at any instant:
+   row n starts at n x 900ms and has left Ringing by the time n+1 arrives.
+
+   STATE LAW. `set()` swaps the class and the word in one synchronous block, so
+   the hue and the label change on the same frame. A colour transition here once
+   left rows reading Ringing while painted green in 18.6% of frames, which is
+   why .lg-state and .lg-rail both carry transition:none.
+
+   The observer toggles .is-live in BOTH directions, so an offscreen ledger runs
+   no animation at all rather than pulsing into an empty room.
    ═══════════════════════════════════════════════════════════════════════════ */
-(function crushScene(){
-  const wrap = document.querySelector('[data-crush-lines]');
-  if (!wrap) return;
-  const rows = Array.from(wrap.querySelectorAll('.cl'));
+(function ledgerScene(){
+  const led = document.querySelector('[data-ledger]');
+  if (!led) return;
+  const rows = Array.prototype.slice.call(led.querySelectorAll('[data-lg-row]'));
   if (!rows.length) return;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced || !('IntersectionObserver' in window)) return;   /* leave it captured */
+  if (reduced || !('IntersectionObserver' in window)) return;   /* leave it settled */
 
-  function label(row, text){ const s = row.querySelector('.cl-s'); if (s) s.textContent = text; }
+  const STATES = [
+    ['is-queued',   'Queued'],
+    ['is-ringing',  'Ringing'],
+    ['is-oncall',   'On call'],
+    ['is-captured', 'Trip captured'],
+    ['is-done',     'Ready for dispatch']
+  ];
+  const CLASSES = STATES.map(function (s) { return s[0]; });
+
+  function set(row, i){
+    const el = row.querySelector('.lg-state');
+    CLASSES.forEach(function (c) { row.classList.remove(c); });
+    row.classList.add(STATES[i][0]);
+    if (el) el.textContent = STATES[i][1];
+  }
 
   let played = false;
-  new IntersectionObserver(function(entries, obs){
-    entries.forEach(function(e){
+  new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      led.classList.toggle('is-live', e.isIntersecting);
       if (!e.isIntersecting || played) return;
       played = true;
-      obs.disconnect();
-      rows.forEach(function(r){
-        r.classList.remove('is-captured');
-        r.classList.add('is-ringing');
-        label(r, 'Ringing');
-      });
-      rows.forEach(function(r, i){
-        setTimeout(function(){
-          r.classList.remove('is-ringing');
-          r.classList.add('is-captured');
-          label(r, 'Captured');
-        }, 900 + i * 700);
+      rows.forEach(function (r) { set(r, 0); });
+      rows.forEach(function (r, n) {
+        const t = n * 900;
+        setTimeout(function () { set(r, 1); }, t);
+        setTimeout(function () { set(r, 2); }, t + 900);
+        setTimeout(function () { set(r, 3); }, t + 2000);
+        setTimeout(function () { set(r, 4); }, t + 3100);
       });
     });
-  }, { threshold: 0.5 }).observe(wrap);
+  }, { threshold: 0.4 }).observe(led);
 })();
-
 
 
 /* ══ B6 · THE VISITOR'S OWN CLOCK ════════════════════════════════════════
@@ -2384,7 +2849,7 @@ body.drawer-open{overflow:hidden}
   <a class="rail-cb" href="#ava-callback" data-event="call_me_rail" aria-label="Get a call back from AVA">Get a call back</a>
 </div>
 
-<script src="/assets/aic.js?v=436cf8c"></script>
+<script src="/assets/aic.js?v=ec781407"></script>
 
 </body>
 </html>

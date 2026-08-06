@@ -7,8 +7,18 @@
   <title>Limo Answering Service — Every Call Answered, 24/7 | AI Chauffeur</title>
   <meta name="description" content="AVA answers every call to your limo line at once, 24/7. The trip comes back as a clean ticket — pickup, dropoff, vehicle — for your dispatcher.">
 
-  <!-- Favicon set from mark-compact.svg with a dark ground baked in: the bars
-       are near-white and would disappear against a light-mode tab strip. -->
+  <!-- Favicon set derived from mark-compact.svg with a dark ground baked in:
+       the bars are near-white and would disappear against a light-mode tab
+       strip. THE LOGO IS A CLOSED SYSTEM (RUN 10 amendment). Its bar and knot
+       values are the kit's, not the site's, and they are written down in exactly
+       two places on purpose — assets/brand/README.md and the LOGO CANON appendix
+       of DESIGN-SYSTEM.md. They are deliberately NOT quoted here: the knot's hex
+       is grep-gated to the brand folder and the root icon files, and a comment
+       that repeats a gated string makes every future audit report a clean page
+       as dirty. RUN 9 repainted these files to the site palette on the reasoning
+       that a derived favicon is not supplied artwork. That was wrong — a favicon
+       IS the mark at 16px — and it forked the brand from the lockup sitting 40px
+       away in the same header. Reverted. Do not harmonize them again. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
@@ -36,17 +46,11 @@
        always fetched in CORS mode — miss either and the file is fetched twice. -->
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/circulant.css?v=436cf8c">
-  <link rel="stylesheet" href="/assets/aic.css?v=436cf8c">
+  <link rel="stylesheet" href="/assets/circulant.css?v=74c973d7">
+  <link rel="stylesheet" href="/assets/aic.css?v=95a59edb">
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-    {"@type":"Question","name":"How fast does it answer?","acceptedAnswer":{"@type":"Answer","text":"On the first ring, at any hour. There is no queue in front of AVA and no menu to sit through — the line picks up and the conversation starts."}},
-    {"@type":"Question","name":"What happens when three calls hit at once?","acceptedAnswer":{"@type":"Answer","text":"All three are answered at once. AVA is not one person with one line, so the second and third callers are not stacked behind the first. Nobody hears hold music. Nobody hears a busy signal."}},
-    {"@type":"Question","name":"Does my dispatcher still confirm every trip?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every single one. AVA captures the trip; your dispatcher confirms it. Nothing reaches a run sheet and no car moves until a human on your side says so. That is the whole design."}},
-    {"@type":"Question","name":"What software does it work with?","acceptedAnswer":{"@type":"Answer","text":"The call comes back as a clean trip ticket your dispatcher confirms in whatever you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox. AVA captures the trip. It does not write into your dispatch software. Nothing gets ripped out and nothing gets replaced."}},
-    {"@type":"Question","name":"How does setup work?","acceptedAnswer":{"@type":"Answer","text":"Setup is done for you and custom to your operation. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented. The build is scoped on the setup call."}}
-  ]}
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How fast does it answer?","acceptedAnswer":{"@type":"Answer","text":"On the first ring, at any hour. There is no queue in front of AVA and no menu to sit through — the line picks up and the conversation starts."}},{"@type":"Question","name":"What happens when three calls hit at once?","acceptedAnswer":{"@type":"Answer","text":"All three are answered at once. AVA is not one person with one line, so the second and third callers are not stacked behind the first. Nobody hears hold music. Nobody hears a busy signal."}},{"@type":"Question","name":"Does my dispatcher still confirm every trip?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every single one. AVA captures the trip; your dispatcher confirms it. Nothing reaches a run sheet and no car moves until a human on your side says so. That is the whole design."}},{"@type":"Question","name":"What software does it work with?","acceptedAnswer":{"@type":"Answer","text":"The call comes back as a clean trip ticket your dispatcher confirms in whatever you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox. AVA captures the trip. It does not write into your dispatch software. Nothing gets ripped out and nothing gets replaced. The full answer is on works with your software."}},{"@type":"Question","name":"How does setup work?","acceptedAnswer":{"@type":"Answer","text":"Setup is done for you and custom to your operation. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented. The build is scoped on the setup call. Every step is written out in how setup works."}}]}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
@@ -259,7 +263,8 @@
       </a>
 
       <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
-        <div class="cb-head">AVA calls you</div>
+        <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span></button>
+        <div class="cb-body" id="cb-body">
         <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
         <div class="cb-row">
           <div class="cb-field">
@@ -279,6 +284,7 @@
         </label>
         <button type="submit" class="cb-submit" data-cb-submit>Have AVA call me</button>
         <p class="cb-note" data-cb-note role="status" aria-live="polite"></p>
+        </div>
       </form>
 
       <div class="cta-tertiary">
@@ -459,7 +465,7 @@
   <a class="rail-cb" href="#ava-callback" data-event="call_me_rail" aria-label="Get a call back from AVA">Get a call back</a>
 </div>
 
-<script src="/assets/aic.js?v=436cf8c"></script>
+<script src="/assets/aic.js?v=ec781407"></script>
 
 </body>
 </html>
