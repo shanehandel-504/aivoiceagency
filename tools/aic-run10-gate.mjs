@@ -29,6 +29,11 @@ const PAGES = [
   ['/airport-transfer-booking/', 'airport-transfer-booking'],
   ['/milwaukee-limo-answering-service/', 'milwaukee'],
   ['/madison-limo-answering-service/', 'madison'],
+  // RUN 12 · ALPHA — the integration cluster, two of them at depth two.
+  ['/integrations/', 'integrations'],
+  ['/integrations/limo-anywhere/', 'integrations-limo-anywhere'],
+  ['/integrations/fasttrak/', 'integrations-fasttrak'],
+  ['/limo-dispatch-automation/', 'limo-dispatch-automation'],
   ['/privacy/', 'privacy'], ['/terms/', 'terms'],
 ];
 const VIEWPORTS = [[360, 800], [390, 844], [430, 932], [768, 1024], [1024, 800], [1440, 900]];

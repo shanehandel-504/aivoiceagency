@@ -22,8 +22,14 @@ CH = os.path.join(ROOT, 'chauffeur')
 
 # What ships to a browser. assets/brand/ is deliberately included so the cyan
 # gate can prove the mark's colour is present THERE and only there.
-PATTERNS = ('*.html', '*/index.html', '*.txt', '*.xml', '*.webmanifest',
-            'assets/*.css', 'assets/*.js', 'assets/brand/*.svg', '*.svg')
+#
+# RUN 12 added '*/*/index.html'. The integration children sit two levels down,
+# and a grep gate that does not open a file cannot find anything in it — it
+# prints "ALL CLEAN" about a page it never read. The negative control at the
+# bottom proves the scanner can see pages; it could not prove it saw THESE.
+PATTERNS = ('*.html', '*/index.html', '*/*/index.html', '*.txt', '*.xml',
+            '*.webmanifest', 'assets/*.css', 'assets/*.js',
+            'assets/brand/*.svg', '*.svg')
 
 # term, why it is banned
 ZERO = [

@@ -1644,3 +1644,131 @@ details[open]{border-color:var(--line);box-shadow:inset 3px 0 0 var(--signal-blu
 details > div{max-width:55ch}
 .card--stage,#faq .card,.ticket-card,.calc,
 .console,.step,.feat,.crush,.setup-card{border-radius:10px}
+
+/* ══ RUN 12 · ALPHA ══════════════════════════════════════════════════════════
+   Byte-identical in assets/aic.css and the embedded <style> in index.html, and
+   the LAST block in both. It carries four selectors the homepage does not
+   render — .answer, .page-updated, .tbl td.st and .answer p a — and that is
+   deliberate, for the reason § 1 of DESIGN-SYSTEM.md gives: splitting a shared
+   block to save the bytes of the selectors one host does not use gives up the
+   one property that makes the pair checkable at all.
+
+   ── THE DIRECT ANSWER ──────────────────────────────────────────────────────
+   The opening 40-60 words are the whole job of an answer-engine page, so they
+   get a container that says "this is the answer" without inventing a new idiom:
+   the 3px rail RUN 11 gave an open FAQ row, on the same surface-plus-hairline
+   every other component uses to separate from the canvas. It costs a section
+   nothing against the two-accent cap, because the gate normalises --sky and
+   --action-blue onto --signal-blue and counts the three as ONE accent.
+
+   Radius 10px is the § 9 container cap, not a choice. No shadow: a resting
+   panel on this brand separates with a hairline and a step of surface. */
+.answer{background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--signal-blue);border-radius:10px;
+  padding:1.15rem 1.25rem;margin:0 0 1.75rem;max-width:600px}
+.answer p{font-size:1.0625rem;color:var(--ink);line-height:1.58;margin:0;
+  text-wrap:pretty}
+.answer p + p{margin-top:.7rem}
+/* An inline link inside prose needs a signal that is not colour — the same rule
+   the INLINE PROSE LINKS block above sets, extended to this container. It lives
+   here rather than in that block so RUN 12 owns one contiguous diff. */
+.answer p a{text-decoration:underline;text-underline-offset:.18em;
+  text-decoration-thickness:1px}
+
+/* ── THE VISIBLE LAST-UPDATED STAMP ─────────────────────────────────────────
+   Mono, because § 3 gives times to the machine-readout face. .75rem because
+   that is the 12px floor and this is operational text, not body copy. --neutral
+   because the stamp is metadata about the page and names no state. */
+.page-updated{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--neutral);margin:0 0 1.75rem}
+
+/* ── THE STATUS COLUMN, DELIBERATELY UNPAINTED ──────────────────────────────
+   Mono per § 3: status belongs to the readout face. What it does NOT get is a
+   colour, and that is the load-bearing decision in this block.
+
+   Every value in this column names a STAGE OF SETUP — reviewed, scoped,
+   available after verification — not a state that is true on screen right now.
+   STATE LAW gives --success-green only to an action that has actually
+   succeeded, beside a label naming it. A green row here would read as "this
+   connection is live", which is a claim no row on this site is entitled to make
+   until a real acceptance test passes. A three-tier colour ladder would make
+   that claim eleven times in one glance, and it would look like evidence.
+
+   So the column is --ink-soft throughout: 9.78:1 on --surface, well over the AA
+   body floor, and it says exactly what the words say and nothing more. */
+.tbl td.st{font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;
+  color:var(--ink-soft);line-height:1.6;max-width:32ch}
+
+/* ── A TWO-COLUMN TABLE HAS NO BUSINESS SCROLLING ON A PHONE ────────────────
+   `.tbl` carries `min-width:620px` inside a `.tbl-wrap{overflow-x:auto}`. That
+   is a reasonable floor for the three- and four-column tables it was written
+   for, and it is plainly wrong for two columns: photographed at 390 before this
+   rule, the hub's status column — the entire point of the page — was off-screen
+   to the right, and the only thing a reader saw was a list of platform names.
+
+   342px of content at 390 is ample for a platform name beside a 12px mono
+   status once both are allowed to wrap. `min-width:0` and slightly tighter
+   cell padding land the whole table inside the viewport with no scroll at all,
+   and the table keeps its real display:table semantics — which is why this is
+   not the display:block "stacked card" trick. That trick drops the table role
+   out of the accessibility tree in every major engine, and a status table whose
+   rows no longer associate with their column heading is a worse outcome than
+   the scroll it replaces.
+
+   `min-width:0` alone was not enough and the measurement said why. `.tbl th`
+   carries `white-space:nowrap` in BOTH the head and the row-header, which is
+   right on a desktop fact table and is what kept the hub 425px wide inside a
+   340px box at 390: the platform column was holding 242px so that "Santa Cruz
+   (GroundWidgets)" could stay on one line. Measured columns were 242 + 182.
+   Letting the header wrap on a phone — and only on a phone — is what actually
+   closes it. A two-line platform name is not a defect; an invisible status
+   column is. */
+.tbl--pair{min-width:0}
+@media(max-width:639.98px){
+  .tbl--pair th,.tbl--pair td{padding:.85rem .7rem}
+  .tbl--pair thead th,.tbl--pair tbody th{white-space:normal}
+  .tbl--pair td.st{max-width:none}
+}
+
+/* ── AND WHERE A TABLE GENUINELY MUST SCROLL, SAY SO AND LET A KEYBOARD DO IT ─
+   The three-column tables cannot honestly fit three columns of prose into
+   342px, so they still scroll. Two things were missing and both are defects
+   rather than polish:
+
+   1. `overflow-x:auto` creates a SCROLLABLE REGION, and a scrollable region
+      that is not focusable cannot be scrolled without a pointer. Adding
+      tabindex="0" and a region role is the fix WCAG asks for, and it is why
+      the focus style below exists — a new tab stop with no visible focus would
+      trade one failure for another.
+   2. Nothing told a reader there was anything to the right. The clipped column
+      read as broken rather than as scrollable. The hint appears only at the
+      widths where the table actually overflows its wrap: content width is
+      viewport minus 48px of .wrap padding, and the table floor is 620, so the
+      overflow begins below 668. */
+.tbl-hint{display:none}
+@media(max-width:667.98px){
+  .tbl-hint{display:block;font-family:var(--mono);font-size:.75rem;
+    letter-spacing:.08em;color:var(--neutral);margin:.7rem 0 1.25rem}
+}
+.tbl-wrap[tabindex]:focus-visible{outline:2px solid var(--signal-blue);
+  outline-offset:2px}
+
+/* ── A LINK INSIDE AN FAQ ANSWER, ON BOTH HEADS ─────────────────────────────
+   THE THREE CSS HOMES TRAP, FOUND AGAIN AND IN THE SAME RULE FAMILY RUN 9
+   FIXED. `details > div a` was declared in assets/aic.css and nowhere else, so
+   on the eleven pages that load it an FAQ link is blue AND underlined, and on
+   the homepage — which carries its own embedded copy of the shell — the base
+   `a{text-decoration:none}` won and colour was the only thing marking the link.
+   The homepage FAQ has carried one such link since the section shipped.
+
+   RUN 9 fixed exactly this for .sec-sub, .card-p, .vs-b and the rest, and
+   listed the selectors it covered; `details` was not among them and nothing
+   since has looked. Lighthouse still reads 100 there, which is why no probe
+   caught it — the audit is not the rule.
+
+   Redeclaring it HERE rather than editing line 803 is deliberate: this block is
+   the one that is byte-identical in both homes by law, so a rule placed in it
+   cannot land on one head and miss the other. It is later in aic.css than the
+   original and identical to it, so that file's rendered result does not move. */
+details > div a{color:var(--signal-blue);text-decoration:underline;
+  text-underline-offset:.18em;text-decoration-thickness:1px}

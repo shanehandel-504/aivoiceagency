@@ -29,6 +29,9 @@ const PAGES = [
   '/', '/demo/', '/book/', '/how-setup-works/', '/works-with-your-software/',
   '/limo-answering-service/', '/after-hours-limo-dispatch/', '/airport-transfer-booking/',
   '/milwaukee-limo-answering-service/', '/madison-limo-answering-service/',
+  // RUN 12 · ALPHA — the integration cluster.
+  '/integrations/', '/integrations/limo-anywhere/', '/integrations/fasttrak/',
+  '/limo-dispatch-automation/',
   '/privacy/', '/terms/',
 ];
 

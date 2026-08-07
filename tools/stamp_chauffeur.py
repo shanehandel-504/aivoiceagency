@@ -56,8 +56,14 @@ def main():
             return 1
         print('  %-24s v=%s' % (rel, tok))
 
+    # RUN 12 · depth two. The integration children are nested a level deeper
+    # than anything before them; without this glob they would ship referencing
+    # /assets/aic.css with NO version token at all, which is the exact
+    # stale-cache failure this tool was written to prevent — and --check would
+    # have reported every page current.
     pages = sorted(set(glob.glob(os.path.join(CH, '*.html')) +
-                       glob.glob(os.path.join(CH, '*', 'index.html'))))
+                       glob.glob(os.path.join(CH, '*', 'index.html')) +
+                       glob.glob(os.path.join(CH, '*', '*', 'index.html'))))
     changed, stale = 0, 0
     for p in pages:
         s = io.open(p, encoding='utf-8').read()

@@ -48,6 +48,10 @@ const read = async (path) => { await p.goto(O + path, { waitUntil: 'networkidle'
 const base = await read('/');                                  // embedded <style>
 const a    = await read('/limo-answering-service/');            // aic.css, money page
 const c    = await read('/works-with-your-software/');          // aic.css, second money page
+// RUN 12 · a DEPTH-TWO aic.css page. Every page this gate had ever read sat one
+// level down, so a relative-path or root-scoped regression on a nested page
+// would have gone unseen. The chrome must resolve identically at any depth.
+const d    = await read('/integrations/limo-anywhere/');        // aic.css, depth two
 
 // /terms/, /privacy/ and /demo/ carry `.rail--solo` BY DESIGN: they have no
 // callback form, so the rail is one full-width control instead of a 60/40 split.
@@ -67,13 +71,14 @@ await b.close();
 let bad = 0;
 console.log('\n══ COMPUTED-STYLE PARITY · index.html (embedded) vs 2 x aic.css pages ══\n');
 for (const k of Object.keys(base)) {
-  const same = base[k] === a[k] && base[k] === c[k];
+  const same = base[k] === a[k] && base[k] === c[k] && base[k] === d[k];
   if (!same) {
     bad++;
     console.log('DIFF  ' + k);
     console.log('      index.html            ', base[k]);
     console.log('      limo-answering-service ', a[k]);
     console.log('      works-with-your-software', c[k]);
+    console.log('      integrations/limo-anywhere', d[k]);
   } else {
     console.log('SAME  ' + k.padEnd(20), String(base[k]).slice(0, 96));
   }

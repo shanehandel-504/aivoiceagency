@@ -30,6 +30,10 @@ const PAGES = [
   ['/airport-transfer-booking/', 'airport-transfer-booking/index.html'],
   ['/milwaukee-limo-answering-service/', 'milwaukee-limo-answering-service/index.html'],
   ['/madison-limo-answering-service/', 'madison-limo-answering-service/index.html'],
+  ['/integrations/', 'integrations/index.html'],
+  ['/integrations/limo-anywhere/', 'integrations/limo-anywhere/index.html'],
+  ['/integrations/fasttrak/', 'integrations/fasttrak/index.html'],
+  ['/limo-dispatch-automation/', 'limo-dispatch-automation/index.html'],
   ['/privacy/', 'privacy/index.html'],
   ['/terms/', 'terms/index.html'],
 ];

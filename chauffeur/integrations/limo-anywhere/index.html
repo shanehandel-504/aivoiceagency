@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070B14">
+  <title>Limo Anywhere Integration — AI Phone Answering | AI Chauffeur</title>
+  <meta name="description" content="AVA answers your line, captures the whole trip, and your dispatcher confirms it in Limo Anywhere. Nothing ripped out. Write-back configured per account. Call (414) 775-0019 to hear AVA answer.">
+
+  <!-- Favicon set derived from mark-compact.svg with a dark ground baked in:
+       the bars are near-white and would disappear against a light-mode tab
+       strip. THE LOGO IS A CLOSED SYSTEM (RUN 10 amendment). Its bar and knot
+       values are the kit's, not the site's, and they are written down in exactly
+       two places on purpose — assets/brand/README.md and the LOGO CANON appendix
+       of DESIGN-SYSTEM.md. They are deliberately NOT quoted here: the knot's hex
+       is grep-gated to the brand folder and the root icon files, and a comment
+       that repeats a gated string makes every future audit report a clean page
+       as dirty. Do not harmonize them to the site palette. -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="canonical" href="https://aichauffeur.ai/integrations/limo-anywhere/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AI Chauffeur">
+  <meta property="og:title" content="Limo Anywhere Integration — AI Phone Answering">
+  <meta property="og:description" content="AVA sits beside Limo Anywhere, not inside it. Every field it captures on the call, where that field lands, and what changes once direct write-back is configured.">
+  <meta property="og:url" content="https://aichauffeur.ai/integrations/limo-anywhere/">
+  <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AI Chauffeur — the limo answering service that never puts a caller on hold. (414) 775-0019">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Limo Anywhere Integration — AI Phone Answering">
+  <meta name="twitter:description" content="AVA sits beside Limo Anywhere, not inside it. Every field it captures on the call, where that field lands, and what changes once direct write-back is configured.">
+  <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
+
+  <!-- RUN 8 · FONT LOCK — self-hosted. The @font-face lives in the stylesheet,
+       so without a preload the browser cannot discover either file until the CSS
+       has parsed and matched a rule against it. The href must be the SAME STRING
+       as the src, and crossorigin is required even same-origin because fonts are
+       always fetched in CORS mode — miss either and the file is fetched twice. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
+  <link rel="stylesheet" href="/assets/aic.css?v=73207be0">
+
+  <!-- Generated from the rendered <details> blocks by
+       tools/aic-run10-faq-mirror.py. Empty on purpose — see the note on the
+       hub page for why this node is never hand-authored. -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Do I have to migrate anything out of Limo Anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. There is no export, no import, and no records to move. Your reservations, rates, accounts and history all stay exactly where they are. AVA arrives in front of the operation, on the phone line, and the first thing it changes is how many calls get answered — not where anything is stored."}},{"@type":"Question","name":"What does AVA create in Limo Anywhere once write-back is on?","acceptedAnswer":{"@type":"Answer","text":"Quote requests and reservation records, on supported dispatch systems, once the connection has been configured and tested against your account. What a new record contains and which status it opens in are part of that configuration, so it comes out looking like the records your dispatcher already works with rather than a foreign object in the list."}},{"@type":"Question","name":"Can I keep AVA on shared-inbox delivery and never turn write-back on?","acceptedAnswer":{"@type":"Answer","text":"Yes, and plenty of operators do. Ticket delivery is included in every setup and it is a complete way to run this. Say so on the setup call and no connection gets built. You can also start there and move later, because the ladder runs in that order for exactly this reason."}},{"@type":"Question","name":"Could a trip go live without anyone looking at it?","acceptedAnswer":{"@type":"Answer","text":"No. Your dispatcher confirms every trip, on every rung of the ladder. Your approval workflow is one of the things configured and tested before write-back is switched on, so an automatically created record still has to pass through the same approval your operation uses today. AVA does not commit a vehicle and does not take payment."}}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://aichauffeur.ai/"},
+    {"@type":"ListItem","position":2,"name":"Integrations","item":"https://aichauffeur.ai/integrations/"},
+    {"@type":"ListItem","position":3,"name":"Limo Anywhere","item":"https://aichauffeur.ai/integrations/limo-anywhere/"}
+  ]}
+  </script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="top">
+  <a href="/" class="brand" aria-label="AI Chauffeur home">
+    <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    <img class="brand-compact" src="/assets/brand/mark-compact.svg" alt="" width="26" height="26" decoding="async">
+  </a>
+
+  <ul class="nav-main">
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-product">Product<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-product">
+        <li><a href="/demo/">Live demo</a></li>
+        <li><a href="/how-setup-works/">How setup works</a></li>
+        <li><a href="/works-with-your-software/">Works with your software</a></li>
+        <li><a href="/integrations/">Integrations</a></li>
+      </ul>
+    </li>
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-solutions">Solutions<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-solutions">
+        <li><a href="/limo-answering-service/">Limo answering service</a></li>
+        <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+        <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+        <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+      </ul>
+    </li>
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-locations">Locations<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-locations">
+        <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+        <li><a href="/madison-limo-answering-service/">Madison</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_nav" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="nav-cta-verb">Call </span>(414) 775-0019</a>
+    <a href="/book/" class="nav-book" data-event="book_click_nav">Book the setup call</a>
+    <button type="button" class="nav-burger" data-drawer-open aria-expanded="false" aria-controls="nav-drawer" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span class="nav-burger-t">Menu</span></button>
+  </div>
+</nav>
+
+<main id="main">
+
+<section class="phead" data-lit="bright" data-rail-after>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/integrations/">Integrations</a></li>
+        <li aria-current="page">Limo Anywhere</li>
+      </ol>
+    </nav>
+    <span class="kicker">Integration · Limo Anywhere</span>
+    <h1 class="page-h">AVA works beside <em>Limo Anywhere.</em></h1>
+    <!-- THE DIRECT ANSWER. 53 words, self-contained, first prose on the page. -->
+    <div class="answer">
+      <p>Yes — AVA works beside Limo Anywhere. It answers your line, takes the whole trip, and delivers a complete ticket to the person on dispatch, who confirms it in Limo Anywhere. Nothing is ripped out and nothing is migrated. Direct write-back is configured and verified against your own account before it is switched on.</p>
+    </div>
+
+    <p class="page-updated">Last updated 7 August 2026</p>
+  </div>
+</section>
+
+<!-- ══ 1 · THE CAPABILITY SENTENCE ════════════════════════════════════════════
+     The paragraph below is the approved wording and ships VERBATIM. It is the
+     one place on this site that states what write-back can create, and every
+     other write-back sentence on the host is bounded by it. Do not paraphrase
+     it, do not tighten it, and do not split it across two paragraphs — the
+     conditions in the middle clause are what keep the first clause honest. -->
+<section id="capability" data-lit="calm">
+  <div class="wrap">
+    <div class="sec-kicker">What write-back means here</div>
+    <h2 class="sec-h">A connection built <em>around your account.</em></h2>
+
+    <div class="answer">
+      <p>AVA can create quote requests and reservation records in supported dispatch systems. Every connection is configured and tested around your account — service types, vehicle classes, rate rules, required fields, statuses, and approval workflow — before direct write-back is activated.</p>
+    </div>
+
+    <p class="sec-sub">Read the middle of that sentence twice, because it is the part that matters. A connection that ignores your service types will file a wedding as an airport run. One that ignores your required fields will create a record your dispatcher has to reopen anyway. One that ignores your approval workflow will put a trip somewhere it has not been approved to be. Configuring those is the work, and it is why write-back is switched on after setup verification rather than on the first day.</p>
+    <p class="sec-sub">Until it is switched on, delivery is a completed trip ticket to the person on dispatch — which is a whole product on its own, and the one most operators start with. The <a href="/integrations/">integration status table</a> says where every other platform stands.</p>
+  </div>
+</section>
+
+<!-- ══ 2 · THE LADDER ════════════════════════════════════════════════════════ -->
+<section id="ladder" data-lit="connected">
+  <div class="wrap">
+    <div class="sec-kicker">The connection ladder</div>
+    <h2 class="sec-h">Three rungs, <em>and you can stop on any of them.</em></h2>
+    <p class="sec-sub">Nobody waits on integration work to start capturing calls. The rungs run in this order because the phone is worth answering on day one whether or not anything is connected yet.</p>
+
+    <div class="vs">
+      <div class="vs-row">
+        <div class="vs-a">Rung 1 · Day one</div>
+        <div class="vs-b"><strong>Shared inbox delivery.</strong> The completed ticket lands in the inbox or channel your team already watches. Nothing touches Limo Anywhere. Your dispatcher reads the ticket and enters the reservation the way they always have — with every detail already taken down, instead of a voicemail to replay.</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-a">Rung 2 · During setup</div>
+        <div class="vs-b"><strong>The connection is configured and tested.</strong> Your service types, vehicle classes, rate rules, required fields, statuses and approval workflow get matched to your account, then run against test trips until the records come out the shape your dispatcher expects. This is scoped on the setup call.</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-a">Rung 3 · After verification</div>
+        <div class="vs-b"><strong>Direct write-back is activated.</strong> Quote requests and reservation records are created for you. Your dispatcher still confirms every trip inside the approval workflow you already run — write-back changes where the record is created, not who says yes to it.</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-a">Staying on rung one</div>
+        <div class="vs-b">A legitimate answer, and a common one. If you would rather every record was keyed by a person who read the ticket first, say so on the setup call and nothing gets connected. The answering, the capture and the quoting all work the same.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3 · THE FIELD MAP — the ONE visible table on this page ════════════════
+     Capability, not vendor internals. This table names ordinary reservation
+     concepts a dispatcher would recognise from any platform; it does not
+     enumerate anyone's API endpoints, and it does not invent field identifiers
+     to look authoritative. Where a mapping is genuinely decided per account,
+     the cell says so. -->
+<section id="fields" data-lit="technical">
+  <div class="wrap">
+    <div class="sec-kicker">The field map</div>
+    <h2 class="sec-h">Everything AVA takes down, <em>and where it ends up.</em></h2>
+    <p class="sec-sub">Nine fields come off every call. The middle column is what your dispatcher reads on the ticket; the right-hand column is what happens to that field once write-back is configured for your account.</p>
+
+    <!-- Three columns of prose will not fit 342px honestly, so this one keeps
+         the horizontal scroll — and a scrollable region has to be reachable
+         without a pointer, which is what tabindex and the region role are for.
+         The hint below it renders only at the widths where it actually
+         overflows. See the RUN 12 block for the measurement. -->
+    <div class="tbl-wrap" tabindex="0" role="region" aria-label="Field map, scrollable table">
+      <table class="tbl">
+        <caption class="tbl-cap">What AVA captures on a call, and where each field lands</caption>
+        <thead>
+          <tr><th scope="col">Trip detail</th><th scope="col">On the trip ticket</th><th scope="col">With write-back configured</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Pickup address</th><td>Route block, first line, as the caller said it.</td><td>The reservation's pickup location.</td></tr>
+          <tr><th scope="row">Dropoff address</th><td>Route block, second line.</td><td>The reservation's dropoff location.</td></tr>
+          <tr><th scope="row">Date and pickup time</th><td>Header, with the day named so nobody mis-reads a date.</td><td>The reservation date and pickup time.</td></tr>
+          <tr><th scope="row">Vehicle class</th><td>Vehicle line, in your own class names.</td><td>The vehicle type, matched to the classes on your account.</td></tr>
+          <tr><th scope="row">Passenger count</th><td>Passenger line.</td><td>The reservation's passenger count.</td></tr>
+          <tr><th scope="row">Bag count</th><td>Passenger line, beside the head count.</td><td>The reservation's luggage count.</td></tr>
+          <tr><th scope="row">Flight number and terminal</th><td>Flight line, read back to the caller before the call ends.</td><td>The reservation's flight details.</td></tr>
+          <tr><th scope="row">Callback number</th><td>Caller block, at the top of the ticket.</td><td>The contact number on the reservation.</td></tr>
+          <tr><th scope="row">Notes and special requests</th><td>Notes block, in the caller's own words.</td><td>The reservation notes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tbl-hint">Scroll the table sideways for the write-back column.</p>
+
+    <p class="sec-sub">Which of those are required, what a missing one should do, and which status a new record opens in are all decided on your setup call rather than assumed here. A quote range is captured too, and it comes from your configured rate rules — the sample below is illustrative only.</p>
+  </div>
+</section>
+
+<!-- ══ 4 · THE TICKET ════════════════════════════════════════════════════════ -->
+<section id="ticket" data-lit="dense">
+  <div class="wrap">
+    <div class="sec-kicker">A worked example</div>
+    <h2 class="sec-h">A Friday night call, <em>written up while it happens.</em></h2>
+    <p class="sec-sub">Not an airport run. This is the call that comes in at 6:40 PM on a Friday from somebody who has already tried two other operators and got voicemail at both.</p>
+
+    <div class="ticket-card">
+      <div class="ticket-bar">
+        <span>Sample trip ticket · night out</span>
+        <span class="ticket-live">Captured</span>
+      </div>
+      <div class="ticket-grid">
+        <div class="tk">
+          <div class="tk-label">Inbound caller</div>
+          <div class="tk-val">Marisol T.</div>
+          <div class="tk-sub">+1 (262) 555-0119 · Inbound</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Trip type</div>
+          <div class="tk-val">Night out · round trip</div>
+          <div class="tk-sub">Return pickup 11:30 PM</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Pickup → dropoff</div>
+          <div class="tk-val">Brookfield residence → Downtown Milwaukee</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Pickup time</div>
+          <div class="tk-val">7:15 PM</div>
+          <div class="tk-sub">Friday</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Vehicle</div>
+          <div class="tk-val">Stretch · 8 passenger</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Passengers</div>
+          <div class="tk-val">6 · 0 bags</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Quote range</div>
+          <div class="tk-val">$310–$375 est.</div>
+          <div class="tk-sub">Illustrative sample</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Status</div>
+          <div class="tk-val">Routed to dispatch</div>
+          <div class="tk-sub">Dispatcher confirms</div>
+        </div>
+      </div>
+      <div class="ticket-foot">Sample ticket · the quote range is illustrative only · real ranges come from your own rate rules</div>
+    </div>
+
+    <p class="sec-sub">On rung one your dispatcher reads that and keys the reservation. On rung three the record is already there and your dispatcher approves it. Either way the same person makes the same decision — they just stop typing the parts AVA already wrote down.</p>
+  </div>
+</section>
+
+<!-- ══ CTA STACK — identical on every chauffeur page ══════════════════════ -->
+<section id="talk" data-lit="bright">
+  <div class="wrap">
+    <div class="sec-kicker">Hear it first</div>
+    <h2 class="sec-h">Bring a real trip. <em>Then read the ticket.</em></h2>
+    <p class="sec-sub">Call the line and book something the way one of your customers would. Compare what comes back against what you would have had to key in by hand. That comparison is the whole pitch, and it takes four minutes.</p>
+
+    <div class="cta-stack">
+      <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_cta">
+        <span class="tel-main">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call (414) 775-0019
+        </span>
+        <span class="tel-sub">AVA answers. Hear it yourself.</span>
+      </a>
+
+      <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
+        <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span><span class="cb-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M9 18l6-6-6-6"/></svg></span></button>
+        <div class="cb-body" id="cb-body">
+        <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
+        <div class="cb-row">
+          <div class="cb-field">
+            <label class="cb-label" for="cb-name-limo-anywhere">First name</label>
+            <input class="cb-input" id="cb-name-limo-anywhere" name="first_name" type="text" data-cb-name
+                   autocomplete="given-name" maxlength="60" placeholder="Mike">
+          </div>
+          <div class="cb-field">
+            <label class="cb-label" for="cb-cell-limo-anywhere">Cell</label>
+            <input class="cb-input" id="cb-cell-limo-anywhere" name="phone" type="tel" data-cb-cell
+                   autocomplete="tel" inputmode="tel" maxlength="20" placeholder="(414) 555-0182">
+          </div>
+        </div>
+        <label class="cb-consent" for="cb-consent-limo-anywhere">
+          <input type="checkbox" id="cb-consent-limo-anywhere" name="tcpa_consent" value="true" data-cb-consent>
+          <span>I agree to get an automated demo call and follow-up texts from AI Chauffeur at this number. Saying yes is not required to buy anything. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy/">See our Privacy Policy</a>.</span>
+        </label>
+        <button type="submit" class="cb-submit" data-cb-submit>Have AVA call me</button>
+        <p class="cb-note" data-cb-note role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <div class="cta-tertiary">
+        <a href="/book/" data-event="book_click_cta">Book the setup call →</a>
+        <span class="cta-note">Schedules the 20-minute setup call.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ═══════════════════════════════════════════════════════════════ -->
+<section id="faq" data-lit="flat">
+  <div class="wrap">
+    <div class="sec-kicker">FAQ</div>
+    <h2 class="sec-h">Questions operators <em>actually ask.</em></h2>
+    <details>
+      <summary>Do I have to migrate anything out of Limo Anywhere?</summary>
+      <div>No. There is no export, no import, and no records to move. Your reservations, rates, accounts and history all stay exactly where they are. AVA arrives in front of the operation, on the phone line, and the first thing it changes is how many calls get answered — not where anything is stored.</div>
+    </details>
+    <details>
+      <summary>What does AVA create in Limo Anywhere once write-back is on?</summary>
+      <div>Quote requests and reservation records, on supported dispatch systems, once the connection has been configured and tested against your account. What a new record contains and which status it opens in are part of that configuration, so it comes out looking like the records your dispatcher already works with rather than a foreign object in the list.</div>
+    </details>
+    <details>
+      <summary>Can I keep AVA on shared-inbox delivery and never turn write-back on?</summary>
+      <div>Yes, and plenty of operators do. Ticket delivery is included in every setup and it is a complete way to run this. Say so on the setup call and no connection gets built. You can also start there and move later, because the ladder runs in that order for exactly this reason.</div>
+    </details>
+    <details>
+      <summary>Could a trip go live without anyone looking at it?</summary>
+      <div>No. Your dispatcher confirms every trip, on every rung of the ladder. Your approval workflow is one of the things configured and tested before write-back is switched on, so an automatically created record still has to pass through the same approval your operation uses today. AVA does not commit a vehicle and does not take payment.</div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ INTERNAL LINKS ════════════════════════════════════════════════════ -->
+<section id="more" data-lit="flat">
+  <div class="wrap">
+    <div class="sec-kicker">More</div>
+    <div class="related">
+      <a class="rel" href="/integrations/">
+        <div class="rel-k">All platforms</div>
+        <div class="rel-t">The full integration status table</div>
+      </a>
+      <a class="rel" href="/integrations/fasttrak/">
+        <div class="rel-k">FASTTRAK</div>
+        <div class="rel-t">Corporate intake for a bigger fleet</div>
+      </a>
+      <a class="rel" href="/how-setup-works/">
+        <div class="rel-k">Setup</div>
+        <div class="rel-t">What the first two weeks actually look like</div>
+      </a>
+    </div>
+    <p class="sec-sub">AI Chauffeur is not affiliated with or endorsed by Limo Anywhere.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ § G · FAT FOOTER ══════════════════════════════════════════════════
+     Four columns plus the NAP block, identical on all sixteen pages. This is
+     the only surface where every indexable page is reachable from every other
+     one, and it is what closed the orphan gap.
+
+     data-rail-hide: the sticky rail suppresses itself once the footer is on
+     screen. The footer carries the number and the setup CTA already, so a bar
+     restating them would be noise — and body.rail-on comes off with it, which
+     is what removes the reserved 73px and leaves the document ending on the
+     last line of content instead of on dead scroll. -->
+<footer data-rail-hide>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="foot-mark">AI <em>Chauffeur</em></div>
+        <p class="foot-nap">
+          AI CHAUFFEUR · Wisconsin-built<br>
+          <a href="tel:+14147750019" data-event="tel_tap_footer">(414) 775-0019</a><br>
+          Serving operators nationwide
+        </p>
+      </div>
+      <div class="foot-col">
+        <h2>Product</h2>
+        <ul>
+          <li><a href="/demo/">Live demo</a></li>
+          <li><a href="/how-setup-works/">How setup works</a></li>
+          <li><a href="/works-with-your-software/">Works with your software</a></li>
+          <li><a href="/integrations/">Integrations</a></li>
+          <li><a href="/book/">Book the setup call</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Solutions</h2>
+        <ul>
+          <li><a href="/limo-answering-service/">Limo answering service</a></li>
+          <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+          <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+          <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Locations</h2>
+        <ul>
+          <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+          <li><a href="/madison-limo-answering-service/">Madison</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Company</h2>
+        <ul>
+          <li><a href="tel:+14147750019" data-event="tel_tap_footer_company">Call (414) 775-0019</a></li>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/terms/">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 AI Chauffeur</span>
+    </div>
+  </div>
+</footer>
+
+<!-- § G · MOBILE DRAWER — every indexable page, real hrefs, no injection. -->
+<div class="nav-drawer" id="nav-drawer" data-drawer>
+  <div class="dw-top">
+    <a href="/" class="brand" aria-label="AI Chauffeur home">
+      <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    </a>
+    <button type="button" class="dw-close" data-drawer-close aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Close</span></button>
+  </div>
+  <div class="dw-body">
+    <nav class="dw-group" aria-label="Product">
+      <h2>Product</h2>
+      <ul>
+        <li><a href="/demo/">Live demo</a></li>
+        <li><a href="/how-setup-works/">How setup works</a></li>
+        <li><a href="/works-with-your-software/">Works with your software</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Solutions">
+      <h2>Solutions</h2>
+      <ul>
+        <li><a href="/limo-answering-service/">Limo answering service</a></li>
+        <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+        <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+        <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Integrations">
+      <h2>Integrations</h2>
+      <ul>
+        <li><a href="/integrations/">Integrations overview</a></li>
+        <li><a href="/integrations/limo-anywhere/" aria-current="page">Limo Anywhere</a></li>
+        <li><a href="/integrations/fasttrak/">FASTTRAK</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Locations">
+      <h2>Locations</h2>
+      <ul>
+        <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+        <li><a href="/madison-limo-answering-service/">Madison</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Company">
+      <h2>Company</h2>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+      </ul>
+    </nav>
+    <div class="dw-actions">
+      <a href="/book/" class="nav-book" data-event="book_click_drawer">Book the setup call</a>
+      <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call (414) 775-0019</a>
+    </div>
+  </div>
+</div>
+
+<!-- RUN 7 · TASK A — mobile sticky action rail -->
+<div class="rail" data-rail>
+  <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call (414) 775-0019</a>
+  <a class="rail-cb" href="#ava-callback" data-event="call_me_rail" aria-label="Get a call back from AVA">Get a call back</a>
+</div>
+
+<script src="/assets/aic.js?v=c675239f"></script>
+
+</body>
+</html>

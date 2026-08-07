@@ -73,8 +73,16 @@ def apply_to_node(node, entities):
 
 def main():
     check = '--check' in sys.argv
+    # RUN 12 · the depth-two glob. /integrations/limo-anywhere/ and
+    # /integrations/fasttrak/ are the first pages on this host that live two
+    # levels down, and until this line existed the mirror walked straight past
+    # them — no error, no warning, just two pages whose FAQPage node was never
+    # checked against the copy it describes. A tool that silently skips a file
+    # reports "every FAQPage node mirrors its visible copy" about a set that
+    # does not include the page you just wrote.
     pages = sorted(set(glob.glob(os.path.join(CH, '*.html')) +
-                       glob.glob(os.path.join(CH, '*', 'index.html'))))
+                       glob.glob(os.path.join(CH, '*', 'index.html')) +
+                       glob.glob(os.path.join(CH, '*', '*', 'index.html'))))
     drift, written, seen = 0, 0, 0
     for p in pages:
         src = io.open(p, encoding='utf-8', newline='').read()

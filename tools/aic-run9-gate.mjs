@@ -33,6 +33,16 @@ const PAGES = [
   ['/airport-transfer-booking/', 'airport-transfer-booking'],
   ['/milwaukee-limo-answering-service/', 'milwaukee'],
   ['/madison-limo-answering-service/', 'madison'],
+  // RUN 12 · ALPHA — the integration cluster. /integrations/limo-anywhere/ and
+  // /integrations/fasttrak/ are the first pages on this host at depth TWO, and
+  // that is not a cosmetic detail: three tools (stamp_chauffeur, the FAQ mirror
+  // and the grep gate) globbed only */index.html and would have skipped both
+  // without saying so. A gate that silently omits a page reports green on a
+  // site it never looked at.
+  ['/integrations/', 'integrations'],
+  ['/integrations/limo-anywhere/', 'integrations-limo-anywhere'],
+  ['/integrations/fasttrak/', 'integrations-fasttrak'],
+  ['/limo-dispatch-automation/', 'limo-dispatch-automation'],
   ['/privacy/', 'privacy'],
   ['/terms/', 'terms'],
 ];

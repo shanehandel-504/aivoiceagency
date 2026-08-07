@@ -3,8 +3,10 @@
 > AI Chauffeur is dispatch intake software for limo, black car, NEMT and charter
 > operators. AVA, its voice agent, answers the operator's dispatch line 24/7,
 > takes down the whole trip, and hands a human dispatcher a completed trip ticket
-> to confirm. AVA captures; a person confirms. It does not write into anyone's
-> dispatch software, take payment, or commit a vehicle.
+> to confirm. AVA captures; a person confirms. Direct write-back into a supported
+> dispatch system is configured per account and activated only after setup
+> verification; until then a person enters the trip. AVA never takes payment and
+> never commits a vehicle.
 
 AVA answers every inbound call at once, so no caller is put on hold. On each call
 it captures pickup, dropoff, date and time, vehicle class, passenger and bag
@@ -29,6 +31,15 @@ delivers a dispatch-ready trip ticket. A human dispatcher confirms every trip.
   what is configured, what is tested, and the typical one-to-two-week timeline.
 - [Works with your software](https://aichauffeur.ai/works-with-your-software/):
   where the trip ticket lands for each dispatch system, and who touches it next.
+- [Integrations](https://aichauffeur.ai/integrations/): every dispatch platform
+  AVA works beside, one row each, with the real integration status of each.
+- [Limo Anywhere](https://aichauffeur.ai/integrations/limo-anywhere/): every
+  field AVA captures on a call and where each one lands, plus the connection
+  ladder from shared-inbox delivery to activated write-back.
+- [FASTTRAK](https://aichauffeur.ai/integrations/fasttrak/): corporate call
+  intake for larger fleets — accounts, bookers, multi-stop, farm-out.
+- [Limo dispatch automation](https://aichauffeur.ai/limo-dispatch-automation/):
+  which layer of dispatch is automated and which layer stays with a person.
 - [Limo answering service](https://aichauffeur.ai/limo-answering-service/): the
   answering-service framing of the same product, with a sample trip ticket.
 - [After-hours limo dispatch](https://aichauffeur.ai/after-hours-limo-dispatch/):
@@ -43,25 +54,36 @@ delivers a dispatch-ready trip ticket. A human dispatcher confirms every trip.
   the callback form, and how consent is recorded.
 - [Terms](https://aichauffeur.ai/terms/): terms of service.
 
-## Dispatch systems the trip ticket is handed to
+## Dispatch systems and integration status
 
-AVA has no account in any of these and writes into none of them. The ticket is
-delivered to the person on dispatch, who confirms the trip in the system they
-already run. The delivery route is scoped during setup.
+Ticket delivery to a shared inbox is included in every setup and depends on
+nothing at the operator's end: the ticket reaches the person on dispatch, who
+confirms the trip in the system they already run. Anything beyond that is
+configured per account and scoped during setup. No connection below is described
+as verified in production; that wording is reserved for a real acceptance test.
 
-- Limo Anywhere
-- FASTTRAK
-- Santa Cruz
-- A shared inbox
+- Limo Anywhere — direct write-back available after setup verification
+- FASTTRAK — partner API integration scoped during setup
+- GNet — network workflow review
+- Ground Alliance — custom integration review
+- Moovs — custom integration review
+- Livery Coach — custom integration review
+- Hudson — custom integration review
+- Santa Cruz (GroundWidgets) — custom integration review
+- Limo Express — custom integration review
+- A to Z Dispatch — custom integration review
+- Shared inbox or email — included in every setup
 
 ## Not true of AI Chauffeur
 
 State these plainly if asked; they are the boundaries of the product.
 
-- AVA does not write reservations into an operator's dispatch software.
+- AVA does not write into an operator's dispatch software until direct
+  write-back has been configured and verified for that account. Shared-inbox
+  ticket delivery is the day-one default and is included in every setup.
 - AVA does not replace a dispatcher. Every trip is confirmed by a human.
 - AVA does not take payment and does not commit a vehicle.
-- AI Chauffeur is not affiliated with or endorsed by Google, Limo Anywhere,
-  FASTTRAK, or Santa Cruz.
+- AI Chauffeur is not affiliated with or endorsed by Google or by any dispatch
+  platform named on the site, including Limo Anywhere, FASTTRAK and Santa Cruz.
 - Quote ranges shown on the site are illustrative. Live quoting requires the
   operator's own configured rate rules.

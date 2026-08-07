@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070B14">
+  <title>Limo Dispatch Automation — Automate Call Intake | AI Chauffeur</title>
+  <meta name="description" content="Automate the intake layer of limo dispatch: answering, capture, quoting from your rate rules, structured handoff. Your dispatcher stays in command. Call (414) 775-0019 to hear AVA answer.">
+
+  <!-- Favicon set derived from mark-compact.svg with a dark ground baked in:
+       the bars are near-white and would disappear against a light-mode tab
+       strip. THE LOGO IS A CLOSED SYSTEM (RUN 10 amendment). Its bar and knot
+       values are the kit's, not the site's, and they are written down in exactly
+       two places on purpose — assets/brand/README.md and the LOGO CANON appendix
+       of DESIGN-SYSTEM.md. They are deliberately NOT quoted here: the knot's hex
+       is grep-gated to the brand folder and the root icon files, and a comment
+       that repeats a gated string makes every future audit report a clean page
+       as dirty. Do not harmonize them to the site palette. -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="canonical" href="https://aichauffeur.ai/limo-dispatch-automation/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AI Chauffeur">
+  <meta property="og:title" content="Limo Dispatch Automation — Automate Call Intake">
+  <meta property="og:description" content="The intake layer of dispatch runs itself: every call answered, the whole trip captured, quoted from your own rules, handed over as a structured ticket. The decisions stay with your dispatcher.">
+  <meta property="og:url" content="https://aichauffeur.ai/limo-dispatch-automation/">
+  <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AI Chauffeur — the limo answering service that never puts a caller on hold. (414) 775-0019">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Limo Dispatch Automation — Automate Call Intake">
+  <meta name="twitter:description" content="The intake layer of dispatch runs itself: every call answered, the whole trip captured, quoted from your own rules, handed over as a structured ticket. The decisions stay with your dispatcher.">
+  <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
+
+  <!-- RUN 8 · FONT LOCK — self-hosted. The @font-face lives in the stylesheet,
+       so without a preload the browser cannot discover either file until the CSS
+       has parsed and matched a rule against it. The href must be the SAME STRING
+       as the src, and crossorigin is required even same-origin because fonts are
+       always fetched in CORS mode — miss either and the file is fetched twice. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
+  <link rel="stylesheet" href="/assets/aic.css?v=73207be0">
+
+  <!-- Generated from the rendered <details> blocks by
+       tools/aic-run10-faq-mirror.py. Empty on purpose — see the note on the
+       hub page for why this node is never hand-authored. -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What part of dispatch does AVA actually automate?","acceptedAnswer":{"@type":"Answer","text":"The intake layer, and only that: answering the line, asking the whole set of questions, writing the answers down, quoting a range from your configured rate rules, and handing over a structured ticket. Everything that follows — which car, which driver, whether to take the job — stays with your dispatcher."}},{"@type":"Question","name":"Does automated intake mean trips book themselves?","acceptedAnswer":{"@type":"Answer","text":"No. A captured trip is a request written down properly, not a commitment. Your dispatcher confirms every one of them, and AVA does not commit a vehicle or take payment. On platforms where direct write-back has been configured for your account, the record is created for you — and it still goes through the same approval your operation uses today."}},{"@type":"Question","name":"What does a dispatcher stop doing?","acceptedAnswer":{"@type":"Answer","text":"Reading voicemail back to themselves, asking the same nine questions for the eleventh time that shift, and calling people back for a bag count. What they keep is the work that needed them in the first place. Nobody's job disappears here; the repetitive half of it does."}},{"@type":"Question","name":"Does this work if we already have someone answering the phone?","acceptedAnswer":{"@type":"Answer","text":"Yes, and that is the common case. The intake layer runs underneath the person, not instead of them — it takes the overflow when two lines ring at once, and the hours nobody is sitting there. Where AVA sits on your lines is one of the things decided on the setup call."}}]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://aichauffeur.ai/"},
+    {"@type":"ListItem","position":2,"name":"Limo dispatch automation","item":"https://aichauffeur.ai/limo-dispatch-automation/"}
+  ]}
+  </script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="top">
+  <a href="/" class="brand" aria-label="AI Chauffeur home">
+    <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    <img class="brand-compact" src="/assets/brand/mark-compact.svg" alt="" width="26" height="26" decoding="async">
+  </a>
+
+  <ul class="nav-main">
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-product">Product<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-product">
+        <li><a href="/demo/">Live demo</a></li>
+        <li><a href="/how-setup-works/">How setup works</a></li>
+        <li><a href="/works-with-your-software/">Works with your software</a></li>
+        <li><a href="/integrations/">Integrations</a></li>
+      </ul>
+    </li>
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-solutions">Solutions<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-solutions">
+        <li><a href="/limo-answering-service/">Limo answering service</a></li>
+        <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+        <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+        <li><a href="/limo-dispatch-automation/" aria-current="page">Limo dispatch automation</a></li>
+      </ul>
+    </li>
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-locations">Locations<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-locations">
+        <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+        <li><a href="/madison-limo-answering-service/">Madison</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_nav" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="nav-cta-verb">Call </span>(414) 775-0019</a>
+    <a href="/book/" class="nav-book" data-event="book_click_nav">Book the setup call</a>
+    <button type="button" class="nav-burger" data-drawer-open aria-expanded="false" aria-controls="nav-drawer" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span class="nav-burger-t">Menu</span></button>
+  </div>
+</nav>
+
+<main id="main">
+
+<section class="phead" data-lit="bright" data-rail-after>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li aria-current="page">Limo dispatch automation</li>
+      </ol>
+    </nav>
+    <span class="kicker">Dispatch automation · the intake layer</span>
+    <h1 class="page-h">Dispatch automation that <em>starts at the phone.</em></h1>
+    <!-- THE DIRECT ANSWER. 50 words, self-contained, first prose on the page.
+         It has to agree with the live FAQ on the homepage, which says plainly
+         that AVA does not replace a dispatcher. Same answer, said forwards. -->
+    <div class="answer">
+      <p>AVA automates the intake layer of dispatch — answering every call, capturing the whole trip, quoting from your own rate rules, and handing over a structured ticket. It does not automate the decisions. Your dispatcher still assigns the vehicle, confirms the trip, and runs the operation, exactly as they do now.</p>
+    </div>
+
+    <p class="page-updated">Last updated 7 August 2026</p>
+  </div>
+</section>
+
+<!-- ══ 1 · WHICH LAYER ═══════════════════════════════════════════════════════ -->
+<section id="layer" data-lit="calm">
+  <div class="wrap">
+    <div class="sec-kicker">Which layer</div>
+    <h2 class="sec-h">Dispatch is two jobs. <em>Only one of them is typing.</em></h2>
+    <p class="sec-sub">Most of what gets sold as dispatch automation tries to automate the decisions. This automates the typing, the answering and the asking — and leaves the decisions where they belong.</p>
+    <p class="sec-sub">Watch a dispatcher for an hour and the work splits cleanly in half. One half is intake: pick up, ask the same nine questions, write the answers down, quote a range, and get it in front of somebody. The other half is judgement — which car, which driver, what to do when a flight moves, whether this one goes to an affiliate.</p>
+    <p class="sec-sub">The first half is identical on every call and it is where the hours go. The second half is why you hired the person. Automating the first does not touch the second, and any product that claims to automate both is describing a business that does not have exceptions in it.</p>
+
+    <div class="vs">
+      <div class="vs-row">
+        <div class="vs-a">Automated · the intake layer</div>
+        <div class="vs-b"><strong>Answering, asking, writing down, quoting, handing over.</strong> Every call, every line at once, whatever time it is. AVA takes pickup, dropoff, date and time, vehicle class, passengers, bags, flight and terminal, callback number and notes — then produces a structured ticket.</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-a">Not automated · the decisions</div>
+        <div class="vs-b"><strong>Which vehicle, which driver, and whether to take the job at all.</strong> Your dispatcher confirms every trip. AVA does not assign a car, does not commit a vehicle, does not take payment, and does not send work out to an affiliate.</div>
+      </div>
+      <div class="vs-row">
+        <div class="vs-a">Where the two meet</div>
+        <div class="vs-b">The ticket. It is the handoff between the layer that runs itself and the layer that never will, which is why it carries the whole trip instead of a summary — the person making the decision should not have to call anyone back to make it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · THE COMPARISON TABLE — the ONE visible table on this page ═════════
+     The baseline column is OUR OWN honest baseline — a dispatch line nobody
+     picks up — not a competitor and not another category of service. Comparing
+     against a named competitor would be a claim about somebody else's product
+     that this site cannot substantiate. Every cell in the right-hand column is
+     a description of what AVA does, and the three phrases the brief fixed are
+     reproduced exactly. -->
+<section id="compare" data-lit="technical">
+  <div class="wrap">
+    <div class="sec-kicker">Side by side</div>
+    <h2 class="sec-h">The same five moments, <em>with and without the intake layer.</em></h2>
+    <p class="sec-sub">The baseline here is an unanswered dispatch line, because that is the real alternative at 2 AM — not a competitor, and not a second dispatcher you are not going to hire for the night shift.</p>
+
+    <!-- Three columns, so this one scrolls on a phone. A scrollable region
+         must be keyboard-reachable; the hint under it renders only where the
+         table genuinely overflows its wrap. -->
+    <div class="tbl-wrap" tabindex="0" role="region" aria-label="Comparison, scrollable table">
+      <table class="tbl">
+        <caption class="tbl-cap">Five moments in a dispatch shift, with and without automated intake</caption>
+        <thead>
+          <tr><th scope="col">The moment</th><th scope="col">An unanswered dispatch line</th><th scope="col">AVA on the intake layer</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">The phone rings at 2 AM</th>
+            <td>Voicemail, or it rings out. The caller has the next operator's number open already.</td>
+            <td>Answers on the first ring.</td>
+          </tr>
+          <tr>
+            <th scope="row">Two callers at once</th>
+            <td>One of them waits, and waiting is where callers go to hang up.</td>
+            <td>Concurrent calls, no hold queue.</td>
+          </tr>
+          <tr>
+            <th scope="row">What dispatch receives</th>
+            <td>A voicemail to replay, and every field re-keyed from memory.</td>
+            <td>Structured ticket into your dispatch workflow; direct write-back configured per account.</td>
+          </tr>
+          <tr>
+            <th scope="row">Quoting the caller</th>
+            <td>Whatever the person who picked up happens to remember about the rate sheet.</td>
+            <td>A range from your own configured rate rules, or nothing at all until they are configured.</td>
+          </tr>
+          <tr>
+            <th scope="row">Who confirms the trip</th>
+            <td>Your dispatcher — on the calls that got through.</td>
+            <td>Your dispatcher, on every trip. That part does not change.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tbl-hint">Scroll the table sideways for the right-hand column.</p>
+
+    <p class="sec-sub">The last row is the one worth reading twice. Nothing above it moves a decision away from your team. Where the ticket lands — an inbox, or a record created for you — depends on your platform and is set out in the <a href="/integrations/">integration status table</a>.</p>
+  </div>
+</section>
+
+<!-- ══ 3 · WHAT THE SEAT COSTS ═══════════════════════════════════════════════
+     MARKET RANGE ONLY. A general salary band for the role, framed as loaded
+     cost, with no client result, no percentage, no saving and no payback
+     arithmetic attached to it. The point of the section is which HOURS get
+     covered, not what anybody saves — and it says so explicitly, because a
+     cost figure sitting next to a product is read as a savings claim unless
+     the page refuses that reading out loud. -->
+<section id="cost" data-lit="dense">
+  <div class="wrap">
+    <div class="sec-kicker">What the seat costs</div>
+    <h2 class="sec-h">A dispatcher is expensive. <em>So is a phone nobody answers.</em></h2>
+    <p class="sec-sub">A full-time dispatcher runs roughly $45,000 to $60,000 a year in most US markets once payroll taxes and benefits are counted — the loaded cost of the seat, not the number on the offer letter. That is a general market range for the role, not a quote and not a figure from anybody's books.</p>
+    <p class="sec-sub">The seat is worth it. What it does not do is cover 168 hours a week, and the hours it cannot cover are the ones where the calls are hardest to replace: a Friday at 11 PM, a Sunday morning, the forty minutes your dispatcher is on another line.</p>
+    <p class="sec-sub">AVA covers the intake layer of that job around the clock. <strong>This is not a headcount argument.</strong> AVA does not replace a dispatcher, and nothing on this site will tell you it does — it takes the repetitive half of the work off the seat so the person in it spends their shift on the half that needs a person. What that is worth to your operation depends on your call volume and your close rate, and neither of those is a number we are going to invent for you.</p>
+  </div>
+</section>
+
+<!-- ══ 4 · THE TICKET ════════════════════════════════════════════════════════ -->
+<section id="ticket" data-lit="connected">
+  <div class="wrap">
+    <div class="sec-kicker">The handoff</div>
+    <h2 class="sec-h">The output of the automated half, <em>in one object.</em></h2>
+    <p class="sec-sub">A Saturday 11:40 PM call out of Madison. Nobody was going to pick this one up, and it is not a complicated trip — it is just one that has to be taken down correctly while the caller is still on the line.</p>
+
+    <div class="ticket-card">
+      <div class="ticket-bar">
+        <span>Sample trip ticket · late night</span>
+        <span class="ticket-live">Captured</span>
+      </div>
+      <div class="ticket-grid">
+        <div class="tk">
+          <div class="tk-label">Inbound caller</div>
+          <div class="tk-val">Curtis A.</div>
+          <div class="tk-sub">+1 (608) 555-0138 · Inbound</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Trip type</div>
+          <div class="tk-val">Airport run · MSN</div>
+          <div class="tk-sub">Departure 8:05 AM</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Pickup → dropoff</div>
+          <div class="tk-val">Near West Side, Madison → MSN Airport</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Pickup time</div>
+          <div class="tk-val">5:50 AM</div>
+          <div class="tk-sub">Sunday</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Vehicle</div>
+          <div class="tk-val">Executive Sedan</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Passengers</div>
+          <div class="tk-val">2 · 3 bags</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Call received</div>
+          <div class="tk-val">11:41 PM</div>
+          <div class="tk-sub">Saturday · line unattended</div>
+        </div>
+        <div class="tk">
+          <div class="tk-label">Status</div>
+          <div class="tk-val">Routed to dispatch</div>
+          <div class="tk-sub">Dispatcher confirms</div>
+        </div>
+      </div>
+      <div class="ticket-foot">Sample ticket · illustrative only · a quote range on a live account comes from your own rate rules</div>
+    </div>
+
+    <p class="sec-sub">Your dispatcher opens the morning with that already written. The automated half happened at 11:41 PM; the half that needs a person happens when a person is there. More on the night shift specifically in <a href="/after-hours-limo-dispatch/">after-hours limo dispatch</a>.</p>
+  </div>
+</section>
+
+<!-- ══ CTA STACK — identical on every chauffeur page ══════════════════════ -->
+<section id="talk" data-lit="bright">
+  <div class="wrap">
+    <div class="sec-kicker">Hear it first</div>
+    <h2 class="sec-h">Automate one call <em>before you automate anything.</em></h2>
+    <p class="sec-sub">Call the line at whatever hour you are reading this and book a trip the way a customer would. What comes back is the whole automated half of a dispatcher's job, running once, for you to judge.</p>
+
+    <div class="cta-stack">
+      <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_cta">
+        <span class="tel-main">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call (414) 775-0019
+        </span>
+        <span class="tel-sub">AVA answers. Hear it yourself.</span>
+      </a>
+
+      <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
+        <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span><span class="cb-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M9 18l6-6-6-6"/></svg></span></button>
+        <div class="cb-body" id="cb-body">
+        <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
+        <div class="cb-row">
+          <div class="cb-field">
+            <label class="cb-label" for="cb-name-limo-dispatch-automation">First name</label>
+            <input class="cb-input" id="cb-name-limo-dispatch-automation" name="first_name" type="text" data-cb-name
+                   autocomplete="given-name" maxlength="60" placeholder="Mike">
+          </div>
+          <div class="cb-field">
+            <label class="cb-label" for="cb-cell-limo-dispatch-automation">Cell</label>
+            <input class="cb-input" id="cb-cell-limo-dispatch-automation" name="phone" type="tel" data-cb-cell
+                   autocomplete="tel" inputmode="tel" maxlength="20" placeholder="(414) 555-0182">
+          </div>
+        </div>
+        <label class="cb-consent" for="cb-consent-limo-dispatch-automation">
+          <input type="checkbox" id="cb-consent-limo-dispatch-automation" name="tcpa_consent" value="true" data-cb-consent>
+          <span>I agree to get an automated demo call and follow-up texts from AI Chauffeur at this number. Saying yes is not required to buy anything. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy/">See our Privacy Policy</a>.</span>
+        </label>
+        <button type="submit" class="cb-submit" data-cb-submit>Have AVA call me</button>
+        <p class="cb-note" data-cb-note role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <div class="cta-tertiary">
+        <a href="/book/" data-event="book_click_cta">Book the setup call →</a>
+        <span class="cta-note">Schedules the 20-minute setup call.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ═══════════════════════════════════════════════════════════════ -->
+<section id="faq" data-lit="flat">
+  <div class="wrap">
+    <div class="sec-kicker">FAQ</div>
+    <h2 class="sec-h">Questions operators <em>actually ask.</em></h2>
+    <details>
+      <summary>What part of dispatch does AVA actually automate?</summary>
+      <div>The intake layer, and only that: answering the line, asking the whole set of questions, writing the answers down, quoting a range from your configured rate rules, and handing over a structured ticket. Everything that follows — which car, which driver, whether to take the job — stays with your dispatcher.</div>
+    </details>
+    <details>
+      <summary>Does automated intake mean trips book themselves?</summary>
+      <div>No. A captured trip is a request written down properly, not a commitment. Your dispatcher confirms every one of them, and AVA does not commit a vehicle or take payment. On platforms where direct write-back has been configured for your account, the record is created for you — and it still goes through the same approval your operation uses today.</div>
+    </details>
+    <details>
+      <summary>What does a dispatcher stop doing?</summary>
+      <div>Reading voicemail back to themselves, asking the same nine questions for the eleventh time that shift, and calling people back for a bag count. What they keep is the work that needed them in the first place. Nobody's job disappears here; the repetitive half of it does.</div>
+    </details>
+    <details>
+      <summary>Does this work if we already have someone answering the phone?</summary>
+      <div>Yes, and that is the common case. The intake layer runs underneath the person, not instead of them — it takes the overflow when two lines ring at once, and the hours nobody is sitting there. Where AVA sits on your lines is one of the things decided on the setup call.</div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ INTERNAL LINKS ════════════════════════════════════════════════════ -->
+<section id="more" data-lit="flat">
+  <div class="wrap">
+    <div class="sec-kicker">More</div>
+    <div class="related">
+      <a class="rel" href="/integrations/">
+        <div class="rel-k">Integrations</div>
+        <div class="rel-t">Where the ticket lands, platform by platform</div>
+      </a>
+      <a class="rel" href="/limo-answering-service/">
+        <div class="rel-k">Answering service</div>
+        <div class="rel-t">The line that never puts a caller on hold</div>
+      </a>
+      <a class="rel" href="/how-setup-works/">
+        <div class="rel-k">Setup</div>
+        <div class="rel-t">What the first two weeks actually look like</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ § G · FAT FOOTER ══════════════════════════════════════════════════
+     Four columns plus the NAP block, identical on all sixteen pages. This is
+     the only surface where every indexable page is reachable from every other
+     one, and it is what closed the orphan gap.
+
+     data-rail-hide: the sticky rail suppresses itself once the footer is on
+     screen. The footer carries the number and the setup CTA already, so a bar
+     restating them would be noise — and body.rail-on comes off with it, which
+     is what removes the reserved 73px and leaves the document ending on the
+     last line of content instead of on dead scroll. -->
+<footer data-rail-hide>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="foot-mark">AI <em>Chauffeur</em></div>
+        <p class="foot-nap">
+          AI CHAUFFEUR · Wisconsin-built<br>
+          <a href="tel:+14147750019" data-event="tel_tap_footer">(414) 775-0019</a><br>
+          Serving operators nationwide
+        </p>
+      </div>
+      <div class="foot-col">
+        <h2>Product</h2>
+        <ul>
+          <li><a href="/demo/">Live demo</a></li>
+          <li><a href="/how-setup-works/">How setup works</a></li>
+          <li><a href="/works-with-your-software/">Works with your software</a></li>
+          <li><a href="/integrations/">Integrations</a></li>
+          <li><a href="/book/">Book the setup call</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Solutions</h2>
+        <ul>
+          <li><a href="/limo-answering-service/">Limo answering service</a></li>
+          <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+          <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+          <li><a href="/limo-dispatch-automation/" aria-current="page">Limo dispatch automation</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Locations</h2>
+        <ul>
+          <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+          <li><a href="/madison-limo-answering-service/">Madison</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Company</h2>
+        <ul>
+          <li><a href="tel:+14147750019" data-event="tel_tap_footer_company">Call (414) 775-0019</a></li>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/terms/">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 AI Chauffeur</span>
+    </div>
+  </div>
+</footer>
+
+<!-- § G · MOBILE DRAWER — every indexable page, real hrefs, no injection. -->
+<div class="nav-drawer" id="nav-drawer" data-drawer>
+  <div class="dw-top">
+    <a href="/" class="brand" aria-label="AI Chauffeur home">
+      <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    </a>
+    <button type="button" class="dw-close" data-drawer-close aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Close</span></button>
+  </div>
+  <div class="dw-body">
+    <nav class="dw-group" aria-label="Product">
+      <h2>Product</h2>
+      <ul>
+        <li><a href="/demo/">Live demo</a></li>
+        <li><a href="/how-setup-works/">How setup works</a></li>
+        <li><a href="/works-with-your-software/">Works with your software</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Solutions">
+      <h2>Solutions</h2>
+      <ul>
+        <li><a href="/limo-answering-service/">Limo answering service</a></li>
+        <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+        <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+        <li><a href="/limo-dispatch-automation/" aria-current="page">Limo dispatch automation</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Integrations">
+      <h2>Integrations</h2>
+      <ul>
+        <li><a href="/integrations/">Integrations overview</a></li>
+        <li><a href="/integrations/limo-anywhere/">Limo Anywhere</a></li>
+        <li><a href="/integrations/fasttrak/">FASTTRAK</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Locations">
+      <h2>Locations</h2>
+      <ul>
+        <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+        <li><a href="/madison-limo-answering-service/">Madison</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Company">
+      <h2>Company</h2>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+      </ul>
+    </nav>
+    <div class="dw-actions">
+      <a href="/book/" class="nav-book" data-event="book_click_drawer">Book the setup call</a>
+      <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call (414) 775-0019</a>
+    </div>
+  </div>
+</div>
+
+<!-- RUN 7 · TASK A — mobile sticky action rail -->
+<div class="rail" data-rail>
+  <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call (414) 775-0019</a>
+  <a class="rail-cb" href="#ava-callback" data-event="call_me_rail" aria-label="Get a call back from AVA">Get a call back</a>
+</div>
+
+<script src="/assets/aic.js?v=c675239f"></script>
+
+</body>
+</html>
