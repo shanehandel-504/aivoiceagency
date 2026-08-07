@@ -434,8 +434,21 @@ note('anchor targets clear the fixed header', anchorBad,
     // A deep link to the console still has to land clear of the fixed bar.
     // This is now the ONLY link path to that form, so it is the one worth
     // measuring — on a fresh load, which is what a deep link actually is.
-    await p.goto(ORIGIN + '/limo-answering-service/#ava-callback', { waitUntil: 'networkidle' });
-    await p.waitForTimeout(1200);
+    //
+    // about:blank first, and it is not ceremony. The page is already sitting on
+    // /limo-answering-service/, so navigating to the same URL with a hash is a
+    // SAME-DOCUMENT navigation. It does not reload — measured at 4ms against
+    // production, versus 855ms for the real thing — and `waitUntil` has nothing
+    // to wait for, so it returns instantly and clean.
+    //
+    // That is the trap: the probe reads a page that has been sitting there
+    // through every step above it, with the console already opened and the
+    // scroll position already settled, and calls it a deep link. Trap 19's
+    // sibling — measure anchors on a FRESH load, which is what a deep link
+    // actually is. Clearing the document first is what makes it one.
+    await p.goto('about:blank');
+    await p.goto(ORIGIN + '/limo-answering-service/#ava-callback', { waitUntil: 'load', timeout: 30000 });
+    await p.waitForTimeout(1400);
     const deep = await p.evaluate(() => ({
       top: Math.round(document.querySelector('#ava-callback').getBoundingClientRect().top),
       navBottom: Math.round(document.querySelector('nav.top').getBoundingClientRect().bottom),

@@ -1,0 +1,48 @@
+
+══ NEGATIVE CONTROLS — each must FIND the planted defect ══
+
+FIRED  co-occurrence probe sees the planted pair
+FIRED  demo-pair probe sees the unequal heights
+FIRED  anchor clearance sees the clip
+FIRED  host-clip probe sees the clipped host
+FIRED  chamfer probe sees the missing chamfer
+FIRED  drawer probe sees the 44px row
+FIRED  radius probe sees the 18px container
+FIRED  FAQ probe sees the blue perimeter
+FIRED  filled probe sees the forced rail
+
+══ § 1 · ANCHOR CLEARANCE ══
+
+PASS  anchor targets clear the fixed header          11 homepage anchors x 4 widths + 15 skip links (the new pages' OWN anchors are swept by aic-run12-gate.mjs probe 13)
+PASS  § 1 rail pair / suppression / deep link / keyboard / back button 2 widths x (rail shape + 2 suppressors + deep link + skip link + back button)
+
+══ § 2-§ 6 · 16 PAGES x 6 VIEWPORTS ══
+
+PASS  --nav-h equals the measured bar                96 page x viewport reads
+PASS  § 2 primary control v3 recipe                  102 rendered primaries
+PASS  § 2 elevation is neutral (Glow Law)            
+PASS  § 3 rail 56px controls + reserve >= height     rail height 73 reserve 73
+PASS  § 3 safe-area inset in the one CSS home + homepage carries no second copy 1 component home, 16 pages linking it
+PASS  § 5 drawer row 64px, full width, chevron       78 consoles
+PASS  § 5 chevron follows the RENDERED state         
+PASS  § 6 no container over 12px radius              pills exempt (radius >= half height)
+PASS  § 6 FAQ open = --line border + inset rail      72 FAQ pages
+PASS  § 6 FAQ measure inside 60-75 chars             61-71 chars
+PASS  § 4 demo pair equal width, 56px, 16px gap      312/312 px wide, 56/56 tall
+
+══ § 3 · ONE FILLED BLUE PER VIEWPORT ══
+
+PASS  two content primaries can never co-occur       16 pages x 6 viewports, exact
+PASS  rail never arms over a content primary         932 live scroll steps
+
+══ § 7 · HAPTICS ══
+
+PASS  § 7 feature-detected and wrapped in source     
+PASS  § 7/§ 5 haptics + third state, runtime         primary=[12] nav=0 scroll=0 fail=0 chip="Not sent" rgb(255, 59, 78)
+
+══ § 2 · HOVER AND PRESS, DRIVEN ══
+
+PASS  § 2 rest / hover / press / release             rest 0.16s, 0.16s press 0.07s hover-t matrix(1, 0, 0, 1, 0, -1) press-t matrix(0.985, 0, 0, 0.985, 0, 2)
+FIRED  state probe sees a stripped hover elevation
+
+GATE aic-run11: ALL GREEN

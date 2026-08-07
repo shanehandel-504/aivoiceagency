@@ -196,9 +196,67 @@ doing chrome.
 
 ---
 
-## 5 · GATES
+## 5 · GATES — ALL AGAINST PRODUCTION
 
-*(filled in at closeout — see § 7)*
+| Gate | Result |
+|---|---|
+| 16 URLs, cache-busted fetch | **16/16 · 200 + rendered H1 + the new asset token** |
+| Rail shape, live | **15 pair + `/book/` solo**, asserted as an exact set |
+| `aic-run9-gate.mjs` — 16 pages × 6 viewports | **PASS**, 12 probes, 5 negative controls |
+| `aic-run9-styleparity.mjs` | **PASS** — chrome identical across the homepage and 3 `aic.css` pages incl. depth two |
+| `aic-run10-gate.mjs` — 12px floor, schema, CTA de-dup, canvas, llms.txt | **ALL GREEN**, 4 controls |
+| `aic-run11-gate.mjs` — anchors, primary v3, rail, drawer, radius, haptics | **ALL GREEN**, 18 probes, 10 controls |
+| `aic-run12-gate.mjs` — answer anatomy, claim ladder, tables, anchors | **ALL GREEN**, 7 controls |
+| `aic-run13-railfit.mjs` | **PASS** — 56 controls × 8 widths × 4 pages, 1 control |
+| `aic-run13-parity.mjs` (local, B0→B1) | **15/16 pages identical, 0 nodes** · homepage 22 intended |
+| `aic-run10-faq-mirror.py --check` | **13/13 mirror visible copy** |
+| `aic-run10-greps.py` | **ALL CLEAN** — 19 terms + the control |
+| `aic-run9-livediff.mjs` | **PASS — 22/22 byte-identical**, 3 stamped assets 200 |
+| Lighthouse, mobile, 16 pages | **a11y 100/16 · SEO 100/16 · CLS 0/16** |
+
+The two probes that mattered most for § 1, both green on production:
+
+```
+rail never arms over a content primary      932 live scroll steps
+two content primaries can never co-occur    16 pages x 6 viewports, exact
+```
+
+### Performance — the question this run had to answer
+
+The homepage stopped inlining its CSS and started fetching a 168KB stylesheet.
+That is the one thing § 2 could plausibly have cost, and trap 21 says it can
+only be measured on production:
+
+```
+home         median of 3   perf 99 / 100 / 100   LCP 1685ms   CLS 0   TBT 0
+integrations median of 3   perf 100 / 100 / 100  LCP 1599ms   CLS 0   TBT 25
+```
+
+**Homepage perf 100, CLS 0.000.** LCP is ~160ms above the ~1524ms RUN 11
+recorded, which is inside this host's own run-to-run spread and did not move the
+score. The homepage already fetched `circulant.css` as a render-blocking
+stylesheet, so `aic.css` is a second request on a connection that was already
+open — and 137KB of CSS moved from a document re-sent on every view into a file
+that is cached across all sixteen pages.
+
+Four pages read **perf 99** on their single run — `/book/`, `/how-setup-works/`,
+`/limo-answering-service/`, `/airport-transfer-booking/`. Per trap 28 a one-run
+99 is not a finding, and the gate's requirement is a11y / SEO / CLS. Printed,
+not chased.
+
+### THE EYES GATE
+
+Opened, not counted — `audits/run13/shots/`:
+
+- **rail at 390** — one filled blue, one hairline ghost, equal widths, the verb
+  correctly gone and the digits reading cleanly beside the glyph;
+- **rail at 480** — the verb back, with a single normal word space before the
+  number, which is the `.rail-label` wrapper doing its job;
+- **rail at 320** — both labels fully on screen, nothing clipped, after the box
+  tightened;
+- **`/book/` solo** — one full-width Call and no second control;
+- **nav chip at 1440** — `Call (414) 775-0019`, back to exactly as shipped after
+  the revert. This shot is the reason that revert happened.
 
 ---
 
