@@ -117,6 +117,11 @@ FOOTER = '''<!-- BRIDGE:FOOTER -->
       <details class="bfoot-col" open>
         <summary>By city &amp; trade</summary>
         <div class="bfoot-items">
+          <span class="bfoot-sub">By trade</span>
+          <a href="/plumber-answering-service">Plumber answering service</a>
+          <a href="/hvac-answering-service">HVAC answering service</a>
+          <a href="/electrician-answering-service">Electrician answering service</a>
+          <a href="/24-hour-answering-service">24-hour answering service</a>
           <span class="bfoot-sub">Milwaukee</span>
           <a href="/milwaukee-hvac">HVAC answering</a>
           <a href="/milwaukee-plumbing">Plumbing answering</a>
@@ -148,12 +153,14 @@ FOOTER = '''<!-- BRIDGE:FOOTER -->
           <a href="/guides/furnace-short-cycling.html">Furnace short cycling</a>
           <a href="/guides/ac-running-but-not-cooling.html">AC running but not cooling</a>
           <a href="/videos">Videos</a>
+          <a href="/watch">Watch AVA book a job</a>
         </div>
       </details>
       <details class="bfoot-col" open>
         <summary>Company</summary>
         <div class="bfoot-items">
           <a href="/overview">Overview</a>
+          <a href="/deck">Interactive deck</a>
           <a href="/roi">ROI Calculator</a>
           <a href="/methodology.html">Methodology</a>
           <a href="/privacy">Privacy</a>
@@ -267,6 +274,18 @@ VERSION_ONLY = [
     # AIC RUN 5 — the booking surface. Same host, same reasoning: it carries the
     # chauffeur nav/footer, so PAGES would inject the AVA site's chrome onto it.
     'chauffeur/book/index.html',
+    # INDEX VELOCITY RIG (2026-08-07) — RUN 12's integration cluster and RUN 13's
+    # dispatch page shipped with hand-written ?v= tokens and were never added
+    # here, so they were the ONLY chauffeur pages whose cache armor never busted.
+    # They pointed at /assets/aic.css?v=b331a4e1 while every registered page on
+    # the same host pointed at ?v=119c51e — one file, two URLs, two cache entries.
+    # The stale one had no way to expire, which is precisely the old-stylesheet-
+    # against-new-markup failure commit b34d9b8 was written to prevent. Found
+    # while auditing the sitemap these four pages are submitted in.
+    'chauffeur/integrations/index.html',
+    'chauffeur/integrations/limo-anywhere/index.html',
+    'chauffeur/integrations/fasttrak/index.html',
+    'chauffeur/limo-dispatch-automation/index.html',
 ]
 
 
