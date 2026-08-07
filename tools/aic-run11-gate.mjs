@@ -272,6 +272,12 @@ const note = (name, bad, extra = '') => {
 // ── NEGATIVE CONTROLS ──────────────────────────────────────────────────────
 console.log('\n══ NEGATIVE CONTROLS — each must FIND the planted defect ══\n');
 const BREAK_CSS =
+  // The control drives its own scroll below, and it must not be racing a smooth
+  // animation while it does. Against a local server the re-scroll finished
+  // inside the wait; against production it did not, and the anchor control read
+  // DEAD on a page that was still travelling — trap 19, hitting the gate that
+  // documents trap 19. Turn the animation off for the control.
+  'html{scroll-behavior:auto!important}' +
   'html{scroll-padding-top:0px!important}' +
   'section[id]{scroll-margin-top:0px!important}' +
   '.btn-primary,.tel-btn,.demo-play-btn{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)!important}' +
@@ -289,8 +295,12 @@ const BREAK_CSS =
   const p = await ctx.newPage();
   await p.goto(ORIGIN + '/#lead-protection', { waitUntil: 'networkidle' });
   await p.addStyleTag({ content: BREAK_CSS });
-  await p.evaluate(() => { location.hash = ''; location.hash = 'lead-protection'; });
-  await p.waitForTimeout(1200);
+  // scrollIntoView() honours scroll-padding/scroll-margin exactly as a fragment
+  // jump does, and with scroll-behavior forced to auto it lands in one frame.
+  // A hash round-trip would scroll to the top first and then animate all the way
+  // back down a ten-thousand-pixel document, which is the race that broke it.
+  await p.evaluate(() => document.querySelector('#lead-protection').scrollIntoView());
+  await p.waitForTimeout(600);
   const anchor = await p.evaluate(PROBE_ANCHOR, '#lead-protection');
   const s = await p.evaluate(PROBE_STATIC);
   const f = await p.evaluate(PROBE_FILLED);

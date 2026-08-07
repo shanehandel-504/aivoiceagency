@@ -655,6 +655,21 @@ line of the page clears the bar, which `.phead`'s own top padding delivers.
     `backgroundColor` on the element.** RUN 11 moved three primaries and had to
     repair RUN 10's filled-CTA counter in the same commit, or it would have
     reported one filled control on a fold carrying two — in green.
+21. **THE LOCAL PERF HARNESS OVERSTATES DOCUMENT SIZE BY ~3.4×.**
+    `python -m http.server` sends everything uncompressed; Vercel serves this
+    site **Brotli**. Measured: the homepage is 202,049 raw bytes and **58,812 on
+    the wire** (3.4×), `aic.css` 3.3×, `circulant.css` 2.8×, `aic.js` 2.9×. Any
+    conclusion of the form "+N KB of document costs +M ms of LCP" drawn against
+    the local server is that much too pessimistic. **Measure document-size
+    effects on production.** RUN 10 escalated a comment-density convention
+    change on the strength of the uncompressed number; production scores 100 at
+    LCP ~1524ms.
+22. **A negative control can be flaky where the thing it guards is not.** RUN
+    11's anchor control passed clean against production and correctly aborted
+    the gate: it drove a hash round-trip into a smooth scroll across a
+    ten-thousand-pixel document and read the box mid-flight — trap 19, hitting
+    the gate that documents trap 19. Controls force `scroll-behavior:auto` and
+    drive `scrollIntoView()` directly.
 
 ---
 
