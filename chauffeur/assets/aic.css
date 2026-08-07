@@ -465,6 +465,26 @@ nav.top{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 1.5rem;displ
 @media(min-width:1024px){
   .nav-book{display:inline-flex}
   .nav-cta{background:var(--surface)}
+  /* ── RUN 13 · A "DEFECT" THAT WAS THE SEPARATOR ─────────────────────────
+     NOT CHANGED, and the reasoning is worth keeping so nobody re-opens it.
+
+     `Call ` is its own span so it can drop below 1024, which also makes it its
+     own FLEX ITEM. The container `gap` therefore spaces it from the DIGITS as
+     well as from the glyph, and RUN 13 measured that on production — verb
+     right edge 1095, digits left edge 1102 — and read the 7px as a hole sitting
+     on top of the space already inside the span.
+
+     It is not. TRAILING WHITESPACE INSIDE A FLEX ITEM IS TRIMMED. The span's
+     own trailing space renders as nothing, so the 7.2px gap is the ONLY thing
+     separating the word from the number. Removing it shipped `Call(414)`,
+     which the shot caught before it left the machine.
+
+     The rail does this properly, and the difference is one element:
+     `.rail-label` wraps the verb and the digits so they are inline siblings
+     INSIDE one flex item, where a trailing space is ordinary text and renders
+     as an ordinary word space. The chip could take the same wrapper, and that
+     is a markup change across sixteen pages for roughly 3px of tracking —
+     a real but small improvement, and a job for a run that is doing chrome. */
 }
 @media(max-width:1023.98px){
   .nav-cta{background:var(--action-blue);color:#FFFFFF;border-color:transparent;
@@ -909,19 +929,34 @@ details > div a{color:var(--signal-blue);text-decoration:underline}
   line-height:1.55;max-width:560px}
 
 /* ── RUN 7 · TASK A — MOBILE STICKY ACTION RAIL ──────────────────────────────
+   ── rewritten RUN 13 · § 1: THE PAIR IS CALL + BOOK ─────────────────────────
    Below the nav breakpoint the hero CTAs scroll away and the operator is left
-   with no control at all until the next section. The rail restores one: the
-   line on the left at 60%, the callback on the right at 40%, in the same order
-   and with the same two labels the page uses everywhere else.
+   with no control at all until the next section. The rail restores two, and
+   they are this site's two real asks: call the line now, or book the setup
+   call.
 
-   It is hidden — not merely dimmed — whenever the callback form or the booking
-   calendar is on screen, so it can never sit on top of an input or a date
-   cell. `visibility` is part of the hidden state on purpose: a transformed-off
-   bar is still focusable, and a keyboard user would otherwise tab into a
-   control they cannot see. `body.rail-on` pays back the height at the foot of
-   the document so the rail cannot cover the last line of the page either. */
+   THE SECOND CONTROL USED TO BE "GET A CALL BACK", and it pointed at the
+   callback console further down the same page. A fixed bar whose second button
+   exists to scroll you to something already on the page is spending half of
+   the only chrome a phone reader has on navigation. The console is untouched
+   and is still the callback path — a reader meets it by scrolling and opens it
+   by tapping its own 64px header. What the bar offers now is the one thing
+   that is NOT on the page: /book/.
+
+   EQUAL COLUMNS, not the old 60/40. § 4's demo pair settled this idiom
+   already: two controls with different labels and no width rule read as a
+   primary with a stray link beside it rather than as a choice. These are one
+   choice. Hierarchy is carried by the fill, which is what fill is for.
+
+   It is hidden — not merely dimmed — whenever an inline primary, the callback
+   console, the booking calendar or the footer is on screen, so it can never
+   sit on top of an input or restate a control already in view. `visibility` is
+   part of the hidden state on purpose: a transformed-off bar is still
+   focusable, and a keyboard user would otherwise tab into a control they
+   cannot see. `body.rail-on` pays back the height at the foot of the document
+   so the rail cannot cover the last line of the page either. */
 .rail{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;
-  grid-template-columns:60fr 40fr;gap:8px;
+  grid-template-columns:1fr 1fr;gap:8px;
   padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));
   background:rgba(7,11,20,.94);border-top:1px solid var(--line);
   -webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
@@ -929,22 +964,67 @@ details > div a{color:var(--signal-blue);text-decoration:underline}
   transition:transform .22s ease}
 .rail--solo{grid-template-columns:1fr}
 .rail.is-on{transform:translateY(0);visibility:visible}
-.rail a{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+/* The separation between the glyph and the label is the SVG's own margin, not
+   the flex `gap`. With a gap, every child is spaced from every other child —
+   and the label is two children once the verb is its own span, so the gap
+   lands BETWEEN the word and the digits and renders "Call (414) 775-0019" with
+   a hole in it. `.rail-label` wraps both so the label is one flex item; the
+   margin then separates exactly the two things that should be separated. */
+.rail a{display:inline-flex;align-items:center;justify-content:center;
   min-height:56px;padding:0 .75rem;border-radius:10px;font-family:var(--sans);
   font-size:.9375rem;font-weight:500;letter-spacing:.005em;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.rail svg{width:15px;height:15px;flex-shrink:0}
+.rail svg{width:15px;height:15px;flex-shrink:0;margin-right:.5rem}
 .rail-call{background:var(--action-blue);color:#FFFFFF;box-shadow:inset 0 1px 0 rgba(127,178,255,.35)}
 .rail-call:hover,.rail-call:active{color:#FFFFFF}
-.rail-cb{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
-.rail-cb:hover{color:var(--sky);border-color:var(--sky)}
+.rail-book{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.rail-book:hover{color:var(--sky);border-color:var(--sky)}
 .rail a:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 @media (max-width:879.98px){
   .rail{display:grid}
   body.rail-on{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
 }
-@media (max-width:359.98px){
+/* ── THE VERB DROPS BEFORE THE NUMBER DOES ───────────────────────────────────
+   Measured on the real faces at the rail's own type, not computed from the
+   CSS. Each figure is glyph + margin + label + the control's own padding:
+
+       "Call (414) 775-0019"   194px at 15px
+       "Book the setup call"   166px at 15px
+                               ---
+                               360px of control
+
+   The 360 viewport offers 328px between the bar's padding and the gap, and 390
+   offers 358. THE TWO FULL LABELS DO NOT FIT SIDE BY SIDE ON A PHONE, and no
+   split of the columns changes that — the shortfall is 32px of text, not 32px
+   of layout.
+
+   § 3's header chip settled the identical problem the identical way: the
+   digits are the payload, the word is the affordance, and once the glyph is
+   there the word is the part that can go. So the verb drops below 480 and the
+   bar steps to 14px below 400 — over the 12px floor, and it buys real slack at
+   360 instead of the two pixels a single measure left. Re-measure both labels
+   before changing either one; this is a text-width budget, not a preference.
+   ─────────────────────────────────────────────────────────────────────────── */
+@media (max-width:479.98px){
+  .rail-verb{display:none}
+}
+@media (max-width:399.98px){
   .rail a{font-size:.875rem}
+}
+/* 320 is below the render gate's floor of 360, and the pair still overflowed
+   there by 28px — measured, not assumed: tracks 324 into a 296px content box,
+   which clips the right edge of "Book the setup call" off the screen. A grid
+   item's `min-width` is `auto`, so a nowrap label GROWS its own 1fr track and
+   the control never reports an overflow; the BAR does, and only if something
+   sums the tracks. `tools/aic-run13-railfit.mjs` is what sums them.
+
+   The relief is taken from the box, not the type — 14px is already the floor
+   this bar should go to. Bar padding 12→8 and control padding 12→6 per side
+   returns 32px against a 28px need. Re-measure at 320 after any label change. */
+@media (max-width:359.98px){
+  .rail{padding-left:8px;padding-right:8px}
+  .rail a{padding:0 .375rem}
+  .rail svg{margin-right:.375rem}
 }
 @media (prefers-reduced-motion:reduce){
   .rail{transition:visibility 0s linear .01s}
@@ -1051,6 +1131,571 @@ footer{padding:60px 0 40px;border-top:1px solid var(--line);margin-top:80px}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rel:hover,.tel-btn:hover,.cb-submit:hover{transform:none!important}
 }
+
+/* ══ RUN 13 · THE HOMEPAGE COMES HOME ════════════════════════════════════════
+   Everything below this line rendered the homepage from an embedded <style> in
+   index.html until RUN 13. That block was this site's THIRD CSS home, and it is
+   why § 1's trap has cost a run every time it has fired: a rule written for
+   "the stylesheet" landed in one head, and the site shipped wearing two.
+   RUN 12's FAQ-answer link was the most recent instance — underlined on eleven
+   pages, colour-only on the homepage, live since the section shipped, with
+   Lighthouse reading 100 either way. THE AUDIT IS NOT THE RULE.
+
+   There are TWO CSS homes now. The homepage loads exactly what the other
+   fifteen pages load, so a shared rule has nowhere left to diverge to.
+
+   POSITION IS LOAD-BEARING, exactly as it was inside index.html: these are the
+   BASE rules, and the RUN 10 / 11 / 12 blocks below still override them. Move
+   this block below those and the container radii, the primary-control physics
+   and the 12px type floor all silently revert — no error, no warning, just an
+   older-looking page.
+
+   Nothing in here matches an element on the other fifteen pages. That is
+   asserted rather than assumed: `node tools/aic-run13-reach.mjs` runs every
+   migrating selector against every page's real DOM. Exactly one collided and it
+   is scoped at the foot of this file.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.hero{padding:140px 0 80px;position:relative}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+h1.hero-h{font-family:var(--sans);font-size:clamp(2.5rem,6.5vw,5.25rem);line-height:1.02;letter-spacing:-.02em;color:var(--ink);font-weight:400;margin-bottom:1.5rem;max-width:18ch}
+h1.hero-h em{font-style:italic;color:var(--signal-blue)}
+.hero-sub{font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--ink-soft);max-width:60ch;line-height:1.55;margin-bottom:2.25rem}
+.ctas{display:flex;flex-wrap:wrap;gap:.85rem;margin-bottom:3.5rem}
+/* ══ § D · THE BUTTON SYSTEM ═════════════════════════════════════════════════
+PRIMARY    filled --action-blue, white lettering, a 1px --sky bevel on the
+top edge. Space Grotesk 500, sentence case.
+SECONDARY  1px --line on --surface; border and label go --sky on hover.
+TERTIARY   a --sky text link with an arrow, no box.
+Hover lifts 1px and brightens the fill. Nothing paints outside its own box.
+Mirrors aic.css exactly. */
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.95rem 1.4rem;border-radius:10px;font-family:var(--sans);font-size:1rem;font-weight:500;letter-spacing:.005em;transition:transform .15s,filter .15s,border-color .15s,color .15s;cursor:pointer;border:none}
+.btn-ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.btn-ghost:hover{background:var(--surface);border-color:var(--sky);color:var(--sky);transform:translateY(-1px)}
+.btn-ghost:active{transform:translateY(0)}
+.btn svg{width:14px;height:14px}
+/* THE CIRCULANT RING IS GONE. It wrapped the primary CTA in a rotating conic
+arc plus a pulsing halo, both painted OUTSIDE the button, and RUN 3.5 already
+had to switch it off with display:none because at rest it rendered as a hard
+rectangle floating a few pixels off a 10px pill. Two runs of dead chrome, a
+custom @property, two keyframes and a @supports fallback, all for something
+nobody could see. § C removes coloured halos outright, so it is deleted here
+rather than recoloured. */
+/* ── § B/C · THE CONSOLE ─────────────────────────────────────────────────────
+An instrument, so it is one of the two zones § B lets the grid speak at .08
+rather than .04, and the hero copy of it is one of the two scenes § C lets
+carry ambient light. Flat fill, one hairline, one colourless shadow. The
+lit top edge stays on the HERO console only (see the scoped rule below);
+the sample console further down the page is a record at rest and gets none. */
+.console{background:var(--surface);border:1px solid var(--line);padding:1.4rem;box-shadow:var(--raise);position:relative;overflow:hidden;isolation:isolate}
+.console::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:-1;opacity:var(--grid-console);background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:32px 32px}
+.hero .console::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--signal-blue),transparent);opacity:.6}
+.console-bar{display:flex;align-items:center;justify-content:space-between;padding-bottom:1rem;margin-bottom:1.2rem;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:.5rem}
+.console-title{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)}
+.dots{display:flex;gap:5px}
+.dots span{width:10px;height:10px;border-radius:50%}
+/* § A · these three were amber, blue and green — the site's three signal hues,
+spent on a window-chrome affordance that names no state. They pushed the hero
+and the sample console to three accents each with nothing to show for it.
+Neutral now: they are a console's window dots, not a status readout. */
+.dots span{background:var(--neutral);opacity:.45}
+/* 12px floor: this label rendered at 10.56px. */
+.live-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--success-green)}
+.live-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--success-green)}
+.console-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.85rem;margin-bottom:.85rem}
+.c-card{border-radius:10px;padding:.95rem 1.05rem}
+/* 12px floor: field labels rendered at 9.92px. Mono is right here — these
+are field names, which is exactly what § D gives the mono face. */
+.c-label{font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--neutral);margin-bottom:.45rem}
+.c-main{color:var(--ink);font-weight:600;font-size:1rem;margin-bottom:.25rem}
+.c-sub{font-family:var(--mono);font-size:.78rem;color:var(--ink-mute)}
+.c-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;padding:.85rem;background:rgba(61,123,255,.05);border:1px solid var(--line);border-radius:10px;margin-bottom:.85rem}
+.c-row .c-card{background:transparent;border:none;padding:0}
+/* 12px floor: rendered at 10.56px. */
+.c-meta{font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--neutral);text-align:center;padding-top:.85rem;border-top:1px solid var(--line)}
+/* These are STATE LABELS, not ornament: each one sits beside a field and names
+what happened to it. § A's state law is satisfied because the word and the
+colour are one object and change together. 12px floor applied. */
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;border-radius:99px}
+.badge-green{background:rgba(46,230,168,.12);color:var(--success-green);border:1px solid rgba(46,230,168,.3)}
+.badge-amber{background:rgba(255,176,32,.12);color:var(--amber);border:1px solid rgba(255,176,32,.3)}
+.badge-blue{background:rgba(61,123,255,.12);color:var(--sky);border:1px solid var(--line-hot)}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.step{background:var(--surface);border:1px solid var(--line);padding:1.6rem;position:relative;transition:border-color .25s,transform .25s}
+.step::before{content:'';position:absolute;top:0;left:0;width:60%;height:1px;background:linear-gradient(90deg,var(--signal-blue),transparent);opacity:.65}
+.step::after{content:'';position:absolute;top:14px;left:14px;width:4px;height:4px;border-radius:50%;background:var(--signal-blue)}
+.step:hover{border-color:var(--line-hot);transform:translateY(-2px)}
+.step-num{font-family:var(--mono);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sky);margin-bottom:1rem}
+.step-h{font-family:var(--sans);font-size:1.6rem;color:var(--ink);font-weight:400;margin-bottom:.6rem;line-height:1.15}
+.step-p{font-size:.95rem;color:var(--ink-mute);line-height:1.55}
+.pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.85rem}
+.pain-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.4rem}
+.pain-icon{width:32px;height:32px;border-radius:8px;background:rgba(61,123,255,.10);border:1px solid var(--line-hot);display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;color:var(--sky)}
+.pain-icon svg{width:16px;height:16px}
+.pain-h{color:var(--ink);font-weight:600;font-size:1rem;margin-bottom:.35rem}
+.pain-p{font-size:.9rem;color:var(--ink-mute);line-height:1.5}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.feat{background:var(--surface);border:1px solid var(--line);padding:1.5rem;transition:border-color .25s,transform .25s;position:relative;overflow:hidden}
+.feat::before{content:'';position:absolute;top:0;left:0;width:60%;height:1px;background:linear-gradient(90deg,var(--signal-blue),transparent);opacity:.65}
+.feat::after{content:'';position:absolute;top:14px;left:14px;width:4px;height:4px;border-radius:50%;background:var(--signal-blue)}
+.feat:hover{border-color:var(--line-hot);transform:translateY(-2px)}
+.feat-h{color:var(--ink);font-weight:600;font-size:1.1rem;margin-bottom:.6rem}
+.feat-p{font-size:.95rem;color:var(--ink-mute);line-height:1.55}
+.crush{padding:3rem 2rem;text-align:center;position:relative;overflow:hidden}
+.crush-h{font-family:var(--sans);font-size:clamp(1.8rem,3.6vw,2.8rem);color:var(--ink);font-weight:400;margin-bottom:1rem;line-height:1.1;position:relative}
+.crush-h em{font-style:italic;color:var(--amber)}
+.crush-p{font-size:1.05rem;color:var(--ink-soft);max-width:62ch;margin:0 auto 2rem;line-height:1.6;position:relative}
+.crush-calc-link{position:relative;margin-top:1.4rem}
+.crush-calc-link a{color:var(--amber);border-bottom:1px solid rgba(255,176,32,.4);display:inline-flex;align-items:center;min-height:44px}
+.crush-calc-link a:hover{color:var(--ink);border-color:var(--ink)}
+.crush-calc-link a:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.crush .btn-primary{position:relative}
+.setup-card{padding:2.5rem 2rem;display:grid;gap:1.5rem;align-items:center;position:relative;overflow:hidden}
+@media(min-width:760px){
+  .setup-card{grid-template-columns:1.5fr 1fr;padding:3rem}
+}
+.setup-h{font-family:var(--sans);font-size:clamp(1.6rem,3vw,2.4rem);color:var(--ink);font-weight:400;line-height:1.1;margin-bottom:.75rem}
+.setup-p{font-size:1rem;color:var(--ink-soft);line-height:1.55}
+.setup-cta{display:flex;flex-direction:column;gap:.6rem}
+.setup-note{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);letter-spacing:.06em}
+@media(max-width:600px){
+  .hero{padding:110px 0 60px}
+  .console{padding:1rem}
+  .c-row{grid-template-columns:repeat(3,1fr);gap:.5rem;padding:.7rem}
+  .ctas{flex-direction:column;align-items:stretch}
+  .btn{justify-content:center}
+  .crush{padding:2.2rem 1.4rem}
+  .setup-card{padding:2rem 1.4rem}
+}
+/* ── § C · THREE DECORATIVE LOOPS, REMOVED ───────────────────────────────────
+A nine-bar waveform that breathed forever inside both setup CTAs; a radar
+ring that expanded to 140px behind the demo CTA; and a footer mesh row. All
+three are gone rather than recoloured.
+
+The waveform: § C allows one active pulse at a time in two named scenes, and
+a CTA is neither of them. It also encoded nothing — a button is not listening
+— and it forced a max-width:400px rule that hid it again to stop the label
+wrapping. Deleting it gives the label back ~28px at every width.
+
+The radar ring: its selector was `#demo > .wrap > div[style*="margin-bottom:2rem"]`
+and no element on this page has carried that inline style since RUN 4. It has
+been painting nothing for four runs.
+
+The mesh row: `.foot-mesh` markup was removed with the cross-brand promo in
+RUN 1. Only the rules were left.
+────────────────────────────────────────────────────────────────────────── */
+/* Demo controls — two-button cluster (CIRCULANT cyan, Space Grotesk) */
+.demo-play-bar{align-items:center}
+.demo-play-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.95rem 1.5rem;font-size:1rem;cursor:pointer;text-decoration:none}
+.demo-call-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.95rem 1.5rem;border-radius:10px;font-family:var(--sans);font-size:1rem;font-weight:500;letter-spacing:.005em;cursor:pointer;border:1px solid transparent;transition:transform .15s,filter .15s,border-color .15s,color .15s;text-decoration:none}
+.demo-play-btn[data-state="playing"]{background:var(--surface);color:var(--sky);border-color:var(--line-hot);box-shadow:none}
+.demo-call-btn{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.demo-call-btn:hover{color:var(--sky);border-color:var(--sky);transform:translateY(-1px)}
+.demo-play-btn .play-glyph,.demo-call-btn .play-glyph{display:inline-flex;align-items:center;justify-content:center;font-size:1rem;line-height:1}
+/* Idle: complete, sharp reservation ticket (no blur, no dim). On tap, .demo-armed enables a brief cyan capture-flash per card as audio hits each threshold. */
+/* Feedback, not ambience: this only fires while the operator is playing the
+recording, and it is an INSET rule so nothing paints outside the card. */
+@keyframes capture-flash{0%,100%{box-shadow:inset 0 0 0 0 rgba(61,123,255,0)}30%{box-shadow:inset 0 0 0 2px var(--signal-blue)}}
+#demo-console.demo-armed [data-reveal].on{animation:capture-flash 1.1s ease}
+#demo-final-badge{display:none;margin-top:1rem;padding:.95rem 1.1rem;border-radius:12px;background:rgba(46,230,168,.10);border:1px solid rgba(46,230,168,.45);color:var(--ink);font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;text-align:center}
+#demo-final-badge.show{display:block;animation:final-badge-in .6s ease}
+/* § A STATE LAW — green because the sentence beside it names three actions
+that succeeded, and the badge only appears once they have. */
+#demo-final-badge::before{content:'✓ ';color:var(--success-green);font-weight:600}
+@keyframes final-badge-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion: reduce){
+  #demo-console.demo-armed [data-reveal].on{animation:none}
+  #demo-final-badge.show{animation:none}
+}
+/* Integrations strip — cyan-bordered platform pills (text only, no logos) */
+.int-pills{display:flex;flex-wrap:wrap;gap:.6rem;margin:0 0 1.1rem}
+.int-pill{display:inline-flex;align-items:center;font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;color:var(--ink);padding:.5rem .9rem;border-radius:99px;background:var(--surface);border:1px solid var(--line)}
+.int-muted{font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;color:var(--neutral);margin:0 0 1.25rem;text-transform:uppercase}
+.int-mini{font-size:1rem;color:var(--ink-soft);max-width:62ch;line-height:1.6}
+/* CIRCULANT cyan pulse on the hero console card (not #demo-console) */
+/* ── § C · SCENE 1 OF 2 · THE HERO CONSOLE ───────────────────────────────────
+One of the two places on this site allowed ambient light. It used to throw a
+10px cyan ring OUTSIDE its own box; the light is now an inset edge that
+breathes, so nothing paints onto the page around it. Paused offscreen by the
+same IntersectionObserver that drives the console's own timeline, and off
+entirely under reduced motion. */
+.hero .console{animation:hero-console-pulse 2.6s ease-in-out infinite}
+@keyframes hero-console-pulse{0%,100%{box-shadow:var(--raise),inset 0 0 0 1px rgba(61,123,255,.16)} 50%{box-shadow:var(--raise),inset 0 0 0 1px rgba(61,123,255,.50)}}
+@media (prefers-reduced-motion: reduce){
+  .hero .console{animation:none}
+}
+/* Hero Dispatch Console — the scripted intake animation */
+.hero-console [data-hc-stage]{opacity:0;transform:translateY(4px);transition:opacity .55s ease,transform .55s ease}
+.hero-console [data-hc-stage].on{opacity:1;transform:translateY(0)}
+.hero-console .hc-state{display:inline-flex;align-items:center;font-family:var(--mono);letter-spacing:.16em;margin-left:.7rem;padding:3px 9px;border-radius:99px;text-transform:uppercase;transition:color .25s,background .25s,border-color .25s}
+.hero-console .hc-state.ringing{color:var(--amber);background:rgba(255,176,32,.10);border:1px solid rgba(255,176,32,.45);animation:hc-ring 1s ease-in-out infinite}
+.hero-console .hc-state.live{color:var(--sky);background:rgba(61,123,255,.12);border:1px solid var(--line-hot)}
+.hero-console .hc-state.complete{color:var(--ink);background:rgba(61,123,255,.18);border:1px solid var(--signal-blue)}
+@keyframes hc-ring{0%,100%{opacity:.55}50%{opacity:1}}
+.hero-console .hc-transcript{display:flex;flex-direction:column;gap:.45rem;padding:.95rem 1rem;margin:0 0 1rem;border-radius:10px;background:rgba(61,123,255,.05);border:1px solid var(--line);min-height:7.5rem}
+.hero-console .hc-line{font-family:var(--mono);font-size:.78rem;line-height:1.5;color:var(--ink-soft);opacity:0;transform:translateX(-4px);transition:opacity .4s ease,transform .4s ease}
+.hero-console .hc-line.on{opacity:1;transform:translateX(0)}
+.hero-console .hc-who{color:var(--sky);font-weight:600;margin-right:.4rem}
+@media (prefers-reduced-motion: reduce){
+  .hero-console [data-hc-stage],.hero-console .hc-line{opacity:1;transform:none;transition:none}
+  .hero-console .hc-state.ringing{animation:none}
+}
+/* ── § C · ONE PANEL RECIPE, NO GLASS ────────────────────────────────────────
+RUN 3.5 unified six different fills and blur radii into one frosted recipe.
+§ C finishes the job by removing the frost: backdrop-filter survives on
+exactly two surfaces sitewide, both of them fixed overlay bars (the nav and
+the sticky rail), which is what keeps the blur count inside budget. Panels
+are a solid surface, one hairline and one colourless shadow.
+
+Which of these still get a panel at all is decided further down in TASK D:
+.feat, .pain-card, .setup-card and .crush are de-carded there and this rule
+has to run first for that override to land. */
+.console,.pain-card,.setup-card,.step,.feat{background:var(--surface);border:1px solid var(--line);box-shadow:var(--raise)}
+.btn:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){
+  .btn{transition:none}
+  .btn:hover,.btn:active{transform:none}
+}
+@media(min-width:1020px){
+  /* ════════════════════════════════════════════════════════════════
+  AIC SITE RUN 1 · "OPERATOR CUT"
+  Radius note: CIRCULANT-X calls for 0px corners on NEW surfaces, but
+  this page is a touchup, not a rebuild, and every existing surface on
+  it is 10-18px. Sharp corners on the new CTA stack alone would read as
+  a broken graft. Matching the page's own idiom; the corner law applies
+  when this page is genuinely rebuilt.
+  ════════════════════════════════════════════════════════════════ */
+  /* --- HERO GRID ----------------------------------------------------- */
+  /* Single column by default (mobile-first). At 1020px the console moves
+  beside the CTA stack instead of below it — the stack caps at 520px, so
+  one column wasted the right half of a desktop fold. align-items:start
+  keeps the console at its natural height instead of stretching. */
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:3rem;align-items:start}
+  .hero .hero-left{min-width:0}
+  .hero .hero-console{margin-top:0;position:sticky;top:96px}
+  .hero h1.hero-h{font-size:clamp(2.5rem,4.4vw,4rem)}
+}
+/* --- B3 · tabular figures on every ticket/quote/time value --------- */
+.c-main,.c-sub,.c-meta,.hc-line,.int-pill,.setup-note{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.hc-ico{width:12px;height:12px;color:var(--cyan-bright);margin-right:.45rem;display:inline-block;vertical-align:-1px;flex-shrink:0}
+/* --- B1 · play control -------------------------------------------- */
+.demo-play-btn svg,.demo-call-btn svg{width:14px;height:14px;flex-shrink:0}
+/* --- B2 · resting ticket + "watch it fill" ------------------------- */
+/* The console is COMPLETE at rest. An operator who never taps still sees
+a finished trip ticket. Only on replay do the fields clear and rebuild. */
+/* RUN 7 · `.demo-rest` deleted — no element has carried that class since
+before this run, so it was two rules of chrome for an affordance that is
+not on the page. The resting-ticket SEMANTICS it was written for are
+intact and are what actually matter: the sample console below is complete
+at rest, and only clears and refills when someone taps play. */
+#demo-console.demo-armed [data-reveal]{opacity:.28;transition:opacity .35s ease}
+#demo-console.demo-armed [data-reveal].on{opacity:1}
+@media (prefers-reduced-motion:reduce){
+  #demo-console.demo-armed [data-reveal]{opacity:1;transition:none}
+}
+/* --- B6 · the visitor's own clock --------------------------------- */
+/* The dot is INLINE-BLOCK inside the text flow, not a flex sibling. As a
+flex item it anchored to the container's left edge and, once the line
+wrapped inside the centred .crush card, floated away from the words as
+a stray amber mark. Inline-block keeps it welded to the first word. */
+.crush-now{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin:0 auto 1rem;max-width:44ch;line-height:1.7;position:relative;font-variant-numeric:tabular-nums}
+.crush-now::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);margin-right:.5rem;vertical-align:middle;animation:pulse 2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){
+  .crush-now::before{animation:none}
+}
+/* --- THE OPERATOR SECTION ----------------------------------------- */
+/* RUN 9 · renamed. § E takes the retired individual-attribution word out of
+every shipped surface, and a class name is a shipped surface — it is in
+the HTML a crawler reads and in the stylesheet it fetches. (The word is
+deliberately not written here: comments ship, and a grep-based audit that
+matches its own fix note reports a clean page as dirty. Describe the
+rule, never quote it.) The card chrome that used
+to wrap this was deleted rather than overridden in RUN 7, for the same
+reason: chrome left one class name away from the element it used to wrap
+is how a de-carded section quietly comes back. */
+.operators-h{font-family:var(--sans);font-size:clamp(1.7rem,3.2vw,2.6rem);color:var(--ink);font-weight:400;line-height:1.1;margin-bottom:1.1rem;max-width:20ch}
+.operators-p{font-size:1.05rem;color:var(--ink-soft);line-height:1.65;max-width:64ch;margin-bottom:1rem}
+.operators-p:last-child{margin-bottom:0}
+/* ══════════════════════════════════════════════════════════════════════
+AIC RUN 7 · "STATE & LIGHT"
+----------------------------------------------------------------------
+This page does NOT load /assets/aic.css — it carries its own embedded
+shell, and the other eleven pages consume the shared file. So every
+shell rule RUN 7 changed exists in two places by design, and this block
+is the mirror. Keep them moving together; a header or CTA change that
+lands in only one of the two ships a site wearing two different heads.
+
+Placed last on purpose: it has to beat the GLASS-X recipe above, which
+styles .console, .pain-card, .setup-card, .step, .feat and details as
+one family. De-carding .feat without overriding that rule would have
+moved five other surfaces with it.
+══════════════════════════════════════════════════════════════════════ */
+/* ── STATE COLOUR BY ROLE ─────────────────────────────────────────────
+The hexes are already declared above. These aliases exist so a rule
+reads as the STATE it paints. --state-fail is deliberately referenced
+by nothing at rest: nothing on this page fails, so red never appears. */
+:root{--lit-technical:rgba(61,123,255,.028);--lit-calm:rgba(138,147,166,.030);--lit-connected:rgba(61,123,255,.020);--lit-dense:rgba(0,0,0,.34);/* halved:at .026 this tint painted the same value as the Crush's own mid-height wash, so "amber lives only in the Crush" did not survive a pixel sample. The Crush keeps an amber floor and this is a whisper under it. */ --lit-warm:rgba(255,176,32,.014);--lit-flat:transparent}
+.hero{padding:150px 0 88px}
+@media(max-width:600px){
+  .hero{padding:92px 0 56px}
+}
+/* ── TASK E · TYPE SCALE ──────────────────────────────────────────────
+Headline 40px at 390 and 64-72px on a 1280-1440 fold. Measure capped at
+~16ch so a headline breaks into deliberate lines instead of running the
+full 1180px wrap. Body settles at 17px on a 560px measure — about 62
+characters, inside the 60-75 band. */
+h1.hero-h{font-size:clamp(2.5rem,5.1vw,4.5rem);line-height:1.03;letter-spacing:-.022em;max-width:16ch}
+@media(min-width:1020px){
+  .hero h1.hero-h{font-size:clamp(2.5rem,5.1vw,4.5rem)}
+  /* the headline needs the wider half of the fold to reach 16ch at 72px */
+  .hero-grid{grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)}
+}
+.hero-sub{font-size:clamp(1.0625rem,1.35vw,1.125rem);line-height:1.58;max-width:560px;text-wrap:pretty}
+.step-p{font-size:1.0625rem;line-height:1.55}
+.feat-p,.pain-p{font-size:1.0625rem;line-height:1.58;max-width:560px;color:var(--ink-soft)}
+.int-mini{font-size:1.0625rem;line-height:1.58;max-width:560px}
+.crush-h{font-size:clamp(2rem,3.6vw,3.25rem);line-height:1.06;letter-spacing:-.018em;max-width:16ch;margin-left:auto;margin-right:auto;text-wrap:balance}
+.crush-p{font-size:1.0625rem;line-height:1.58;max-width:560px}
+/* #setup carries no h2, so this h3 IS that section's head and owes the
+44-52 / 32-38 band every other section head on this page hits. Heading
+LEVEL stays h3 — that is document structure; this is only its size. */
+.setup-h{font-size:clamp(2rem,3.2vw,3rem)}
+.crush-now{font-size:.75rem}
+.setup-p{font-size:1.0625rem;line-height:1.58;max-width:560px}
+.operators-h{font-size:clamp(2rem,3.6vw,3.25rem);line-height:1.06;letter-spacing:-.018em;max-width:16ch;text-wrap:balance}
+.operators-p{font-size:1.0625rem;line-height:1.58;max-width:560px}
+/* MONO IS FOR OPERATIONAL DATA — a status, a field, a time, a route, a
+quote, a phone number. It is not for sentences. Every rule below was
+setting a full sentence in JetBrains Mono, which makes sales copy read
+like a machine readout and costs real legibility at these sizes.
+#crush-now KEEPS mono and is not in this list: it is a live readout of
+the reader's own device clock, which is exactly what mono is for. */
+.cta-note{text-transform:none}
+.setup-note,.int-muted{font-family:var(--sans);letter-spacing:0;text-transform:none;font-size:.9rem;color:var(--ink-mute);line-height:1.55;max-width:560px}
+.crush-calc-link a{font-family:var(--sans);letter-spacing:0;text-transform:none;font-size:.95rem}
+/* ── TASK D · DE-CARD ─────────────────────────────────────────────────
+Cards survive on exactly the surfaces that are discrete records: the two
+consoles, the four stage cards, the FAQ accordion and the callback form.
+Everything below was explanatory prose wearing a record's chrome. */
+.feat,.setup-card,.crush{background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.pain-card{background:none;border:0;border-radius:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.feat::before,.feat::after,.crush::before,.crush::after,.setup-card::before{display:none}
+.feat,.pain-card{padding:1.15rem 0 0;border-top:1px solid var(--line)}
+.feat-grid,.pain-grid{gap:1.75rem 2.5rem}
+/* The Crush keeps its centred composition — the card is what RUN 7 removes,
+not the layout. Left-aligning it as well left the right half of a 1440
+fold empty and read as a mistake rather than as negative space. */
+.crush{padding:0;text-align:center}
+.crush-h,.crush-p,.crush-now,.ledger{margin-left:auto;margin-right:auto}
+.setup-card{padding:0;gap:2rem}
+@media(min-width:760px){
+  .setup-card{padding:0}
+}
+/* ── TASK G · THE CRUSH ───────────────────────────────────────────────
+The card is gone; the amber moves up to the section, where it belongs.
+Ambience, not an object: a low amber wash over black with a hairline top
+and bottom, so the scene reads as a change of light rather than as one
+more box. The heading's italic goes amber too — this section is about
+the hour, not about the system, and cyan means the system.
+
+ACCENT COUNT, corrected after measuring. The first cut left THREE on
+screen at rest: amber, green, and cyan — the cyan arriving twice, once as
+the CTA (a control, arguably chrome) and once as the section kicker,
+which is plain text and cannot be argued as a control. The kicker is
+amber here now, so the section carries amber (the hour) and green (taken)
+as its content accents, and cyan appears only on the button.
+
+The gradient no longer decays to bare void either: at the old floor the
+bottom two-thirds of this section measured the same painted value as the
+operator-section tint, which made "amber lives only here" untrue below the
+fold of the section. It keeps a residual amber roughly twice that tint's.
+No red — nothing here fails. */
+/* ── § C · SCENE 2 OF 2 · THE CRUSH ──────────────────────────────────────────
+The other place ambient light is allowed, and the only place amber appears
+at scene scale. A change of light, not one more box. */
+section[data-lit="crush"]{background:radial-gradient(ellipse 90% 60% at 50% 0%,rgba(255,176,32,.15),transparent 72%), linear-gradient(180deg,rgba(255,176,32,.06),rgba(255,176,32,.035));border-top:1px solid rgba(255,176,32,.22);border-bottom:1px solid rgba(255,176,32,.22)}
+.crush-h em{color:var(--state-ringing)}
+#crush .sec-kicker{color:var(--state-ringing)}
+.crush-now{margin:0 auto 1.1rem;max-width:560px}
+/* THE THREE CRUSH ROWS ARE GONE, replaced by the dispatch ledger. Their
+rules are deleted here rather than left behind: they matched nothing
+after the swap, and dead CSS on the homepage is bytes on the critical
+path for a component that no longer exists. The lesson they carried —
+no colour transition on a state, because label and hue must change on
+the same frame — moved with the component and is enforced on .lg-state
+and .lg-rail in the SHOWROOM block. */
+/* ── THE OPERATOR SECTION ─────────────────────────────────────────────
+Uncarded. The rail is mono because those three items are entries on a
+record, not a sentence — which is the one place mono is right. */
+.operators-block{max-width:760px}
+.auth-rail{list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:.4rem 0;margin:1.7rem 0 0;padding:1.05rem 0 0;border-top:1px solid var(--line);font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);font-variant-numeric:tabular-nums}
+.auth-rail li{display:inline-flex;align-items:center;white-space:nowrap}
+.auth-rail li+li::before{content:'·';color:var(--neutral);margin:0 .7rem}
+@media(max-width:600px){
+  /* On a phone this was not a rail. The middle item is wider than a 342px
+  row, so it wrapped INSIDE itself and the '·' — which is a li+li::before —
+  landed at the START of the next line. Rendered, that is four lines: a
+  hanging dot, "17 YEARS IN CHAUFFEURED", an orphaned "TRANSPORTATION" with
+  no dot, then another hanging dot. Below 600 it stacks, drops the
+  separators (a stack does not need them) and gives up TRACKING rather than
+  type size — at 12px/.04em the longest item measures ~292px against the
+  312px available at 360, so it clears without breaking mid-phrase and
+  without dropping under the 12px floor. */
+  .auth-rail{display:grid;gap:.45rem;letter-spacing:.04em}
+  .auth-rail li+li::before{content:none}
+}
+/* ── TASK C · CONSOLE PROOF LOOP ──────────────────────────────────────
+The honesty chip replaces a green liveness badge that sat beside an
+invented caller on a scripted loop. (Describing the rule, not quoting the
+retired string — see the note above the FAQ.) 12px floor on both new
+labels, the CLAUDE.md minimum, even though it costs a wrap at 390px. */
+.hero-console .hc-honest{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--neutral);line-height:1.4}
+@media(max-width:600px){
+  .hero-console .hc-honest{flex-basis:100%;letter-spacing:.04em}
+}
+/* min-height RESERVES TWO LINES, and it is not cosmetic. This line is set
+in JetBrains Mono, which arrives over the network with font-display:swap:
+it renders one line in the fallback and two once the real face lands, and
+that reflow pushed everything below it down. Measured: page CLS went
+0.029 -> 0.071 with this element in, and back to 0.030 with it hidden.
+Reserving the taller state costs a little air on wide screens and buys
+CLS 0 from this element at every width.
+
+The reservation must include the flex ROW-GAP. The first attempt reserved
+two line boxes and the padding but not the .3rem between the rows, so it
+came up 4.8px short: the box sat at the 56px floor in the fallback font
+and grew to 60.8px the moment the real face wrapped it onto two rows —
+a 5px push on everything below it, measured at 135ms. Two lines, one
+gap, the padding, the border: that is the whole box. */
+.hero-console .hc-result{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .5rem;font-family:var(--mono);font-size:.75rem;line-height:1.45;letter-spacing:.11em;text-transform:uppercase;color:var(--neutral);margin:0 0 1rem;padding:.6rem .75rem;min-height:calc(2 * 1.45em + .3rem + 1.2rem + 2px);border:1px solid var(--line);border-radius:8px;background:rgba(61,123,255,.05)}
+.hero-console .hc-r{color:var(--ink)}
+.hero-console .hc-arrow{color:var(--neutral)}
+@media(max-width:600px){
+  .hero-console .hc-result{letter-spacing:.06em;gap:.25rem .4rem}
+  /* At 390 the dots, "Dispatch Console" and "READY FOR DISPATCH" together
+  want ~316px of a 310px row, so the chip broke across two lines INSIDE
+  its own pill. Letting the title row wrap puts the chip on its own line
+  intact, which is what a status badge should look like. */
+  .hero-console .console-title{flex-wrap:wrap}
+  .hero-console .hc-state{margin-left:0;white-space:nowrap;letter-spacing:.08em}
+}
+/* State chip. One state on screen at a time, so the section never carries
+more than the accent it is actually in plus the console's own cyan. */
+/* ── RUN 13 · STATE LAW, APPLIED WHERE IT HAD NEVER REACHED ──────────────────
+   § 2's STATE LAW: label text and colour change on the SAME FRAME, and it was
+   written after a 450ms crossfade left rows reading one state while painted
+   another in 18.6% of frames. RUN 10 gave `transition:none` to the callback
+   console's chip and to the dispatch ledger. This chip — scene 1 of GLOW LAW,
+   on the homepage fold — kept a 250ms colour transition and nobody re-read the
+   law against it.
+
+   index.html's setState() writes textContent and className in one synchronous
+   block, so the WORD changes instantly and the COLOUR takes a quarter second
+   to follow. For that quarter second the chip reads "Trip captured" in the
+   previous state's blue. That is the defect the law names, not an instance of
+   the law being satisfied by other means.
+
+   Found by the RUN 13 parity harness rather than by reading: two runs of
+   identical code recorded the same element, with the same class, in two
+   different colours — which is only possible while a colour is in flight.
+   ─────────────────────────────────────────────────────────────────────────── */
+.hero-console .hc-state{letter-spacing:.12em;padding:3px 10px;transition:none}
+.hero-console .hc-state.ringing{color:var(--state-ringing);background:rgba(255,176,32,.10);border:1px solid rgba(255,176,32,.45)}
+.hero-console .hc-state.live,.hero-console .hc-state.quote{color:var(--sky);background:rgba(61,123,255,.12);border:1px solid var(--line-hot);animation:none}
+.hero-console .hc-state.captured,.hero-console .hc-state.ready,.hero-console .hc-state.complete{color:var(--state-captured);background:rgba(46,230,168,.12);border:1px solid rgba(46,230,168,.45);animation:none}
+/* "fields complete in green" — an inset rule, not a border, so nothing on
+the grid moves by a pixel when the state lands. */
+.hero-console .c-card,.hero-console .c-row{transition:box-shadow .45s ease}
+/* .is-filled, not a blanket .hc-captured descendant: a card goes green when
+ITS OWN fields are all in, so nothing is marked complete while it is
+still empty. Set from JS after every timeline step. */
+.hero-console.hc-captured .c-card.is-filled,.hero-console.hc-captured .c-row.is-filled{box-shadow:inset 2px 0 0 var(--state-captured)}
+@media (prefers-reduced-motion:reduce){
+  .hero-console .hc-state.ringing{animation:none}
+  .hero-console .c-card{transition:none}
+}
+/* ── TASK F · FOUR-STAGE PROGRESSION RAIL ─────────────────────────────
+The stage cards were four islands, each wearing a 4px cyan dot that
+encoded nothing. The dot is now the state node and the rail is the
+sequence: neutral ahead, cyan on the current stage, green behind it.
+The grid is pinned to 1 column below 1020px and 4 above it — the old
+auto-fit produced a 2x2 at tablet widths, and a horizontal rail across
+a two-row grid draws a line through one row and abandons the other.
+Padding is down 20% (1.6rem to 1.28rem). */
+/* max-width in the single-column band is LOAD-BEARING. Pinning the grid to
+one column fixed the rail, but at 850-1019px it also handed each card the
+full 1132px and the paragraph measured 86 characters — well past the
+60-75 band. 640px puts it back at ~63ch and matches the 560px measure the
+rest of the page uses. */
+.steps{position:relative;grid-template-columns:1fr;gap:1rem;padding-left:28px;max-width:640px}
+/* --rail-tail is set from JS to the distance between the LAST node and the
+bottom of the grid, so the vertical rail stops on the last stop instead
+of running 200px past it — the same defect the desktop branch fixes with
+right:calc(25% - 17.5px). It falls back to 14px if JS never runs. */
+.steps::before,.steps::after{content:'';position:absolute;top:14px;bottom:var(--rail-tail,14px);left:5px;width:1px;pointer-events:none}
+.steps::before{background:var(--line)}
+/* Default 1, not 0. With JS off the four stages are all true — the system
+does all four — so the honest resting state is complete, exactly like the
+Crush rows. JS rewinds to 0 on viewport entry and plays forward. */
+.steps::after{background:var(--state-captured);opacity:.8;transform:scaleY(var(--rail-p,1));transform-origin:center top;transition:transform .7s cubic-bezier(.4,0,.2,1)}
+/* overflow:visible is LOAD-BEARING. The card carried overflow:hidden to clip
+the decorative ::before gradient it used to have; that gradient is gone
+and the ::after is now the rail's state node, which sits OUTSIDE the card
+so it can land on the rail. With the old overflow the nodes rendered and
+were clipped to nothing — the rail drew, the states fired, and not one
+dot was on screen. Caught in the render gate, not in the CSS. */
+.step{padding:1.28rem;overflow:visible}
+.step::before{display:none}
+.step::after{content:'';position:absolute;top:20px;left:-29px;width:11px;height:11px;border-radius:50%;background:var(--midnight);border:2px solid var(--state-idle);box-shadow:none;transition:background .35s ease,border-color .35s ease,box-shadow .35s ease}
+.step.is-current::after{border-color:var(--state-listening);background:var(--state-listening);box-shadow:0 0 0 4px rgba(61,123,255,.20)}
+.step.is-done::after{border-color:var(--state-captured);background:var(--state-captured)}
+@media(min-width:1020px){
+  .steps{grid-template-columns:repeat(4,minmax(0,1fr));padding-left:0;padding-top:26px;max-width:none}
+  /* The rail must END on the fourth node, not run past it to the grid edge
+  — a line that continues beyond the last stop reads as a progress bar
+  that never finished. For a 4-column grid with a 1rem gap the last
+  node's centre sits at 3*(col+gap)+5.5px from the left, which reduces
+  to exactly 25% - 17.5px from the right at any container width. */
+  .steps::before,.steps::after{top:11px;bottom:auto;left:5px;right:calc(25% - 17.5px);width:auto;height:1px}
+  .steps::after{transform:scaleX(var(--rail-p,1));transform-origin:left center}
+  /* -21/-1 not -20/0: `left`/`top` on an absolutely positioned child are
+  measured from the padding edge, which the card's 1px border offsets. */
+  .step::after{top:-21px;left:-1px}
+}
+@media (prefers-reduced-motion:reduce){
+  .steps::after{transition:none}
+  .step::after{transition:none}
+}
+/* The old setup label was the longest string on the site and it carried a
+hyphen, which is a break opportunity — both homepage setup buttons
+rendered it on two lines between 320 and 768px. § F replaces it with a
+shorter label that has no hyphen in it, and the decorative waveform that
+used to sit inside these buttons is gone, so the same control now has
+roughly 90px more room than the string needs. nowrap stays as the belt. */
+.btn{white-space:nowrap}
+@media(max-width:600px){
+  .btn{font-size:.75rem;letter-spacing:.03em}
+}
+/* The header clearance for #ava-callback moved to the § 1 ANCHOR GUTTER
+block in assets/circulant.css — one rule for every anchor target on all
+twelve pages. A copy here would have ADDED to it, not replaced it. */
+/* The console's own halo pulse animated box-shadow forever, on or off
+screen — the same cost this run removed from the JS loop, left running in
+CSS. It is gated on the same IntersectionObserver now. */
+.hero .console{animation-play-state:paused}
+.hero .console.hc-onscreen{animation-play-state:running}
+/* The clock line is sans now. Only its FIRST clause is a device readout;
+the second ("Dinner and hotel runs.") is editorial, and mono is for
+operational data, not for a sentence that happens to sit beside one.
+tabular-nums stays so the minute does not jitter as it renders. */
+.crush-now{font-family:var(--sans);letter-spacing:.01em;text-transform:none}
+/* A pulsing dot means "this is happening now". The sample ticket below is
+a finished record that is not happening at all, and it is the only
+.live-badge left on the page now that the hero console carries the
+honesty chip. The state stays green — it really is captured — and the
+animation goes. */
+.live-badge::before{animation:none}
 
 /* ══ RUN 10 · SHOWROOM v2.0 ══════════════════════════════════════════════════
    CANONICAL BLOCK. Byte-identical in assets/aic.css and in the embedded <style>
@@ -1772,3 +2417,45 @@ details > div{max-width:55ch}
    original and identical to it, so that file's rendered result does not move. */
 details > div a{color:var(--signal-blue);text-decoration:underline;
   text-underline-offset:.18em;text-decoration-thickness:1px}
+
+/* ── RUN 13 · THE TWO VALUES THE HOMEPAGE KEEPS ──────────────────────────────
+   Merging two heads meant meeting the places where they genuinely disagreed
+   rather than merely differed in wording. Two of them would have moved the
+   homepage if aic.css's value had simply won:
+
+       .sec-sub    margin-bottom   2.5rem  (home)   1.25rem  (the other 15)
+       .cta-stack  margin-bottom   3rem    (home)   1rem     (the other 15)
+
+   That is the homepage's original standalone rhythm, from before there were
+   other pages to be consistent with. RUN 13 is housekeeping: it removes the
+   drift SOURCE, and it is not licensed to restyle the page on the way past. So
+   the rendered result is preserved and the disagreement is written down here
+   instead of living in a second file where nobody can see both values at once.
+
+   A scope is not a fork. A fork is two copies that can drift apart; this is one
+   copy, in the shared home, next to the value it differs from.
+
+   Whether the homepage should keep a wider rhythm than the content pages is a
+   real design question with a real answer, and it belongs to a design run.
+   ─────────────────────────────────────────────────────────────────────────── */
+body.home .sec-sub{margin-bottom:2.5rem}
+body.home .cta-stack{margin:0 0 3rem}
+
+/* ── AND ONE RULE THAT WAS ALREADY DEAD, KEPT DEAD ──────────────────────────
+   index.html carried `@media(min-width:1020px){.cta-stack{margin-bottom:0}}`,
+   and it had not applied to anything for a long time: a LATER `.cta-stack`
+   rule in the same file set the `margin` SHORTHAND, which resets
+   margin-bottom, and a media query adds no specificity to break a tie that
+   source order has already decided.
+
+   Migrating it faithfully is what resurrected it — the move put it after the
+   shorthand instead of before, and the homepage hero lost 48px at desktop,
+   which walked the whole page up 20px. The parity harness caught it; nothing
+   else would have, because both the rule and the shorthand are correct in
+   isolation and the file reads exactly as it did before.
+
+   MOVING CSS CHANGES WHICH RULES ARE DEAD. A rule that lost a source-order tie
+   in its old home can win it in the new one, and it arrives looking like a
+   faithful copy. It is not restored here, because it was not doing anything
+   when the run started and this run does not change how the page looks.
+   ─────────────────────────────────────────────────────────────────────────── */

@@ -1,6 +1,16 @@
 # -*- coding: utf-8 -*-
 """AIC RUN 7 · "STATE & LIGHT" — the mechanical half of the polish pass.
 
+*** SUPERSEDED — DO NOT RE-RUN. Historical record only. ***
+RUN 13 replaced the sticky rail's second control: it is "Book the setup call"
+to /book/ now, not a callback link. This file still emits the RUN 7 form of
+that markup, so re-running it would silently put the retired control back on
+every page. The rail's current shape is owned by tools/aic-run13-rail.mjs and
+asserted by tools/aic-run9-styleparity.mjs and tools/aic-run13-railfit.mjs.
+Its idempotence note below is about RUN 7's own transforms and does not protect
+against this: the markup it matches no longer exists, so "matches only the OLD
+form" now means "matches nothing, then writes the old form".
+
 WHY A SCRIPT AND NOT TWELVE HAND EDITS
 --------------------------------------
 Task A's requirement is "one name for one action, sitewide — zero synonyms

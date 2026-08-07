@@ -1,8 +1,20 @@
 #!/usr/bin/env node
-// RUN 9 · COMPUTED-STYLE PARITY GATE
-// index.html carries its own embedded <style>; the other eleven pages consume
-// assets/aic.css. Two heads on one site is the defect RUN 7 shipped. This reads
-// the RESOLVED style of the shared chrome off both kinds of page and diffs it.
+// RUN 9 · COMPUTED-STYLE PARITY GATE  (premise updated in RUN 13)
+//
+// This gate was written because index.html carried its own embedded <style>
+// while the other pages consumed assets/aic.css. Two heads on one site is the
+// defect RUN 7 shipped, and reading the RESOLVED chrome off both kinds of page
+// was the only way to catch a rule that had landed on one of them.
+//
+// RUN 13 removed the second head: all sixteen pages link the same two files.
+// The gate is NOT retired, because "same stylesheet" is not the same claim as
+// "same rendered chrome" — a page can still diverge through its own markup, a
+// stray attribute, a missing wrapper, or a rule that only matches under a
+// class one page happens not to carry. What changed is the failure it is
+// hunting: not a missing rule in a second copy, but a page that has drifted
+// out of the shape the shared rule expects.
+//
+// The source-level "no second copy" assertion lives in aic-run11-gate.mjs.
 import { createRequire } from 'node:module';
 const require = createRequire('C:/Users/offic/Desktop/AVA-factory/adstage/package.json');
 const { chromium } = require('playwright');
@@ -53,17 +65,33 @@ const c    = await read('/works-with-your-software/');          // aic.css, seco
 // would have gone unseen. The chrome must resolve identically at any depth.
 const d    = await read('/integrations/limo-anywhere/');        // aic.css, depth two
 
-// /terms/, /privacy/ and /demo/ carry `.rail--solo` BY DESIGN: they have no
-// callback form, so the rail is one full-width control instead of a 60/40 split.
-// That is a real difference in what the page offers, not chrome drift, so it is
-// asserted explicitly rather than diffed away.
+// RUN 13 · `.rail--solo` MOVED, AND THE REASON FOR IT MOVED WITH IT.
+//
+// Through RUN 12 the solo pages were /terms/, /privacy/ and /demo/, because the
+// rail's second control was "Get a call back" and those three pages have no
+// callback form to send anyone to. The second control is now "Book the setup
+// call", which goes to /book/ — a page that exists on every one of the sixteen.
+// So the old reason evaporates and all three of those pages get the pair.
+//
+// Exactly one page is solo now, for a different reason: on /book/ itself, a
+// button offering to take the reader to /book/ is a control that does nothing.
+// Call stays, because calling is still a real alternative there.
+//
+// This is asserted rather than diffed away, and it is asserted as an EXACT SET
+// — solo where it should be and, just as important, NOT solo anywhere else.
+// The old check only looked at the three pages it expected to be solo, so a
+// fourth page going solo by accident would have passed clean.
+const SOLO_EXPECTED = ['/book/'];
+const soloCheck = ['/book/', '/terms/', '/privacy/', '/demo/', '/limo-answering-service/'];
 const solo = [];
-for (const path of ['/terms/', '/privacy/', '/demo/']) {
+for (const path of soloCheck) {
   await p.goto(O + path, { waitUntil: 'networkidle' });
   solo.push([path, await p.evaluate(() => ({
     solo: !!document.querySelector('.rail--solo'),
     cols: getComputedStyle(document.querySelector('.rail')).gridTemplateColumns,
-    forms: document.querySelectorAll('[data-cb-form]').length
+    ctrls: document.querySelectorAll('.rail a').length,
+    book: document.querySelectorAll('.rail a[href="/book/"]').length,
+    call: document.querySelectorAll('.rail a[href^="tel:"]').length,
   }))]);
 }
 await b.close();
@@ -86,9 +114,14 @@ for (const k of Object.keys(base)) {
 console.log('');
 let soloBad = 0;
 for (const [path, s] of solo) {
-  const ok = s.solo && s.forms === 0 && s.cols !== '60fr 40fr';
+  const want = SOLO_EXPECTED.includes(path);
+  // Solo: one control, and it is the phone. Paired: two, one phone one /book/.
+  // Every page carries Call either way — that is the rail's whole job.
+  const ok = s.call === 1 && (want
+    ? (s.solo && s.ctrls === 1 && s.book === 0)
+    : (!s.solo && s.ctrls === 2 && s.book === 1 && s.cols !== '60fr 40fr'));
   if (!ok) soloBad++;
-  console.log((ok ? 'SAME  ' : 'DIFF  ') + ('rail--solo ' + path).padEnd(20) + '  ' + JSON.stringify(s));
+  console.log((ok ? 'SAME  ' : 'DIFF  ') + ((want ? 'rail solo ' : 'rail pair ') + path).padEnd(24) + '  ' + JSON.stringify(s));
 }
 console.log('\nGATE computed-style-parity: ' + (bad || soloBad ? 'FAIL (' + (bad + soloBad) + ')' : 'PASS'));
 process.exit(bad || soloBad ? 1 : 0);

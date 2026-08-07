@@ -288,8 +288,21 @@
       });
     }
 
-    /* The rail's own target is this form. Landing on a collapsed card after
-       tapping "Get a call back" would be a dead end, so the same click opens it. */
+    /* Any in-page link to this form opens it, because landing on a collapsed
+       card is a dead end.
+
+       RUN 13 · THERE ARE NO SUCH LINKS ON THE SITE RIGHT NOW. The sticky rail
+       used to carry one — "Get a call back" — and its second control is
+       "Book the setup call" to /book/ now. The console is unchanged and is
+       still the callback path; a reader meets it by scrolling and opens it by
+       tapping its own header row. This handler is kept rather than deleted
+       because it is the correct behaviour for a link that may exist again, and
+       because deleting it would leave the next person to add one with a dead
+       end and no clue that it had ever been solved. It binds to nothing today.
+
+       A DIRECT #ava-callback URL still lands on a collapsed card on a phone —
+       this fires on click, not on a hash landing. That was equally true before
+       RUN 13; what changed is that the click path no longer exists to mask it. */
     var jumps = document.querySelectorAll('a[href="#' + (form.id || '') + '"]');
     for (var q = 0; q < jumps.length; q++) {
       jumps[q].addEventListener('click', function () { setOpen(true); });
@@ -395,9 +408,14 @@
 
        armed      the hero CTA cluster has left the top of the viewport, so the
                   operator no longer has a control on screen.
-       suppressed the callback form or the booking calendar is on screen. The
-                  rail's own targets are visible, so a bar restating them would
-                  be noise at best and a lid over an input at worst.
+       suppressed an inline primary, the callback console, the booking calendar
+                  or the footer is on screen. Something the bar restates is
+                  already visible, so the bar would be noise at best and a lid
+                  over an input at worst.
+
+     RUN 13 · the bar is Call + Book now, and the suppressor set did not need
+     to change to cover it: every /book/ CTA on this site is either a
+     .btn-primary or sits inside the footer, and both are already observed.
 
      Both observers are edge-triggered; `sync` is the only thing that touches
      the DOM, and only when the resulting state actually changed. body.rail-on

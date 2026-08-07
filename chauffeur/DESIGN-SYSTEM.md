@@ -1,8 +1,13 @@
 # AI CHAUFFEUR — DESIGN SYSTEM
 
-**Signal v1.4** · ratified RUN 12 "ALPHA — MONEY PAGES", 2026-08-07.
-Supersedes Signal v1.3 (RUN 11) — which is still correct about everything it
-covers; v1.4 adds the answer-engine page anatomy (the direct answer, the
+**Signal v1.5** · ratified RUN 13 "STICKY + TIDY", 2026-08-07.
+v1.5 changes two things and closes the build phase: the sticky rail is
+**Call + Book** (§ 3), and **there are two CSS homes, not three** (§ 1) — the
+homepage's embedded stylesheet is gone and with it the drift class that has cost
+a run every time it fired since RUN 7.
+
+Supersedes Signal v1.4 (RUN 12), which is still correct about everything else it
+covers; v1.4 added the answer-engine page anatomy (the direct answer, the
 last-updated stamp, the status column), the table rules for a phone, and the
 CLAIM LADDER that governs what this brand is allowed to say about write-back.
 v1.3 added the anchor gutter, a third-generation primary control with press
@@ -34,40 +39,49 @@ described incorrectly since RUN 7 and which this run supersedes for this brand.
 
 ---
 
-## 1 · THE THREE CSS HOMES — the trap that has bitten every run since RUN 7
+## 1 · THE TWO CSS HOMES — the trap that bit every run from RUN 7 to RUN 12
 
-There is no single stylesheet. There are three, and a rule that lands in one of
-them ships a site wearing two different heads:
+**There were three. RUN 13 removed the third, and the trap with it.**
 
-| # | File | Loaded by |
-|---|---|---|
-| 1 | `chauffeur/assets/circulant.css` | all 12 pages |
-| 2 | `chauffeur/assets/aic.css` | **11** pages — everything except `index.html` |
-| 3 | the embedded `<style>` in `chauffeur/index.html` | the homepage only |
+| # | File | Loaded by | Holds |
+|---|---|---|---|
+| 1 | `chauffeur/assets/circulant.css` | all 16 pages | the DOCUMENT layer — tokens, canvas, anchor gutter, the grid |
+| 2 | `chauffeur/assets/aic.css` | all 16 pages | the COMPONENT layer — everything else |
 
-`index.html` does **not** load `aic.css`. It carries its own copy of the shell.
+Both files load on every page, in that order, from a `<link>` in every `<head>`.
+There is no third copy and no page-local block anywhere on this host.
 
-Three blocks are **byte-identical by law** and machine-checked:
+Through RUN 12, `index.html` did not load `aic.css` — it carried its own
+embedded copy of the shell, and a rule written for "the stylesheet" could land
+in one head and ship a site wearing two. That cost a run every time it fired.
+The last instance was RUN 12's `details > div a`: an FAQ-answer link underlined
+on eleven pages and colour-only on the homepage, live since the section shipped,
+with Lighthouse reading 100 either way. **The audit is not the rule.**
 
-- **SIGNAL v1.1 · TOKEN BLOCK** — in all three files.
-- **§ G · THE NAV LAYER** — in `aic.css` and `index.html`.
-- **RUN 11 · TACTILE CUT** — in `aic.css` and `index.html`, and it is now the
-  LAST block in both, immediately after RUN 10's. It carries selectors that
-  exist on only one host (`.console` / `.step` / `.feat` / `.crush` /
-  `.setup-card` / `.demo-play-bar` are homepage-only; `.card--stage` /
-  `.ticket-card` / `.calc` are `aic.css`-only) and that is deliberate. Splitting
-  the block to save those bytes gives up the one property that makes the pair
-  checkable at all.
+### What replaced the byte-identity law
 
-A rule that belongs to the **document** rather than to a component goes in
-`circulant.css` instead, which all twelve pages load and nothing else does — one
-copy, nothing to drift. The canvas layer and the § 1 anchor gutter both live
-there for that reason.
+Three blocks used to be byte-identical across the homes and machine-checked as
+pairs. A pair-check is a proxy for "there is one copy of this rule", and now
+there is literally one copy, so the proxy is retired and the stronger claim is
+asserted directly: `aic-run11-gate.mjs` fails if `index.html` grows a `<style>`
+element again, or stops linking `aic.css`.
 
-Change one, change all. `node tools/aic-run9-styleparity.mjs` reads the RESOLVED
-computed style of the shared chrome off a homepage and two `aic.css` pages and
-fails on any difference. `/demo/`, `/terms/` and `/privacy/` carry `.rail--solo`
-by design — they have no callback form — and that is asserted, not diffed away.
+Rules genuinely belonging to the homepage alone live in `aic.css` under
+**RUN 13 · THE HOMEPAGE COMES HOME**, and **their position in that file is
+load-bearing**: they are BASE rules and the RUN 10 / 11 / 12 blocks below them
+still override. Move that block below those and the container radii, the
+primary-control physics and the 12px type floor all silently revert.
+
+A rule that belongs to the **document** rather than to a component still goes in
+`circulant.css` — one copy, nothing to drift. The canvas layer and the § 1
+anchor gutter live there for that reason.
+
+`node tools/aic-run9-styleparity.mjs` still reads the RESOLVED computed style of
+the shared chrome off a homepage and three `aic.css` pages. Its premise changed
+but not its value: "same stylesheet" is not "same rendered chrome", because a
+page can still diverge through its own markup. **`/book/` carries `.rail--solo`**
+— see § 3 — and that is asserted as an exact set: solo where it belongs and not
+solo anywhere else.
 
 **`aic.css` used to claim `/demo/` did not load it. That was false.** It does.
 Anyone trusting the old note would have edited a shared file believing one page
@@ -128,6 +142,21 @@ Green renders **only beside a label naming the action that succeeded** — TRIP
 CAPTURED, QUOTE RETURNED, READY FOR DISPATCH. Never because a flow ended.
 **Label text and colour change on the same frame.** A 450ms colour crossfade
 once left rows reading "Ringing" while still painted green, in 18.6% of frames.
+
+**A COLOUR TRANSITION ON A STATE CHIP IS THE VIOLATION, not a softening of it.**
+RUN 10 gave `transition:none` to the callback console's chip and to the dispatch
+ledger. `.hero-console .hc-state` — scene 1 of § 4 GLOW LAW, on the homepage
+fold — kept a **250ms** colour transition until RUN 13, and nobody re-read the
+law against it. `index.html`'s `setState()` writes `textContent` and `className`
+in one synchronous block, so the word changed instantly and the colour took a
+quarter second to follow: for that quarter second the chip read "Trip captured"
+in the previous state's blue.
+
+**How it was found is the transferable part.** Not by reading the CSS — by the
+RUN 13 parity harness recording the same element, with the same class, in two
+different colours across two runs of identical code. That is only possible while
+a colour is in flight. **If a probe reads a different value from a page that did
+not change, something on that page is animating that should not be.**
 
 ### CANVAS LAW (ratified RUN 10)
 
@@ -301,14 +330,62 @@ fold before this run, the header chip and the hero primary sat 40px apart, both
 filled, both dialling the same number, and the rail was a third once the reader
 scrolled.
 
-- **Header chip** — the OUTLINED utility variant at every width. Digits always
-  visible; the word "Call" survives to 380px and drops below it (measured at
-  390: 123 lockup + 8 + 177 chip + 8 + 44 burger = 360 into 366 available). The
-  `aria-label` still CONTAINS the visible text.
+- **Header chip** — the OUTLINED utility variant at desktop; **filled below
+  1024px**, where it is the only chrome CTA on screen. Digits always visible;
+  **the word "Call" drops below 1024px**, which is what the CSS has always done
+  — an earlier draft of this section claimed 380px and was wrong about its own
+  file. The `aria-label` still CONTAINS the visible text.
 - **Hero** — keeps THE filled primary.
 - **Rail** — arms only after the hero CTA cluster has left the top of the
-  viewport, and suppresses itself whenever the callback form, the booking
-  calendar or the footer is on screen.
+  viewport, and suppresses itself whenever an inline primary, the callback
+  console, the booking calendar or the footer is on screen.
+
+### THE STICKY PAIR (ratified RUN 13)
+
+**The rail is `Call (414) 775-0019` filled + `Book the setup call` ghost, in
+equal columns.** Its second control used to be "Get a call back", pointing at
+the callback console further down the same page — a fixed bar spending half of
+the only chrome a phone reader has on scrolling them to something already on
+the page. The console is unchanged and is still the callback path: a reader
+meets it by scrolling and opens it by tapping its own 64px header row.
+
+- **Equal columns, not 60/40.** § 4's demo pair settled the idiom: two controls
+  with different labels and no width rule read as a primary with a stray link
+  beside it rather than as a choice. These are one choice, and the fill carries
+  the hierarchy.
+- **`/book/` is the only `.rail--solo` page**, and the reason moved with the
+  set. `/demo/`, `/terms/` and `/privacy/` were solo because they have no
+  callback form for the old control to point at; `/book/` exists on every page,
+  so all three now get the pair. On `/book/` the Book control would take the
+  reader to the page they are on, so it is dropped. Call stays — calling is
+  still a real alternative there.
+- **THE TWO FULL LABELS DO NOT FIT ON A PHONE.** Measured at the rail's own
+  type: Call needs **194px**, Book needs **166px**, and the 360 viewport offers
+  **328px** between the bar's padding and the gap. The shortfall is 32px of
+  text, not of layout, and no split of the columns fixes it. So the verb drops
+  below **480px** — the header chip's own idiom, digits are the payload and the
+  glyph carries the affordance once the word goes — and the bar steps to 14px
+  below **400px**. Re-measure both labels before changing either.
+- **The label is ONE flex item.** `.rail-label` wraps the verb span and the
+  digits so they are inline siblings *inside* one item, where the span's
+  trailing space is ordinary text and renders as an ordinary word space.
+
+  **The header chip does NOT have that wrapper, and its 7px is the separator,
+  not a defect.** RUN 13 measured the chip at desktop — verb right edge 1095,
+  digits left edge 1102 — read the gap as a hole sitting on top of the span's
+  own trailing space, removed it, and shipped `Call(414)` into a screenshot.
+  **Trailing whitespace inside a flex item is trimmed**, so the container `gap`
+  was the only thing holding the word off the number. Reverted, and the chip is
+  as it has always been. Adopting `.rail-label`'s wrapper there is a markup
+  change on sixteen pages worth about 3px of tracking — a fair job for a run
+  that is doing chrome, and not one to do by accident.
+
+  The first attempt also failed in a second way worth remembering: applied to
+  the base rule rather than scoped to ≥1024, moving the spacing onto the glyph
+  ADDED 7.2px at widths where the verb is hidden, and the nav row went 1px past
+  its own content box at 360 on all sixteen pages. `aic-run9-gate.mjs` caught
+  that one.
+- Analytics: `tel_tap_rail` and `book_click_rail`.
 
 **One primary per viewport** still holds. The single exception is the callback
 console's submit, which is a ghost at rest and takes the fill only once both
@@ -535,7 +612,10 @@ explaining the sweep contained the word it was sweeping.
 ## 7 · CTA CANON
 
 **Exactly one setup CTA string sitewide: "Book the setup call."** Space Grotesk,
-sentence case, everywhere — nav, drawer, hero, section CTAs, footer.
+sentence case, everywhere — nav, drawer, hero, section CTAs, footer, and from
+RUN 13 the **sticky rail**. The rail is the only place the string appears
+without the filled treatment: it is the ghost half of the pair, because the
+filled half is the phone. See § 3 THE STICKY PAIR.
 
 Grep gates, all must read zero: `founder-led` · `request setup` ·
 `book the strategy` · `intro call`.
@@ -778,6 +858,42 @@ line of the page clears the bar, which `.phead`'s own top padding delivers.
     `/integrations/limo-anywhere/` read perf **99** once, with a 101ms TBT spike.
     Median of three on the same URL: **100**, CLS 0.000 in 3 of 3. Do not report
     a one-run dip as a finding, and do not report a one-run 100 as a pass.
+29. **MOVING CSS CHANGES WHICH RULES ARE DEAD.** `index.html` carried
+    `@media(min-width:1020px){.cta-stack{margin-bottom:0}}`, and it had not
+    applied to anything in a long time: a LATER rule in the same file set the
+    `margin` SHORTHAND, which resets `margin-bottom`, and a media query adds no
+    specificity to break a tie source order has already decided. Migrating it
+    faithfully — same text, same media query — put it AFTER the shorthand
+    instead of before and **resurrected it**: the homepage hero lost 48px at
+    desktop and the whole page walked up 20px. A rule that lost a source-order
+    tie in its old home can win it in the new one, and it arrives looking like a
+    verbatim copy. **Only a rendered before/after finds this.**
+30. **A SELECTOR BOTH FILES DECLARE IS THE DANGEROUS ONE, not a missing one.**
+    The first RUN 13 migrator emitted a rule when aic.css did not mention its
+    selector at all, and shipped a homepage missing 350 nodes of geometry —
+    because aic.css carried the RUN 10/11/12 *override* for `.console`, `.step`,
+    `.feat`, `.c-card` and `.btn` while the BASE those overrides were written
+    against lived only in `index.html`. Selector-level presence answered "yes,
+    aic.css has it" and threw the base away. **Compare per PROPERTY, not per
+    selector**, and treat same-property-different-value as a human decision.
+31. **`python -m http.server` IS SINGLE-THREADED and deadlocks a headless
+    browser.** Chromium holds up to six keep-alive connections per origin; the
+    server answers one at a time and the rest queue, so a page waiting on
+    `networkidle` waits forever. The symptom is a sweep that hangs with no
+    error, no timeout and no partial output — it reads like a broken probe and
+    it is a broken server. Serve from the harness itself.
+32. **A snapshot of an animating page diffs against itself.** Two runs of
+    identical code differed on 1,130 nodes in `opacity`, `box-shadow` and
+    `transform` — the console's breathing edge, the ledger pulse and `/book/`'s
+    skeleton loader, each caught on a different frame. That noise sits in the
+    exact properties a real regression moves. Freeze with
+    `getAnimations().forEach(a => { a.pause(); a.currentTime = 0 })` before
+    measuring. Note this does NOT freeze a JS-driven class swap on a timer —
+    a CSS transition started after the pause call runs unpaused, which is
+    how trap 29's sibling above (the `hc-state` crossfade) surfaced.
+33. **Take a clean baseline from a git worktree, never from a stash.**
+    `git worktree add /tmp/x HEAD` gives a pristine tree to measure against
+    without putting a run's uncommitted work at the mercy of one command.
 
 ---
 
@@ -797,7 +913,24 @@ node tools/aic-run12-lighthouse.js https://aichauffeur.ai   # PRODUCTION ONLY, 1
 MSYS_NO_PATHCONV=1 node tools/aic-run12-cls.js https://aichauffeur.ai /integrations/ 5
 node tools/aic-run12-shots.mjs live https://aichauffeur.ai  # THE EYES GATE — the 4 new pages, 4 widths
 node tools/aic-run12-book-probe.mjs https://aichauffeur.ai  # /book/ white-chrome, reads the widget frame
+
+# RUN 13 · the dedup instruments. The first three are one-shot and are kept as
+# the record of how the merge was decided; the parity harness is reusable and is
+# the one to reach for before ANY future move of CSS between files.
+node tools/aic-run13-cssdiff.mjs          # LOST / GAINED / net-divergent, per selector
+node tools/aic-run13-reach.mjs            # does a migrating selector match anything on the OTHER pages
+node tools/aic-run13-migrate.mjs          # derive the payload; property-level, source order, comments travel
+node tools/aic-run13-parity.mjs snap A --site /path/to/worktree/chauffeur
+node tools/aic-run13-parity.mjs snap B
+node tools/aic-run13-parity.mjs diff A B  # every element, 16 pages x 3 viewports, ~60 properties + box
 ```
+
+**`aic-run13-parity.mjs` is the only tool here that can prove a refactor moved
+nothing.** Every other gate asserts a property someone thought to name. This one
+records the resolved computed style of every rendered element on every page at
+three widths and diffs two states of the tree. RUN 13's dedup passed it at
+**15 of 16 pages byte-identical, 0 nodes**, with the homepage differing on
+exactly the 22 nodes the run intended. It found both of RUN 13's real defects.
 
 `aic-run12-gate.mjs` adds, with **seven** negative controls of its own: **one
 visible table per new page**; a **40-60 word direct answer that is the first

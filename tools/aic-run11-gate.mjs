@@ -385,25 +385,62 @@ note('anchor targets clear the fixed header', anchorBad,
     const ctx = await browser.newContext({ viewport: { width: w, height: h } });
     const p = await ctx.newPage();
 
+    // ── RUN 13 · THE RAIL'S SECOND CONTROL IS NOT THE CALLBACK ANY MORE ────
+    // Through RUN 12 this drove the rail's own "Get a call back" link and got
+    // three assertions out of one click: the anchor landed clear of the fixed
+    // bar, the collapsed console opened, and the rail hid itself so there were
+    // never two callback controls on screen at once.
+    //
+    // That link is gone — the rail is Call + Book now — so the click that used
+    // to prove all three does not exist. Testing it against a `force: true`
+    // click on a selector that matches nothing would have gone on "passing".
+    //
+    // The suppression claim is the one that still matters and it does not need
+    // a click: scroll until the console is on screen and the rail must be
+    // hidden. That is the actual law — one filled control per viewport — and
+    // driving it by scroll tests it the way a reader meets it.
     await p.goto(ORIGIN + '/limo-answering-service/', { waitUntil: 'networkidle' });
     await p.evaluate(() => window.scrollTo(0, 1200));
     await p.waitForTimeout(900);                       // let the rail arm
-    const railLink = await p.$('.rail a[href="#ava-callback"]');
-    if (!railLink) pathBad.push({ w, why: 'rail never armed' });
-    else {
-      await railLink.click({ force: true });
-      await p.waitForTimeout(1600);
-      const r = await p.evaluate(() => {
-        const el = document.querySelector('#ava-callback');
-        return { top: Math.round(el.getBoundingClientRect().top),
-                 navBottom: Math.round(document.querySelector('nav.top').getBoundingClientRect().bottom),
-                 open: !!document.querySelector('.cb-body').getClientRects().length,
+    const armed = await p.evaluate(() => {
+      const r = document.querySelector('.rail');
+      return { vis: getComputedStyle(r).visibility,
+               ctrls: r.querySelectorAll('a').length,
+               book: r.querySelectorAll('a[href="/book/"]').length,
+               call: r.querySelectorAll('a[href^="tel:"]').length };
+    });
+    if (armed.vis !== 'visible') pathBad.push({ w, why: 'rail never armed', ...armed });
+    if (armed.call !== 1 || armed.book !== 1 || armed.ctrls !== 2) pathBad.push({ w, why: 'rail is not Call + Book', ...armed });
+
+    // Trap 4: IntersectionObserver has not fired one frame after scrollTo.
+    // Scroll, settle, then read — and read the console's own box to be sure it
+    // really is on screen rather than trusting the scroll offset.
+    for (const target of ['#ava-callback', 'footer']) {
+      await p.evaluate((sel) => {
+        document.documentElement.style.scrollBehavior = 'auto';
+        document.querySelector(sel).scrollIntoView({ block: 'center' });
+      }, target);
+      await p.waitForTimeout(700);
+      const s = await p.evaluate((sel) => {
+        const el = document.querySelector(sel);
+        const b = el.getBoundingClientRect();
+        return { onScreen: b.top < innerHeight && b.bottom > 0,
                  railVis: getComputedStyle(document.querySelector('.rail')).visibility };
-      });
-      if (r.top < r.navBottom) pathBad.push({ w, why: 'rail click lands clipped', ...r });
-      if (!r.open) pathBad.push({ w, why: 'rail click left the drawer shut', ...r });
-      if (r.railVis !== 'hidden') pathBad.push({ w, why: 'duplicate callback control: rail still visible', ...r });
+      }, target);
+      if (!s.onScreen) pathBad.push({ w, why: `${target} never reached`, ...s });
+      else if (s.railVis !== 'hidden') pathBad.push({ w, why: `rail not suppressed by ${target}`, ...s });
     }
+
+    // A deep link to the console still has to land clear of the fixed bar.
+    // This is now the ONLY link path to that form, so it is the one worth
+    // measuring — on a fresh load, which is what a deep link actually is.
+    await p.goto(ORIGIN + '/limo-answering-service/#ava-callback', { waitUntil: 'networkidle' });
+    await p.waitForTimeout(1200);
+    const deep = await p.evaluate(() => ({
+      top: Math.round(document.querySelector('#ava-callback').getBoundingClientRect().top),
+      navBottom: Math.round(document.querySelector('nav.top').getBoundingClientRect().bottom),
+    }));
+    if (deep.top < deep.navBottom) pathBad.push({ w, why: 'deep link to console lands clipped', ...deep });
 
     await p.goto(ORIGIN + '/limo-answering-service/', { waitUntil: 'networkidle' });
     await p.keyboard.press('Tab');
@@ -430,21 +467,46 @@ note('anchor targets clear the fixed header', anchorBad,
     if (bk.top < bk.navBottom || bk.hash !== '#lead-protection') pathBad.push({ w, why: 'back button', ...bk });
     await ctx.close();
   }
-  note('§ 1 real click / keyboard / back button', pathBad, '2 widths x 3 paths');
+  note('§ 1 rail pair / suppression / deep link / keyboard / back button', pathBad,
+    '2 widths x (rail shape + 2 suppressors + deep link + skip link + back button)');
 }
 
 // ── P2..P10 · the settled-page sweep ───────────────────────────────────────
 console.log(`\n══ § 2-§ 6 · ${PAGES.length} PAGES x ${VIEWPORTS.length} VIEWPORTS ══\n`);
 const rows = [];
+const flaky = [];
 for (const [w, h] of VIEWPORTS) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h } });
   const p = await ctx.newPage();
   for (const [path, tag] of PAGES) {
-    await p.goto(ORIGIN + path, { waitUntil: 'networkidle' });
+    /* `networkidle` on /book/ is a coin flip and always has been: the page
+       pulls GHL's form_embed.js from a third party, and if that fetch stalls
+       the page never goes idle. An uncaught throw here does not fail ONE page
+       — it kills the sweep, and the ninety-five measurements after it are
+       never taken. Same shape as trap 27: one bad read turning into a dead
+       gate.
+       Verified environmental before this was added, not assumed: the identical
+       navigation was run against the committed tree and the working tree, and
+       both reached networkidle in ~2.4s on the retry.
+       Falling back to `load` keeps the sweep alive, and the fallback is
+       RECORDED and printed — a page that always needs it is a real finding
+       about that page, and swallowing it silently would be the worse bug. */
+    try {
+      await p.goto(ORIGIN + path, { waitUntil: 'networkidle', timeout: 20000 });
+    } catch {
+      flaky.push({ page: tag, w });
+      await p.goto(ORIGIN + path, { waitUntil: 'load', timeout: 20000 });
+      await p.waitForTimeout(1200);
+    }
     await p.waitForTimeout(260);
     rows.push({ tag, w, ...(await p.evaluate(PROBE_STATIC)) });
   }
   await ctx.close();
+}
+if (flaky.length) {
+  console.log(`  NOTE  ${flaky.length} navigation(s) fell back from networkidle to load: ` +
+    flaky.map((f) => `${f.page}@${f.w}`).join(', '));
+  console.log('        (third-party fetch stalled; the page was still measured)\n');
 }
 
 const navBad = rows.filter((r) => r.navH !== null && Math.abs(r.navH - r.navVar) > 0.5)
@@ -482,14 +544,24 @@ note('§ 3 rail 56px controls + reserve >= height', railBad, rails.length ? `rai
 // The safe-area inset CANNOT be read from a computed style — the engine resolves
 // env() to a px value, so a runtime test for it is a check that always passes,
 // which is the one kind of check this repo does not ship. Assert the source.
-const cssSrc = ['../chauffeur/assets/aic.css', '../chauffeur/index.html']
-  .map((f) => readFileSync(new URL(f, import.meta.url).pathname.slice(1), 'utf8'));
+// RUN 13 · there is ONE CSS home for components now. This used to read the same
+// two assertions off aic.css AND the homepage's embedded copy, because a rule
+// could be right in one and missing in the other. index.html no longer carries
+// a stylesheet, so the pair-check is replaced by the stronger claim it was
+// always a proxy for: the rules exist once, and the homepage has no second copy
+// to disagree with. THAT absence is asserted here — if a future run reintroduces
+// an embedded block, this fails rather than quietly going back to two heads.
+const homeSrc = readFileSync(new URL('../chauffeur/index.html', import.meta.url).pathname.slice(1), 'utf8');
+const aicSrc = readFileSync(new URL('../chauffeur/assets/aic.css', import.meta.url).pathname.slice(1), 'utf8');
 const safeBad = [];
-cssSrc.forEach((s, i) => {
-  if (!/\.rail\{[^}]*env\(safe-area-inset-bottom/.test(s.replace(/\n\s*/g, ''))) safeBad.push({ home: i, why: '.rail padding drops the safe-area inset' });
-  if (!/rail-on\{padding-bottom:calc\(73px \+ env\(safe-area-inset-bottom/.test(s.replace(/\n\s*/g, ''))) safeBad.push({ home: i, why: 'rail reserve is not 73px + safe area' });
-});
-note('§ 3 safe-area inset present in source', safeBad, `${cssSrc.length} CSS homes`);
+{
+  const s = aicSrc.replace(/\n\s*/g, '');
+  if (!/\.rail\{[^}]*env\(safe-area-inset-bottom/.test(s)) safeBad.push({ why: '.rail padding drops the safe-area inset' });
+  if (!/rail-on\{padding-bottom:calc\(73px \+ env\(safe-area-inset-bottom/.test(s)) safeBad.push({ why: 'rail reserve is not 73px + safe area' });
+  if (/^[ \t]*<style>[ \t]*$/m.test(homeSrc)) safeBad.push({ why: 'index.html has grown an embedded stylesheet again — back to two heads' });
+  if (!/<link rel="stylesheet" href="\/assets\/aic\.css/.test(homeSrc)) safeBad.push({ why: 'index.html does not link assets/aic.css' });
+}
+note('§ 3 safe-area inset in the one CSS home + homepage carries no second copy', safeBad, '1 component home, 16 pages linking it');
 
 const drawers = rows.flatMap((r) => r.drawers.map((d) => ({ page: r.tag, w: r.w, ...d })));
 const drawerBad = drawers.filter((d) => d.headH < 64 || !d.chev || d.headW < d.formW - 2)
