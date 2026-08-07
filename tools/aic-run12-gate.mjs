@@ -167,6 +167,51 @@ const PROBE = () => {
   return out;
 };
 
+// ── 13 · EVERY ANCHOR ON EVERY NEW PAGE ────────────────────────────────────
+// RUN 11's anchor sweep covers the HOMEPAGE's eleven anchors and the skip link
+// on every other page. It does not touch a new page's own section anchors, and
+// four new pages carry thirty-two between them — so the rule RUN 11 exists to
+// enforce would have been unenforced on exactly the pages this run added.
+//
+// Both widths matter and they are not redundant: --nav-h is 61px below 1024 and
+// 73px at or above it, so a single width tests one of the two constants.
+//
+// TRAP 19 and TRAP 3: scroll-behavior is smooth here and a fragment jump is
+// still travelling when a naive probe reads the box. Every anchor is measured
+// on a FRESH context, which is also what a deep link actually is.
+const ANCHOR_PROBE = (id) => {
+  const el = document.querySelector(id);
+  if (!el) return null;
+  const nav = document.querySelector('nav.top');
+  const r = el.getBoundingClientRect();
+  const cs = getComputedStyle(el);
+  // the first painted text inside the target — the user-visible assertion
+  let textTop = null, text = '';
+  for (const n of el.querySelectorAll('*')) {
+    if (!n.getClientRects().length) continue;
+    if (!n.textContent.trim()) continue;
+    if (n.children.length) continue;
+    textTop = n.getBoundingClientRect().top;
+    text = n.textContent.trim().slice(0, 34);
+    break;
+  }
+  return {
+    top: +r.top.toFixed(1),
+    navBottom: nav ? +nav.getBoundingClientRect().bottom.toFixed(1) : 0,
+    spt: getComputedStyle(document.documentElement).scrollPaddingTop,
+    smt: cs.scrollMarginTop,
+    textTop: textTop === null ? null : +textTop.toFixed(1),
+    text,
+  };
+};
+
+const NEW_ANCHORS = {
+  '/integrations/': ['#platforms', '#deep', '#ladder', '#ticket', '#talk', '#faq', '#more', '#ava-callback'],
+  '/integrations/limo-anywhere/': ['#capability', '#ladder', '#fields', '#ticket', '#talk', '#faq', '#more', '#ava-callback'],
+  '/integrations/fasttrak/': ['#status', '#operation', '#intake', '#ticket', '#talk', '#faq', '#more', '#ava-callback'],
+  '/limo-dispatch-automation/': ['#layer', '#compare', '#cost', '#ticket', '#talk', '#faq', '#more', '#ava-callback'],
+};
+
 // ── shingles: 5-word windows, for the anti-doorway measure ────────────────
 const shingles = (s) => {
   const w = s.toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter(Boolean);
@@ -223,13 +268,34 @@ async function controls(page) {
   // and the uniqueness measure must be able to report a LOW number
   const self = shingles(p.content);
   if (uniqueFraction(self, self) !== 0) missed.push('uniqueness control did not fire');
+  // ── control 7 · the anchor probe must SEE a section under the bar ────────
+  // TRAP 22 (RUN 11): a negative control can be flaky where the thing it guards
+  // is not. Driving a hash round-trip into a smooth scroll across a long
+  // document reads the box mid-flight and reports a defect that is not there.
+  // So the control forces scroll-behavior:auto and drives scrollIntoView()
+  // itself, exactly as RUN 11's does.
+  {
+    const c = await page.context().browser().newContext({ viewport: { width: 390, height: 844 } });
+    const p2 = await c.newPage();
+    await p2.goto(ORIGIN + '/integrations/', { waitUntil: 'networkidle' });
+    await p2.addStyleTag({ content:
+      'html{scroll-behavior:auto!important;scroll-padding-top:0px!important}' +
+      'section[id]{scroll-margin-top:0px!important}' });
+    await p2.evaluate(() => document.querySelector('#platforms').scrollIntoView());
+    await p2.waitForTimeout(400);
+    const r = await p2.evaluate(ANCHOR_PROBE, '#platforms');
+    await c.close();
+    const caught = r && r.textTop !== null && r.textTop < r.navBottom;
+    if (!caught) missed.push('anchor-clearance control did not fire');
+  }
+
   console.log('\n══ NEGATIVE CONTROLS ══');
   if (missed.length) {
     missed.forEach(m => console.log('  ABORT  ' + m));
     console.log('\n  A gate that cannot fail is not a gate. Aborting.\n');
     process.exit(2);
   }
-  console.log('  all 6 controls fired against the injected fixture\n');
+  console.log('  all 7 controls fired against the injected fixture\n');
 }
 
 // ── run ────────────────────────────────────────────────────────────────────
@@ -255,6 +321,22 @@ for (const [w, h] of [[360, 800], [390, 844], [430, 932]]) {
     await page.goto(ORIGIN + path, { waitUntil: 'networkidle' });
     const r = await page.evaluate(PROBE);
     narrow[w + '|' + path] = r.wraps;
+  }
+}
+
+// Probe 13 — every anchor on every new page, on a FRESH context each time.
+const anchors = [];
+for (const [w, h] of [[390, 844], [1440, 900]]) {
+  for (const path of Object.keys(NEW_ANCHORS)) {
+    for (const id of NEW_ANCHORS[path]) {
+      const c = await b.newContext({ viewport: { width: w, height: h } });
+      const p2 = await c.newPage();
+      await p2.goto(ORIGIN + path + id, { waitUntil: 'networkidle' });
+      await p2.waitForTimeout(1200);
+      const r = await p2.evaluate(ANCHOR_PROBE, id);
+      await c.close();
+      anchors.push({ w, path, id, r });
+    }
   }
 }
 await b.close();
@@ -408,7 +490,29 @@ note(!ALL.some(([p]) => data[p].bookTargets.filter(t => t !== CTA && t !== CTA +
     overflowing + ' overflow / ' + fits + ' fit, across 3 phone widths');
 }
 
-writeFileSync(OUT + 'gate.json', JSON.stringify({ wide: data, narrow }, null, 1));
+// 13 · anchor clearance on the new pages
+{
+  const bad = [];
+  for (const a of anchors) {
+    if (!a.r) { bad.push(a.path + a.id + ' @' + a.w + ' MISSING'); continue; }
+    const want = parseFloat(a.r.spt) + parseFloat(a.r.smt);
+    if (Math.abs(a.r.top - want) > 1.5) {
+      bad.push(a.path + a.id + ' @' + a.w + ' top ' + a.r.top + ' want ' + want);
+    } else if (a.r.textTop !== null && a.r.textTop < a.r.navBottom) {
+      bad.push(a.path + a.id + ' @' + a.w + ' text ' + a.r.textTop +
+        ' under nav ' + a.r.navBottom + ' "' + a.r.text + '"');
+    }
+  }
+  bad.slice(0, 8).forEach(m => note(false, '13 · anchor under the bar', m));
+  const at390 = anchors.filter(a => a.w === 390 && a.r);
+  const at1440 = anchors.filter(a => a.w === 1440 && a.r);
+  note(!bad.length, '13 · every new-page anchor clears the fixed header',
+    anchors.length + ' anchor loads · ' +
+    (at390.length ? 'at 390 top=' + at390[0].r.top + ' navBottom=' + at390[0].r.navBottom : '') +
+    (at1440.length ? ' · at 1440 top=' + at1440[0].r.top + ' navBottom=' + at1440[0].r.navBottom : ''));
+}
+
+writeFileSync(OUT + 'gate.json', JSON.stringify({ wide: data, narrow, anchors }, null, 1));
 console.log('\n  wrote %sgate.json', OUT);
 console.log('\nGATE run12: %s\n', fail.length ? 'FAIL (' + fail.length + ')' : 'ALL GREEN');
 process.exit(fail.length ? 1 : 0);

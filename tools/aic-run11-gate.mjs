@@ -364,7 +364,11 @@ for (const [path, tag] of PAGES.slice(1)) {
   // first painted line of the page must clear the bar.
   if (r && r.textTop !== null && r.textTop < r.navBottom) anchorBad.push({ tag, id: '#main', textTop: r.textTop, navBottom: r.navBottom, text: r.text });
 }
-note('anchor targets clear the fixed header', anchorBad, `${HOME_ANCHORS.length} anchors x 4 widths + 11 skip links`);
+// RUN 12: the skip-link count is PAGES-derived, so it stops being wrong the
+// next time a page is added. It read "11 skip links" while sweeping 15.
+note('anchor targets clear the fixed header', anchorBad,
+  `${HOME_ANCHORS.length} homepage anchors x 4 widths + ${PAGES.length - 1} skip links` +
+  ` (the new pages' OWN anchors are swept by aic-run12-gate.mjs probe 13)`);
 
 // ── P1b · THE THREE PATHS A READER ACTUALLY TAKES ──────────────────────────
 // A direct #URL is one of them. The other two are a REAL click on an in-page
@@ -430,7 +434,7 @@ note('anchor targets clear the fixed header', anchorBad, `${HOME_ANCHORS.length}
 }
 
 // ── P2..P10 · the settled-page sweep ───────────────────────────────────────
-console.log('\n══ § 2-§ 6 · TWELVE PAGES x SIX VIEWPORTS ══\n');
+console.log(`\n══ § 2-§ 6 · ${PAGES.length} PAGES x ${VIEWPORTS.length} VIEWPORTS ══\n`);
 const rows = [];
 for (const [w, h] of VIEWPORTS) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h } });

@@ -1,11 +1,17 @@
 # AI CHAUFFEUR — DESIGN SYSTEM
 
-**Signal v1.3** · ratified RUN 11 "TACTILE CUT", 2026-08-06.
-Supersedes Signal v1.2 (RUN 10) — which is still correct about everything it
-covers; v1.3 adds the anchor gutter, a third-generation primary control with
-press physics, a third state on the callback console, and the container cap.
-v1.2 added a third elevation, a page-depth layer, a second-generation button
-system, the callback console, the dispatch ledger and the logo canon.
+**Signal v1.4** · ratified RUN 12 "ALPHA — MONEY PAGES", 2026-08-07.
+Supersedes Signal v1.3 (RUN 11) — which is still correct about everything it
+covers; v1.4 adds the answer-engine page anatomy (the direct answer, the
+last-updated stamp, the status column), the table rules for a phone, and the
+CLAIM LADDER that governs what this brand is allowed to say about write-back.
+v1.3 added the anchor gutter, a third-generation primary control with press
+physics, a third state on the callback console, and the container cap. v1.2
+added a third elevation, a page-depth layer, a second-generation button system,
+the callback console, the dispatch ledger and the logo canon.
+
+**The site is sixteen pages.** Everything below that says "twelve" predates
+RUN 12 and describes a smaller tree; the rules are unchanged, the counts are not.
 
 Read this file **before** touching anything under `chauffeur/`. It is the brand's
 own law. Where it disagrees with a skill, this file wins. Where it disagrees with
@@ -396,6 +402,75 @@ happen in one synchronous block.
 
 ---
 
+## 3.6 · THE ANSWER-ENGINE PAGE (ratified RUN 12)
+
+A page written to be the answer to a question has an anatomy, and it is not the
+same as a landing page's. Four rules, all machine-checked by
+`tools/aic-run12-gate.mjs`.
+
+- **The direct answer is the FIRST prose in `<main>`.** 40-60 words, complete on
+  its own, in `.answer` — a `--surface` panel with a 3px `--signal-blue` inset
+  rail, the same idiom RUN 11 gave an open FAQ row. **It replaces `.page-sub` on
+  these pages rather than following it.** RUN 12 shipped all four with a deck
+  between the H1 and the answer, and the gate caught it: the first prose an
+  answer engine met was a shorter summary of the answer underneath it. Two decks
+  saying the same thing in two lengths is a redundancy for a reader and an
+  ambiguity for anything lifting one paragraph off the page.
+- **Exactly one visible `<table>` per page.** The table is the artifact; a second
+  one splits the thing a machine is supposed to quote.
+- **A visible last-updated stamp**, `.page-updated`, mono, 12px, `--neutral`.
+- **Four FAQs**, mirrored to `FAQPage` from the rendered copy by the mirror tool.
+  Never hand-authored — ship `"mainEntity":[]` and let the tool fill it.
+
+### THE CLAIM LADDER
+
+**What this brand may say about writing into a dispatch system, and in what
+order.** The whole of RUN 12's copy work was making sixteen pages say one thing.
+
+| Rung | Wording that is allowed |
+|---|---|
+| Day one | ticket delivery to a shared inbox — **included in every setup** |
+| During setup | the connection is **configured and tested around the account** |
+| After verification | direct write-back is **activated** |
+
+- **Never an unbounded denial.** "AVA does not write into your dispatch software"
+  was true when nothing could; with write-back on the ladder it is a claim the
+  product contradicts. Every denial carries its condition: *until direct
+  write-back has been configured and verified for that account.*
+- **Never an unbounded promise either.** The approved capability sentence lives
+  verbatim on `/integrations/limo-anywhere/` and is the ceiling for the whole
+  host. Its middle clause — service types, vehicle classes, rate rules, required
+  fields, statuses, approval workflow — is what keeps the first clause honest.
+  Do not paraphrase it and do not split it.
+- **"Production verified" appears NOWHERE** until a real client acceptance test
+  passes. `writeback-flip.md` owns that day. The gate asserts its absence on all
+  sixteen pages.
+- **A status is not a state.** The five strings on the hub name stages of setup,
+  so the column is **deliberately unpainted**. STATE LAW gives `--success-green`
+  to an action that has actually succeeded beside a label naming it; a colour
+  ladder down eleven rows would make eleven live-connection claims in one glance
+  and would look like evidence.
+- **The default never moved.** A person confirms every trip on every rung.
+
+### TABLES ON A PHONE
+
+- **Two columns take `.tbl--pair`** and fit at 390 with no scroll. `.tbl` carries
+  `min-width:620px`, which is a three-column floor; `min-width:0` alone is not
+  enough, because `.tbl th` is `white-space:nowrap` in both the head and the row
+  header. Measured on the hub at 390 before the fix: columns 242 + 182 inside a
+  340px box, status column entirely off-screen. Letting the header wrap **on a
+  phone only** closes it.
+- **Three columns still scroll, and must say so.** `.tbl-wrap` takes
+  `tabindex="0"`, `role="region"` and an `aria-label`, because `overflow-x:auto`
+  creates a scrollable region and a region that is not focusable cannot be
+  scrolled without a pointer. A `.tbl-hint` renders below 668px — the width at
+  which a 620px table stops fitting `.wrap`'s content box.
+- **Not the `display:block` stacked-card trick.** It drops the table role out of
+  the accessibility tree in every major engine, and a status table whose rows no
+  longer associate with their column heading is a worse outcome than a scroll.
+
+---
+
 ## 4 · GLOW LAW
 
 **Ambient light exists in exactly two scenes**, both on the homepage:
@@ -670,6 +745,39 @@ line of the page clears the bar, which `.phead`'s own top padding delivers.
     ten-thousand-pixel document and read the box mid-flight — trap 19, hitting
     the gate that documents trap 19. Controls force `scroll-behavior:auto` and
     drive `scrollIntoView()` directly.
+23. **THREE TOOLS GLOBBED ONLY `*/index.html`.** `stamp_chauffeur.py`, the FAQ
+    mirror and the grep gate all walked one level. `/integrations/limo-anywhere/`
+    and `/integrations/fasttrak/` are the first pages on this host at depth
+    **two**, so all three would have skipped them in silence — no error, and
+    `--check` reporting every page current about a set that excluded the two
+    just written. All three now carry `*/*/index.html`, and the scan set is
+    enumerated rather than assumed. **A tool that does not open a file cannot
+    find anything in it, and it will say ALL CLEAN.**
+24. **A shared block is prose AND rules, and CSS has no parse error to raise.**
+    Editing explanatory text into the RUN 12 block left a stray `*/` mid-comment;
+    the orphaned prose was swallowed as a malformed selector and it took the
+    NEXT RULE with it — `.tbl--pair` silently stopped applying and the table
+    went back to 620px. Nothing but a render probe noticed. The re-apply script
+    scans comment balance before it writes.
+25. **`details > div a` lived in `aic.css` and nowhere else.** Eleven pages
+    underlined an FAQ link; the homepage, which carries its own copy of the
+    shell, left colour as the only signal. Same family RUN 9 fixed for
+    `.sec-sub` and friends, with `details` missing from the list, and Lighthouse
+    reads 100 either way. **The audit is not the rule.** Fixed by redeclaring it
+    in the block that is byte-identical in both homes by law.
+26. **Git Bash rewrites a bare `/path/` argument.** `node tool.js https://host
+    /integrations/` reaches node as `C:/Program Files/Git/integrations/`, and the
+    only symptom is `CHROME_INTERSTITIAL_ERROR` on every run — which reads like a
+    network fault, not a shell one. Export `MSYS_NO_PATHCONV=1`, and have the
+    tool refuse a path argument that does not start with `/`.
+27. **A Lighthouse report can EXIST and still be unusable.** Reading
+    `.numericValue` straight off an audit throws inside the sweep loop and kills
+    every remaining run, turning one bad report into a dead gate. Check the shape
+    and report a bad run as a bad run.
+28. **A single Lighthouse run is noise, and that cuts both ways.**
+    `/integrations/limo-anywhere/` read perf **99** once, with a 101ms TBT spike.
+    Median of three on the same URL: **100**, CLS 0.000 in 3 of 3. Do not report
+    a one-run dip as a finding, and do not report a one-run 100 as a pass.
 
 ---
 
@@ -684,7 +792,28 @@ python tools/aic-run10-faq-mirror.py --check   # FAQPage mirrors visible copy
 node tools/aic-run10-shots.mjs after   # THE EYES GATE — shots that must be LOOKED AT
 node tools/aic-run11-gate.mjs         # anchors, primary v3, rail, drawer, radius, haptics
 node tools/aic-run11-shots.mjs after  # THE EYES GATE — RUN 11 set
+node tools/aic-run12-gate.mjs https://aichauffeur.ai   # answer anatomy, claim ladder, tables, new-page anchors
+node tools/aic-run12-lighthouse.js https://aichauffeur.ai   # PRODUCTION ONLY, 16 pages
+MSYS_NO_PATHCONV=1 node tools/aic-run12-cls.js https://aichauffeur.ai /integrations/ 5
+node tools/aic-run12-shots.mjs live https://aichauffeur.ai  # THE EYES GATE — the 4 new pages, 4 widths
+node tools/aic-run12-book-probe.mjs https://aichauffeur.ai  # /book/ white-chrome, reads the widget frame
 ```
+
+`aic-run12-gate.mjs` adds, with **seven** negative controls of its own: **one
+visible table per new page**; a **40-60 word direct answer that is the first
+prose in `<main>`**; the **five-string status vocabulary and no sixth**; the
+reserved phrase absent on all sixteen; the **last-updated stamp** above the 12px
+floor; **≥60% unique content**, every new page against every other page on the
+site (worst 87.9%); **≥2 in-body inbound links and zero orphans**; a
+**non-affiliation line** wherever a third party is named in an H1; **CTA canon**;
+**chrome parity across all sixteen**; the **sitemap listing exactly sixteen**;
+the **scrollable-table rules at three phone widths**; and **every anchor on every
+new page at 390 and 1440** — 64 fresh loads, which is the only honest way to
+measure a deep link, and which tests both `--nav-h` constants rather than one.
+
+`aic-run12-lighthouse.js` has **no BEFORE origin at all**, because trap 21 makes
+a local before/after comparison worthless for anything document-size shaped.
+Perf is the median of three on the two pages worth three runs.
 
 The render gate checks: horizontal overflow · console and page errors · full
 rendered-node contrast against the AA floor · control labels on one line · accents
