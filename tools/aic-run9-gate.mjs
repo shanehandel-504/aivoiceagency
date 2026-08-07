@@ -71,6 +71,7 @@ const PROBE = () => {
     wraps: [],
     shadows: 0,
     insets: 0,
+    dropShadows: 0,
     blurs: 0,
     accents: [],
     docBottom: null,
@@ -198,6 +199,13 @@ const PROBE = () => {
       if (layers.length && layers.every((l) => /\binset\b/.test(l))) out.insets++;
       else out.shadows++;
     }
+    /* RUN 11 · A drop-shadow IS elevation and this budget could not see it.
+       § 2's primary control chamfers itself with clip-path, and clip-path clips
+       box-shadow away entirely — so its exterior elevation had to be a
+       filter:drop-shadow instead. Counted only as box-shadow, the homepage
+       would have read 7 of 15 while painting three more shadows on the page.
+       Elevation is elevation whichever property draws it. */
+    if (cs.filter && cs.filter.includes('drop-shadow')) { out.shadows++; out.dropShadows++; }
     if ((cs.backdropFilter && cs.backdropFilter.includes('blur')) ||
         (cs.webkitBackdropFilter && cs.webkitBackdropFilter.includes('blur')) ||
         (cs.filter && cs.filter.includes('blur'))) out.blurs++;
@@ -388,7 +396,8 @@ line('mobile nav height > 64px', navTall);
 line('nav row outside its own box', navRow);
 line('dead scroll below footer', deadScroll);
 const homeInset = Math.max(...results.filter(r => r.page === 'home').map(r => r.insets));
-console.log(`${homeShadow <= 15 ? 'PASS' : 'FAIL'}  ${'homepage elevation shadows <= 15'.padEnd(42)} ${homeShadow}`);
+const homeDrop = Math.max(...results.filter(r => r.page === 'home').map(r => r.dropShadows));
+console.log(`${homeShadow <= 15 ? 'PASS' : 'FAIL'}  ${'homepage elevation shadows <= 15'.padEnd(42)} ${homeShadow} (${homeShadow - homeDrop} box-shadow + ${homeDrop} drop-shadow)`);
 console.log(`${homeInset <= 40 ? 'PASS' : 'FAIL'}  ${'homepage inset hairlines <= 40'.padEnd(42)} ${homeInset}`);
 console.log(`${maxBlur <= 6 ? 'PASS' : 'FAIL'}  ${'sitewide blur() <= 6'.padEnd(42)} ${maxBlur}`);
 console.log(`${rm.running.length === 0 ? 'PASS' : 'FAIL'}  ${'reduced motion settles'.padEnd(42)} ${rm.running.length ? rm.running.join(', ') : `state="${rm.state}" crush=${JSON.stringify(rm.crush)}`}`);

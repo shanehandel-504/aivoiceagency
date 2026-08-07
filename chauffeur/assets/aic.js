@@ -18,6 +18,45 @@
   var ENDPOINT = 'https://circulant.app.n8n.cloud/webhook/ava-call';
   var TEL_DISPLAY = '(414) 775-0019';
 
+  /* ── RUN 11 · § 7 — ANDROID HAPTICS ────────────────────────────────────────
+     Progressive enhancement in the strict sense: feature-detected, wrapped, and
+     the page is complete without it. navigator.vibrate is an Android surface;
+     iOS Safari does not expose it and gets nothing here on purpose — the § 2
+     press physics (2px drop, scale .985, the shadow collapsing) ARE the tactile
+     layer on that platform, and they are the layer on Android too. This only
+     adds a second channel where one exists.
+
+     Two events, and only two:
+       12ms         on a PRIMARY CTA tap. Short enough to read as the control
+                    closing rather than as a notification.
+       20/40/20     on a callback SUCCESS. Three pulses, and it fires in the
+                    same block that flips the module to CALLING NOW, so the
+                    buzz and the word cannot disagree.
+
+     Never on a nav link, never on scroll, never on a failure. A phone that
+     buzzes when something did not work teaches the reader to distrust the buzz.
+     The try/catch is not decoration: Chrome throws if the call is not inside a
+     user gesture, and a page that dies in a click handler takes the click with
+     it. ─────────────────────────────────────────────────────────────────── */
+  var CAN_BUZZ = ('vibrate' in navigator);
+  function buzz(pattern) {
+    if (!CAN_BUZZ) return;
+    try { navigator.vibrate(pattern); } catch (e) { /* never let this break a tap */ }
+  }
+  (function primaryHaptics() {
+    if (!CAN_BUZZ) return;
+    /* The filled primaries only. .nav-cta / .nav-book / .nav-burger and every
+       drawer link are excluded by omission, and the two closest() guards keep
+       them excluded if one of these classes is ever used inside the chrome. */
+    var PRIMARY = '.tel-btn,.btn-primary,.demo-play-btn,.rail-call';
+    document.addEventListener('click', function (e) {
+      var t = (e.target && e.target.closest) ? e.target.closest(PRIMARY) : null;
+      if (!t) return;
+      if (t.closest('nav.top') || t.closest('.nav-drawer')) return;
+      buzz(12);
+    }, { passive: true });
+  })();
+
   /* ── nav tint on scroll ────────────────────────────────────────────────── */
   (function navTint() {
     var nav = document.querySelector('nav.top');
@@ -181,6 +220,35 @@
       note.classList.toggle('is-ok', kind === 'ok');
     }
 
+    /* ── RUN 11 · § 5 — THE THIRD STATE ──────────────────────────────────────
+       STANDING BY -> CALLING NOW was a two-state module that had a third state
+       all along and painted it in neither colour nor word: every failure left
+       the header reading STANDING BY in --neutral while the note underneath
+       said the call had not been placed. Collapsed on a phone the note is not
+       even on screen, so the module's own header was the only thing a reader
+       could see and it was wrong.
+
+       STATE LAW applies exactly as it does to the green: the class that
+       repaints the chip and the assignment that rewrites the word are ONE
+       synchronous block, and .cb-status carries transition:none, so no frame
+       can render red beside "Standing by". Miss-red is failure and only
+       failure. The sentence explaining WHAT failed stays in the note, in
+       prose — a three-word chip cannot carry a reason, and pretending it can
+       is how a status ends up meaning nothing.
+       ────────────────────────────────────────────────────────────────────── */
+    function fail(msg) {
+      form.classList.remove('is-done');
+      form.classList.add('is-err');
+      if (status) status.textContent = 'Not sent';
+      setNote(msg, 'err');
+    }
+    function clearFail() {
+      if (!form.classList.contains('is-err')) return;
+      form.classList.remove('is-err');
+      if (status) status.textContent = 'Standing by';
+      setNote('', '');
+    }
+
     /* ── RUN 10 · COLLAPSE ────────────────────────────────────────────────────
        The 390 fold has to carry the headline, one line of subhead, the phone
        control AND this module. Collapsed to its 44px header row it fits; open
@@ -241,6 +309,9 @@
       var okName = !nameEl || (nameEl.value || '').trim().length > 0;
       var okBox  = !!(okEl && okEl.checked);
       form.classList.toggle('is-ready', okCell && okName && okBox);
+      /* Touching the form is the reader answering the error. Leaving the chip
+         red while they fix it says the fix did not register. */
+      clearFail();
     }
     ['input', 'change'].forEach(function (ev) {
       if (nameEl) nameEl.addEventListener(ev, refreshReady);
@@ -256,7 +327,7 @@
       var cell = toE164(cellEl.value);
       if (!/^\+[1-9]\d{7,14}$/.test(cell)) {
         cellEl.setAttribute('aria-invalid', 'true');
-        setNote('That number does not look right — check the digits.', 'err');
+        fail('That number does not look right — check the digits.');
         cellEl.focus();
         return;
       }
@@ -264,12 +335,14 @@
       /* TCPA: fail closed. No explicit consent, no automated call — and the
          box is re-cleared on every reset so a new number needs a new tick. */
       if (!okEl || !okEl.checked) {
-        setNote('Tick the box so AVA is allowed to call you.', 'err');
+        fail('Tick the box so AVA is allowed to call you.');
         if (okEl) okEl.focus();
         return;
       }
 
       btn.disabled = true;
+      form.classList.remove('is-err');
+      if (status) status.textContent = 'Standing by';
       setNote('Sending your number to AVA…', '');
 
       var payload = {
@@ -295,16 +368,20 @@
           /* STATE LAW — the class that repaints the chip and the word inside it
              change in the same synchronous block, so no frame can render green
              beside a label that still says the call has not been placed. */
+          form.classList.remove('is-err');
           form.classList.add('is-done');
           if (status) status.textContent = 'Calling now';
           setNote('Your phone rings in seconds. That call is the product.', 'ok');
+          /* § 7 — the ONLY success buzz on this site, and it fires inside the
+             same block that paints the chip green and writes the word. */
+          buzz([20, 40, 20]);
           return;
         }
         btn.disabled = false;
-        setNote('Could not reach AVA (' + r.status + '). Try again, or just call ' + TEL_DISPLAY + '.', 'err');
+        fail('Could not reach AVA (' + r.status + '). Try again, or just call ' + TEL_DISPLAY + '.');
       }, function () {
         btn.disabled = false;
-        setNote('Could not reach AVA. Try again, or just call ' + TEL_DISPLAY + '.', 'err');
+        fail('Could not reach AVA. Try again, or just call ' + TEL_DISPLAY + '.');
       });
     });
   }
@@ -335,7 +412,26 @@
     if (!rail || !('IntersectionObserver' in window)) return;
 
     var trigger = document.querySelector('[data-rail-after]');
-    var suppressors = document.querySelectorAll('[data-rail-hide]');
+    /* ── RUN 11 · § 3 — WHAT SUPPRESSES THE BAR ─────────────────────────────
+       The set used to be hand-tagged regions only, which meant the law "one
+       filled action-blue control per viewport" held on the opening fold — the
+       only place RUN 10's gate measured it — and stopped holding the moment
+       the reader scrolled. Every inline filled primary on this site could sit
+       in the same viewport as the rail's own filled control: two identical
+       blue objects, both asking, neither obviously the ask.
+
+       The classes are read from the DOM rather than tagged in markup on
+       purpose. A filled primary added to a page in some future run suppresses
+       the bar without anyone remembering to write an attribute, which is the
+       failure mode a hand-maintained list actually has.
+
+       `summary` joins them so the bar is never sitting on an FAQ control while
+       a reader is opening and closing rows. querySelectorAll de-duplicates, so
+       a .demo-play-btn inside a [data-rail-hide] bar is observed once; and the
+       counter is symmetric either way, incrementing on enter and decrementing
+       on exit. ──────────────────────────────────────────────────────────── */
+    var suppressors = document.querySelectorAll(
+      '[data-rail-hide],.btn-primary,.tel-btn,.demo-play-btn,summary');
     var armed = false;
     var visible = 0;
     var on = false;

@@ -51,7 +51,7 @@
        own <style>, so every local token below still wins. This also DEFINES
        --green, which this page referenced in .live-badge and .badge-green but
        never declared — both rules were silently broken. -->
-  <link rel="stylesheet" href="/assets/circulant.css?v=74c973d7">
+  <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
 
   <!-- ══ RUN 10 · TASK G — THE AEO LAYER ═══════════════════════════════════
        ONE @graph, five nodes, cross-referenced by @id. It replaced two separate
@@ -1424,8 +1424,9 @@ body.drawer-open{overflow:hidden}
     @media(max-width:600px){
       .btn{font-size:.75rem;letter-spacing:.03em}
     }
-    /* the rail's CALL ME targets #ava-callback — clear the fixed header */
-    .cb-form{scroll-margin-top:76px}
+    /* The header clearance for #ava-callback moved to the § 1 ANCHOR GUTTER
+       block in assets/circulant.css — one rule for every anchor target on all
+       twelve pages. A copy here would have ADDED to it, not replaced it. */
 
     /* The console's own halo pulse animated box-shadow forever, on or off
        screen — the same cost this run removed from the JS loop, left running in
@@ -1790,6 +1791,223 @@ footer{padding-bottom:32px}
    be; when a label wraps at all, add the space back before believing the
    number. 12px padding and a 6px gap give a 165px column against 161px of
    label, and the probe reads zero wraps at 360, 390 and 430. */
+
+/* ══ RUN 11 · TACTILE CUT ════════════════════════════════════════════════════
+   CANONICAL BLOCK. Byte-identical in assets/aic.css and in the embedded <style>
+   in index.html, and it is now the LAST block in both. Same reasoning as RUN
+   10's block directly above: a trailing block beats every older copy at equal
+   specificity and can be byte-compared by a gate.
+
+   Selectors that live on only one of the two hosts ship in both copies anyway.
+   .console / .step / .feat / .crush / .setup-card / .demo-play-bar are
+   homepage-only; .card--stage / .ticket-card / .calc are aic.css-only.
+   Splitting the block to save those bytes would give up the one property that
+   makes the pair checkable at all. Byte-identity is the guard. A shorter file
+   is not.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── § 2 · PRIMARY CONTROL v3 ────────────────────────────────────────────────
+   The signature is an 8px chamfer on the upper-right corner. Everything about
+   the structure below exists because of ONE measured fact:
+
+     clip-path is applied AFTER filter and it clips EVERYTHING the element
+     paints — its outline and its box-shadow included.
+
+   Read as pixels rather than as spec prose, on a 200x60 fixture over --midnight:
+   an outline at offset +4 rendered 7,11,20 (the page) with clip-path on and
+   61,123,255 (the ring) with it off. A box-shadow below the box: gone. A
+   filter:drop-shadow below the box: also gone — filter runs first, so the
+   shadow it produces is inside the region clip-path then throws away.
+
+   A control that is chamfered by clipping ITSELF therefore has no elevation and
+   NO FOCUS RING, and a removed focus ring is banned outright. So the chamfer
+   moves off the host:
+
+     HOST      unclipped. Carries the label, the exterior elevation as a
+               drop-shadow, and the sitewide 2px --signal-blue focus ring, which
+               survives because nothing clips it.
+     ::before  clipped. Carries the fill, the 1px border, the top bevel and the
+               bottom depth, so all four follow the chamfer instead of ignoring
+               it. z-index:-1 puts it behind the label inside the stacking
+               context the host's own filter creates.
+
+   Re-read as pixels after the change: ring 61,123,255 at +4 outside the host,
+   drop-shadow present below it, fill 30,86,214, top bevel row 63,118,228,
+   bottom depth row 23,67,167, and the top-right corner cut to background.
+
+   THE ELEVATION IS NEUTRAL BLACK. § 4 GLOW LAW allows ambient light in exactly
+   two scenes and neither of them is a button; a coloured halo here would be the
+   rule this brand has broken most often. 0 8px 24px rgba(0,0,0,.35) is --raise
+   geometry at a lighter alpha, which is what a control gets against a panel.
+
+   .rail-call and .nav-book are deliberately NOT in this list. They are chrome —
+   the same object on every page inside a fixed bar — and they keep the RUN 10
+   button v2 recipe: no chamfer, no exterior elevation. .btn-ghost is untouched.
+   ────────────────────────────────────────────────────────────────────────── */
+.btn-primary,.tel-btn,.demo-play-btn{
+  position:relative;background:none;border:0;border-radius:10px;box-shadow:none;
+  color:#FFFFFF;font-family:var(--sans);letter-spacing:.005em;
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,.35));
+  transition:transform 160ms cubic-bezier(.2,.8,.2,1),
+             filter 160ms cubic-bezier(.2,.8,.2,1)}
+.btn-primary::before,.tel-btn::before,.demo-play-btn::before{
+  content:'';position:absolute;inset:0;z-index:-1;
+  background:var(--action-blue);border:1px solid rgba(127,178,255,.45);
+  border-radius:10px;
+  box-shadow:inset 0 1px 0 rgba(127,178,255,.35),inset 0 -2px 0 rgba(0,0,0,.22);
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+  transition:background 160ms cubic-bezier(.2,.8,.2,1),
+             border-color 160ms cubic-bezier(.2,.8,.2,1)}
+/* filter IS RESTATED HERE AND IT HAS TO BE. RUN 10's hover rule sets
+   filter:none to retire the old brightness() lift, and it matches the same
+   three selectors at the same specificity. A hover rule that only declares
+   transform therefore inherits nothing and loses filter to that earlier
+   :none — measured on the live page, the elevation vanished the moment the
+   pointer landed and came back when it left. The cascade does not merge two
+   rules; it resolves each PROPERTY independently. */
+.btn-primary:hover,.tel-btn:hover,.demo-play-btn:hover{
+  color:#FFFFFF;transform:translateY(-1px);
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,.35))}
+.btn-primary:hover::before,.tel-btn:hover::before,.demo-play-btn:hover::before{
+  background:var(--action-blue-hover);border-color:rgba(127,178,255,.60)}
+/* PRESS 70ms, RELEASE 160ms. The pair is the whole point: a control that leaves
+   as slowly as it arrives reads as a slider, not as something that was pushed.
+   The 2px drop and the shadow collapsing from 24px of blur to 8px are one
+   gesture — the button moves toward the page and its gap to the page closes. */
+.btn-primary:active,.tel-btn:active,.demo-play-btn:active{
+  transform:translateY(2px) scale(.985);
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.35));
+  transition-duration:70ms}
+.btn-primary:active::before,.tel-btn:active::before,.demo-play-btn:active::before{
+  background:#1A4CC2;transition-duration:70ms}
+/* The play control's second state is a ghost. Its fill and border live on the
+   ::before now, so the rule that paints that state has to move with them or the
+   button stays filled blue while claiming to be playing. */
+.demo-play-btn[data-state="playing"]{filter:none}
+/* ...and the label with them. The primary's :hover rule sets color:#FFFFFF at
+   (0,2,0) and comes later than the playing rule at the same weight, so with the
+   pointer still resting on the control it had just started — which is where the
+   pointer always is — the ghost rendered a WHITE label. Legible at 15.7:1, but
+   a ghost's hover in this system goes --sky, and a state that only misbehaves
+   while the pointer is on it is a state nobody sees misbehaving. */
+.demo-play-btn[data-state="playing"]:hover{color:var(--sky)}
+.demo-play-btn[data-state="playing"]::before{
+  background:var(--surface);border-color:var(--line-hot);
+  box-shadow:none}
+@media (prefers-reduced-motion:reduce){
+  .btn-primary,.tel-btn,.demo-play-btn,
+  .btn-primary::before,.tel-btn::before,.demo-play-btn::before{transition:none}
+  .btn-primary:hover,.tel-btn:hover,.demo-play-btn:hover,
+  .btn-primary:active,.tel-btn:active,.demo-play-btn:active{transform:none}
+  /* colour states only — the elevation holds at its resting value rather than
+     snapping between two shadows with the transition switched off */
+  .btn-primary:active,.tel-btn:active,.demo-play-btn:active{
+    filter:drop-shadow(0 8px 24px rgba(0,0,0,.35))}
+}
+
+/* ── § 3 · THE RAIL RESERVE, MEASURED ────────────────────────────────────────
+   The bar is 1 + 8 + 56 + 8 = 73px and body.rail-on was paying back 72. One
+   pixel of the last line sat under the rail's own top hairline for as long as
+   the rail has existed. Controls were already 56px and the safe-area inset was
+   already in the padding; this is the only number that was wrong. */
+@media (max-width:879.98px){
+  body.rail-on{padding-bottom:calc(73px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ── § 4 · THE DEMO PAIR ─────────────────────────────────────────────────────
+   Two controls with different labels and no width rule render at two different
+   widths, and the pair reads as a primary control with a stray link beside it
+   rather than as a choice. They are the same choice: hear the call, or make
+   one. Same width, same height, stacked on the site's own CTA measure — this is
+   .cta-stack's geometry (column, 1rem gap, 520px cap), because the hero already
+   established it and a second idiom for the same job is one idiom too many.
+   56px at every width here, which is the phone value of button v2 rather than
+   its 54px desktop value; a two-control choice is worth the two pixels. */
+.demo-play-bar{display:flex;flex-direction:column;flex-wrap:nowrap;gap:1rem;
+  max-width:520px;margin:0 0 1.4rem}
+/* padding-block:0 with min-height and align-items:center pins both to
+   exactly 56. Left on .95rem the ghost measured 58 against the filled one's 56,
+   because its content box is taller by the arrow's line box — two pixels of
+   difference between two controls sitting one above the other, which is
+   visible precisely because they are stacked and the same width. */
+.demo-play-bar>.demo-play-btn,.demo-play-bar>.demo-call-btn{
+  width:100%;justify-content:center;min-height:56px;
+  padding-top:0;padding-bottom:0}
+
+/* ── § 5 · THE CALLBACK DRAWER ───────────────────────────────────────────────
+   The header row was a 44px button that looked like a title. It is the control
+   that opens the one module on the fold that does something, so it gets a 64px
+   row and a chevron that says which way it goes.
+
+   THE CHEVRON FOLLOWS THE RENDERED STATE, NOT THE ATTRIBUTE. aria-expanded is
+   written by JS from what CSS actually painted (RUN 10), so a rotation keyed to
+   it would point the wrong way for one frame on every load and would point the
+   wrong way forever with scripting off. These selectors are the same ones that
+   drive the collapse, so the glyph and the body cannot disagree.
+
+   It is an inline SVG rather than a text glyph. The two faces on this site are
+   self-hosted subsets and a metric-matched fallback silently steals characters
+   the real face does not carry; an arrow drawn in markup inherits currentColor
+   and cannot go missing. */
+.cb-head{min-height:64px;gap:.6rem}
+.cb-title{margin-right:auto}
+.cb-chev{display:inline-flex;align-items:center;flex:none;color:var(--neutral);
+  transform:rotate(90deg);
+  transition:transform 160ms cubic-bezier(.2,.8,.2,1)}
+.cb-chev svg{width:12px;height:12px;display:block}
+@media (max-width:767.98px){
+  .cb-form:not([data-collapsed="false"]) .cb-chev{transform:rotate(0deg)}
+}
+.cb-form[data-collapsed="true"] .cb-chev{transform:rotate(0deg)}
+@media (prefers-reduced-motion:reduce){.cb-chev{transition:none}}
+/* STATE LAW, third state. STANDING BY --neutral -> CALLING NOW --success-green
+   -> NOT SENT --miss-red, and the colour and the word change on the same frame
+   because the dot and the label are one element with transition:none on it.
+   Miss-red is failure and only failure; it is never "attention". Measured on
+   --surface: 5.26:1, over the AA body floor. The one-line explanation of what
+   went wrong is the note under the form, in sentences, not in this chip. */
+.cb-form.is-err .cb-status{color:var(--miss-red)}
+
+/* ── § 6 · CONTAINER TIGHTEN ─────────────────────────────────────────────────
+   An open FAQ row was outlined in blue on all four sides, which made the row
+   the loudest object in the section and said nothing about which row it was.
+   The border goes back to --line and the open state is a 3px rail down the left
+   edge instead: it marks position rather than perimeter. It is an INSET shadow,
+   so it paints nothing outside the box and stacks no elevation ladder — a
+   hairline drawn with the shadow property, which is the distinction RUN 10's
+   budget probe already splits.
+
+   Radius: every container over 12px comes to 10px, which is the radius the
+   button system, the rail and the trip-ticket cells already use. Pills are not
+   containers and keep their full round — .badge, .int-pill and .hc-state are
+   status chips, and a chip at 10px reads as a small box rather than as a state.
+   Nothing already at or under 12px is touched. */
+details[open]{border-color:var(--line);box-shadow:inset 3px 0 0 var(--signal-blue)}
+/* MEASURE, AND ch IS NOT A CHARACTER. The answers had no cap at all, so on a
+   1440 desktop they ran the full 1180px wrap — about 110 characters a line
+   against the 60-75 band § 9 and CLAUDE.md APPENDIX A both set.
+
+   The first cut used 64ch on the reasoning that it lands on the site's 560px
+   prose measure. Measured, it rendered 623.6px and 79-84 characters a line —
+   still over the band. 1ch is the advance of "0", and Space Grotesk's zero is
+   markedly wider than its average glyph, so a ch value overshoots real text by
+   about a third here. 52ch measures ~506px and 64-68 characters, which is the
+   same CHARACTER measure the 17px body gets from its 560px box. The measure
+   was never 560 pixels; 560 was the number of pixels that produced 62
+   characters at 17px, and at 15.2px the same count needs a narrower box.
+
+   52ch then read 58 characters on one page against a 60 floor — a knife-edge
+   miss, because the count is content-dependent and one page's first answer runs
+   longer words than another's. 55ch measures ~536px and 61-70 characters across
+   all nine FAQ pages, which is margin on both ends of the band rather than a
+   number tuned until one page scraped in.
+
+   The brief asked for ~34ch. That is roughly half the ratified measure and
+   would have broken the same two rules from the other side, so the cap is the
+   character count this site already uses and the pixel result is stated here. */
+details > div{max-width:55ch}
+.card--stage,#faq .card,.ticket-card,.calc,
+.console,.step,.feat,.crush,.setup-card{border-radius:10px}
   </style>
 </head>
 <body>
@@ -1861,7 +2079,7 @@ footer{padding-bottom:32px}
 
       <!-- SECONDARY — AVA calls you -->
       <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
-        <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span></button>
+        <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span><span class="cb-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M9 18l6-6-6-6"/></svg></span></button>
         <div class="cb-body" id="cb-body">
         <p class="cb-sub">Busy right now? Drop your cell and AVA calls you instead.</p>
 
@@ -2234,7 +2452,19 @@ footer{padding-bottom:32px}
         </div>
       </div>
 
-      <a href="/book/" class="btn btn-primary" data-event="book_click_crush">
+      <!-- RUN 11 · SECONDARY, and the reason is a measurement. § 3 of
+           DESIGN-SYSTEM.md has said "one primary per viewport" since RUN 10,
+           and three filled section CTAs sat 520-670px apart on this page:
+           Crush -> GOOGLE LEAD PROTECTION -> Setup. Any two adjacent ones share
+           a viewport at EVERY width, and at 768 all the middle one had to do
+           was clear 28px of scroll for two of them to be on screen together.
+           RUN 10's probe measured the opening fold only, which is where the
+           defect it was written for lived, so this one was never seen.
+           The label, the target and the analytics event are unchanged; only the
+           LEVEL moves, to the ratified secondary. The one filled ask on the
+           page below the hero now sits in "Setup, done for you" — the section
+           whose subject IS the call. -->
+      <a href="/book/" class="btn btn-ghost" data-event="book_click_crush">
         Book the setup call
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
@@ -2258,7 +2488,11 @@ footer{padding-bottom:32px}
     <div class="sec-kicker">GOOGLE LEAD PROTECTION</div>
     <h2 class="sec-h">Google found the rider. AVA finishes the handoff.</h2>
     <p class="sec-sub">Search and ads can make the phone ring. They can't make your dispatch line answer. AVA picks up every call and takes down the route, flight, vehicle, passengers, bags, and callback number — before the rider dials the next operator on the map. Every trip you capture is a booked ride, a relationship, and a review your competitor never gets.</p>
-    <a href="/book/" class="btn btn-primary" data-event="book_click_glp">
+    <!-- RUN 11 · SECONDARY. See the note on the Crush CTA above. The GOOGLE
+         LEAD PROTECTION copy law fixes this section's STRING and its TARGET,
+         both of which are unchanged; it says nothing about the control's level,
+         and the level is what "one primary per viewport" governs. -->
+    <a href="/book/" class="btn btn-ghost" data-event="book_click_glp">
       Book the setup call
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
     </a>
@@ -2849,7 +3083,7 @@ footer{padding-bottom:32px}
   <a class="rail-cb" href="#ava-callback" data-event="call_me_rail" aria-label="Get a call back from AVA">Get a call back</a>
 </div>
 
-<script src="/assets/aic.js?v=ec781407"></script>
+<script src="/assets/aic.js?v=c675239f"></script>
 
 </body>
 </html>

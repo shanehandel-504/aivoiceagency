@@ -1,9 +1,11 @@
 # AI CHAUFFEUR — DESIGN SYSTEM
 
-**Signal v1.2** · ratified RUN 10 "SHOWROOM v2.0", 2026-08-06.
-Supersedes Signal v1.1 (RUN 9) — which is still correct about everything it
-covers; v1.2 adds a third elevation, a page-depth layer, a second-generation
-button system, the callback console, the dispatch ledger and the logo canon.
+**Signal v1.3** · ratified RUN 11 "TACTILE CUT", 2026-08-06.
+Supersedes Signal v1.2 (RUN 10) — which is still correct about everything it
+covers; v1.3 adds the anchor gutter, a third-generation primary control with
+press physics, a third state on the callback console, and the container cap.
+v1.2 added a third elevation, a page-depth layer, a second-generation button
+system, the callback console, the dispatch ledger and the logo canon.
 
 Read this file **before** touching anything under `chauffeur/`. It is the brand's
 own law. Where it disagrees with a skill, this file wins. Where it disagrees with
@@ -39,10 +41,22 @@ them ships a site wearing two different heads:
 
 `index.html` does **not** load `aic.css`. It carries its own copy of the shell.
 
-Two blocks are **byte-identical by law** and machine-checked:
+Three blocks are **byte-identical by law** and machine-checked:
 
 - **SIGNAL v1.1 · TOKEN BLOCK** — in all three files.
 - **§ G · THE NAV LAYER** — in `aic.css` and `index.html`.
+- **RUN 11 · TACTILE CUT** — in `aic.css` and `index.html`, and it is now the
+  LAST block in both, immediately after RUN 10's. It carries selectors that
+  exist on only one host (`.console` / `.step` / `.feat` / `.crush` /
+  `.setup-card` / `.demo-play-bar` are homepage-only; `.card--stage` /
+  `.ticket-card` / `.calc` are `aic.css`-only) and that is deliberate. Splitting
+  the block to save those bytes gives up the one property that makes the pair
+  checkable at all.
+
+A rule that belongs to the **document** rather than to a component goes in
+`circulant.css` instead, which all twelve pages load and nothing else does — one
+copy, nothing to drift. The canvas layer and the § 1 anchor gutter both live
+there for that reason.
 
 Change one, change all. `node tools/aic-run9-styleparity.mjs` reads the RESOLVED
 computed style of the shared chrome off a homepage and two `aic.css` pages and
@@ -208,11 +222,57 @@ not reintroduce a font CDN link. A metric-matched fallback **must carry the same
 preload `href` must be the **same string** as the `@font-face` `src`, with
 `crossorigin`, or the file is fetched twice.
 
-### The button system — v2 (ratified RUN 10)
+### The primary control — v3 (ratified RUN 11)
+
+**Applies to `.btn-primary`, `.tel-btn`, `.demo-play-btn` only.** `.rail-call`
+and `.nav-book` are **chrome** — the same object inside a fixed bar on every
+page — and they keep the v2 recipe below: no chamfer, no exterior elevation.
+`.btn-ghost` is untouched.
+
+| Part | Recipe |
+|---|---|
+| Fill | `--action-blue`, `#FFFFFF` label, `1px solid rgba(127,178,255,.45)`, radius **10px** |
+| Bevel | `inset 0 1px 0 rgba(127,178,255,.35)` top · `inset 0 -2px 0 rgba(0,0,0,.22)` bottom |
+| Elevation | `drop-shadow(0 8px 24px rgba(0,0,0,.35))` — **neutral black, no hue** |
+| Signature | a single **8px chamfer on the upper-right corner**, `clip-path` polygon |
+| Hover | `--action-blue-hover`, border `rgba(127,178,255,.60)`, `translateY(-1px)` |
+| Press | `#1A4CC2`, `translateY(2px) scale(.985)`, shadow collapses to `0 2px 8px rgba(0,0,0,.35)` |
+| Timing | press **70ms**, release **160ms**, `cubic-bezier(.2,.8,.2,1)` |
+| Reduced motion | transforms and transitions off, **colour states only**, elevation holds at its resting value |
+| Label | Space Grotesk 600, sentence case. No ALL-CAPS, no emoji, no cyan. |
+
+**THE STRUCTURE IS NOT A STYLE CHOICE.** `clip-path` is applied **after**
+`filter` and it clips **everything the element paints — its outline and its
+box-shadow included.** Read as pixels on a 200×60 fixture over `--midnight`: an
+outline at `outline-offset:4px` rendered `7,11,20` (the page) with `clip-path`
+on and `61,123,255` (the ring) with it off. A `box-shadow` below the box: gone.
+A `filter:drop-shadow` below the box: **also gone** — the filter runs first, so
+the shadow it produces sits inside the region `clip-path` then discards.
+
+A control that chamfers **itself** therefore has no elevation and **no focus
+ring**, and a removed focus ring is banned outright. So the chamfer moves off
+the host:
+
+| | Carries |
+|---|---|
+| **host** — unclipped | the label, the exterior elevation as a `drop-shadow`, and the sitewide `2px solid --signal-blue` focus ring, which survives because nothing clips it |
+| **`::before`** — clipped, `z-index:-1` | the fill, the 1px border, both bevels, so all four follow the chamfer instead of ignoring it |
+
+Any state rule that repaints a primary's **fill or border** must target the
+`::before`. `.demo-play-btn[data-state="playing"]` is the live example: written
+against the host it would leave the button filled blue while claiming to play.
+
+**Two consequences for the gates, both already handled.** RUN 10's filled-CTA
+probe read only an element's own `background-color`; from RUN 11 it reads the
+`::before` as well, or it would report ONE filled control on a fold carrying
+two, in green. And a `drop-shadow` is elevation that the `box-shadow` budget
+cannot see — `aic-run11-gate.mjs` asserts the hue in it is neutral.
+
+### The button system — v2 (still current for chrome)
 
 | Level | Recipe |
 |---|---|
-| **Primary** | filled `--action-blue`, `#FFFFFF` label, `1px solid rgba(127,178,255,.30)` border, `inset 0 1px 0 rgba(127,178,255,.35)` bevel. **Hover: `background:var(--action-blue-hover)`, border `rgba(127,178,255,.55)`, `translateY(-1px)`, `filter:none`.** Active `#1A4CC2`, `translateY(0)`. **No halo.** |
+| **Primary (chrome)** | filled `--action-blue`, `#FFFFFF` label, `1px solid rgba(127,178,255,.30)` border, `inset 0 1px 0 rgba(127,178,255,.35)` bevel. **Hover: `background:var(--action-blue-hover)`, border `rgba(127,178,255,.55)`, `translateY(-1px)`, `filter:none`.** Active `#1A4CC2`, `translateY(0)`. **No halo.** |
 | **Secondary** | 1px `--line` on `--surface`. Border and label go `--sky` on hover. |
 | **Tertiary** | `--sky` text link with an arrow. No box. |
 
@@ -260,10 +320,32 @@ The form was a card with a label on it. It is an instrument now.
 - Card `--surface`, border `--line`, **`border-top: 1px var(--line-hot)`**,
   radius 8. That hot hairline is the only place `--line-hot` appears on a
   resting panel, and it marks the one panel on the fold that *does* something.
-- **Header row 44px**: mono module name left, status right — `● STANDING BY` in
-  `--neutral`, flipping to `--success-green` `● CALLING NOW` **on the same frame
-  as the submit succeeds**. The dot and the word are one element, so they cannot
-  disagree, and `transition:none` is declared on the rule.
+- **Header row 64px** (was 44 through RUN 10): the whole row is the control that
+  opens the one module on the fold that does something, and it is sized as one.
+  Mono module name left, then status, then a **chevron** — an inline SVG, not a
+  text glyph, because the two faces here are self-hosted subsets and a
+  metric-matched fallback silently steals characters the real face does not
+  carry. It points right when the body is collapsed and rotates to point down
+  when it is open, 160ms `cubic-bezier(.2,.8,.2,1)`.
+- **The chevron follows the RENDERED state, never `aria-expanded`.** That
+  attribute is written by JS from what CSS actually painted, so a rotation keyed
+  to it points the wrong way for one frame on every load and points the wrong
+  way forever with scripting off. Its selectors are the same ones that drive the
+  collapse.
+- **THREE states, not two.** `● STANDING BY` in `--neutral` → `● CALLING NOW` in
+  `--success-green` **on the same frame as the submit succeeds** → `● NOT SENT`
+  in `--miss-red` on any failure, validation included. The dot and the word are
+  one element with `transition:none`, so they cannot disagree. Miss-red measures
+  5.26:1 on `--surface` — over the AA body floor — and it means failure and only
+  failure, never "attention". **The chip does not carry the reason**: the
+  one-line explanation stays in the note, in prose. A three-word status cannot
+  hold a reason, and pretending it can is how a status ends up meaning nothing.
+  Touching either field clears the state, because leaving it red while the
+  reader fixes the problem says the fix did not register.
+- Through RUN 10 every failure left the header reading STANDING BY while the
+  note underneath said the call had not been placed — and collapsed on a phone
+  the note is not even on screen, so the module's own header was the only thing
+  a reader could see and it was wrong.
 - Body nested on `--surface-2` with the 1px top light.
 - **Labels mono 12px.** They rendered at 9.92px (`.62rem`) from the day the form
   shipped — under the § 3 floor. There is now a probe for it (§ 11).
@@ -470,10 +552,50 @@ related pages, and the homepage links each one once in body.
 - Section rhythm **96px desktop / 56px mobile**. The AVA homepage's 64px override
   belongs to that page and **does not travel to this brand**.
 - Body **17px** on a **560px** measure (≈62 characters, inside the 60-75 band).
-- Touch targets **≥44×44px**, ≥8px apart.
-- Sharp-ish corners are **not** enforced here: this brand's live idiom is 8-18px
-  radii throughout and matching it is deliberate. Corners get revisited when a
-  surface is genuinely rebuilt, not patched.
+  **FAQ answers are capped at `64ch`** — they had no cap at all through RUN 10
+  and ran the full 1180px wrap on desktop, roughly 110 characters a line.
+- Touch targets **≥44×44px**, ≥8px apart. The callback header row is **64px**.
+- **Container radius is capped at 10px** (ratified RUN 11). Everything over 12px
+  came down: `.console` 18 · `.crush` 18 · `.setup-card` 18 · `.ticket-card` 16
+  · `.calc` 16 · `.card--stage` / `#faq .card` 14 · `.step` 14 · `.feat` 14.
+  Nothing already at or under 12px was touched, and **a pill is not a
+  container**: `.badge`, `.int-pill` and `.hc-state` keep their full round,
+  because a status chip at 10px reads as a small box rather than as a state. The
+  gate's test for "pill" is geometric — radius ≥ half the element's own height.
+
+### THE ANCHOR GUTTER (ratified RUN 11)
+
+`nav.top` is `position:fixed`, so it is out of flow and the scroll container
+knows nothing about it. Every anchored section landed its own top edge at scroll
+offset 0 — under the bar. Measured at 390 before RUN 11, on all ten homepage
+section anchors: **nav bottom 61px, section kicker top 56px.** The eyebrow
+rendered five pixels inside the header on every one of them, at 390 and at 430.
+
+```
+:root{--nav-h:61px}                          8+44+8+1
+@media (min-width:1024px){:root{--nav-h:73px}}  14+44+14+1
+html{scroll-padding-top:var(--nav-h)}
+section[id],main[id],.cb-form[id]{scroll-margin-top:16px}
+```
+
+**Two properties, two jobs, and they ADD** — measured, not assumed: at 390,
+padding alone settles the target at 61, margin alone at 16, the pair at **77**.
+`scroll-padding-top` clears the **chrome**; it lives on the scroll container, so
+it covers every target including ones no rule names, and it applies to a link
+jump, a focus jump and `scrollIntoView()` alike. `scroll-margin-top` is the
+**gutter**, and it belongs to the target so one can opt out without touching the
+chrome clearance. A private `scroll-margin-top:76px` on `.cb-form` in two files
+was deleted rather than kept: from a later stylesheet it would have beaten the
+shared rule at equal specificity and the total would have been 137px.
+
+`--nav-h` is asserted against `getBoundingClientRect()` at all six viewports on
+all twelve pages. A constant describing the header is worthless the first time
+the header changes and nobody re-measures; this one fails loudly instead.
+
+**`<main id="main">` cannot clear the bar and that is geometry, not a defect.**
+It starts at document offset 0, so the scrollport cannot move above it. The
+assertion that means something there is the user-visible one: the first painted
+line of the page clears the bar, which `.phead`'s own top padding delivers.
 
 ---
 
@@ -514,6 +636,25 @@ related pages, and the homepage links each one once in body.
     posts — a permanent deadlock.
 16. **Do not touch** `/book/`'s iframe loader, the forms, the n8n payloads, board
     wiring, or `chauffeur/fonts/`.
+17. **`clip-path` is applied AFTER `filter`, and it clips the outline and every
+    shadow.** An element that clips itself has no focus ring, no `box-shadow`
+    and — the one that is genuinely counter-intuitive — no `filter:drop-shadow`
+    either, because the filter runs first and the shadow it produces lands
+    inside the region the clip then throws away. Proved by pixels, not by
+    reading the spec. See the § 3 primary-control note for the structure that
+    keeps all three.
+18. **`scroll-padding-top` and `scroll-margin-top` ADD.** Setting both to the
+    header height gives double the offset. Split them: padding clears the
+    chrome, margin is the gutter.
+19. **A fragment jump is still travelling when a naive probe reads the box.**
+    `scroll-behavior` is smooth here, and the duration scales with distance, so
+    hopping from the foot of the document to the hero outruns a 1s wait and
+    reports a wildly negative offset that looks like a defect and is not.
+    Measure anchors on a FRESH load, which is also what a deep link actually is.
+20. **Moving a fill onto a pseudo-element blinds every probe that reads
+    `backgroundColor` on the element.** RUN 11 moved three primaries and had to
+    repair RUN 10's filled-CTA counter in the same commit, or it would have
+    reported one filled control on a fold carrying two — in green.
 
 ---
 
@@ -526,6 +667,8 @@ node tools/aic-run9-lighthouse.js      # mobile LH, a11y/SEO 100, perf vs pre-ru
 node tools/aic-run10-gate.mjs          # 12px floor, schema, CTA de-dup, canvas, llms.txt
 python tools/aic-run10-faq-mirror.py --check   # FAQPage mirrors visible copy
 node tools/aic-run10-shots.mjs after   # THE EYES GATE — shots that must be LOOKED AT
+node tools/aic-run11-gate.mjs         # anchors, primary v3, rail, drawer, radius, haptics
+node tools/aic-run11-shots.mjs after  # THE EYES GATE — RUN 11 set
 ```
 
 The render gate checks: horizontal overflow · console and page errors · full
@@ -544,6 +687,19 @@ shipped and no probe would have caught it); JSON-LD that parses, carries no `{{`
 or `REPLACE_`, and whose FAQPage mirrors the rendered Q&A; **at most one filled
 `--action-blue` control in the 390 fold**; the canvas layer present; and
 `/llms.txt` returning 200. It ships its own negative controls.
+
+`aic-run11-gate.mjs` adds, with seven negative controls of its own: **anchor
+clearance** on eleven targets at four widths plus every skip link, measured on
+fresh loads; **`--nav-h` against the measured bar**; the **§ 3 primary-control
+recipe** including host-is-not-clipped, the chamfer polygon on the `::before`,
+and a **neutral** hue in the elevation; **rail geometry and its reserve**;
+**drawer row 64px, full width, chevron rotation matching the rendered state**;
+**container radius ≤12px with pills exempt geometrically**; **FAQ open =
+`--line` border + inset rail**, and its **measure inside 60-75 characters**;
+the **demo pair equal-width / 56px / 16px**; **one filled control per viewport
+at every scroll step**, not only on the opening fold; and **haptics at
+runtime** — 12ms on a primary, zero on nav, drawer, footer, scroll and failure,
+with `navigator.vibrate` stubbed and recorded.
 
 **THE EYES GATE is not automatable and is not optional.** `aic-run10-shots.mjs`
 writes home / crush / form / footer at 390 and 1440 into `audits/run10/`, and the

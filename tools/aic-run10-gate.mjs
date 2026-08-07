@@ -88,7 +88,17 @@ const PROBE = () => {
     if (!shown(el)) continue;
     const r = el.getBoundingClientRect();
     if (r.bottom <= 0 || r.top >= innerHeight) continue;
-    if (!AB.includes(getComputedStyle(el).backgroundColor)) continue;
+    /* RUN 11 · THE FILL MOVED AND THIS PROBE WOULD HAVE GONE BLIND. § 2's
+       chamfer is a clip-path, and clip-path clips everything the element
+       paints — its outline and its shadows included — so the fill, the border
+       and the bevels had to move onto a clipped ::before while the host stays
+       unclipped and keeps the focus ring. The host's own background-color is
+       rgba(0,0,0,0) from that moment on. Reading only the host, this probe
+       would have reported ONE filled control on a fold carrying two, and
+       reported it in green. Read both boxes. */
+    const own = getComputedStyle(el).backgroundColor;
+    const pseudo = getComputedStyle(el, '::before').backgroundColor;
+    if (!AB.includes(own) && !AB.includes(pseudo)) continue;
     const id = (el.className || el.tagName).toString().trim().split(/\s+/)[0]
       + '|' + el.textContent.trim().replace(/\s+/g, ' ').slice(0, 28);
     (el.closest(CHROME) ? filledChrome : filledContent).push(id);

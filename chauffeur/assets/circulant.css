@@ -319,6 +319,48 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     radial-gradient(120% 48% at 50% 100%,rgba(61,123,255,.045),rgba(61,123,255,0) 68%),
     radial-gradient(118% 80% at 50% 44%,rgba(0,0,0,0) 54%,rgba(0,0,0,.06) 100%)}
 
+/* ══ RUN 11 · § 1 · THE ANCHOR GUTTER ════════════════════════════════════════
+   ONE COPY, ON PURPOSE — the same argument as the canvas layer above. This file
+   is loaded by all twelve pages and by nothing else, so the offset that clears
+   the fixed header cannot drift between the three CSS homes the way a rule
+   duplicated into aic.css and the homepage's embedded <style> can.
+
+   THE DEFECT. nav.top is position:fixed, so it is out of flow and the scroll
+   container knows nothing about it. Every anchored section on this site landed
+   its own top edge at scroll offset 0 — under the bar. Measured at 390 before
+   this run, across all ten homepage section anchors: nav bottom 61px, section
+   kicker top 56px. The eyebrow rendered five pixels INSIDE the header on every
+   one of them, at 390 and at 430. GOOGLE LEAD PROTECTION and Operator-built are
+   simply the two a reader is most likely to reach from a deep link.
+
+   TWO PROPERTIES, TWO JOBS, AND THEY ADD. Measured rather than assumed: at 390,
+   scroll-padding-top 61 alone settles the target at 61, scroll-margin-top 16
+   alone settles it at 16, and the pair settles it at 77. Splitting the offset
+   is deliberate.
+
+     scroll-padding-top   clears the CHROME. It lives on the scroll container,
+                          so it covers every target on the page including ones
+                          no rule below names, and it applies to a link jump, a
+                          focus jump and scrollIntoView() alike.
+     scroll-margin-top    is the 16px GUTTER, and it belongs to the target, so a
+                          target that should sit flush can opt out without
+                          anyone touching the chrome clearance.
+
+   --nav-h is the bar's REAL height and tools/aic-run11-gate.mjs asserts it
+   against getBoundingClientRect() at all six viewports. A constant that
+   describes the header is worthless the first time the header changes and
+   nobody re-measures; this one fails loudly instead of re-clipping in silence.
+   8+44+8+1 = 61 below the desktop breakpoint, 14+44+14+1 = 73 above it.
+
+   .cb-form used to carry a private scroll-margin-top of 76px in TWO files for
+   the same reason. Both are deleted: an equal-specificity rule in a later
+   stylesheet would have beaten this one, and the total would have been 137px.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{--nav-h:61px}
+@media (min-width:1024px){:root{--nav-h:73px}}
+html{scroll-padding-top:var(--nav-h)}
+section[id],main[id],.cb-form[id]{scroll-margin-top:16px}
+
 /* ══ RUN 9 · WHAT THIS FILE NO LONGER CARRIES ════════════════════════════════
    The legacy AVA-parent palette, the frosted-glass card recipe, the coloured
    outer-glow utilities, the pill button pair and the pulsing status dot were
