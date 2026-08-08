@@ -28,122 +28,117 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/green-bay-dental",
-  "serviceType": "AI Phone Answering for Dental Practices",
-  "name": "AVA for Green Bay Dental",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Solo and small Dental shops serving Green Bay"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Green Bay"
-  },
-  "description": "AVA is an AI voice agent that answers after-hours and overflow calls for dental practices across Green Bay and Brown County, capturing emergency and new-patient details and texting the intake to your team."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Green Bay Dental",
-      "item": "https://aivoiceagency.ai/green-bay-dental"
+      "@type": "Service",
+      "name": "The toothache that hits at 2 AM still gets answered in Ashwaubenon.",
+      "url": "https://aivoiceagency.ai/green-bay-dental",
+      "description": "Emergency dental calls do not wait for office hours. A knocked-out tooth after the game, an abscess at midnight, a crown that let go before a Monday meeting - the caller near the stadium district just dials the next practice on the list when your front desk is dark. AVA answers, captures what is wrong, and texts you the intake so you can call back with the full picture.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Green Bay"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA answer when my Green Bay office is closed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA picks up after hours, over lunch, and on weekends - the times a toothache tends to flare and the caller in Ashwaubenon starts working down the list. Your cell can still ring first if you want it to; AVA only steps in when no one picks up."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does AVA actually do with an emergency call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers, asks what is going on - a cracked tooth, swelling, a crown that came loose - captures the caller's name, number, and the problem, and texts you the intake. Nothing gets diagnosed. AVA gathers the details and routes them so you or your team can call back and the front desk will confirm the appointment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will callers know it is not my front desk staff?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers as your practice and sounds calm and clear, not like a generic machine. It is an AI voice agent, not a person, and it is upfront about taking a message and getting someone to call back. For a patient in pain at midnight, a phone that answers beats a voicemail box."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "We are near the stadium and game days get loud. Can AVA handle the overflow?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That is exactly the pattern AVA is built for. When your Ashwaubenon office gets a rush - a game-day crowd, a Monday surge of weekend injuries - the calls that would have hit a busy signal get answered and captured instead, so you can work through them in order once the chair opens up."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Green Bay",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/green-bay"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Dental",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/green-bay-dental"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Does AVA answer when my Green Bay office is closed?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. AVA picks up after hours, over lunch, and on weekends - the times a toothache tends to flare and the caller in Ashwaubenon starts working down the list. Your cell can still ring first if you want it to; AVA only steps in when no one picks up."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What does AVA actually do with an emergency call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA answers, asks what is going on - a cracked tooth, swelling, a crown that came loose - captures the caller's name, number, and the problem, and texts you the intake. Nothing gets diagnosed. AVA gathers the details and routes them so you or your team can call back and the front desk will confirm the appointment."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will callers know it is not my front desk staff?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA answers as your practice and sounds calm and clear, not like a generic machine. It is an AI voice agent, not a person, and it is upfront about taking a message and getting someone to call back. For a patient in pain at midnight, a phone that answers beats a voicemail box."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "We are near the stadium and game days get loud. Can AVA handle the overflow?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "That is exactly the pattern AVA is built for. When your Ashwaubenon office gets a rush - a game-day crowd, a Monday surge of weekend injuries - the calls that would have hit a busy signal get answered and captured instead, so you can work through them in order once the chair opens up."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

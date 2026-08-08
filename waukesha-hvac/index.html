@@ -28,122 +28,117 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/waukesha-hvac",
-  "serviceType": "AI Phone Answering for HVAC Businesses",
-  "name": "AVA for Waukesha HVAC",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Solo and small HVAC shops serving Waukesha"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Waukesha"
-  },
-  "description": "AVA is an AI phone answering service for HVAC contractors in Waukesha and Waukesha County, Wisconsin, capturing after-hours and no-heat emergency calls and texting the intake to the shop owner."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Waukesha HVAC",
-      "item": "https://aivoiceagency.ai/waukesha-hvac"
+      "@type": "Service",
+      "name": "No heat in Brookfield. A 2 AM cold snap. AVA answers your line.",
+      "url": "https://aivoiceagency.ai/waukesha-hvac",
+      "description": "Brookfield runs on dual-zone and multi-system setups, and when one drops in a cold snap the homeowner is already dialing the next name on the list. The affluent western suburbs expect a fast callback, not a mailbox. AVA picks up when you cannot, captures the address and the symptom, and texts you the intake before the caller has set the phone down.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Waukesha"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA replace my dispatcher or my guys?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Your cell rings first if you want it to. AVA only picks up when you cannot, so a call about a furnace short cycling at dinner does not roll to voicemail while you are under a truck. It captures the caller and texts you the intake."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens on a real no-heat call at 2 AM?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers, gets the address and the symptom, flags it as urgent, and routes it to you. The caller hears a real answer instead of a mailbox, and you decide whether to roll a truck now or first thing. A dispatcher will confirm the details."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will it handle the Brookfield warranty and new-construction calls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA captures which system, the install timeframe, and what it is doing, so a warranty call on a newer western-suburbs home comes to you sorted, not as a two-minute voicemail you have to decode."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "I only cover Waukesha County. Can I keep it that tight?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That is the point. AVA works from your service area, your hours, and your callback rules. Calls from the 262 suburbs you serve get captured; the rest get handled the way you tell it to."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Waukesha",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/waukesha"
+        },
+        {
+          "@type": "ListItem",
+          "name": "HVAC",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/waukesha-hvac"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Does AVA replace my dispatcher or my guys?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. Your cell rings first if you want it to. AVA only picks up when you cannot, so a call about a furnace short cycling at dinner does not roll to voicemail while you are under a truck. It captures the caller and texts you the intake."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens on a real no-heat call at 2 AM?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA answers, gets the address and the symptom, flags it as urgent, and routes it to you. The caller hears a real answer instead of a mailbox, and you decide whether to roll a truck now or first thing. A dispatcher will confirm the details."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will it handle the Brookfield warranty and new-construction calls?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. AVA captures which system, the install timeframe, and what it is doing, so a warranty call on a newer western-suburbs home comes to you sorted, not as a two-minute voicemail you have to decode."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I only cover Waukesha County. Can I keep it that tight?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "That is the point. AVA works from your service area, your hours, and your callback rules. Calls from the 262 suburbs you serve get captured; the rest get handled the way you tell it to."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

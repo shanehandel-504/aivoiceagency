@@ -59,20 +59,53 @@
 
 <script type="application/ld+json">
 {
-  "@context":"https://schema.org",
-  "@graph":[
-    {"@type":"Organization","@id":"https://aivoiceagency.ai/#organization",
-     "name":"AI Voice Agency","url":"https://aivoiceagency.ai/","telephone":"+1-414-240-8930",
-     "founder":{"@type":"Person","name":"Shane Handel"},
-     "areaServed":{"@type":"State","name":"Wisconsin"},
-     "address":{"@type":"PostalAddress","addressLocality":"Kewaskum","addressRegion":"WI","addressCountry":"US"}},
-    {"@type":"Service","@id":"https://aivoiceagency.ai/#ava-service",
-     "name":"AVA — done-for-you AI receptionist",
-     "serviceType":"AI phone answering, appointment booking and missed-call recovery for local service businesses",
-     "provider":{"@id":"https://aivoiceagency.ai/#organization"},
-     "areaServed":{"@type":"State","name":"Wisconsin"},
-     "offers":{"@type":"Offer","price":"497","priceCurrency":"USD",
-       "description":"Starting monthly price. Setup starts at $497."}}
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://aivoiceagency.ai/#ava-service",
+      "name": "Watch AVA work",
+      "description": "One ring. Sixteen agents. A job on your calendar — done for you, launched on your existing number. From $497/month.",
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "497",
+        "priceCurrency": "USD"
+      }
+    }
   ]
 }
 </script>

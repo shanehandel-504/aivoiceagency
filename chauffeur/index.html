@@ -82,9 +82,128 @@
        generated from the rendered copy by tools/aic-run10-faq-mirror.py so the
        two cannot drift.
        ═══════════════════════════════════════════════════════════════════════ -->
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://aichauffeur.ai/#org","name":"AI Chauffeur","url":"https://aichauffeur.ai/","logo":"https://aichauffeur.ai/assets/brand/lockup-short.svg","email":"dispatch@aichauffeur.ai","telephone":"+1-414-775-0019","address":{"@type":"PostalAddress","addressRegion":"WI","addressCountry":"US"},"areaServed":{"@type":"Country","name":"United States"},"description":"AI answering and dispatch intake for limo, black car, and chauffeured transportation operators. AVA answers the line, captures the full trip, and hands the dispatcher a clean trip ticket."},{"@type":"WebSite","@id":"https://aichauffeur.ai/#site","url":"https://aichauffeur.ai/","name":"AI Chauffeur","publisher":{"@id":"https://aichauffeur.ai/#org"}},{"@type":"SoftwareApplication","@id":"https://aichauffeur.ai/#app","name":"AVA","applicationCategory":"BusinessApplication","operatingSystem":"Cloud, telephone","provider":{"@id":"https://aichauffeur.ai/#org"},"description":"AVA answers a chauffeured transportation operator's dispatch line 24/7, captures pickup, dropoff, time, vehicle class, passenger and bag count and flight details, estimates a quote range from the operator's own rate sheet, and delivers a dispatch-ready trip ticket that a human confirms in Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox.","featureList":["Answers every inbound call at once, 24/7, with no caller on hold","Captures pickup, dropoff, date and time for each trip","Captures vehicle class, passenger count and bag count","Captures flight number and terminal for airport transfers","Estimates a quote range from the operator's own rate sheet","Delivers a completed, dispatch-ready trip ticket for a human to confirm","Delivers that ticket in a form readable in Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox"]},{"@type":"Service","@id":"https://aichauffeur.ai/#service","name":"Dispatch intake implementation","serviceType":"Limo answering and dispatch intake","provider":{"@id":"https://aichauffeur.ai/#org"},"areaServed":{"@type":"Country","name":"United States"},"description":"Setup is done for the operator: rate rules, service area, vehicle classes and dispatch process are documented and configured, then tested on live calls before AVA answers the published line."},{"@type":"FAQPage","@id":"https://aichauffeur.ai/#faq","mainEntity":[{"@type":"Question","name":"Is this just basic call coverage?","acceptedAnswer":{"@type":"Answer","text":"No. AI Chauffeur is dispatch intake software for limo and black car operators. AVA captures ride requests, organizes trip details, estimates the quote range, and hands your dispatcher a finished trip ticket. Call coverage is a side effect, not the product."}},{"@type":"Question","name":"Does it replace my dispatcher?","acceptedAnswer":{"@type":"Answer","text":"No. It handles the first layer of intake so your dispatcher is not buried by missed calls, repeated questions, and after-hours requests. Your dispatcher confirms and runs the operation. Which half of the job gets automated, and which half never will, is set out on limo dispatch automation."}},{"@type":"Question","name":"What still requires dispatcher approval?","acceptedAnswer":{"@type":"Answer","text":"Every trip does. AVA captures the request and builds the ticket; a human confirms it and assigns the vehicle. Where direct write-back has been configured and verified for your account, the reservation record is created for you and still passes through the same approval your dispatchers use today. AVA does not take payment and does not commit a vehicle on its own."}},{"@type":"Question","name":"How does AI Chauffeur handle multiple calls at once?","acceptedAnswer":{"@type":"Answer","text":"AVA answers every inbound line at the same time, so no caller waits on hold. Each call gets its own intake: pickup, dropoff, time, vehicle class, passengers, bags, and flight details. Every one ends as a separate trip ticket sitting in front of your dispatcher, ready to confirm."}},{"@type":"Question","name":"Can it quote rides?","acceptedAnswer":{"@type":"Answer","text":"Yes, when your rate rules are configured. The page demo uses illustrative quote ranges only. Live setup requires your real rate rules, service area, vehicle types, and dispatch process."}},{"@type":"Question","name":"Does it work with my CRM or dispatch software?","acceptedAnswer":{"@type":"Answer","text":"Yes. The call comes back as a clean trip ticket your dispatcher confirms in the software you already run — Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox. Nothing gets ripped out and nothing gets replaced. Direct write-back is configured per account where the platform supports it, and every platform's status is published on the integrations page."}},{"@type":"Question","name":"How fast can it go live?","acceptedAnswer":{"@type":"Answer","text":"Setup is done for you by our team. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented."}},{"@type":"Question","name":"What about pricing?","acceptedAnswer":{"@type":"Answer","text":"Every build is custom to your operation — your rates, your service area, your vehicle classes. We scope it on the setup call, once we know your call volume, fleet size, and how you dispatch. That call runs 20 minutes."}},{"@type":"Question","name":"Can I just hear it first?","acceptedAnswer":{"@type":"Answer","text":"Call (414) 775-0019 and AVA picks up. That is the same line an operator's caller would reach — no booking, no form, no salesperson. Listen to how it handles you, then decide."}}]}]}
-  </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aichauffeur.ai/#organization",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "telephone": "+1-414-775-0019",
+      "email": "dispatch@aichauffeur.ai",
+      "logo": "https://aichauffeur.ai/assets/brand/lockup-short.svg",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressRegion": "WI"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aichauffeur.ai/#website",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "publisher": {
+        "@id": "https://aichauffeur.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://aichauffeur.ai/#service",
+      "name": "Book the ride before they call someone else.",
+      "description": "AVA answers the line, takes the whole trip, and hands your dispatcher a clean ticket. Pickup, dropoff, vehicle, flight, taken down the first time. Nobody sits on hold. Nobody hangs up.",
+      "provider": {
+        "@id": "https://aichauffeur.ai/#organization"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://aichauffeur.ai/#app",
+      "name": "AVA",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Cloud, telephone",
+      "description": "AVA answers the line, takes the whole trip, and hands your dispatcher a clean ticket. Pickup, dropoff, vehicle, flight, taken down the first time. Nobody sits on hold. Nobody hangs up.",
+      "provider": {
+        "@id": "https://aichauffeur.ai/#organization"
+      },
+      "featureList": [
+        "Answers every inbound call at once, 24/7, with no caller on hold",
+        "Captures pickup, dropoff, date and time for each trip",
+        "Captures vehicle class, passenger count and bag count",
+        "Captures flight number and terminal for airport transfers",
+        "Estimates a quote range from the operator's own rate sheet",
+        "Delivers a completed, dispatch-ready trip ticket for a human to confirm",
+        "Delivers that ticket in a form readable in Limo Anywhere, FASTTRAK, Santa Cruz, or a shared inbox"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://aichauffeur.ai/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is this just basic call coverage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. AI Chauffeur is dispatch intake software for limo and black car operators. AVA captures ride requests, organizes trip details, estimates the quote range, and hands your dispatcher a finished trip ticket. Call coverage is a side effect, not the product."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What still requires dispatcher approval?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every trip does. AVA captures the request and builds the ticket; a human confirms it and assigns the vehicle. Where direct write-back has been configured and verified for your account, the reservation record is created for you and still passes through the same approval your dispatchers use today. AVA does not take payment and does not commit a vehicle on its own."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does AI Chauffeur handle multiple calls at once?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers every inbound line at the same time, so no caller waits on hold. Each call gets its own intake: pickup, dropoff, time, vehicle class, passengers, bags, and flight details. Every one ends as a separate trip ticket sitting in front of your dispatcher, ready to confirm."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it quote rides?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, when your rate rules are configured. The page demo uses illustrative quote ranges only. Live setup requires your real rate rules, service area, vehicle types, and dispatch process."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast can it go live?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Setup is done for you by our team. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about pricing?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every build is custom to your operation — your rates, your service area, your vehicle classes. We scope it on the setup call, once we know your call volume, fleet size, and how you dispatch. That call runs 20 minutes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I just hear it first?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Call (414) 775-0019 and AVA picks up. That is the same line an operator's caller would reach — no booking, no form, no salesperson. Listen to how it handles you, then decide."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body class="home">
 

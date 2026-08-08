@@ -28,129 +28,124 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Plumbing Businesses",
-  "name": "AVA for Milwaukee Plumbing",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Plumbing contractors and drain-service companies in the Milwaukee metro"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Milwaukee"
-  },
-  "description": "Round-the-clock AI call answering for Milwaukee plumbers: burst-pipe and flood intake, safety-first triage, address capture, and direct routing to the on-call plumber."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Milwaukee",
-      "item": "https://aivoiceagency.ai/milwaukee"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Milwaukee Plumbing",
-      "item": "https://aivoiceagency.ai/milwaukee-plumbing"
+      "@type": "Service",
+      "name": "Burst pipe in Shorewood. Your phone answered.",
+      "description": "The North Shore runs on pre-war housing stock — Shorewood, Whitefish Bay, Riverwest — full of galvanized pipe that fails at the worst possible hour. When it lets go at 1 AM, AVA picks up, captures the address and the shutoff situation, and gets your on-call plumber moving.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Milwaukee"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does AVA actually capture on a burst-pipe call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Address first, then the failure point if the caller knows it, whether the water is shut off, property access details, and callback number. The whole package routes to your on-call plumber by SMS the moment the call ends."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA walk a panicking caller to the main shutoff?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA keeps the caller focused and captures the situation, and it can relay your standard guidance — like locating the main shutoff — exactly as you script it. Anything beyond your script gets routed to a human immediately."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "We run Jobber. Does that work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Captured emergencies, drain calls, and estimate requests land in the scheduling and CRM stack you already use, tagged so your dispatcher can see urgency at a glance."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you handle the North Shore and the south suburbs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA covers your map, not ours — Shorewood, Whitefish Bay, Riverwest, Walker's Point, Greenfield, Cudahy, Franklin, wherever you run trucks. Out-of-area callers get politely screened out, so your dispatcher stays focused on the jobs you actually run."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about gas-smell calls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Safety scripts are non-negotiable: a caller reporting a gas odor is told to leave the building and call We Energies and 911 first. AVA captures the details for your follow-up but never schedules over a safety hazard."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Milwaukee",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/milwaukee"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Plumbing",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/milwaukee-plumbing"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What does AVA actually capture on a burst-pipe call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Address first, then the failure point if the caller knows it, whether the water is shut off, property access details, and callback number. The whole package routes to your on-call plumber by SMS the moment the call ends."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can AVA walk a panicking caller to the main shutoff?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA keeps the caller focused and captures the situation, and it can relay your standard guidance — like locating the main shutoff — exactly as you script it. Anything beyond your script gets routed to a human immediately."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "We run Jobber. Does that work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Captured emergencies, drain calls, and estimate requests land in the scheduling and CRM stack you already use, tagged so your dispatcher can see urgency at a glance."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do you handle the North Shore and the south suburbs?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA covers your map, not ours — Shorewood, Whitefish Bay, Riverwest, Walker's Point, Greenfield, Cudahy, Franklin, wherever you run trucks. Out-of-area callers get politely screened out, so your dispatcher stays focused on the jobs you actually run."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What about gas-smell calls?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Safety scripts are non-negotiable: a caller reporting a gas odor is told to leave the building and call We Energies and 911 first. AVA captures the details for your follow-up but never schedules over a safety hazard."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

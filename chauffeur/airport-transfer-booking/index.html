@@ -49,15 +49,99 @@
   <link rel="stylesheet" href="/assets/circulant.css?v=119c51e">
   <link rel="stylesheet" href="/assets/aic.css?v=119c51e">
 
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does it get the flight number?","acceptedAnswer":{"@type":"Answer","text":"Yes. On an airport run AVA asks for it, then asks for the airline and the terminal, and reads all three back to the caller. They land in their own fields on the trip ticket instead of buried in a note at the bottom."}},{"@type":"Question","name":"What happens if the flight is delayed?","acceptedAnswer":{"@type":"Answer","text":"AVA captures what the caller reports. If the caller says the flight is running late, that goes on the ticket and your dispatcher sees it. AVA does not watch live flight data today, so a delay nobody calls about is not something it can know. The pickup time stays your dispatcher's call either way."}},{"@type":"Question","name":"Does it know which terminal?","acceptedAnswer":{"@type":"Answer","text":"It asks. The caller says the terminal, and the airline sits next to it on the ticket. A dispatcher who knows that airport can check the two against each other. AVA captures the terminal. It does not decide it."}},{"@type":"Question","name":"Who confirms the pickup time?","acceptedAnswer":{"@type":"Answer","text":"Your dispatcher. Every trip, without exception. AVA writes down the time the caller wants, notes the flight it is measured against, and marks the buffer for review. Nothing reaches a run sheet and no car moves until a human on your side confirms it."}}]}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
-    {"@type":"ListItem","position":1,"name":"Home","item":"https://aichauffeur.ai/"},
-    {"@type":"ListItem","position":2,"name":"Airport transfer booking","item":"https://aichauffeur.ai/airport-transfer-booking/"}
-  ]}
-  </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aichauffeur.ai/#organization",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "telephone": "+1-414-775-0019",
+      "email": "dispatch@aichauffeur.ai",
+      "logo": "https://aichauffeur.ai/assets/brand/lockup-short.svg",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressRegion": "WI"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aichauffeur.ai/#website",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "publisher": {
+        "@id": "https://aichauffeur.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "name": "Airport runs, captured with the flight.",
+      "description": "The flight details come in on the call, not in a callback. AVA takes the flight number, the airline and the terminal while the caller is still on the line, and your dispatcher confirms the pickup.",
+      "provider": {
+        "@id": "https://aichauffeur.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does it get the flight number?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. On an airport run AVA asks for it, then asks for the airline and the terminal, and reads all three back to the caller. They land in their own fields on the trip ticket instead of buried in a note at the bottom."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if the flight is delayed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures what the caller reports. If the caller says the flight is running late, that goes on the ticket and your dispatcher sees it. AVA does not watch live flight data today, so a delay nobody calls about is not something it can know. The pickup time stays your dispatcher's call either way."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it know which terminal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It asks. The caller says the terminal, and the airline sits next to it on the ticket. A dispatcher who knows that airport can check the two against each other. AVA captures the terminal. It does not decide it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who confirms the pickup time?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your dispatcher. Every trip, without exception. AVA writes down the time the caller wants, notes the flight it is measured against, and marks the buffer for review. Nothing reaches a run sheet and no car moves until a human on your side confirms it."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aichauffeur.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Airport transfer booking",
+          "position": 2,
+          "item": "https://aichauffeur.ai/airport-transfer-booking/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

@@ -28,50 +28,118 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/medical-practices",
-  "serviceType": "AI Voice Agent for Medical Practices",
-  "name": "AVA for Medical Practices",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Dental practices, primary care clinics, specialty practices, veterinary, chiropractic"
-  },
-  "areaServed": {
-    "@type": "State",
-    "name": "Wisconsin"
-  },
-  "description": "AI voice system that books appointments, routes prescription refill requests, captures new patient intake, and triages after-hours calls into your practice management system."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aivoiceagency.ai/" },
-    { "@type": "ListItem", "position": 2, "name": "Verticals", "item": "https://aivoiceagency.ai/#verticals" },
-    { "@type": "ListItem", "position": 3, "name": "Medical Practices", "item": "https://aivoiceagency.ai/medical-practices" }
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "name": "Patients need answers — not voicemail.",
+      "url": "https://aivoiceagency.ai/medical-practices",
+      "description": "Front desk is six lines deep. Calls hit during the lunch hour. After-hours urgencies. Refill requests. New patient intake. AVA handles all of it — booking real appointments, routing refills, triaging emergencies — and pushes everything into your practice management system.",
+      "areaServed": {
+        "@type": "State",
+        "name": "Wisconsin"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can AVA book appointments?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA holds your calendar, offers real availability by provider, and books appointments directly into your practice management system."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does AVA handle prescription refill requests?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures the patient name, medication, pharmacy, and refill history, then routes the request to your refill queue or clinical staff for review."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about HIPAA compliance?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA routes captured details into your existing HIPAA-compliant systems. We do not claim AVA replaces your HIPAA workflow — AVA captures and routes. Your practice management software owns the compliance perimeter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA triage after-hours emergency calls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures symptoms, severity, and patient identifiers, then routes urgent calls to the on-call provider by phone or SMS. Non-urgent calls get callback bookings for the next business day."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AVA verify insurance?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures the patient's insurance details — carrier, member ID, group number — and routes them to your front desk for verification. AVA does not run live insurance checks."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Medical Practices",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/medical-practices"
+        }
+      ]
+    }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Can AVA book appointments?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AVA holds your calendar, offers real availability by provider, and books appointments directly into your practice management system." } },
-    { "@type": "Question", "name": "How does AVA handle prescription refill requests?", "acceptedAnswer": { "@type": "Answer", "text": "AVA captures the patient name, medication, pharmacy, and refill history, then routes the request to your refill queue or clinical staff for review." } },
-    { "@type": "Question", "name": "What about HIPAA compliance?", "acceptedAnswer": { "@type": "Answer", "text": "AVA routes captured details into your existing HIPAA-compliant systems. We do not claim AVA replaces your HIPAA workflow — AVA captures and routes. Your practice management software owns the compliance perimeter." } },
-    { "@type": "Question", "name": "Can AVA triage after-hours emergency calls?", "acceptedAnswer": { "@type": "Answer", "text": "AVA captures symptoms, severity, and patient identifiers, then routes urgent calls to the on-call provider by phone or SMS. Non-urgent calls get callback bookings for the next business day." } },
-    { "@type": "Question", "name": "Does AVA verify insurance?", "acceptedAnswer": { "@type": "Answer", "text": "AVA captures the patient's insurance details — carrier, member ID, group number — and routes them to your front desk for verification. AVA does not run live insurance checks." } }
-  ]
-}
-</script>
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,35 +153,6 @@
 <script src="/js/bridge.js?v=119c51e" defer></script>
 <link rel="stylesheet" href="/css/demo-pill.css?v=119c51e">
 <!-- /BRIDGE:HEAD -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
 </head>
 <body>
 

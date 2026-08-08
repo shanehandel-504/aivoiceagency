@@ -28,129 +28,124 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Dental Businesses",
-  "name": "AVA for Milwaukee Dental",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "General, family, pediatric, and specialty dental practices in the Milwaukee metro"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Milwaukee"
-  },
-  "description": "AI phone answering for Milwaukee dental practices: new-patient capture, lunch-hour and after-hours coverage, urgency flagging per your emergency protocol, and scheduling intake."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Milwaukee",
-      "item": "https://aivoiceagency.ai/milwaukee"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Milwaukee Dental",
-      "item": "https://aivoiceagency.ai/milwaukee-dental"
+      "@type": "Service",
+      "name": "New patient on line two. Nobody missed it.",
+      "description": "From the Wauwatosa medical corridor to family practices in Oak Creek and Franklin, the pattern is identical: the front desk is checking out a hygiene patient while the phone carries a brand-new patient to voicemail. AVA ends that trade-off.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Milwaukee"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA give dental or clinical advice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Never. AVA captures symptoms in the caller's own words, flags urgency like uncontrolled pain or swelling for immediate escalation to your on-call protocol, and schedules or routes per your rules. Clinical judgment stays entirely with your team."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does AVA handle patient information?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures only what your intake requires — name, callback, insurance carrier if you want it asked, and reason for visit — and writes it into your existing scheduling workflow. Your setup call defines exactly what gets asked and where it lands."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA cover just lunch hours and evenings?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Many practices forward only from noon to one and after close. Overflow-only forwarding — AVA picks up when the desk cannot get there by ring three — is the most popular configuration."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens with a severe-pain call at night?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your emergency protocol runs exactly as written: callers with symptoms you define as urgent get your on-call instructions and the encounter is captured and routed so your team sees it first thing. Everything else schedules for the next open slot."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will callers know it's not our front desk?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA identifies itself honestly when asked and never pretends to be staff. Most callers simply notice the practical part: the phone got answered, their problem got captured, and the appointment request went through."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Milwaukee",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/milwaukee"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Dental",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/milwaukee-dental"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Does AVA give dental or clinical advice?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Never. AVA captures symptoms in the caller's own words, flags urgency like uncontrolled pain or swelling for immediate escalation to your on-call protocol, and schedules or routes per your rules. Clinical judgment stays entirely with your team."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does AVA handle patient information?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA captures only what your intake requires — name, callback, insurance carrier if you want it asked, and reason for visit — and writes it into your existing scheduling workflow. Your setup call defines exactly what gets asked and where it lands."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can AVA cover just lunch hours and evenings?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Many practices forward only from noon to one and after close. Overflow-only forwarding — AVA picks up when the desk cannot get there by ring three — is the most popular configuration."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens with a severe-pain call at night?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Your emergency protocol runs exactly as written: callers with symptoms you define as urgent get your on-call instructions and the encounter is captured and routed so your team sees it first thing. Everything else schedules for the next open slot."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will callers know it's not our front desk?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA identifies itself honestly when asked and never pretends to be staff. Most callers simply notice the practical part: the phone got answered, their problem got captured, and the appointment request went through."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

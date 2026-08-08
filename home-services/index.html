@@ -28,50 +28,118 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/home-services",
-  "serviceType": "AI Voice Agent for Home Service Operators",
-  "name": "AVA for Home Services",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "HVAC, plumbing, electrical, roofing, pest control, and contracting operators"
-  },
-  "areaServed": {
-    "@type": "State",
-    "name": "Wisconsin"
-  },
-  "description": "AI voice system that answers emergency dispatch calls, books estimates, identifies repeat customers, and pushes details into your scheduling software."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aivoiceagency.ai/" },
-    { "@type": "ListItem", "position": 2, "name": "Verticals", "item": "https://aivoiceagency.ai/#verticals" },
-    { "@type": "ListItem", "position": 3, "name": "Home Services", "item": "https://aivoiceagency.ai/home-services" }
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "name": "Emergency at 11 PM. AVA answers every time.",
+      "url": "https://aivoiceagency.ai/home-services",
+      "description": "No heat in February. Burst pipe at 2am. Panel sparking. AVA captures the address, the urgency, the access details, and routes the call to your on-call tech before the customer dials your competitor.",
+      "areaServed": {
+        "@type": "State",
+        "name": "Wisconsin"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can AVA dispatch emergency calls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures emergency details — no heat, no water, electrical hazard — and routes the call to the on-call tech by SMS, phone, or your dispatch software. Built to capture the call before it goes cold — no voicemail at 11pm."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AVA work with ServiceTitan, Jobber, Housecall Pro, or FieldEdge?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA pushes captured jobs, estimates, and schedule changes into whatever scheduling and CRM tool you already run."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA tell a repeat customer from a new one?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA recognizes returning callers, pulls their job history, and routes them differently than a quote-shopper hitting your number for the first time."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about peak season — storm calls, heat waves, freezes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Concurrency is scoped and tested to your call volume before launch. Your team works the jobs that pay; AVA handles the intake load."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will AVA quote prices?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures the job scope and books the estimate or service call. Pricing decisions stay with your team — AVA never freelances on quotes."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Home Services",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/home-services"
+        }
+      ]
+    }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Can AVA dispatch emergency calls?", "acceptedAnswer": { "@type": "Answer", "text": "AVA captures emergency details — no heat, no water, electrical hazard — and routes the call to the on-call tech by SMS, phone, or your dispatch software. Built to capture the call before it goes cold — no voicemail at 11pm." } },
-    { "@type": "Question", "name": "Does AVA work with ServiceTitan, Jobber, Housecall Pro, or FieldEdge?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AVA pushes captured jobs, estimates, and schedule changes into whatever scheduling and CRM tool you already run." } },
-    { "@type": "Question", "name": "Can AVA tell a repeat customer from a new one?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AVA recognizes returning callers, pulls their job history, and routes them differently than a quote-shopper hitting your number for the first time." } },
-    { "@type": "Question", "name": "What about peak season — storm calls, heat waves, freezes?", "acceptedAnswer": { "@type": "Answer", "text": "Concurrency is scoped and tested to your call volume before launch. Your team works the jobs that pay; AVA handles the intake load." } },
-    { "@type": "Question", "name": "Will AVA quote prices?", "acceptedAnswer": { "@type": "Answer", "text": "AVA captures the job scope and books the estimate or service call. Pricing decisions stay with your team — AVA never freelances on quotes." } }
-  ]
-}
-</script>
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,35 +153,6 @@
 <script src="/js/bridge.js?v=119c51e" defer></script>
 <link rel="stylesheet" href="/css/demo-pill.css?v=119c51e">
 <!-- /BRIDGE:HEAD -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
 </head>
 <body>
 

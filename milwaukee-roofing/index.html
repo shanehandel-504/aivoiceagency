@@ -28,121 +28,116 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Roofing Businesses",
-  "name": "AVA for Milwaukee Roofing",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Residential roofing and storm-restoration contractors in the Milwaukee metro"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Milwaukee"
-  },
-  "description": "Surge-capacity AI answering for Milwaukee roofing companies: hail-week call absorption, active-leak urgency routing, insurance-claim detail capture, and inspection scheduling."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Milwaukee",
-      "item": "https://aivoiceagency.ai/milwaukee"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Milwaukee Roofing",
-      "item": "https://aivoiceagency.ai/milwaukee-roofing"
+      "@type": "Service",
+      "name": "Hail hits. Forty calls. AVA holds the surge.",
+      "description": "One storm cell over the metro and your phone becomes the most valuable asset your company owns — for about seventy-two hours. Out-of-state storm outfits answer on the first ring. AVA makes sure the local company does too, from Bay View flats to Oak Creek subdivisions.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Milwaukee"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can AVA really absorb a hail-week surge?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — that is the core design. Concurrency is scoped and tested to your storm-day volume before launch, so callers get a live answer, address capture, damage description, and a scheduled inspection window. Your office works the list instead of the switchboard."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does AVA handle insurance-claim callers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures carrier, claim number if one exists, adjuster timing, and the damage story, then schedules the inspection. It never speculates about coverage or what insurance will pay — claim talk stays with your estimator."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do active-leak calls get treated differently?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. A caller with water actively coming in gets flagged urgent and routed to whoever runs your emergency tarp response, with the address and roof access details already captured."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "We only work the metro — can AVA screen out storm tourists?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA qualifies by address on every call, so out-of-area callers and solicitors get filtered before they cost you a callback. Bay View, Wauwatosa, Greenfield, Oak Creek, Franklin — your boundaries, enforced on intake."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Milwaukee",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/milwaukee"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Roofing",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/milwaukee-roofing"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Can AVA really absorb a hail-week surge?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes — that is the core design. Concurrency is scoped and tested to your storm-day volume before launch, so callers get a live answer, address capture, damage description, and a scheduled inspection window. Your office works the list instead of the switchboard."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does AVA handle insurance-claim callers?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA captures carrier, claim number if one exists, adjuster timing, and the damage story, then schedules the inspection. It never speculates about coverage or what insurance will pay — claim talk stays with your estimator."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do active-leak calls get treated differently?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. A caller with water actively coming in gets flagged urgent and routed to whoever runs your emergency tarp response, with the address and roof access details already captured."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "We only work the metro — can AVA screen out storm tourists?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA qualifies by address on every call, so out-of-area callers and solicitors get filtered before they cost you a callback. Bay View, Wauwatosa, Greenfield, Oak Creek, Franklin — your boundaries, enforced on intake."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

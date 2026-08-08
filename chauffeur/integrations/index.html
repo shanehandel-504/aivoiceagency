@@ -51,30 +51,161 @@
        it describes, and structured data that disagrees with the page is a
        machine-readable claim the page does not make. Empty here on purpose;
        the mirror fills it and --check fails the run on any drift. -->
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does AVA connect to my dispatch software?","acceptedAnswer":{"@type":"Answer","text":"It can, on supported platforms, once the connection has been configured and tested against your account. Until then — and permanently, if you prefer it that way — AVA delivers a completed trip ticket to the person on dispatch, who enters and confirms the trip in the system you already run. Both are real setups, and the table above says which platforms are at which stage."}},{"@type":"Question","name":"What happens on day one, before any integration exists?","acceptedAnswer":{"@type":"Answer","text":"The phone gets answered. AVA takes the whole trip and the ticket arrives in the inbox or channel your team already watches, so a call captured on your first live day is a trip your dispatcher can work that same hour. Nothing waits on connection work, which is the point of building the ladder in that order."}},{"@type":"Question","name":"My platform is not on the list. Now what?","acceptedAnswer":{"@type":"Answer","text":"Shared inbox delivery covers you from day one regardless of what you run, because it depends on nothing at your end. Bring the platform to the setup call and it gets a custom integration review like the rest — that means someone looks at what your account actually supports before anybody promises you anything."}},{"@type":"Question","name":"Who confirms the trip once write-back is switched on?","acceptedAnswer":{"@type":"Answer","text":"Your dispatcher, exactly as before. Write-back changes where the record gets created; it does not change who approves it. The approval workflow your operation already uses is one of the things configured and tested during setup, and a trip does not skip it because the record arrived automatically."}}]}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"ItemList","name":"Dispatch platforms AI Chauffeur works beside","itemListOrder":"https://schema.org/ItemListUnordered","numberOfItems":11,"itemListElement":[
-    {"@type":"ListItem","position":1,"name":"Limo Anywhere","description":"Direct write-back available after setup verification."},
-    {"@type":"ListItem","position":2,"name":"FASTTRAK","description":"Partner API integration scoped during setup."},
-    {"@type":"ListItem","position":3,"name":"GNet","description":"Network workflow review."},
-    {"@type":"ListItem","position":4,"name":"Ground Alliance","description":"Custom integration review."},
-    {"@type":"ListItem","position":5,"name":"Moovs","description":"Custom integration review."},
-    {"@type":"ListItem","position":6,"name":"Livery Coach","description":"Custom integration review."},
-    {"@type":"ListItem","position":7,"name":"Hudson","description":"Custom integration review."},
-    {"@type":"ListItem","position":8,"name":"Santa Cruz (GroundWidgets)","description":"Custom integration review."},
-    {"@type":"ListItem","position":9,"name":"Limo Express","description":"Custom integration review."},
-    {"@type":"ListItem","position":10,"name":"A to Z Dispatch","description":"Custom integration review."},
-    {"@type":"ListItem","position":11,"name":"Shared inbox or email","description":"Included in every setup."}
-  ]}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
-    {"@type":"ListItem","position":1,"name":"Home","item":"https://aichauffeur.ai/"},
-    {"@type":"ListItem","position":2,"name":"Integrations","item":"https://aichauffeur.ai/integrations/"}
-  ]}
-  </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aichauffeur.ai/#organization",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "telephone": "+1-414-775-0019",
+      "email": "dispatch@aichauffeur.ai",
+      "logo": "https://aichauffeur.ai/assets/brand/lockup-short.svg",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressRegion": "WI"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aichauffeur.ai/#website",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "publisher": {
+        "@id": "https://aichauffeur.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "name": "Dispatch software AVA works beside.",
+      "description": "AVA answers your dispatch line, takes the whole trip, and delivers a complete trip ticket into the workflow your team already runs — a shared inbox on day one. Direct write-back into a dispatch system is configured per account and switched on after setup verification. Your dispatcher stays in command of every trip.",
+      "provider": {
+        "@id": "https://aichauffeur.ai/#organization"
+      }
+    },
+    {
+      "@type": "ItemList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Limo Anywhere",
+          "position": 1
+        },
+        {
+          "@type": "ListItem",
+          "name": "FASTTRAK",
+          "position": 2
+        },
+        {
+          "@type": "ListItem",
+          "name": "GNet",
+          "position": 3
+        },
+        {
+          "@type": "ListItem",
+          "name": "Ground Alliance",
+          "position": 4
+        },
+        {
+          "@type": "ListItem",
+          "name": "Moovs",
+          "position": 5
+        },
+        {
+          "@type": "ListItem",
+          "name": "Livery Coach",
+          "position": 6
+        },
+        {
+          "@type": "ListItem",
+          "name": "Hudson",
+          "position": 7
+        },
+        {
+          "@type": "ListItem",
+          "name": "Santa Cruz (GroundWidgets)",
+          "position": 8
+        },
+        {
+          "@type": "ListItem",
+          "name": "Limo Express",
+          "position": 9
+        },
+        {
+          "@type": "ListItem",
+          "name": "A to Z Dispatch",
+          "position": 10
+        },
+        {
+          "@type": "ListItem",
+          "name": "Shared inbox or email",
+          "position": 11
+        }
+      ],
+      "itemListOrder": "https://schema.org/ItemListUnordered",
+      "numberOfItems": 11
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA connect to my dispatch software?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can, on supported platforms, once the connection has been configured and tested against your account. Until then — and permanently, if you prefer it that way — AVA delivers a completed trip ticket to the person on dispatch, who enters and confirms the trip in the system you already run. Both are real setups, and the table above says which platforms are at which stage."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens on day one, before any integration exists?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The phone gets answered. AVA takes the whole trip and the ticket arrives in the inbox or channel your team already watches, so a call captured on your first live day is a trip your dispatcher can work that same hour. Nothing waits on connection work, which is the point of building the ladder in that order."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "My platform is not on the list. Now what?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Shared inbox delivery covers you from day one regardless of what you run, because it depends on nothing at your end. Bring the platform to the setup call and it gets a custom integration review like the rest — that means someone looks at what your account actually supports before anybody promises you anything."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who confirms the trip once write-back is switched on?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your dispatcher, exactly as before. Write-back changes where the record gets created; it does not change who approves it. The approval workflow your operation already uses is one of the things configured and tested during setup, and a trip does not skip it because the record arrived automatically."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aichauffeur.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Integrations",
+          "position": 2,
+          "item": "https://aichauffeur.ai/integrations/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

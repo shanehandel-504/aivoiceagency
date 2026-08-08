@@ -28,121 +28,116 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Dental Businesses",
-  "name": "AVA for West Bend Dental",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Small and family dental practices in West Bend and Washington County"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "West Bend"
-  },
-  "description": "AI phone coverage for West Bend and Washington County dental practices: after-school and after-hours capture, new-patient intake, and urgency flagging per practice protocol."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Medical Practices",
-      "item": "https://aivoiceagency.ai/medical-practices"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "West Bend Dental",
-      "item": "https://aivoiceagency.ai/west-bend-dental"
+      "@type": "Service",
+      "name": "The 5:10 PM patient call. Finally answered.",
+      "description": "Washington County families would rather see a dentist in West Bend, Hartford, or Jackson than drive to the Milwaukee suburbs — but they will drive if nobody answers. For the county's small front desks, AVA is the second phone line that never existed.",
+      "areaServed": {
+        "@type": "City",
+        "name": "West Bend"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is this practical for a two-chair practice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is designed for exactly that scale: no new hardware, no software migration, forwarding rules you control, and a monthly cost below a single day of front-desk temp coverage. The smallest practices see the clearest gains because every miss was visible revenue."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AVA ever discuss treatment or give dental advice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No — hard boundary. Symptoms are captured in the caller's words, urgency flags follow your written protocol, and everything clinical waits for your team. AVA schedules, captures, and routes; it does not practice dentistry."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it take calls only when the desk is closed or swamped?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Overflow-and-after-hours is the standard county configuration: your desk answers when it can, AVA catches ring four onward and everything past 5 PM, and your morning starts with a clean capture log instead of blinking voicemail."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What do patients hear when they ask if it's a person?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The truth — AVA identifies itself as the practice's AI assistant when asked, then keeps solving the caller's problem. Honest, brief, and back to scheduling the appointment."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "West Bend",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/west-bend"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Dental",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/west-bend-dental"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Is this practical for a two-chair practice?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "It is designed for exactly that scale: no new hardware, no software migration, forwarding rules you control, and a monthly cost below a single day of front-desk temp coverage. The smallest practices see the clearest gains because every miss was visible revenue."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does AVA ever discuss treatment or give dental advice?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No — hard boundary. Symptoms are captured in the caller's words, urgency flags follow your written protocol, and everything clinical waits for your team. AVA schedules, captures, and routes; it does not practice dentistry."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can it take calls only when the desk is closed or swamped?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Overflow-and-after-hours is the standard county configuration: your desk answers when it can, AVA catches ring four onward and everything past 5 PM, and your morning starts with a clean capture log instead of blinking voicemail."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What do patients hear when they ask if it's a person?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The truth — AVA identifies itself as the practice's AI assistant when asked, then keeps solving the caller's problem. Honest, brief, and back to scheduling the appointment."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -28,122 +28,117 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/waukesha-plumbing",
-  "serviceType": "AI Phone Answering for Plumbing Businesses",
-  "name": "AVA for Waukesha Plumbing",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Solo and small Plumbing shops serving Waukesha"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Waukesha"
-  },
-  "description": "AI phone answering for plumbing shops across Waukesha and Waukesha County, Wisconsin, capturing after-hours and overflow emergency calls when the shop cannot get to the phone."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Waukesha Plumbing",
-      "item": "https://aivoiceagency.ai/waukesha-plumbing"
+      "@type": "Service",
+      "name": "Burst pipe. 2 AM. Water on the floor. The Waukesha call still gets answered.",
+      "url": "https://aivoiceagency.ai/waukesha-plumbing",
+      "description": "New Berlin runs on subdivisions and rural well-and-septic homes, and the emergencies do not keep shop hours. A sump quits, a water heater lets go, a line freezes and splits, and the homeowner standing in a spreading puddle is not going to wait through six rings to leave a voicemail. AVA answers the plumbing line when you cannot, captures the address and the problem, and texts you the intake before the caller sets the phone down.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Waukesha"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do I have to give up my own cell to use AVA?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Your cell rings first if you set it that way, and AVA only picks up when you cannot get to it. A New Berlin homeowner with a flooding basement never lands in silence while you are finishing another job across Waukesha County."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does AVA actually do on a 2 AM plumbing call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers as your shop, gets the caller's name, address, and the problem, say a sump pump not turning on with water rising, and texts you the intake right away. You call back with the full picture instead of a blank missed-call notification."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA schedule the job for me?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures the details and routes the call, then you or your dispatcher will confirm the actual visit. AVA is honest about being an AI voice agent, and it hands you what you need to call the Waukesha customer back and set the time."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why AVA instead of a national call center for my Waukesha shop?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A call center reads a generic script. AVA is built for the trades and answers like a plumbing line, treating a February frozen line or a spring-thaw flooded basement in New Berlin like the emergency it is, not a routine message to pass along."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Waukesha",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/waukesha"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Plumbing",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/waukesha-plumbing"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Do I have to give up my own cell to use AVA?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. Your cell rings first if you set it that way, and AVA only picks up when you cannot get to it. A New Berlin homeowner with a flooding basement never lands in silence while you are finishing another job across Waukesha County."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What does AVA actually do on a 2 AM plumbing call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA answers as your shop, gets the caller's name, address, and the problem, say a sump pump not turning on with water rising, and texts you the intake right away. You call back with the full picture instead of a blank missed-call notification."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can AVA schedule the job for me?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA captures the details and routes the call, then you or your dispatcher will confirm the actual visit. AVA is honest about being an AI voice agent, and it hands you what you need to call the Waukesha customer back and set the time."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Why AVA instead of a national call center for my Waukesha shop?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A call center reads a generic script. AVA is built for the trades and answers like a plumbing line, treating a February frozen line or a spring-thaw flooded basement in New Berlin like the emergency it is, not a routine message to pass along."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

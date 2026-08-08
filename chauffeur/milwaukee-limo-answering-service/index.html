@@ -49,21 +49,119 @@
   <link rel="stylesheet" href="/assets/circulant.css?v=119c51e">
   <link rel="stylesheet" href="/assets/aic.css?v=119c51e">
 
-  <!-- LocalBusiness · NO streetAddress, postalCode or geo is emitted. AI Chauffeur
-       has no public storefront in Milwaukee and inventing one is a hard violation.
-       telephone and areaServed are true and verifiable; an address would not be. -->
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://aichauffeur.ai/milwaukee-limo-answering-service/#business","name":"AI Chauffeur — Milwaukee limo answering service","url":"https://aichauffeur.ai/milwaukee-limo-answering-service/","telephone":"+1-414-775-0019","priceRange":"Custom per operation","description":"Limo answering service and dispatch intake for Milwaukee limousine, black car and chauffeured transportation operators. AVA answers every inbound call at once, 24/7, and hands the dispatcher a structured trip ticket to confirm. Wisconsin-built, serving operators nationwide.","areaServed":[{"@type":"City","name":"Milwaukee"},{"@type":"State","name":"Wisconsin"}],"parentOrganization":{"@type":"Organization","name":"AI Voice Agency","url":"https://aivoiceagency.ai/"}}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Do you only work with Milwaukee operators?","acceptedAnswer":{"@type":"Answer","text":"No. AI Chauffeur is built in Wisconsin and runs for chauffeured transportation operators nationwide. Milwaukee is home, so the local detail comes easy — but the service area is set up around your operation, wherever you run."}},{"@type":"Question","name":"Does it know MKE and the local hotels?","acceptedAnswer":{"@type":"Answer","text":"Your service area, airports, landmarks and hotel list are configured during setup. That includes General Mitchell, the downtown properties you run to most, and the way your dispatcher writes a pickup point. AVA works from your list, not a generic map."}},{"@type":"Question","name":"What about festival and event nights?","acceptedAnswer":{"@type":"Answer","text":"That is the pattern AVA is built for. Calls do not arrive one at a time on a lakefront Saturday. AVA answers every inbound call at once, 24/7, and never puts a caller on hold or returns a busy signal. Each call comes back as its own trip ticket with the pickup point, party size and time."}},{"@type":"Question","name":"Who confirms the trip?","acceptedAnswer":{"@type":"Answer","text":"Your dispatcher. AVA captures the call and builds the trip ticket — pickup, dropoff, time, vehicle class, passenger and bag count, flight details and notes. A person on your side confirms it in the software you already run, whether that is Limo Anywhere, FASTTRAK, Santa Cruz or a shared inbox."}}]}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
-    {"@type":"ListItem","position":1,"name":"Home","item":"https://aichauffeur.ai/"},
-    {"@type":"ListItem","position":2,"name":"Milwaukee limo answering service","item":"https://aichauffeur.ai/milwaukee-limo-answering-service/"}
-  ]}
-  </script>
+  <!-- RUN A · this node was a LocalBusiness until 2026-08-07. It is now a Service.
+       The reason the old comment gave for withholding streetAddress, postalCode and
+       geo — AI Chauffeur has no public storefront in Milwaukee and inventing one is
+       a hard violation — is the reason the TYPE was wrong too: LocalBusiness asserts
+       a place of business. areaServed is true and verifiable, so it survives; the
+       storefront claim does not. telephone went with the type: schema.org does not
+       define it on Service, and the number is on the Organization this node names as
+       its provider. Do not retype this back. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aichauffeur.ai/#organization",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "telephone": "+1-414-775-0019",
+      "email": "dispatch@aichauffeur.ai",
+      "logo": "https://aichauffeur.ai/assets/brand/lockup-short.svg",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressRegion": "WI"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aichauffeur.ai/#website",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "publisher": {
+        "@id": "https://aichauffeur.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://aichauffeur.ai/milwaukee-limo-answering-service/#business",
+      "name": "Milwaukee limo answering — built in Wisconsin.",
+      "url": "https://aichauffeur.ai/milwaukee-limo-answering-service/",
+      "description": "Built for Milwaukee limousine, black car, and chauffeured transportation operators. Early departures out of Mitchell, hotel pickups downtown, a lakefront calendar that fills every summer weekend. AVA answers the line while you are driving, dispatching, or asleep — and hands your dispatcher a clean trip ticket.",
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Milwaukee"
+        },
+        {
+          "@type": "State",
+          "name": "Wisconsin"
+        }
+      ],
+      "provider": {
+        "@id": "https://aichauffeur.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do you only work with Milwaukee operators?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. AI Chauffeur is built in Wisconsin and runs for chauffeured transportation operators nationwide. Milwaukee is home, so the local detail comes easy — but the service area is set up around your operation, wherever you run."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it know MKE and the local hotels?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your service area, airports, landmarks and hotel list are configured during setup. That includes General Mitchell, the downtown properties you run to most, and the way your dispatcher writes a pickup point. AVA works from your list, not a generic map."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about festival and event nights?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That is the pattern AVA is built for. Calls do not arrive one at a time on a lakefront Saturday. AVA answers every inbound call at once, 24/7, and never puts a caller on hold or returns a busy signal. Each call comes back as its own trip ticket with the pickup point, party size and time."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who confirms the trip?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your dispatcher. AVA captures the call and builds the trip ticket — pickup, dropoff, time, vehicle class, passenger and bag count, flight details and notes. A person on your side confirms it in the software you already run, whether that is Limo Anywhere, FASTTRAK, Santa Cruz or a shared inbox."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aichauffeur.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Milwaukee limo answering service",
+          "position": 2,
+          "item": "https://aichauffeur.ai/milwaukee-limo-answering-service/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

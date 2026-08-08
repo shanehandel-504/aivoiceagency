@@ -28,122 +28,117 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/green-bay-plumbing",
-  "serviceType": "AI Phone Answering for Plumbing Businesses",
-  "name": "AVA for Green Bay Plumbing",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Solo and small Plumbing shops serving Green Bay"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Green Bay"
-  },
-  "description": "AVA is an AI voice agent that answers after-hours and overflow calls for plumbing shops across Green Bay and Brown County, Wisconsin, capturing caller details and routing the intake to the owner by text."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Green Bay Plumbing",
-      "item": "https://aivoiceagency.ai/green-bay-plumbing"
+      "@type": "Service",
+      "name": "A pipe lets go at 2 AM. Allouez is on the phone. AVA answers your Green Bay line.",
+      "url": "https://aivoiceagency.ai/green-bay-plumbing",
+      "description": "Allouez sits on old bones near the river, and the old supply lines let go on the coldest nights. When a frozen pipe splits or a water heater gives out at 2 AM, the caller wants a plumber now, not a voicemail. AVA answers your Green Bay line, captures what broke and where, and texts you the intake.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Green Bay"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA answer when I am already on a Green Bay job?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your cell rings first if you want it to. AVA only picks up when you cannot get to it, so a caller mid-afternoon under a furnace still reaches someone. It captures their details and texts you the intake before they set the phone down."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens on a 2 AM burst-pipe call in Allouez?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers your Green Bay line, gets the address, what let go, and how fast the water is moving, then routes the intake to you by text. You call back with full context. A dispatcher will confirm the visit; AVA does not promise a time on your behalf."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it tell a real emergency from a caller who can wait until morning?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA takes down what the caller is actually seeing, whether that is a water heater leaking from the top or a slow drip under the kitchen sink, and flags the urgent ones so you know which text to open first. You still decide who gets the truck tonight."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will Brown County callers know they are talking to an AI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers as your shop and is upfront that it is an AI taking the details. For a homeowner standing in two inches of basement water, a clear voice that takes down the intake and gets a plumber moving beats a voicemail every time."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Green Bay",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/green-bay"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Plumbing",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/green-bay-plumbing"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Does AVA answer when I am already on a Green Bay job?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Your cell rings first if you want it to. AVA only picks up when you cannot get to it, so a caller mid-afternoon under a furnace still reaches someone. It captures their details and texts you the intake before they set the phone down."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens on a 2 AM burst-pipe call in Allouez?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA answers your Green Bay line, gets the address, what let go, and how fast the water is moving, then routes the intake to you by text. You call back with full context. A dispatcher will confirm the visit; AVA does not promise a time on your behalf."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can it tell a real emergency from a caller who can wait until morning?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA takes down what the caller is actually seeing, whether that is a water heater leaking from the top or a slow drip under the kitchen sink, and flags the urgent ones so you know which text to open first. You still decide who gets the truck tonight."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will Brown County callers know they are talking to an AI?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA answers as your shop and is upfront that it is an AI taking the details. For a homeowner standing in two inches of basement water, a clear voice that takes down the intake and gets a plumber moving beats a voicemail every time."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

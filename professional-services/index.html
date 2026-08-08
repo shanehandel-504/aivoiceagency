@@ -28,50 +28,118 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/professional-services",
-  "serviceType": "AI Voice Agent for Professional Services",
-  "name": "AVA for Professional Services",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Law firms, accounting practices, marketing agencies, consultants"
-  },
-  "areaServed": {
-    "@type": "State",
-    "name": "Wisconsin"
-  },
-  "description": "AI voice system that answers client calls, captures intake details, routes by case or account, and pushes everything into your CRM or practice management software."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aivoiceagency.ai/" },
-    { "@type": "ListItem", "position": 2, "name": "Verticals", "item": "https://aivoiceagency.ai/#verticals" },
-    { "@type": "ListItem", "position": 3, "name": "Professional Services", "item": "https://aivoiceagency.ai/professional-services" }
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "name": "Your clients don't wait on hold. AVA picks up.",
+      "url": "https://aivoiceagency.ai/professional-services",
+      "description": "You're in court, on a deposition, in a partner meeting, or running tax-season triage. The phone keeps ringing. AVA answers, captures intake, runs conflict screens, and routes the file before you walk back to your desk.",
+      "areaServed": {
+        "@type": "State",
+        "name": "Wisconsin"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can AVA handle new client intake?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA captures full intake — contact details, matter type, urgency, referral source — and routes the file to your practice management software or CRM before you finish your meeting."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AVA run a basic conflict check?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures the new caller's name and adverse parties and flags potential conflicts against a list you provide. Final conflict clearance still belongs to your team."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens when existing clients call after hours?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA identifies the caller, pulls the matter context, and either books a callback in your calendar or routes urgent matters to the partner on call."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA send intake into Clio, MyCase, QuickBooks, or our CRM?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA pushes captured details into whatever you already use — practice management, CRM, scheduling tool, or shared inbox."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about client confidentiality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA records and processes calls under your existing privacy policy and your engagement letter terms. You set the disclosure language AVA uses at call open."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Professional Services",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/professional-services"
+        }
+      ]
+    }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Can AVA handle new client intake?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AVA captures full intake — contact details, matter type, urgency, referral source — and routes the file to your practice management software or CRM before you finish your meeting." } },
-    { "@type": "Question", "name": "Does AVA run a basic conflict check?", "acceptedAnswer": { "@type": "Answer", "text": "AVA captures the new caller's name and adverse parties and flags potential conflicts against a list you provide. Final conflict clearance still belongs to your team." } },
-    { "@type": "Question", "name": "What happens when existing clients call after hours?", "acceptedAnswer": { "@type": "Answer", "text": "AVA identifies the caller, pulls the matter context, and either books a callback in your calendar or routes urgent matters to the partner on call." } },
-    { "@type": "Question", "name": "Can AVA send intake into Clio, MyCase, QuickBooks, or our CRM?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AVA pushes captured details into whatever you already use — practice management, CRM, scheduling tool, or shared inbox." } },
-    { "@type": "Question", "name": "What about client confidentiality?", "acceptedAnswer": { "@type": "Answer", "text": "AVA records and processes calls under your existing privacy policy and your engagement letter terms. You set the disclosure language AVA uses at call open." } }
-  ]
-}
-</script>
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,35 +153,6 @@
 <script src="/js/bridge.js?v=119c51e" defer></script>
 <link rel="stylesheet" href="/css/demo-pill.css?v=119c51e">
 <!-- /BRIDGE:HEAD -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
 </head>
 <body>
 

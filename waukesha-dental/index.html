@@ -28,122 +28,117 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/waukesha-dental",
-  "serviceType": "AI Phone Answering for Dental Offices",
-  "name": "AVA for Waukesha Dental",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Solo and small Dental shops serving Waukesha"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Waukesha"
-  },
-  "description": "AVA is an AI phone answering service that picks up after-hours and overflow calls for dental offices across Waukesha and Waukesha County, capturing patient details and routing emergencies so the practice can call back fast."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Waukesha Dental",
-      "item": "https://aivoiceagency.ai/waukesha-dental"
+      "@type": "Service",
+      "name": "A broken crown on Pewaukee Lake still rings your office at 2 AM.",
+      "url": "https://aivoiceagency.ai/waukesha-dental",
+      "description": "Weekend emergencies do not call ahead. A patient out on Pewaukee Lake cracks a crown Saturday night, starts dialing dentists, and takes whoever picks up. Miss that ring and the new patient is someone else's by Monday.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Waukesha"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA sound like a real front desk or a robot?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers in a natural voice, gets the caller's name, number, and what is going on, whether it is a routine cleaning question or a cracked tooth sensitive to cold at 9 PM. Your team gets the intake as a text, so the callback is fast and already has the details."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens to my after-hours and weekend calls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your line rings your office first if you want it to. When no one can pick up, nights, weekends, or the Monday-morning rush, AVA answers, captures the details, and routes the emergency ones so a dentist or the front desk can call the patient back."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "We are a small office in Waukesha. Is this overkill?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is built for exactly that. A solo or two-chair office near Pewaukee cannot chase every ring and still run the schedule. AVA covers the calls that would have gone to voicemail so you stop losing new patients to the next office on the list."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will AVA schedule the visit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures the request and the caller details, then your front desk sets the actual time. For a true emergency AVA marks it urgent in the intake text so it is flagged instead of sitting in voicemail until morning. The sample data on this page shows how a captured call reads."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Waukesha",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/waukesha"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Dental",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/waukesha-dental"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Does AVA sound like a real front desk or a robot?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA answers in a natural voice, gets the caller's name, number, and what is going on, whether it is a routine cleaning question or a cracked tooth sensitive to cold at 9 PM. Your team gets the intake as a text, so the callback is fast and already has the details."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens to my after-hours and weekend calls?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Your line rings your office first if you want it to. When no one can pick up, nights, weekends, or the Monday-morning rush, AVA answers, captures the details, and routes the emergency ones so a dentist or the front desk can call the patient back."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "We are a small office in Waukesha. Is this overkill?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "It is built for exactly that. A solo or two-chair office near Pewaukee cannot chase every ring and still run the schedule. AVA covers the calls that would have gone to voicemail so you stop losing new patients to the next office on the list."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will AVA schedule the visit?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA captures the request and the caller details, then your front desk sets the actual time. For a true emergency AVA marks it urgent in the intake text so it is flagged instead of sitting in voicemail until morning. The sample data on this page shows how a captured call reads."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

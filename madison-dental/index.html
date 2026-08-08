@@ -28,129 +28,124 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Dental Businesses",
-  "name": "AVA for Madison Dental",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Family, pediatric, and specialty dental practices in Madison and Dane County"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Madison"
-  },
-  "description": "AI phone coverage for Madison dental practices: Monday-surge absorption, lunch-hour capture, new-patient intake with insurance details, and after-hours urgency handling per practice protocol."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Madison",
-      "item": "https://aivoiceagency.ai/madison"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Madison Dental",
-      "item": "https://aivoiceagency.ai/madison-dental"
+      "@type": "Service",
+      "name": "Monday, 8 AM. Fourteen callers. Zero sent to voicemail.",
+      "description": "Madison adds thousands of new residents a year, and every arriving family picks a dentist the same way: they call down a list until a phone gets answered. Hilldale, Middleton, Sun Prairie — the practices that pick up are the practices that grow.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Madison"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is AVA giving out clinical or triage advice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. AVA records symptoms verbatim, applies the urgency rules your dentists define — swelling, trauma, uncontrolled bleeding escalate immediately — and otherwise schedules per your protocol. Diagnosis and advice remain with licensed staff, full stop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA verify insurance on the call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures carrier, member ID, and subscriber details exactly as your intake form specifies, so verification is queued for your team before the patient arrives. It does not promise coverage or quote benefits to callers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "We only need coverage at lunch and on Mondays. Possible?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Completely. Forwarding rules are yours: Monday mornings, the noon hour, after 5 PM, or overflow-only when the desk cannot answer by the third ring. Most practices start with overflow and expand once they see the capture log."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do emergency toothache calls work after hours?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Callers describing what your protocol defines as urgent hear your on-call instructions and get captured for morning follow-up; everything else is offered the next open slot. Your practice manager reviews every after-hours encounter in the morning digest."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will it sound like a call center?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No script-reading drone, no hold music maze. AVA answers with your practice's greeting in a natural voice and gets to the point — most callers just experience a phone that finally got answered."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Madison",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/madison"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Dental",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/madison-dental"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Is AVA giving out clinical or triage advice?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. AVA records symptoms verbatim, applies the urgency rules your dentists define — swelling, trauma, uncontrolled bleeding escalate immediately — and otherwise schedules per your protocol. Diagnosis and advice remain with licensed staff, full stop."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can AVA verify insurance on the call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA captures carrier, member ID, and subscriber details exactly as your intake form specifies, so verification is queued for your team before the patient arrives. It does not promise coverage or quote benefits to callers."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "We only need coverage at lunch and on Mondays. Possible?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Completely. Forwarding rules are yours: Monday mornings, the noon hour, after 5 PM, or overflow-only when the desk cannot answer by the third ring. Most practices start with overflow and expand once they see the capture log."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do emergency toothache calls work after hours?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Callers describing what your protocol defines as urgent hear your on-call instructions and get captured for morning follow-up; everything else is offered the next open slot. Your practice manager reviews every after-hours encounter in the morning digest."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will it sound like a call center?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No script-reading drone, no hold music maze. AVA answers with your practice's greeting in a natural voice and gets to the point — most callers just experience a phone that finally got answered."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -28,108 +28,119 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Wisconsin",
-      "item": "https://aivoiceagency.ai/#verticals"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Waukesha",
-      "item": "https://aivoiceagency.ai/waukesha"
+      "@type": "Service",
+      "name": "AVA answers the phone for Waukesha County when you are on the job.",
+      "description": "Waukesha County runs on the fast callback. Lake homes on Pewaukee and the Oconomowoc chain, new builds off the I-94 corridor, and Brookfield offices all expect a live voice, and the caller who hits voicemail just dials the next name on the list. When your hands are full, AVA picks up, takes down the job, and texts you the intake so you can call back with the whole story.",
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://aivoiceagency.ai/waukesha",
+        "price": "497",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will AVA say the local names right?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA is trained on Waukesha County speech, so Oconomowoc, Pewaukee, Menomonee Falls, and Muskego come out clean, and callers are not stuck spelling their own town before they can get to the point."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What area does AVA cover for my shop?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Whatever you cover. Set your map to Waukesha, Brookfield, New Berlin, Delafield, Sussex, and the lake communities, and AVA screens callers against it so you are not driving to jobs outside your range."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens when the season spikes the phone?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That is the point. When the February no-heat rush or the spring thaw lights up every line at once, AVA takes the overflow in order so the calls you cannot grab still get captured instead of rolling to voicemail."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "I know my customers by name. Will this feel like a machine?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers in your shop's name, keeps it short and plain, and hands the caller straight to you. You still make the callback and keep the relationship. AVA just picks up the one you cannot get to instead of letting it sit in voicemail."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long to get running?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Days, not months. We set AVA up with your trades, your service map, and how you want calls handled, then you test it on your own line before it ever answers a customer."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Waukesha",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/waukesha"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Will AVA say the local names right?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. AVA is trained on Waukesha County speech, so Oconomowoc, Pewaukee, Menomonee Falls, and Muskego come out clean, and callers are not stuck spelling their own town before they can get to the point."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What area does AVA cover for my shop?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Whatever you cover. Set your map to Waukesha, Brookfield, New Berlin, Delafield, Sussex, and the lake communities, and AVA screens callers against it so you are not driving to jobs outside your range."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens when the season spikes the phone?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "That is the point. When the February no-heat rush or the spring thaw lights up every line at once, AVA takes the overflow in order so the calls you cannot grab still get captured instead of rolling to voicemail."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I know my customers by name. Will this feel like a machine?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA answers in your shop's name, keeps it short and plain, and hands the caller straight to you. You still make the callback and keep the relationship. AVA just picks up the one you cannot get to instead of letting it sit in voicemail."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How long to get running?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Days, not months. We set AVA up with your trades, your service map, and how you want calls handled, then you test it on your own line before it ever answers a customer."
-      }
-    }
-  ]
-}
-</script>
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

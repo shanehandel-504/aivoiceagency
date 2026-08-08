@@ -28,122 +28,117 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/green-bay-hvac",
-  "serviceType": "AI Phone Answering for HVAC Contractors",
-  "name": "AVA for Green Bay HVAC",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Solo and small HVAC shops serving Green Bay"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Green Bay"
-  },
-  "description": "AVA is an AI voice agent that answers after-hours and overflow phone calls for HVAC contractors across Green Bay and Brown County, Wisconsin, capturing each caller's details and routing the intake to the owner."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Green Bay HVAC",
-      "item": "https://aivoiceagency.ai/green-bay-hvac"
+      "@type": "Service",
+      "name": "No heat off the bay. 2 AM, furnace down. AVA answers the 920 call you would have missed.",
+      "url": "https://aivoiceagency.ai/green-bay-hvac",
+      "description": "A cold snap rolls off the bay and the old furnaces along the Fox River give out first. The homeowner in De Pere is on the tools too, working down the 920 listings to whoever picks up. If your line goes to voicemail, they are already dialing the next shop.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Green Bay"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA answer only after hours, or all the time?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your cell rings first if you want it to. AVA picks up only when you cannot, nights, weekends, or mid-job, so a Green Bay caller hears a real answer instead of a beep."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does AVA actually do with a no-heat call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures the address, the phone number, and the problem, say a furnace short cycling or blowing cold, then routes the intake to your phone by text. A dispatcher will confirm the visit when you call back. Sample data only."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "I mostly work De Pere and the west side. Does AVA know my area?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers as your shop and takes calls from across Brown County and the 920, De Pere, Allouez, Ashwaubenon, downtown Green Bay. It captures the caller's town so you know the drive before you call back."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about Packers Sundays when venue and restaurant calls spike?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That is exactly the overflow AVA is built for. When your line is slammed with hospitality and home calls at once, AVA answers the ones you cannot pick up and hands you the details."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Green Bay",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/green-bay"
+        },
+        {
+          "@type": "ListItem",
+          "name": "HVAC",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/green-bay-hvac"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Does AVA answer only after hours, or all the time?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Your cell rings first if you want it to. AVA picks up only when you cannot, nights, weekends, or mid-job, so a Green Bay caller hears a real answer instead of a beep."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What does AVA actually do with a no-heat call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA captures the address, the phone number, and the problem, say a furnace short cycling or blowing cold, then routes the intake to your phone by text. A dispatcher will confirm the visit when you call back. Sample data only."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I mostly work De Pere and the west side. Does AVA know my area?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA answers as your shop and takes calls from across Brown County and the 920, De Pere, Allouez, Ashwaubenon, downtown Green Bay. It captures the caller's town so you know the drive before you call back."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What about Packers Sundays when venue and restaurant calls spike?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "That is exactly the overflow AVA is built for. When your line is slammed with hospitality and home calls at once, AVA answers the ones you cannot pick up and hands you the details."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

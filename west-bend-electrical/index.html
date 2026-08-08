@@ -28,121 +28,122 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Electrical Businesses",
-  "name": "AVA for West Bend Electrical",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Licensed electrical contractors serving West Bend, Washington County farms, shops, and homes"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "West Bend"
-  },
-  "description": "AI call answering for Washington County electricians: hazard-first triage, standby-generator lead qualification, farm and shop priority routing, and storm-wave call capture."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "West Bend Electrical",
-      "item": "https://aivoiceagency.ai/west-bend-electrical"
+      "@type": "Service",
+      "name": "Panel fault in the pole barn. Somebody picked up.",
+      "description": "Electrical work in Washington County means pole barns in Addison, light-industrial panels in Germantown, generator transfer switches in Generac's home region, and service upgrades on lake properties. AVA — built in Kewaskum, ten minutes north — answers while you are on the pole.",
+      "areaServed": {
+        "@type": "City",
+        "name": "West Bend"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://aivoiceagency.ai/west-bend-electrical",
+        "price": "497",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does AVA treat a hot-panel or burning-smell call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "As a hazard first and a lead second: your safety script runs — cut the main if you have scripted it, evacuate and call 911 language for anything active — and your on-call number gets the escalation immediately. The quote conversation happens after everyone is safe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it qualify generator leads properly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes: home square footage, well pump and sump loads, propane or natural gas supply, panel location, and timeline all get captured, so your site visit starts at sizing instead of discovery."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do farm calls get special handling?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Farm and shop callers get an intake that respects the stakes — what equipment is down, what it costs per hour, single-phase or three-phase if they know it — and urgent routing when livestock systems are involved."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does coverage cost for a shop my size?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Starter runs $497 a month plus a $497 setup. For a county shop, that is roughly one recovered service call and change — the full pricing sits on the homepage with no games."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "West Bend",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/west-bend"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Electrical",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/west-bend-electrical"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How does AVA treat a hot-panel or burning-smell call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "As a hazard first and a lead second: your safety script runs — cut the main if you have scripted it, evacuate and call 911 language for anything active — and your on-call number gets the escalation immediately. The quote conversation happens after everyone is safe."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can it qualify generator leads properly?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes: home square footage, well pump and sump loads, propane or natural gas supply, panel location, and timeline all get captured, so your site visit starts at sizing instead of discovery."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do farm calls get special handling?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Farm and shop callers get an intake that respects the stakes — what equipment is down, what it costs per hour, single-phase or three-phase if they know it — and urgent routing when livestock systems are involved."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What does coverage cost for a shop my size?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Starter runs $497 a month plus a $497 setup. For a county shop, that is roughly one recovered service call and change — the full pricing sits on the homepage with no games."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

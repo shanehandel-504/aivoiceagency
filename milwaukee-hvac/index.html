@@ -28,129 +28,124 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for HVAC Businesses",
-  "name": "AVA for Milwaukee HVAC",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "HVAC contractors and heating and cooling companies in the Milwaukee metro"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Milwaukee"
-  },
-  "description": "24/7 AI phone answering for Milwaukee HVAC companies: emergency no-heat and no-cool triage, repair intake, estimate scheduling, and dispatch routing to on-call techs."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Milwaukee",
-      "item": "https://aivoiceagency.ai/milwaukee"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Milwaukee HVAC",
-      "item": "https://aivoiceagency.ai/milwaukee-hvac"
+      "@type": "Service",
+      "name": "No-heat call at 2 AM. AVA answers for Milwaukee HVAC.",
+      "description": "A furnace quits in a Bay View bungalow during a January cold snap. The homeowner calls three HVAC companies off Google — the first one that picks up gets the job. AVA makes sure that company is yours, from Wauwatosa ranch homes to Brookfield changeouts.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Milwaukee"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can AVA tell a no-heat emergency from a tune-up request?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA triages on the call: no heat in January or no cooling during a heat advisory gets captured as urgent and routed straight to your on-call tech by SMS or phone. A tune-up or estimate request gets captured with full details and scheduled into your normal queue."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AVA work with ServiceTitan, Housecall Pro, or Jobber?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA pushes captured jobs, customer details, and schedule requests into the field-service software your dispatch already runs, so nothing lives in a separate inbox your team has to remember to check."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What parts of the Milwaukee metro do you cover?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Wherever your trucks roll — Bay View, Wauwatosa, Brookfield, West Allis, Greenfield, Menomonee Falls, Mequon, Oak Creek, and the rest of the metro. AVA learns your actual service boundaries during setup and captures the address before anything else."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will AVA give repair prices over the phone?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. AVA captures the symptom, the equipment age if the caller knows it, and the address, then schedules the visit. Pricing stays with your techs and your comfort advisors — AVA never invents a number."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens during a cold-snap call surge?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Concurrency is scoped and tested to your call volume before launch. When the first real freeze hits the metro and furnaces older than fifteen years start failing at once, those calls get answered and captured."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Milwaukee",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/milwaukee"
+        },
+        {
+          "@type": "ListItem",
+          "name": "HVAC",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/milwaukee-hvac"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Can AVA tell a no-heat emergency from a tune-up request?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. AVA triages on the call: no heat in January or no cooling during a heat advisory gets captured as urgent and routed straight to your on-call tech by SMS or phone. A tune-up or estimate request gets captured with full details and scheduled into your normal queue."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does AVA work with ServiceTitan, Housecall Pro, or Jobber?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA pushes captured jobs, customer details, and schedule requests into the field-service software your dispatch already runs, so nothing lives in a separate inbox your team has to remember to check."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What parts of the Milwaukee metro do you cover?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Wherever your trucks roll — Bay View, Wauwatosa, Brookfield, West Allis, Greenfield, Menomonee Falls, Mequon, Oak Creek, and the rest of the metro. AVA learns your actual service boundaries during setup and captures the address before anything else."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will AVA give repair prices over the phone?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. AVA captures the symptom, the equipment age if the caller knows it, and the address, then schedules the visit. Pricing stays with your techs and your comfort advisors — AVA never invents a number."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens during a cold-snap call surge?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Concurrency is scoped and tested to your call volume before launch. When the first real freeze hits the metro and furnaces older than fifteen years start failing at once, those calls get answered and captured."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

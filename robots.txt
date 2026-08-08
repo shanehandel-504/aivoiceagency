@@ -1,11 +1,75 @@
+# ============================================================================
+# aivoiceagency.ai — robots
+# ----------------------------------------------------------------------------
+# RUN A · INVISIBLE TRUTH LAYER (2026-08-07)
+#
+# THE RULE THAT MAKES THIS FILE LONG, AND WHY IT IS NOT REDUNDANT:
+# a crawler obeys exactly ONE group — the most specific User-agent match — and
+# ignores every other group in the file, including `*`. So the moment a named
+# group exists for a bot, that group must repeat the disallows, or that bot is
+# told the internal cockpits are fair game. Every group below therefore carries
+# the same two Disallow lines. Adding a bot without them is a leak, not a
+# formatting choice.
+#
+# /work/ and /hq/ are the internal cockpits. They are also noindex; robots and
+# meta have to agree, because a page blocked here can still be indexed from an
+# external link and a Disallow prevents the crawler from ever reading the
+# noindex that would have stopped it.
+# ============================================================================
+
 User-agent: *
 Allow: /
 Disallow: /work/
 Disallow: /hq/
-Sitemap: https://aivoiceagency.ai/sitemap.xml
 
-# AI agent crawlers explicitly allowed
+# --- Search crawlers --------------------------------------------------------
+
+User-agent: Googlebot
+Allow: /
+Disallow: /work/
+Disallow: /hq/
+
+User-agent: Googlebot-Image
+Allow: /
+Disallow: /work/
+Disallow: /hq/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /work/
+Disallow: /hq/
+
+# --- Answer engines ---------------------------------------------------------
+# These are the agents that read a page in order to answer a question about it.
+# They are the audience the schema layer in every <head> was written for, so
+# each one is named rather than left to the wildcard.
+
+# OpenAI: OAI-SearchBot indexes for ChatGPT search; ChatGPT-User fetches a page
+# live when a user's prompt cites it; GPTBot is the training crawler. They are
+# three separate agents and allowing one does not allow the others.
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /work/
+Disallow: /hq/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /work/
+Disallow: /hq/
+
 User-agent: GPTBot
+Allow: /
+Disallow: /work/
+Disallow: /hq/
+
+# Anthropic: same three-way split — Claude-SearchBot indexes for search,
+# Claude-User fetches on a user's behalf, ClaudeBot is the crawler.
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /work/
+Disallow: /hq/
+
+User-agent: Claude-User
 Allow: /
 Disallow: /work/
 Disallow: /hq/
@@ -20,22 +84,14 @@ Allow: /
 Disallow: /work/
 Disallow: /hq/
 
+User-agent: Perplexity-User
+Allow: /
+Disallow: /work/
+Disallow: /hq/
+
 User-agent: Google-Extended
 Allow: /
 Disallow: /work/
 Disallow: /hq/
 
-User-agent: OAI-SearchBot
-Allow: /
-Disallow: /work/
-Disallow: /hq/
-
-User-agent: PerplexityBot-User
-Allow: /
-Disallow: /work/
-Disallow: /hq/
-
-User-agent: Bingbot
-Allow: /
-Disallow: /work/
-Disallow: /hq/
+Sitemap: https://aivoiceagency.ai/sitemap.xml

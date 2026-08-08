@@ -30,80 +30,113 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/ground-transportation",
-  "serviceType": "AI Voice Dispatch Intake for Ground Transportation Operators",
-  "name": "AVA for Ground Transportation",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Limousine, chauffeured, black car, sedan, sprinter van, motorcoach, charter, NEMT, and corporate ground transportation operators"
-  },
-  "areaServed": {
-    "@type": "Country",
-    "name": "United States"
-  },
-  "description": "Voice operations system that handles inbound reservation calls, captures trip details, quotes from your rate rules, checks flight context, captures greeter instructions, and writes clean reservation records into your dispatch stack."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aivoiceagency.ai/" },
-    { "@type": "ListItem", "position": 2, "name": "Verticals", "item": "https://aivoiceagency.ai/#verticals" },
-    { "@type": "ListItem", "position": 3, "name": "Ground Transportation", "item": "https://aivoiceagency.ai/ground-transportation" }
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+  "@graph": [
     {
-      "@type": "Question",
-      "name": "What does AVA actually do on a reservation call?",
-      "acceptedAnswer": { "@type": "Answer", "text": "AVA answers the call, captures pickup, drop-off, date and time, passenger count, vehicle class, bags, contact, corporate account, and any notes — then quotes from your rate rules, captures greeter instructions for airport runs, writes a clean reservation record into your dispatch stack, and alerts the dispatcher before the caller hangs up." }
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "Question",
-      "name": "Does AVA work alongside Limo Anywhere or other dispatch software?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes. AVA pushes captured trip data into the dispatch stack you already run — Limo Anywhere via Zapier, GoHighLevel, shared inbox, or your operator-side queue. Your dispatcher confirms; AVA doesn't dispatch the driver." }
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "Question",
-      "name": "Can AVA quote from our rate sheet?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes. AVA quotes from your rules — service area, vehicle classes, airport rules, hourly minimums, zone or mileage, wait-time, and meet-and-greet flags — with 'estimate only' language where confirmation is required." }
+      "@type": "Service",
+      "name": "Your dispatch desk just got a second brain .",
+      "description": "AVA answers ride calls, captures trip details, quotes from your rate rules, checks flight context, captures greeter instructions, and writes clean reservation records into your dispatch stack — before the caller hangs up.",
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
     },
     {
-      "@type": "Question",
-      "name": "How does AVA handle airport runs?",
-      "acceptedAnswer": { "@type": "Answer", "text": "AVA captures airline, flight number, terminal, pickup buffer, baggage notes, and greeting preferences. Flight-status logic supports timing and dispatcher review. The AI captures the meet-and-greet detail — your chauffeur delivers it." }
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA work alongside Limo Anywhere or other dispatch software?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA pushes captured trip data into the dispatch stack you already run — Limo Anywhere via Zapier, GoHighLevel, shared inbox, or your operator-side queue. Your dispatcher confirms; AVA doesn't dispatch the driver."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does AVA handle airport runs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures airline, flight number, terminal, pickup buffer, baggage notes, and greeting preferences. Flight-status logic supports timing and dispatcher review. The AI captures the meet-and-greet detail — your chauffeur delivers it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will AVA replace my dispatcher?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. AVA takes the intake load so the dispatcher dispatches. Three calls hit at once — AVA takes all three, captures the trips, and the dispatcher works the manifests instead of fighting the phones."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about a Friday afternoon airport surge?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Built for burst capacity, scoped to your call volume. AVA answers the surge, captures the ride, quotes from your rules, texts the passenger, alerts dispatch, and leaves a clean record. No more voicemail leak when the next ride goes to whoever answers first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AVA do outbound for ground transportation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — inbound is the lead capability, but AVA also handles quote-lead callbacks, missed-call recovery, corporate account follow-up, ride confirmations, and post-trip surveys. Useful for fleets running lead-gen to keep vehicles full."
+          }
+        }
+      ]
     },
     {
-      "@type": "Question",
-      "name": "Will AVA replace my dispatcher?",
-      "acceptedAnswer": { "@type": "Answer", "text": "No. AVA takes the intake load so the dispatcher dispatches. Three calls hit at once — AVA takes all three, captures the trips, and the dispatcher works the manifests instead of fighting the phones." }
-    },
-    {
-      "@type": "Question",
-      "name": "What about a Friday afternoon airport surge?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Built for burst capacity, scoped to your call volume. AVA answers the surge, captures the ride, quotes from your rules, texts the passenger, alerts dispatch, and leaves a clean record. No more voicemail leak when the next ride goes to whoever answers first." }
-    },
-    {
-      "@type": "Question",
-      "name": "Does AVA do outbound for ground transportation?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes — inbound is the lead capability, but AVA also handles quote-lead callbacks, missed-call recovery, corporate account follow-up, ride confirmations, and post-trip surveys. Useful for fleets running lead-gen to keep vehicles full." }
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Transportation",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/ground-transportation"
+        }
+      ]
     }
   ]
 }
 </script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -117,35 +150,6 @@
 <script src="/js/bridge.js?v=119c51e" defer></script>
 <link rel="stylesheet" href="/css/demo-pill.css?v=119c51e">
 <!-- /BRIDGE:HEAD -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
 </head>
 <body>
 

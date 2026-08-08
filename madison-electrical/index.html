@@ -28,121 +28,116 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Electrical Businesses",
-  "name": "AVA for Madison Electrical",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Electrical contractors serving Madison and Dane County homes and small businesses"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Madison"
-  },
-  "description": "AI call answering for Madison electricians: hazard calls escalated safety-first, service and remodel inquiries captured with full discovery, EV charger leads qualified on intake."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Madison",
-      "item": "https://aivoiceagency.ai/madison"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Madison Electrical",
-      "item": "https://aivoiceagency.ai/madison-electrical"
+      "@type": "Service",
+      "name": "Breaker keeps tripping in Nakoma. The call didn't.",
+      "description": "Madison's near-west bungalows in Nakoma and Dudgeon-Monroe still run wiring from the Coolidge administration, while the metro adds EV chargers faster than almost anywhere in Wisconsin. Both ends of that spectrum call an electrician — and hang up on voicemail.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Madison"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does AVA do with a sparking-outlet or burning-smell call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It runs your safety script before anything else: evacuate-and-call-911 language for active hazards, breaker-off guidance only if you have scripted it, and immediate escalation to your on-call number. Scheduling only happens once the caller is out of danger."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA pre-qualify remodel and EV charger quotes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — panel location, service size if the caller can read it, garage versus street parking for chargers, project timeline, and budget expectations if you want them asked. Your estimator walks in with the discovery already done."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "We're a two-person shop. Is this overkill?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The opposite: a two-person shop is exactly who loses the most to voicemail, because both of you are always on a job. AVA is the office staff you cannot justify hiring, at a fraction of a hire."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast do captured calls reach us?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The SMS with full intake details lands on your phone within seconds of hangup, and the same record posts to your CRM or job board at the same time. Urgent flags ring through per your escalation rules."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Madison",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/madison"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Electrical",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/madison-electrical"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What does AVA do with a sparking-outlet or burning-smell call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "It runs your safety script before anything else: evacuate-and-call-911 language for active hazards, breaker-off guidance only if you have scripted it, and immediate escalation to your on-call number. Scheduling only happens once the caller is out of danger."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can AVA pre-qualify remodel and EV charger quotes?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes — panel location, service size if the caller can read it, garage versus street parking for chargers, project timeline, and budget expectations if you want them asked. Your estimator walks in with the discovery already done."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "We're a two-person shop. Is this overkill?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The opposite: a two-person shop is exactly who loses the most to voicemail, because both of you are always on a job. AVA is the office staff you cannot justify hiring, at a fraction of a hire."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How fast do captured calls reach us?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The SMS with full intake details lands on your phone within seconds of hangup, and the same record posts to your CRM or job board at the same time. Urgent flags ring through per your escalation rules."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

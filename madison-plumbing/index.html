@@ -28,121 +28,116 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Plumbing Businesses",
-  "name": "AVA for Madison Plumbing",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Plumbing and drain-service contractors in Madison and Dane County"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Madison"
-  },
-  "description": "AI answering for Madison plumbers: frozen-pipe and backup emergencies triaged and routed 24/7, landlord-tenant intake handled correctly, addresses verified against your service map."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Madison",
-      "item": "https://aivoiceagency.ai/madison"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Madison Plumbing",
-      "item": "https://aivoiceagency.ai/madison-plumbing"
+      "@type": "Service",
+      "name": "Frozen line on Willy Street. AVA already picked up.",
+      "description": "The Marquette and Atwood neighborhoods run on hundred-year-old plumbing that fails on the coldest night of February. Verona and Waunakee run on new construction with punch-list callbacks. Different failures, same phone problem — solved the same way.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Madison"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What details does AVA get from a frozen-pipe caller?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Address, whether water is currently flowing, whether the main is shut off, what part of the house is affected, and access notes — captured in under two minutes and routed to your on-call phone as a structured SMS, not a rambling voicemail."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA tell a landlord call from a tenant call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, and it matters on the isthmus: AVA captures the caller's role, the property address, and who authorizes work, so your plumber is not standing on a Willy Street porch waiting for an owner callback that should have happened at intake."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you cover the whole county or just the city?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Wherever you run: the isthmus, Monona, McFarland, Fitchburg, Verona, Waunakee, Stoughton. Your boundary list is enforced on every call so dispatch never chases an address you will not drive to."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if the caller has sewage backing up?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Backups get flagged urgent automatically — health hazard language in the intake does that — and routed to your emergency rotation with photos requested by text where that helps your crew arrive ready."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Madison",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/madison"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Plumbing",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/madison-plumbing"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What details does AVA get from a frozen-pipe caller?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Address, whether water is currently flowing, whether the main is shut off, what part of the house is affected, and access notes — captured in under two minutes and routed to your on-call phone as a structured SMS, not a rambling voicemail."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can AVA tell a landlord call from a tenant call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, and it matters on the isthmus: AVA captures the caller's role, the property address, and who authorizes work, so your plumber is not standing on a Willy Street porch waiting for an owner callback that should have happened at intake."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do you cover the whole county or just the city?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Wherever you run: the isthmus, Monona, McFarland, Fitchburg, Verona, Waunakee, Stoughton. Your boundary list is enforced on every call so dispatch never chases an address you will not drive to."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What if the caller has sewage backing up?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Backups get flagged urgent automatically — health hazard language in the intake does that — and routed to your emergency rotation with photos requested by text where that helps your crew arrive ready."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

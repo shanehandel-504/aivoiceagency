@@ -28,58 +28,119 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "name": "AI Voice Agent for Madison businesses.",
+      "description": "Madison and Dane County service businesses — from the Isthmus to Middleton, Fitchburg, Sun Prairie, and Verona — run on 608 numbers. Between Badger game-day congestion and the lakes-and-Isthmus geography that funnels traffic through a few chokepoints, the office phone keeps ringing while your crew is on the job. AVA answers so your team can keep working — built by a Wisconsin operator who knows the seasonal swings.",
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://aivoiceagency.ai/madison",
+        "price": "497",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does AVA handle Badger game-day and event-day call surges?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Fall Saturdays around Camp Randall, graduation weekends, and Concerts on the Square bunch calls into tight windows. AVA can answer during those surges and capture or route each caller. Concurrency is scoped and tested to your call volume before launch."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA cover my whole Dane County service area?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA is configured for the service area you define — the Isthmus and near-downtown, Monona, Middleton, Fitchburg, Sun Prairie, Verona, and out across Dane County. You set the boundaries and AVA routes by them."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will AVA say Madison-area names correctly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA's pronunciation library is configured for Madison-region names — Waunakee, Middleton, Verona, Monona, Mount Horeb, McFarland, Oregon, and Stoughton — and it can tell East Side from West Side when routing a caller."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about biotech and healthcare practices in the metro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA can capture appointment requests, intake, and after-hours messages for practices across the Madison metro — including the campus corridor and the Middleton and Verona clusters — and route them by the rules set for your account."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What's the Madison setup process?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A twenty-minute scoping call. Most Starter builds go live in days — your written scope sets the date. Call forwarding from your existing 608 number. No hardware. No software install."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Madison",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/madison"
+        }
+      ]
+    }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aivoiceagency.ai/" },
-    { "@type": "ListItem", "position": 2, "name": "Wisconsin", "item": "https://aivoiceagency.ai/#verticals" },
-    { "@type": "ListItem", "position": 3, "name": "Madison", "item": "https://aivoiceagency.ai/madison" }
-  ]
-}
-</script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "How does AVA handle Badger game-day and event-day call surges?", "acceptedAnswer": { "@type": "Answer", "text": "Fall Saturdays around Camp Randall, graduation weekends, and Concerts on the Square bunch calls into tight windows. AVA can answer during those surges and capture or route each caller. Concurrency is scoped and tested to your call volume before launch." } },
-    { "@type": "Question", "name": "Can AVA cover my whole Dane County service area?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AVA is configured for the service area you define — the Isthmus and near-downtown, Monona, Middleton, Fitchburg, Sun Prairie, Verona, and out across Dane County. You set the boundaries and AVA routes by them." } },
-    { "@type": "Question", "name": "Will AVA say Madison-area names correctly?", "acceptedAnswer": { "@type": "Answer", "text": "AVA's pronunciation library is configured for Madison-region names — Waunakee, Middleton, Verona, Monona, Mount Horeb, McFarland, Oregon, and Stoughton — and it can tell East Side from West Side when routing a caller." } },
-    { "@type": "Question", "name": "What about biotech and healthcare practices in the metro?", "acceptedAnswer": { "@type": "Answer", "text": "AVA can capture appointment requests, intake, and after-hours messages for practices across the Madison metro — including the campus corridor and the Middleton and Verona clusters — and route them by the rules set for your account." } },
-    { "@type": "Question", "name": "What's the Madison setup process?", "acceptedAnswer": { "@type": "Answer", "text": "A twenty-minute scoping call. Most Starter builds go live in days — your written scope sets the date. Call forwarding from your existing 608 number. No hardware. No software install." } }
-  ]
-}
-</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -28,121 +28,116 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Roofing Businesses",
-  "name": "AVA for West Bend Roofing",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Shingle, steel, and storm-restoration roofers serving West Bend and Washington County"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "West Bend"
-  },
-  "description": "Storm-cycle AI answering for West Bend roofing companies: county-wide hail surge absorption, structure-type intake sorting, insurance-detail logging, and lake-property urgency routing."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "West Bend Roofing",
-      "item": "https://aivoiceagency.ai/west-bend-roofing"
+      "@type": "Service",
+      "name": "County-wide hail. Two crews. Every call answered.",
+      "description": "When a cell tracks across Washington County, the damage list runs from West Bend subdivisions to steel-roofed pole barns in Wayne and cottages ringing Big Cedar Lake. The calls hit one office line for two straight weeks. AVA — built in Kewaskum — holds the line.",
+      "areaServed": {
+        "@type": "City",
+        "name": "West Bend"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can AVA separate house, barn, and cottage calls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — structure type drives the intake: homes get insurance and shingle detail capture, agricultural buildings get dimensions and steel-versus-asphalt preference, lake properties get access and urgency handling. Your estimator sees a sorted list, not a jumble."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens to the insurance conversation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA logs carrier, claim number, and adjuster timing as facts and schedules the inspection. It never predicts what insurance will cover — that conversation belongs to you, and callers are told exactly that."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "We're a family shop. Who sees the captured calls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Whoever you name: SMS to two phones, a shared job list, or your CRM if you run one. The kitchen-table office keeps working — it just stops missing the other twenty calls."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How wide can the storm coverage stretch?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "As wide as you chase: West Bend, Barton, Addison, Wayne, Trenton, the lake districts, or across the county line when a cycle justifies it. You set the boundary per storm if you want — AVA screens to whatever the current map says."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "West Bend",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/west-bend"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Roofing",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/west-bend-roofing"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Can AVA separate house, barn, and cottage calls?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes — structure type drives the intake: homes get insurance and shingle detail capture, agricultural buildings get dimensions and steel-versus-asphalt preference, lake properties get access and urgency handling. Your estimator sees a sorted list, not a jumble."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens to the insurance conversation?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA logs carrier, claim number, and adjuster timing as facts and schedules the inspection. It never predicts what insurance will cover — that conversation belongs to you, and callers are told exactly that."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "We're a family shop. Who sees the captured calls?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Whoever you name: SMS to two phones, a shared job list, or your CRM if you run one. The kitchen-table office keeps working — it just stops missing the other twenty calls."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How wide can the storm coverage stretch?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "As wide as you chase: West Bend, Barton, Addison, Wayne, Trenton, the lake districts, or across the county line when a cycle justifies it. You set the boundary per storm if you want — AVA screens to whatever the current map says."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -1,30 +1,88 @@
 # ============================================================================
 # aichauffeur.ai — robots
 # ----------------------------------------------------------------------------
-# AIC SITE RUN 1 · TASK D
-#
 # This file is served at https://aichauffeur.ai/robots.txt because the
 # `aichauffeur` Vercel project has Root Directory = /chauffeur/. It is a REAL
 # FILE, not a vercel.json rewrite: the repo-root vercel.json is never read by
 # that project, so the host-conditional rewrite approach cannot work here.
-# Before this run, aichauffeur.ai/robots.txt returned 404.
 #
 # aivoiceagency.ai has its own robots.txt at the repo root. The two hosts are
 # separate sites and must never cross-index.
+#
+# RUN A · 2026-08-07 — the answer engines are now named individually.
+# A crawler obeys exactly ONE group, the most specific User-agent match, and
+# ignores `*` entirely once a named group exists for it. So the Disallow that
+# used to live only under `*` is repeated in every group below. Without that
+# repetition, adding these groups would have SILENTLY UNBLOCKED
+# /DESIGN-SYSTEM.md for the eleven bots that matter most here.
 # ============================================================================
 
 User-agent: *
 Allow: /
-
-# RUN 10 · DESIGN-SYSTEM.md is the brand's engineering law and lives at the
-# chauffeur root because that is where a future run will look for it. RUN 9 left
-# it in the deploy bundle and blocked it here instead; chauffeur/.vercelignore
-# now excludes it, so the path 404s rather than merely asking crawlers not to
-# look. This line stays because a Disallow on a path that no longer exists costs
-# nothing and a crawler that already has the URL will stop asking for it.
 Disallow: /DESIGN-SYSTEM.md
 
-# RUN 10 · llms.txt is a description of this site for answer engines. It is meant
-# to be fetched, so it is deliberately NOT disallowed.
+# --- Search crawlers --------------------------------------------------------
+
+User-agent: Googlebot
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+User-agent: Googlebot-Image
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+User-agent: Bingbot
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+# --- Answer engines ---------------------------------------------------------
+# OpenAI and Anthropic each split this into three agents — an indexer, a
+# live fetcher acting for a user, and a training crawler. Allowing one does
+# not allow the others, so all three are named for both.
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+User-agent: GPTBot
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+User-agent: Claude-User
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /DESIGN-SYSTEM.md
+
+# RUN 10 · DESIGN-SYSTEM.md is the brand's engineering law. chauffeur/.vercelignore
+# excludes it from the deploy bundle, so the path 404s rather than merely asking
+# crawlers not to look. These lines stay because a Disallow on a path that no
+# longer exists costs nothing and a crawler that already has the URL will stop
+# asking for it.
+#
+# llms.txt is a description of this site for answer engines. It is meant to be
+# fetched, so it is deliberately NOT disallowed.
 
 Sitemap: https://aichauffeur.ai/sitemap.xml

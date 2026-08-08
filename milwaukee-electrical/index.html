@@ -28,121 +28,116 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Electrical Businesses",
-  "name": "AVA for Milwaukee Electrical",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Licensed electrical contractors and service electricians in the Milwaukee metro"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Milwaukee"
-  },
-  "description": "AI phone answering for Milwaukee electricians with safety-first triage: hazard escalation, service-call capture, EV charger and panel-upgrade lead qualification, and estimate scheduling."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Milwaukee",
-      "item": "https://aivoiceagency.ai/milwaukee"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Milwaukee Electrical",
-      "item": "https://aivoiceagency.ai/milwaukee-electrical"
+      "@type": "Service",
+      "name": "Hands on the panel. Phone still answered.",
+      "description": "Half of Milwaukee's housing stock predates modern wiring — knob-and-tube in Washington Heights, 60-amp services in Story Hill, loft conversions in the Third Ward. Those homes generate urgent, high-value electrical calls all day. AVA answers them while your hands are busy.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Milwaukee"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does AVA handle a possible electrical fire or burning smell?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Safety first, always: callers describing smoke, flames, or a hot burning odor are told to get out and call 911 before anything else. AVA captures the callback details so your shop can follow up once the caller is safe — it never schedules past a hazard."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA qualify EV charger and panel-upgrade leads?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA captures the home's age, the caller's electrical service size if known, the vehicle or equipment involved, and the address, then schedules the estimate. You show up already knowing whether it is a 100-amp service with no spare slots."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AVA answer when we're on multi-day commercial jobs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That is the exact use case. Your line forwards to AVA whenever you choose — all day, after hours, or only when you do not pick up by the third ring. Every captured call routes as SMS plus a CRM entry."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which neighborhoods do you know?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your whole map: Washington Heights, Story Hill, the Third Ward, West Allis, New Berlin, Mequon, Bayside, and out to wherever you take service work. AVA screens by your boundaries during intake."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Milwaukee",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/milwaukee"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Electrical",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/milwaukee-electrical"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How does AVA handle a possible electrical fire or burning smell?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Safety first, always: callers describing smoke, flames, or a hot burning odor are told to get out and call 911 before anything else. AVA captures the callback details so your shop can follow up once the caller is safe — it never schedules past a hazard."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can AVA qualify EV charger and panel-upgrade leads?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. AVA captures the home's age, the caller's electrical service size if known, the vehicle or equipment involved, and the address, then schedules the estimate. You show up already knowing whether it is a 100-amp service with no spare slots."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does AVA answer when we're on multi-day commercial jobs?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "That is the exact use case. Your line forwards to AVA whenever you choose — all day, after hours, or only when you do not pick up by the third ring. Every captured call routes as SMS plus a CRM entry."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Which neighborhoods do you know?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Your whole map: Washington Heights, Story Hill, the Third Ward, West Allis, New Berlin, Mequon, Bayside, and out to wherever you take service work. AVA screens by your boundaries during intake."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

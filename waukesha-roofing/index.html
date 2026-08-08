@@ -28,122 +28,117 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/waukesha-roofing",
-  "serviceType": "AI Phone Answering for Roofing Businesses",
-  "name": "AVA for Waukesha Roofing",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Solo and small Roofing shops serving Waukesha"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Waukesha"
-  },
-  "description": "AVA is an AI voice agent that answers after-hours and overflow phone calls for roofing contractors across Waukesha and Waukesha County, capturing caller details and routing them to the shop."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Waukesha Roofing",
-      "item": "https://aivoiceagency.ai/waukesha-roofing"
+      "@type": "Service",
+      "name": "The storm passed at 2 AM. Muskego is already calling roofers. AVA picks up while you sleep.",
+      "url": "https://aivoiceagency.ai/waukesha-roofing",
+      "description": "Wind and hail move through, and by sunrise every lake home in Muskego is looking for a roofer. The out-of-area storm crews are working the same list you are. The shop that answers the first call gets the walk-through, not the second callback.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Waukesha"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA answer when I am up on a roof and cannot grab the phone?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That is the idea. Your cell rings first if you want it to. AVA picks up only when you cannot, gets the caller name, address, and what is wrong, and texts you the intake before you are back down the ladder."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Storm-chaser crews flood Waukesha after every big blow. How does answering help?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The morning after wind or hail, whoever answers first gets the walk-through. When a Muskego homeowner searches shingles blown off roof at 6 AM and calls, AVA picks up in your shop name instead of routing them to the next roofer on the list."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA tell a real emergency from a routine call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures what the caller says and routes it to you. An active leak into a bedroom reads different from a spring gutter quote, and both land in your text with enough detail to decide what gets a same-night callback. Your dispatcher will confirm the actual appointment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it sound like an out-of-town call center?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. AVA answers in your shop name and talks like it belongs in Waukesha County, not a national queue. Callers get a straight, quick intake and you get the details in a text. This is sample-based demo behavior, not a promise about any one call."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Waukesha",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/waukesha"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Roofing",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/waukesha-roofing"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Does AVA answer when I am up on a roof and cannot grab the phone?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "That is the idea. Your cell rings first if you want it to. AVA picks up only when you cannot, gets the caller name, address, and what is wrong, and texts you the intake before you are back down the ladder."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Storm-chaser crews flood Waukesha after every big blow. How does answering help?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The morning after wind or hail, whoever answers first gets the walk-through. When a Muskego homeowner searches shingles blown off roof at 6 AM and calls, AVA picks up in your shop name instead of routing them to the next roofer on the list."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can AVA tell a real emergency from a routine call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA captures what the caller says and routes it to you. An active leak into a bedroom reads different from a spring gutter quote, and both land in your text with enough detail to decide what gets a same-night callback. Your dispatcher will confirm the actual appointment."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does it sound like an out-of-town call center?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. AVA answers in your shop name and talks like it belongs in Waukesha County, not a national queue. Callers get a straight, quick intake and you get the details in a text. This is sample-based demo behavior, not a promise about any one call."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

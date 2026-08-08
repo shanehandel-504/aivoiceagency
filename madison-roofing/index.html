@@ -28,121 +28,116 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Roofing Businesses",
-  "name": "AVA for Madison Roofing",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Residential roofing and exteriors contractors in Madison and Dane County"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Madison"
-  },
-  "description": "Storm-surge AI answering for Madison roofing companies: hail-event call absorption, ice-dam urgency routing, insurance-detail capture, and area-grouped inspection scheduling."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Madison",
-      "item": "https://aivoiceagency.ai/madison"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Madison Roofing",
-      "item": "https://aivoiceagency.ai/madison-roofing"
+      "@type": "Service",
+      "name": "Ice dam leaking in Maple Bluff. Your line stayed open.",
+      "description": "Madison roofing has two phone seasons: the summer afternoon a cell drops hail across Stoughton and DeForest, and the February week when ice dams send water through ceilings from Maple Bluff to Westmorland. Both bury an office line in hours.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Madison"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Sixty calls in three days — AVA keeps up?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — concurrency is scoped and tested to your surge volume, so callers get answered, damage described, address logged, inspection window offered. Your team starts each surge morning with a worked list sorted by urgency and neighborhood instead of a full voicemail box."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How are ice-dam calls triaged versus hail calls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Active interior water gets urgent routing to your mitigation crew; exterior-only damage schedules as inspections. Both intakes capture what your estimator needs — roof age, story count, visible damage, insurance intent — before anyone drives anywhere."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AVA discuss insurance proceeds with homeowners?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It captures carrier, claim status, and adjuster appointments as data points and leaves every coverage conversation to your project managers. No promises get made on your behalf."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it group inspections by area during a storm response?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures the caller's address at intake, so your scheduler can run Stoughton on Tuesday and DeForest on Wednesday instead of criss-crossing the county — the intake data makes the routing possible."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Madison",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/madison"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Roofing",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/madison-roofing"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Sixty calls in three days — AVA keeps up?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes — concurrency is scoped and tested to your surge volume, so callers get answered, damage described, address logged, inspection window offered. Your team starts each surge morning with a worked list sorted by urgency and neighborhood instead of a full voicemail box."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How are ice-dam calls triaged versus hail calls?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Active interior water gets urgent routing to your mitigation crew; exterior-only damage schedules as inspections. Both intakes capture what your estimator needs — roof age, story count, visible damage, insurance intent — before anyone drives anywhere."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does AVA discuss insurance proceeds with homeowners?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. It captures carrier, claim status, and adjuster appointments as data points and leaves every coverage conversation to your project managers. No promises get made on your behalf."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can it group inspections by area during a storm response?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA captures the caller's address at intake, so your scheduler can run Stoughton on Tuesday and DeForest on Wednesday instead of criss-crossing the county — the intake data makes the routing possible."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

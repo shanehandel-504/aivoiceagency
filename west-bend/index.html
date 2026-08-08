@@ -28,108 +28,119 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Wisconsin",
-      "item": "https://aivoiceagency.ai/#verticals"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "West Bend",
-      "item": "https://aivoiceagency.ai/west-bend"
+      "@type": "Service",
+      "name": "The AI phone line for West Bend service shops",
+      "description": "West Bend runs on one- and two-truck shops from Barton to Allenton, and the local shop that answers is the one that gets the work. When you are elbow-deep in a job the phone still rings - furnace calls, thaw floods, panel work - and the caller just dials the next 262 listing. AVA picks up when you cannot, captures the details, and texts you the intake.",
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://aivoiceagency.ai/west-bend",
+        "price": "497",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will AVA say our local towns right?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AVA is tuned to Washington County - Kewaskum, Slinger, Allenton, Newburg, Barton - so a caller from the lake districts hears their own town said plainly, and you get the address back the way a local writes it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What area does this cover?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "West Bend and the towns around it: Barton, Kewaskum, Jackson, Slinger, Hartford, Newburg, Allenton, and the Big Cedar and Little Cedar lake districts. If you take calls across Washington County, AVA covers your map."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it handle the winter no-heat rush?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That is the point. When January furnace calls or a spring thaw stack up faster than one truck can answer, AVA captures each caller and routes them to you in order instead of letting a busy signal send the job down the road."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this replace how I answer my own calls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Your cell rings first if you want it to. AVA picks up only when you cannot - nights, weekends, a second call during a job - and texts you the intake so the callback is yours. AVA is an AI voice agent, not a receptionist you have to manage."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long to get running?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Days, not months. Tell us your trade, your towns, and how you want calls handled, and AVA answers in your shop's name shortly after - no new hardware and no rip-out of your current number."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "West Bend",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/west-bend"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Will AVA say our local towns right?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. AVA is tuned to Washington County - Kewaskum, Slinger, Allenton, Newburg, Barton - so a caller from the lake districts hears their own town said plainly, and you get the address back the way a local writes it."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What area does this cover?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "West Bend and the towns around it: Barton, Kewaskum, Jackson, Slinger, Hartford, Newburg, Allenton, and the Big Cedar and Little Cedar lake districts. If you take calls across Washington County, AVA covers your map."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can it handle the winter no-heat rush?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "That is the point. When January furnace calls or a spring thaw stack up faster than one truck can answer, AVA captures each caller and routes them to you in order instead of letting a busy signal send the job down the road."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does this replace how I answer my own calls?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. Your cell rings first if you want it to. AVA picks up only when you cannot - nights, weekends, a second call during a job - and texts you the intake so the callback is yours. AVA is an AI voice agent, not a receptionist you have to manage."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How long to get running?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Days, not months. Tell us your trade, your towns, and how you want calls handled, and AVA answers in your shop's name shortly after - no new hardware and no rip-out of your current number."
-      }
-    }
-  ]
-}
-</script>
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

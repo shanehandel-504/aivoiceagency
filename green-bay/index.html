@@ -28,58 +28,119 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "name": "AI Voice Agent for Green Bay businesses.",
+      "description": "Green Bay and Brown County service businesses run on the 920 area code — and on Packers home-game days the east side around the stadium district jams solid while the calls keep coming. AVA answers your phone so your team can run the work — built by a Wisconsin operator.",
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://aivoiceagency.ai/green-bay",
+        "price": "497",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can AVA handle Packers home-game call volume?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA is built for the home-game surge, when Ashwaubenon and stadium-district hospitality and transportation lines spike inside a short window. Concurrency is scoped and tested to your call volume before launch, so the rush is less likely to roll a caller to a busy signal."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What's your Green Bay service area?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers for operators across Brown County — Green Bay, De Pere, Ashwaubenon, Howard, Bellevue, Allouez, and Suamico — and along the I-43/US-41 corridor. AVA runs over your existing phone number, so there's no coverage map to worry about: if you take the call today, AVA can take it for you."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will AVA say the local names right?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA is configured with Green Bay-area names — Ashwaubenon, Allouez, Suamico, De Pere, and the rest of the Brown County map — so callers aren't re-spelling their own neighborhood and your front desk isn't correcting a robot."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does AVA handle the smaller-market relationship style?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA is configured around how your team already greets returning customers. Returning callers can be recognized by name and routed with their account context — same warm hello, without dropping calls when three come in at once."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What's the Green Bay setup process?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A twenty-minute scoping call. Most Starter builds can go live in days — your written scope sets the date. Call forwarding from your existing number. No hardware. No software install."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Green Bay",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/green-bay"
+        }
+      ]
+    }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aivoiceagency.ai/" },
-    { "@type": "ListItem", "position": 2, "name": "Wisconsin", "item": "https://aivoiceagency.ai/#verticals" },
-    { "@type": "ListItem", "position": 3, "name": "Green Bay", "item": "https://aivoiceagency.ai/green-bay" }
-  ]
-}
-</script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Can AVA handle Packers home-game call volume?", "acceptedAnswer": { "@type": "Answer", "text": "AVA is built for the home-game surge, when Ashwaubenon and stadium-district hospitality and transportation lines spike inside a short window. Concurrency is scoped and tested to your call volume before launch, so the rush is less likely to roll a caller to a busy signal." } },
-    { "@type": "Question", "name": "What's your Green Bay service area?", "acceptedAnswer": { "@type": "Answer", "text": "AVA answers for operators across Brown County — Green Bay, De Pere, Ashwaubenon, Howard, Bellevue, Allouez, and Suamico — and along the I-43/US-41 corridor. AVA runs over your existing phone number, so there's no coverage map to worry about: if you take the call today, AVA can take it for you." } },
-    { "@type": "Question", "name": "Will AVA say the local names right?", "acceptedAnswer": { "@type": "Answer", "text": "AVA is configured with Green Bay-area names — Ashwaubenon, Allouez, Suamico, De Pere, and the rest of the Brown County map — so callers aren't re-spelling their own neighborhood and your front desk isn't correcting a robot." } },
-    { "@type": "Question", "name": "How does AVA handle the smaller-market relationship style?", "acceptedAnswer": { "@type": "Answer", "text": "AVA is configured around how your team already greets returning customers. Returning callers can be recognized by name and routed with their account context — same warm hello, without dropping calls when three come in at once." } },
-    { "@type": "Question", "name": "What's the Green Bay setup process?", "acceptedAnswer": { "@type": "Answer", "text": "A twenty-minute scoping call. Most Starter builds can go live in days — your written scope sets the date. Call forwarding from your existing number. No hardware. No software install." } }
-  ]
-}
-</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

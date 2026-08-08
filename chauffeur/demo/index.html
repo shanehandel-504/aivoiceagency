@@ -75,15 +75,91 @@
     .cta-stack .cta-tertiary:hover{ border-color:var(--sky); }
   </style>
 
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does the demo dispatch a car?","acceptedAnswer":{"@type":"Answer","text":"No. It captures the trip and shows the ticket it would hand a dispatcher. No vehicle goes out and nothing is charged."}},{"@type":"Question","name":"Where did the scenario demo go?","acceptedAnswer":{"@type":"Answer","text":"It was retired. Hearing AVA handle your own trip on a real line tells you more than a scripted replay does, so the demo is the call now."}},{"@type":"Question","name":"What if I want it on my own line?","acceptedAnswer":{"@type":"Answer","text":"Book the setup call. It is scoped to how your operation runs — your rate rules, your service area, your dispatch process."}}]}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
-    {"@type":"ListItem","position":1,"name":"Home","item":"https://aichauffeur.ai/"},
-    {"@type":"ListItem","position":2,"name":"Live demo","item":"https://aichauffeur.ai/demo/"}
-  ]}
-  </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aichauffeur.ai/#organization",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "telephone": "+1-414-775-0019",
+      "email": "dispatch@aichauffeur.ai",
+      "logo": "https://aichauffeur.ai/assets/brand/lockup-short.svg",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressRegion": "WI"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aichauffeur.ai/#website",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "publisher": {
+        "@id": "https://aichauffeur.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "name": "The demo is a phone call. Give AVA a real trip.",
+      "description": "Dial the line and talk like a customer would. Airport run, hourly charter, point to point — whatever you get most. AVA takes the whole trip and reads it back before you hang up.",
+      "provider": {
+        "@id": "https://aichauffeur.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does the demo dispatch a car?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It captures the trip and shows the ticket it would hand a dispatcher. No vehicle goes out and nothing is charged."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where did the scenario demo go?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It was retired. Hearing AVA handle your own trip on a real line tells you more than a scripted replay does, so the demo is the call now."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if I want it on my own line?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Book the setup call. It is scoped to how your operation runs — your rate rules, your service area, your dispatch process."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aichauffeur.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Live demo",
+          "position": 2,
+          "item": "https://aichauffeur.ai/demo/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

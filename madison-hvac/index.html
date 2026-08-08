@@ -28,129 +28,124 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for HVAC Businesses",
-  "name": "AVA for Madison HVAC",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "HVAC contractors and property-service companies in Madison and Dane County"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Madison"
-  },
-  "description": "AI phone answering for Madison HVAC companies: no-heat emergency triage on sub-zero nights, property-manager account routing, and August turnover-season intake capture."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Madison",
-      "item": "https://aivoiceagency.ai/madison"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Madison HVAC",
-      "item": "https://aivoiceagency.ai/madison-hvac"
+      "@type": "Service",
+      "name": "Minus 18 in Tenney-Lapham. Every furnace call answered.",
+      "description": "Madison HVAC runs on two calendars: the deep-winter nights when isthmus flats and Middleton ranches lose heat, and the August rental turnover when property managers need forty units checked at once. AVA answers through both.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Madison"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can AVA handle property managers differently from homeowners?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Known property-management numbers get recognized and routed by your account rules — multi-unit intake, PO capture, direct line to your service manager — while homeowner calls run the standard triage. You define the tiers at setup."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens during a real cold snap when calls stack up?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cold-snap night is the design case: concurrency is scoped and tested to your call volume before launch, and AVA separates no-heat emergencies from morning-scheduling requests, and routes urgent dispatches to your on-call tech instead of dropping the caller to voicemail."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Dane County communities can you cover?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your service map is the boundary: Madison proper, Middleton, Fitchburg, Verona, Sun Prairie, Waunakee, Monona, McFarland — AVA verifies the address on intake and screens out-of-area callers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AVA integrate with our dispatch software?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Captured calls flow into the field-service platform you already run — job details, urgency tag, address, callback — so dispatch works from one queue instead of a voicemail box."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it book the August turnover inspections?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures unit lists, access instructions, and requested windows during turnover season and writes them into your schedule per your rules, so a forty-unit request does not evaporate because the office was already on a call."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Madison",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/madison"
+        },
+        {
+          "@type": "ListItem",
+          "name": "HVAC",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/madison-hvac"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Can AVA handle property managers differently from homeowners?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Known property-management numbers get recognized and routed by your account rules — multi-unit intake, PO capture, direct line to your service manager — while homeowner calls run the standard triage. You define the tiers at setup."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens during a real cold snap when calls stack up?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Cold-snap night is the design case: concurrency is scoped and tested to your call volume before launch, and AVA separates no-heat emergencies from morning-scheduling requests, and routes urgent dispatches to your on-call tech instead of dropping the caller to voicemail."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Which Dane County communities can you cover?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Your service map is the boundary: Madison proper, Middleton, Fitchburg, Verona, Sun Prairie, Waunakee, Monona, McFarland — AVA verifies the address on intake and screens out-of-area callers."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does AVA integrate with our dispatch software?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Captured calls flow into the field-service platform you already run — job details, urgency tag, address, callback — so dispatch works from one queue instead of a voicemail box."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can it book the August turnover inspections?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA captures unit lists, access instructions, and requested windows during turnover season and writes them into your schedule per your rules, so a forty-unit request does not evaporate because the office was already on a call."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

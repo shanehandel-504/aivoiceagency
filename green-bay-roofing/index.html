@@ -28,122 +28,117 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "url": "https://aivoiceagency.ai/green-bay-roofing",
-  "serviceType": "AI Phone Answering for Roofing Contractors",
-  "name": "AVA for Green Bay Roofing",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Solo and small Roofing shops serving Green Bay"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Green Bay"
-  },
-  "description": "AVA is an AI voice agent that answers after-hours and overflow phone calls for roofing contractors across Green Bay and Brown County, Wisconsin, capturing storm-damage leads and routing the details to the owner."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Green Bay Roofing",
-      "item": "https://aivoiceagency.ai/green-bay-roofing"
+      "@type": "Service",
+      "name": "Hail hit Bellevue overnight. Storm chasers are already dialing. Answer first.",
+      "url": "https://aivoiceagency.ai/green-bay-roofing",
+      "description": "A wind-and-hail line rolls through the Bellevue subdivisions, and by sunrise the phone starts. If you are up on a roof or still asleep, the out-of-town storm crew grabs the call you could not. AVA picks up when you cannot, takes the address and the damage, and texts you the intake before the caller sets the phone down.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Green Bay"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA answer only when I miss the call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your cell rings first if you want it to. AVA picks up only when you cannot, whether you are on a roof, driving, or asleep, takes the caller's address and what they are seeing, and texts you the intake. You call back from the truck with the full story."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens on a storm night when the calls stack up?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA answers each one, captures the Bellevue address and the damage, and routes the details to you. Sample data shows a caller reporting shingles torn off at 2 AM being captured and sent to you while you sleep, and a dispatcher will confirm the actual visit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AVA tell an emergency from a routine call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA gets the details. A homeowner searching ice dam forming on the roof edge after the thaw is a different call than a spring quote request. AVA captures both and flags what sounds urgent so you know which one to call back first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will out-of-town storm crews really beat me to the phone?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The morning after a Green Bay hail line, chasers work the 920 listings hard and answer fast. If your phone goes unanswered, they get the homeowner. AVA keeps you in the running by answering in your name and getting the lead to you."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Green Bay",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/green-bay"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Roofing",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/green-bay-roofing"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Does AVA answer only when I miss the call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Your cell rings first if you want it to. AVA picks up only when you cannot, whether you are on a roof, driving, or asleep, takes the caller's address and what they are seeing, and texts you the intake. You call back from the truck with the full story."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens on a storm night when the calls stack up?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA answers each one, captures the Bellevue address and the damage, and routes the details to you. Sample data shows a caller reporting shingles torn off at 2 AM being captured and sent to you while you sleep, and a dispatcher will confirm the actual visit."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can AVA tell an emergency from a routine call?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA gets the details. A homeowner searching ice dam forming on the roof edge after the thaw is a different call than a spring quote request. AVA captures both and flags what sounds urgent so you know which one to call back first."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will out-of-town storm crews really beat me to the phone?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The morning after a Green Bay hail line, chasers work the 920 listings hard and answer fast. If your phone goes unanswered, they get the homeowner. AVA keeps you in the running by answering in your name and getting the lead to you."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

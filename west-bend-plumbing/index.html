@@ -28,121 +28,116 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for Plumbing Businesses",
-  "name": "AVA for West Bend Plumbing",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Plumbing contractors serving West Bend, Washington County, and surrounding townships"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "West Bend"
-  },
-  "description": "AI answering for West Bend plumbers: well-pump and no-water emergencies, softener and filtration inquiries, septic-adjacent call routing, and weekend on-call dispatch."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "West Bend Plumbing",
-      "item": "https://aivoiceagency.ai/west-bend-plumbing"
+      "@type": "Service",
+      "name": "Well pump dead in Newburg. Call captured in ninety seconds.",
+      "description": "Washington County plumbing is its own trade: well pumps and pressure tanks in the townships, water softeners fighting some of the hardest water in Wisconsin, galvanized lines in Barton's older blocks. AVA — built ten minutes away in Kewaskum — answers for the plumbers who work it.",
+      "areaServed": {
+        "@type": "City",
+        "name": "West Bend"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA know the difference between well and municipal households?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It asks early, because everything downstream depends on it: well households get pump, pressure-tank, and power questions; city households get main and meter questions. Your tech rolls with the right parts either way."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it capture septic-related calls correctly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AVA captures backup symptoms, tank-service history if known, and access details, then routes per your rules — including handing off to the septic company you partner with when the job is not yours. No confused promises to callers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the actual coverage area?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You draw the map: West Bend, Barton, Jackson, Trenton, Farmington, Newburg, Kewaskum, out to the lake districts. AVA confirms the caller's location during intake, so addresses land right the first time and you spend less time chasing them across county lines."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast does a captured emergency reach me on a weekend?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Seconds after hangup: structured SMS with address, symptom, shutoff status, and callback number. If you run an on-call rotation with another plumber, AVA follows the calendar you set."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "West Bend",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/west-bend"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Plumbing",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/west-bend-plumbing"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Does AVA know the difference between well and municipal households?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "It asks early, because everything downstream depends on it: well households get pump, pressure-tank, and power questions; city households get main and meter questions. Your tech rolls with the right parts either way."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can it capture septic-related calls correctly?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "AVA captures backup symptoms, tank-service history if known, and access details, then routes per your rules — including handing off to the septic company you partner with when the job is not yours. No confused promises to callers."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the actual coverage area?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You draw the map: West Bend, Barton, Jackson, Trenton, Farmington, Newburg, Kewaskum, out to the lake districts. AVA confirms the caller's location during intake, so addresses land right the first time and you spend less time chasing them across county lines."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How fast does a captured emergency reach me on a weekend?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Seconds after hangup: structured SMS with address, symptom, shutoff status, and callback number. If you run an on-call rotation with another plumber, AVA follows the calendar you set."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

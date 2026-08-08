@@ -28,121 +28,122 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://aivoiceagency.ai/#organization",
-  "name": "AI Voice Agency",
-  "url": "https://aivoiceagency.ai/",
-  "telephone": "+1-414-240-8930",
-  "description": "AI receptionist for local service businesses. Answers every call 24/7 and books the job.",
-  "founder": {
-    "@type": "Person",
-    "name": "Shane Handel"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Kewaskum",
-    "addressRegion": "WI",
-    "addressCountry": "US"
-  },
-  "sameAs": [
-    "https://www.facebook.com/AIVoiceAgency",
-    "https://www.instagram.com/aivoiceagency.ai",
-    "https://x.com/AIVoiceAgency",
-    "https://www.youtube.com/@aivoiceagency",
-    "https://www.tiktok.com/@aivoiceagency.ai",
-    "https://www.linkedin.com/company/aivoiceagency"
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "AI Phone Answering for HVAC Businesses",
-  "name": "AVA for West Bend HVAC",
-  "provider": {
-    "@id": "https://aivoiceagency.ai/#organization"
-  },
-  "audience": {
-    "@type": "BusinessAudience",
-    "audienceType": "Solo and small HVAC shops serving West Bend and Washington County"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "West Bend"
-  },
-  "description": "AI phone answering for West Bend and Washington County HVAC shops: propane and natural-gas no-heat triage, lake-property urgency calls, and one-truck operator handoff built in Kewaskum."
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://aivoiceagency.ai/"
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Home Services",
-      "item": "https://aivoiceagency.ai/home-services"
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "West Bend HVAC",
-      "item": "https://aivoiceagency.ai/west-bend-hvac"
+      "@type": "Service",
+      "name": "Furnace out in Barton. Answered from up the road.",
+      "description": "AVA is built in Kewaskum — ten minutes north of West Bend on Highway 45. It answers for the HVAC shops working Barton bungalows, Big Cedar Lake cottages, and the propane furnaces heating farmhouses from Allenton to Newburg.",
+      "areaServed": {
+        "@type": "City",
+        "name": "West Bend"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://aivoiceagency.ai/west-bend-hvac",
+        "price": "497",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does AVA understand propane versus natural gas households?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — the intake asks. Fuel type, tank level if the caller knows it, and equipment age all get captured, because a propane no-heat on a farm outside Kewaskum is a different dispatch than a natural-gas call in downtown West Bend."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "I'm a one-man shop. How does the handoff work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your cell keeps ringing first if you want it to — AVA picks up only when you cannot, captures the caller's details, and texts you the intake before the caller has set the phone down. You call back from under the next furnace with full context."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How far out do you cover?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your radius is the rule: West Bend, Barton, Kewaskum, Jackson, Slinger, Hartford, Newburg, Allenton, the lake districts — and AVA politely declines the Sheboygan address you do not want to drive to in February."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this overkill for my call volume?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Volume is not the problem at small scale — timing is. You miss calls precisely when you are earning, and each miss is a bigger slice of your year than it would be for a ten-truck outfit. Coverage is priced for that reality, starting at $497 a month."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aivoiceagency.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "West Bend",
+          "position": 2,
+          "item": "https://aivoiceagency.ai/west-bend"
+        },
+        {
+          "@type": "ListItem",
+          "name": "HVAC",
+          "position": 3,
+          "item": "https://aivoiceagency.ai/west-bend-hvac"
+        }
+      ]
     }
   ]
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Does AVA understand propane versus natural gas households?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes — the intake asks. Fuel type, tank level if the caller knows it, and equipment age all get captured, because a propane no-heat on a farm outside Kewaskum is a different dispatch than a natural-gas call in downtown West Bend."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I'm a one-man shop. How does the handoff work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Your cell keeps ringing first if you want it to — AVA picks up only when you cannot, captures the caller's details, and texts you the intake before the caller has set the phone down. You call back from under the next furnace with full context."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How far out do you cover?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Your radius is the rule: West Bend, Barton, Kewaskum, Jackson, Slinger, Hartford, Newburg, Allenton, the lake districts — and AVA politely declines the Sheboygan address you do not want to drive to in February."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is this overkill for my call volume?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Volume is not the problem at small scale — timing is. You miss calls precisely when you are earning, and each miss is a bigger slice of your year than it would be for a ten-truck outfit. Coverage is priced for that reality, starting at $497 a month."
-      }
-    }
-  ]
-}
-</script>
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

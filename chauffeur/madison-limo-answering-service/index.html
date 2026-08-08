@@ -49,21 +49,123 @@
   <link rel="stylesheet" href="/assets/circulant.css?v=119c51e">
   <link rel="stylesheet" href="/assets/aic.css?v=119c51e">
 
-  <!-- LocalBusiness · no streetAddress, postalCode or geo is emitted. There is no
-       public storefront in Madison and a fabricated one would be a hard violation.
-       telephone and areaServed are true and verifiable; an address would not be. -->
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://aichauffeur.ai/madison-limo-answering-service/#business","name":"AI Chauffeur — Madison limo answering service","url":"https://aichauffeur.ai/madison-limo-answering-service/","telephone":"+1-414-775-0019","priceRange":"Custom per operation","description":"Limo answering service and dispatch intake for Madison limousine, black car and chauffeured transportation operators. AVA answers every inbound call at once, 24/7, and hands the dispatcher a structured trip ticket to confirm. Wisconsin-built, serving operators nationwide.","areaServed":[{"@type":"City","name":"Madison"},{"@type":"AdministrativeArea","name":"Dane County"},{"@type":"State","name":"Wisconsin"}],"parentOrganization":{"@type":"Organization","name":"AI Voice Agency","url":"https://aivoiceagency.ai/"}}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Do you only work with Madison operators?","acceptedAnswer":{"@type":"Answer","text":"No. AI Chauffeur is built in Wisconsin and runs for chauffeured transportation operators nationwide. Madison is an hour down the road, so the local detail comes easy — but the service area is set up around your operation, wherever you run."}},{"@type":"Question","name":"Does it know MSN and the campus venues?","acceptedAnswer":{"@type":"Answer","text":"Your service area, airports, venues and hotel list are configured during setup. That includes Dane County Regional, the Capitol square, the campus buildings you run to most, and the way your dispatcher writes a pickup point. AVA works from your list, not a generic map."}},{"@type":"Question","name":"What about game days and commencement?","acceptedAnswer":{"@type":"Answer","text":"That is the pattern AVA is built for. Calls do not arrive one at a time when a stadium empties or a campus fills with families. AVA answers every inbound call at once, 24/7, and never puts a caller on hold or returns a busy signal. Each call comes back as its own trip ticket with the pickup point, party size and time."}},{"@type":"Question","name":"Who confirms the trip?","acceptedAnswer":{"@type":"Answer","text":"Your dispatcher. AVA captures the call and builds the trip ticket — pickup, dropoff, time, vehicle class, passenger and bag count, flight details and notes. A person on your side confirms it in the software you already run, whether that is Limo Anywhere, FASTTRAK, Santa Cruz or a shared inbox."}}]}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
-    {"@type":"ListItem","position":1,"name":"Home","item":"https://aichauffeur.ai/"},
-    {"@type":"ListItem","position":2,"name":"Madison limo answering service","item":"https://aichauffeur.ai/madison-limo-answering-service/"}
-  ]}
-  </script>
+  <!-- RUN A · this node was a LocalBusiness until 2026-08-07. It is now a Service.
+       The reason the old comment gave for withholding streetAddress, postalCode and
+       geo — there is no public storefront in Madison, and a fabricated one would be
+       a hard violation — is the reason the TYPE was wrong too: LocalBusiness asserts
+       a place of business. areaServed is true and verifiable, so it survives; the
+       storefront claim does not. telephone went with the type: schema.org does not
+       define it on Service, and the number is on the Organization this node names as
+       its provider. Do not retype this back. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aichauffeur.ai/#organization",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "telephone": "+1-414-775-0019",
+      "email": "dispatch@aichauffeur.ai",
+      "logo": "https://aichauffeur.ai/assets/brand/lockup-short.svg",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressRegion": "WI"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aichauffeur.ai/#website",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "publisher": {
+        "@id": "https://aichauffeur.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://aichauffeur.ai/madison-limo-answering-service/#business",
+      "name": "Madison limo answering — built in Wisconsin.",
+      "url": "https://aichauffeur.ai/madison-limo-answering-service/",
+      "description": "Built for Madison limousine, black car, and chauffeured transportation operators. Early departures out of Dane County Regional, corporate riders out of Verona, a downtown of closed streets, and Saturdays that fill the whole city. AVA answers the line while you are driving, dispatching, or asleep — and hands your dispatcher a clean trip ticket.",
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Madison"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Dane County"
+        },
+        {
+          "@type": "State",
+          "name": "Wisconsin"
+        }
+      ],
+      "provider": {
+        "@id": "https://aichauffeur.ai/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do you only work with Madison operators?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. AI Chauffeur is built in Wisconsin and runs for chauffeured transportation operators nationwide. Madison is an hour down the road, so the local detail comes easy — but the service area is set up around your operation, wherever you run."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it know MSN and the campus venues?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your service area, airports, venues and hotel list are configured during setup. That includes Dane County Regional, the Capitol square, the campus buildings you run to most, and the way your dispatcher writes a pickup point. AVA works from your list, not a generic map."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about game days and commencement?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That is the pattern AVA is built for. Calls do not arrive one at a time when a stadium empties or a campus fills with families. AVA answers every inbound call at once, 24/7, and never puts a caller on hold or returns a busy signal. Each call comes back as its own trip ticket with the pickup point, party size and time."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who confirms the trip?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your dispatcher. AVA captures the call and builds the trip ticket — pickup, dropoff, time, vehicle class, passenger and bag count, flight details and notes. A person on your side confirms it in the software you already run, whether that is Limo Anywhere, FASTTRAK, Santa Cruz or a shared inbox."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aichauffeur.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Madison limo answering service",
+          "position": 2,
+          "item": "https://aichauffeur.ai/madison-limo-answering-service/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
