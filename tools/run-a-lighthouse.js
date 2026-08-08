@@ -172,9 +172,14 @@ if (PHASE === 'resummarise') {
             seo: s('seo'), bp: s('best-practices'),
             cls: (j.audits['cumulative-layout-shift'] || {}).numericValue,
             lcp: (j.audits['largest-contentful-paint'] || {}).numericValue,
-            seoFails: (j.categories.seo.auditRefs || []).map(r => j.audits[r.id])
+            // A top-up run may carry --only-categories=performance, so the
+            // other categories are simply absent. Reaching through an absent
+            // category to .auditRefs throws and takes the whole summary with
+            // it — the extra samples are the point, not a crash.
+            seoFails: ((j.categories.seo || {}).auditRefs || [])
+              .map(r => j.audits[r.id])
               .filter(x => x && x.score !== null && x.score < 1).map(x => x.id),
-            bpFails: (j.categories['best-practices'].auditRefs || [])
+            bpFails: ((j.categories['best-practices'] || {}).auditRefs || [])
               .map(r => j.audits[r.id])
               .filter(x => x && x.score !== null && x.score < 1).map(x => x.id),
           });
