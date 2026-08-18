@@ -1,0 +1,106 @@
+{
+  "agent_id": "agent_d5ada9f774fe3ae7f034d2c677",
+  "channel": "voice",
+  "last_modification_timestamp": 1787071139079,
+  "agent_name": "AVA — AI Voice Agency",
+  "version_description": "",
+  "response_engine": {
+    "type": "retell-llm",
+    "llm_id": "llm_d0f4aff62bb8b60ff878055aa18c",
+    "version": 42
+  },
+  "webhook_url": "https://api.chat-dash.com/v1/private/agents/6a32f5ed85d489d1d15f0d1e/import/webhook",
+  "webhook_timeout_ms": 5000,
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "end_call_after_silence_ms": 30000,
+  "version": 42,
+  "base_version": 41,
+  "assigned_tags": [],
+  "is_published": true,
+  "version_title": "",
+  "post_call_analysis_model": "gpt-4.1",
+  "pii_config": {
+    "mode": "post_call",
+    "categories": []
+  },
+  "handbook_config": {
+    "echo_verification": false,
+    "speech_normalization": false,
+    "default_personality": true,
+    "scope_boundaries": false,
+    "natural_filler_words": true,
+    "nato_phonetic_alphabet": false,
+    "high_empathy": true,
+    "ai_disclosure": false,
+    "smart_matching": false
+  },
+  "timezone": "America/Chicago",
+  "post_call_analysis_data": [
+    {
+      "name": "call_summary",
+      "type": "system-presets",
+      "description": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call."
+    },
+    {
+      "name": "caller_first",
+      "type": "string",
+      "description": "The caller's first name, as stated by the caller during the conversation."
+    },
+    {
+      "name": "caller_email",
+      "type": "string",
+      "description": "The caller's email address, as confirmed/read back during the call. Lowercase, valid email format."
+    },
+    {
+      "name": "caller_phone",
+      "type": "string",
+      "description": "The best callback phone number for the caller, in E.164 format (e.g. +14142408930) if possible."
+    },
+    {
+      "name": "business_name",
+      "type": "string",
+      "description": "The name of the caller's company or business."
+    },
+    {
+      "type": "system-presets",
+      "name": "call_successful",
+      "description": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail."
+    },
+    {
+      "type": "system-presets",
+      "name": "user_sentiment",
+      "description": "Evaluate user's sentiment, mood and satisfaction level."
+    }
+  ],
+  "voice_id": "cartesia-Kate",
+  "voice_model": "sonic-3.5",
+  "voice_temperature": 0.7,
+  "voice_speed": 1.02,
+  "volume": 1,
+  "enable_backchannel": false,
+  "max_call_duration_ms": 600000,
+  "interruption_sensitivity": 0.82,
+  "boosted_keywords": [],
+  "ambient_sound": "call-center",
+  "ambient_sound_volume": 0.08,
+  "responsiveness": 1,
+  "begin_message_delay_ms": 400,
+  "ring_duration_ms": 69000,
+  "voicemail_option": {
+    "action": {
+      "type": "static_text",
+      "text": "Hi, this is AVA with AI Voice Agency - sorry I missed you. Call me back anytime at 414-240-8930, or grab a time that works at aivoiceagency.ai/book. Talk soon."
+    }
+  },
+  "stt_mode": "fast",
+  "vocab_specialization": "general",
+  "allow_user_dtmf": true,
+  "allow_dtmf_interruption": false,
+  "user_dtmf_options": {},
+  "denoising_mode": "noise-cancellation",
+  "webhook_events": [
+    "call_analyzed"
+  ]
+}
