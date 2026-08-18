@@ -1,0 +1,358 @@
+{
+  "name": "WF-POSTCALL-AVA · 8930 Call Wrap v1.0",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ava-postcall-wrap",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "pc-webhook-0001",
+      "name": "Retell Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.event }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "call_analyzed"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          }
+        }
+      },
+      "id": "pc-isanalyzed-01",
+      "name": "Is Call Analyzed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        220,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// AVA POST-CALL · node \"Wrap Payload\"\n// The ONE place that reads the Retell call_analyzed envelope, so the owner email\n// and the CRM note can never disagree about what happened on the call.\nconst body = $('Retell Webhook').first().json.body || {};\nconst c = body.call || {};\nconst an = c.call_analysis || {};\n\nconst d10 = (v) => ((v == null ? '' : v) + '').replace(/[^0-9]/g, '').slice(-10);\nconst OUR = String(($vars && $vars.OUR_NUMBERS) || '').split(',').map(d10).filter((x) => x.length === 10);\n\n// On an OUTBOUND call the lead is the to_number; inbound it is the from_number.\n// Reading from_number unconditionally would file every outbound call under our\n// own line and note it on the wrong contact.\nconst dir = ((c.direction || '') + '').toLowerCase();\nconst isOut = dir.indexOf('out') === 0;\nconst caller = (isOut ? c.to_number : c.from_number) || '';\nconst caller10 = d10(caller);\nconst is_internal = OUR.indexOf(caller10) !== -1;\n\nconst secs = (c.end_timestamp && c.start_timestamp)\n  ? Math.round((c.end_timestamp - c.start_timestamp) / 1000)\n  : (c.duration_ms ? Math.round(c.duration_ms / 1000) : null);\nconst duration = secs === null ? 'n/a' : (Math.floor(secs / 60) + 'm ' + (secs % 60) + 's');\n\nconst summary = ((an.call_summary || '') + '').trim() || 'No summary returned by Retell.';\nconst sentiment = an.user_sentiment || 'n/a';\nconst transcript = ((c.transcript || '') + '').trim() || '(no transcript on this call)';\nconst started = c.start_timestamp ? new Date(c.start_timestamp).toISOString() : 'n/a';\n\nconst subject = 'AVA CALL — ' + (caller || 'unknown caller') + ' — ' + duration + ' — ' + sentiment;\n\nconst email_body = [\n  subject,\n  '',\n  'From:      ' + (caller || 'unknown'),\n  'To:        ' + (c.to_number || 'n/a'),\n  'Direction: ' + (dir || 'n/a'),\n  'Duration:  ' + duration,\n  'Sentiment: ' + sentiment,\n  'Ended:     ' + (c.disconnection_reason || 'n/a'),\n  'Call ID:   ' + (c.call_id || 'n/a'),\n  'Started:   ' + started,\n  'Recording: ' + (c.recording_url || 'n/a'),\n  '',\n  'SUMMARY',\n  summary,\n  '',\n  'FULL TRANSCRIPT',\n  transcript,\n].join('\\n');\n\n// A GHL note has a practical size ceiling. Cut the transcript and SAY it was cut,\n// pointing at the recording, rather than losing the tail silently.\nconst MAX = 3500;\nconst cut = transcript.length > MAX;\nconst note_body = [\n  'AVA CALL LOG — ' + sentiment + ' · ' + duration,\n  'From: ' + (caller || 'unknown') + ' · Call ID: ' + (c.call_id || 'n/a'),\n  '',\n  'SUMMARY',\n  summary,\n  '',\n  'RECORDING',\n  (c.recording_url || 'n/a'),\n  '',\n  'TRANSCRIPT',\n  transcript.slice(0, MAX) + (cut ? '\\n…[truncated — full audio at the recording link]' : ''),\n].join('\\n');\n\nreturn [{ json: {\n  call_id: c.call_id || '', caller: caller, caller10: caller10, is_internal: is_internal,\n  duration: duration, sentiment: sentiment, summary: summary,\n  subject: subject, email_body: email_body, note_body: note_body,\n  agent_id: c.agent_id || '', transcript_chars: transcript.length,\n} }];\n"
+      },
+      "id": "pc-wrap-000001",
+      "name": "Wrap Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $vars.OWNER_ALERT_EMAIL }}",
+        "subject": "={{ $('Wrap Payload').item.json.subject }}",
+        "emailType": "text",
+        "message": "={{ $('Wrap Payload').item.json.email_body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "pc-email-00001",
+      "name": "Owner Call Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        160
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "75yoiG46HfIX5VkQ",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://services.leadconnectorhq.com/contacts/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "specifyQuery": "keypair",
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "locationId",
+              "value": "sdShCZCaxce8DHKbYcIl"
+            },
+            {
+              "name": "query",
+              "value": "={{ $('Wrap Payload').item.json.caller10 }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 12000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "pc-find-000001",
+      "name": "GHL Find Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        880,
+        160
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ (() => { const w = $('Wrap Payload').item.json; if (w.is_internal) return 'NO'; if (!w.caller10 || w.caller10.length < 10) return 'NO'; const d = s => ((s == null ? '' : s) + '').replace(/[^0-9]/g, ''); const list = ($json.contacts || []); const hit = list.find(c => d(c.phone).slice(-10) === w.caller10); return hit ? 'YES' : 'NO'; })() }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "YES"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          }
+        }
+      },
+      "id": "pc-matched-0001",
+      "name": "Contact Matched?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1100,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ (() => { const w = $('Wrap Payload').item.json; const d = s => ((s == null ? '' : s) + '').replace(/[^0-9]/g, ''); const hit = ($('GHL Find Contact').item.json.contacts || []).find(c => d(c.phone).slice(-10) === w.caller10); return hit ? hit.id : ''; })() }}/notes",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { body: $('Wrap Payload').item.json.note_body } }}",
+        "options": {
+          "timeout": 12000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "pc-note-000001",
+      "name": "GHL Call Note",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1320,
+        80
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { ok: true, call_id: $('Wrap Payload').item.json.call_id, emailed: true, noted: (() => { const w = $('Wrap Payload').item.json; if (w.is_internal || !w.caller10 || w.caller10.length < 10) return false; const d = s => ((s == null ? '' : s) + '').replace(/[^0-9]/g, ''); return (($('GHL Find Contact').item.json.contacts) || []).some(c => d(c.phone).slice(-10) === w.caller10); })() } }}"
+      },
+      "id": "pc-respok-0001",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1540,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { ok: true, ignored: true, event: ($json.body && $json.body.event) || null } }}"
+      },
+      "id": "pc-respign-001",
+      "name": "Respond Ignored",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        440,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Retell Webhook": {
+      "main": [
+        [
+          {
+            "node": "Is Call Analyzed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Call Analyzed": {
+      "main": [
+        [
+          {
+            "node": "Wrap Payload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Ignored",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wrap Payload": {
+      "main": [
+        [
+          {
+            "node": "Owner Call Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Owner Call Email": {
+      "main": [
+        [
+          {
+            "node": "GHL Find Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHL Find Contact": {
+      "main": [
+        [
+          {
+            "node": "Contact Matched?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contact Matched?": {
+      "main": [
+        [
+          {
+            "node": "GHL Call Note",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHL Call Note": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "SlnAeMrVRORsF0w7"
+  }
+}

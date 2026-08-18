@@ -1,0 +1,1500 @@
+{
+  "updatedAt": "2026-08-18T16:52:52.848Z",
+  "createdAt": "2026-07-02T02:42:12.332Z",
+  "id": "c5GPBkma1HyvonEa",
+  "name": "AVA · book_appointment · realtime",
+  "description": "Retell realtime custom function: book_appointment(name, email, cell, slot, business_type). Upserts contact in GHL, books next available slot on AVA Discovery Call calendar if slot empty, returns {success, appointment_id}.",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "e95466b5-9827-4ff4-8e23-24ec2457c4fd",
+      "name": "Retell Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        240
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ava-book-appointment",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "7de22ecd-7a17-4deb-9f66-3e66c944e1f9"
+    },
+    {
+      "id": "a2327004-5185-4aac-b421-5017c96cd3b9",
+      "name": "Normalize",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        240
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "name",
+              "type": "string",
+              "value": "={{ (((($json.body.args ? ($json.body.args.name || $json.body.args.first_name || \"\") : ($json.body.name || $json.body.first_name || \"\")) + \"\").trim()).match(/^[A-Za-z][A-Za-z'. \\-]*$/) || [\"AVA Lead\"])[0] }}"
+            },
+            {
+              "id": "a2",
+              "name": "email",
+              "type": "string",
+              "value": "={{ $json.body.args?.email || $json.body.email || \"\" }}"
+            },
+            {
+              "id": "a3",
+              "name": "cell",
+              "type": "string",
+              "value": "={{ $json.body.args?.cell || $json.body.cell || \"\" }}"
+            },
+            {
+              "id": "a4",
+              "name": "slot",
+              "type": "string",
+              "value": "={{ (() => { const q = ($json.query && $json.query.slot) ? String($json.query.slot).trim() : ''; if (q && q.indexOf('{{') === -1 && q.toLowerCase() !== 'null' && q.toLowerCase() !== 'undefined') return q; return $json.body.args?.slot || $json.body.slot || \"\"; })() }}"
+            },
+            {
+              "id": "a5",
+              "name": "business_type",
+              "type": "string",
+              "value": "={{ $json.body.args?.business_type || $json.body.business_type || \"\" }}"
+            },
+            {
+              "id": "a6",
+              "name": "is_internal",
+              "type": "boolean",
+              "value": "={{ (() => { const call = ($json.body && $json.body.call) || {}; const dig = s => ((s == null ? '' : s) + '').replace(/[^0-9]/g, ''); const OUR = String($vars.OUR_NUMBERS || '').split(',').map(x => dig(x).slice(-10)).filter(x => x.length === 10); const dir = ((call.direction || '') + '').toLowerCase(); const isOut = dir.indexOf('out') === 0; const other = isOut ? call.to_number : call.from_number; return OUR.indexOf(dig(other).slice(-10)) !== -1; })() }}"
+            },
+            {
+              "id": "a7",
+              "name": "is_sim",
+              "type": "boolean",
+              "value": "={{ (() => { const b = $json.body || {}; const c = b.call || {}; const fn = ((c.from_number == null ? '' : c.from_number) + '').trim(); return fn === ''; })() }}"
+            }
+          ]
+        },
+        "mode": "manual"
+      }
+    },
+    {
+      "id": "b00f3076-11bb-45b6-a9cb-99ef43e1a30e",
+      "name": "GHL Upsert Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        668,
+        240
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/upsert",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ (() => { const b = $('Retell Webhook').item.json.body || {}; const call = b.call || {}; const a = b.args || {}; const dv = call.retell_llm_dynamic_variables || {}; const dig = s => ((s == null ? '' : s) + '').replace(/[^0-9]/g, ''); const OUR = String($vars.OUR_NUMBERS || '').split(',').map(x => dig(x).slice(-10)).filter(x => x.length === 10); const last10 = s => dig(s).slice(-10); const ours = s => OUR.indexOf(last10(s)) !== -1; const valid = s => { const d = dig(s); return d.length >= 10 && !/^0+$/.test(d) && !ours(s); }; const norm = s => { const raw = ((s == null ? '' : s) + '').trim(); const d = dig(raw); if (raw.charAt(0) === '+') return '+' + d; if (d.length === 10) return '+1' + d; if (d.length === 11 && d.charAt(0) === '1') return '+' + d; return d ? ('+' + d) : ''; }; const dir = ((call.direction || '') + '').toLowerCase(); const isOut = dir.indexOf('out') === 0 || ours(call.from_number); const primary = isOut ? call.to_number : call.from_number; const cands = [a.cell, a.phone, b.cell, dv.cell, primary]; let ph = ''; for (const c of cands) { if (valid(c)) { ph = norm(c); break; } } return Object.assign({ locationId: 'sdShCZCaxce8DHKbYcIl', name: $json.name, source: 'AVA Live Demo', tags: (ph ? ['AVA Demo Call'] : ['AVA Demo Call', 'phone-unresolved']) }, $json.email ? { email: $json.email } : {}, ph ? { phone: ph } : {}); })() }}"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "b8134453-1f99-4ae3-9a86-d44363abba64",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2448,
+        336
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": false, \"error\": ($json.error && ($json.error.message || $json.error)) || $json.message || \"GHL request failed\" } }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "4a803702-8ca2-41ec-82a7-eaa14318e763",
+      "name": "GHL Create Appointment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1564,
+        96
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/calendars/events/appointments",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"calendarId\": \"aCIv7rUnCGrysobt6Mlg\", \"locationId\": \"sdShCZCaxce8DHKbYcIl\", \"contactId\": $(\"Contact Ref\").item.json.contact_id, \"assignedUserId\": \"riVdJngF0dT6xbEmvvFg\", \"startTime\": $json.slot_final, \"endTime\": $json.slot_end || DateTime.fromISO($json.slot_final).plus({ minutes: 20 }).toISO(), \"title\": \"AVA Discovery Call - \" + $(\"Normalize\").item.json.name, \"appointmentStatus\": \"confirmed\", \"ignoreFreeSlotValidation\": false } }}"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "9eda5af8-e9ad-4717-bba8-5f56d6997a9b",
+      "name": "GHL Get Free Slots",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1116,
+        272
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://services.leadconnectorhq.com/calendars/aCIv7rUnCGrysobt6Mlg/free-slots",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "specifyQuery": "keypair",
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "startDate",
+              "value": "={{ $now.toMillis() }}"
+            },
+            {
+              "name": "endDate",
+              "value": "={{ $now.plus({ days: 14 }).toMillis() }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "b5511757-3588-4895-a2bb-484c0f6ea68a",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2448,
+        48
+      ],
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"appointment_id\": ($('GHL Create Appointment').item.json.id || null), \"start_time\": ($('GHL Create Appointment').item.json.startTime || null), \"start_time_human\": ($('Slot Gate').item.json.slot_human_ct || null) } }}"
+      }
+    },
+    {
+      "id": "655d92c1-732b-4ceb-b534-19a7f7942be7",
+      "name": "Slot Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        176
+      ],
+      "parameters": {
+        "jsCode": "const ZONE = 'America/Chicago';\nconst raw = ($('Normalize').first().json.slot || '').toString().trim();\n\nfunction parseSlot(input) {\n  if (!input) return null;\n  let dt = DateTime.fromISO(input, { zone: ZONE });\n  if (dt.isValid) return dt;\n  let s = input.replace(/\\u2013|\\u2014/g, '-').replace(/\\s+/g, ' ').trim();\n  s = s.replace(/\\b(CDT|CST|CT|EDT|EST|ET|MDT|MST|MT|PDT|PST|PT|Central( Time)?|Eastern( Time)?|Mountain( Time)?|Pacific( Time)?)\\.?$/i, '').trim();\n  s = s.replace(/(\\d{1,2})(st|nd|rd|th)\\b/gi, '$1');\n  s = s.replace(/\\b([ap])\\.?\\s?m\\.?/gi, (m, x) => x.toUpperCase() + 'M');\n  const wd = s.match(/^(next\\s+)?(sun|mon|tue|tues|wed|wednes|thu|thur|thurs|fri|sat|satur)(day)?\\b,?\\s*/i);\n  if (wd) s = s.slice(wd[0].length).trim();\n  const rel = s.match(/\\b(today|tomorrow)\\b/i);\n  const tm = s.match(/(\\d{1,2})(?::(\\d{2}))?\\s*(AM|PM)/i);\n  const mkTime = (base) => { let h = parseInt(tm[1], 10) % 12; if (/pm/i.test(tm[3])) h += 12; return base.set({ hour: h, minute: tm[2] ? parseInt(tm[2], 10) : 0, second: 0, millisecond: 0 }); };\n  if (rel && tm) {\n    let base = DateTime.now().setZone(ZONE).startOf('day');\n    if (/tomorrow/i.test(rel[1])) base = base.plus({ days: 1 });\n    return mkTime(base);\n  }\n  const formats = [\"MMMM d, yyyy 'at' h:mm a\", \"MMMM d, yyyy 'at' h a\", \"MMMM d 'at' h:mm a\", \"MMMM d 'at' h a\", \"MMMM d, yyyy h:mm a\", \"MMMM d, yyyy h a\", \"MMMM d h:mm a\", \"MMMM d h a\", \"MMM d, yyyy 'at' h:mm a\", \"MMM d, yyyy 'at' h a\", \"MMM d 'at' h:mm a\", \"MMM d 'at' h a\", \"MMM d, yyyy h:mm a\", \"MMM d, yyyy h a\", \"MMM d h:mm a\", \"MMM d h a\", \"M/d/yyyy h:mm a\", \"M/d h:mm a\", \"M/d h a\"];\n  for (const f of formats) {\n    dt = DateTime.fromFormat(s, f, { zone: ZONE });\n    if (dt.isValid) return dt;\n  }\n  if (wd && tm) {\n    const key = wd[2].toLowerCase().slice(0, 3);\n    const map = { sun: 7, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };\n    const target = map[key];\n    if (target) {\n      const nowW = DateTime.now().setZone(ZONE);\n      let cand = mkTime(nowW.startOf('day').plus({ days: (target - nowW.weekday + 7) % 7 }));\n      if (cand <= nowW) cand = cand.plus({ days: 7 });\n      else if (wd[1] && (target - nowW.weekday + 7) % 7 === 0) cand = cand.plus({ days: 7 });\n      return cand;\n    }\n  }\n  if (tm && s.replace(tm[0], '').trim() === '') {\n    const nowT = DateTime.now().setZone(ZONE);\n    let cand = mkTime(nowT.startOf('day'));\n    if (cand <= nowT) cand = cand.plus({ days: 1 });\n    return cand;\n  }\n  return null;\n}\n\nconst resp = $json;\nlet free = [];\nfor (const k of Object.keys(resp)) {\n  if (k === 'traceId') continue;\n  const v = resp[k];\n  if (v && Array.isArray(v.slots)) free = free.concat(v.slots);\n}\nconst nowZ = DateTime.now().setZone(ZONE);\nconst freeDt = free.map(s => DateTime.fromISO(s).setZone(ZONE)).filter(d => d.isValid && d > nowZ);\nfreeDt.sort((a, b) => a.toMillis() - b.toMillis());\nconst fence = d => d.weekday <= 5 && d.hour >= 8 && d.hour < 18;\nconst fenced = freeDt.filter(fence);\nconst fmt = \"cccc, LLL d 'at' h:mm a\";\nconst human = d => d.toFormat(fmt) + ' CT';\n\nfunction out(o) { return [{ json: o }]; }\n\nif (!raw) {\n  if (!fenced.length) return out({ bookable: false, reason: 'no_slots_available', requested: '', nearest_slot: '', nearest_slot_human: '', alternatives: [] });\n  const pick = fenced[0];\n  return out({ bookable: true, mode: 'auto', slot_final: pick.toISO(), slot_end: pick.plus({ minutes: 20 }).toISO(), slot_human_ct: human(pick) });\n}\n\nlet requestedDt = parseSlot(raw);\nif (requestedDt && requestedDt < nowZ.minus({ hours: 1 })) {\n  const bumped = requestedDt.plus({ years: 1 });\n  if (bumped > nowZ) requestedDt = bumped;\n}\n\nif (!requestedDt || !requestedDt.isValid) {\n  const near = fenced[0];\n  return out({ bookable: false, reason: 'could_not_parse_time', requested: raw, nearest_slot: near ? near.toISO() : '', nearest_slot_human: near ? human(near) : '', alternatives: fenced.slice(1, 3).map(human) });\n}\n\nconst reqMin = Math.round(requestedDt.toMillis() / 60000);\nconst match = fenced.find(d => Math.round(d.toMillis() / 60000) === reqMin);\nif (match) {\n  return out({ bookable: true, mode: 'requested', slot_final: match.toISO(), slot_end: match.plus({ minutes: 20 }).toISO(), slot_human_ct: human(match) });\n}\n\nconst inFence = fence(requestedDt) && requestedDt > nowZ;\nconst reason = inFence ? 'slot_taken' : 'outside_service_hours';\nlet near = null, bestScore = Infinity;\nfor (const d of fenced) {\n  const diff = d.toMillis() - requestedDt.toMillis();\n  const score = Math.abs(diff) - (diff >= 0 ? 1 : 0);\n  if (score < bestScore) { bestScore = score; near = d; }\n}\nconst alts = fenced.filter(d => !near || d.toMillis() !== near.toMillis()).slice(0, 2).map(human);\nreturn out({ bookable: false, reason, requested: raw, requested_parsed_ct: human(requestedDt), nearest_slot: near ? near.toISO() : '', nearest_slot_human: near ? human(near) : '', alternatives: alts });"
+      }
+    },
+    {
+      "id": "450d5bd4-48e9-4401-82a0-f392af541f41",
+      "name": "Bookable?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1564,
+        240
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.bookable ? 'YES' : 'NO' }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "YES"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          }
+        }
+      }
+    },
+    {
+      "id": "cb771536-7d15-4091-b742-912c2f143554",
+      "name": "Respond Not Available",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2448,
+        400
+      ],
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": false, \"reason\": $json.reason, \"requested\": $json.requested || '', \"nearest_slot\": $json.nearest_slot || '', \"nearest_slot_human\": $json.nearest_slot_human || '', \"alternatives\": $json.alternatives || [] } }}"
+      }
+    },
+    {
+      "id": "r65bif",
+      "name": "Is Our Number?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        556,
+        240
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.is_internal ? 'YES' : 'NO' }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "YES"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          }
+        }
+      }
+    },
+    {
+      "id": "r65btc",
+      "name": "Test Contact",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        780,
+        96
+      ],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "tc1",
+              "name": "contact",
+              "type": "object",
+              "value": "={{ { id: $vars.ZZ_TEST_CONTACT_ID } }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "r65bcr",
+      "name": "Contact Ref",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        920,
+        240
+      ],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cr1",
+              "name": "contact_id",
+              "type": "string",
+              "value": "={{ $json.contact.id }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.is_sim ? 'SIM' : 'REAL' }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "SIM"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          }
+        }
+      },
+      "id": "sim-guard-if-0001",
+      "name": "Sim Guard?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        336,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": false, \"reason\": \"simulation_no_phone_leg\", \"requested\": ($('Normalize').item.json.slot || ''), \"nearest_slot\": \"\", \"nearest_slot_human\": \"\", \"alternatives\": [], \"detail\": \"No call.from_number on the payload, so this is not a real phone leg. No contact was created or updated and no appointment was booked.\" } }}"
+      },
+      "id": "sim-guard-resp-0001",
+      "name": "Respond Sim Blocked",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        336,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// AVA Booking · node \"Owner Alert Body\"\n// Builds the ONE owner-alert string used by both the SMS and the email leg, so\n// the two can never drift apart.\n//\n// MESSAGE FORMAT LAW: status-led. \"BOOKED\" is the first token so the outcome is\n// readable from a lock screen without opening anything.\nconst n = $('Normalize').first().json;\nconst gate = $('Slot Gate').first().json;\nconst appt = $('GHL Create Appointment').first().json;\n\n// slot_human_ct already ends in \" CT\". Strip it before re-adding so the line\n// reads \"... at 2:00 PM CT\" and never \"... at 2:00 PM CT CT\".\nconst rawSlot = ((gate.slot_human_ct || appt.startTime || '') + '').trim();\nconst slot = rawSlot.replace(/\\s*CT\\s*$/i, '').trim();\n\nconst name  = ((n.name  || '') + '').trim() || 'AVA Lead';\nconst cell  = ((n.cell  || '') + '').trim() || 'no cell given';\nconst email = ((n.email || '') + '').trim() || 'no email given';\n\nconst owner_msg = ['BOOKED', name, (slot ? slot + ' CT' : 'time unconfirmed'), cell, email].join(' — ');\n\nconst owner_email_body = [\n  owner_msg,\n  '',\n  'Name:        ' + name,\n  'When:        ' + (slot ? slot + ' CT' : 'time unconfirmed'),\n  'Cell:        ' + cell,\n  'Email:       ' + email,\n  'Business:    ' + (((n.business_type || '') + '').trim() || 'not given'),\n  'Appointment: ' + ((appt.id || 'id not returned') + ''),\n  '',\n  'Booked by AVA on the 414-240-8930 line.'\n].join('\\n');\n\nreturn [{ json: { owner_msg: owner_msg, owner_email_body: owner_email_body } }];\n"
+      },
+      "id": "owner-alert-body-01",
+      "name": "Owner Alert Body",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1784,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/conversations/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { type: 'SMS', contactId: $vars.OWNER_ALERT_CONTACT_ID, fromNumber: $vars.OWNER_SMS_FROM, message: $('Owner Alert Body').item.json.owner_msg } }}",
+        "options": {
+          "timeout": 8000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "owner-alert-sms-01",
+      "name": "Owner Alert SMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2004,
+        48
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $vars.OWNER_ALERT_EMAIL }}",
+        "subject": "={{ $('Owner Alert Body').item.json.owner_msg }}",
+        "emailType": "text",
+        "message": "={{ $('Owner Alert Body').item.json.owner_email_body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "owner-alert-email-01",
+      "name": "Owner Alert Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2224,
+        48
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "75yoiG46HfIX5VkQ",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "webhookId": "8516eaa3-07ab-4f77-9f45-c846d9ce6e1e"
+    }
+  ],
+  "connections": {
+    "Retell Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "Sim Guard?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHL Upsert Contact": {
+      "main": [
+        [
+          {
+            "node": "Contact Ref",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHL Create Appointment": {
+      "main": [
+        [
+          {
+            "node": "Owner Alert Body",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHL Get Free Slots": {
+      "main": [
+        [
+          {
+            "node": "Slot Gate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slot Gate": {
+      "main": [
+        [
+          {
+            "node": "Bookable?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bookable?": {
+      "main": [
+        [
+          {
+            "node": "GHL Create Appointment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Not Available",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Our Number?": {
+      "main": [
+        [
+          {
+            "node": "Test Contact",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GHL Upsert Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Contact": {
+      "main": [
+        [
+          {
+            "node": "Contact Ref",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contact Ref": {
+      "main": [
+        [
+          {
+            "node": "GHL Get Free Slots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sim Guard?": {
+      "main": [
+        [
+          {
+            "node": "Respond Sim Blocked",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Our Number?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Owner Alert Body": {
+      "main": [
+        [
+          {
+            "node": "Owner Alert SMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Owner Alert SMS": {
+      "main": [
+        [
+          {
+            "node": "Owner Alert Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Owner Alert Email": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "errorWorkflow": "SlnAeMrVRORsF0w7"
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "nodeGroups": [],
+  "pinData": null,
+  "versionId": "faa993b9-0b91-464e-9f82-cd0c7fa01166",
+  "activeVersionId": "faa993b9-0b91-464e-9f82-cd0c7fa01166",
+  "versionCounter": 13,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-07-02T02:42:12.334Z",
+      "createdAt": "2026-07-02T02:42:12.334Z",
+      "role": "workflow:owner",
+      "workflowId": "c5GPBkma1HyvonEa",
+      "projectId": "1XuT7aKjecjLpe2J",
+      "project": {
+        "updatedAt": "2026-05-31T02:37:25.269Z",
+        "createdAt": "2026-05-31T02:37:17.779Z",
+        "id": "1XuT7aKjecjLpe2J",
+        "name": "Shane Handel <shanehandel@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "2ec04ee5-0828-4565-a6e0-4bdd4e0372ba"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-08-18T16:52:52.850Z",
+    "createdAt": "2026-08-18T16:52:52.850Z",
+    "versionId": "faa993b9-0b91-464e-9f82-cd0c7fa01166",
+    "workflowId": "c5GPBkma1HyvonEa",
+    "nodes": [
+      {
+        "id": "e95466b5-9827-4ff4-8e23-24ec2457c4fd",
+        "name": "Retell Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          0,
+          240
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "ava-book-appointment",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "webhookId": "7de22ecd-7a17-4deb-9f66-3e66c944e1f9"
+      },
+      {
+        "id": "a2327004-5185-4aac-b421-5017c96cd3b9",
+        "name": "Normalize",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          224,
+          240
+        ],
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "a1",
+                "name": "name",
+                "type": "string",
+                "value": "={{ (((($json.body.args ? ($json.body.args.name || $json.body.args.first_name || \"\") : ($json.body.name || $json.body.first_name || \"\")) + \"\").trim()).match(/^[A-Za-z][A-Za-z'. \\-]*$/) || [\"AVA Lead\"])[0] }}"
+              },
+              {
+                "id": "a2",
+                "name": "email",
+                "type": "string",
+                "value": "={{ $json.body.args?.email || $json.body.email || \"\" }}"
+              },
+              {
+                "id": "a3",
+                "name": "cell",
+                "type": "string",
+                "value": "={{ $json.body.args?.cell || $json.body.cell || \"\" }}"
+              },
+              {
+                "id": "a4",
+                "name": "slot",
+                "type": "string",
+                "value": "={{ (() => { const q = ($json.query && $json.query.slot) ? String($json.query.slot).trim() : ''; if (q && q.indexOf('{{') === -1 && q.toLowerCase() !== 'null' && q.toLowerCase() !== 'undefined') return q; return $json.body.args?.slot || $json.body.slot || \"\"; })() }}"
+              },
+              {
+                "id": "a5",
+                "name": "business_type",
+                "type": "string",
+                "value": "={{ $json.body.args?.business_type || $json.body.business_type || \"\" }}"
+              },
+              {
+                "id": "a6",
+                "name": "is_internal",
+                "type": "boolean",
+                "value": "={{ (() => { const call = ($json.body && $json.body.call) || {}; const dig = s => ((s == null ? '' : s) + '').replace(/[^0-9]/g, ''); const OUR = String($vars.OUR_NUMBERS || '').split(',').map(x => dig(x).slice(-10)).filter(x => x.length === 10); const dir = ((call.direction || '') + '').toLowerCase(); const isOut = dir.indexOf('out') === 0; const other = isOut ? call.to_number : call.from_number; return OUR.indexOf(dig(other).slice(-10)) !== -1; })() }}"
+              },
+              {
+                "id": "a7",
+                "name": "is_sim",
+                "type": "boolean",
+                "value": "={{ (() => { const b = $json.body || {}; const c = b.call || {}; const fn = ((c.from_number == null ? '' : c.from_number) + '').trim(); return fn === ''; })() }}"
+              }
+            ]
+          },
+          "mode": "manual"
+        }
+      },
+      {
+        "id": "b00f3076-11bb-45b6-a9cb-99ef43e1a30e",
+        "name": "GHL Upsert Contact",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          668,
+          240
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "https://services.leadconnectorhq.com/contacts/upsert",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Version",
+                "value": "2021-07-28"
+              },
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ (() => { const b = $('Retell Webhook').item.json.body || {}; const call = b.call || {}; const a = b.args || {}; const dv = call.retell_llm_dynamic_variables || {}; const dig = s => ((s == null ? '' : s) + '').replace(/[^0-9]/g, ''); const OUR = String($vars.OUR_NUMBERS || '').split(',').map(x => dig(x).slice(-10)).filter(x => x.length === 10); const last10 = s => dig(s).slice(-10); const ours = s => OUR.indexOf(last10(s)) !== -1; const valid = s => { const d = dig(s); return d.length >= 10 && !/^0+$/.test(d) && !ours(s); }; const norm = s => { const raw = ((s == null ? '' : s) + '').trim(); const d = dig(raw); if (raw.charAt(0) === '+') return '+' + d; if (d.length === 10) return '+1' + d; if (d.length === 11 && d.charAt(0) === '1') return '+' + d; return d ? ('+' + d) : ''; }; const dir = ((call.direction || '') + '').toLowerCase(); const isOut = dir.indexOf('out') === 0 || ours(call.from_number); const primary = isOut ? call.to_number : call.from_number; const cands = [a.cell, a.phone, b.cell, dv.cell, primary]; let ph = ''; for (const c of cands) { if (valid(c)) { ph = norm(c); break; } } return Object.assign({ locationId: 'sdShCZCaxce8DHKbYcIl', name: $json.name, source: 'AVA Live Demo', tags: (ph ? ['AVA Demo Call'] : ['AVA Demo Call', 'phone-unresolved']) }, $json.email ? { email: $json.email } : {}, ph ? { phone: ph } : {}); })() }}"
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "wOmBNtlzVgn2fVAc",
+            "name": "GHL Header Auth"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "id": "b8134453-1f99-4ae3-9a86-d44363abba64",
+        "name": "Respond Error",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          2448,
+          336
+        ],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ { \"success\": false, \"error\": ($json.error && ($json.error.message || $json.error)) || $json.message || \"GHL request failed\" } }}",
+          "options": {
+            "responseCode": 200
+          }
+        }
+      },
+      {
+        "id": "4a803702-8ca2-41ec-82a7-eaa14318e763",
+        "name": "GHL Create Appointment",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          1564,
+          96
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "https://services.leadconnectorhq.com/calendars/events/appointments",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Version",
+                "value": "2021-07-28"
+              },
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ { \"calendarId\": \"aCIv7rUnCGrysobt6Mlg\", \"locationId\": \"sdShCZCaxce8DHKbYcIl\", \"contactId\": $(\"Contact Ref\").item.json.contact_id, \"assignedUserId\": \"riVdJngF0dT6xbEmvvFg\", \"startTime\": $json.slot_final, \"endTime\": $json.slot_end || DateTime.fromISO($json.slot_final).plus({ minutes: 20 }).toISO(), \"title\": \"AVA Discovery Call - \" + $(\"Normalize\").item.json.name, \"appointmentStatus\": \"confirmed\", \"ignoreFreeSlotValidation\": false } }}"
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "wOmBNtlzVgn2fVAc",
+            "name": "GHL Header Auth"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "id": "9eda5af8-e9ad-4717-bba8-5f56d6997a9b",
+        "name": "GHL Get Free Slots",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          1116,
+          272
+        ],
+        "parameters": {
+          "method": "GET",
+          "url": "https://services.leadconnectorhq.com/calendars/aCIv7rUnCGrysobt6Mlg/free-slots",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendQuery": true,
+          "specifyQuery": "keypair",
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "startDate",
+                "value": "={{ $now.toMillis() }}"
+              },
+              {
+                "name": "endDate",
+                "value": "={{ $now.plus({ days: 14 }).toMillis() }}"
+              }
+            ]
+          },
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Version",
+                "value": "2021-07-28"
+              },
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          }
+        },
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "wOmBNtlzVgn2fVAc",
+            "name": "GHL Header Auth"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "id": "b5511757-3588-4895-a2bb-484c0f6ea68a",
+        "name": "Respond OK",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          2448,
+          48
+        ],
+        "parameters": {
+          "options": {
+            "responseCode": 200
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { \"success\": true, \"appointment_id\": ($('GHL Create Appointment').item.json.id || null), \"start_time\": ($('GHL Create Appointment').item.json.startTime || null), \"start_time_human\": ($('Slot Gate').item.json.slot_human_ct || null) } }}"
+        }
+      },
+      {
+        "id": "655d92c1-732b-4ceb-b534-19a7f7942be7",
+        "name": "Slot Gate",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1340,
+          176
+        ],
+        "parameters": {
+          "jsCode": "const ZONE = 'America/Chicago';\nconst raw = ($('Normalize').first().json.slot || '').toString().trim();\n\nfunction parseSlot(input) {\n  if (!input) return null;\n  let dt = DateTime.fromISO(input, { zone: ZONE });\n  if (dt.isValid) return dt;\n  let s = input.replace(/\\u2013|\\u2014/g, '-').replace(/\\s+/g, ' ').trim();\n  s = s.replace(/\\b(CDT|CST|CT|EDT|EST|ET|MDT|MST|MT|PDT|PST|PT|Central( Time)?|Eastern( Time)?|Mountain( Time)?|Pacific( Time)?)\\.?$/i, '').trim();\n  s = s.replace(/(\\d{1,2})(st|nd|rd|th)\\b/gi, '$1');\n  s = s.replace(/\\b([ap])\\.?\\s?m\\.?/gi, (m, x) => x.toUpperCase() + 'M');\n  const wd = s.match(/^(next\\s+)?(sun|mon|tue|tues|wed|wednes|thu|thur|thurs|fri|sat|satur)(day)?\\b,?\\s*/i);\n  if (wd) s = s.slice(wd[0].length).trim();\n  const rel = s.match(/\\b(today|tomorrow)\\b/i);\n  const tm = s.match(/(\\d{1,2})(?::(\\d{2}))?\\s*(AM|PM)/i);\n  const mkTime = (base) => { let h = parseInt(tm[1], 10) % 12; if (/pm/i.test(tm[3])) h += 12; return base.set({ hour: h, minute: tm[2] ? parseInt(tm[2], 10) : 0, second: 0, millisecond: 0 }); };\n  if (rel && tm) {\n    let base = DateTime.now().setZone(ZONE).startOf('day');\n    if (/tomorrow/i.test(rel[1])) base = base.plus({ days: 1 });\n    return mkTime(base);\n  }\n  const formats = [\"MMMM d, yyyy 'at' h:mm a\", \"MMMM d, yyyy 'at' h a\", \"MMMM d 'at' h:mm a\", \"MMMM d 'at' h a\", \"MMMM d, yyyy h:mm a\", \"MMMM d, yyyy h a\", \"MMMM d h:mm a\", \"MMMM d h a\", \"MMM d, yyyy 'at' h:mm a\", \"MMM d, yyyy 'at' h a\", \"MMM d 'at' h:mm a\", \"MMM d 'at' h a\", \"MMM d, yyyy h:mm a\", \"MMM d, yyyy h a\", \"MMM d h:mm a\", \"MMM d h a\", \"M/d/yyyy h:mm a\", \"M/d h:mm a\", \"M/d h a\"];\n  for (const f of formats) {\n    dt = DateTime.fromFormat(s, f, { zone: ZONE });\n    if (dt.isValid) return dt;\n  }\n  if (wd && tm) {\n    const key = wd[2].toLowerCase().slice(0, 3);\n    const map = { sun: 7, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };\n    const target = map[key];\n    if (target) {\n      const nowW = DateTime.now().setZone(ZONE);\n      let cand = mkTime(nowW.startOf('day').plus({ days: (target - nowW.weekday + 7) % 7 }));\n      if (cand <= nowW) cand = cand.plus({ days: 7 });\n      else if (wd[1] && (target - nowW.weekday + 7) % 7 === 0) cand = cand.plus({ days: 7 });\n      return cand;\n    }\n  }\n  if (tm && s.replace(tm[0], '').trim() === '') {\n    const nowT = DateTime.now().setZone(ZONE);\n    let cand = mkTime(nowT.startOf('day'));\n    if (cand <= nowT) cand = cand.plus({ days: 1 });\n    return cand;\n  }\n  return null;\n}\n\nconst resp = $json;\nlet free = [];\nfor (const k of Object.keys(resp)) {\n  if (k === 'traceId') continue;\n  const v = resp[k];\n  if (v && Array.isArray(v.slots)) free = free.concat(v.slots);\n}\nconst nowZ = DateTime.now().setZone(ZONE);\nconst freeDt = free.map(s => DateTime.fromISO(s).setZone(ZONE)).filter(d => d.isValid && d > nowZ);\nfreeDt.sort((a, b) => a.toMillis() - b.toMillis());\nconst fence = d => d.weekday <= 5 && d.hour >= 8 && d.hour < 18;\nconst fenced = freeDt.filter(fence);\nconst fmt = \"cccc, LLL d 'at' h:mm a\";\nconst human = d => d.toFormat(fmt) + ' CT';\n\nfunction out(o) { return [{ json: o }]; }\n\nif (!raw) {\n  if (!fenced.length) return out({ bookable: false, reason: 'no_slots_available', requested: '', nearest_slot: '', nearest_slot_human: '', alternatives: [] });\n  const pick = fenced[0];\n  return out({ bookable: true, mode: 'auto', slot_final: pick.toISO(), slot_end: pick.plus({ minutes: 20 }).toISO(), slot_human_ct: human(pick) });\n}\n\nlet requestedDt = parseSlot(raw);\nif (requestedDt && requestedDt < nowZ.minus({ hours: 1 })) {\n  const bumped = requestedDt.plus({ years: 1 });\n  if (bumped > nowZ) requestedDt = bumped;\n}\n\nif (!requestedDt || !requestedDt.isValid) {\n  const near = fenced[0];\n  return out({ bookable: false, reason: 'could_not_parse_time', requested: raw, nearest_slot: near ? near.toISO() : '', nearest_slot_human: near ? human(near) : '', alternatives: fenced.slice(1, 3).map(human) });\n}\n\nconst reqMin = Math.round(requestedDt.toMillis() / 60000);\nconst match = fenced.find(d => Math.round(d.toMillis() / 60000) === reqMin);\nif (match) {\n  return out({ bookable: true, mode: 'requested', slot_final: match.toISO(), slot_end: match.plus({ minutes: 20 }).toISO(), slot_human_ct: human(match) });\n}\n\nconst inFence = fence(requestedDt) && requestedDt > nowZ;\nconst reason = inFence ? 'slot_taken' : 'outside_service_hours';\nlet near = null, bestScore = Infinity;\nfor (const d of fenced) {\n  const diff = d.toMillis() - requestedDt.toMillis();\n  const score = Math.abs(diff) - (diff >= 0 ? 1 : 0);\n  if (score < bestScore) { bestScore = score; near = d; }\n}\nconst alts = fenced.filter(d => !near || d.toMillis() !== near.toMillis()).slice(0, 2).map(human);\nreturn out({ bookable: false, reason, requested: raw, requested_parsed_ct: human(requestedDt), nearest_slot: near ? near.toISO() : '', nearest_slot_human: near ? human(near) : '', alternatives: alts });"
+        }
+      },
+      {
+        "id": "450d5bd4-48e9-4401-82a0-f392af541f41",
+        "name": "Bookable?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          1564,
+          240
+        ],
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "leftValue": "={{ $json.bookable ? 'YES' : 'NO' }}",
+                "operator": {
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "YES"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "loose"
+            }
+          }
+        }
+      },
+      {
+        "id": "cb771536-7d15-4091-b742-912c2f143554",
+        "name": "Respond Not Available",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          2448,
+          400
+        ],
+        "parameters": {
+          "options": {
+            "responseCode": 200
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { \"success\": false, \"reason\": $json.reason, \"requested\": $json.requested || '', \"nearest_slot\": $json.nearest_slot || '', \"nearest_slot_human\": $json.nearest_slot_human || '', \"alternatives\": $json.alternatives || [] } }}"
+        }
+      },
+      {
+        "id": "r65bif",
+        "name": "Is Our Number?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          556,
+          240
+        ],
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "leftValue": "={{ $json.is_internal ? 'YES' : 'NO' }}",
+                "operator": {
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "YES"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "loose"
+            }
+          }
+        }
+      },
+      {
+        "id": "r65btc",
+        "name": "Test Contact",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          780,
+          96
+        ],
+        "parameters": {
+          "mode": "manual",
+          "assignments": {
+            "assignments": [
+              {
+                "id": "tc1",
+                "name": "contact",
+                "type": "object",
+                "value": "={{ { id: $vars.ZZ_TEST_CONTACT_ID } }}"
+              }
+            ]
+          },
+          "options": {}
+        }
+      },
+      {
+        "id": "r65bcr",
+        "name": "Contact Ref",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          920,
+          240
+        ],
+        "parameters": {
+          "mode": "manual",
+          "assignments": {
+            "assignments": [
+              {
+                "id": "cr1",
+                "name": "contact_id",
+                "type": "string",
+                "value": "={{ $json.contact.id }}"
+              }
+            ]
+          },
+          "options": {}
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "leftValue": "={{ $json.is_sim ? 'SIM' : 'REAL' }}",
+                "operator": {
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "SIM"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "loose"
+            }
+          }
+        },
+        "id": "sim-guard-if-0001",
+        "name": "Sim Guard?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          336,
+          240
+        ]
+      },
+      {
+        "parameters": {
+          "options": {
+            "responseCode": 200
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { \"success\": false, \"reason\": \"simulation_no_phone_leg\", \"requested\": ($('Normalize').item.json.slot || ''), \"nearest_slot\": \"\", \"nearest_slot_human\": \"\", \"alternatives\": [], \"detail\": \"No call.from_number on the payload, so this is not a real phone leg. No contact was created or updated and no appointment was booked.\" } }}"
+        },
+        "id": "sim-guard-resp-0001",
+        "name": "Respond Sim Blocked",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          336,
+          560
+        ]
+      },
+      {
+        "parameters": {
+          "jsCode": "// AVA Booking · node \"Owner Alert Body\"\n// Builds the ONE owner-alert string used by both the SMS and the email leg, so\n// the two can never drift apart.\n//\n// MESSAGE FORMAT LAW: status-led. \"BOOKED\" is the first token so the outcome is\n// readable from a lock screen without opening anything.\nconst n = $('Normalize').first().json;\nconst gate = $('Slot Gate').first().json;\nconst appt = $('GHL Create Appointment').first().json;\n\n// slot_human_ct already ends in \" CT\". Strip it before re-adding so the line\n// reads \"... at 2:00 PM CT\" and never \"... at 2:00 PM CT CT\".\nconst rawSlot = ((gate.slot_human_ct || appt.startTime || '') + '').trim();\nconst slot = rawSlot.replace(/\\s*CT\\s*$/i, '').trim();\n\nconst name  = ((n.name  || '') + '').trim() || 'AVA Lead';\nconst cell  = ((n.cell  || '') + '').trim() || 'no cell given';\nconst email = ((n.email || '') + '').trim() || 'no email given';\n\nconst owner_msg = ['BOOKED', name, (slot ? slot + ' CT' : 'time unconfirmed'), cell, email].join(' — ');\n\nconst owner_email_body = [\n  owner_msg,\n  '',\n  'Name:        ' + name,\n  'When:        ' + (slot ? slot + ' CT' : 'time unconfirmed'),\n  'Cell:        ' + cell,\n  'Email:       ' + email,\n  'Business:    ' + (((n.business_type || '') + '').trim() || 'not given'),\n  'Appointment: ' + ((appt.id || 'id not returned') + ''),\n  '',\n  'Booked by AVA on the 414-240-8930 line.'\n].join('\\n');\n\nreturn [{ json: { owner_msg: owner_msg, owner_email_body: owner_email_body } }];\n"
+        },
+        "id": "owner-alert-body-01",
+        "name": "Owner Alert Body",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1784,
+          48
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://services.leadconnectorhq.com/conversations/messages",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Version",
+                "value": "2021-07-28"
+              },
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ { type: 'SMS', contactId: $vars.OWNER_ALERT_CONTACT_ID, fromNumber: $vars.OWNER_SMS_FROM, message: $('Owner Alert Body').item.json.owner_msg } }}",
+          "options": {
+            "timeout": 8000,
+            "response": {
+              "response": {
+                "neverError": true
+              }
+            }
+          }
+        },
+        "id": "owner-alert-sms-01",
+        "name": "Owner Alert SMS",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          2004,
+          48
+        ],
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "wOmBNtlzVgn2fVAc",
+            "name": "GHL Header Auth"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "resource": "message",
+          "operation": "send",
+          "sendTo": "={{ $vars.OWNER_ALERT_EMAIL }}",
+          "subject": "={{ $('Owner Alert Body').item.json.owner_msg }}",
+          "emailType": "text",
+          "message": "={{ $('Owner Alert Body').item.json.owner_email_body }}",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "id": "owner-alert-email-01",
+        "name": "Owner Alert Email",
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          2224,
+          48
+        ],
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "75yoiG46HfIX5VkQ",
+            "name": "Gmail OAuth2 API"
+          }
+        },
+        "onError": "continueRegularOutput",
+        "webhookId": "8516eaa3-07ab-4f77-9f45-c846d9ce6e1e"
+      }
+    ],
+    "connections": {
+      "Retell Webhook": {
+        "main": [
+          [
+            {
+              "node": "Normalize",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Normalize": {
+        "main": [
+          [
+            {
+              "node": "Sim Guard?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GHL Upsert Contact": {
+        "main": [
+          [
+            {
+              "node": "Contact Ref",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Respond Error",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GHL Create Appointment": {
+        "main": [
+          [
+            {
+              "node": "Owner Alert Body",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Respond Error",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GHL Get Free Slots": {
+        "main": [
+          [
+            {
+              "node": "Slot Gate",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Respond Error",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Slot Gate": {
+        "main": [
+          [
+            {
+              "node": "Bookable?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Bookable?": {
+        "main": [
+          [
+            {
+              "node": "GHL Create Appointment",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Respond Not Available",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Is Our Number?": {
+        "main": [
+          [
+            {
+              "node": "Test Contact",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "GHL Upsert Contact",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Test Contact": {
+        "main": [
+          [
+            {
+              "node": "Contact Ref",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Contact Ref": {
+        "main": [
+          [
+            {
+              "node": "GHL Get Free Slots",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Sim Guard?": {
+        "main": [
+          [
+            {
+              "node": "Respond Sim Blocked",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Is Our Number?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Owner Alert Body": {
+        "main": [
+          [
+            {
+              "node": "Owner Alert SMS",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Owner Alert SMS": {
+        "main": [
+          [
+            {
+              "node": "Owner Alert Email",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Owner Alert Email": {
+        "main": [
+          [
+            {
+              "node": "Respond OK",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Shane Handel",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-08-18T16:52:53.017Z",
+        "id": 321,
+        "workflowId": "c5GPBkma1HyvonEa",
+        "versionId": "faa993b9-0b91-464e-9f82-cd0c7fa01166",
+        "event": "activated",
+        "userId": "2ec04ee5-0828-4565-a6e0-4bdd4e0372ba"
+      },
+      {
+        "createdAt": "2026-08-18T16:52:53.017Z",
+        "id": 320,
+        "workflowId": "c5GPBkma1HyvonEa",
+        "versionId": "faa993b9-0b91-464e-9f82-cd0c7fa01166",
+        "event": "deactivated",
+        "userId": "2ec04ee5-0828-4565-a6e0-4bdd4e0372ba"
+      }
+    ]
+  }
+}
