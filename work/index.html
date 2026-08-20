@@ -151,7 +151,8 @@
         if (!it) return;
         var chip = card.querySelector("[data-chip]");
         if (chip && it.status) {
-          var cls = it.status === "live" ? "live" : (it.status === "planned" ? "planned" : "pending");
+          var s = String(it.status).toLowerCase();
+          var cls = s === "live" ? "live" : (s === "sealed" ? "sealed" : (s === "planned" ? "planned" : "pending"));
           chip.className = "chip " + cls;
           chip.setAttribute("data-chip", "");
           chip.innerHTML = '<span class="d"></span>' + (it.label || it.status);

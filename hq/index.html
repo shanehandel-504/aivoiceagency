@@ -36,6 +36,8 @@
   .lchip.pending .d{background:var(--gold);box-shadow:0 0 8px rgba(255,184,0,.6)}
   .lchip.planned{color:var(--dim);border-color:var(--line-2);background:var(--panel-2)}
   .lchip.planned .d{background:var(--dim-2)}
+  .lchip.sealed{color:#14161C;border-color:#2EE6A8;background:#2EE6A8}
+  .lchip.sealed .d{background:#14161C;box-shadow:none}
   .log{display:grid;gap:9px;margin-top:6px}
   .logrow{background:var(--panel);border:1px solid var(--line);border-left:2px solid var(--cyan);
     border-radius:12px;padding:11px 13px}
@@ -112,7 +114,8 @@
           var l = lmap[row.getAttribute("data-lane")]; if (!l) return;
           var chip = row.querySelector(".lchip"), note = row.querySelector(".ln"), upd = row.querySelector(".lu");
           if (chip && l.status) {
-            var cls = l.status === "live" ? "live" : (l.status === "planned" ? "planned" : "pending");
+            var s = String(l.status).toLowerCase();
+            var cls = s === "live" ? "live" : (s === "sealed" ? "sealed" : (s === "planned" ? "planned" : "pending"));
             chip.className = "lchip " + cls;
             chip.innerHTML = '<span class="d"></span>' + (l.status);
           }
