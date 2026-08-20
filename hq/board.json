@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-08-18T12:44:21.382-05:00",
+  "updated": "2026-08-20T12:55:11.213-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -191,7 +191,7 @@
       "id": "ava-8930-tune",
       "title": "AVA 8930 TUNE — forensics + v37 TEST",
       "url": "https://dashboard.retellai.com/",
-      "status": "live",
+      "status": "SEALED",
       "label": "25-call forensics · LLM is the bottleneck · v37 TEST built, published, no number bound"
     },
     {
@@ -378,6 +378,10 @@
     }
   ],
   "log": [
+    {
+      "ts": "2026-08-20T12:55:11.213-05:00",
+      "entry": "v48 published — sealed by real-call gate, 51/54 suite, ads cleared."
+    },
     {
       "ts": "2026-08-18T12:44:21.382-05:00",
       "entry": "AVA SEAL — POST-CALL RAIL LIVE. kpYlhLbwSD0W1sE0 \"WF-POSTCALL-AVA · 8930 Call Wrap v1.0\" emails the owner the summary and full transcript on every call_analyzed and notes the matching GHL contact. TWO TRAPS THE BRIEF WALKED INTO. (1) PATH: ava-postcall was already owned by ACTIVE workflow 6r8YHuMEJbxeDyT5, a mature rail carrying owner SMS+email, a Notion log, a text-back and a quarantine gate — and outside the scope fence. Ownership was checked BEFORE creating anything rather than gambling on activation, the rail was built on ava-postcall-wrap, and the incumbent was re-read afterwards and confirmed still ACTIVE. (2) VERSIONING: webhook_url is versioned on this agent (v0–v5 none, v6 an n8n URL, v7–v43 chat-dash) and get-agent returns the unpublished DRAFT while the number routes via latest_published — so PATCH + GET would have read fully green while every real call kept firing chat-dash. Publishing was gated behind explicit approval because it is outward-facing on a live line and this repo records it as Shane's call (V37 CARVE-OUT). Its stated reason, the voice freeze, was MEASURED and found absent: LLM v42 and v43 are byte-identical, and the agent diff is version metadata only. Published on approval — latest_published is now v43. Rollback is one call: pin inbound_agents to agent_version 42."
