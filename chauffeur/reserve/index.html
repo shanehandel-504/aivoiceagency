@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070B14">
+  <title>Secure Reservation Hold — AI Chauffeur</title>
+  <meta name="description" content="Hold a vehicle with AI Chauffeur. Send the trip and a way to reach you, and a dispatcher calls to go over the pickup, the vehicle and the price. No card, no charge.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="canonical" href="https://aichauffeur.ai/reserve/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AI Chauffeur">
+  <meta property="og:title" content="Secure Reservation Hold — AI Chauffeur">
+  <meta property="og:description" content="Send the trip and a way to reach you. A dispatcher calls to go over the pickup, the vehicle and the price. No card, no charge.">
+  <meta property="og:url" content="https://aichauffeur.ai/reserve/">
+  <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AI Chauffeur - the limo answering service that never puts a caller on hold. (414) 775-0019">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta name="twitter:title" content="Secure Reservation Hold — AI Chauffeur">
+  <meta name="twitter:description" content="Send the trip and a way to reach you. A dispatcher calls to go over the pickup, the vehicle and the price. No card, no charge.">
+
+  <!-- RUN 8 · FONT LOCK — self-hosted. The @font-face lives in the stylesheet,
+       so without a preload the browser cannot discover either file until the CSS
+       has parsed and matched a rule against it. The href must be the SAME STRING
+       as the src, and crossorigin is required even same-origin because fonts are
+       always fetched in CORS mode — miss either and the file is fetched twice. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/circulant.css?v=d08196a">
+  <link rel="stylesheet" href="/assets/aic.css?v=d08196a">
+
+  <!-- The form posts to the n8n intake spine. Warming that origin here takes the
+       TLS handshake off the submit path, so the first thing the reader does
+       after filling four fields is not wait for a connection to open. -->
+  <link rel="preconnect" href="https://circulant.app.n8n.cloud">
+
+  <style>
+  /* ==========================================================================
+     /reserve/ — page-scoped only.
+     Everything structural (nav, footer, CTA stack, section type, .cb-* form
+     parts) comes from aic.css. What lives here is the hold-request layout, the
+     textarea, and the demo card block — nothing else, so this page cannot drift
+     from its siblings.
+     ========================================================================== */
+
+  /* Tighter than .phead's 140px. On a form page the form is the content, and a
+     full screen of head above it is the one mistake that costs completions.
+     This is a fold decision, not a rhythm change: section rhythm below stays on
+     the host's 96/56. */
+  .phead.hold-head{padding:120px 0 28px}
+  @media(max-width:600px){.phead.hold-head{padding:96px 0 22px}}
+  .hold-head .page-sub{margin-bottom:0}
+
+  .hold-sec{padding:0 0 56px}
+  @media(min-width:601px){.hold-sec{padding:0 0 96px}}
+
+  /* Asymmetric, not 50/50: the form is the protagonist and the rail is the
+     footnote that answers the three questions a reader has while filling it in.
+     One breakpoint, and it is the site's own 880px nav breakpoint rather than a
+     private number, so the page reflows where the chrome already does. */
+  .hold-grid{display:grid;gap:2rem;align-items:start}
+  @media(min-width:880px){
+    .hold-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:3rem}
+  }
+
+  /* Reuses the ONE raised-panel recipe (.cb-form in aic.css) rather than
+     inventing a second one. Only the padding differs, because this form holds
+     four fields and a fieldset instead of two fields. */
+  .hold-form{background:var(--surface);border:1px solid var(--line);
+    box-shadow:var(--raise);border-radius:12px;padding:1.5rem}
+  @media(max-width:600px){.hold-form{padding:1.15rem}}
+
+  .hold-legend{font-family:var(--mono);font-size:.75rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--sky);
+    margin-bottom:1.1rem}
+
+  /* Stacked, not side-by-side. Four fields where three are long strings (name,
+     email, a trip in the reader's own words) have nothing to gain from a split
+     row, and a 150px flex basis puts two 44px controls on one line at 390 where
+     neither can show what was typed. */
+  .hold-field{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1rem}
+  .hold-field .cb-label{margin-bottom:0}
+
+  /* The textarea has no rule in the shared sheet, so it takes .cb-input's box
+     and adds only what a multi-line control needs. resize:vertical, because a
+     horizontal drag inside a 12px-inset panel is how a reader breaks a layout. */
+  textarea.cb-input{min-height:132px;resize:vertical;line-height:1.55;
+    padding:.85rem;font-family:var(--sans)}
+
+  .hold-help{font-size:.85rem;color:var(--ink-mute);line-height:1.5;margin-top:.1rem}
+
+  /* ── THE DEMO CARD BLOCK ────────────────────────────────────────────────────
+     It has to read as a card-on-file panel and it has to be impossible to
+     mistake for one that works. Four things do that job together, because any
+     one of them alone can be missed:
+
+       1. --neutral, not --amber. chauffeur-design gives amber to "ringing ·
+          pending · the cost of the miss". Nothing here is pending — the block
+          is INACTIVE, and --neutral is the token whose meaning is literally
+          "inactive · not-yet · n/a". Painting it amber would say a payment is
+          in flight when none exists.
+       2. Every control carries `disabled`, so it takes no digits, no focus and
+          no tab stop, and the browser will not submit it.
+       3. The label is printed twice, once as the fieldset's own <legend> and
+          once as the strip across the top, so it is read by a screen reader
+          before the controls and seen by an eye that scans.
+       4. The values are the literal words DEMO and NO CHARGE rather than a
+          masked number, so nothing on screen looks like a real card.
+
+     THERE WAS A FIFTH AND IT WAS A DEFECT. This block used to carry
+     opacity:.62 on .demo-body to make it read as switched off. The render gate
+     measured what that ACTUALLY produced: --neutral is 6.38:1 on midnight, and
+     .62 of it composites to 3.07:1 — under the 4.5 floor, on all four field
+     labels and all four DEMO values. Eight failures, and every one of them on
+     the words whose whole job is to tell a reader that nothing is being
+     collected. The least legible text on the page was the disclosure.
+
+     The opacity is gone. --neutral already MEANS inactive, the dashed border
+     already reads as a placeholder, and the controls are already disabled; the
+     dimming was a fourth signal that cost the first three their legibility.
+     Re-measured after the change and recorded in the run report.
+     ────────────────────────────────────────────────────────────────────────── */
+  .demo-card{border:1px dashed var(--neutral);border-radius:10px;
+    background:var(--input-bg);padding:0;margin:1.5rem 0 1.25rem;
+    /* a fieldset defaults to min-width:min-content, which stops it shrinking
+       inside a grid track and is the classic source of overflow at 390 */
+    min-width:0}
+  .demo-card legend{padding:0 .5rem;margin-left:.75rem;
+    font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--neutral)}
+  .demo-strip{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .75rem;
+    padding:.15rem 1rem .85rem}
+  .demo-dot{width:6px;height:6px;border-radius:50%;background:var(--neutral);flex:none}
+  .demo-strip span{font-size:.85rem;color:var(--ink-mute);line-height:1.5}
+  .demo-body{padding:0 1rem 1.15rem}
+  .demo-row{display:flex;flex-wrap:wrap;gap:.6rem}
+  .demo-row .hold-field{flex:1 1 130px;margin-bottom:.75rem}
+  .demo-card .cb-label{color:var(--neutral)}
+  /* A disabled control still has to clear the 4.5:1 floor: a reader has to be
+     able to READ that nothing is being collected. Measured on the rendered
+     pixels, not assumed from the token — see the note above for what happened
+     the one time it was assumed. */
+  .demo-card .cb-input:disabled{background:transparent;border-color:var(--line);
+    color:var(--neutral);font-family:var(--mono);font-size:.85rem;
+    letter-spacing:.08em;cursor:not-allowed;min-height:44px}
+
+  /* Full-width and filled: on this page the submit IS the primary control, so
+     it takes the primary recipe from aic.css rather than the ghost .cb-submit.
+     .btn-primary brings the chamfer, the bevel and the neutral elevation. */
+  .hold-submit{width:100%;justify-content:center;min-height:54px;font-weight:600}
+
+  .hold-note{font-family:var(--sans);font-size:.9rem;letter-spacing:0;
+    color:var(--ink-mute);margin-top:.85rem;line-height:1.55;min-height:1.2em}
+  .hold-note.is-err{color:var(--miss-red)}
+  .hold-note.is-ok{color:var(--success-green)}
+  .hold-form.is-done .hold-field,
+  .hold-form.is-done .demo-card,
+  .hold-form.is-done .cb-consent,
+  .hold-form.is-done .hold-submit,
+  .hold-form.is-done .hold-legend{display:none}
+
+  /* ── THE RAIL ───────────────────────────────────────────────────────────────
+     Three answers, hairline-separated, no cards. RUN 7's de-card rule: three
+     paragraphs of supporting prose are not three discrete records, and giving
+     them glass would put three panels beside the one panel that matters. */
+  .hold-rail{display:flex;flex-direction:column;gap:1.5rem}
+  .hold-rail h2{font-family:var(--mono);font-size:.75rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--sky);margin:0}
+  .hold-item{border-top:1px solid var(--line);padding-top:1.1rem}
+  .hold-item h3{font-family:var(--sans);font-size:1.08rem;font-weight:600;
+    color:var(--ink);margin:0 0 .5rem}
+  .hold-item p{font-size:1.0625rem;color:var(--ink-mute);line-height:1.58;margin:0}
+
+  /* The signature. One mono line, tabular figures, sitting under the rail: the
+     page tells you which rate card the number you will be quoted comes from,
+     and links to it. It is the only place on this page where the brand's
+     instrument voice speaks, which is why it is one line and not a panel. */
+  .hold-src{border-top:1px solid var(--line-hot);padding-top:1.1rem;
+    font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--neutral);line-height:1.7}
+  /* min-height 44 and inline-flex, matching .cta-tertiary in aic.css. These two
+     are STANDALONE links on their own line, not links inside a sentence, so the
+     inline exemption to the target-size rule does not cover them — the gate
+     measured them at 16px tall before this rule existed. The privacy link
+     inside the consent sentence is genuinely inline and is left alone. */
+  .hold-src a{color:var(--sky);text-decoration:underline;
+    text-underline-offset:.18em;text-decoration-thickness:1px;
+    display:inline-flex;align-items:center;min-height:44px}
+  .hold-src a:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
+
+  .signoff{font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--neutral);margin-top:2rem}
+  </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aichauffeur.ai/#organization",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "telephone": "+1-414-775-0019",
+      "email": "dispatch@aichauffeur.ai",
+      "logo": "https://aichauffeur.ai/assets/brand/lockup-short.svg",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressRegion": "WI"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aichauffeur.ai/#website",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "publisher": {
+        "@id": "https://aichauffeur.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "name": "Secure your reservation hold.",
+      "description": "Send the trip and a way to reach you. A dispatcher calls to go over the pickup, the vehicle and the price. Nothing is charged on this page.",
+      "provider": {
+        "@id": "https://aichauffeur.ai/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aichauffeur.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Reserve",
+          "position": 2,
+          "item": "https://aichauffeur.ai/reserve/"
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="top">
+  <a href="/" class="brand" aria-label="AI Chauffeur home">
+    <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    <img class="brand-compact" src="/assets/brand/mark-compact.svg" alt="" width="26" height="26" decoding="async">
+  </a>
+
+  <ul class="nav-main">
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-product">Product<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-product">
+        <li><a href="/demo/">Live demo</a></li>
+        <li><a href="/how-setup-works/">How setup works</a></li>
+        <li><a href="/works-with-your-software/">Works with your software</a></li>
+        <li><a href="/integrations/">Integrations</a></li>
+      </ul>
+    </li>
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-solutions">Solutions<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-solutions">
+        <li><a href="/limo-answering-service/">Limo answering service</a></li>
+        <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+        <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+        <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+      </ul>
+    </li>
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-locations">Locations<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-locations">
+        <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+        <li><a href="/madison-limo-answering-service/">Madison</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_nav" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="nav-cta-verb">Call </span>(414) 775-0019</a>
+    <a href="/book/" class="nav-book" data-event="book_click_nav">Book the setup call</a>
+    <button type="button" class="nav-burger" data-drawer-open aria-expanded="false" aria-controls="nav-drawer" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span class="nav-burger-t">Menu</span></button>
+  </div>
+</nav>
+
+<main id="main">
+
+<section class="phead hold-head" data-lit="bright" data-rail-after>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li aria-current="page">Reserve</li>
+      </ol>
+    </nav>
+    <span class="kicker">Reservation hold</span>
+    <h1 class="page-h">Secure your <em>reservation hold.</em></h1>
+    <p class="page-sub">Send the trip and a way to reach you. A dispatcher calls to go over the pickup, the vehicle and the price. Nothing is charged on this page.</p>
+  </div>
+</section>
+
+<!-- ══ THE HOLD REQUEST ═══════════════════════════════════════════════════ -->
+<section class="hold-sec" data-lit="flat">
+  <div class="wrap">
+    <div class="hold-grid">
+
+      <form class="hold-form" id="hold" data-hold-form data-rail-hide novalidate>
+        <div class="hold-legend">Hold request</div>
+
+        <div class="hold-field">
+          <label class="cb-label" for="hold-name">Full name</label>
+          <input class="cb-input" id="hold-name" name="full_name" type="text" required
+                 autocomplete="name" maxlength="80" placeholder="Dana Whitfield">
+        </div>
+
+        <div class="hold-field">
+          <label class="cb-label" for="hold-mobile">Mobile</label>
+          <input class="cb-input" id="hold-mobile" name="mobile" type="tel" required
+                 autocomplete="tel" inputmode="tel" maxlength="20" placeholder="(414) 555-0182">
+          <p class="hold-help" id="hold-mobile-help">This is the number a dispatcher calls back on.</p>
+        </div>
+
+        <div class="hold-field">
+          <label class="cb-label" for="hold-email">Email</label>
+          <input class="cb-input" id="hold-email" name="email" type="email" required
+                 autocomplete="email" maxlength="120" placeholder="dana@example.com">
+        </div>
+
+        <div class="hold-field">
+          <label class="cb-label" for="hold-trip">Trip summary</label>
+          <textarea class="cb-input" id="hold-trip" name="trip_summary" required
+                    maxlength="1200" rows="5"
+                    placeholder="Saturday the 14th, pickup 7:30pm at the Pfister, four passengers to General Mitchell. Executive SUV if you have one."></textarea>
+          <p class="hold-help">Date, time, pickup, drop-off, passenger count and the vehicle you want. Plain words are fine.</p>
+        </div>
+
+        <!-- DEMO CARD BLOCK — collects nothing. Every control is disabled, so
+             the browser will not serialize or submit any of them, and none of
+             them can take a keystroke or a paste. -->
+        <fieldset class="demo-card" disabled>
+          <legend>Card on file</legend>
+          <div class="demo-strip">
+            <span class="demo-dot" aria-hidden="true"></span>
+            <span><strong>DEMO — no charge, no card required.</strong> This block is switched off and takes no digits. Payment is arranged with a dispatcher after the trip is set.</span>
+          </div>
+          <div class="demo-body" aria-hidden="true">
+            <div class="hold-field">
+              <span class="cb-label">Card number</span>
+              <input class="cb-input" type="text" value="DEMO — NO CHARGE" disabled tabindex="-1">
+            </div>
+            <div class="demo-row">
+              <div class="hold-field">
+                <span class="cb-label">Expires</span>
+                <input class="cb-input" type="text" value="DEMO" disabled tabindex="-1">
+              </div>
+              <div class="hold-field">
+                <span class="cb-label">Security code</span>
+                <input class="cb-input" type="text" value="DEMO" disabled tabindex="-1">
+              </div>
+              <div class="hold-field">
+                <span class="cb-label">ZIP</span>
+                <input class="cb-input" type="text" value="DEMO" disabled tabindex="-1">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <label class="cb-consent" for="hold-consent">
+          <input type="checkbox" id="hold-consent" name="tcpa_consent" value="true" required>
+          <span>I agree to get calls and texts from AI Chauffeur at this number about this reservation, including automated ones. Saying yes is not required to buy anything. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy/">See our Privacy Policy</a>.</span>
+        </label>
+
+        <button type="submit" class="btn btn-primary hold-submit" data-event="reserve_hold_submit">Place the reservation hold</button>
+        <p class="hold-note" data-hold-note role="status" aria-live="polite"></p>
+      </form>
+
+      <aside class="hold-rail">
+        <h2>What a hold does</h2>
+
+        <div class="hold-item">
+          <h3>It holds the vehicle</h3>
+          <p>Your request reaches a dispatcher with the trip attached. The vehicle class you asked for is held while they check the calendar against it.</p>
+        </div>
+
+        <div class="hold-item">
+          <h3>Nothing is charged</h3>
+          <p>The card block takes no digits and cannot bill you. It is there to show you where a card would go. Payment is arranged with a dispatcher once the trip is set.</p>
+        </div>
+
+        <div class="hold-item">
+          <h3>You get a call back</h3>
+          <p>A dispatcher calls the number you gave us to go over the pickup, the vehicle and the price. That call is where the trip is set.</p>
+        </div>
+
+        <div class="hold-src">
+          Quoted from rate card RCv1.0<br>
+          <a href="/rates/">See the rate card</a> · <a href="tel:+14147750019" data-event="tel_tap_rail_inline">Call (414) 775-0019</a>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ THE CROSS-BRAND ASK ════════════════════════════════════════════════ -->
+<section data-lit="technical">
+  <div class="wrap">
+    <div class="sec-kicker">For operators</div>
+    <h2 class="sec-h">This is AI Chauffeur <em>running live.</em></h2>
+    <p class="sec-sub">Want it answering YOUR phones? The same system that took this reservation answers for plumbers, dentists, roofers and dispatchers. Book a call with AI Voice Agency and hear it on your own line.</p>
+    <p>
+      <a href="https://book.aivoiceagency.ai/" class="btn btn-ghost" data-event="book_click_ava_parent">Book a call with AI Voice Agency</a>
+    </p>
+    <p class="signoff">AVA Team</p>
+  </div>
+</section>
+
+</main>
+
+<footer data-rail-hide>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="foot-mark">AI <em>Chauffeur</em></div>
+        <p class="foot-nap">
+          AI CHAUFFEUR · Wisconsin-built<br>
+          <a href="tel:+14147750019" data-event="tel_tap_footer">(414) 775-0019</a><br>
+          Serving operators nationwide
+        </p>
+      </div>
+      <div class="foot-col">
+        <h2>Product</h2>
+        <ul>
+          <li><a href="/demo/">Live demo</a></li>
+          <li><a href="/how-setup-works/">How setup works</a></li>
+          <li><a href="/works-with-your-software/">Works with your software</a></li>
+          <li><a href="/integrations/">Integrations</a></li>
+          <li><a href="/book/">Book the setup call</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Reservations</h2>
+        <ul>
+          <li><a href="/reserve/" aria-current="page">Reservation hold</a></li>
+          <li><a href="/rates/">Rate card</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Solutions</h2>
+        <ul>
+          <li><a href="/limo-answering-service/">Limo answering service</a></li>
+          <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+          <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+          <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Company</h2>
+        <ul>
+          <li><a href="tel:+14147750019" data-event="tel_tap_footer_company">Call (414) 775-0019</a></li>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/terms/">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 AI Chauffeur</span>
+    </div>
+  </div>
+</footer>
+
+<!-- § G · MOBILE DRAWER — every indexable page, real hrefs, no injection. -->
+<div class="nav-drawer" id="nav-drawer" data-drawer>
+  <div class="dw-top">
+    <a href="/" class="brand" aria-label="AI Chauffeur home">
+      <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    </a>
+    <button type="button" class="dw-close" data-drawer-close aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Close</span></button>
+  </div>
+  <div class="dw-body">
+    <nav class="dw-group" aria-label="Reservations">
+      <h2>Reservations</h2>
+      <ul>
+        <li><a href="/reserve/" aria-current="page">Reservation hold</a></li>
+        <li><a href="/rates/">Rate card</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Product">
+      <h2>Product</h2>
+      <ul>
+        <li><a href="/demo/">Live demo</a></li>
+        <li><a href="/how-setup-works/">How setup works</a></li>
+        <li><a href="/works-with-your-software/">Works with your software</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Solutions">
+      <h2>Solutions</h2>
+      <ul>
+        <li><a href="/limo-answering-service/">Limo answering service</a></li>
+        <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+        <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+        <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Integrations">
+      <h2>Integrations</h2>
+      <ul>
+        <li><a href="/integrations/">Integrations overview</a></li>
+        <li><a href="/integrations/limo-anywhere/">Limo Anywhere</a></li>
+        <li><a href="/integrations/fasttrak/">FASTTRAK</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Locations">
+      <h2>Locations</h2>
+      <ul>
+        <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+        <li><a href="/madison-limo-answering-service/">Madison</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Company">
+      <h2>Company</h2>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+      </ul>
+    </nav>
+    <div class="dw-actions">
+      <a href="/book/" class="nav-book" data-event="book_click_drawer">Book the setup call</a>
+      <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call (414) 775-0019</a>
+    </div>
+  </div>
+</div>
+
+<!-- RUN 7 · TASK A — mobile sticky action rail -->
+<div class="rail" data-rail>
+  <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="rail-label"><span class="rail-verb">Call </span>(414) 775-0019</span></a>
+  <a class="rail-book" href="/rates/" data-event="rates_click_rail">See the rate card</a>
+</div>
+
+<script src="/assets/aic.js?v=d08196a"></script>
+
+<script>
+/* ============================================================================
+   /reserve/ — HOLD REQUEST SUBMIT                             page-scoped only
+   ----------------------------------------------------------------------------
+   WHY THIS IS NOT WIRED THROUGH assets/aic.js:
+
+   aic.js owns [data-cb-form] and posts a two-field payload to the /ava-call
+   webhook. This form is a different shape (four fields plus a trip in the
+   reader's own words) and it belongs to a different spine — AVA Client Intake
+   at /ava-intake, which is the workflow that upserts to GHL, writes the full
+   formatted note and fires the owner alert. Binding this form with
+   [data-cb-form] would have handed it to the callback rail and silently sent a
+   reservation to the wrong endpoint with two of its four fields dropped. The
+   attribute here is data-hold-form for exactly that reason.
+
+   THE VALIDATOR ON THE OTHER END FAILS CLOSED, and this payload is shaped to
+   satisfy it rather than to hope: AVA Client Intake accepts a submission only
+   when business_name is non-empty AND tcpa_consent is true. Verified against
+   the live workflow this run — a POST without consent returns HTTP 400
+   {"ok":false} and creates nothing.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var ENDPOINT = 'https://circulant.app.n8n.cloud/webhook/ava-intake';
+  var TEL_DISPLAY = '(414) 775-0019';
+
+  var form = document.querySelector('[data-hold-form]');
+  if (!form) return;
+
+  var nameEl  = document.getElementById('hold-name');
+  var cellEl  = document.getElementById('hold-mobile');
+  var mailEl  = document.getElementById('hold-email');
+  var tripEl  = document.getElementById('hold-trip');
+  var okEl    = document.getElementById('hold-consent');
+  var btn     = form.querySelector('.hold-submit');
+  var note    = form.querySelector('[data-hold-note]');
+
+  /* Same normalizer as the callback rail in aic.js, on purpose. Two forms on
+     one site that disagree about what a phone number is will file the same
+     caller as two contacts. */
+  function toE164(raw) {
+    var hadPlus = (raw || '').trim().charAt(0) === '+';
+    var d = (raw || '').replace(/\D/g, '');
+    if (!d) return '';
+    if (hadPlus) return '+' + d;
+    if (d.length === 10) return '+1' + d;
+    if (d.length === 11 && d.charAt(0) === '1') return '+' + d;
+    return '';
+  }
+
+  function setNote(msg, kind) {
+    if (!note) return;
+    note.textContent = msg;
+    note.className = 'hold-note' + (kind ? ' is-' + kind : '');
+  }
+
+  /* An error names the field AND moves focus to it. A message at the top of a
+     form that does not say which of four inputs is wrong is a guessing game. */
+  function fail(msg, el) {
+    setNote(msg, 'err');
+    if (el) {
+      el.setAttribute('aria-invalid', 'true');
+      el.focus();
+    }
+  }
+
+  ['input', 'change'].forEach(function (ev) {
+    form.addEventListener(ev, function (e) {
+      if (e.target && e.target.setAttribute) e.target.setAttribute('aria-invalid', 'false');
+    });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var fullName = (nameEl.value || '').trim();
+    var trip     = (tripEl.value || '').trim();
+    var email    = (mailEl.value || '').trim();
+    var cell     = toE164(cellEl.value);
+
+    if (fullName.length < 2) { fail('Add the name the reservation is under.', nameEl); return; }
+    if (!/^\+[1-9]\d{7,14}$/.test(cell)) { fail('That mobile number does not look right. Check the digits.', cellEl); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { fail('That email does not look right. Check the address.', mailEl); return; }
+    if (trip.length < 8) { fail('Tell us the trip: date, time, pickup and drop-off.', tripEl); return; }
+    /* TCPA: fail closed. No explicit consent, no automated call. */
+    if (!okEl.checked) { fail('Tick the box so a dispatcher is allowed to call you back.', okEl); return; }
+
+    btn.disabled = true;
+    setNote('Sending your hold request…', '');
+
+    /* PAYLOAD CONTRACT — AVA Client Intake (/ava-intake), read from the live
+       workflow rather than guessed:
+         business_name  REQUIRED and non-empty, or the run answers 400.
+         tcpa_consent   REQUIRED true, same.
+         owner_name     split into firstName / lastName for the GHL upsert.
+         ava_number     becomes the GHL contact phone.
+         billing_email  becomes the GHL contact email.
+         services       printed in the intake note the owner reads.
+       The raw reserve-shaped keys ride along underneath. The current note
+       builder ignores them; they are there so a future revision reads the trip
+       from a field that is actually named after it. */
+    var payload = {
+      business_name: 'RESERVATION HOLD - ' + fullName,
+      owner_name: fullName,
+      vertical: 'Chauffeur / black car',
+      tier: 'Reservation hold',
+      ava_number: cell,
+      billing_email: email,
+      services: trip,
+      tcpa_consent: true,
+      tcpa_consent_at: new Date().toISOString(),
+      source: 'aichauffeur_reserve',
+
+      full_name: fullName,
+      mobile: cell,
+      email: email,
+      trip_summary: trip,
+      brand: 'AI Chauffeur',
+      page: location.pathname,
+      card_on_file: 'DEMO - no card collected, no charge'
+    };
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      if (r.ok) {
+        /* The class that hides the fields and the sentence that explains what
+           happens next are written in the same synchronous block, so no frame
+           can render an empty panel with no message in it. */
+        form.classList.add('is-done');
+        setNote('Hold request received. A dispatcher calls ' + cellEl.value.trim() + ' to go over the pickup, the vehicle and the price. Nothing has been charged.', 'ok');
+        return;
+      }
+      btn.disabled = false;
+      fail('Could not send the hold (' + r.status + '). Try again, or call ' + TEL_DISPLAY + '.');
+    }, function () {
+      btn.disabled = false;
+      fail('Could not send the hold. Try again, or call ' + TEL_DISPLAY + '.');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

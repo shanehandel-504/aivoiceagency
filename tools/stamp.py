@@ -286,6 +286,16 @@ VERSION_ONLY = [
     'chauffeur/integrations/limo-anywhere/index.html',
     'chauffeur/integrations/fasttrak/index.html',
     'chauffeur/limo-dispatch-automation/index.html',
+    # RESERVATION SURFACES (2026-08-20) — the public rate card and the
+    # reservation-hold form. Registered HERE at creation rather than after the
+    # fact, which is the whole lesson of the four pages directly above: a
+    # chauffeur page that ships with a hand-written ?v= token and is never
+    # listed pins itself to whatever hash was current the day it was written,
+    # and has no way to expire. VERSION_ONLY, never PAGES — both carry the
+    # chauffeur nav/footer, and PAGES would inject the AVA site's chrome onto a
+    # different brand's host.
+    'chauffeur/rates/index.html',
+    'chauffeur/reserve/index.html',
 ]
 
 

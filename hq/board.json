@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-08-20T12:55:11.213-05:00",
+  "updated": "2026-08-20T13:13:28.822-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -75,6 +75,20 @@
     }
   ],
   "items": [
+    {
+      "id": "AIC-RATE-CARD-RCV1",
+      "title": "/rates/ — public rate card RCv1.0",
+      "url": "https://aichauffeur.ai/rates/",
+      "status": "live",
+      "label": "15 vehicle classes, 5 tbody groups, weekday/weekend hourly plus hourly minimum, mono tabular figures. Fits without scrolling at 390 (340/340 measured); below 380 it scrolls inside a labelled focusable region with a hint scoped to the widths where scrolling is real. 0 contrast failures across 112 nodes at desktop. CAVEAT ON THE PAGE'S OWN FOOTER LINE: it claims the AI quotes from this card, and published agent v19 has no rate_lookup tool — the line is aspirational until that is wired."
+    },
+    {
+      "id": "AIC-RESERVE-HOLD",
+      "title": "/reserve/ — Secure Reservation Hold, wired to the AVA Client Intake spine",
+      "url": "https://aichauffeur.ai/reserve/",
+      "status": "live",
+      "label": "Four fields plus a required TCPA tick, POSTing to webhook /ava-intake (workflow 9FoLm4slBmM5nIus, ACTIVE, versionId == activeVersionId 33184ac3, Error Sentry SlnAeMrVRORsF0w7 attached) with source: aichauffeur_reserve. Deliberately NOT tagged [data-cb-form]: that attribute is owned by assets/aic.js, which would have grabbed this form and posted two of its four fields to the /ava-call callback rail instead. Card block is fieldset[disabled] with DEMO/NO CHARGE as the literal values; FormData proves zero card keys are serialized. Gate at 390 and 1280: no horizontal overflow, no console errors, 0 contrast failures across 68 nodes, nothing under the 12px floor, and the only sub-44px targets are genuinely inline-in-sentence."
+    },
     {
       "id": "POSTCALL-RAIL-8930",
       "title": "POST-CALL RAIL — owner gets the summary + full transcript after every call",
@@ -378,6 +392,10 @@
     }
   ],
   "log": [
+    {
+      "ts": "2026-08-20T13:13:28.822-05:00",
+      "entry": "AIC RESERVATION SURFACES LIVE — aichauffeur.ai/reserve/ and aichauffeur.ai/rates/. /reserve/ is a four-field hold request (full name, mobile, email, trip summary) with a required TCPA tick, posting to the EXISTING AVA Client Intake spine (9FoLm4slBmM5nIus, webhook /ava-intake) tagged source: aichauffeur_reserve. The card-on-file block is a visibly dead stub: fieldset[disabled], every control disabled, values printed as the literal words DEMO / NO CHARGE. Proved rather than asserted — new FormData(form) serializes exactly [full_name, mobile, email, trip_summary] and ZERO card keys, so the browser cannot transmit a digit that was never collectable. /rates/ is rate card RCv1.0, 15 vehicle classes in 5 semantic tbody groups, weekday/weekend hourly plus the hourly minimum. FOUR THINGS THE BRIEF COULD NOT HAVE KNOWN. (1) THE DISCLOSURE WAS THE LEAST LEGIBLE TEXT ON THE PAGE. opacity:.62 on the demo card composited --neutral from 6.38:1 down to 3.07:1 — eight WCAG failures, all of them on the words whose only job is to say nothing is being collected. Caught by measuring rendered pixels, not by reading the token. Opacity removed; re-measured 0 fails across 68 nodes on /reserve/ and 112 on /rates/. (2) THE MOBILE TABLE THRESHOLD WAS GUESSED WRONG BY 4px. The rate table's min-content demand is 332 and the wrap is viewport minus 48, so it starts scrolling at 380 — not the 376 first written. Three viewport widths would have dragged sideways while the page said nothing. .tbl-hint is now scoped to <380 where it is TRUE; the shared rule would have printed 'scroll for more' at 390 where nothing scrolls. (3) stamp.py RE-INJECTED THE /backstage BreadcrumbList THAT RUN A DELETED — a trail that page never renders, the exact defect the INVISIBLE TRUTH LAYER removed. Running stamp.py at all re-armed it across 60 AVA parent pages. Those 60 were reverted; only the 16 chauffeur pages plus the 2 new ones ship. stamp.py is a landmine for the next run that touches either host. (4) THE FOOTER CLAIM IS NOT TRUE YET, AND IT SHIPPED AS WRITTEN. 'This is the live rate card the AI quotes from' — the AI does not quote from it. Resolved against what actually answers 414-775-0019: agent_8e9e7d477949c6babcbdcc756d latest_published v19 (not the v20 draft) carries exactly two tools, end_call and write_reservation. No rate_lookup, no mention of RCv1.0, no figure from the card. Shipped verbatim per CLAUDE.md § 0 precedence 1 and flagged, not silently rewritten. Wiring rate_lookup is the next move. The happy path was NOT fired live: it would mint a real GHL contact and an owner SMS. What WAS proved on the wire — CORS preflight 204 for origin https://aichauffeur.ai, and the page's exact payload with consent flipped false returning a clean 400 from the IF node rather than a 500, which is what proves Build Payload consumed the real object shape without throwing."
+    },
     {
       "ts": "2026-08-20T12:55:11.213-05:00",
       "entry": "v48 published — sealed by real-call gate, 51/54 suite, ads cleared."

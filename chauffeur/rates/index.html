@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070B14">
+  <title>AI Chauffeur Rate Card RCv1.0 — Hourly Rates by Vehicle</title>
+  <meta name="description" content="The AI Chauffeur rate card, RCv1.0. Hourly weekday and weekend rates and hourly minimums for sedans, SUVs, sprinters, limousines, party buses and coaches.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="canonical" href="https://aichauffeur.ai/rates/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AI Chauffeur">
+  <meta property="og:title" content="AI Chauffeur Rate Card RCv1.0">
+  <meta property="og:description" content="Hourly weekday and weekend rates and hourly minimums for every vehicle class. Gratuity and service are already in the number.">
+  <meta property="og:url" content="https://aichauffeur.ai/rates/">
+  <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AI Chauffeur - the limo answering service that never puts a caller on hold. (414) 775-0019">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta name="twitter:title" content="AI Chauffeur Rate Card RCv1.0">
+  <meta name="twitter:description" content="Hourly weekday and weekend rates and hourly minimums for every vehicle class. Gratuity and service are already in the number.">
+
+  <!-- RUN 8 · FONT LOCK — self-hosted. The @font-face lives in the stylesheet,
+       so without a preload the browser cannot discover either file until the CSS
+       has parsed and matched a rule against it. The href must be the SAME STRING
+       as the src, and crossorigin is required even same-origin because fonts are
+       always fetched in CORS mode — miss either and the file is fetched twice. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/circulant.css?v=d08196a">
+  <link rel="stylesheet" href="/assets/aic.css?v=d08196a">
+
+  <style>
+  /* ==========================================================================
+     /rates/ — page-scoped only.
+     The table system (.tbl-wrap / .tbl / .tbl-cap) is the shared one from
+     aic.css. What lives here is the row-group header, the figure treatment, and
+     the mobile fit — nothing else, so this page cannot drift from its siblings.
+     ========================================================================== */
+
+  .phead.rate-head{padding:120px 0 28px}
+  @media(max-width:600px){.phead.rate-head{padding:96px 0 22px}}
+  .rate-head .page-sub{margin-bottom:0}
+
+  .rate-sec{padding:0 0 56px}
+  @media(min-width:601px){.rate-sec{padding:0 0 96px}}
+
+  /* ── THE FIGURES ────────────────────────────────────────────────────────────
+     Mono with tabular figures, and that is not decoration. § D of the brand
+     gives the mono face to operational data — a status, a field, a time, a
+     route, A QUOTE — and tabular numerals are what make a column of prices
+     read as a column instead of as fifteen unrelated strings. $75 and $185
+     occupy the same width per digit, so the decimal edge is a straight line
+     down the table and a dispatcher scanning for the jump between classes
+     finds it by shape rather than by reading. */
+  .rate-num{font-family:var(--mono);font-size:1rem;font-weight:500;color:var(--ink);
+    font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;white-space:nowrap}
+  /* The weekend column is the same money in a different condition, not a second
+     kind of money. It stays --ink-soft so the weekday column reads as the base
+     and the weekend as its variation, which is what the two columns MEAN. */
+  .rate-num--wknd{color:var(--ink-soft)}
+  .rate-min{font-family:var(--mono);font-size:.85rem;letter-spacing:.06em;
+    color:var(--neutral);font-variant-numeric:tabular-nums}
+
+  /* ── ROW GROUPS ─────────────────────────────────────────────────────────────
+     Fifteen rows under one header is a wall. Five <tbody> groups turn it into
+     five short lists a reader can hold in their head, and the grouping encodes
+     something true — these are the vehicle families an operator actually thinks
+     in, not five arbitrary chunks of three. scope="colgroup" is what tells a
+     screen reader the label governs the rows below it rather than the row it
+     sits in. */
+  .rate-grp th{font-family:var(--mono);font-size:.75rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--sky);
+    background:var(--surface-2);padding:.85rem 1rem;
+    border-bottom:1px solid var(--line);
+    box-shadow:inset 0 1px 0 rgba(127,178,255,.06)}
+
+  /* ── THE MOBILE FIT, MEASURED NOT HOPED ─────────────────────────────────────
+     The shared .tbl carries min-width:620px and scrolls inside its wrap, which
+     is right for the three-column prose tables on this site and wrong here: on
+     THIS page the table is the whole content, and a rate card a passenger has
+     to drag sideways at a red light is a rate card they do not read.
+
+     What has to give is nowrap on the two header rows: "Executive Sprinter"
+     wraps to two lines, and a two-line vehicle name is not a defect while an
+     invisible price column is.
+
+     THE NUMBERS, MEASURED IN THE BROWSER AND NOT COMPUTED FROM THE CSS.
+     At 390 the wrap is 340px and the table's min-content demand broke down as:
+
+       vehicle column   110.0   ("Motorcoach", the one name that will not wrap)
+       weekday           78.2   (set by the HEADER word, not by "$115")
+       weekend           78.2
+       hourly minimum    78.2
+                        ------
+                        344.6   into 340. Four pixels over, and a rate card that
+                                drags sideways by four pixels is still a rate
+                                card that drags sideways.
+
+     Three of the four columns were sized by their own header, not by a price,
+     so the padding is what buys the fit: 8px sides x 8 edges is 64px of the
+     344. Taking it to 6.4 returns 12.8px and lands the table at ~332 into 340,
+     which is a real margin rather than a rounding win.
+
+     BELOW 380px IT STILL SCROLLS AND THAT IS THE HONEST OUTCOME. Shaving the
+     rest would mean abbreviating the headers, and "Wknd" over a price column is
+     a worse page than a drag. So the wrap keeps overflow-x:auto, its focusable
+     region and its label, and the hint below is scoped to the widths where it
+     is actually TRUE — the shared .tbl-hint rule paints at <=667.98px, which
+     would have printed "scroll for more" at 390 where nothing scrolls.
+
+     THE 380 IS MEASURED, AND THE FIRST GUESS WAS WRONG BY FOUR PIXELS. Read at
+     360: wrap 310, table 332 — so the table's min-content demand is 332 and the
+     wrap is always viewport minus 48px of .wrap padding. It therefore begins to
+     scroll at 332 + 48 = 380, not at the 376 this rule was first written with.
+     Guessing the threshold would have left three viewport widths where the
+     table drags and the page says nothing about it.
+     ────────────────────────────────────────────────────────────────────────── */
+  @media(max-width:667.98px){
+    .rate-tbl{min-width:0}
+    .rate-tbl th,.rate-tbl td{padding:.75rem .4rem}
+    .rate-tbl thead th,.rate-tbl tbody th{white-space:normal}
+    .rate-tbl td{max-width:none}
+    .rate-grp th{padding:.75rem .4rem}
+    .rate-num{font-size:.95rem}
+    .rate-min{font-size:.8rem}
+  }
+  /* Only true under the measured threshold. See the block above. */
+  @media(min-width:380px){.rate-sec .tbl-hint{display:none}}
+
+  /* ── THE NOTE ───────────────────────────────────────────────────────────────
+     Directly under the table, not in a footer. It is the four things that
+     change the number a caller hears, and somebody reading a price wants them
+     in the same glance as the price. Hairline on top, no panel: it belongs to
+     the table above it. */
+  .rate-note{border-top:1px solid var(--line);margin-top:1.5rem;padding-top:1.25rem;
+    font-size:1.0625rem;color:var(--ink-soft);line-height:1.65;max-width:640px}
+  .rate-note strong{color:var(--ink);font-weight:600}
+
+  /* The one line the page is built to deliver, in the brand's instrument voice,
+     sitting on the accent hairline so it reads as the card signing itself. */
+  .rate-live{border-top:1px solid var(--line-hot);margin-top:1.5rem;padding-top:1.25rem;
+    font-size:1.0625rem;color:var(--ink);line-height:1.6;max-width:640px}
+
+  .rate-ctas{display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-start;margin-top:1.75rem}
+
+  .signoff{font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--neutral);margin-top:2rem}
+  </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aichauffeur.ai/#organization",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "telephone": "+1-414-775-0019",
+      "email": "dispatch@aichauffeur.ai",
+      "logo": "https://aichauffeur.ai/assets/brand/lockup-short.svg",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressRegion": "WI"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aichauffeur.ai/#website",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "publisher": {
+        "@id": "https://aichauffeur.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "name": "Rate card RCv1.0.",
+      "description": "Hourly weekday and weekend rates, and the hourly minimum, for every vehicle class we quote. Gratuity and service are already in the number.",
+      "provider": {
+        "@id": "https://aichauffeur.ai/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aichauffeur.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Rates",
+          "position": 2,
+          "item": "https://aichauffeur.ai/rates/"
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="top">
+  <a href="/" class="brand" aria-label="AI Chauffeur home">
+    <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    <img class="brand-compact" src="/assets/brand/mark-compact.svg" alt="" width="26" height="26" decoding="async">
+  </a>
+
+  <ul class="nav-main">
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-product">Product<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-product">
+        <li><a href="/demo/">Live demo</a></li>
+        <li><a href="/how-setup-works/">How setup works</a></li>
+        <li><a href="/works-with-your-software/">Works with your software</a></li>
+        <li><a href="/integrations/">Integrations</a></li>
+      </ul>
+    </li>
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-solutions">Solutions<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-solutions">
+        <li><a href="/limo-answering-service/">Limo answering service</a></li>
+        <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+        <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+        <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+      </ul>
+    </li>
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-locations">Locations<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-locations">
+        <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+        <li><a href="/madison-limo-answering-service/">Madison</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_nav" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="nav-cta-verb">Call </span>(414) 775-0019</a>
+    <a href="/book/" class="nav-book" data-event="book_click_nav">Book the setup call</a>
+    <button type="button" class="nav-burger" data-drawer-open aria-expanded="false" aria-controls="nav-drawer" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span class="nav-burger-t">Menu</span></button>
+  </div>
+</nav>
+
+<main id="main">
+
+<section class="phead rate-head" data-lit="bright" data-rail-after>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li aria-current="page">Rates</li>
+      </ol>
+    </nav>
+    <span class="kicker">AI Chauffeur · rate card</span>
+    <h1 class="page-h">Rate card <em>RCv1.0.</em></h1>
+    <p class="page-sub">Hourly weekday and weekend rates, and the hourly minimum, for every vehicle class we quote. Gratuity and service are already in the number.</p>
+  </div>
+</section>
+
+<!-- ══ THE RATE CARD ══════════════════════════════════════════════════════ -->
+<section class="rate-sec" data-lit="flat">
+  <div class="wrap">
+
+    <div class="tbl-wrap" tabindex="0" role="region" aria-label="AI Chauffeur rate card RCv1.0">
+      <table class="tbl rate-tbl">
+        <caption class="tbl-cap">Rate card RCv1.0 · hourly rate by vehicle class</caption>
+        <thead>
+          <tr>
+            <th scope="col">Vehicle</th>
+            <th scope="col">Weekday</th>
+            <th scope="col">Weekend</th>
+            <th scope="col">Hourly minimum</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr class="rate-grp"><th colspan="4" scope="colgroup">Sedans and SUVs</th></tr>
+          <tr>
+            <th scope="row">Executive Sedan</th>
+            <td><span class="rate-num">$75</span></td>
+            <td><span class="rate-num rate-num--wknd">$85</span></td>
+            <td><span class="rate-min">2 hours</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Luxury Sedan</th>
+            <td><span class="rate-num">$115</span></td>
+            <td><span class="rate-num rate-num--wknd">$135</span></td>
+            <td><span class="rate-min">2 hours</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Executive SUV</th>
+            <td><span class="rate-num">$95</span></td>
+            <td><span class="rate-num rate-num--wknd">$115</span></td>
+            <td><span class="rate-min">2 hours</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Premium SUV</th>
+            <td><span class="rate-num">$125</span></td>
+            <td><span class="rate-num rate-num--wknd">$150</span></td>
+            <td><span class="rate-min">2 hours</span></td>
+          </tr>
+        </tbody>
+
+        <tbody>
+          <tr class="rate-grp"><th colspan="4" scope="colgroup">Vans and Sprinters</th></tr>
+          <tr>
+            <th scope="row">Executive Van</th>
+            <td><span class="rate-num">$110</span></td>
+            <td><span class="rate-num rate-num--wknd">$130</span></td>
+            <td><span class="rate-min">3 hours</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Executive Sprinter</th>
+            <td><span class="rate-num">$135</span></td>
+            <td><span class="rate-num rate-num--wknd">$155</span></td>
+            <td><span class="rate-min">3 hours</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Luxury Sprinter</th>
+            <td><span class="rate-num">$150</span></td>
+            <td><span class="rate-num rate-num--wknd">$175</span></td>
+            <td><span class="rate-min">3 to 4 hours</span></td>
+          </tr>
+        </tbody>
+
+        <tbody>
+          <tr class="rate-grp"><th colspan="4" scope="colgroup">Limousines</th></tr>
+          <tr>
+            <th scope="row">Stretch Limo</th>
+            <td><span class="rate-num">$135</span></td>
+            <td><span class="rate-num rate-num--wknd">$165</span></td>
+            <td><span class="rate-min">Set on the call</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Super Stretch</th>
+            <td><span class="rate-num">$165</span></td>
+            <td><span class="rate-num rate-num--wknd">$195</span></td>
+            <td><span class="rate-min">Set on the call</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Hummer Limo</th>
+            <td><span class="rate-num">$185</span></td>
+            <td><span class="rate-num rate-num--wknd">$225</span></td>
+            <td><span class="rate-min">Set on the call</span></td>
+          </tr>
+        </tbody>
+
+        <tbody>
+          <tr class="rate-grp"><th colspan="4" scope="colgroup">Party buses</th></tr>
+          <tr>
+            <th scope="row">Party Bus 20</th>
+            <td><span class="rate-num">$175</span></td>
+            <td><span class="rate-num rate-num--wknd">$215</span></td>
+            <td><span class="rate-min">Set on the call</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Party Bus 30</th>
+            <td><span class="rate-num">$225</span></td>
+            <td><span class="rate-num rate-num--wknd">$275</span></td>
+            <td><span class="rate-min">Set on the call</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Party Bus 40</th>
+            <td><span class="rate-num">$275</span></td>
+            <td><span class="rate-num rate-num--wknd">$325</span></td>
+            <td><span class="rate-min">Set on the call</span></td>
+          </tr>
+        </tbody>
+
+        <tbody>
+          <tr class="rate-grp"><th colspan="4" scope="colgroup">Coaches</th></tr>
+          <tr>
+            <th scope="row">Mini Coach</th>
+            <td><span class="rate-num">$165</span></td>
+            <td><span class="rate-num rate-num--wknd">$195</span></td>
+            <td><span class="rate-min">Set on the call</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Motorcoach</th>
+            <td><span class="rate-num">$195</span></td>
+            <td><span class="rate-num rate-num--wknd">$225</span></td>
+            <td><span class="rate-min">Set on the call</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tbl-hint">Scroll the table sideways to see the hourly minimum.</p>
+
+    <p class="rate-note">Airport transfers priced from the zone card or hourly minimum. 20% gratuity &amp; service included in every quote. Meet &amp; greet $30. Child seats $20/each.</p>
+
+    <p class="rate-live">This is the live rate card the AI quotes from — call 414-775-0019 and try it.</p>
+
+    <div class="rate-ctas">
+      <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_rates">
+        <span class="tel-main">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call (414) 775-0019
+        </span>
+        <span class="tel-sub">Ask for a quote and hear the card read back.</span>
+      </a>
+      <a href="/reserve/" class="btn btn-ghost" data-event="reserve_click_rates">Secure a reservation hold</a>
+    </div>
+
+    <p class="signoff">AVA Team</p>
+
+  </div>
+</section>
+
+</main>
+
+<footer data-rail-hide>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="foot-mark">AI <em>Chauffeur</em></div>
+        <p class="foot-nap">
+          AI CHAUFFEUR · Wisconsin-built<br>
+          <a href="tel:+14147750019" data-event="tel_tap_footer">(414) 775-0019</a><br>
+          Serving operators nationwide
+        </p>
+      </div>
+      <div class="foot-col">
+        <h2>Product</h2>
+        <ul>
+          <li><a href="/demo/">Live demo</a></li>
+          <li><a href="/how-setup-works/">How setup works</a></li>
+          <li><a href="/works-with-your-software/">Works with your software</a></li>
+          <li><a href="/integrations/">Integrations</a></li>
+          <li><a href="/book/">Book the setup call</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Reservations</h2>
+        <ul>
+          <li><a href="/reserve/">Reservation hold</a></li>
+          <li><a href="/rates/" aria-current="page">Rate card</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Solutions</h2>
+        <ul>
+          <li><a href="/limo-answering-service/">Limo answering service</a></li>
+          <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+          <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+          <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Company</h2>
+        <ul>
+          <li><a href="tel:+14147750019" data-event="tel_tap_footer_company">Call (414) 775-0019</a></li>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/terms/">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 AI Chauffeur</span>
+    </div>
+  </div>
+</footer>
+
+<!-- § G · MOBILE DRAWER — every indexable page, real hrefs, no injection. -->
+<div class="nav-drawer" id="nav-drawer" data-drawer>
+  <div class="dw-top">
+    <a href="/" class="brand" aria-label="AI Chauffeur home">
+      <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    </a>
+    <button type="button" class="dw-close" data-drawer-close aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Close</span></button>
+  </div>
+  <div class="dw-body">
+    <nav class="dw-group" aria-label="Reservations">
+      <h2>Reservations</h2>
+      <ul>
+        <li><a href="/reserve/">Reservation hold</a></li>
+        <li><a href="/rates/" aria-current="page">Rate card</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Product">
+      <h2>Product</h2>
+      <ul>
+        <li><a href="/demo/">Live demo</a></li>
+        <li><a href="/how-setup-works/">How setup works</a></li>
+        <li><a href="/works-with-your-software/">Works with your software</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Solutions">
+      <h2>Solutions</h2>
+      <ul>
+        <li><a href="/limo-answering-service/">Limo answering service</a></li>
+        <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+        <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+        <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Integrations">
+      <h2>Integrations</h2>
+      <ul>
+        <li><a href="/integrations/">Integrations overview</a></li>
+        <li><a href="/integrations/limo-anywhere/">Limo Anywhere</a></li>
+        <li><a href="/integrations/fasttrak/">FASTTRAK</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Locations">
+      <h2>Locations</h2>
+      <ul>
+        <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+        <li><a href="/madison-limo-answering-service/">Madison</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Company">
+      <h2>Company</h2>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+      </ul>
+    </nav>
+    <div class="dw-actions">
+      <a href="/book/" class="nav-book" data-event="book_click_drawer">Book the setup call</a>
+      <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call (414) 775-0019</a>
+    </div>
+  </div>
+</div>
+
+<!-- RUN 7 · TASK A — mobile sticky action rail -->
+<div class="rail" data-rail>
+  <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="rail-label"><span class="rail-verb">Call </span>(414) 775-0019</span></a>
+  <a class="rail-book" href="/reserve/" data-event="reserve_click_rail">Secure a hold</a>
+</div>
+
+<script src="/assets/aic.js?v=d08196a"></script>
+
+</body>
+</html>
