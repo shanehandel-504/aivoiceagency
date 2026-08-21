@@ -71,16 +71,48 @@
     .hold-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:3rem}
   }
 
-  /* Reuses the ONE raised-panel recipe (.cb-form in aic.css) rather than
-     inventing a second one. Only the padding differs, because this form holds
-     four fields and a fieldset instead of two fields. */
-  .hold-form{background:var(--surface);border:1px solid var(--line);
-    box-shadow:var(--raise);border-radius:12px;padding:1.5rem}
+  /* ── THE PANEL, RAISED FOR REAL ─────────────────────────────────────────────
+     RUN 14. This card was --surface on a section whose lighting is
+     `transparent`, which means the panel was #0D1420 sitting on #070B14: a
+     1.08:1 step, and the only thing separating the form from the page was the
+     hairline. A drop shadow was already on it and could not help, because there
+     was nothing for it to lift.
+
+     The ground goes UP one step to --surface-2 and the panel joins the elevation
+     ladder the rest of the site already runs:
+
+       #070B14  midnight    the page
+       #0A101C  --input-bg  the wells the reader types into
+       #0D1420  --surface   ordinary panels
+       #111A2A  --surface-2 THIS panel, and the table header on /rates/
+
+     The inputs are now DARKER than the card that holds them, which is what makes
+     them read as wells rather than as tiles. Re-measured on the new ground, not
+     inherited from the old one: --ink 14.82:1, --ink-soft 9.42:1, --ink-mute
+     5.28:1, --neutral 5.65:1. All clear the 4.5 floor.
+
+     The elevation is still ONE neutral shadow plus the brand's inset top
+     highlight — the same recipe .c-card and .tk use. § 4 GLOW LAW is unchanged:
+     no light is thrown outside the box.
+     ──────────────────────────────────────────────────────────────────────────*/
+  .hold-form{background:var(--surface-2);border:1px solid var(--line);
+    box-shadow:var(--raise),inset 0 1px 0 rgba(127,178,255,.06);
+    border-radius:12px;padding:1.5rem}
   @media(max-width:600px){.hold-form{padding:1.15rem}}
 
+  /* The legend was a floating word above the first field. It is the panel's
+     title bar now — full-bleed to the card edge on a --surface strip, with a
+     hairline under it — which is the same object .cb-head is on the callback
+     form and .tbl-cap is on the rate card. The negative margin has to track the
+     padding, so the 600px step below is not optional. */
   .hold-legend{font-family:var(--mono);font-size:.75rem;font-weight:500;
     letter-spacing:.16em;text-transform:uppercase;color:var(--sky);
-    margin-bottom:1.1rem}
+    margin:-1.5rem -1.5rem 1.35rem;padding:.95rem 1.5rem;
+    background:var(--surface);border-bottom:1px solid var(--line);
+    border-radius:11px 11px 0 0}
+  @media(max-width:600px){
+    .hold-legend{margin:-1.15rem -1.15rem 1.15rem;padding:.85rem 1.15rem}
+  }
 
   /* Stacked, not side-by-side. Four fields where three are long strings (name,
      email, a trip in the reader's own words) have nothing to gain from a split
@@ -95,7 +127,12 @@
   textarea.cb-input{min-height:132px;resize:vertical;line-height:1.55;
     padding:.85rem;font-family:var(--sans)}
 
-  .hold-help{font-size:.85rem;color:var(--ink-mute);line-height:1.5;margin-top:.1rem}
+  /* .9rem, not .85rem. Helper text arrives BEFORE the mistake it prevents
+     (Appendix A, forms), which only works if it is read. 13.6px of --ink-mute
+     under a 17px label was the quietest thing in the panel; 14.4px keeps it
+     clearly subordinate to the label without asking the reader to lean in. */
+  .hold-help{font-size:.9rem;color:var(--ink-mute);line-height:1.5;margin-top:.15rem;
+    max-width:52ch}
 
   /* ── THE DEMO CARD BLOCK ────────────────────────────────────────────────────
      It has to read as a card-on-file panel and it has to be impossible to
@@ -133,16 +170,49 @@
     /* a fieldset defaults to min-width:min-content, which stops it shrinking
        inside a grid track and is the classic source of overflow at 390 */
     min-width:0}
+  /* .16em — RUN 14's label canon. A fieldset legend names the group under it,
+     which is the definition of a label on this site. */
   .demo-card legend{padding:0 .5rem;margin-left:.75rem;
-    font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.14em;
+    font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
     text-transform:uppercase;color:var(--neutral)}
-  .demo-strip{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .75rem;
+  /* ── THE DOT WAS ORPHANED, AND IT WAS THE DISCLOSURE IT ORPHANED ────────────
+     RUN 14, found by rendering. `flex-wrap:wrap` on a row holding a 6px dot and
+     a 30-word sentence does exactly what it is told: the sentence does not fit
+     beside the dot, so it wraps ENTIRELY to the next line and the dot is left
+     sitting alone above it like a bullet nobody wrote. At both viewports.
+
+     The row does not wrap now. The dot is `flex:none`, the sentence is
+     `flex:1 1 0` and wraps INSIDE itself, and the two stay on one row at every
+     width. align-items goes to flex-start with the dot nudged onto the first
+     line's optical centre, because centring a 6px dot against a three-line
+     paragraph parks it in the middle of the paragraph.
+     ──────────────────────────────────────────────────────────────────────────*/
+  .demo-strip{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:.55rem;
     padding:.15rem 1rem .85rem}
-  .demo-dot{width:6px;height:6px;border-radius:50%;background:var(--neutral);flex:none}
-  .demo-strip span{font-size:.85rem;color:var(--ink-mute);line-height:1.5}
+  /* `.demo-strip span` and `.demo-dot` are BOTH spans in this row, and the dot's
+     own class is (0,1,0) against the descendant selector's (0,1,1). The first
+     cut of this fix gave the text `flex:1 1 0` and watched the dot inherit it
+     too: measured at 390, the 6px dot rendered 130.2px wide and the disclosure
+     got the other half of the row. The dot's rule has to out-specify the one
+     that is also matching it. */
+  .demo-strip span{flex:1 1 0;min-width:0;font-size:.85rem;color:var(--ink-mute);line-height:1.5}
+  .demo-strip span.demo-dot{width:6px;height:6px;border-radius:50%;
+    background:var(--neutral);flex:0 0 6px;margin-top:.5em}
   .demo-body{padding:0 1rem 1.15rem}
-  .demo-row{display:flex;flex-wrap:wrap;gap:.6rem}
-  .demo-row .hold-field{flex:1 1 130px;margin-bottom:.75rem}
+  /* 78px basis, not 130. Inside the card the row has ~246px at 390, so a 130px
+     basis put three controls on three rows and made a block that collects
+     nothing the tallest thing on the form. Three DEMO values are four mono
+     characters each; 78 fits all three on one row from 390 up and the block
+     reads as one strip instead of as a second form. */
+  .demo-row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:stretch}
+  /* justify-content:flex-end, and it is what stops the row looking broken.
+     "Security code" is thirteen tracked mono characters and wraps to two lines
+     in an 84px column while "ZIP" does not, so with the default alignment the
+     three inputs sat at three different heights inside three equal-height
+     columns. Pinning the content to the bottom of each column puts the three
+     controls on one line and lets the labels be as tall as they need to be. */
+  .demo-row .hold-field{flex:1 1 78px;min-width:0;margin-bottom:.75rem;
+    justify-content:flex-end}
   .demo-card .cb-label{color:var(--neutral)}
   /* A disabled control still has to clear the 4.5:1 floor: a reader has to be
      able to READ that nothing is being collected. Measured on the rendered
@@ -154,8 +224,17 @@
 
   /* Full-width and filled: on this page the submit IS the primary control, so
      it takes the primary recipe from aic.css rather than the ghost .cb-submit.
-     .btn-primary brings the chamfer, the bevel and the neutral elevation. */
-  .hold-submit{width:100%;justify-content:center;min-height:54px;font-weight:600}
+     .btn-primary brings the chamfer, the bevel and the neutral elevation.
+
+     THE min-height IS GONE AND ITS ABSENCE IS THE FIX. It restated .btn's own
+     54px desktop value, which looks harmless and is not: aic.css also carries
+     `@media(max-width:767.98px){.btn{min-height:56px}}`, at the SAME
+     specificity and EARLIER in the cascade, because a linked stylesheet is
+     always earlier than a page <style>. So this line won on a phone and the
+     one control the page exists for stood 54px while every other primary on
+     the site stood 56. Restating a shared value is how a page opts out of a
+     system without ever saying so. */
+  .hold-submit{width:100%;justify-content:center;font-weight:600}
 
   .hold-note{font-family:var(--sans);font-size:.9rem;letter-spacing:0;
     color:var(--ink-mute);margin-top:.85rem;line-height:1.55;min-height:1.2em}
@@ -183,8 +262,11 @@
      page tells you which rate card the number you will be quoted comes from,
      and links to it. It is the only place on this page where the brand's
      instrument voice speaks, which is why it is one line and not a panel. */
+  /* .16em, not .1em — RUN 14's eyebrow canon. This is a label naming where a
+     number comes from, so it takes the label tracking every other label on the
+     site takes. See § 14.A in aic.css for why the console's readouts do NOT. */
   .hold-src{border-top:1px solid var(--line-hot);padding-top:1.1rem;
-    font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;
+    font-family:var(--mono);font-size:.75rem;letter-spacing:.16em;
     text-transform:uppercase;color:var(--neutral);line-height:1.7}
   /* min-height 44 and inline-flex, matching .cta-tertiary in aic.css. These two
      are STANDALONE links on their own line, not links inside a sentence, so the
@@ -196,7 +278,7 @@
     display:inline-flex;align-items:center;min-height:44px}
   .hold-src a:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
 
-  .signoff{font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;
+  .signoff{font-family:var(--mono);font-size:.75rem;letter-spacing:.16em;
     text-transform:uppercase;color:var(--neutral);margin-top:2rem}
   </style>
 <script type="application/ld+json">

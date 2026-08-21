@@ -207,6 +207,13 @@
 </head>
 <body class="home">
 
+<!-- RUN 14 · Seventeen of the eighteen pages on this host opened with this link
+     and closed it on a <main id="main"> landmark. The homepage did not, and the
+     homepage has the longest nav to skip past: three dropdown groups, two CTAs
+     and a burger, ahead of the H1. A keyboard reader had to tab through all of
+     it on the one page most likely to be their first. -->
+<a class="skip" href="#main">Skip to content</a>
+
 <nav class="top">
   <a href="/" class="brand" aria-label="AI Chauffeur home">
     <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
@@ -248,6 +255,8 @@
   </div>
 </nav>
 
+<main id="main">
+
 <section class="hero" data-lit="bright">
   <!-- Two columns from 1020px: the CTA stack is max-width 520px, so on a wide
        screen a single column left the entire right half of the fold empty and
@@ -262,19 +271,41 @@
 
     <!-- ══ A2 · CTA STACK ═══════════════════════════════════════════════
          Order is deliberate: call, be called, book a setup. The phone is
-         first because hearing AVA answer IS the demonstration. -->
-    <div class="cta-stack" data-rail-after>
+         first because hearing AVA answer IS the demonstration.
 
-      <!-- PRIMARY -->
-      <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_hero">
-        <span class="tel-main">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call (414) 775-0019
-        </span>
-        <span class="tel-sub">AVA answers. Hear it yourself.</span>
-      </a>
+         RUN 14 · TWO DOORS, ONE FUNNEL. The setup call used to be a text link
+         BELOW the callback form, which on a 390 fold meant a reader who did
+         not want to dial had to scroll past a form to find the other way in.
+         A door you have to scroll past is not a door. It is a peer of the
+         phone now and stands beside it: same height, different weight, so the
+         pair reads as a choice rather than as a control with a stray link
+         next to it. -->
+    <div class="cta-stack cta-stack--pair" data-rail-after>
 
-      <!-- SECONDARY — AVA calls you -->
+      <div class="cta-pair">
+        <!-- PRIMARY -->
+        <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_hero">
+          <span class="tel-main tel-main--split">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span class="tel-verb">Call the demo —</span><span class="tel-num">(414) 775-0019</span>
+          </span>
+          <span class="tel-sub">AVA answers. Hear it yourself.</span>
+        </a>
+        <!-- SECONDARY — the other door, same fold -->
+        <a href="/book/" class="btn btn-ghost" data-event="book_click_hero">Get a discovery call</a>
+      </div>
+      <!-- The note used to sit inside .cta-tertiary, directly under the link it
+           describes. Under a two-door row it could read as a caption for both,
+           and it is only true of one — the phone line schedules nothing.
+
+           It stays, unedited, and lands correctly because the primary door
+           already carries its own sub-line inside the button ("AVA answers.
+           Hear it yourself."). The door that has no sub-line is the one this
+           sentence belongs to, and it is the one directly above it. Considered,
+           not overlooked. -->
+      <p class="cta-note">Schedules the 20-minute setup call.</p>
+
+      <!-- THIRD DOOR — AVA calls you -->
       <form class="cb-form" id="ava-callback" data-cb-form data-rail-hide novalidate>
         <button type="button" class="cb-head" data-cb-toggle aria-controls="cb-body"><span class="cb-title">AVA calls you</span><span class="cb-status" data-cb-status>Standing by</span><span class="cb-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M9 18l6-6-6-6"/></svg></span></button>
         <div class="cb-body" id="cb-body">
@@ -302,12 +333,6 @@
         <p class="cb-note" id="cb-note" data-cb-note role="status" aria-live="polite"></p>
         </div>
       </form>
-
-      <!-- TERTIARY -->
-      <div class="cta-tertiary">
-        <a href="/book/" data-event="book_click_hero">Book the setup call →</a>
-        <span class="cta-note">Schedules the 20-minute setup call.</span>
-      </div>
 
     </div>
     </div><!-- /.hero-left -->
@@ -806,6 +831,8 @@
     </details>
   </div>
 </section>
+
+</main>
 
 <!-- ══ § G · FAT FOOTER ══════════════════════════════════════════════════
      Four columns plus the NAP block, identical on all twelve pages. This is

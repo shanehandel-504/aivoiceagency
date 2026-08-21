@@ -59,20 +59,18 @@
   <link rel="stylesheet" href="/assets/aic.css?v=d08196a">
 
   <style>
-    /* The shared .cta-tertiary renders 26px tall — fine as an inline text link,
-       under the 44px touch minimum when it is one of only two CTAs on a
-       call-first page. Scoped here rather than patched into aic.css, which
-       eight other live chauffeur pages share and none of them were re-rendered
-       in this run. */
-    .cta-stack .cta-tertiary{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:44px;
-      padding:10px 18px;
-      border:1px solid var(--line);
-    }
-    .cta-stack .cta-tertiary:hover{ border-color:var(--sky); }
+    /* RUN 14 · THIS BLOCK IS NOW EMPTY, AND THAT IS THE FIX.
+
+       It used to carry a private rule that grew `.cta-tertiary` a border and a
+       44px box, because a 26px text link was the second of only two CTAs on a
+       call-first page. Both CTA stacks on this page use the shared `.cta-pair`
+       now — a real ghost button beside the phone control — so the page-scoped
+       rule matched nothing. A dead selector in a page <style> is worse than no
+       rule: it reads as the page's own decision and the next reader edits it
+       expecting something to move.
+
+       The 44px argument that produced it was right, and it lives on in the
+       shared component rather than in one page's head. */
   </style>
 
 <script type="application/ld+json">
@@ -220,15 +218,21 @@
     <h1 class="page-h">The demo is a phone call. <em>Give AVA a real trip.</em></h1>
     <p class="page-sub">Dial the line and talk like a customer would. Airport run, hourly charter, point to point — whatever you get most. AVA takes the whole trip and reads it back before you hang up.</p>
 
-    <div class="cta-stack cta-stack--wide">
-      <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_hero">
-        <span class="tel-main">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call (414) 775-0019
-        </span>
-        <span class="tel-sub">AVA answers. Hear it yourself.</span>
-      </a>
-      <a href="/book/" class="cta-tertiary" data-event="book_click_hero">Book the setup call →</a>
+    <!-- RUN 14 · TWO DOORS, ONE FUNNEL. Same pair as the homepage fold, in the
+         same order and with the same labels, because these are the two pages a
+         reader lands on from an answer engine and a door that changes its name
+         between them is a door they have to re-learn. -->
+    <div class="cta-stack cta-stack--wide cta-stack--pair">
+      <div class="cta-pair">
+        <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_hero">
+          <span class="tel-main tel-main--split">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span class="tel-verb">Call the demo —</span><span class="tel-num">(414) 775-0019</span>
+          </span>
+          <span class="tel-sub">AVA answers. Hear it yourself.</span>
+        </a>
+        <a href="/book/" class="btn btn-ghost" data-event="book_click_hero">Get a discovery call</a>
+      </div>
     </div>
     <p class="cta-note">Open any hour. No signup, no menu, no hold. The demo line captures the trip — it does not put a car on the road.</p>
   </div>
@@ -293,15 +297,17 @@
       </div>
     </div>
 
-    <div class="cta-stack">
-      <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_cta">
-        <span class="tel-main">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call (414) 775-0019
-        </span>
-        <span class="tel-sub">AVA answers. Hear it yourself.</span>
-      </a>
-      <a href="/book/" class="cta-tertiary" data-event="book_click_cta">Book the setup call →</a>
+    <div class="cta-stack cta-stack--pair">
+      <div class="cta-pair">
+        <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_cta">
+          <span class="tel-main tel-main--split">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span class="tel-verb">Call the demo —</span><span class="tel-num">(414) 775-0019</span>
+          </span>
+          <span class="tel-sub">AVA answers. Hear it yourself.</span>
+        </a>
+        <a href="/book/" class="btn btn-ghost" data-event="book_click_cta">Get a discovery call</a>
+      </div>
     </div>
   </div>
 </section>

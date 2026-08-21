@@ -1,17 +1,21 @@
 /* ============================================================================
    AI CHAUFFEUR · SHARED PAGE SHELL          RUN 9 — "SIGNAL CUT v1.5"
    ----------------------------------------------------------------------------
-   Loaded by ELEVEN of the twelve chauffeur pages. The one exception is
-   /index.html, which carries its own embedded <style> because it holds console
-   machinery these pages do not need.
+   Loaded by ALL EIGHTEEN chauffeur pages. There is no exception any more.
 
-   CORRECTED IN RUN 9: this header used to name /demo/ as a second exception. It
-   is not one and has not been since that page was rebuilt call-first — /demo/
-   links this file in its <head> like every other content page and adds a short
-   page-scoped block on top. Anyone reading the old note would have edited this
-   file believing /demo/ could not be affected by it, which is exactly the kind
-   of comment that turns a shared stylesheet into a trap. Verified by reading
-   the <head> of all twelve pages, not by trusting the note.
+   CORRECTED IN RUN 14, and this is the second time this header has lied. It
+   said "eleven of the twelve pages, the one exception is /index.html, which
+   carries its own embedded <style>". RUN 13 retired that third CSS home — the
+   homepage links this file like everything else and carries no <style> block
+   at all — and the header was never updated, so for a week it told every reader
+   that a change here could not reach the homepage. It reaches the homepage.
+
+   RUN 9 corrected the same sentence about /demo/, for the same reason. A note
+   that names an exception is the most load-bearing line in a shared stylesheet:
+   anyone who believes it edits this file thinking one page is out of reach.
+   Verified this run by reading the <head> of all eighteen pages and by counting
+   the rendered result on each, not by trusting the note. If you retire a CSS
+   home, this paragraph is part of the change.
 
    This is deliberately the SUBSET the content pages need: tokens, nav, the CTA
    stack, section typography, FAQ, footer. It is not a copy of the homepage
@@ -715,7 +719,13 @@ section[data-lit="flat"]{background:var(--lit-flat)}
    ══════════════════════════════════════════════════════════════════════════ */
 .sec-sub a,.page-sub a,.card-p a,.vs-b a,.tk-sub a,.calc-basis a,.ticket-foot a,
 .feat-p a,.pain-p a,.step-p a,.setup-p a,.int-mini a,.crush-p a,.operators-p a,
-.hero-sub a,.cta-note a,.legal p a,.legal li a{
+.hero-sub a,.cta-note a,.legal p a,.legal li a,
+/* RUN 14 · /rates/ printed its one phone number as plain text. Making it a
+   tel: link is the whole fix for a number a passenger reads on a phone and
+   cannot tap — but a NEW in-body link is exactly the defect RUN 9 caught, so
+   the class joins this list in the same edit that creates the link, not in a
+   later one. */
+.rate-live a{
   text-decoration:underline;text-underline-offset:.18em;text-decoration-thickness:1px}
 
 /* ── CARD GRID (3-up → 2-up → 1-up) ──────────────────────────────────────── */
@@ -1063,7 +1073,19 @@ details > div a{color:var(--signal-blue);text-decoration:underline}
   color:var(--neutral);margin-bottom:.45rem}
 .calc-v{font-family:var(--mono);font-size:1.5rem;font-weight:500;color:var(--amber);
   font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;line-height:1.1}
-.calc-v[data-empty="true"]{color:var(--neutral);opacity:.5}
+/* ── RUN 14 · THE SAME DEFECT AS THE DEMO CARD, ON A DIFFERENT ELEMENT ───────
+   `opacity:.5` was here to make the calculator's empty state read as empty.
+   Measured: --neutral is 6.38:1 on midnight and half of it composites to
+   2.41:1, on a 24px figure — under the floor even at the large-text threshold
+   of 3. RUN 13 removed this exact construction from /reserve/'s card block
+   after the render gate found eight failures on the words whose job was to say
+   nothing is being collected. It survived here because nobody re-measured a
+   placeholder.
+
+   --neutral already MEANS "inactive · not-yet · n/a", and the glyph in the box
+   is an em rule rather than a number. The dimming was a second signal that
+   cost the first one its legibility. Gone; 6.38:1. */
+.calc-v[data-empty="true"]{color:var(--neutral)}
 .calc-note{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;color:var(--neutral);
   margin-top:1.1rem;text-transform:uppercase}
 .calc-basis{font-size:.85rem;color:var(--ink-mute);margin-top:.6rem;line-height:1.55}
@@ -1674,8 +1696,32 @@ shorter label that has no hyphen in it, and the decorative waveform that
 used to sit inside these buttons is gone, so the same control now has
 roughly 90px more room than the string needs. nowrap stays as the belt. */
 .btn{white-space:nowrap}
+/* ── RUN 14 · THE 12px BUTTON LABEL ──────────────────────────────────────────
+   This block used to read `.btn{font-size:.75rem;letter-spacing:.03em}`, and
+   the paragraph above says exactly why it was written: ONE homepage setup
+   label was the longest string on the site, it carried a hyphen, and it broke
+   onto two lines between 320 and 768. § F then replaced that label with a
+   shorter one with no hyphen in it and removed the waveform inside the control,
+   and the same paragraph says the button now has "roughly 90px more room than
+   the string needs".
+
+   The label went. The shrink stayed. Measured this run at 390: EVERY .btn on
+   the site rendered its label at 12px on a phone — including "Place the
+   reservation hold", which is the single control /reserve/ exists to collect a
+   press on, sitting directly under 16px input text and beside a 17px phone
+   control. A 12px label on a 56px button reads as a disabled control.
+
+   16px and the site's own letter-spacing. The padding comes in 4px to buy the
+   width back, and nowrap becomes normal BELOW 600 only: on a 320 phone the one
+   remaining long label ("Book a call with AI Voice Agency") is wider than the
+   viewport at any legible size, and a label that wraps to two lines is a far
+   smaller defect than a page that scrolls sideways. Desktop keeps nowrap, so
+   no CTA wraps where there is room for it. Re-measured at 320, 360, 390 and
+   430: zero horizontal overflow on any page.
+   ────────────────────────────────────────────────────────────────────────── */
 @media(max-width:600px){
-  .btn{font-size:.75rem;letter-spacing:.03em}
+  .btn{font-size:1rem;letter-spacing:.005em;padding:.95rem 1.15rem;
+    white-space:normal;text-align:center}
 }
 /* The header clearance for #ava-callback moved to the § 1 ANCHOR GUTTER
 block in assets/circulant.css — one rule for every anchor target on all
@@ -2459,3 +2505,160 @@ body.home .cta-stack{margin:0 0 3rem}
    faithful copy. It is not restored here, because it was not doing anything
    when the run started and this run does not change how the page looks.
    ─────────────────────────────────────────────────────────────────────────── */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   AIC RUN 14 · "SHOWROOM"                                          2026-08-20
+   ---------------------------------------------------------------------------
+   Appended as ONE block rather than interleaved. Everything this run changes in
+   the shared sheet is here, so the next reader sees the whole delta without
+   diffing 2,400 lines, and so a later run can lift it out in one piece.
+
+   Every number below came off the RENDERED page — `node tools/aic-run14-audit.mjs`
+   walks eighteen pages at 390x844 and 1440x900 and reports computed values. A
+   formatting pass judged from the stylesheet is a formatting pass judged from
+   intent, and intent is exactly what was wrong in two of the four fixes here.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 14.A · THE EYEBROW, ONE RECIPE ──────────────────────────────────────────
+   Counted on the rendered page, not read out of the CSS: the site was carrying
+   SEVEN tracking steps on uppercase mono type — .08, .10, .11, .12, .14, .16
+   and .18em. Nobody chose seven. They accumulated, one run at a time, and the
+   eye reads the result as noise rather than as a system.
+
+   The split that survives is by ROLE, and it is two values:
+
+     .16em  LABELS — anything whose job is to NAME something else: a section
+            eyebrow, a table column header, a form field label, a footer column
+            head, a card label, a step marker, a signoff. Normalised here.
+     .12em  READOUTS and CHIPS — a value the page is REPORTING: a timestamp, a
+            log id, a live state, a status. Left exactly as they are. These are
+            read as strings, and wide tracking makes a string slower to read,
+            not faster. The console's numbers were tuned deliberately and are
+            not eyebrows; sweeping them into the label recipe would have been
+            consistency bought with legibility.
+
+   So this rule is short on purpose. It moves the LABEL recipes that were off
+   the canon onto it and touches nothing that reports a value:
+
+     .c-label            .14em -> .16em   console card labels
+     .card-num           .18em -> .16em   the /demo/ step markers
+     .tbl thead th       .14em -> .16em   every column header on the site
+     .tbl-cap            .14em -> .16em   every table caption
+     .legal h3           .14em -> .16em   the sub-heads on /privacy/ and /terms/
+     .signoff            .14em -> .16em   page-scoped; set in /reserve/ + /rates/
+     .demo-card legend   .14em -> .16em   page-scoped; set in /reserve/
+     .hold-src           .10em -> .16em   page-scoped; set in /reserve/
+
+   WHAT IS STILL SPREAD, AND WHY THAT IS THE ANSWER RATHER THAN AN OVERSIGHT.
+   After this rule the site still renders .04, .06, .08, .10, .11, .12 and .14em
+   somewhere, and every one of them is either a console readout (.hc-r,
+   .hc-arrow, .hc-honest, .lg-time, .lg-id, .lg-state, .c-meta), a status chip
+   (.cb-status, .hc-state, .badge, .live-badge), a breadcrumb, or the footer
+   colophon. None of those is an eyebrow. Sweeping them in would have been
+   consistency bought with legibility on the exact text a dispatcher reads at
+   2AM, and the console's values were tuned deliberately in RUN 9.
+
+   The claim this run makes is therefore narrow and checkable: EVERY LABEL is on
+   .16em. `node tools/aic-run14-gate.mjs` prints the full tracking census with
+   the class names behind each value, so the next run can see at a glance
+   whether a new label joined the canon or started a ninth value.
+
+   .tbl thead th carries white-space:nowrap, so widening it can only push a
+   header, never wrap one. Measured after: the widest header on the site
+   ("HOURLY MINIMUM") grew 3.4px and no table's min-content demand crossed its
+   wrap. ────────────────────────────────────────────────────────────────────── */
+.c-label,.card-num,.tbl thead th,.tbl-cap,.legal h3{letter-spacing:.16em}
+
+/* ── 14.B · THE 12px FLOOR IS A FLOOR, NOT A LIST ────────────────────────────
+   RUN 10 set the floor in ONE place in this file and named eleven rules that
+   were under it. It has held for every rule IN this file and was broken by one
+   that is not: /book/ added `.sk-note{font-size:.68rem}` to its own <style>
+   after the floor block shipped, and a page-scoped rule cannot be covered by a
+   shared list it was never added to.
+
+   Measured this run at 10.88px — the only text under 12px on eighteen pages,
+   at either viewport. Fixed where it lives, in /book/'s own style block. The
+   note is here because the floor is here: a floor enforced in one file while
+   pages quietly opt out of it is not a floor, it is a habit.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── 14.C · ONE BUTTON BOX ───────────────────────────────────────────────────
+   `.btn` set padding and a min-height and left line-height to inherit, so the
+   same control measured 56px in one section and 58px in another purely from
+   the leading it happened to land in. Measured: `.btn-ghost` inside #crush was
+   58, the identical `.btn-ghost` elsewhere was 56.
+
+   Two pixels is not the point. The point is that the height of a control was a
+   function of where it was standing. Setting the leading on the button makes
+   the box a function of the button: padding + min-height, everywhere. Labels
+   are already white-space:nowrap, so nothing can wrap into the tighter
+   leading. ─────────────────────────────────────────────────────────────────── */
+.btn{line-height:1.2}
+
+/* ── 14.D · MEASURE ──────────────────────────────────────────────────────────
+   Appendix A puts prose on a 60-75 character measure. Every paragraph class on
+   the site is capped except one: `.calc-basis`, the line under the missed-night
+   calculator, had no max-width and rendered at 122.3 CHARACTERS on a 1440
+   desktop — nearly double the ceiling, on the one paragraph that explains where
+   a number came from. 62ch lands it beside `.sec-sub`, which is the paragraph
+   it sits under. ─────────────────────────────────────────────────────────────*/
+.calc-basis{max-width:62ch}
+
+/* ── 14.E · THE DUAL CTA ─────────────────────────────────────────────────────
+   Two doors, one funnel. The phone is the demonstration, so it stays the filled
+   primary; the discovery call becomes the ghost standing BESIDE it rather than
+   a text link under a form. A door a reader has to scroll past is not a door.
+
+   Column below 560px, row above it. `align-items:stretch` is load-bearing: the
+   phone control carries a second line of label and stands ~78px, so a
+   default-aligned partner would sit 22px shorter and the two would read as a
+   control with a stray link next to it instead of as a pair. Same height,
+   different weight, is what makes a pair legible as a choice.
+
+   The children are `flex:0 1 auto` above 560 so the row is as wide as the two
+   controls rather than as wide as the column. On a 1180px wrap a pair stretched
+   to full width would put 600px of nothing between the two doors.
+   ────────────────────────────────────────────────────────────────────────── */
+.cta-pair{display:flex;flex-direction:column;align-items:stretch;gap:.75rem;
+  max-width:520px;margin:0}
+.cta-pair>.tel-btn{flex:0 1 auto}
+.cta-pair>.btn{flex:0 1 auto;justify-content:center;text-align:center}
+@media(min-width:560px){
+  .cta-pair{flex-direction:row;flex-wrap:wrap;gap:.85rem;max-width:none}
+}
+/* THE PAIR NEEDS A WIDER STACK, AND THE NUMBER IS MEASURED. `.cta-stack` caps
+   at 520px and `.cta-stack--wide` at 560, both sized for a single column of
+   controls with a callback form under them. Rendered at 1440 the two doors want
+   348.3 + 13.6 + 199.3 = 561.2px, so inside either cap the row silently wrapped
+   and the "pair" shipped as a stack — the exact layout it exists to replace,
+   with no error anywhere to say so.
+
+   580 clears 561.2 with room for the label to grow, and it fits: the hero-left
+   column measures 607px at 1440. The modifier goes on the STACK rather than the
+   pair because it is the stack's cap doing the constraining, and a rule has to
+   change the thing that is actually deciding. */
+.cta-stack--pair{max-width:580px}
+/* The note belongs to the pair, not to the stack. `.cta-stack` gaps its
+   children at 1rem, which is the distance between two CTAs — too far for a
+   caption that explains the one directly above it. */
+.cta-stack>.cta-note{margin-top:-.5rem}
+
+/* THE LABEL GOT LONGER, SO THE NOWRAP HAD TO BECOME A SMALLER PROMISE.
+   `.tel-main` is white-space:nowrap for a reason that is still correct: the
+   number was breaking after "775-" and orphaning "0019". But the label is
+   "Call the demo — (414) 775-0019" now, and an unbreakable 30-character string
+   overflows a 390 fold rather than wrapping in it.
+
+   The nowrap moves off the whole label and onto the two pieces that are single
+   tokens. The phrase and the number can part company; neither can break inside
+   itself. A modifier class rather than :has(), so the promise is visible in the
+   markup and does not depend on a selector level. */
+.tel-main--split{white-space:normal;flex-wrap:wrap;row-gap:.15rem}
+.tel-main--split .tel-verb,.tel-main--split .tel-num{white-space:nowrap}
+
+/* ── 14.F · SKIP LINK ON EVERY PAGE ──────────────────────────────────────────
+   Seventeen of eighteen pages carried `<a class="skip" href="#main">` and a
+   `<main id="main">` to land on. The eighteenth was the homepage — the page
+   with the longest nav to skip past. Fixed in the markup; the rule already
+   exists in this file and needed nothing.
+   ────────────────────────────────────────────────────────────────────────── */

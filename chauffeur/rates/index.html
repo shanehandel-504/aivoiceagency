@@ -66,8 +66,49 @@
      kind of money. It stays --ink-soft so the weekday column reads as the base
      and the weekend as its variation, which is what the two columns MEAN. */
   .rate-num--wknd{color:var(--ink-soft)}
+
+  /* ── RUN 14 · THE MONEY GOES RIGHT ──────────────────────────────────────────
+     The paragraph above claimed tabular figures made "the decimal edge a
+     straight line down the table". Rendered, it did not, and the reason is
+     ordinary: tabular numerals line the digits up INSIDE one number. They can
+     do nothing about two numbers in a LEFT-aligned column, where $75 and $115
+     share a left edge and their units digits therefore sit one place apart —
+     which is the exact comparison a reader is making when they scan a rate
+     card for the jump between classes.
+
+     Right-aligning the two money columns puts units under units, tens under
+     tens, the whole way down. The HEADER goes right with the cells: a column
+     header that does not sit over its own column is a label for the wrong
+     thing. The minimum column stays left, because it is not money and lining
+     it up against the money would say it was.
+
+     nth-child rather than a class on thirty cells: in a data row the children
+     are [th, td, td, td], so the first td is child 2. The group header rows
+     carry a single th with colspan=4 and are never matched.
+     ──────────────────────────────────────────────────────────────────────────*/
+  .rate-tbl thead th:nth-child(2),.rate-tbl thead th:nth-child(3),
+  .rate-tbl tbody td:nth-child(2),.rate-tbl tbody td:nth-child(3){text-align:right}
+
+  /* ── RUN 14 · A MINIMUM AND A STATUS ARE NOT THE SAME OBJECT ────────────────
+     "2 hours" and "Set on the call" were both .rate-min in --neutral, so the
+     card said the same thing two different ways and looked like it was saying
+     it once. One of them is a VALUE the card is quoting. The other is the card
+     saying it does not have one yet.
+
+     § 2 has a token for each and they are not interchangeable. A real minimum
+     becomes a figure: --ink-soft, tabular, sentence case, sitting in the same
+     family as the money it qualifies. "Set on the call" becomes status text in
+     the site's own status idiom — mono, uppercase, .16em, --neutral, whose
+     meaning is literally "inactive · not-yet · n/a". That is what it is.
+
+     .75rem and not a hair under. RUN 10's 12px floor covers labels exactly like
+     this one, and a status a dispatcher reads at 2AM is the last place to
+     shave a pixel. ────────────────────────────────────────────────────────────*/
   .rate-min{font-family:var(--mono);font-size:.85rem;letter-spacing:.06em;
-    color:var(--neutral);font-variant-numeric:tabular-nums}
+    color:var(--ink-soft);font-variant-numeric:tabular-nums}
+  .rate-set{font-family:var(--mono);font-size:.75rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--neutral);
+    line-height:1.5;display:inline-block}
 
   /* ── ROW GROUPS ─────────────────────────────────────────────────────────────
      Fifteen rows under one header is a wall. Five <tbody> groups turn it into
@@ -75,10 +116,36 @@
      something true — these are the vehicle families an operator actually thinks
      in, not five arbitrary chunks of three. scope="colgroup" is what tells a
      screen reader the label governs the rows below it rather than the row it
-     sits in. */
-  .rate-grp th{font-family:var(--mono);font-size:.75rem;font-weight:500;
-    letter-spacing:.16em;text-transform:uppercase;color:var(--sky);
-    background:var(--surface-2);padding:.85rem 1rem;
+     sits in.
+
+     ── RUN 14 · THIS RULE WAS HALF-CANCELLED AND SHIPPED THAT WAY ─────────────
+     The selector was `.rate-grp th`. aic.css carries `.tbl tbody th`, which is
+     one class and TWO type selectors — (0,1,2) against this rule's (0,1,1) — so
+     it wins no matter which file loads first. Four of the seven declarations
+     here never applied:
+
+       font-family  var(--mono)   LOST  -> rendered Space Grotesk
+       font-size    .75rem        LOST  -> rendered 16px
+       font-weight  500           LOST  -> rendered 600
+       color        var(--sky)    LOST  -> rendered --ink
+       letter-spacing .16em       won   (nothing competes for it)
+       background   --surface-2   won
+       padding      .85rem 1rem   won
+
+     The result was a group header wearing the eyebrow's TRACKING on the body
+     face at the body size in the body colour — a hybrid nobody designed, on the
+     five labels whose whole job is to break fifteen rows into five short lists.
+     It renders as a slightly spaced row of white text and reads as another
+     vehicle name.
+
+     Nothing about the intent was wrong. The selector was. `.rate-tbl tbody
+     tr.rate-grp th` is (0,2,3) and states what it means: the group header row
+     inside THIS table. Caught by reading the computed style off the rendered
+     page — the stylesheet says what was meant, and the browser says what
+     happened. ────────────────────────────────────────────────────────────────*/
+  .rate-tbl tbody tr.rate-grp th{font-family:var(--mono);font-size:.75rem;
+    font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--sky);
+    background:var(--surface-2);padding:.85rem 1rem;white-space:normal;
     border-bottom:1px solid var(--line);
     box-shadow:inset 0 1px 0 rgba(127,178,255,.06)}
 
@@ -122,18 +189,122 @@
      scroll at 332 + 48 = 380, not at the 376 this rule was first written with.
      Guessing the threshold would have left three viewport widths where the
      table drags and the page says nothing about it.
+
+     ── RUN 14 · THE SCROLL IS GONE, SO THE HINT WENT WITH IT ──────────────────
+     Everything above describes a table under `table-layout:auto`, where the
+     browser sizes each column from its own content and the total is whatever it
+     turns out to be. The whole 380px cliff was a consequence of that: four
+     columns each demanding their natural width, adding up to four pixels more
+     than the phone had.
+
+     This table is `table-layout:fixed` on a <colgroup> now. The column widths
+     are percentages of the table, the table is 100% of its wrap, and the wrap
+     is the viewport. There is no total to overflow — the columns divide what
+     exists. Re-measured at 320, 360, 390 and 430: zero horizontal scroll at
+     every one, where 320 and 360 used to drag.
+
+     So `<p class="tbl-hint">Scroll the table sideways to see the hourly
+     minimum.</p>` came off the page. It is not a copy change made for taste: it
+     was an instruction that is now FALSE at every width, and a page that tells
+     a reader to drag a table that cannot move is worse than a page that says
+     nothing. The shared .tbl-hint rule stays in aic.css for the prose tables
+     that genuinely do scroll.
+
+     WHAT FIXED WIDTHS COST, stated rather than discovered later: a column can
+     no longer grow for its content, so a cell whose content will not fit and
+     will not wrap overflows its box instead of widening it. Two guards. The
+     ≤667.98 block already sets `white-space:normal` on both header rows, so
+     vehicle names wrap. And the vehicle column takes 34% under 668 rather than
+     31%, which measured at 390 gives it 103px of usable width against the 84px
+     "Motorcoach" needs — the one name that will not wrap.
+
+     THE DESKTOP CAP IS A DESIGN DECISION, NOT A FIT. Measured, this card's
+     honest content width is about 530px: 180 for the longest vehicle name, 96
+     for each money column, 155 for "Set on the call". Stretched across an
+     1180px wrap it put 130px of nothing between a vehicle and its price, which
+     is the one comparison the page exists to make. 720px puts the money back
+     beside the name and lands the table on the same left-aligned measure as the
+     note, the live line and the CTAs below it, so the page reads as one column
+     instead of as a wide table with narrow paragraphs under it.
      ────────────────────────────────────────────────────────────────────────── */
-  @media(max-width:667.98px){
+  .rate-tbl{table-layout:fixed}
+  .rate-tbl col:nth-child(1){width:31%}
+  .rate-tbl col:nth-child(2){width:17%}
+  .rate-tbl col:nth-child(3){width:17%}
+  .rate-tbl col:nth-child(4){width:35%}
+  @media(min-width:768px){.rate-sec .tbl-wrap{max-width:720px}}
+  @media(max-width:767.98px){
     .rate-tbl{min-width:0}
-    .rate-tbl th,.rate-tbl td{padding:.75rem .4rem}
+    .rate-tbl th,.rate-tbl td{padding:.75rem .55rem}
     .rate-tbl thead th,.rate-tbl tbody th{white-space:normal}
     .rate-tbl td{max-width:none}
-    .rate-grp th{padding:.75rem .4rem}
+    .rate-tbl tbody tr.rate-grp th{padding:.75rem .55rem}
     .rate-num{font-size:.95rem}
     .rate-min{font-size:.8rem}
   }
-  /* Only true under the measured threshold. See the block above. */
-  @media(min-width:380px){.rate-sec .tbl-hint{display:none}}
+
+  /* ── RUN 14 · UNDER 560 THE TABLE STOPS BEING A GRID ────────────────────────
+     FIXED WIDTHS DO NOT INVENT SPACE, and the first cut of this run proved it
+     the hard way: with the columns pinned to percentages, "WEEKDAY" and
+     "WEEKEND" — one word each, at the 12px floor, on the .16em label tracking —
+     each demanded 64px inside a 42px column and rendered on top of one another
+     as WEEKDAWEEKENHOURLY at 390. A collision, not a squeeze.
+
+     There is no arithmetic that fixes it. Four columns whose HEADERS alone
+     demand 110 + 77 + 77 + 77 = 341px cannot live in the 342px a 390 phone
+     leaves after the wrap's padding, and every lever left — smaller type, tighter
+     tracking, abbreviated headers — trades the thing a rate card is for.
+
+     So below 560 this stops being a grid and becomes what a person actually
+     reads on a phone: one block per vehicle, name on top, three labelled lines
+     under it. Every figure gets its full width, nothing wraps to three lines,
+     and there is no sideways drag at any width.
+
+     THE SEMANTICS SURVIVE, DELIBERATELY. `display:block` strips the table roles
+     out of the accessibility tree in every engine — a screen reader stops
+     hearing rows and columns and hears a run of text instead. The markup now
+     carries explicit role="table" / rowgroup / row / columnheader / rowheader /
+     cell, which is the documented way to keep the tree when the box changes, and
+     <thead> is CLIPPED rather than display:none so scope="col" still has real
+     column headers to associate with. Asserted with a live accessibility
+     snapshot at 390, not assumed.
+
+     The visible keys are real <span aria-hidden="true"> elements, not ::before
+     content. CSS `content` IS announced by some screen readers, and the column
+     header is already in the tree — a duplicated label is worse than none.
+     ──────────────────────────────────────────────────────────────────────────*/
+  /* The key names the line it sits on. Off above 560, where the column header
+     names it instead and printing both would say it twice.
+
+     THIS RULE IS DELIBERATELY ABOVE THE MEDIA QUERY. It was written below it
+     first, and `display:none` at (0,1,0) beat `display:block` at (0,1,0) inside
+     a media query purely on source order — a media query adds no specificity —
+     so every key vanished at 390 and the stacked layout rendered three unlabelled
+     figures per vehicle. Rendered, caught, moved. */
+  .rate-k{display:none;flex:none;font-family:var(--mono);font-size:.75rem;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--neutral);line-height:1.5}
+
+  @media(max-width:560px){
+    .rate-tbl,.rate-tbl thead,.rate-tbl tbody,.rate-tbl tr,
+    .rate-tbl th,.rate-tbl td{display:block;width:auto;max-width:none}
+    .rate-tbl colgroup,.rate-tbl col{display:none}
+    /* A <caption> keeps display:table-caption inside a display:block table, which
+       spawns an anonymous table wrapper and shrink-wraps the text to its longest
+       word. Rendered as one word per line before this rule existed. */
+    .rate-tbl .tbl-cap{display:block}
+    /* clipped, not hidden: the column headers stay in the a11y tree */
+    .rate-tbl thead{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+      overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);border:0;white-space:nowrap}
+    .rate-tbl tbody tr:not(.rate-grp){border-bottom:1px solid var(--line);padding-bottom:.55rem}
+    .rate-tbl tbody tr:not(.rate-grp):last-child{border-bottom:0}
+    .rate-tbl tbody th[scope="row"]{font-size:1.0625rem;padding:.9rem 1rem .4rem;border-bottom:0}
+    .rate-tbl tbody td{display:flex;align-items:baseline;justify-content:space-between;
+      gap:1rem;padding:.28rem 1rem;border-bottom:0}
+    .rate-tbl tbody tr.rate-grp th{padding:.85rem 1rem}
+    .rate-k{display:block}
+    .rate-num{font-size:1rem}
+    .rate-min{font-size:.85rem}
+  }
 
   /* ── THE NOTE ───────────────────────────────────────────────────────────────
      Directly under the table, not in a footer. It is the four things that
@@ -151,7 +322,7 @@
 
   .rate-ctas{display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-start;margin-top:1.75rem}
 
-  .signoff{font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;
+  .signoff{font-family:var(--mono);font-size:.75rem;letter-spacing:.16em;
     text-transform:uppercase;color:var(--neutral);margin-top:2rem}
   </style>
 <script type="application/ld+json">
@@ -277,133 +448,141 @@
   <div class="wrap">
 
     <div class="tbl-wrap" tabindex="0" role="region" aria-label="AI Chauffeur rate card RCv1.0">
-      <table class="tbl rate-tbl">
+      <table class="tbl rate-tbl" role="table">
         <caption class="tbl-cap">Rate card RCv1.0 · hourly rate by vehicle class</caption>
-        <thead>
-          <tr>
-            <th scope="col">Vehicle</th>
-            <th scope="col">Weekday</th>
-            <th scope="col">Weekend</th>
-            <th scope="col">Hourly minimum</th>
+        <!-- RUN 14 · the four columns are declared here and sized in the page
+             style, because `table-layout:fixed` needs somewhere to hang the
+             widths and a <col> is the element the spec provides for it. Nothing
+             is presented by these elements themselves; they carry no content and
+             no role, and a screen reader walks the same fifteen rows it did
+             before. -->
+        <colgroup>
+          <col><col><col><col>
+        </colgroup>
+        <thead role="rowgroup">
+          <tr role="row">
+            <th scope="col" role="columnheader">Vehicle</th>
+            <th scope="col" role="columnheader">Weekday</th>
+            <th scope="col" role="columnheader">Weekend</th>
+            <th scope="col" role="columnheader">Hourly minimum</th>
           </tr>
         </thead>
 
-        <tbody>
-          <tr class="rate-grp"><th colspan="4" scope="colgroup">Sedans and SUVs</th></tr>
-          <tr>
-            <th scope="row">Executive Sedan</th>
-            <td><span class="rate-num">$75</span></td>
-            <td><span class="rate-num rate-num--wknd">$85</span></td>
-            <td><span class="rate-min">2 hours</span></td>
+        <tbody role="rowgroup">
+          <tr class="rate-grp" role="row"><th colspan="4" scope="colgroup" role="columnheader">Sedans and SUVs</th></tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Executive Sedan</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$75</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$85</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-min">2 hours</span></td>
           </tr>
-          <tr>
-            <th scope="row">Luxury Sedan</th>
-            <td><span class="rate-num">$115</span></td>
-            <td><span class="rate-num rate-num--wknd">$135</span></td>
-            <td><span class="rate-min">2 hours</span></td>
+          <tr role="row">
+            <th scope="row" role="rowheader">Luxury Sedan</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$115</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$135</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-min">2 hours</span></td>
           </tr>
-          <tr>
-            <th scope="row">Executive SUV</th>
-            <td><span class="rate-num">$95</span></td>
-            <td><span class="rate-num rate-num--wknd">$115</span></td>
-            <td><span class="rate-min">2 hours</span></td>
+          <tr role="row">
+            <th scope="row" role="rowheader">Executive SUV</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$95</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$115</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-min">2 hours</span></td>
           </tr>
-          <tr>
-            <th scope="row">Premium SUV</th>
-            <td><span class="rate-num">$125</span></td>
-            <td><span class="rate-num rate-num--wknd">$150</span></td>
-            <td><span class="rate-min">2 hours</span></td>
-          </tr>
-        </tbody>
-
-        <tbody>
-          <tr class="rate-grp"><th colspan="4" scope="colgroup">Vans and Sprinters</th></tr>
-          <tr>
-            <th scope="row">Executive Van</th>
-            <td><span class="rate-num">$110</span></td>
-            <td><span class="rate-num rate-num--wknd">$130</span></td>
-            <td><span class="rate-min">3 hours</span></td>
-          </tr>
-          <tr>
-            <th scope="row">Executive Sprinter</th>
-            <td><span class="rate-num">$135</span></td>
-            <td><span class="rate-num rate-num--wknd">$155</span></td>
-            <td><span class="rate-min">3 hours</span></td>
-          </tr>
-          <tr>
-            <th scope="row">Luxury Sprinter</th>
-            <td><span class="rate-num">$150</span></td>
-            <td><span class="rate-num rate-num--wknd">$175</span></td>
-            <td><span class="rate-min">3 to 4 hours</span></td>
+          <tr role="row">
+            <th scope="row" role="rowheader">Premium SUV</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$125</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$150</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-min">2 hours</span></td>
           </tr>
         </tbody>
 
-        <tbody>
-          <tr class="rate-grp"><th colspan="4" scope="colgroup">Limousines</th></tr>
-          <tr>
-            <th scope="row">Stretch Limo</th>
-            <td><span class="rate-num">$135</span></td>
-            <td><span class="rate-num rate-num--wknd">$165</span></td>
-            <td><span class="rate-min">Set on the call</span></td>
+        <tbody role="rowgroup">
+          <tr class="rate-grp" role="row"><th colspan="4" scope="colgroup" role="columnheader">Vans and Sprinters</th></tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Executive Van</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$110</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$130</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-min">3 hours</span></td>
           </tr>
-          <tr>
-            <th scope="row">Super Stretch</th>
-            <td><span class="rate-num">$165</span></td>
-            <td><span class="rate-num rate-num--wknd">$195</span></td>
-            <td><span class="rate-min">Set on the call</span></td>
+          <tr role="row">
+            <th scope="row" role="rowheader">Executive Sprinter</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$135</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$155</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-min">3 hours</span></td>
           </tr>
-          <tr>
-            <th scope="row">Hummer Limo</th>
-            <td><span class="rate-num">$185</span></td>
-            <td><span class="rate-num rate-num--wknd">$225</span></td>
-            <td><span class="rate-min">Set on the call</span></td>
-          </tr>
-        </tbody>
-
-        <tbody>
-          <tr class="rate-grp"><th colspan="4" scope="colgroup">Party buses</th></tr>
-          <tr>
-            <th scope="row">Party Bus 20</th>
-            <td><span class="rate-num">$175</span></td>
-            <td><span class="rate-num rate-num--wknd">$215</span></td>
-            <td><span class="rate-min">Set on the call</span></td>
-          </tr>
-          <tr>
-            <th scope="row">Party Bus 30</th>
-            <td><span class="rate-num">$225</span></td>
-            <td><span class="rate-num rate-num--wknd">$275</span></td>
-            <td><span class="rate-min">Set on the call</span></td>
-          </tr>
-          <tr>
-            <th scope="row">Party Bus 40</th>
-            <td><span class="rate-num">$275</span></td>
-            <td><span class="rate-num rate-num--wknd">$325</span></td>
-            <td><span class="rate-min">Set on the call</span></td>
+          <tr role="row">
+            <th scope="row" role="rowheader">Luxury Sprinter</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$150</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$175</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-min">3 to 4 hours</span></td>
           </tr>
         </tbody>
 
-        <tbody>
-          <tr class="rate-grp"><th colspan="4" scope="colgroup">Coaches</th></tr>
-          <tr>
-            <th scope="row">Mini Coach</th>
-            <td><span class="rate-num">$165</span></td>
-            <td><span class="rate-num rate-num--wknd">$195</span></td>
-            <td><span class="rate-min">Set on the call</span></td>
+        <tbody role="rowgroup">
+          <tr class="rate-grp" role="row"><th colspan="4" scope="colgroup" role="columnheader">Limousines</th></tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Stretch Limo</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$135</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$165</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-set">Set on the call</span></td>
           </tr>
-          <tr>
-            <th scope="row">Motorcoach</th>
-            <td><span class="rate-num">$195</span></td>
-            <td><span class="rate-num rate-num--wknd">$225</span></td>
-            <td><span class="rate-min">Set on the call</span></td>
+          <tr role="row">
+            <th scope="row" role="rowheader">Super Stretch</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$165</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$195</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-set">Set on the call</span></td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Hummer Limo</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$185</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$225</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-set">Set on the call</span></td>
+          </tr>
+        </tbody>
+
+        <tbody role="rowgroup">
+          <tr class="rate-grp" role="row"><th colspan="4" scope="colgroup" role="columnheader">Party buses</th></tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Party Bus 20</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$175</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$215</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-set">Set on the call</span></td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Party Bus 30</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$225</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$275</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-set">Set on the call</span></td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Party Bus 40</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$275</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$325</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-set">Set on the call</span></td>
+          </tr>
+        </tbody>
+
+        <tbody role="rowgroup">
+          <tr class="rate-grp" role="row"><th colspan="4" scope="colgroup" role="columnheader">Coaches</th></tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Mini Coach</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$165</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$195</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-set">Set on the call</span></td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Motorcoach</th>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekday</span><span class="rate-num">$195</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Weekend</span><span class="rate-num rate-num--wknd">$225</span></td>
+            <td role="cell"><span class="rate-k" aria-hidden="true">Hourly minimum</span><span class="rate-set">Set on the call</span></td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p class="tbl-hint">Scroll the table sideways to see the hourly minimum.</p>
 
     <p class="rate-note">Airport transfers priced from the zone card or hourly minimum. 20% gratuity &amp; service included in every quote. Meet &amp; greet $30. Child seats $20/each.</p>
 
-    <p class="rate-live">This is the live rate card the AI quotes from — call 414-775-0019 and try it.</p>
+    <p class="rate-live">This is the live rate card the AI quotes from — call <a href="tel:+14147750019" data-event="tel_tap_rates_inline">414-775-0019</a> and try it.</p>
 
     <div class="rate-ctas">
       <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_rates">

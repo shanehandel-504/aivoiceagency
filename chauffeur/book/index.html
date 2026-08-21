@@ -93,7 +93,13 @@
   .sk-cell{height:38px;border-radius:6px;background:var(--neutral);opacity:.09}
   .sk-slots{display:grid;gap:10px;padding:4px 20px 24px}
   .sk-slot{height:44px;border-radius:8px;background:var(--neutral);opacity:.12}
-  .sk-note{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+  /* .75rem, not .68rem. RUN 10 set a 12px type floor in aic.css and listed the
+     eleven rules that were under it; this rule was written into THIS page's
+     <style> afterwards, so a shared list it was never added to could not cover
+     it. RUN 14's render walk found it at 10.88px — the only text under 12px on
+     eighteen pages, at either viewport, and it is the line a reader stares at
+     while the calendar loads. */
+  .sk-note{font-family:var(--mono);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;
     color:var(--neutral);text-align:center;padding:0 20px}
   @media(prefers-reduced-motion:no-preference){
     .sk-bar,.sk-cell,.sk-slot{animation:sk-settle 1.9s ease-in-out infinite}
