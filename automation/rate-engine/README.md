@@ -4,6 +4,11 @@ Shipped 2026-08-03. These files are the **authoring copy** of code that lives in
 n8n is the runtime; this directory is the only version-controlled copy. Edit here, then push
 the change into the node — there is no automatic sync.
 
+**Card version now live: `RCv2.3`.** The three `wf-rate.*.js` bodies here had drifted to RCv1.0
+while the workflow ran RCv2.0 → RCv2.2; they were re-synced from the live nodes on 2026-08-28 and
+now match `2JlTkvQ1dGiwwjw9` byte-for-byte. Because there is no automatic sync, **re-diff these
+files against the live nodes before trusting them.**
+
 `docs/` and `automation/` are in `.vercelignore`, so nothing here is deployed.
 
 ## Where each file runs
@@ -49,7 +54,8 @@ a *third-party* Limo Anywhere endpoint path (`/companies/{company_alias}/rate_lo
 | `vehicle_key` | string | must exist in `vehicle_classes` |
 | `pickup_at` | ISO-8601 or `yyyy-MM-dd HH:mm` | required; interpreted in `America/Chicago` |
 | `requested_hours` | number | hourly only |
-| `origin`, `airport` | string | airport only; matched case- and punctuation-insensitively |
+| `origin`, `airport` | string | airport only; matched case- and punctuation-insensitively. **`origin` stays the zone-lookup pricing key** regardless of direction |
+| `trip_origin`, `trip_destination` | string | optional, RCv2.3. The true direction of travel. On an airport **arrival** `trip_origin` is the airport and `trip_destination` is the drop-off — the reverse of the `(origin, airport)` pricing key. Wording only: see **Direction fields** below |
 | `addons` | array of `{key, qty, seat_type}` | object and CSV forms are also normalised |
 | `stops_count` | number | `> 3` escalates |
 | `account_type` | `retail` \| `corporate` \| `affiliate` \| `farm_out` | non-retail never gets a number |
@@ -98,6 +104,32 @@ asserts this: no retail number can leak on an escalation.
 $5 multiple × 20% is always a whole dollar, the line items always sum exactly to `all_in_total`.
 Rounding the *total* instead would have produced an itemised quote whose lines do not reconcile —
 a defect in an emailed ticket. The battery asserts the sum on every `QUOTED` case.
+
+## Direction fields (RCv2.3, 2026-08-28)
+
+Zone rows are direction-agnostic — one `(Kewaskum, MKE)` row prices both the MKE arrival and the
+MKE departure. Until RCv2.3 the spoken phrase always read origin-to-airport, so an **arrival** was
+described backwards to a caller standing in the terminal.
+
+When Retell sends **both** `trip_origin` and `trip_destination` non-empty, and the trip is not
+hourly, the spoken route phrase becomes `{trip_origin} to {trip_destination}` and
+`normalized_origin` / `normalized_destination` follow the same direction.
+
+- **Airports are spoken as terminal names.** A direction field may arrive as an IATA code (`MKE`),
+  a full name (`Milwaukee Mitchell International Airport`), or a town (`Kewaskum`). Codes and
+  canonical names resolve to the same wording the zone lane already speaks; anything else passes
+  through verbatim.
+- **Bare city names are deliberately NOT matched to their airports.** Indexing
+  `Denver International` under `Denver` would make a downtown-Denver pickup speak as the airport.
+  A non-canonical phrasing is spoken as the caller said it — never wrong, occasionally less canonical.
+- **Hourly is excluded.** Its phrase is a duration (`3 hours of dedicated service`), not a route.
+- **Not in the input hash.** `trip_origin` / `trip_destination` are absent from `canonical`, so they
+  cannot move `input_hash` and cannot change idempotency, supersede or `quote_id` behavior.
+- **Absent fields ⇒ byte-identical output.** Verified by running the RCv2.2 and RCv2.3 bodies against
+  identical inputs: `message`, `spoken_trip`, `breakdown`, `all_in_total` and the response key set all
+  match exactly. Only `rate_card_version` / `calculation_version` / `reason` carry the version bump.
+
+Pricing, zone lookup, the ladder, rounding and the response contract shape are untouched.
 
 ## Idempotency and corrections
 
