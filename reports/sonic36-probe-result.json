@@ -1,0 +1,49 @@
+{
+  "probe_agent_id": "agent_cfc97001055d3a5e377d0979d7",
+  "probe_agent_name": "ZZ-PROBE-36",
+  "source_agent_id": "agent_2d1d687eb85e6d5d0e720795c2",
+  "source_engine": {
+    "type": "conversation-flow",
+    "conversation_flow_id": "conversation_flow_ec560891b66b",
+    "version": 21
+  },
+  "isolated_flow_id": "conversation_flow_9daa48690731",
+  "accepted_model": "sonic-3-latest",
+  "ladder": [
+    {
+      "model": "sonic-3.6",
+      "note": "brief target — Cartesia GA model id",
+      "status": 400,
+      "accepted": false,
+      "body": "{\"error_message\":\"request/body/voice_model must be equal to one of the allowed values: eleven_turbo_v2, eleven_flash_v2, eleven_turbo_v2_5, eleven_flash_v2_5, eleven_multilingual_v2, eleven_v3, sonic-3, sonic-3-latest, sonic-3.5, tts-1, gpt-4o-mini-tts, speech-02-turbo, speech-2.8-turbo, s1, s2-pro, s2.1-pro, inworld-tts-2, inworld-tts-2-flash, \"}",
+      "readback": null
+    },
+    {
+      "model": "sonic-3-latest",
+      "note": "brief fallback — rolling alias",
+      "status": 200,
+      "accepted": true,
+      "body": null,
+      "readback": "sonic-3-latest"
+    },
+    {
+      "model": "sonic-3.5",
+      "note": "CONTROL — source agent already runs this",
+      "status": 200,
+      "accepted": true,
+      "body": null,
+      "readback": "sonic-3.5"
+    }
+  ],
+  "readback": {
+    "voice_id": "cartesia-Kate",
+    "voice_model": "sonic-3-latest",
+    "webhook_url": null,
+    "version": 0
+  },
+  "numbers_bound_to_probe": 0,
+  "source_untouched": true,
+  "live_flow_untouched": true,
+  "dashboard": "https://dashboard.retellai.com/agents/agent_cfc97001055d3a5e377d0979d7",
+  "probed_at": "2026-08-30T18:29:57.164Z"
+}
