@@ -203,6 +203,69 @@
     return '';
   }
 
+  /* ── CALLBACK GATE (client half) — 2026-09-06 ──────────────────────────────
+     INCIDENT: this form dialled a +44 121 number for 13m14s. The far end was a
+     "test call connected, you are all set to earn" recording — international
+     revenue-share fraud, paid for by us, one form submission at a time.
+
+     The old test was /^\+[1-9]\d{7,14}$/ — every country on earth. toE164 above
+     hands back '+' + digits for anything a reader types with a leading '+', so
+     a UK number was never even a special case; it was the happy path.
+
+     This is the CLIENT half and it is a COURTESY, not the defence. The real
+     gate is server-side in n8n (WF-CALLBACK-GATE), because anything here can be
+     skipped by POSTing the endpoint directly — which is exactly what a bot does.
+     What this earns is a reader who mistypes getting told so instantly instead
+     of watching a phone that never rings.
+
+     +1 only, and not every +1 is safe: 900/976 bill the caller, and the twenty
+     Caribbean area codes below are premium revenue-share numbers that LOOK
+     domestic because they are +1. That is the trap a country-code check misses.
+     ─────────────────────────────────────────────────────────────────────────── */
+  var PREMIUM_NPA   = ['900', '976'];
+  var CARIBBEAN_NPA = ['242','246','264','268','284','345','441','473','649','664',
+                       '721','758','767','784','809','829','849','868','869','876'];
+  var TOLLFREE_NPA  = ['800','833','844','855','866','877','888'];
+
+  function dialCheck(e164) {
+    if (!e164) return { ok: false, msg: 'That number does not look right — check the digits.' };
+    if (e164.slice(0, 2) !== '+1') {
+      return { ok: false, msg: 'AVA calls US and Canadian numbers only. Enter a 10-digit number.' };
+    }
+    if (!/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(e164)) {
+      return { ok: false, msg: 'That number does not look right — check the digits.' };
+    }
+    var npa = e164.slice(2, 5);
+    if (PREMIUM_NPA.indexOf(npa) !== -1 || CARIBBEAN_NPA.indexOf(npa) !== -1) {
+      return { ok: false, msg: 'AVA cannot call that area code. Use the number you answer.' };
+    }
+    if (TOLLFREE_NPA.indexOf(npa) !== -1) {
+      return { ok: false, msg: 'That is a toll-free number. Enter the phone you answer.' };
+    }
+    return { ok: true, msg: '' };
+  }
+
+  /* Honeypot. Built here rather than in the markup so one file covers all ten
+     pages and no page can ship the form without it. It is not hidden with
+     `display:none` alone — a field that is off-screen, unlabelled, tab-skipped
+     and autocomplete-off is invisible to a reader and to a screen reader, while
+     still being a real input a form-filling bot will populate. Any value in it
+     is a block, server-side. */
+  function addHoneypot(form) {
+    if (form.querySelector('[data-cb-hp]')) return;
+    var wrap = document.createElement('div');
+    wrap.setAttribute('aria-hidden', 'true');
+    wrap.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden';
+    var hp = document.createElement('input');
+    hp.type = 'text';
+    hp.name = 'company_url';
+    hp.setAttribute('data-cb-hp', '');
+    hp.tabIndex = -1;
+    hp.autocomplete = 'off';
+    wrap.appendChild(hp);
+    form.appendChild(wrap);
+  }
+
   function wireForm(form) {
     var nameEl = form.querySelector('[data-cb-name]');
     var cellEl = form.querySelector('[data-cb-cell]');
@@ -318,7 +381,7 @@
        enabled one that will.
        ─────────────────────────────────────────────────────────────────────── */
     function refreshReady() {
-      var okCell = /^\+[1-9]\d{7,14}$/.test(toE164(cellEl.value));
+      var okCell = dialCheck(toE164(cellEl.value)).ok;
       var okName = !nameEl || (nameEl.value || '').trim().length > 0;
       var okBox  = !!(okEl && okEl.checked);
       form.classList.toggle('is-ready', okCell && okName && okBox);
@@ -338,9 +401,10 @@
       cellEl.setAttribute('aria-invalid', 'false');
 
       var cell = toE164(cellEl.value);
-      if (!/^\+[1-9]\d{7,14}$/.test(cell)) {
+      var verdict = dialCheck(cell);
+      if (!verdict.ok) {
         cellEl.setAttribute('aria-invalid', 'true');
-        fail('That number does not look right — check the digits.');
+        fail(verdict.msg);
         cellEl.focus();
         return;
       }
@@ -369,7 +433,16 @@
         business_type: 'Ground Transportation',
         email: '',
         tcpa_consent: true,
-        tcpa_consent_at: new Date().toISOString()
+        tcpa_consent_at: new Date().toISOString(),
+        /* Always sent, even empty. The server treats absent and empty alike
+           (both pass) ON PURPOSE: a cached copy of this file that predates the
+           honeypot must not lock every real lead out during rollover. The field
+           earns its keep against bots that fill the rendered DOM; the +1-only
+           rule is what stops the fraud dialer. */
+        company_url: (function () {
+          var hp = form.querySelector('[data-cb-hp]');
+          return hp ? (hp.value || '') : '';
+        })()
       };
 
       fetch(ENDPOINT, {
@@ -391,6 +464,15 @@
           return;
         }
         btn.disabled = false;
+        /* 403 is the server callback gate refusing this number, not an outage.
+           Telling a reader to "try again" when the answer will never change is
+           the worst thing this branch can do, so the refusal gets its own copy. */
+        if (r.status === 403) {
+          cellEl.setAttribute('aria-invalid', 'true');
+          fail('AVA calls US and Canadian numbers only. Or call ' + TEL_DISPLAY + ' now.');
+          cellEl.focus();
+          return;
+        }
         fail('Could not reach AVA (' + r.status + '). Try again, or just call ' + TEL_DISPLAY + '.');
       }, function () {
         btn.disabled = false;
@@ -400,7 +482,7 @@
   }
 
   var forms = document.querySelectorAll('[data-cb-form]');
-  for (var i = 0; i < forms.length; i++) wireForm(forms[i]);
+  for (var i = 0; i < forms.length; i++) { addHoneypot(forms[i]); wireForm(forms[i]); }
 
   /* ── RUN 7 · TASK A — MOBILE STICKY ACTION RAIL ────────────────────────────
      Two independent conditions, ANDed, both driven by IntersectionObserver so

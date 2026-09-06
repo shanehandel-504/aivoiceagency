@@ -378,7 +378,7 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     //   10 digits             -> prepend "+1"  (5551234567  -> +15551234567)
     //   11 digits leading "1" -> prepend "+"   (15551234567 -> +15551234567)
     //   already starts with "+" then digits -> keep as-is
-    //   anything else -> '' (blocks submit; isValidCell rejects it)
+    //   anything else -> '' (blocks submit; dialCheck rejects it)
     function normalizeCell(raw) {
       var hadPlus = (raw || '').trim().charAt(0) === '+';
       var digits = (raw || '').replace(/\D/g, '');
@@ -389,11 +389,72 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
       return '';
     }
 
-    function isValidCell(e164) {
-      return /^\+[1-9]\d{7,14}$/.test(e164);
+    /* ── CALLBACK GATE (client half) — 2026-09-06 ─────────────────────────────
+       INCIDENT: this endpoint dialled a +44 121 number for 13m14s. The far end
+       was a "test call connected, you are all set to earn" recording —
+       international revenue-share fraud, billed to us, one submission at a time.
+       It arrived through the chauffeur form, but BOTH brands POST to the same
+       n8n webhook and both validated with the same test, so both were open.
+
+       The old test was /^\+[1-9]\d{7,14}$/ — every country on earth. And
+       normalizeCell above returns '+' + digits for anything typed with a
+       leading '+', so an overseas number was never an edge case; it was the
+       happy path.
+
+       CLIENT HALF, COURTESY ONLY. The real gate is server-side in n8n
+       (WF-CALLBACK-GATE); anything here is skipped by POSTing the endpoint
+       directly, which is what a bot does. This exists so a reader who mistypes
+       is told instantly instead of waiting on a phone that never rings.
+
+       Not every +1 is safe: 900/976 bill the caller, and the twenty Caribbean
+       area codes below are premium revenue-share numbers that LOOK domestic
+       because they are +1. A country-code check alone walks straight past them.
+       ───────────────────────────────────────────────────────────────────────── */
+    var PREMIUM_NPA   = ['900', '976'];
+    var CARIBBEAN_NPA = ['242','246','264','268','284','345','441','473','649','664',
+                         '721','758','767','784','809','829','849','868','869','876'];
+    var TOLLFREE_NPA  = ['800','833','844','855','866','877','888'];
+
+    function dialCheck(e164) {
+      if (!e164) return { ok: false, msg: 'Enter a real mobile number (e.g. 305 555 1212).' };
+      if (e164.slice(0, 2) !== '+1') {
+        return { ok: false, msg: 'AVA calls US and Canadian numbers only. Enter a 10-digit number.' };
+      }
+      if (!/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(e164)) {
+        return { ok: false, msg: 'Enter a real mobile number (e.g. 305 555 1212).' };
+      }
+      var npa = e164.slice(2, 5);
+      if (PREMIUM_NPA.indexOf(npa) !== -1 || CARIBBEAN_NPA.indexOf(npa) !== -1) {
+        return { ok: false, msg: 'AVA cannot call that area code. Use the number you answer.' };
+      }
+      if (TOLLFREE_NPA.indexOf(npa) !== -1) {
+        return { ok: false, msg: 'That is a toll-free number. Enter the phone you answer.' };
+      }
+      return { ok: true, msg: '' };
+    }
+
+    /* Honeypot, built in JS so every widget on every page gets one and no page
+       can ship the form without it. Off-screen, unlabelled, tab-skipped and
+       autocomplete-off: invisible to a reader and to a screen reader, and still
+       a real input a form-filling bot will populate. Any value is a block,
+       server-side. */
+    function addHoneypot(widget) {
+      if (widget.querySelector('[data-lcw-hp]')) return;
+      var wrap = document.createElement('div');
+      wrap.setAttribute('aria-hidden', 'true');
+      wrap.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden';
+      var hp = document.createElement('input');
+      hp.type = 'text';
+      hp.name = 'company_url';
+      hp.setAttribute('data-lcw-hp', '');
+      hp.tabIndex = -1;
+      hp.autocomplete = 'off';
+      wrap.appendChild(hp);
+      widget.appendChild(wrap);
     }
 
     widgets.forEach(function(widget) {
+      addHoneypot(widget);
       var chips = widget.querySelectorAll('.lcw-chip');
       var nameInput = widget.querySelector('[data-lcw-name]');
       var cellInput = widget.querySelector('[data-lcw-cell]');
@@ -479,8 +540,9 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
         e.preventDefault();
         clearTimeout(resetTimer);
         var cell = normalizeCell(cellInput.value);
-        if (!isValidCell(cell)) {
-          fail('Enter a real mobile number (e.g. +1 305 555 1212).');
+        var verdict = dialCheck(cell);
+        if (!verdict.ok) {
+          fail(verdict.msg);
           cellInput.focus();
           return;
         }
@@ -554,7 +616,16 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
           business_type: bizInput ? bizInput.value : '',
           email: email,
           tcpa_consent: true,
-          tcpa_consent_at: new Date().toISOString()
+          tcpa_consent_at: new Date().toISOString(),
+          /* Always sent, even empty. The server treats absent and empty alike
+             (both pass) ON PURPOSE: a cached copy of this file that predates
+             the honeypot must not lock every real lead out during rollover.
+             The field earns its keep against bots that fill the rendered DOM;
+             the +1-only rule is what stops the fraud dialer. */
+          company_url: (function () {
+            var hp = widget.querySelector('[data-lcw-hp]');
+            return hp ? (hp.value || '') : '';
+          })()
         };
 
         // Log the exact JSON payload before sending (URL + body, no secrets).
@@ -586,7 +657,14 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
           }, function() {
             if (window.console && console.error) console.error('[AVA] submit failed', r.status, '(body unreadable)');
           });
-          fail('Could not reach AVA (' + r.status + '). Tap to try again.');
+          /* 403 is the server callback gate refusing this number, not an
+             outage. "Tap to try again" on a refusal that will never change is
+             the worst copy this branch can show, so the refusal gets its own. */
+          if (r.status === 403) {
+            fail('AVA calls US and Canadian numbers only. Or call 414-240-8930 now.');
+          } else {
+            fail('Could not reach AVA (' + r.status + '). Tap to try again.');
+          }
           resetIdle(5000);
         }, function(err) {
           if (window.console && console.error) console.error('[AVA] network error', err);
