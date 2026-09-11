@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-06T15:24:56.969-05:00",
+  "updated": "2026-09-11T16:38:16.909-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -75,6 +75,13 @@
     }
   ],
   "items": [
+    {
+      "id": "aic-try",
+      "title": "aichauffeur.ai/try — browser demo of the (414) 775-0019 agent",
+      "url": "https://aichauffeur.ai/try/",
+      "status": "pending",
+      "label": "PAGE LIVE, CALLS WAIT ON TWO SETTINGS. e4bb3ab + 419b57b. One screen, one control: tap -> mic -> Turnstile -> POST /api/web-call. chauffeur/api/web-call.js: POST only, same-site Origin, 3 attempts per IP per hour, Turnstile siteverify with a hostname check, refuses while 10 of the account's 20 call slots are busy, then POST /v3/create-web-call pinned to agent_2d1d687eb85e6d5d0e720795c2 @ latest_published with agent_override 480000 ms max + 60000 ms silence and metadata.source aichauffeur.ai/try. The browser joins with retell-client-js-sdk 3.0.1 RetellWebClient.startCall. PROVEN: unit 21/21; real local web call call_511e14867afad9d8df953b73aea (v27 published, 5 agent + 5 user turns, ended itself at 60 s, max_duration_reached); render 320/390/430/1440 no overflow, min contrast 5.98:1; RUN 9 gate 16x6 PASS; RUN 10 gate the same 18 pre-existing FAQ failures, 0 new. WAITING ON: RETELL_API_KEY + TURNSTILE_SECRET in the aichauffeur Vercel project (function answers 503 not_configured on dpl_8Tmmp5LcJsvX6HEHwebJJHSbBtFV) and aichauffeur.ai on the Turnstile widget (error 110200). Until then every tap lands on the phone line in 0.1 s. /demo NOT redirected; it links here. noindex, not in the sitemap."
+    },
     {
       "id": "AIC-POLISH",
       "title": "AIC RUN 14 — showroom polish + AEO index",
@@ -429,6 +436,10 @@
     }
   ],
   "log": [
+    {
+      "ts": "2026-09-11T16:38:16.909-05:00",
+      "entry": "AIC /try SHIPPED, RUN INCOMPLETE — e4bb3ab (page, function, /demo line, sitemap, tools/aic-try) and 419b57b (a refused Turnstile now reaches the phone line in 0.1 s instead of 20 s; red on the live page, green on the fix). Production: /try 200 noindex; /api/web-call 405 / 403 paths verified but 503 not_configured, the function log reading retell_key false, turnstile_secret false; Turnstile answers 110200 for aichauffeur.ai. Real local web call call_511e14867afad9d8df953b73aea proved the pipe and the per-call cap (60 s, max_duration_reached). Next: Shane adds both keys (Production + Preview) and the hostname, then redeploys; GO runs probe-fn, render --prod, call --mode prod, probe-fn --limit. Rollback: git revert 419b57b e4bb3ab, or promote dpl_CqEUGDyT7bv32ob1UKknabZrK8zH."
+    },
     {
       "ts": "2026-09-06T15:24:56.969-05:00",
       "entry": "CALLBACK GATE LIVE — n8n u3FaLLiH0loGf1BN activeVersionId 82bd9f69-c7b1-4a1c-b828-ed816eae384b (rollback: 5f891259-c517-410a-a85e-0801644d1e91). Closes the hole that produced call_54e89c60b6b97ae97170d0f4162 — the AI Chauffeur line dialling a +44 121 revenue-share recording for 13m14s off a public form, 372.09 Retell cost units of which 132.33 was UK telephony. THE DIALER WAS NEITHER \"IN THE REPO\" NOR GHL: it is the ACTIVE n8n workflow \"AVA Layer 1 — Money Path Spine\", and BOTH brands' forms POST to its one ava-call webhook, so gating a separate WF-CALLBACK-GATE alongside it would have left the vulnerable endpoint open. The gate went in at the chokepoint instead. +1 only, 900/976 + 20 Caribbean NPAs + toll-free + our own lines blocked, TCPA true required, honeypot required empty, one call per number per 24h; fails closed; every attempt logged to data table callback_gate_log with a reason; a block texts the owner on the Error Sentry rail. 5/5 hostile cases proven against PRODUCTION. Client halves in site.js + chauffeur/assets/aic.js render-verified at 390x844 and desktop, 0 console errors. Retell drafts capped and read-back-verified (720000 / 60000) on BOTH outbound agents — NOT published; the phone still serves v27 / v28 until Shane publishes. Turnstile is NOT live (no key exists); the token is recorded, never trusted. THREE THINGS THE BRIEF COULD NOT HAVE KNOWN: (1) all 8 numbers are retell-twilio PROVISIONED, not imported, and Retell exposes no per-number outbound/international flag at all — allowed_inbound_country_list is inbound-only, so there was no platform switch to throw. (2) The first live-fire returned 403 with an EMPTY reason: Respond Blocked sat behind the SMS node and was reading the GHL response as $json. The block worked; the explanation did not, and only a live test could see the difference. (3) The parent AVA form carried the identical permissive regex, so the fraud could have arrived through aivoiceagency.ai just as easily — it was never a chauffeur-only defect."
