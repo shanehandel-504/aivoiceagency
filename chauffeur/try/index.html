@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="/assets/circulant.css?v=abf8701">
   <link rel="stylesheet" href="/assets/aic.css?v=abf8701">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="preconnect" href="https://challenges.cloudflare.com">
+  <link rel="preconnect" href="https://circulant.app.n8n.cloud" crossorigin>
 
   <style>
     /* /try · page scope. Every colour is a site token and every control is the
@@ -134,7 +134,6 @@
         <p class="try-rec">Calls are recorded. <a href="/privacy/">Privacy</a></p>
         <button type="button" class="btn btn-primary try-btn" id="try-btn" data-event="try_call_start">Try AI Chauffeur</button>
         <p class="try-alt" id="try-alt" hidden>Or call the line: <a href="tel:+14147750019" data-event="tel_tap_try">(414) 775-0019</a></p>
-        <div class="try-ts" id="try-ts"></div>
       </div>
     </div>
   </div>
@@ -142,11 +141,13 @@
 
 <script type="module">
   // /try · one browser call to the AI Chauffeur line.
-  // Tap: mic permission -> Turnstile token -> POST /api/web-call -> join.
-  // The server picks the agent, the version and the caps. The page only joins.
+  // Tap: mic permission -> proof of work -> POST to the n8n webhook -> join.
+  // n8n picks the agent, the version and the caps. The page only joins.
   const SDK_URL = 'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@3.0.1/+esm';
-  const TS_URL = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileReady';
-  const SITE_KEY = '0x4AAAAAAD9NsnMlfhExNQbU'; // Turnstile site key: public by design
+  // This URL is public by nature: it sits in this page, and no secret does. What
+  // stands in front of a call is the puzzle below, 3 tries per IP per hour, 40
+  // calls a day, and a ceiling that keeps 10 of the 20 call slots for the phones.
+  const WEBHOOK = 'https://circulant.app.n8n.cloud/webhook/7b9e6dee2ce9ce780673725e0448791f';
   const LINE = '<a href="tel:+14147750019" data-event="tel_tap_try">(414) 775-0019</a>';
   const IN_APP = /FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|Twitter|musical_ly|BytedanceWebview|Snapchat/i;
 
@@ -214,45 +215,101 @@
   let sdk = null;
   const loadSdk = () => sdk || (sdk = import(SDK_URL).catch((e) => { sdk = null; throw e; }));
 
-  // TURNSTILE renders invisibly and keeps one fresh token ready. Tokens are
-  // single-use, so the widget is reset after every attempt. A widget that has
-  // errored (a domain it does not allow, a network failure) is asked once more
-  // on tap, and a second error reaches the visitor at once, not after the timeout.
-  let ts = null, tsId = null, token = null, tsError = false, waiters = [];
-  const deliver = (t) => { token = t; const w = waiters; waiters = []; w.forEach((f) => f()); };
-  function loadTurnstile() {
-    if (ts) return ts;
-    ts = new Promise((resolve, reject) => {
-      window.onTurnstileReady = () => resolve(window.turnstile);
-      const s = document.createElement('script');
-      s.src = TS_URL; s.async = true;
-      s.onerror = () => reject(new Error('turnstile'));
-      document.head.appendChild(s);
-    }).then((api) => {
-      tsId = api.render('#try-ts', {
-        sitekey: SITE_KEY, size: 'flexible', appearance: 'interaction-only', action: 'try_call',
-        callback: (t) => { tsError = false; deliver(t); },
-        'expired-callback': () => { token = null; api.reset(tsId); },
-        'error-callback': () => { token = null; tsError = true; deliver(null); return true; },
-        'timeout-callback': () => { token = null; tsError = true; deliver(null); },
-      });
-      return api;
-    }).catch((e) => { ts = null; throw e; });
-    return ts;
-  }
-  function takeToken(ms) {
-    return new Promise((resolve) => {
-      const give = () => { const t = token; token = null; resolve(t); };
-      if (token) return give();
-      if (tsError && window.turnstile && tsId !== null) {
-        tsError = false;
-        try { window.turnstile.reset(tsId); } catch (e) {}
+  // THE PUZZLE. Before n8n will create a call, this device finds a counter where
+  // SHA-256("nonce:counter") starts with `bits` zero bits: about a million hashes
+  // at 20, a few seconds on a phone. Each nonce is one-time and expires in three
+  // minutes. It costs a script the same, which is the point.
+  const post = (fields) => fetch(WEBHOOK, {
+    method: 'POST', cache: 'no-store', credentials: 'omit',
+    body: new URLSearchParams(fields),
+  });
+
+  function powSolve(nonce, bits, start, limit) {
+    var K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+      0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+      0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+      0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+      0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+      0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+      0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+      0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2];
+    var W = new Int32Array(64), msg = new Uint8Array(64);
+    var prefix = nonce + ':', plen = prefix.length, shift = 32 - bits;
+    for (var i = 0; i < plen; i++) msg[i] = prefix.charCodeAt(i);
+    for (var n = start; n < start + limit; n++) {
+      var s = String(n), len = plen + s.length, t;
+      for (t = 0; t < s.length; t++) msg[plen + t] = s.charCodeAt(t);
+      for (t = 0; t < 16; t++) W[t] = 0;
+      for (t = 0; t < len; t++) W[t >> 2] |= msg[t] << (24 - ((t & 3) << 3));
+      W[len >> 2] |= 0x80 << (24 - ((len & 3) << 3));
+      W[15] = len << 3;
+      for (t = 16; t < 64; t++) {
+        var x = W[t - 15], y = W[t - 2];
+        var s0 = ((x >>> 7) | (x << 25)) ^ ((x >>> 18) | (x << 14)) ^ (x >>> 3);
+        var s1 = ((y >>> 17) | (y << 15)) ^ ((y >>> 19) | (y << 13)) ^ (y >>> 10);
+        W[t] = (W[t - 16] + s0 + W[t - 7] + s1) | 0;
       }
-      const timer = setTimeout(() => resolve(null), ms);
-      waiters.push(() => { clearTimeout(timer); give(); });
+      var a = 0x6a09e667, b = 0xbb67ae85 | 0, c = 0x3c6ef372, d = 0xa54ff53a | 0,
+        e = 0x510e527f, f = 0x9b05688c | 0, g = 0x1f83d9ab, h = 0x5be0cd19;
+      for (t = 0; t < 64; t++) {
+        var S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+        var ch = (e & f) ^ (~e & g);
+        var t1 = (h + S1 + ch + K[t] + W[t]) | 0;
+        var S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+        var t2 = (S0 + ((a & b) ^ (a & c) ^ (b & c))) | 0;
+        h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+      }
+      if ((((a + 0x6a09e667) | 0) >>> shift) === 0) return n;
+    }
+    return -1;
+  }
+
+  // The search runs in a worker built from powSolve's own source, so the page
+  // keeps painting. If workers are blocked it runs here in slices instead.
+  function solve(nonce, bits, ms) {
+    return new Promise((resolve) => {
+      let worker = null, url = null, done = false;
+      const finish = (n) => {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        if (worker) worker.terminate();
+        if (url) URL.revokeObjectURL(url);
+        resolve(n);
+      };
+      const timer = setTimeout(() => finish(-1), ms);
+      const slices = () => {
+        let at = 0;
+        const step = () => {
+          if (done) return;
+          const n = powSolve(nonce, bits, at, 20000);
+          if (n >= 0) return finish(n);
+          at += 20000;
+          setTimeout(step, 0);
+        };
+        step();
+      };
+      try {
+        const src = powSolve.toString() + '\nonmessage = function (e) { postMessage(powSolve(e.data[0], e.data[1], 0, 4294967295)); };';
+        url = URL.createObjectURL(new Blob([src], { type: 'text/javascript' }));
+        worker = new Worker(url);
+        worker.onmessage = (e) => finish(e.data);
+        worker.onerror = () => { worker.terminate(); worker = null; slices(); };
+        worker.postMessage([nonce, bits]);
+      } catch (e) { worker = null; slices(); }
     });
   }
-  function freshToken() { token = null; if (window.turnstile && tsId !== null) { try { window.turnstile.reset(tsId); } catch (e) {} } }
+
+  async function prove() {
+    try {
+      const r = await within(post({ step: 'challenge' }), 10000);
+      if (!r.ok) return null;
+      const c = await r.json();
+      if (!/^[0-9a-f]{32}$/.test(String(c.nonce)) || !(c.bits >= 1 && c.bits <= 24)) return null;
+      const counter = await solve(c.nonce, c.bits, 30000);
+      return counter >= 0 ? { nonce: c.nonce, counter: counter } : null;
+    } catch (e) { return null; }
+  }
 
   const within = (p, ms) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error('timeout')), ms))]);
 
@@ -285,19 +342,11 @@
       probe.getTracks().forEach((t) => t.stop());
     } catch (e) { return fail('mic'); }
     try {
-      // 2 · the SDK and a Turnstile token, together
-      const [mod, t] = await Promise.all([
-        within(loadSdk(), 15000),
-        within(loadTurnstile(), 15000).then(() => takeToken(20000)).catch(() => null),
-      ]);
-      if (!t) return fail();
-      // 3 · the server creates the call
-      const r = await within(fetch('/api/web-call', {
-        method: 'POST', cache: 'no-store',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ turnstile: t }),
-      }), 15000);
-      freshToken();
+      // 2 · the SDK loads while this device solves the server's one-time puzzle
+      const [mod, proof] = await Promise.all([within(loadSdk(), 15000), prove()]);
+      if (!proof) return fail();
+      // 3 · n8n checks the proof and its limits, then creates the call
+      const r = await within(post({ step: 'call', nonce: proof.nonce, counter: String(proof.counter) }), 15000);
       if (!r.ok) return fail();
       const d = await r.json();
       if (state !== 'connecting') return;
@@ -342,7 +391,7 @@
   });
 
   const idle = (fn) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 2500 }) : setTimeout(fn, 1200));
-  idle(() => { loadSdk().catch(() => {}); loadTurnstile().catch(() => {}); });
+  idle(() => { loadSdk().catch(() => {}); });
 </script>
 </body>
 </html>

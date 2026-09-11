@@ -10,6 +10,8 @@ export const { chromium } = require('playwright');
 
 export const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const SITE = 'https://aichauffeur.ai';
+export const WEBHOOK = 'https://circulant.app.n8n.cloud/webhook/7b9e6dee2ce9ce780673725e0448791f';
+export const WEBHOOK_URL = /circulant\.app\.n8n\.cloud\/webhook\//;
 const CHAUFFEUR = path.join(REPO, 'chauffeur');
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -19,15 +21,10 @@ const TYPES = {
 };
 
 // Serve chauffeur/ AS https://aichauffeur.ai inside the test browser only, so the
-// page's Origin header is the production one. apiHandler answers /api/web-call.
-export async function serveLocal(context, apiHandler) {
+// page's Origin header is the production one the webhook demands.
+export async function serveLocal(context) {
   await context.route(`${SITE}/**`, async (route) => {
-    const req = route.request();
-    const u = new URL(req.url());
-    if (u.pathname === '/api/web-call') {
-      if (!apiHandler) return route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":"no_handler"}' });
-      return route.fulfill(await apiHandler(req));
-    }
+    const u = new URL(route.request().url());
     let p = decodeURIComponent(u.pathname);
     if (p.endsWith('/')) p += 'index.html';
     const file = path.join(CHAUFFEUR, p);
@@ -41,54 +38,20 @@ export async function serveLocal(context, apiHandler) {
   });
 }
 
-// Run a Vercel-style (req, res) handler in-process for one intercepted request.
-export function vercelAdapter(handler, onResult) {
-  return async (request) => {
-    const headers = { ...request.headers(), 'x-forwarded-for': '127.0.0.1' };
-    let body = {};
-    try { body = JSON.parse(request.postData() || '{}'); } catch {}
-    const out = await new Promise((resolve) => {
-      const res = {
-        statusCode: 200, headers: {},
-        setHeader(k, v) { this.headers[k.toLowerCase()] = String(v); },
-        end(s) { resolve({ status: this.statusCode, headers: this.headers, body: s }); },
-      };
-      handler({ method: request.method(), headers, body }, res);
-    });
-    if (onResult) onResult(out);
-    return out;
+// Stands in for the n8n webhook so a layout or failure-path check never spends a
+// real call. The challenge it hands out is 8 bits, which solves instantly.
+export function webhookStub(callAnswer = { status: 429, body: { error: 'rate_limited' } }) {
+  return (route) => {
+    const posted = route.request().postData() || '';
+    const headers = { 'access-control-allow-origin': SITE, 'cache-control': 'no-store' };
+    if (/(^|&)step=challenge(&|$)/.test(posted)) {
+      return route.fulfill({ status: 200, headers, contentType: 'application/json',
+        body: JSON.stringify({ nonce: '0123456789abcdef0123456789abcdef', bits: 8 }) });
+    }
+    return route.fulfill({ status: callAnswer.status, headers, contentType: 'application/json',
+      body: JSON.stringify(callAnswer.body) });
   };
 }
-
-// Stands in for Turnstile and hands out Cloudflare's published dummy token.
-// Only ever paired with the always-pass TEST secret, which siteverify accepts.
-export const TURNSTILE_STUB = `(() => {
-  const TOKEN = 'XXXX.DUMMY.TOKEN.XXXX'; const widgets = [];
-  const issue = (w) => setTimeout(() => w.callback && w.callback(TOKEN), 60);
-  window.turnstile = {
-    render(el, o) { const w = { callback: o.callback }; widgets.push(w); issue(w); return String(widgets.length - 1); },
-    reset(id) { const w = widgets[Number(id)]; if (w) issue(w); },
-    execute(id) { const w = widgets[Number(id)]; if (w) issue(w); },
-    remove() {}, getResponse() { return TOKEN; },
-  };
-  const m = /[?&]onload=([^&]+)/.exec(document.currentScript ? document.currentScript.src : '');
-  if (m && typeof window[m[1]] === 'function') window[m[1]]();
-})();`;
-export const TURNSTILE_URL = /challenges\.cloudflare\.com\/turnstile\/v0\/api\.js/;
-
-// Stands in for a Turnstile widget that refuses, the way a domain missing from
-// the widget's hostname list does (Cloudflare error 110200). Never issues a token.
-export const TURNSTILE_ERROR_STUB = `(() => {
-  const widgets = [];
-  const fire = (w) => setTimeout(() => w.error && w.error('110200'), 60);
-  window.turnstile = {
-    render(el, o) { const w = { error: o['error-callback'] }; widgets.push(w); fire(w); return String(widgets.length - 1); },
-    reset(id) { const w = widgets[Number(id)]; if (w) fire(w); },
-    execute() {}, remove() {}, getResponse() { return undefined; },
-  };
-  const m = /[?&]onload=([^&]+)/.exec(document.currentScript ? document.currentScript.src : '');
-  if (m && typeof window[m[1]] === 'function') window[m[1]]();
-})();`;
 
 // Watch the status chip from inside the page: every change, timestamped.
 export const STATE_RECORDER = () => {
@@ -102,9 +65,9 @@ export const STATE_RECORDER = () => {
   });
 };
 
-// Rendered-pixel contrast for every visible text element, with ancestor
-// opacity folded in and ::before fills counted (the primary button paints its
-// fill there). Also the 12px floor, overflow and the visible-text "retell" check.
+// Rendered-pixel contrast for every visible text element, with ancestor opacity
+// folded in and ::before fills counted (the primary button paints its fill
+// there). Also the 12px floor, overflow and the visible-text "retell" check.
 export async function probe(page) {
   return page.evaluate(() => {
     const parse = (c) => {
