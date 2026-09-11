@@ -76,6 +76,20 @@ export const TURNSTILE_STUB = `(() => {
 })();`;
 export const TURNSTILE_URL = /challenges\.cloudflare\.com\/turnstile\/v0\/api\.js/;
 
+// Stands in for a Turnstile widget that refuses, the way a domain missing from
+// the widget's hostname list does (Cloudflare error 110200). Never issues a token.
+export const TURNSTILE_ERROR_STUB = `(() => {
+  const widgets = [];
+  const fire = (w) => setTimeout(() => w.error && w.error('110200'), 60);
+  window.turnstile = {
+    render(el, o) { const w = { error: o['error-callback'] }; widgets.push(w); fire(w); return String(widgets.length - 1); },
+    reset(id) { const w = widgets[Number(id)]; if (w) fire(w); },
+    execute() {}, remove() {}, getResponse() { return undefined; },
+  };
+  const m = /[?&]onload=([^&]+)/.exec(document.currentScript ? document.currentScript.src : '');
+  if (m && typeof window[m[1]] === 'function') window[m[1]]();
+})();`;
+
 // Watch the status chip from inside the page: every change, timestamped.
 export const STATE_RECORDER = () => {
   window.__states = [];

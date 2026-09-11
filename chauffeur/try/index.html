@@ -215,8 +215,10 @@
   const loadSdk = () => sdk || (sdk = import(SDK_URL).catch((e) => { sdk = null; throw e; }));
 
   // TURNSTILE renders invisibly and keeps one fresh token ready. Tokens are
-  // single-use, so the widget is reset after every attempt.
-  let ts = null, tsId = null, token = null, waiters = [];
+  // single-use, so the widget is reset after every attempt. A widget that has
+  // errored (a domain it does not allow, a network failure) is asked once more
+  // on tap, and a second error reaches the visitor at once, not after the timeout.
+  let ts = null, tsId = null, token = null, tsError = false, waiters = [];
   const deliver = (t) => { token = t; const w = waiters; waiters = []; w.forEach((f) => f()); };
   function loadTurnstile() {
     if (ts) return ts;
@@ -229,9 +231,10 @@
     }).then((api) => {
       tsId = api.render('#try-ts', {
         sitekey: SITE_KEY, size: 'flexible', appearance: 'interaction-only', action: 'try_call',
-        callback: (t) => deliver(t),
+        callback: (t) => { tsError = false; deliver(t); },
         'expired-callback': () => { token = null; api.reset(tsId); },
-        'error-callback': () => { token = null; deliver(null); return true; },
+        'error-callback': () => { token = null; tsError = true; deliver(null); return true; },
+        'timeout-callback': () => { token = null; tsError = true; deliver(null); },
       });
       return api;
     }).catch((e) => { ts = null; throw e; });
@@ -241,6 +244,10 @@
     return new Promise((resolve) => {
       const give = () => { const t = token; token = null; resolve(t); };
       if (token) return give();
+      if (tsError && window.turnstile && tsId !== null) {
+        tsError = false;
+        try { window.turnstile.reset(tsId); } catch (e) {}
+      }
       const timer = setTimeout(() => resolve(null), ms);
       waiters.push(() => { clearTimeout(timer); give(); });
     });

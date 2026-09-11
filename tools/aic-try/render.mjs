@@ -12,7 +12,7 @@
 
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
-import { chromium, SITE, REPO, serveLocal, TURNSTILE_STUB, TURNSTILE_URL, probe } from './lib.mjs';
+import { chromium, SITE, REPO, serveLocal, TURNSTILE_STUB, TURNSTILE_ERROR_STUB, TURNSTILE_URL, probe } from './lib.mjs';
 
 const PROD = process.argv.includes('--prod');
 const OUT = path.join(REPO, 'audits', 'aic-try');
@@ -108,6 +108,23 @@ const telInNote = (page) => page.evaluate(() => !!document.querySelector('#try-n
   await page.waitForFunction(() => document.getElementById('try-tag').dataset.state === 'failed', null, { timeout: 30000 }).catch(() => {});
   const s = await tagState(page), n = await noteText(page);
   check(s === 'failed' && n.startsWith("The call didn't start.") && await telInNote(page), 'SDK load failure -> NOT CONNECTED + phone line', `${s} | ${n}`);
+  await context.close();
+}
+{ // Turnstile refuses (110200, a domain missing from the widget): the phone line
+  // must arrive in seconds, and no request may reach the function
+  const { context, page } = await newPage({ viewport: { width: 390, height: 844 } }, { b: browserMic, turnstileStub: false });
+  await context.route(TURNSTILE_URL, (r) => r.fulfill({ status: 200, contentType: 'application/javascript', body: TURNSTILE_ERROR_STUB }));
+  let posted = false;
+  page.on('request', (r) => { if (r.url().endsWith('/api/web-call')) posted = true; });
+  await page.goto(URL_TRY, { waitUntil: 'load' });
+  await page.waitForTimeout(3500);
+  const t0 = Date.now();
+  await page.click('#try-btn');
+  await page.waitForFunction(() => document.getElementById('try-tag').dataset.state === 'failed', null, { timeout: 30000 }).catch(() => {});
+  const secs = ((Date.now() - t0) / 1000).toFixed(1);
+  const s = await tagState(page), n = await noteText(page);
+  check(s === 'failed' && n.startsWith("The call didn't start.") && Number(secs) <= 6 && !posted,
+    'Turnstile refusal -> phone line within 6 s, nothing sent to the function', `${secs}s | ${s} | posted=${posted}`);
   await context.close();
 }
 { // the function refuses (429)
