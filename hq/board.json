@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-11T16:38:16.909-05:00",
+  "updated": "2026-09-11T18:18:46.690-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -79,8 +79,8 @@
       "id": "aic-try",
       "title": "aichauffeur.ai/try — browser demo of the (414) 775-0019 agent",
       "url": "https://aichauffeur.ai/try/",
-      "status": "pending",
-      "label": "PAGE LIVE, CALLS WAIT ON TWO SETTINGS. e4bb3ab + 419b57b. One screen, one control: tap -> mic -> Turnstile -> POST /api/web-call. chauffeur/api/web-call.js: POST only, same-site Origin, 3 attempts per IP per hour, Turnstile siteverify with a hostname check, refuses while 10 of the account's 20 call slots are busy, then POST /v3/create-web-call pinned to agent_2d1d687eb85e6d5d0e720795c2 @ latest_published with agent_override 480000 ms max + 60000 ms silence and metadata.source aichauffeur.ai/try. The browser joins with retell-client-js-sdk 3.0.1 RetellWebClient.startCall. PROVEN: unit 21/21; real local web call call_511e14867afad9d8df953b73aea (v27 published, 5 agent + 5 user turns, ended itself at 60 s, max_duration_reached); render 320/390/430/1440 no overflow, min contrast 5.98:1; RUN 9 gate 16x6 PASS; RUN 10 gate the same 18 pre-existing FAQ failures, 0 new. WAITING ON: RETELL_API_KEY + TURNSTILE_SECRET in the aichauffeur Vercel project (function answers 503 not_configured on dpl_8Tmmp5LcJsvX6HEHwebJJHSbBtFV) and aichauffeur.ai on the Turnstile widget (error 110200). Until then every tap lands on the phone line in 0.1 s. /demo NOT redirected; it links here. noindex, not in the sitemap."
+      "status": "live",
+      "label": "LIVE. Tap, allow the mic, talk to the agent the phone line answers with. The browser posts to n8n WF-TRY-WEBCALL (9nKn8i2dRuALikuv, published 5eefa885-370f-4d13-9285-0bc94e5af117, kill switch = unpublish), which holds credential \"Retell API\" (kGVhqVmqLgPUAxpM, restricted to api.retellai.com) so the page holds no secret; the Vercel function is deleted and /api/web-call 404s. Gate order: origin -> daily cap 40 -> 3 attempts per IP per hour (keyed on cf-connecting-ip, which Cloudflare sets and a caller cannot forge) -> proof of work (SHA-256 to 20 zero bits, one-time nonce, 3 min TTL) -> refuse while 10 of the account's 20 call slots are busy -> POST /v3/create-web-call pinned to latest_published with agent_override 480000 ms + 60000 ms silence + metadata.source. PROVEN ON PRODUCTION: call_33583d539e09678fe50b72582af ended itself at 60 s with max_duration_reached (the override), call_dd9527f60e438181dd306138d1e ran 25 s with 3 agent + 3 caller turns on published v27; negatives 403/403/403/429 with Create web call never executed and no call in Retell's ledger; render gates ALL PASS local and production at 320/390/430/1440 with five failure paths; 19/19 unit tests on the Code nodes and the pure-JS SHA-256. The phone line is untouched: agent v27 still carries its own 900000 ms cap. /demo NOT redirected; it links here. noindex, not in the sitemap."
     },
     {
       "id": "AIC-POLISH",
@@ -436,6 +436,10 @@
     }
   ],
   "log": [
+    {
+      "ts": "2026-09-11T18:18:46.690-05:00",
+      "entry": "AIC /try LIVE VIA n8n — 5013e1d. v2 shipped a Vercel function that could only answer 503 (no RETELL_API_KEY on that project, dashboard-only to add), so v3 moved the secret and the gates into n8n: WF-TRY-WEBCALL 9nKn8i2dRuALikuv, published 5eefa885-370f-4d13-9285-0bc94e5af117, Error Sentry attached, credential Retell API kGVhqVmqLgPUAxpM restricted to api.retellai.com. Turnstile was dropped for this build (aichauffeur.ai is not on the widget, error 110200, and Doppler holds no Cloudflare token) and replaced by a proof-of-work gate; the budget behind it is the real defence. Two real calls from the production page: call_33583d539e09678fe50b72582af proved the per-call cap by ending itself at 60 s (max_duration_reached), call_dd9527f60e438181dd306138d1e is the clean 25 s run. Negatives spent this machine's allowance deliberately: 403, 403, 403, 429 with zero calls created. Rollback: unpublish the workflow, or git revert 5013e1d."
+    },
     {
       "ts": "2026-09-11T16:38:16.909-05:00",
       "entry": "AIC /try SHIPPED, RUN INCOMPLETE — e4bb3ab (page, function, /demo line, sitemap, tools/aic-try) and 419b57b (a refused Turnstile now reaches the phone line in 0.1 s instead of 20 s; red on the live page, green on the fix). Production: /try 200 noindex; /api/web-call 405 / 403 paths verified but 503 not_configured, the function log reading retell_key false, turnstile_secret false; Turnstile answers 110200 for aichauffeur.ai. Real local web call call_511e14867afad9d8df953b73aea proved the pipe and the per-call cap (60 s, max_duration_reached). Next: Shane adds both keys (Production + Preview) and the hostname, then redeploys; GO runs probe-fn, render --prod, call --mode prod, probe-fn --limit. Rollback: git revert 419b57b e4bb3ab, or promote dpl_CqEUGDyT7bv32ob1UKknabZrK8zH."
