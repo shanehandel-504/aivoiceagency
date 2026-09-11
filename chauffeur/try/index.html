@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070B14">
+  <title>Try AI Chauffeur in your browser | AI Chauffeur</title>
+  <meta name="description" content="Talk to the AI Chauffeur limo answering service right in your browser. Tap once, allow the mic, and ask for a ride the way your riders do.">
+  <meta name="robots" content="noindex,follow">
+
+  <!-- /try is a link we send, not a search page: noindex, left out of
+       sitemap.xml, and no site chrome. The phone-first demo is /demo/, which
+       links here. One screen, one control, one browser call. -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="canonical" href="https://aichauffeur.ai/try/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AI Chauffeur">
+  <meta property="og:title" content="Try AI Chauffeur in your browser">
+  <meta property="og:description" content="Tap once, allow the mic, and ask for a ride. It's the same AVA that answers (414) 775-0019.">
+  <meta property="og:url" content="https://aichauffeur.ai/try/">
+  <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AI Chauffeur - the limo answering service that never puts a caller on hold. (414) 775-0019">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta name="twitter:title" content="Try AI Chauffeur in your browser">
+  <meta name="twitter:description" content="Tap once, allow the mic, and ask for a ride. It's the same AVA that answers (414) 775-0019.">
+
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/circulant.css?v=abf8701">
+  <link rel="stylesheet" href="/assets/aic.css?v=abf8701">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://challenges.cloudflare.com">
+
+  <style>
+    /* /try · page scope. Every colour is a site token and every control is the
+       site's own (.btn-primary, .btn-ghost); this block only lays out one screen.
+       The status panel follows the callback console: surface, hairline, the hot
+       top line that marks the one panel on the fold that does something. */
+    .try{min-height:100vh;min-height:100dvh;display:flex;margin:0;padding:0}
+    .try [hidden]{display:none}
+    .try-wrap{flex:1;width:100%;max-width:1180px;margin:0 auto;
+      padding:1.5rem 1.5rem 3.5rem;display:flex;flex-direction:column;gap:3rem}
+    .try-brand{display:inline-flex;align-self:flex-start;border-radius:4px}
+    .try-brand img{display:block;width:135px;height:auto}
+    .try a:focus-visible{outline:2px solid var(--signal-blue);outline-offset:3px}
+    .try-grid{display:grid;gap:2rem;align-content:start}
+    .try-h{margin:0;max-width:15ch;font-family:var(--sans);font-weight:500;
+      font-size:clamp(2.125rem,1.35rem + 2.9vw,3.75rem);line-height:1.06;
+      letter-spacing:-.02em;color:var(--ink);text-wrap:balance}
+    .try-act{display:flex;flex-direction:column;gap:1rem;width:100%;max-width:30rem}
+
+    .try-panel{background:var(--surface);border:1px solid var(--line);
+      border-top:1px solid var(--line-hot);border-radius:8px}
+    .try-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+      min-height:52px;padding:0 1rem;border-bottom:1px solid var(--line)}
+    /* STATE LAW: the dot and the word are one element and the colour never
+       transitions, so the chip cannot read one state while painted another. */
+    .try-tag{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);
+      font-size:.75rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--neutral);white-space:nowrap;transition:none}
+    .try-tag::before{content:'';width:6px;height:6px;border-radius:50%;
+      background:currentColor;flex:none}
+    .try-tag[data-state="connecting"]{color:var(--amber)}
+    .try-tag[data-state="live"]{color:var(--signal-blue)}
+    .try-tag[data-state="failed"]{color:var(--miss-red)}
+    .try-time{font-family:var(--mono);font-size:.8125rem;letter-spacing:.04em;
+      font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+    .try-body{padding:1.25rem 1rem 1rem;background:var(--surface-2);border-radius:0 0 7px 7px}
+    .try-meter{display:grid;grid-template-columns:repeat(32,minmax(0,1fr));gap:3px;height:48px}
+    .try-meter i{display:block;height:100%;background:var(--line);
+      transform:scaleY(.08);transform-origin:50% 50%}
+    .try[data-state="live"] .try-meter i{background:var(--signal-blue)}
+    .try-note{margin:1rem 0 0;min-height:3.1em;font-family:var(--sans);font-size:.9375rem;
+      line-height:1.55;color:var(--ink-soft);text-wrap:pretty}
+    .try-note a,.try-rec a,.try-alt a{color:var(--ink);text-decoration:underline;
+      text-underline-offset:.18em;text-decoration-thickness:1px}
+    .try-rec{margin:0;font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft)}
+    .try-btn{width:100%;justify-content:center}
+    .try-btn[aria-disabled="true"]{cursor:progress}
+    .try-alt{margin:0;font-family:var(--sans);font-size:1rem;line-height:1.5;color:var(--ink-soft)}
+
+    .try-inapp{background:var(--surface);border:1px solid var(--line);
+      border-left:3px solid var(--amber);border-radius:8px;padding:1rem 1rem 1rem 1.125rem}
+    .try-inapp p{margin:0;font-family:var(--sans);font-size:1rem;line-height:1.5;color:var(--ink)}
+    .try-copy{margin-top:.875rem}
+    .try-url{display:block;width:100%;margin-top:.75rem;min-height:44px;padding:0 .75rem;
+      background:var(--input-bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;
+      font-family:var(--mono);font-size:.8125rem}
+    .try-inapp .try-copied{margin-top:.5rem;font-size:.875rem;color:var(--ink-soft)}
+    .try-inapp .try-copied:empty{display:none}
+
+    @media (min-width:1024px){
+      .try-wrap{padding:2rem 1.5rem 6rem;gap:0}
+      .try-grid{flex:1;grid-template-columns:minmax(0,1fr) minmax(0,28rem);
+        gap:4rem;align-content:center;align-items:center}
+    }
+  </style>
+</head>
+<body>
+
+<main id="main" class="try" data-state="ready">
+  <div class="try-wrap">
+    <a class="try-brand" href="/"><img src="/assets/brand/lockup-short.svg" alt="AI Chauffeur" width="135" height="23"></a>
+
+    <div class="try-grid">
+      <h1 class="try-h">Book a trip like you're the customer.</h1>
+
+      <div class="try-act">
+        <div class="try-inapp" id="try-inapp" hidden>
+          <p>The mic doesn't work inside this app's browser. Tap the ••• menu and choose Open in Safari or Open in Chrome.</p>
+          <button type="button" class="btn btn-ghost try-copy" id="try-copy" data-event="try_copy_link">Copy link</button>
+          <input class="try-url" id="try-url" type="text" readonly hidden aria-label="Link to this page">
+          <p class="try-copied" id="try-copied" aria-live="polite"></p>
+        </div>
+
+        <div class="try-panel" role="group" aria-label="Call status">
+          <div class="try-head">
+            <span class="try-tag" id="try-tag" data-state="ready">Ready</span>
+            <span class="try-time" id="try-time" aria-hidden="true">00:00</span>
+          </div>
+          <div class="try-body">
+            <div class="try-meter" id="try-meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <p class="try-note" id="try-note" aria-live="polite">Your browser will ask to use your mic. Choose Allow.</p>
+          </div>
+        </div>
+
+        <p class="try-rec">Calls are recorded. <a href="/privacy/">Privacy</a></p>
+        <button type="button" class="btn btn-primary try-btn" id="try-btn" data-event="try_call_start">Try AI Chauffeur</button>
+        <p class="try-alt" id="try-alt" hidden>Or call the line: <a href="tel:+14147750019" data-event="tel_tap_try">(414) 775-0019</a></p>
+        <div class="try-ts" id="try-ts"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+  // /try · one browser call to the AI Chauffeur line.
+  // Tap: mic permission -> Turnstile token -> POST /api/web-call -> join.
+  // The server picks the agent, the version and the caps. The page only joins.
+  const SDK_URL = 'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@3.0.1/+esm';
+  const TS_URL = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileReady';
+  const SITE_KEY = '0x4AAAAAAD9NsnMlfhExNQbU'; // Turnstile site key: public by design
+  const LINE = '<a href="tel:+14147750019" data-event="tel_tap_try">(414) 775-0019</a>';
+  const IN_APP = /FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|Twitter|musical_ly|BytedanceWebview|Snapchat/i;
+
+  const $ = (id) => document.getElementById(id);
+  const root = document.querySelector('.try');
+  const tag = $('try-tag'), clock = $('try-time'), note = $('try-note'), btn = $('try-btn'), alt = $('try-alt');
+  const bars = Array.from(document.querySelectorAll('#try-meter i'));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+  const TAG = { ready: 'Ready', connecting: 'Connecting', live: 'Live', ended: 'Ended', failed: 'Not connected' };
+  const NOTE = {
+    ready: 'Your browser will ask to use your mic. Choose Allow.',
+    connecting: 'Connecting you to AVA.',
+    live: "You're live. Tell AVA about your trip.",
+    mic: "We couldn't reach your mic. Call the line instead: " + LINE,
+    failed: "The call didn't start. Call the line instead: " + LINE,
+  };
+
+  let state = 'ready', client = null, t0 = 0, secs = 0, tick = 0;
+  const mmss = (s) => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+
+  // STATE LAW: word, colour, note and button change in one synchronous block.
+  // Every string written here is fixed above; nothing a visitor types reaches it.
+  function setState(next, html) {
+    state = next;
+    root.dataset.state = next;
+    tag.dataset.state = next;
+    tag.textContent = TAG[next];
+    note.innerHTML = html;
+    btn.textContent = next === 'live' ? 'End call' : next === 'connecting' ? 'Connecting' : 'Try AI Chauffeur';
+    btn.setAttribute('aria-disabled', next === 'connecting' ? 'true' : 'false');
+    alt.hidden = next !== 'ended';
+  }
+
+  function startClock() {
+    t0 = Date.now(); secs = 0; clock.textContent = '00:00';
+    tick = setInterval(() => { secs = Math.floor((Date.now() - t0) / 1000); clock.textContent = mmss(secs); }, 250);
+  }
+  function stopClock() { clearInterval(tick); tick = 0; if (t0) secs = Math.floor((Date.now() - t0) / 1000); t0 = 0; }
+
+  // THE METER. The SDK hands over snapshots of the incoming audio (AVA's side)
+  // once per frame. Each bar is the loudness of one slice of the snapshot.
+  // transform only; under reduced motion it still shows the level, 5 times a second.
+  const level = new Float32Array(bars.length);
+  let pending = null, raf = 0, lastPaint = 0;
+  function onAudio(samples) { pending = samples; if (!raf) raf = requestAnimationFrame(paint); }
+  function paint(now) {
+    raf = 0;
+    if (!pending) return;
+    if (reduce.matches && now - lastPaint < 200) { raf = requestAnimationFrame(paint); return; }
+    lastPaint = now;
+    const s = pending; pending = null;
+    const step = Math.max(1, Math.floor(s.length / bars.length));
+    for (let b = 0; b < bars.length; b++) {
+      let sum = 0;
+      for (let i = b * step, end = Math.min(s.length, i + step); i < end; i++) sum += s[i] * s[i];
+      const v = Math.min(1, Math.sqrt(Math.sqrt(sum / step)) * 1.8);
+      level[b] = reduce.matches ? v : Math.max(v, level[b] * 0.82);
+      bars[b].style.transform = 'scaleY(' + Math.max(0.08, level[b]).toFixed(3) + ')';
+    }
+  }
+  function meterIdle() { level.fill(0); pending = null; bars.forEach((el) => { el.style.transform = ''; }); }
+
+  // THE SDK loads after first paint and is awaited on tap. A failed load can retry.
+  let sdk = null;
+  const loadSdk = () => sdk || (sdk = import(SDK_URL).catch((e) => { sdk = null; throw e; }));
+
+  // TURNSTILE renders invisibly and keeps one fresh token ready. Tokens are
+  // single-use, so the widget is reset after every attempt.
+  let ts = null, tsId = null, token = null, waiters = [];
+  const deliver = (t) => { token = t; const w = waiters; waiters = []; w.forEach((f) => f()); };
+  function loadTurnstile() {
+    if (ts) return ts;
+    ts = new Promise((resolve, reject) => {
+      window.onTurnstileReady = () => resolve(window.turnstile);
+      const s = document.createElement('script');
+      s.src = TS_URL; s.async = true;
+      s.onerror = () => reject(new Error('turnstile'));
+      document.head.appendChild(s);
+    }).then((api) => {
+      tsId = api.render('#try-ts', {
+        sitekey: SITE_KEY, size: 'flexible', appearance: 'interaction-only', action: 'try_call',
+        callback: (t) => deliver(t),
+        'expired-callback': () => { token = null; api.reset(tsId); },
+        'error-callback': () => { token = null; deliver(null); return true; },
+      });
+      return api;
+    }).catch((e) => { ts = null; throw e; });
+    return ts;
+  }
+  function takeToken(ms) {
+    return new Promise((resolve) => {
+      const give = () => { const t = token; token = null; resolve(t); };
+      if (token) return give();
+      const timer = setTimeout(() => resolve(null), ms);
+      waiters.push(() => { clearTimeout(timer); give(); });
+    });
+  }
+  function freshToken() { token = null; if (window.turnstile && tsId !== null) { try { window.turnstile.reset(tsId); } catch (e) {} } }
+
+  const within = (p, ms) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error('timeout')), ms))]);
+
+  function drop() {
+    if (!client) return;
+    const c = client; client = null;
+    try { c.removeAllListeners(); c.stopCall(); } catch (e) {}
+  }
+  function fail(kind) {
+    if (state === 'failed') return;
+    stopClock(); meterIdle(); drop();
+    setState('failed', kind === 'mic' ? NOTE.mic : NOTE.failed);
+  }
+  function live() {
+    if (state !== 'connecting' || !client) return;
+    setState('live', NOTE.live); startClock();
+  }
+  function ended() {
+    if (state !== 'live' && state !== 'connecting') return;
+    stopClock(); meterIdle(); drop();
+    setState('ended', 'Call ended · ' + Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0'));
+  }
+
+  async function start() {
+    setState('connecting', NOTE.connecting);
+    // 1 · the mic first, so a denial is caught before any call exists
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return fail('mic');
+    try {
+      const probe = await navigator.mediaDevices.getUserMedia({ audio: true });
+      probe.getTracks().forEach((t) => t.stop());
+    } catch (e) { return fail('mic'); }
+    try {
+      // 2 · the SDK and a Turnstile token, together
+      const [mod, t] = await Promise.all([
+        within(loadSdk(), 15000),
+        within(loadTurnstile(), 15000).then(() => takeToken(20000)).catch(() => null),
+      ]);
+      if (!t) return fail();
+      // 3 · the server creates the call
+      const r = await within(fetch('/api/web-call', {
+        method: 'POST', cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ turnstile: t }),
+      }), 15000);
+      freshToken();
+      if (!r.ok) return fail();
+      const d = await r.json();
+      if (state !== 'connecting') return;
+      // 4 · join it
+      client = new mod.RetellWebClient();
+      client.on('call_started', live);
+      client.on('call_ended', ended);
+      client.on('error', () => fail());
+      client.on('audio', onAudio);
+      await client.startCall({
+        callId: d.call_id, accessToken: d.access_token, transport: d.transport,
+        iceServers: d.ice_servers, url: d.url, emitRawAudioSamples: true,
+      });
+      live();
+    } catch (e) { fail(); }
+  }
+
+  btn.addEventListener('click', () => {
+    if (state === 'connecting') return;
+    if (state === 'live') { if (client) { const c = client; c.stopCall(); } ended(); return; }
+    start();
+  });
+
+  // Some browsers hold playback until a tap. Any tap during a call resumes it.
+  document.addEventListener('pointerdown', () => { if (client) client.startAudioPlayback().catch(() => {}); });
+  // Leaving the page hangs up, so an abandoned tab does not keep the line open.
+  addEventListener('pagehide', drop);
+
+  // In-app browsers usually block the mic. Check the feature first, then the app.
+  if (IN_APP.test(navigator.userAgent || '') || !(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+    $('try-inapp').hidden = false;
+  }
+  $('try-copy').addEventListener('click', async () => {
+    const url = location.href, msg = $('try-copied'), input = $('try-url');
+    try {
+      await navigator.clipboard.writeText(url);
+      msg.textContent = 'Link copied. Paste it into Safari or Chrome.';
+    } catch (e) {
+      input.hidden = false; input.value = url; input.focus(); input.select();
+      msg.textContent = 'Press and hold the link above, then choose Copy.';
+    }
+  });
+
+  const idle = (fn) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 2500 }) : setTimeout(fn, 1200));
+  idle(() => { loadSdk().catch(() => {}); loadTurnstile().catch(() => {}); });
+</script>
+</body>
+</html>
