@@ -53,8 +53,13 @@ page.on('response', async (r) => {
   try {
     const j = await r.json();
     if (j.nonce) { challengeMs = Date.now() - tChallenge; return; }
+    // THE FIRST CREATE IS THE ONE THIS RUN IS ABOUT. The second push is
+    // deliberately refused with a 429 to prove the reset without opening another
+    // call, and letting that refusal overwrite this made the run end with
+    // "no call_id" for a call it had just finished making.
+    if (created && created.call_id) return;
     created = { status: r.status(), call_id: j.call_id || null, keys: Object.keys(j).sort(), error: j.error || null };
-  } catch { created = { status: r.status(), call_id: null }; }
+  } catch { if (!(created && created.call_id)) created = { status: r.status(), call_id: null }; }
 });
 
 // The button breathes, so page.click() waits forever for a "stable" bounding
@@ -78,15 +83,14 @@ async function push() {
     const r = el.getBoundingClientRect();
     return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
   });
-  await page.evaluate(() => { window.__pushes = (window.__pushes || 0); document.getElementById('try-btn').addEventListener('click', () => { window.__pushes++; }, { capture: true, once: true }); });
+  await page.evaluate(() => { window.__pushes = 0; document.getElementById('try-btn').addEventListener('click', () => { window.__pushes++; }, { capture: true, once: true }); });
   await page.mouse.move(b.x, b.y);
   await page.waitForTimeout(80);
   await page.mouse.down();
   await page.mouse.up();
   // A push that never reached the control must never be reported as a feature
   // that did not work. This is the assertion that separates the two.
-  const landed = await page.evaluate(() => window.__pushes || 0);
-  return landed;
+  return await page.evaluate(() => window.__pushes || 0);
 }
 
 console.log(`/try live call — ${MODE.toUpperCase()}${EXPECT_CAP ? ` (must end itself at ~${EXPECT_CAP}s)` : ` (hold ${HOLD}s)`}\n`);
@@ -186,6 +190,16 @@ if (wentLive) {
   });
   check(/Copied|Press and hold/.test(copied.label + copied.msg), 'the copy-link control responded', JSON.stringify(copied));
 
+  // The call itself is over. Judge the state sequence and the console on what
+  // happened UP TO HERE: everything after this point is a refusal this run asks
+  // for on purpose, and it writes both a 429 in the console and two more states.
+  {
+    const seq = (await page.evaluate(() => window.__states.map((x) => x.s))).filter((s, i, a) => s !== a[i - 1]);
+    check(JSON.stringify(seq) === JSON.stringify(['ready', 'connecting', 'live', 'ended']),
+      'status sequence READY → CONNECTING → LIVE → ENDED', seq.join(' → '));
+    check(errors.length === 0, 'zero console / page errors during the call', errors.slice(0, 4).join(' | '));
+  }
+
   const before = await page.evaluate(() => document.querySelectorAll('#try-turns .try-turn').length);
   // The second push must clear the first call's record. It must NOT open a
   // second call: the reset runs on the click itself, so refusing the create
@@ -210,10 +224,13 @@ if (wentLive) {
     'a SECOND push cleared the card, the player and the thread', `was ${before} turn(s); now ${JSON.stringify(after)}`);
 }
 
+// The sequence and the console were judged above, before the deliberate refusal.
+// What is left to confirm here is that the refusal landed where it was aimed:
+// the run must end on 'failed', not on a second live call.
 const states = await page.evaluate(() => window.__states.map((x) => x.s));
 const seq = states.filter((s, i) => s !== states[i - 1]);
-check(JSON.stringify(seq) === JSON.stringify(['ready', 'connecting', 'live', 'ended']), 'status sequence READY → CONNECTING → LIVE → ENDED', seq.join(' → '));
-check(errors.length === 0, 'zero console / page errors', errors.slice(0, 4).join(' | '));
+check(seq[seq.length - 1] === 'failed' || seq.length === 4,
+  'the refused second push ended on NOT CONNECTED and opened no second call', seq.join(' → '));
 if (created) check(JSON.stringify(created.keys) === JSON.stringify(['access_token', 'call_id', 'ice_servers', 'transport']) || JSON.stringify(created.keys) === JSON.stringify(['access_token', 'call_id', 'ice_servers', 'transport', 'url']), 'the webhook returned only the browser fields', created.keys.join(','));
 await browser.close();
 
