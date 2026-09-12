@@ -50,44 +50,26 @@
     .try-brand{display:inline-flex;align-self:flex-start;border-radius:4px}
     .try-brand img{display:block;width:135px;height:auto}
     .try a:focus-visible,.try button:focus-visible{outline:2px solid var(--signal-blue);outline-offset:3px}
-    /* THE ORDER ON A PHONE IS NOT THE ORDER ON A DESK.
-       Measured at 390x844 with the prompts in the reading column, the button
-       landed at 911px — off the first screen, which is the one number this page
-       cannot get wrong. The prompts move under the action instead. They lose
-       nothing by it: they are what you read WHILE the call runs, not before you
-       push, and the push is what the fold is for. At 1024 the second column
-       exists and they go back beside the headline where they were written. */
-    .try-grid{display:grid;gap:1.5rem;align-content:start}
-    .try-tell{display:flex;flex-direction:column;gap:.75rem;order:1}
-    .try-act{order:2}
-    .try-prompts{order:3}
+    /* ONE COLUMN AT EVERY WIDTH. At rest the page is five things — the mark,
+       the headline, one sub-line, the button, the recording line — plus the one
+       small line under the button. Everything else waits for the push. */
+    .try-grid{display:flex;flex-direction:column;gap:1.5rem}
+    .try-tell{display:flex;flex-direction:column;gap:.75rem}
     .try-h{margin:0;max-width:20ch;font-family:var(--sans);font-weight:500;
       font-size:clamp(1.6875rem,1.15rem + 2.2vw,3.25rem);line-height:1.08;
       letter-spacing:-.02em;color:var(--ink);text-wrap:balance}
-    .try-sub{margin:0;max-width:34ch;font-family:var(--sans);font-size:1rem;
+    .try-sub{margin:0;max-width:40ch;font-family:var(--sans);font-size:1rem;
       line-height:1.5;color:var(--ink-soft);text-wrap:pretty}
-
-    /* THE PROMPTS. Read-only: a chip is something to say out loud, not a
-       control that starts anything. It is still a <button> because it takes a
-       tap and a keyboard, and the tap marks the one you are reading. */
-    .try-prompts{display:flex;flex-direction:column;gap:.5rem}
-    .try-role{margin:0;max-width:40ch;font-family:var(--sans);font-size:.9375rem;
-      line-height:1.5;color:var(--ink-soft);text-wrap:pretty}
-    .try-cl{margin:.25rem 0 0;font-family:var(--mono);font-size:.75rem;font-weight:500;
-      letter-spacing:.1em;text-transform:uppercase;color:var(--neutral)}
-    .try-chips{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0}
-    .try-chips li{display:flex;flex:1 1 100%}
-    .try-chip{flex:1;min-height:44px;padding:.6rem .75rem;text-align:left;cursor:pointer;
-      background:var(--surface);border:1px solid var(--line);border-radius:8px;
-      font-family:var(--sans);font-size:.9375rem;line-height:1.4;color:var(--ink-soft);
-      transition:border-color .16s,color .16s}
-    .try-chip:hover{border-color:var(--sky);color:var(--ink)}
-    .try-chip[data-read="true"]{border-color:var(--line-hot);color:var(--ink)}
 
     .try-act{display:flex;flex-direction:column;gap:.875rem;width:100%;max-width:30rem}
 
+    /* THE PANEL IS NOT THERE UNTIL YOU PUSH. It unfolds under the button in
+       240ms — opacity and transform only, so nothing below it is animated into
+       place and the button the finger just left does not move. */
     .try-panel{background:var(--surface);border:1px solid var(--line);
       border-top:1px solid var(--line-hot);border-radius:8px}
+    .try-panel:not([hidden]){animation:try-unfold .24s ease-out both}
+    @keyframes try-unfold{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
     .try-head{display:flex;align-items:center;gap:.75rem;
       min-height:52px;padding:0 .25rem 0 1rem;border-bottom:1px solid var(--line)}
     /* STATE LAW: the dot and the word are one element and the colour never
@@ -149,7 +131,7 @@
       line-height:1.55;color:var(--ink-soft);text-wrap:pretty}
     .try-note a,.try-rec a,.try-alt a{color:var(--ink);text-decoration:underline;
       text-underline-offset:.18em;text-decoration-thickness:1px}
-    .try-rec{margin:0;font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft)}
+    .try-rec{margin:0;font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft);text-wrap:balance}
     /* The separator travels with the word it separates. At 1440 the line broke
        between them and left "·" starting a line on its own. CSS line-breaking,
        not a hard space: a non-breaking space survives a copy-paste into a CRM
@@ -212,36 +194,29 @@
     .try-inapp .try-copied{margin-top:.5rem}
 
     /* FOCUS MODE. During a call everything that is not the instrument steps
-       back. IT STEPS BACK TO .62 AND NOT TO .35, and the number is measured
+       back. IT STEPS BACK TO .63 AND NOT TO .35, and the number is measured
        rather than chosen: ancestor opacity multiplies into rendered contrast,
-       and --ink-soft at .35 lands at 2.17:1 on this ground. The chips are in
-       this group and reading them mid-call is their whole job, so a dim that
-       makes them the least legible thing on the page defeats itself. At .62
-       --ink-soft holds 4.51:1 and --ink holds 6.35:1 — both over the AA floor,
-       and the panel still separates because it keeps its own surface, its
-       hairline and 100%. */
-    .try-tell,.try-prompts,.try-rec,.try-hint,.try-brand{transition:opacity .3s ease}
+       and --ink-soft at .35 lands at 2.17:1 on this ground, and the sub-line,
+       the recording line and the hint are --ink-soft. v4 shipped .62 on a
+       computed 4.51:1; the rendered-pixel probe reads .62 at 4.46:1, under the
+       floor. .63 is the lowest step that clears it: 4.57:1. The panel still
+       separates because it keeps its own surface, its hairline and 100%. */
+    .try-tell,.try-rec,.try-hint,.try-brand{transition:opacity .3s ease}
     .try[data-focus="true"] .try-tell,
-    .try[data-focus="true"] .try-prompts,
     .try[data-focus="true"] .try-rec,
     .try[data-focus="true"] .try-hint,
-    .try[data-focus="true"] .try-brand{opacity:.62}
+    .try[data-focus="true"] .try-brand{opacity:.63}
 
     @media (prefers-reduced-motion:reduce){
       .try[data-state="ready"] .try-push{animation:none}
-      .try-tell,.try-prompts,.try-rec,.try-hint,.try-brand{transition:none}
-      .try-chip{transition:none}
+      .try-panel:not([hidden]){animation:none}
+      .try-tell,.try-rec,.try-hint,.try-brand{transition:none}
     }
 
+    /* DESKTOP IS THE SAME PAGE, CENTRED. One column, 720px wide at most. */
     @media (min-width:1024px){
-      .try-wrap{padding:2rem 1.5rem 3rem;gap:2rem}
-      .try-grid{flex:1;grid-template-columns:minmax(0,1fr) minmax(0,28rem);
-        grid-template-areas:"tell act" "prompts act";
-        grid-template-rows:auto 1fr;
-        gap:1.5rem 4rem;align-content:center}
-      .try-tell{grid-area:tell;gap:1rem;align-self:end}
-      .try-prompts{grid-area:prompts;align-self:start}
-      .try-act{grid-area:act;align-self:center}
+      .try-wrap{max-width:720px;padding:3rem 1.5rem;gap:2rem}
+      .try-tell{gap:1rem}
       .try-turns{max-height:13rem}
     }
   </style>
@@ -255,17 +230,7 @@
     <div class="try-grid">
       <div class="try-tell">
         <h1 class="try-h">Push the button. Book a trip like you're the customer.</h1>
-        <p class="try-sub">Push. Talk. Trip sheet sent. No call, no form. About two minutes.</p>
-      </div>
-
-      <div class="try-prompts">
-          <p class="try-role">Limo owners: try it as the passenger. There's no right way to ask.</p>
-          <p class="try-cl" id="try-cl">Not sure what to say? Read one of these.</p>
-          <ul class="try-chips" aria-labelledby="try-cl">
-            <li><button type="button" class="try-chip" data-event="try_chip_read">&ldquo;I need a ride to the airport tomorrow morning at six.&rdquo;</button></li>
-            <li><button type="button" class="try-chip" data-event="try_chip_read">&ldquo;I need a Sprinter for ten people to the airport.&rdquo;</button></li>
-            <li><button type="button" class="try-chip" data-event="try_chip_read">&ldquo;I need a car for four hours Saturday night.&rdquo;</button></li>
-          </ul>
+        <p class="try-sub">This is the AI Chauffeur demo. Act like a customer, answer its questions. About two minutes.</p>
       </div>
 
       <div class="try-act">
@@ -276,7 +241,13 @@
           <p class="try-copied" id="try-copied" aria-live="polite"></p>
         </div>
 
-        <div class="try-panel" role="group" aria-label="Call status">
+        <div class="try-push">
+          <button type="button" class="btn btn-primary try-btn" id="try-btn" data-event="try_call_start">PUSH TO BOOK</button>
+          <input class="try-haptic" id="try-haptic" type="checkbox" switch tabindex="-1" aria-hidden="true">
+        </div>
+        <p class="try-hint">Push once, then just talk. Stop any time.</p>
+
+        <div class="try-panel" id="try-panel" role="group" aria-label="Call status" hidden>
           <div class="try-head">
             <span class="try-tag" id="try-tag" data-state="ready">Ready</span>
             <span class="try-time" id="try-time" aria-hidden="true">00:00</span>
@@ -294,17 +265,12 @@
               <ol class="try-turns" id="try-turns" aria-live="polite" aria-label="Transcript"></ol>
               <p class="try-empty" id="try-empty">Your conversation shows up here.</p>
             </div>
-            <p class="try-note" id="try-note" aria-live="polite">Your browser will ask to use your mic. Choose Allow.</p>
+            <p class="try-note" id="try-note" aria-live="polite"></p>
           </div>
         </div>
 
         <p class="try-rec">Recorded so you can hear it back — right here when the call ends. <span class="try-nb">· <a href="/privacy/">Privacy</a></span></p>
 
-        <div class="try-push">
-          <button type="button" class="btn btn-primary try-btn" id="try-btn" data-event="try_call_start">PUSH TO BOOK</button>
-          <input class="try-haptic" id="try-haptic" type="checkbox" switch tabindex="-1" aria-hidden="true">
-        </div>
-        <p class="try-hint">Push once, then just talk. Stop any time.</p>
         <p class="try-alt" id="try-alt" hidden>Or call the line: <a href="tel:+14147750019" data-event="tel_tap_try">(414) 775-0019</a></p>
 
         <div class="try-result" id="try-result" hidden>
@@ -346,6 +312,7 @@
 
   const $ = (id) => document.getElementById(id);
   const root = document.querySelector('.try');
+  const panel = $('try-panel');
   const tag = $('try-tag'), clock = $('try-time'), note = $('try-note'), btn = $('try-btn'), alt = $('try-alt');
   const turnsEl = $('try-turns'), emptyEl = $('try-empty');
   const result = $('try-result'), building = $('try-building'), ticket = $('try-ticket'),
@@ -356,9 +323,11 @@
 
   const TAG = { ready: 'Ready', connecting: 'Connecting', live: 'Live', ended: 'Ended', failed: 'Not connected' };
   const LABEL = { ready: 'PUSH TO BOOK', connecting: 'Connecting', live: 'End call', ended: 'PUSH TO BOOK', failed: 'PUSH TO BOOK' };
+  // The mic hint is said once, at the only moment it is true: while the browser
+  // is asking. At rest the panel does not exist, so there is nothing to say.
   const NOTE = {
-    ready: 'Your browser will ask to use your mic. Choose Allow.',
-    connecting: 'Connecting you.',
+    ready: '',
+    connecting: 'Your browser will ask to use your mic. Choose Allow.',
     live: "You're live. Say where you're going and when.",
     mic: "We couldn't reach your mic. Call the line instead: " + LINE,
     failed: "The call didn't start. Call the line instead: " + LINE,
@@ -376,6 +345,7 @@
     state = next;
     root.dataset.state = next;
     root.dataset.focus = next === 'connecting' || next === 'live' ? 'true' : 'false';
+    panel.hidden = next === 'ready';
     tag.dataset.state = next;
     tag.textContent = TAG[next];
     note.innerHTML = html;
@@ -829,18 +799,6 @@
   document.addEventListener('pointerdown', () => { if (client) client.startAudioPlayback().catch(() => {}); });
   // Leaving the page hangs up, so an abandoned tab does not keep the line open.
   addEventListener('pagehide', drop);
-
-  // THE CHIPS are read-only. Tapping one marks it and brings it into view; it
-  // never starts a call, and it stays on screen while the call runs.
-  document.querySelectorAll('.try-chip').forEach((chip) => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.try-chip').forEach((c) => { c.dataset.read = c === chip ? 'true' : 'false'; });
-      const r = chip.getBoundingClientRect();
-      if (r.top < 0 || r.bottom > innerHeight) {
-        chip.scrollIntoView({ block: 'nearest', behavior: reduce.matches ? 'auto' : 'smooth' });
-      }
-    });
-  });
 
   // In-app browsers usually block the mic. Check the feature first, then the app.
   if (IN_APP.test(navigator.userAgent || '') || !(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {

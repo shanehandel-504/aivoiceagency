@@ -41,13 +41,15 @@ export async function serveLocal(context) {
 // Stands in for the n8n webhook so a layout or failure-path check never spends a
 // real call. The challenge it hands out is 8 bits, which solves instantly.
 export function webhookStub(callAnswer = { status: 429, body: { error: 'rate_limited' } }) {
-  return (route) => {
+  return async (route) => {
     const posted = route.request().postData() || '';
     const headers = { 'access-control-allow-origin': SITE, 'cache-control': 'no-store' };
     if (/(^|&)step=challenge(&|$)/.test(posted)) {
       return route.fulfill({ status: 200, headers, contentType: 'application/json',
         body: JSON.stringify({ nonce: '0123456789abcdef0123456789abcdef', bits: 8 }) });
     }
+    // `delay` holds the create step open, so a gate can inspect CONNECTING.
+    if (callAnswer.delay) await new Promise((f) => setTimeout(f, callAnswer.delay));
     return route.fulfill({ status: callAnswer.status, headers, contentType: 'application/json',
       body: JSON.stringify(callAnswer.body) });
   };

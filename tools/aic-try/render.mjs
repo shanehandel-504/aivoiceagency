@@ -13,7 +13,7 @@
 //   webhook refuses the proof -> phone line · webhook 429 -> phone line
 // Negative control first: a fixture that overflows and fails contrast must be caught.
 
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium, SITE, REPO, serveLocal, webhookStub, WEBHOOK_URL, probe } from './lib.mjs';
 
@@ -106,9 +106,6 @@ const SEEN = ['booked', 'confirmed', 'locked in', 'nobody', 'sounds human', 'sea
   const words = await page.evaluate(() => ({
     h1: document.querySelector('h1').textContent,
     sub: document.querySelector('.try-sub').textContent,
-    role: document.querySelector('.try-role').textContent,
-    cl: document.querySelector('.try-cl').textContent,
-    chips: [...document.querySelectorAll('.try-chip')].map((c) => c.textContent),
     rec: document.querySelector('.try-rec').textContent.trim(),
     btn: document.getElementById('try-btn').textContent,
     hint: document.querySelector('.try-hint').textContent,
@@ -123,9 +120,7 @@ const SEEN = ['booked', 'confirmed', 'locked in', 'nobody', 'sounds human', 'sea
   }));
   const want = {
     h1: "Push the button. Book a trip like you're the customer.",
-    sub: 'Push. Talk. Trip sheet sent. No call, no form. About two minutes.',
-    role: "Limo owners: try it as the passenger. There's no right way to ask.",
-    cl: 'Not sure what to say? Read one of these.',
+    sub: 'This is the AI Chauffeur demo. Act like a customer, answer its questions. About two minutes.',
     rec: 'Recorded so you can hear it back — right here when the call ends. · Privacy',
     btn: 'PUSH TO BOOK',
     hint: 'Push once, then just talk. Stop any time.',
@@ -141,10 +136,13 @@ const SEEN = ['booked', 'confirmed', 'locked in', 'nobody', 'sounds human', 'sea
     const got = k === 'rec' ? words.rec.replace(/\s+/g, ' ') : words[k];
     check(got === want[k], `locked copy · ${k}`, got === want[k] ? '' : `got "${got}"`);
   }
-  const chips = ['“I need a ride to the airport tomorrow morning at six.”',
-    '“I need a Sprinter for ten people to the airport.”',
-    '“I need a car for four hours Saturday night.”'];
-  check(JSON.stringify(words.chips) === JSON.stringify(chips), 'locked copy · the three chips', words.chips.join(' | '));
+  // v4.1 REMOVED these. Judged on the served source, not only on what renders,
+  // because "hidden" is not "removed".
+  const GONE = ['Read one of these', 'try it as the passenger', "There's no right way to ask", 'Push. Talk. Trip sheet sent.',
+    'I need a ride to the airport tomorrow morning at six', 'I need a Sprinter for ten people to the airport',
+    'I need a car for four hours Saturday night', 'try-chip', 'try-prompts', 'try-role', 'try_chip_read'];
+  const served = PROD ? await (await fetch(URL_TRY, { cache: 'no-store' })).text() : await readFile(path.join(REPO, 'chauffeur', 'try', 'index.html'), 'utf8');
+  for (const g of GONE) check(!src.includes(g) && !served.includes(g), `removed · "${g}" is absent from the built page`);
   await context.close();
 }
 
@@ -160,13 +158,42 @@ for (const [w, h] of WIDTHS) {
   check(p.under12.length === 0, '12px floor', p.under12.length ? JSON.stringify(p.under12.slice(0, 3)) : '');
   check(!p.retellVisible, 'the SDK vendor is absent from visible text and title');
   check(errors.length === 0, 'zero console / page errors', errors.slice(0, 3).join(' | '));
-  const chips = await page.evaluate(() => {
-    const cs = [...document.querySelectorAll('.try-chip')];
-    return { n: cs.length, wrapped: cs.every((c) => c.getBoundingClientRect().width <= innerWidth), rows: new Set(cs.map((c) => Math.round(c.getBoundingClientRect().top))).size };
+  // AT REST: exactly five things plus the one small line. Every visible leaf —
+  // an image, a control, or an element carrying its own text — is named by the
+  // block it belongs to, and the set must be exactly this one.
+  const rest = await page.evaluate(() => {
+    const shown = (el) => {
+      if (!el.getClientRects().length) return false;
+      for (let e = el; e; e = e.parentElement) { const s = getComputedStyle(e); if (s.display === 'none' || s.visibility === 'hidden') return false; }
+      return true;
+    };
+    const BLOCKS = { '.try-brand': 'wordmark', '.try-h': 'headline', '.try-sub': 'sub-line', '.try-push': 'button', '.try-hint': 'small line', '.try-rec': 'recording line' };
+    const seen = new Set(), stray = [];
+    for (const el of document.body.querySelectorAll('*')) {
+      const leaf = el.tagName === 'IMG' || el.tagName === 'BUTTON' || [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+      if (!leaf || !shown(el) || el.closest('[aria-hidden="true"]')) continue;
+      const hit = Object.keys(BLOCKS).find((s) => el.closest(s));
+      if (hit) seen.add(BLOCKS[hit]); else stray.push((el.id || el.className || el.tagName) + ': ' + (el.textContent || '').trim().slice(0, 30));
+    }
+    const panel = document.querySelector('.try-panel');
+    // .try-act and not .try-push: the push breathes, so its box is scaled by
+    // whatever frame the read lands on. Its non-animated parent holds the edge.
+    const box = (s) => { const r = document.querySelector(s).getBoundingClientRect(); return { l: Math.round(r.left), w: Math.round(r.width) }; };
+    return { seen: [...seen], stray, panelHidden: !!panel && !panel.getClientRects().length,
+      cols: ['.try-brand', '.try-h', '.try-sub', '.try-act', '.try-hint', '.try-rec'].map(box) };
   });
-  check(chips.n === 3 && chips.wrapped, 'the chips wrap inside the viewport', `${chips.rows} row(s)`);
+  const FIVE = ['wordmark', 'headline', 'sub-line', 'button', 'small line', 'recording line'];
+  check(rest.stray.length === 0 && FIVE.every((f) => rest.seen.includes(f)) && rest.seen.length === 6,
+    'at rest: the five things + the small line, and nothing else', rest.stray.length ? 'STRAY ' + JSON.stringify(rest.stray.slice(0, 4)) : rest.seen.join(' · '));
+  check(rest.panelHidden, 'at rest: the panel does not exist on screen');
+  const lefts = new Set(rest.cols.map((c) => c.l));
+  check(lefts.size === 1 && rest.cols.every((c) => c.w <= 720), 'one column, every block on one left edge, nothing wider than 720px', JSON.stringify(rest.cols));
+  if (w === 1440) {
+    const wrap = await page.evaluate(() => { const r = document.querySelector('.try-wrap').getBoundingClientRect(); return { l: Math.round(r.left), r: Math.round(r.right) }; });
+    check(Math.abs((wrap.l + wrap.r) / 2 - w / 2) <= 1 && wrap.r - wrap.l <= 720, 'desktop: the column is centred and 720px at most', `${wrap.l}–${wrap.r}`);
+  }
   if (w === 390) {
-    check(p.btn && p.btn.bottom <= h, 'button inside the 390x844 first screen', p.btn ? `bottom ${p.btn.bottom}px, height ${p.btn.height}px` : 'no button');
+    check(p.btn && p.btn.top < 560, 'button top edge above 560px at 390x844', p.btn ? `top ${p.btn.top}px, height ${p.btn.height}px` : 'no button');
     check(p.title === 'Try AI Chauffeur in your browser | AI Chauffeur', 'title', p.title);
     check(p.robots === 'noindex,follow', 'robots noindex,follow', p.robots);
     check(p.canonical === 'https://aichauffeur.ai/try/', 'canonical', p.canonical);
@@ -197,14 +224,6 @@ console.log('\nALIVE');
   check(br.name === 'try-breathe' && br.dur === '4s', 'the button breathes on a 4s loop at READY', `${br.name} ${br.dur}`);
   check(br.onBtn === 'none', 'and the animation is on the WRAPPER, so the control keeps its own hover and press', br.onBtn);
 
-  const chip = await page.evaluate(async () => {
-    const c = document.querySelector('.try-chip');
-    c.click();
-    await new Promise((r) => setTimeout(r, 120));
-    return { read: c.dataset.read, state: document.querySelector('.try').dataset.state };
-  });
-  check(chip.read === 'true' && chip.state === 'ready', 'tapping a chip marks it and does NOT start a call', JSON.stringify(chip));
-
   // The dim is a 300ms transition, so it is read AFTER it has settled.
   // getComputedStyle in the same tick returns the value mid-flight, which is
   // how a working fade reads as "no fade at all".
@@ -214,13 +233,13 @@ console.log('\nALIVE');
     await new Promise((f) => setTimeout(f, 500));
     const dim = getComputedStyle(document.querySelector('.try-tell')).opacity;
     const panel = getComputedStyle(document.querySelector('.try-panel')).opacity;
-    const chip = getComputedStyle(document.querySelector('.try-chip')).opacity;
     r.dataset.focus = 'false';
-    return { dim, panel, chip };
+    return { dim, panel };
   });
-  check(focus.dim === '0.62' && focus.panel === '1', 'focus mode steps the surround back and leaves the instrument at full', JSON.stringify(focus));
-  check(focus.chip === '1', 'the chips carry no dim of their own — they inherit the group and stay readable', focus.chip);
+  check(focus.dim === '0.63' && focus.panel === '1', 'focus mode steps the surround back and leaves the instrument at full', JSON.stringify(focus));
 
+  // The mute lives in the panel, which is hidden at rest. Its behaviour is
+  // judged on the element; its placement is judged in THE PUSH below.
   const mute = await page.evaluate(async () => {
     const b = document.getElementById('try-mute');
     const before = b.getAttribute('aria-pressed');
@@ -234,9 +253,8 @@ console.log('\nALIVE');
   check(kept === 'true', 'and it survives a reload', kept);
 
   const hap = await page.evaluate(async () => {
-    // back to the top first: a chip was tapped above and scrolled the page, and
-    // elementFromPoint works in viewport coordinates. The first run of this
-    // check read "nothing" for exactly that reason.
+    // back to the top first: elementFromPoint works in viewport coordinates,
+    // and a scrolled page reads "nothing" at the button's centre.
     window.scrollTo(0, 0);
     await new Promise((f) => setTimeout(f, 250));
     const h = document.getElementById('try-haptic');
@@ -254,6 +272,48 @@ console.log('\nALIVE');
   });
   check(hap.hidden === 'true' && hap.tab === -1 && hap.pe === 'none', 'the haptic switch is hidden from tab order and assistive tech', JSON.stringify(hap));
   check(hap.isBtn === true, 'and the button is still the only thing under the finger', `hit ${hap.hit}`);
+  await context.close();
+}
+
+// ── the push, stubbed ───────────────────────────────────────────────────────
+// One push against a webhook that holds the create step open for six seconds,
+// so CONNECTING can be looked at. No call exists at any point.
+console.log('\nTHE PUSH');
+{
+  const { context, page, errors } = await newPage({ viewport: { width: 390, height: 844 } }, { b: browserMic, answer: { status: 403, body: { error: 'verification' }, delay: 6000 } });
+  await page.goto(URL_TRY, { waitUntil: 'load' });
+  await page.waitForTimeout(3500);
+  await push(page);
+  const tPush = Date.now();
+  await page.waitForFunction(() => document.getElementById('try-tag').dataset.state === 'connecting', null, { timeout: 5000 }).catch(() => {});
+  const at = await page.evaluate(() => {
+    const panel = document.getElementById('try-panel');
+    const s = getComputedStyle(panel);
+    const pr = panel.getBoundingClientRect(), br = document.getElementById('try-btn').getBoundingClientRect();
+    return { state: document.getElementById('try-tag').dataset.state, hidden: panel.hidden, shown: panel.getClientRects().length > 0,
+      anim: s.animationName, dur: parseFloat(s.animationDuration) * 1000, under: Math.round(pr.top) >= Math.round(br.bottom),
+      focus: document.querySelector('.try').dataset.focus, note: document.getElementById('try-note').textContent,
+      chips: !!document.querySelector('.try-chip, .try-chips, .try-prompts, .try-role, .try-cl') };
+  });
+  check(at.state === 'connecting' && !at.hidden && at.shown, 'push -> the panel exists', `${at.state} after ${Date.now() - tPush}ms`);
+  check(at.anim === 'try-unfold' && at.dur > 0 && at.dur <= 300, 'and it unfolds in 300ms or less', `${at.anim} ${at.dur}ms`);
+  check(at.under, 'and it unfolds UNDER the button');
+  check(at.note === 'Your browser will ask to use your mic. Choose Allow.', 'the mic hint shows in CONNECTING', at.note);
+  check(!at.chips, 'the chips region does not exist in the DOM');
+  await page.waitForTimeout(500);
+  const f = await page.evaluate(() => ({ focus: document.querySelector('.try').dataset.focus,
+    tell: getComputedStyle(document.querySelector('.try-tell')).opacity, rec: getComputedStyle(document.querySelector('.try-rec')).opacity,
+    panel: getComputedStyle(document.getElementById('try-panel')).opacity }));
+  check(f.focus === 'true' && f.tell === '0.63' && f.rec === '0.63' && f.panel === '1', 'focus mode applies: surround at .63, panel at full', JSON.stringify(f));
+  const p = await probe(page);
+  check(p.failures.length === 0, 'AA contrast on every text node in CONNECTING, dim included', `min ${p.minRatio}:1 over ${p.rows.length} nodes` + (p.failures.length ? ' ' + JSON.stringify(p.failures.slice(0, 3)) : ''));
+  check(p.scrollWidth <= p.innerWidth, 'no horizontal overflow with the panel open', `${p.scrollWidth}/${p.innerWidth}`);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await page.screenshot({ path: path.join(OUT, `${PROD ? 'prod' : 'local'}-push-390.png`) });
+  await page.waitForFunction(() => document.getElementById('try-tag').dataset.state === 'failed', null, { timeout: 15000 }).catch(() => {});
+  const end = await page.evaluate(() => ({ state: document.getElementById('try-tag').dataset.state, panel: !document.getElementById('try-panel').hidden }));
+  check(end.state === 'failed' && end.panel, 'the refusal lands in the panel, which stays open', JSON.stringify(end));
+  check(errors.filter((e) => !/403|Failed to load resource/.test(e)).length === 0, 'zero console errors beyond the 403 the stub asks for', errors.slice(0, 3).join(' | '));
   await context.close();
 }
 
@@ -342,11 +402,10 @@ const waitFailed = (page, ms) => page.waitForFunction(() => document.getElementB
   await page.goto(URL_TRY, { waitUntil: 'load' });
   const rm = await page.evaluate(() => ({
     anim: getComputedStyle(document.querySelector('.try-push')).animationName,
-    chip: (document.querySelector('.try-chip').click(), document.querySelector('.try-chip').dataset.read),
-    mute: !!document.getElementById('try-mute'),
+    unfold: (document.getElementById('try-panel').hidden = false, getComputedStyle(document.getElementById('try-panel')).animationName),
   }));
   check(rm.anim === 'none', 'reduced motion: the breathing is off', rm.anim);
-  check(rm.chip === 'true' && rm.mute, 'and the chips and the mute toggle still work');
+  check(rm.unfold === 'none', 'reduced motion: the panel appears without the unfold', rm.unfold);
   await context.close();
 }
 

@@ -126,10 +126,10 @@ if (wentLive) {
   const liveThread = await page.evaluate(() => ({
     turns: document.querySelectorAll('#try-turns .try-turn').length,
     focus: document.querySelector('.try').dataset.focus,
-    dim: getComputedStyle(document.querySelector('.try-prompts')).opacity,
+    dim: getComputedStyle(document.querySelector('.try-tell')).opacity,
   }));
   console.log(`  live thread during the call: ${liveThread.turns} turn(s) (0 is expected on the gateway transport)`);
-  check(liveThread.focus === 'true' && liveThread.dim === '0.62', 'focus mode is on while live', `focus ${liveThread.focus}, surround ${liveThread.dim}`);
+  check(liveThread.focus === 'true' && liveThread.dim === '0.63', 'focus mode is on while live', `focus ${liveThread.focus}, surround ${liveThread.dim}`);
 
   if (!EXPECT_CAP) {
     await page.waitForTimeout(Math.max(0, HOLD * 1000 - 8000));
