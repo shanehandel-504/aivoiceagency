@@ -99,7 +99,10 @@
       background:currentColor;flex:none}
     .try-tag[data-state="connecting"]{color:var(--amber)}
     .try-tag[data-state="live"]{color:var(--signal-blue)}
-    .try-tag[data-state="ended"]{color:var(--success-green)}
+    /* ENDED STAYS NEUTRAL. Green is reserved for a label naming the thing that
+       succeeded — a trip captured, a quote returned — and a call that stopped is
+       not one of those. Painting it green would say the call went well, which
+       this chip has no way of knowing. */
     .try-tag[data-state="failed"]{color:var(--miss-red)}
     .try-time{font-family:var(--mono);font-size:.8125rem;letter-spacing:.04em;
       font-variant-numeric:tabular-nums;color:var(--ink-soft)}
@@ -508,7 +511,10 @@
     }
     turnsEl.replaceChildren(frag);
     emptyEl.hidden = list.length > 0;
-    turnsEl.scrollTop = turnsEl.scrollHeight;
+    // A running call follows the newest line. A finished transcript is read from
+    // the top — scrolled to the end it opens on a line sliced in half, which
+    // reads as broken rather than as scrolled.
+    turnsEl.scrollTop = live ? turnsEl.scrollHeight : 0;
   }
   function onUpdate(u) {
     if (!u || !Array.isArray(u.transcript)) return;
