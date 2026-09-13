@@ -15,7 +15,7 @@
 
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
-import { chromium, SITE, REPO, serveLocal, WEBHOOK_URL, STATE_RECORDER, retellGet } from './lib.mjs';
+import { chromium, SITE, REPO, serveLocal, WEBHOOK_URL, STATE_RECORDER, retellGet, BTN_FACE } from './lib.mjs';
 
 const arg = (k, d) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : d; };
 const MODE = arg('--mode', 'prod');
@@ -62,10 +62,8 @@ page.on('response', async (r) => {
   } catch { if (!(created && created.call_id)) created = { status: r.status(), call_id: null }; }
 });
 
-// The button breathes, so page.click() waits forever for a "stable" bounding
-// box that never comes. A finger does not wait; hit testing uses the live
-// transform. Drive the real mouse instead — which also pauses the breathing,
-// exactly as a pointer arriving on the control does.
+// Drive the real mouse, not page.click(): arriving on the control pauses its
+// light and pressing it kills the light, exactly as a pointer does.
 async function push() {
   const b = await page.evaluate(async () => {
     const el = document.getElementById('try-btn');
@@ -116,7 +114,24 @@ if (wentLive) {
     meterPeak = Math.max(meterPeak, v);
   }, 400);
   await page.waitForTimeout(8000);
+  // The pointer is still resting on the control from the push. Step off it, so
+  // the face read is LIVE itself and not LIVE under hover.
+  await page.mouse.move(4, 4);
+  await page.waitForTimeout(400);
   await page.screenshot({ path: path.join(OUT, `call-${MODE}-live-390.png`) });
+  const liveBtn = await page.evaluate(BTN_FACE);
+  check(liveBtn.label === 'End demo', 'LIVE: the button says End demo', liveBtn.label);
+  check(liveBtn.face === 'rgb(13, 20, 32)' && liveBtn.bw === '2px' && liveBtn.bc === 'rgba(46, 230, 168, 0.75)'
+    && liveBtn.color === 'rgb(232, 237, 245)' && liveBtn.anim === 'none' && !liveBtn.filter.includes('rgba(46, 230, 168'),
+    'LIVE: surface face, 2px green edge, ink letters, no animation, no glow',
+    `${liveBtn.face} · ${liveBtn.bw} ${liveBtn.bc} · ${liveBtn.color} · ${liveBtn.anim} · ${liveBtn.filter}`);
+  check(liveBtn.note === "You're live. Start with: I need a ride to the airport tomorrow. It will ask you the rest.", 'LIVE: the starter line', liveBtn.note);
+  const connFace = (await page.evaluate(() => window.__faces || [])).find((x) => x.s === 'connecting');
+  if (connFace) {
+    check(connFace.face === 'rgb(13, 20, 32)' && connFace.bw === '2px' && connFace.color === 'rgb(232, 237, 245)'
+      && connFace.anim === 'none' && !connFace.filter.includes('rgba(46, 230, 168'),
+      'CONNECTING (read 300 ms in): the same dark face', `${connFace.label} · ${connFace.face} · ${connFace.bw} ${connFace.bc} · ${connFace.color} · ${connFace.anim}`);
+  } else console.log('  CONNECTING lasted under 300 ms on this call, so its face was not sampled');
 
   // DURING THE CALL. The thread is reported, not asserted: Retell allocates
   // these calls its GATEWAY transport, whose data channel delivers no
@@ -137,8 +152,16 @@ if (wentLive) {
   }
   const endedOk = await waitState('ended', EXPECT_CAP ? EXPECT_CAP * 1000 + 45000 : 15000);
   clearInterval(sampler);
+  await page.mouse.move(4, 4);
+  await page.waitForTimeout(500);
   await page.screenshot({ path: path.join(OUT, `call-${MODE}-ended-390.png`) });
   check(endedOk, 'call reached ENDED', `live for ~${Math.round((Date.now() - tLive) / 1000)}s`);
+  const end1 = await page.evaluate(BTN_FACE);
+  await page.waitForTimeout(800);
+  const end2 = await page.evaluate(BTN_FACE);
+  check(end1.label === 'PUSH TO BOOK' && /rgb\(74, 243, 190\) 0%, rgb\(46, 230, 168\) 55%, rgb\(38, 214, 155\) 100%/.test(end1.img)
+    && end1.color === 'rgb(7, 11, 20)' && end1.anim === 'none' && end1.filter.includes('rgba(46, 230, 168, 0.5)') && end1.filter === end2.filter,
+    'ENDED: green again, lit, still, PUSH TO BOOK', `${end1.label} · ${end1.anim} · ${end1.filter}`);
   check(meterPeak > 0.3, 'the AGENT meter moved with the voice on the line', `peak scale ${meterPeak.toFixed(2)}`);
   check(await page.evaluate(() => document.querySelector('.try').dataset.focus === 'false'), 'focus mode released on ENDED');
 

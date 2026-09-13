@@ -55,16 +55,46 @@ export function webhookStub(callAnswer = { status: 429, body: { error: 'rate_lim
   };
 }
 
-// Watch the status chip from inside the page: every change, timestamped.
+// Watch the status chip from inside the page: every change, timestamped, and the
+// push button's face as it stood 300 ms into each state. Not in the same tick:
+// the button's fill and filter transition for 160 ms, and a read inside that
+// window returns the value mid-flight.
 export const STATE_RECORDER = () => {
   window.__states = [];
+  window.__faces = [];
   document.addEventListener('DOMContentLoaded', () => {
     const tag = document.getElementById('try-tag');
     if (!tag) return;
-    const log = () => window.__states.push({ s: tag.dataset.state, word: tag.textContent, t: Math.round(performance.now()) });
+    const face = (s) => {
+      const b = document.getElementById('try-btn');
+      if (!b || tag.dataset.state !== s) return;
+      const cs = getComputedStyle(b), pre = getComputedStyle(b, '::before');
+      window.__faces.push({ s, label: b.textContent, color: cs.color, opacity: cs.opacity, anim: cs.animationName, filter: cs.filter,
+        face: pre.backgroundColor, img: pre.backgroundImage, bw: pre.borderTopWidth, bc: pre.borderTopColor });
+    };
+    const log = () => {
+      const s = tag.dataset.state;
+      window.__states.push({ s, word: tag.textContent, t: Math.round(performance.now()) });
+      setTimeout(() => face(s), 300);
+    };
     log();
     new MutationObserver(log).observe(tag, { attributes: true, attributeFilter: ['data-state'] });
   });
+};
+
+// The push button as a visitor sees it. The face and the edge live on the
+// ::before (the site's notched .btn-primary recipe); the label, the light and
+// the motion live on the host.
+export const BTN_FACE = () => {
+  const b = document.getElementById('try-btn');
+  const cs = getComputedStyle(b), pre = getComputedStyle(b, '::before');
+  return {
+    state: document.getElementById('try-tag').dataset.state, label: b.textContent,
+    color: cs.color, weight: cs.fontWeight, opacity: cs.opacity, anim: cs.animationName, play: cs.animationPlayState,
+    filter: cs.filter, transform: cs.transform,
+    face: pre.backgroundColor, img: pre.backgroundImage, bw: pre.borderTopWidth, bc: pre.borderTopColor, clip: pre.clipPath,
+    note: (document.getElementById('try-note') || {}).textContent || '',
+  };
 };
 
 // Rendered-pixel contrast for every visible text element, with ancestor opacity
@@ -90,18 +120,37 @@ export async function probe(page) {
       }
       return true;
     };
-    const bgOf = (el) => {
+    // A GRADIENT HAS NO ONE COLOUR. Read as background-color a gradient fill is
+    // transparent, and a label on it would be measured against the page behind
+    // the button instead of the button. So every stop of a fully painted ramp is
+    // a candidate ground, and the text is judged against the worst of them. A
+    // gradient with a transparent stop is a pattern drawn over a ground (a grid,
+    // a hairline), not a ground, and is left out as before.
+    const layer = (s) => {
+      const out = [];
+      if (/gradient\(/.test(s.backgroundImage || '')) {
+        const stops = [...s.backgroundImage.matchAll(/rgba?\([^)]*\)/g)].map((m) => parse(m[0]));
+        if (stops.length && stops.every((c) => c && c.a > 0)) out.push(stops);
+      }
+      const fill = parse(s.backgroundColor);
+      if (fill && fill.a > 0) out.push([fill]);
+      return out;
+    };
+    const bgsOf = (el) => {
       const layers = [];
       for (let e = el; e; e = e.parentElement) {
-        const own = parse(getComputedStyle(e).backgroundColor);
+        // Nearest the text first. An absolutely positioned ::before paints ABOVE
+        // its host's own background — the button's fill sits at z-index:-1 inside
+        // the stacking context the host's filter creates — so it is pushed before
+        // the host's background, not after. The other way round, a host
+        // background that only exists under :hover was judged as the face.
         const pre = getComputedStyle(e, '::before');
-        const fill = pre.content !== 'none' && pre.position === 'absolute' ? parse(pre.backgroundColor) : null;
-        if (own && own.a > 0) layers.push(own);
-        if (fill && fill.a > 0) layers.push(fill);
+        if (pre.content !== 'none' && pre.position === 'absolute') layers.push(...layer(pre));
+        layers.push(...layer(getComputedStyle(e)));
       }
-      let base = { r: 7, g: 11, b: 20, a: 1 };
-      for (let i = layers.length - 1; i >= 0; i--) base = over(layers[i], base);
-      return base;
+      let bases = [{ r: 7, g: 11, b: 20, a: 1 }];
+      for (let i = layers.length - 1; i >= 0; i--) bases = bases.flatMap((b) => layers[i].map((c) => over(c, b)));
+      return bases;
     };
     const rows = [];
     for (const el of document.body.querySelectorAll('*')) {
@@ -111,10 +160,10 @@ export async function probe(page) {
       let alpha = 1;
       for (let e = el; e; e = e.parentElement) alpha *= Number(getComputedStyle(e).opacity);
       const fg = parse(s.color); fg.a *= alpha;
-      const bg = bgOf(el);
+      const bgs = bgsOf(el);
       const size = parseFloat(s.fontSize), weight = Number(s.fontWeight) || 400;
       const large = size >= 24 || (size >= 18.66 && weight >= 700);
-      const cr = ratio(over(fg, bg), bg);
+      const cr = Math.min(...bgs.map((bg) => ratio(over(fg, bg), bg)));
       rows.push({ text: el.textContent.trim().slice(0, 48), size, cr: Math.round(cr * 100) / 100, need: large ? 3 : 4.5 });
     }
     const de = document.documentElement;
