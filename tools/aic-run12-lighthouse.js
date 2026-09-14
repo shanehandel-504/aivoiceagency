@@ -7,7 +7,7 @@
  * for this run says it plainly — perf is measured on PRODUCTION only — so this
  * runner has no BEFORE origin at all and nothing to be wrong about.
  *
- * Gate: Accessibility 100 and SEO 100 on all sixteen, CLS 0 on all sixteen
+ * Gate: Accessibility 100 and SEO 100 on every page in PAGES, CLS 0 on every one
  * except /book/, whose third-party booking iframe has contributed 0.001 since
  * RUN 11 and is not ours to fix. Best-Practices is PRINTED, not chased, for the
  * same reason. Performance is the MEDIAN OF THREE and only on the pages worth
@@ -29,12 +29,18 @@ const ORIGIN = process.argv[2] || 'https://aichauffeur.ai';
 const OUT = path.join(__dirname, '..', 'audits', 'run12', 'lh');
 fs.mkdirSync(OUT, { recursive: true });
 
+// 2026-09-13 · /demo/ is deleted (production 308s it to /try/). /try/ is NOT
+// added: it is noindex by design, and the SEO category's crawlability audit
+// would score it under 100 for doing exactly what it was told to. The two
+// answer-engine pages join, and so do /rates/ and /reserve/ — this gate claims
+// every page, and those two had shipped without it.
 const PAGES = [
-  '/', '/demo/', '/book/', '/how-setup-works/', '/works-with-your-software/',
+  '/', '/book/', '/how-setup-works/', '/works-with-your-software/',
   '/limo-answering-service/', '/after-hours-limo-dispatch/', '/airport-transfer-booking/',
   '/milwaukee-limo-answering-service/', '/madison-limo-answering-service/',
   '/integrations/', '/integrations/limo-anywhere/', '/integrations/fasttrak/',
-  '/limo-dispatch-automation/', '/privacy/', '/terms/',
+  '/limo-dispatch-automation/', '/what-it-does/', '/what-it-can-do/',
+  '/rates/', '/reserve/', '/privacy/', '/terms/',
 ];
 // three runs only where a median is worth the minutes
 const TRIPLE = new Set(['/', '/integrations/']);

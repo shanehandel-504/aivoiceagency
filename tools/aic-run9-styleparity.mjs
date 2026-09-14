@@ -18,7 +18,9 @@
 import { createRequire } from 'node:module';
 const require = createRequire('C:/Users/offic/Desktop/AVA-factory/adstage/package.json');
 const { chromium } = require('playwright');
-const O = process.argv[2] || 'http://localhost:8848';
+// 127.0.0.1, not localhost: tools/aic-serve.mjs binds IPv4 only, and on this
+// machine localhost resolves to ::1 first and the connection is refused.
+const O = process.argv[2] || 'http://127.0.0.1:8848';
 
 const TARGETS = [
   ['nav bar',            'nav.top',            ['backgroundColor','borderBottomColor','paddingTop','paddingBottom','paddingLeft','height','backdropFilter','gap']],
@@ -81,8 +83,12 @@ const d    = await read('/integrations/limo-anywhere/');        // aic.css, dept
 // — solo where it should be and, just as important, NOT solo anywhere else.
 // The old check only looked at the three pages it expected to be solo, so a
 // fourth page going solo by accident would have passed clean.
+//
+// 2026-09-13 · /demo/ is deleted (production 308s it to /try/), so its slot in
+// the check goes to /what-it-does/. A page this run adds has to be PROVEN to
+// carry the pair, not assumed to because it was built from the same shell.
 const SOLO_EXPECTED = ['/book/'];
-const soloCheck = ['/book/', '/terms/', '/privacy/', '/demo/', '/limo-answering-service/'];
+const soloCheck = ['/book/', '/terms/', '/privacy/', '/what-it-does/', '/limo-answering-service/'];
 const solo = [];
 for (const path of soloCheck) {
   await p.goto(O + path, { waitUntil: 'networkidle' });

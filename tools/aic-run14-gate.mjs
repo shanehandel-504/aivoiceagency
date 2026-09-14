@@ -14,6 +14,13 @@
      6  exactly one <h1> per page, no skipped heading level, a #main to skip to
      7  no paragraph over 75 characters of measure at desktop
      8  the eyebrow canon: every uppercase LABEL is on one tracking value
+
+   2026-09-13 · A gate that cannot fail is not a gate, and until today this one
+   shipped no negative control. Two now run before the sweep and abort the run
+   if either passes clean: dark ink on a ::before ramp of dark stops must fail
+   assertion 4, and a failed load that is NOT the analytics script must fail
+   assertion 2. The analytics 404 itself is the one console error forgiven —
+   see isInsights404.
    ─────────────────────────────────────────────────────────────────────────── */
 import { createRequire } from 'node:module';
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -27,13 +34,27 @@ const arg = (f, d) => { const i = process.argv.indexOf(f); return i > -1 ? proce
 const BASE = arg('--base', 'http://127.0.0.1:8848');
 const OUT = resolve(ROOT, 'audits/run14'); mkdirSync(OUT, { recursive: true });
 
-const PAGES = ['/', '/reserve/', '/rates/', '/demo/', '/book/', '/how-setup-works/',
+/* 2026-09-13 · /demo/ is deleted (production 308s it to /try/); the two
+   answer-engine pages join. */
+const PAGES = ['/', '/reserve/', '/rates/', '/book/', '/how-setup-works/',
   '/works-with-your-software/', '/integrations/', '/integrations/limo-anywhere/',
   '/integrations/fasttrak/', '/limo-answering-service/', '/after-hours-limo-dispatch/',
   '/airport-transfer-booking/', '/limo-dispatch-automation/',
   '/milwaukee-limo-answering-service/', '/madison-limo-answering-service/',
+  '/what-it-does/', '/what-it-can-do/',
   '/privacy/', '/terms/'];
 const WIDTHS = [320, 360, 390, 430, 1440];
+
+/* THE ONE CONSOLE ERROR FORGIVEN. Every page loads Vercel Web Analytics, and
+   until Web Analytics is enabled on the project /_vercel/insights/script.js is a
+   404 on aic-serve and on production alike, so Chromium logs "Failed to load
+   resource" for it on every page. It is forgiven by EXACT match — a failed load
+   whose own URL is under /_vercel/insights/ — and printed once as a WARN. Any
+   other console error, including any other failed load, still fails. */
+const INSIGHTS = '/_vercel/insights/';
+const isInsights404 = m =>
+  /^Failed to load resource/.test(m.text()) && ((m.location() || {}).url || '').includes(INSIGHTS);
+let insights404 = 0;
 
 const PROBE = () => {
   const px = v => parseFloat(v) || 0;
@@ -56,15 +77,33 @@ const PROBE = () => {
      ratio is measured against a surface; the rendered ratio is measured against
      whatever is really behind it, and RUN 13 lost eight labels to exactly that
      gap. */
+  /* 2026-09-13 · A GRADIENT HAS NO ONE COLOUR, and this walk composited
+     background-color only. PUSH TO BOOK paints its face as a ::before
+     background-IMAGE over a host that paints nothing, so its dark ink was
+     measured against the page behind the button — about 1:1, on a label that
+     reads 10:1. A fully painted linear-gradient on an absolutely positioned
+     ::before is a ground now, laid over its host's own background because it
+     paints above it, and every stop is a candidate ground: the text is judged
+     against the worst of them, which for dark ink is the darkest stop. A ramp
+     with a transparent stop is a pattern (a hairline, the grid), not a ground,
+     and is left out. Ported from tools/aic-try/lib.mjs. */
+  const rampOf = el => {
+    const s = getComputedStyle(el, '::before');
+    if (s.content === 'none' || s.position !== 'absolute' || !/linear-gradient\(/.test(s.backgroundImage)) return null;
+    const stops = (s.backgroundImage.match(/rgba?\([^)]*\)/g) || []).map(parse);
+    return stops.length && stops.every(c => c && c.a > 0) ? stops : null;
+  };
   const groundOf = el => {
-    let out = { r: 7, g: 11, b: 20, a: 1 };
+    let outs = [{ r: 7, g: 11, b: 20, a: 1 }];
     const chain = [];
     for (let n = el; n && n.nodeType === 1; n = n.parentElement) chain.push(n);
     for (let i = chain.length - 1; i >= 0; i--) {
       const bg = parse(getComputedStyle(chain[i]).backgroundColor);
-      if (bg && bg.a > 0) out = over(bg, out);
+      if (bg && bg.a > 0) outs = outs.map(o => over(bg, o));
+      const ramp = rampOf(chain[i]);
+      if (ramp) outs = ramp.flatMap(s => outs.map(o => over(s, o)));
     }
-    return out;
+    return outs;
   };
   const effOpacity = el => { let o = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement)
     o *= parseFloat(getComputedStyle(n).opacity || 1); return o; };
@@ -120,8 +159,7 @@ const PROBE = () => {
     if (fg0 && eo < .05) { /* not painted */ }
     else if (fg0 && !animating(el)) {
       const fg = { ...fg0, a: fg0.a * eo };
-      const bg = groundOf(el);
-      const cr = +ratio(over(fg, bg), bg).toFixed(2);
+      const cr = +Math.min(...groundOf(el).map(bg => ratio(over(fg, bg), bg))).toFixed(2);
       const large = size >= 24 || (size >= 18.66 && +cs.fontWeight >= 700);
       if (cr < (large ? 3 : 4.5)) low.push({ t: t.slice(0, 34), cls: String(el.className), size: +size.toFixed(1), cr });
     } else if (fg0) { deferred++; }
@@ -157,13 +195,61 @@ const PROBE = () => {
 };
 
 const b = await chromium.launch();
+
+/* ── NEGATIVE CONTROLS ─────────────────────────────────────────────────────
+   Run first, on a real page; the run aborts if either passes clean.
+     a  dark ink on a ::before ramp of dark stops, set on a WHITE panel. A probe
+        that still read background-color alone would measure ~19:1 and pass
+        it; only a probe that sees the ramp fails it.
+     b  a script that does not exist. Its 404 must reach the error list — the
+        analytics forgiveness is for one URL, not for failed loads. */
+{
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
+  const page = await ctx.newPage();
+  const errs = [];
+  page.on('console', m => { if (m.type() === 'error' && !isInsights404(m)) errs.push(((m.location() || {}).url || '') + ' ' + m.text()); });
+  await page.goto(BASE + '/', { waitUntil: 'networkidle' });
+  await page.evaluate(() => {
+    const st = document.createElement('style');
+    st.textContent = '#NEGCTL-RAMP{position:relative;display:block;color:rgb(7,11,20);font-size:16px}' +
+      '#NEGCTL-RAMP::before{content:"";position:absolute;inset:0;z-index:-1;' +
+      'background-image:linear-gradient(180deg,#1A2233 0%,#0D1420 100%)}';
+    document.head.appendChild(st);
+    const panel = document.createElement('div');
+    panel.style.cssText = 'background:#FFFFFF;isolation:isolate';
+    const ink = document.createElement('span');
+    ink.id = 'NEGCTL-RAMP'; ink.textContent = 'negative control: dark ink on a dark ramp';
+    panel.appendChild(ink);
+    document.body.appendChild(panel);
+    const s = document.createElement('script');
+    s.src = '/negative-control-missing.js';
+    document.head.appendChild(s);
+  });
+  await page.waitForTimeout(1400);
+  const r = await page.evaluate(PROBE);
+  await ctx.close();
+  const dead = [];
+  if (!r.low.some(l => l.t.startsWith('negative control: dark ink'))) dead.push('4 CONTRAST: a ::before ramp is not read as the ground');
+  if (!errs.some(e => e.includes('/negative-control-missing.js'))) dead.push('2 CONSOLE: a failed load that is not the analytics script was forgiven');
+  if (dead.length) {
+    console.log('NEGATIVE CONTROL PASSED CLEAN — ' + dead.join(' · ') + '\nA gate that cannot fail is not a gate.');
+    await b.close();
+    process.exit(2);
+  }
+  console.log('negative controls: ramp ground and a foreign 404 both caught\n');
+}
+
 const fails = [], report = {};
 for (const w of WIDTHS) {
   const ctx = await b.newContext({ viewport: { width: w, height: w > 800 ? 900 : 844 }, deviceScaleFactor: 1 });
   for (const p of PAGES) {
     const page = await ctx.newPage();
     const errs = [];
-    page.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
+    page.on('console', m => {
+      if (m.type() !== 'error') return;
+      if (isInsights404(m)) { insights404++; return; }
+      errs.push(m.text());
+    });
     page.on('pageerror', e => errs.push('pageerror: ' + e.message));
     await page.goto(BASE + p, { waitUntil: 'networkidle' });
     /* 1.4s, not 260ms. The homepage console runs a scripted intake sequence on
@@ -228,6 +314,7 @@ let defer = 0;
 for (const v of Object.values(report)) for (const r of Object.values(v)) defer += (r.deferred || 0);
 console.log('\ncontrast deferred (element under a running animation at read time): ' + defer);
 
+if (insights404) console.log('\nWARN  analytics script 404 — Web Analytics not enabled on the project yet (' + insights404 + ' ignored)');
 writeFileSync(resolve(OUT, 'gate.json'), JSON.stringify({ fails, report }, null, 1));
 console.log('\n' + '='.repeat(78));
 if (fails.length) { console.log('GATE FAIL — ' + fails.length + ' finding(s)'); [...new Set(fails)].forEach(f => console.log('  ' + f)); process.exitCode = 1; }

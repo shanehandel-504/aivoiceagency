@@ -32,6 +32,10 @@ const WIDTHS = [[320, 700], [390, 844], [430, 932], [1440, 900]];
 const browser = await chromium.launch({ args: ['--use-fake-device-for-media-stream'] });
 const browserMic = await chromium.launch({ args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'] });
 let failed = 0;
+// The analytics script (/_vercel/insights/script.js) 404s until Web Analytics is
+// enabled on the Vercel project. That one resource is counted and reported as a
+// WARN at the end; every other console error still fails. (2026-09-13)
+let insights404 = 0;
 const check = (ok, label, detail = '') => { if (!ok) failed++; console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${label}${detail ? '  ' + detail : ''}`); };
 
 async function newPage(opts = {}, { b = browser, answer, receipt } = {}) {
@@ -47,7 +51,12 @@ async function newPage(opts = {}, { b = browser, answer, receipt } = {}) {
   });
   const page = await context.newPage();
   const errors = [];
-  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text().slice(0, 160)); });
+  page.on('console', (m) => {
+    if (m.type() !== 'error') return;
+    // exact: a failed LOAD of the insights script; an error thrown from that URL still fails
+    if (/^Failed to load resource/.test(m.text()) && ((m.location() || {}).url || '').includes('/_vercel/insights/')) { insights404++; return; }
+    errors.push(m.text().slice(0, 160));
+  });
   page.on('pageerror', (e) => errors.push('pageerror: ' + String(e.message).slice(0, 160)));
   return { context, page, errors };
 }
@@ -85,6 +94,17 @@ console.log(`/try render gate — ${PROD ? 'PRODUCTION' : 'LOCAL (chauffeur/ as 
   const p = await probe(page);
   const caught = p.failures.length > 0 && p.scrollWidth > p.innerWidth;
   console.log(`NEGATIVE CONTROL  ${caught ? 'PASS  broken fixture caught (contrast ' + p.minRatio + ', width ' + p.scrollWidth + ')' : 'ABORT  the probe cannot fail'}`);
+  await context.close();
+  if (!caught) { await browser.close(); await browserMic.close(); process.exit(2); }
+}
+// the console filter forgives ONE resource; a failed load of anything else must still fail
+{
+  const { context, page, errors } = await newPage({ viewport: { width: 390, height: 844 } });
+  await page.goto(URL_TRY, { waitUntil: 'load' });
+  await page.evaluate(() => { const s = document.createElement('script'); s.src = '/negative-control-missing.js'; document.head.appendChild(s); });
+  await page.waitForTimeout(800);
+  const caught = errors.some((e) => /Failed to load resource/.test(e));
+  console.log(`NEGATIVE CONTROL  ${caught ? 'PASS  a failed load that is not the analytics script still fails' : 'ABORT  the console filter forgives more than the analytics script'}`);
   await context.close();
   if (!caught) { await browser.close(); await browserMic.close(); process.exit(2); }
 }
@@ -747,5 +767,6 @@ if (BASE && !PROD) {
 
 await browser.close();
 await browserMic.close();
+if (insights404) console.log(`\n  WARN  analytics script 404 — Web Analytics not enabled on the project yet (${insights404} ignored)`);
 console.log(`\n${failed ? 'FAIL — ' + failed + ' check(s)' : 'ALL CHECKS PASS'}`);
 process.exit(failed ? 1 : 0);

@@ -260,7 +260,10 @@ VERSION_ONLY = [
     # design, exactly like chauffeur/index.html -> VERSION_ONLY, never PAGES.
     # (PAGES would inject the AVA site's shared nav/footer/breadcrumbs onto a
     # different brand's host.)
-    'chauffeur/demo/index.html',
+    # (/demo/ left the host on 2026-09-13 — it redirects to /try/ — and the two
+    # answer pages joined, registered at creation like the reservation surfaces.)
+    'chauffeur/what-it-does/index.html',
+    'chauffeur/what-it-can-do/index.html',
     'chauffeur/limo-answering-service/index.html',
     'chauffeur/after-hours-limo-dispatch/index.html',
     'chauffeur/milwaukee-limo-answering-service/index.html',

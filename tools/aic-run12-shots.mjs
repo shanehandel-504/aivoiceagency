@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------------
 //   node tools/aic-run12-shots.mjs <before|after|live> [origin]
 //
-// The four new pages, at four widths, framed on the three things no numeric
+// The new pages, at four widths, framed on the three things no numeric
 // probe can answer:
 //
 //   fold    — does the H1 clear the bar, and is the direct answer the first
@@ -32,11 +32,17 @@ const ORIGIN = process.argv[3] || 'http://127.0.0.1:8848';
 const OUT = new URL(`../audits/run12/${PHASE}/`, import.meta.url).pathname.slice(1);
 mkdirSync(OUT, { recursive: true });
 
+// [name, path, table frame, second frame, the second frame's name]. The two
+// 2026-09-13 answer-engine pages carry no sample ticket: their second frame is
+// #hear-it, where the page's PUSH TO BOOK sits, and the shot is named for what
+// it shows rather than borrowing "ticket" for a picture that has none.
 const PAGES = [
   ['hub', '/integrations/', '#platforms', '#ticket'],
   ['limo-anywhere', '/integrations/limo-anywhere/', '#fields', '#ticket'],
   ['fasttrak', '/integrations/fasttrak/', '#intake', '#ticket'],
   ['automation', '/limo-dispatch-automation/', '#compare', '#ticket'],
+  ['what-it-does', '/what-it-does/', '.tbl-wrap', '#hear-it', 'hear-it'],
+  ['what-it-can-do', '/what-it-can-do/', '.tbl-wrap', '#hear-it', 'hear-it'],
 ];
 const FOLD_W = [[390, 844], [430, 932], [768, 1024], [1440, 900]];
 const FRAME_W = [[390, 844], [1440, 900]];
@@ -52,7 +58,7 @@ const settle = async (p, sel) => {
 const b = await chromium.launch();
 let n = 0;
 
-for (const [name, path, tableSel, ticketSel] of PAGES) {
+for (const [name, path, tableSel, ticketSel, ticketTag = 'ticket'] of PAGES) {
   for (const [w, h] of FOLD_W) {
     const ctx = await b.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2 });
     const p = await ctx.newPage();
@@ -63,7 +69,7 @@ for (const [name, path, tableSel, ticketSel] of PAGES) {
     await ctx.close();
   }
   for (const [w, h] of FRAME_W) {
-    for (const [tag, sel] of [['table', tableSel], ['ticket', ticketSel]]) {
+    for (const [tag, sel] of [['table', tableSel], [ticketTag, ticketSel]]) {
       const ctx = await b.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2 });
       const p = await ctx.newPage();
       await p.goto(ORIGIN + path, { waitUntil: 'networkidle' });

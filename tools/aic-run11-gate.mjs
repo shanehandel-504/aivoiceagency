@@ -21,7 +21,8 @@ const OUT = new URL('../audits/run11/', import.meta.url).pathname.slice(1);
 mkdirSync(OUT, { recursive: true });
 
 const PAGES = [
-  ['/', 'home'], ['/demo/', 'demo'], ['/book/', 'book'],
+  // 2026-09-13 · /demo/ is deleted; production 308s it to /try/.
+  ['/', 'home'], ['/book/', 'book'],
   ['/how-setup-works/', 'how-setup-works'],
   ['/works-with-your-software/', 'works-with-your-software'],
   ['/limo-answering-service/', 'limo-answering-service'],
@@ -34,12 +35,40 @@ const PAGES = [
   ['/integrations/limo-anywhere/', 'integrations-limo-anywhere'],
   ['/integrations/fasttrak/', 'integrations-fasttrak'],
   ['/limo-dispatch-automation/', 'limo-dispatch-automation'],
+  // 2026-09-13 · the two answer-engine pages, each carrying a PUSH TO BOOK.
+  ['/what-it-does/', 'what-it-does'],
+  ['/what-it-can-do/', 'what-it-can-do'],
   ['/privacy/', 'privacy'], ['/terms/', 'terms'],
 ];
 const VIEWPORTS = [[360, 800], [390, 844], [430, 932], [768, 1024], [1024, 800], [1440, 900]];
 
 const AB = ['rgb(30, 86, 214)', 'rgb(42, 99, 232)', 'rgb(26, 76, 194)'];
 const PRIMARY = '.btn-primary,.tel-btn,.demo-play-btn';
+
+// ── 2026-09-13 · THE MONEY BUTTON ─────────────────────────────────────────
+// `.btn-go` is a modifier of .btn.btn-primary, so every probe keyed on PRIMARY
+// already reads PUSH TO BOOK — and every blue-only test below read it wrong.
+// Its face is Booked-Green: a ramp painted as the ::before background-IMAGE at
+// rest and on hover, a flat pressed green on :active, over a host that paints
+// nothing. AB is still what the BLUE primary recipe is judged on; GREEN only
+// decides what else counts as a filled control.
+const GREEN = ['rgb(46, 230, 168)', 'rgb(34, 196, 142)'];
+const GO_RAMP = /linear-gradient\((?:180deg, |to bottom, )?rgb\(74, 243, 190\) 0%, rgb\(46, 230, 168\) 55%, rgb\(38, 214, 155\) 100%\)/;
+
+// The hues in a host's drop-shadows that the Glow Law does not allow, as
+// [r, g, b] triples; an empty list is a neutral elevation. EVERY layer is read.
+// The first cut matched one layer with /drop-shadow\(([^)]*)\)/, and [^)]* stops
+// at the ")" closing that layer's own rgba() — the capture never held a whole
+// colour, so the check could not fail on any filter at all. Black is legal
+// everywhere. The money button's pulse is the one ruled exception: on a
+// .btn-go, and only there, the Booked-Green halo (46,230,168) and its mint core
+// (170,255,225) are legal too.
+const haloOf = (x) => (x.hostFilter.match(/drop-shadow\((?:[^()]|\([^)]*\))*\)/g) || [])
+  .map((layer) => (layer.match(/rgba?\(([^)]*)\)/) || [])[1])
+  .filter(Boolean)
+  .map((c) => c.split(',').slice(0, 3).map((n) => parseFloat(n)))
+  .filter(([r, g, bl]) => !(r === 0 && g === 0 && bl === 0) &&
+    !(x.isGo && ((r === 46 && g === 230 && bl === 168) || (r === 170 && g === 255 && bl === 225))));
 
 // ── shared in-page helpers, injected as source into every probe ────────────
 const HELPERS = `
@@ -65,6 +94,18 @@ const HELPERS = `
   const sel = (el) => el.tagName.toLowerCase() +
     (typeof el.className === 'string' && el.className.trim()
       ? '.' + el.className.trim().split(/\\s+/).join('.') : '');
+  // 2026-09-13 · FILLED MEANS BLUE OR GREEN, read off the host and the ::before.
+  // The law did not grow a second budget for a second colour: one filled
+  // content control per viewport, the two counted together.
+  const FILL_BLUE = ${JSON.stringify(AB)}, FILL_GREEN = ${JSON.stringify(GREEN)};
+  const fillOf = (el) => {
+    const own = getComputedStyle(el).backgroundColor;
+    const bf = getComputedStyle(el, '::before');
+    if (FILL_BLUE.includes(own) || FILL_BLUE.includes(bf.backgroundColor)) return 'blue';
+    if (FILL_GREEN.includes(own) || FILL_GREEN.includes(bf.backgroundColor) ||
+        /46, 230, 168|74, 243, 190/.test(bf.backgroundImage)) return 'green';
+    return null;
+  };
 `;
 
 // ═══ THE PROBES ════════════════════════════════════════════════════════════
@@ -100,6 +141,11 @@ const PROBE_STATIC = new Function(`${HELPERS}
       transition: cs.transitionDuration + ' / ' + cs.transitionTimingFunction,
       upper: cs.textTransform === 'uppercase',
       family: cs.fontFamily,
+      // 2026-09-13 · what the .btn-go branch of the recipe is judged on
+      isGo: el.matches('.btn-go'),
+      beforeImg: bf.backgroundImage,
+      label: el.textContent.replace(/\\s+/g, ' ').trim(),
+      textTransform: cs.textTransform,
     });
   }
 
@@ -202,42 +248,39 @@ const PROBE_STATIC = new Function(`${HELPERS}
   return out;
 `);
 
-// P4 — one filled action-blue per viewport, at EVERY scroll step, not just the
+// P4 — one filled control per viewport, at EVERY scroll step, not just the
 // opening fold. RUN 10 measured the fold because that was where the defect was
-// found; the law does not stop applying once the reader scrolls.
+// found; the law does not stop applying once the reader scrolls. Since
+// 2026-09-13 "filled" is green or blue, counted together (fillOf, in HELPERS).
 const PROBE_FILLED = new Function(`${HELPERS}
-  const AB = ${JSON.stringify(AB)};
   const CHROME = 'nav.top, .rail, .nav-drawer';
   const content = [], chrome = [], tel = [];
   for (const el of document.querySelectorAll('a,button')) {
     if (!shown(el)) continue;
     const r = el.getBoundingClientRect();
     if (r.bottom <= 0 || r.top >= innerHeight) continue;
-    const own = getComputedStyle(el).backgroundColor;
-    const pseudo = getComputedStyle(el, '::before').backgroundColor;
-    if (!AB.includes(own) && !AB.includes(pseudo)) continue;
-    const id = sel(el) + '|' + el.textContent.trim().replace(/\\s+/g,' ').slice(0,24);
+    const fill = fillOf(el);
+    if (!fill) continue;
+    const id = sel(el) + '|' + fill + '|' + el.textContent.trim().replace(/\\s+/g,' ').slice(0,24);
     (el.closest(CHROME) ? chrome : content).push(id);
     if ((el.getAttribute('href')||'').startsWith('tel:')) tel.push(id);
   }
   return { content, chrome, tel, y: Math.round(scrollY) };
 `);
 
-// P4a — document-space rects of every filled action-blue CONTENT control, for
+// P4a — document-space rects of every filled CONTENT control, green or blue, for
 // the exact co-occurrence test below. Chrome is exempt by § 3 and is dropped
 // here rather than counted and forgiven later.
 const PROBE_RECTS = new Function(`${HELPERS}
-  const AB = ${JSON.stringify(AB)};
   const CHROME = 'nav.top, .rail, .nav-drawer';
   const out = [];
   for (const el of document.querySelectorAll('a,button')) {
     if (!shown(el)) continue;
     if (el.closest(CHROME)) continue;
-    const own = getComputedStyle(el).backgroundColor;
-    const pseudo = getComputedStyle(el, '::before').backgroundColor;
-    if (!AB.includes(own) && !AB.includes(pseudo)) continue;
+    const fill = fillOf(el);
+    if (!fill) continue;
     const r = el.getBoundingClientRect();
-    out.push({ id: sel(el) + '|' + el.textContent.trim().replace(/\\s+/g,' ').slice(0,24),
+    out.push({ id: sel(el) + '|' + fill + '|' + el.textContent.trim().replace(/\\s+/g,' ').slice(0,24),
                top: Math.round(r.top + scrollY), bottom: Math.round(r.bottom + scrollY),
                tel: (el.getAttribute('href')||'').startsWith('tel:') });
   }
@@ -293,13 +336,47 @@ const BREAK_CSS =
   '.demo-play-bar>.demo-call-btn{min-height:64px!important}' +
   // re-creates exactly the defect RUN 11 removed: the two demoted section CTAs
   // filled again, 520-670px apart on a page whose shortest viewport is 800.
+  // 2026-09-13 · kept, but no control depends on it any more — see the planted
+  // fixture below. Whether those ghosts survive the copy run is the page's
+  // business, and a control must not die with them.
   '.btn-ghost{background:rgb(30,86,214)!important}' +
-  '.rail{transform:none!important;visibility:visible!important}';
+  '.rail{transform:none!important;visibility:visible!important}' +
+  // 2026-09-13 · the halo fixture: a SECOND drop-shadow layer, in the exact green
+  // the money button is allowed, on a primary that is NOT a .btn-go. The
+  // one-layer regex could not see a colour at all, and an exemption that leaked
+  // past .btn-go would wave this through; the gate has to object on both counts.
+  '.negctl-halo{filter:drop-shadow(0 8px 24px rgba(0,0,0,.35)) drop-shadow(0 0 12px rgba(46,230,168,.6))!important}' +
+  // the planted green ramp, built the way .btn-go builds its face: on the ::before
+  '.negctl-go::before{content:"";position:absolute;inset:0;z-index:-1;' +
+    'background-image:linear-gradient(180deg,#4AF3BE 0%,#2EE6A8 55%,#26D69B 100%)}';
 {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const p = await ctx.newPage();
   await p.goto(ORIGIN + '/#lead-protection', { waitUntil: 'networkidle' });
   await p.addStyleTag({ content: BREAK_CSS });
+  // 2026-09-13 · PLANTED, NOT BORROWED. The co-occurrence and filled controls
+  // used to fire on the page's own furniture — the hero's filled tel button and
+  // the ghosts forced blue above. The tel button is gone, and a control that
+  // fires only while the page happens to carry a defect-shaped element dies the
+  // day the page is fixed. So the fixture brings its own: a filled-blue pair and
+  // a green pair (the ramp, and the flat pressed green), position:fixed so they
+  // sit inside whatever viewport a probe reads, the fold included; and a blue
+  // primary wearing the coloured second drop-shadow, at the END of <main> so no
+  // anchor above it moves.
+  await p.evaluate(() => {
+    const plant = (cls, css, text) => {
+      const a = document.createElement('a');
+      a.href = '#'; a.className = cls; a.style.cssText = css; a.textContent = text;
+      return a;
+    };
+    const fixed = 'position:fixed;left:16px;width:220px;min-height:44px;display:block;z-index:5;';
+    document.body.append(
+      plant('negctl-blue', fixed + 'top:180px;background:rgb(30,86,214)', 'negative control blue'),
+      plant('negctl-blue', fixed + 'top:260px;background:rgb(30,86,214)', 'negative control blue'),
+      plant('negctl-go', fixed + 'top:340px', 'negative control ramp'),
+      plant('negctl-flat', fixed + 'top:420px;background:rgb(34,196,142)', 'negative control pressed'));
+    document.querySelector('main').append(plant('btn btn-primary negctl-halo', '', 'negative control halo'));
+  });
   // scrollIntoView() honours scroll-padding/scroll-margin exactly as a fragment
   // jump does, and with scroll-behavior forced to auto it lands in one frame.
   // A hash round-trip would scroll to the top first and then animate all the way
@@ -310,8 +387,15 @@ const BREAK_CSS =
   const s = await p.evaluate(PROBE_STATIC);
   const f = await p.evaluate(PROBE_FILLED);
   const rects = await p.evaluate(PROBE_RECTS);
+  // and the fold, where the planted green pair sits with the page's own PUSH TO BOOK
+  await p.evaluate(() => window.scrollTo(0, 0));
+  await p.waitForTimeout(300);
+  const fold = await p.evaluate(PROBE_FILLED);
   let planted = false;
-  for (let i = 1; i < rects.length; i++) if (rects[i].top - rects[i - 1].bottom < 844) planted = true;
+  for (let i = 1; i < rects.length; i++) {
+    if (rects[i].top - rects[i - 1].bottom < 844 &&
+        (rects[i].id.includes('negctl-') || rects[i - 1].id.includes('negctl-'))) planted = true;
+  }
   const controls = [
     ['co-occurrence probe sees the planted pair', planted],
     ['demo-pair probe sees the unequal heights', s.demoPair ? s.demoPair.heights[0] !== s.demoPair.heights[1] : false],
@@ -321,7 +405,14 @@ const BREAK_CSS =
     ['drawer probe sees the 44px row', s.drawers.some((d) => d.headH < 64)],
     ['radius probe sees the 18px container', s.radii.some((r) => r.r > 12)],
     ['FAQ probe sees the blue perimeter', !/inset/.test(s.faqOpen.boxShadow)],
-    ['filled probe sees the forced rail', f.chrome.length + f.content.length >= 2],
+    // the rail is display:grid at 390 and hidden only by visibility + transform,
+    // both of which BREAK_CSS overrides, so its blue Call is in chrome here
+    ['filled probe sees the forced rail over a planted blue pair',
+      f.chrome.length >= 1 && f.content.filter((id) => id.includes('negctl-blue')).length === 2],
+    ['filled probe sees a second green fill in the fold',
+      fold.content.filter((id) => /negctl-(go|flat)/.test(id)).length === 2 && fold.content.length > 1],
+    ['halo probe sees a green second layer on a non-.btn-go primary',
+      s.primaries.some((x) => x.sel.includes('negctl-halo') && haloOf(x).length > 0)],
   ];
   let dead = 0;
   for (const [n, fired] of controls) {
@@ -334,7 +425,8 @@ const BREAK_CSS =
 
 // ── P1 · ANCHOR CLEARANCE ──────────────────────────────────────────────────
 console.log('\n══ § 1 · ANCHOR CLEARANCE ══\n');
-const HOME_ANCHORS = ['#demo', '#integrations', '#how', '#pain', '#features', '#crush',
+// 2026-09-13 · #features is gone; #built replaced it in the copy run.
+const HOME_ANCHORS = ['#demo', '#integrations', '#how', '#pain', '#built', '#crush',
   '#lead-protection', '#setup', '#operators', '#faq', '#ava-callback'];
 const anchorBad = [];
 for (const [w, h] of [[360, 800], [390, 844], [430, 932], [1440, 900]]) {
@@ -527,7 +619,23 @@ const navBad = rows.filter((r) => r.navH !== null && Math.abs(r.navH - r.navVar)
 note('--nav-h equals the measured bar', navBad, `${rows.length} page x viewport reads`);
 
 const prim = rows.flatMap((r) => r.primaries.map((x) => ({ page: r.tag, w: r.w, ...x })));
-const primBad = prim.filter((x) =>
+// 2026-09-13 · .btn-go HAS ITS OWN BRANCH. It is a v3 primary in every structural
+// respect — unclipped host, chamfered ::before, 10px radius, elevation on the
+// host — but its face is the green ramp as a background-IMAGE, so the
+// action-blue fill test fails every money button on the site; and its label is
+// set in capitals by ruling, so the no-ALL-CAPS test fails it too. The ruling is
+// about the WORDS: the capitals live in the markup, never in text-transform.
+const primBad = prim.filter((x) => (x.isGo ? (
+  x.hostClip !== 'none' ||                                    // ring must not be clipped
+  !/polygon/.test(x.beforeClip) ||                            // chamfer must exist
+  !GO_RAMP.test(x.beforeImg) ||                               // face is the green ramp
+  x.beforeBg !== 'rgba(0, 0, 0, 0)' ||                        // ...with no fill under it
+  Math.round(parseFloat(x.beforeRadius)) !== 10 ||
+  !/drop-shadow/.test(x.hostFilter) ||
+  !/Space Grotesk/.test(x.family) ||
+  x.label !== 'PUSH TO BOOK' ||                               // capitals by ruling...
+  x.textTransform !== 'none'                                  // ...in the words, not the CSS
+) : (
   x.hostClip !== 'none' ||                                    // ring must not be clipped
   !/polygon/.test(x.beforeClip) ||                            // chamfer must exist
   !x.isAB ||                                                  // fill must be action-blue
@@ -536,18 +644,15 @@ const primBad = prim.filter((x) =>
   !/inset/.test(x.beforeShadow) ||
   x.upper ||                                                  // no ALL-CAPS
   !/Space Grotesk/.test(x.family)
-).map((x) => ({ page: x.page, w: x.w, sel: x.sel, hostClip: x.hostClip, beforeClip: x.beforeClip.slice(0, 30), r: x.beforeRadius, filter: x.hostFilter.slice(0, 30), upper: x.upper }));
-note('§ 2 primary control v3 recipe', primBad, `${prim.length} rendered primaries`);
+))).map((x) => ({ page: x.page, w: x.w, sel: x.sel, go: x.isGo, hostClip: x.hostClip, beforeClip: x.beforeClip.slice(0, 30), r: x.beforeRadius, filter: x.hostFilter.slice(0, 30), upper: x.upper,
+  ...(x.isGo ? { img: x.beforeImg.slice(0, 64), bg: x.beforeBg, label: x.label, tt: x.textTransform } : {}) }));
+note('§ 2 primary control v3 recipe', primBad,
+  `${prim.length} rendered primaries, ${prim.filter((x) => x.isGo).length} of them .btn-go`);
 
-// the exterior elevation must be NEUTRAL — no hue in the drop-shadow
-const haloBad = prim.filter((x) => {
-  const m = x.hostFilter.match(/drop-shadow\(([^)]*)\)/);
-  if (!m) return false;
-  const c = m[1].match(/rgba?\(([^)]*)\)/);
-  if (!c) return false;
-  const [r, g, bl] = c[1].split(',').map((n) => parseFloat(n));
-  return !(r === 0 && g === 0 && bl === 0);
-}).map((x) => ({ page: x.page, sel: x.sel, filter: x.hostFilter }));
+// the exterior elevation must be NEUTRAL — no hue in ANY drop-shadow layer
+// (haloOf, at the top; the .btn-go pulse is the one ruled exception)
+const haloBad = prim.filter((x) => haloOf(x).length)
+  .map((x) => ({ page: x.page, sel: x.sel, go: x.isGo, hues: haloOf(x).map((c) => c.join(',')), filter: x.hostFilter }));
 note('§ 2 elevation is neutral (Glow Law)', haloBad);
 
 const rails = rows.filter((r) => r.rail && r.rail.display === 'grid');
@@ -574,7 +679,7 @@ const safeBad = [];
   if (/^[ \t]*<style>[ \t]*$/m.test(homeSrc)) safeBad.push({ why: 'index.html has grown an embedded stylesheet again — back to two heads' });
   if (!/<link rel="stylesheet" href="\/assets\/aic\.css/.test(homeSrc)) safeBad.push({ why: 'index.html does not link assets/aic.css' });
 }
-note('§ 3 safe-area inset in the one CSS home + homepage carries no second copy', safeBad, '1 component home, 16 pages linking it');
+note('§ 3 safe-area inset in the one CSS home + homepage carries no second copy', safeBad, `1 component home, ${PAGES.length} pages in the sweep`);
 
 const drawers = rows.flatMap((r) => r.drawers.map((d) => ({ page: r.tag, w: r.w, ...d })));
 const drawerBad = drawers.filter((d) => d.headH < 64 || !d.chev || d.headW < d.formW - 2)
@@ -627,7 +732,7 @@ const pairBad = pairs.filter((r) => {
 note('§ 4 demo pair equal width, 56px, 16px gap', pairBad,
   pairs.length ? `${pairs[0].demoPair.widths.join('/')} px wide, ${pairs[0].demoPair.heights.join('/')} tall` : '');
 
-// ── P4 · ONE FILLED BLUE PER VIEWPORT ──────────────────────────────────────
+// ── P4 · ONE FILLED CONTROL PER VIEWPORT, GREEN AND BLUE COUNTED TOGETHER ──
 //
 // TWO PASSES, because the question has a static half and a dynamic half and a
 // scroll sweep answers neither of them properly.
@@ -640,7 +745,7 @@ note('§ 4 demo pair equal width, 56px, 16px gap', pairBad,
 //     that decides which defects exist is not a measurement.
 // B · LIVE, for the RAIL, which is the half that genuinely cannot be computed
 //     from static rects — it arms and suppresses on IntersectionObserver.
-console.log('\n══ § 3 · ONE FILLED BLUE PER VIEWPORT ══\n');
+console.log('\n══ § 3 · ONE FILLED CONTROL PER VIEWPORT — GREEN AND BLUE COUNTED TOGETHER ══\n');
 
 const coBad = [];
 for (const [w, h] of VIEWPORTS) {
@@ -657,7 +762,7 @@ for (const [w, h] of VIEWPORTS) {
   }
   await ctx.close();
 }
-note('two content primaries can never co-occur', coBad, `${PAGES.length} pages x ${VIEWPORTS.length} viewports, exact`);
+note('two filled content controls (green or blue) never co-occur', coBad, `${PAGES.length} pages x ${VIEWPORTS.length} viewports, exact`);
 
 const filledBad = [];
 let steps = 0;
@@ -722,10 +827,20 @@ note('§ 7 feature-detected and wrapped in source', srcBad);
     return true;
   }, s).then(async (ok) => { await p.waitForTimeout(120); return ok; });
 
-  await p.evaluate(() => { window.__buzz.length = 0; });
-  await tap('.tel-btn');
-  const onPrimary = await p.evaluate(() => window.__buzz.slice());
-  if (onPrimary.length !== 1 || onPrimary[0] !== 12) hapBad.push({ where: 'primary CTA', got: onPrimary });
+  // 2026-09-13 · the hero .tel-btn is gone. #setup's primary is the blue v3
+  // control on / now, and PUSH TO BOOK is a .btn-primary, so aic.js's PRIMARY
+  // selector has to buzz it as well. Each is tapped once and each must buzz
+  // exactly one 12ms pulse. A control that is not there is reported MISSING,
+  // not read as silence.
+  const onPrimary = [];
+  for (const s of ['#setup .btn-primary', '.btn-go']) {
+    await p.evaluate(() => { window.__buzz.length = 0; });
+    const found = await tap(s);
+    const got = await p.evaluate(() => window.__buzz.slice());
+    onPrimary.push(got);
+    if (!found) hapBad.push({ where: 'primary CTA ' + s, got: 'MISSING' });
+    else if (got.length !== 1 || got[0] !== 12) hapBad.push({ where: 'primary CTA ' + s, got });
+  }
 
   await p.evaluate(() => { window.__buzz.length = 0; });
   await tap('nav.top .nav-cta');
@@ -770,59 +885,89 @@ note('§ 7 feature-detected and wrapped in source', srcBad);
 // VANISHED under the pointer. The cascade resolves each PROPERTY independently;
 // it does not merge two rules. Drive the pointer, then read.
 console.log('\n══ § 2 · HOVER AND PRESS, DRIVEN ══\n');
+// 2026-09-13 · THE CONTROL UNDER TEST MOVED. This drove the hero .tel-btn, which
+// the copy run removed, and a selector that matches nothing is a null the whole
+// gate dies on. #setup's primary is the same blue v3 control, so every expected
+// value below stands. Two things differ and both are handled here. It sits far
+// down the page, so it is scrolled to the middle of the viewport first —
+// 'instant', because scroll-behavior is smooth on this site and 'auto' animates
+// while the box is being read. And it is a link to /book/, not a tel: link that
+// headless Chromium ignores, so the released press is a click that would
+// navigate away mid-probe; a capture-phase preventDefault stops the navigation
+// without touching :hover, :active or the transitions being measured.
+const STATE_PRIMARY = '#setup .btn-primary';
+const toStatePrimary = async (p) => {
+  await p.addInitScript(() => document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href]');
+    if (a) e.preventDefault();
+  }, true));
+  await p.goto(ORIGIN + '/', { waitUntil: 'networkidle' });
+  await p.waitForTimeout(400);
+  const found = await p.evaluate((s) => {
+    const el = document.querySelector(s);
+    if (el) el.scrollIntoView({ block: 'center', behavior: 'instant' });
+    return !!el;
+  }, STATE_PRIMARY);
+  await p.waitForTimeout(700);
+  return found ? (await p.$(STATE_PRIMARY)).boundingBox() : null;
+};
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
-  await p.goto(ORIGIN + '/', { waitUntil: 'networkidle' });
-  await p.waitForTimeout(400);
-  const read = () => p.evaluate(() => {
-    const el = document.querySelector('.tel-btn');
-    const cs = getComputedStyle(el), bf = getComputedStyle(el, '::before');
-    return { transform: cs.transform, filter: cs.filter, bg: bf.backgroundColor,
-             dur: cs.transitionDuration, ease: cs.transitionTimingFunction };
-  });
-  const box = await (await p.$('.tel-btn')).boundingBox();
-  const rest = await read();
-  await p.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  await p.waitForTimeout(320);
-  const hover = await read();
-  await p.mouse.down();
-  await p.waitForTimeout(240);
-  const press = await read();
-  await p.mouse.up();
-  await p.mouse.move(5, 5);
-  await p.waitForTimeout(320);
-  const back = await read();
+  const box = await toStatePrimary(p);
+  if (!box) {
+    note('§ 2 rest / hover / press / release', [{ why: 'MISSING ' + STATE_PRIMARY + ' on /' }]);
+  } else {
+    const read = () => p.evaluate((s) => {
+      const el = document.querySelector(s);
+      const cs = getComputedStyle(el), bf = getComputedStyle(el, '::before');
+      return { transform: cs.transform, filter: cs.filter, bg: bf.backgroundColor,
+               dur: cs.transitionDuration, ease: cs.transitionTimingFunction };
+    }, STATE_PRIMARY);
+    const rest = await read();
+    await p.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await p.waitForTimeout(320);
+    const hover = await read();
+    await p.mouse.down();
+    await p.waitForTimeout(240);
+    const press = await read();
+    await p.mouse.up();
+    await p.mouse.move(5, 5);
+    await p.waitForTimeout(320);
+    const back = await read();
 
-  const stateBad = [];
-  const has24 = (f) => /drop-shadow\(rgba\(0, 0, 0, 0\.35\) 0px 8px 24px\)/.test(f);
-  const has8 = (f) => /drop-shadow\(rgba\(0, 0, 0, 0\.35\) 0px 2px 8px\)/.test(f);
-  if (!has24(rest.filter)) stateBad.push({ state: 'rest', filter: rest.filter });
-  if (!has24(hover.filter)) stateBad.push({ state: 'hover elevation lost', filter: hover.filter });
-  if (hover.transform !== 'matrix(1, 0, 0, 1, 0, -1)') stateBad.push({ state: 'hover lift', t: hover.transform });
-  if (hover.bg !== 'rgb(42, 99, 232)') stateBad.push({ state: 'hover fill', bg: hover.bg });
-  if (!has8(press.filter)) stateBad.push({ state: 'press shadow', filter: press.filter });
-  if (press.transform !== 'matrix(0.985, 0, 0, 0.985, 0, 2)') stateBad.push({ state: 'press transform', t: press.transform });
-  if (press.bg !== 'rgb(26, 76, 194)') stateBad.push({ state: 'press fill', bg: press.bg });
-  if (parseFloat(press.dur) !== 0.07) stateBad.push({ state: 'press 70ms', dur: press.dur });
-  if (parseFloat(rest.dur) !== 0.16) stateBad.push({ state: 'release 160ms', dur: rest.dur });
-  if (!/cubic-bezier\(0\.2, 0\.8, 0\.2, 1\)/.test(rest.ease)) stateBad.push({ state: 'easing', ease: rest.ease });
-  if (!has24(back.filter) || back.transform !== 'none') stateBad.push({ state: 'returns to rest', ...back });
-  note('§ 2 rest / hover / press / release', stateBad,
-    `rest ${rest.dur} press ${press.dur} hover-t ${hover.transform} press-t ${press.transform}`);
+    const stateBad = [];
+    const has24 = (f) => /drop-shadow\(rgba\(0, 0, 0, 0\.35\) 0px 8px 24px\)/.test(f);
+    const has8 = (f) => /drop-shadow\(rgba\(0, 0, 0, 0\.35\) 0px 2px 8px\)/.test(f);
+    if (!has24(rest.filter)) stateBad.push({ state: 'rest', filter: rest.filter });
+    if (!has24(hover.filter)) stateBad.push({ state: 'hover elevation lost', filter: hover.filter });
+    if (hover.transform !== 'matrix(1, 0, 0, 1, 0, -1)') stateBad.push({ state: 'hover lift', t: hover.transform });
+    if (hover.bg !== 'rgb(42, 99, 232)') stateBad.push({ state: 'hover fill', bg: hover.bg });
+    if (!has8(press.filter)) stateBad.push({ state: 'press shadow', filter: press.filter });
+    if (press.transform !== 'matrix(0.985, 0, 0, 0.985, 0, 2)') stateBad.push({ state: 'press transform', t: press.transform });
+    if (press.bg !== 'rgb(26, 76, 194)') stateBad.push({ state: 'press fill', bg: press.bg });
+    if (parseFloat(press.dur) !== 0.07) stateBad.push({ state: 'press 70ms', dur: press.dur });
+    if (parseFloat(rest.dur) !== 0.16) stateBad.push({ state: 'release 160ms', dur: rest.dur });
+    if (!/cubic-bezier\(0\.2, 0\.8, 0\.2, 1\)/.test(rest.ease)) stateBad.push({ state: 'easing', ease: rest.ease });
+    if (!has24(back.filter) || back.transform !== 'none') stateBad.push({ state: 'returns to rest', ...back });
+    note('§ 2 rest / hover / press / release', stateBad,
+      `rest ${rest.dur} press ${press.dur} hover-t ${hover.transform} press-t ${press.transform}`);
+  }
   await ctx.close();
 }
 // negative control for it: strip the hover filter and the probe must object
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
-  await p.goto(ORIGIN + '/', { waitUntil: 'networkidle' });
-  await p.addStyleTag({ content: '.tel-btn:hover{filter:none!important}' });
-  const box = await (await p.$('.tel-btn')).boundingBox();
-  await p.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  await p.waitForTimeout(320);
-  const f = await p.evaluate(() => getComputedStyle(document.querySelector('.tel-btn')).filter);
-  const fired = !/drop-shadow/.test(f);
+  const box = await toStatePrimary(p);
+  let fired = false;
+  if (box) {
+    await p.addStyleTag({ content: `${STATE_PRIMARY}:hover{filter:none!important}` });
+    await p.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await p.waitForTimeout(320);
+    const f = await p.evaluate((s) => getComputedStyle(document.querySelector(s)).filter, STATE_PRIMARY);
+    fired = !/drop-shadow/.test(f);
+  }
   console.log(`${fired ? 'FIRED' : 'DEAD '}  state probe sees a stripped hover elevation`);
   await ctx.close();
   if (!fired) { fails.push('state negative control'); }

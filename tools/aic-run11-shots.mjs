@@ -32,7 +32,9 @@ const shot = async (name, w, h, fn, clip) => {
   const ctx = await b.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2 });
   const p = await ctx.newPage();
   await fn(p);
-  await p.screenshot({ path: `${OUT}${name}.png`, ...(clip ? { clip } : {}) });
+  // a clip may be a function of the page, measured AFTER fn has scrolled it
+  const c = typeof clip === 'function' ? await clip(p) : clip;
+  await p.screenshot({ path: `${OUT}${name}.png`, ...(c ? { clip: c } : {}) });
   console.log(`  ${PHASE}/${name}.png`);
   await ctx.close();
 };
@@ -81,32 +83,34 @@ await shot('nav-430', 430, 932, async (p) => {
 }, { x: 0, y: 0, width: 430, height: 120 });
 
 // ── § 2 · the primary control, close enough to read the chamfer ───────────
+// 2026-09-13 · the hero .tel-btn these framed is gone, and a rect read off a
+// selector that matches nothing is a null that kills the whole run. #setup's
+// primary is the same blue v3 control. It sits far down the page, so it is
+// scrolled to the middle of the viewport — 'instant', because scroll-behavior is
+// smooth here and 'auto' animates while the box is read — and the clip is
+// measured in the SAME page after that scroll, not in a second context at the
+// top of the document, which only ever worked because the old target sat in
+// the fold.
+const SHOT_PRIMARY = '#setup .btn-primary';
+const toPrimary = async (p) => {
+  await p.goto(ORIGIN + '/', { waitUntil: 'networkidle' });
+  await p.waitForTimeout(400);
+  await p.evaluate((s) => document.querySelector(s).scrollIntoView({ block: 'center', behavior: 'instant' }), SHOT_PRIMARY);
+  await p.waitForTimeout(700);
+};
 for (const [name, w, h] of [['primary-390', 390, 844], ['primary-1440', 1440, 900]]) {
-  await shot(name, w, h, async (p) => {
-    await p.goto(ORIGIN + '/', { waitUntil: 'networkidle' });
-    await p.waitForTimeout(500);
-  }, await (async () => {
-    const ctx = await b.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2 });
-    const q = await ctx.newPage();
-    await q.goto(ORIGIN + '/', { waitUntil: 'networkidle' });
-    await q.waitForTimeout(400);
-    const r = await q.evaluate(() => {
-      const el = document.querySelector('.tel-btn');
-      const b = el.getBoundingClientRect();
-      return { x: Math.max(0, b.x - 26), y: Math.max(0, b.y - 26), width: b.width + 52, height: b.height + 52 };
-    });
-    await ctx.close();
-    return r;
-  })());
+  await shot(name, w, h, toPrimary, (p) => p.evaluate((s) => {
+    const b = document.querySelector(s).getBoundingClientRect();
+    return { x: Math.max(0, b.x - 26), y: Math.max(0, b.y - 26), width: b.width + 52, height: b.height + 52 };
+  }, SHOT_PRIMARY));
 }
 
 // § 2 · pressed. :active cannot be forced by CSS state, so the pointer is
-// actually held down on the control and the shutter fires while it is.
+// actually held down on the control and the shutter fires while it is. It is
+// never released, so the link to /book/ is never followed.
 await shot('primary-pressed-390', 390, 844, async (p) => {
-  await p.goto(ORIGIN + '/', { waitUntil: 'networkidle' });
-  await p.waitForTimeout(500);
-  const el = await p.$('.tel-btn');
-  const box = await el.boundingBox();
+  await toPrimary(p);
+  const box = await (await p.$(SHOT_PRIMARY)).boundingBox();
   await p.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await p.mouse.down();
   await p.waitForTimeout(220);

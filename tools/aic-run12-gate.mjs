@@ -17,11 +17,12 @@
 //   7  >=2 in-body links INTO each new page, and no orphans        (§5, § 8)
 //   8  a non-affiliation line wherever a page names a third party in its H1
 //   9  CTA canon: one string, one target                           (§8)
-//  10  chrome parity: all 16 pages carry the same nav/footer/drawer link set
-//  11  the sitemap lists exactly the 16 indexable URLs
+//      — and every PUSH TO BOOK link reads its one string and goes to /try/
+//  10  chrome parity: every page in ALL carries the same nav/footer/drawer link set
+//  11  the sitemap lists exactly the SITEMAP set, and never /try/
 //
 // EVERY ZERO-READING PROBE SHIPS A NEGATIVE CONTROL (DESIGN-SYSTEM trap 13).
-// Six fixtures are injected into a real page first and each must be caught. If
+// Fixtures are injected into a real page first and each must be caught. If
 // a control passes clean the whole run aborts, because a gate that cannot fail
 // is not a gate.
 //
@@ -43,9 +44,15 @@ const NEW = [
   ['/integrations/limo-anywhere/', 'integrations-limo-anywhere'],
   ['/integrations/fasttrak/', 'integrations-fasttrak'],
   ['/limo-dispatch-automation/', 'limo-dispatch-automation'],
+  // 2026-09-13 · the two answer-engine pages carry the anatomy this run's four
+  // did — breadcrumbs, a direct answer, a stamp, one visible table, four FAQ
+  // rows — so they are held to the same checks (1, 2, 5, 6, 7, 12, 13).
+  ['/what-it-does/', 'what-it-does'],
+  ['/what-it-can-do/', 'what-it-can-do'],
 ];
 const OLD = [
-  ['/', 'home'], ['/demo/', 'demo'], ['/book/', 'book'],
+  // 2026-09-13 · /demo/ is deleted; production 308s it to /try/.
+  ['/', 'home'], ['/book/', 'book'],
   ['/how-setup-works/', 'how-setup-works'],
   ['/works-with-your-software/', 'works-with-your-software'],
   ['/limo-answering-service/', 'limo-answering-service'],
@@ -55,7 +62,39 @@ const OLD = [
   ['/madison-limo-answering-service/', 'madison'],
   ['/privacy/', 'privacy'], ['/terms/', 'terms'],
 ];
+// ALL is the set whose CHROME must be identical (check 10) and whose in-body
+// links decide orphans (check 7). /rates/ and /reserve/ are NOT in it, and that
+// is measured, not forgotten: on 2026-09-13 both pages' footers carry /rates/
+// and /reserve/ in place of the two city pages, and their drawers add the same
+// two links, while no other page's do. Folding them in would fail check 10 on a
+// RUN 14 difference this run did not make and has no ruling on. They are in
+// SITEMAP below, so check 11 still holds them to the index.
 const ALL = [...OLD, ...NEW];
+
+// 11 · exactly what the sitemap lists — its OWN set, because "the pages this
+// gate sweeps" and "the pages the index is told about" stopped being one list
+// the day /rates/ and /reserve/ shipped. /try/ is deliberately absent: noindex.
+const SITEMAP = [
+  '/', '/limo-answering-service/', '/after-hours-limo-dispatch/',
+  '/milwaukee-limo-answering-service/', '/works-with-your-software/',
+  '/airport-transfer-booking/', '/how-setup-works/', '/what-it-does/',
+  '/what-it-can-do/', '/madison-limo-answering-service/', '/integrations/',
+  '/integrations/limo-anywhere/', '/integrations/fasttrak/',
+  '/limo-dispatch-automation/', '/book/', '/privacy/', '/terms/',
+  '/rates/', '/reserve/',
+];
+// judged as a function so its negative control can feed it a wrong sitemap
+const sitemapVerdict = (xml) => {
+  const locs = [...xml.matchAll(/<loc>https:\/\/aichauffeur\.ai([^<]*)<\/loc>/g)].map(m => m[1]);
+  return {
+    locs,
+    missing: SITEMAP.filter(p => !locs.includes(p)),
+    extra: locs.filter(l => !SITEMAP.includes(l)),
+    dupes: locs.filter((l, i) => locs.indexOf(l) !== i),
+    // any scheme, any host, with or without the slash — /try/ is never indexed
+    tryListed: /<loc>[^<]*\/try\/?<\/loc>/.test(xml),
+  };
+};
 
 // § 1 — the whole status vocabulary. Five strings. A sixth is a defect, and so
 // is a variant of one of these with a word moved.
@@ -68,6 +107,11 @@ const STATUS = [
 ];
 
 const CTA = 'Book the setup call';
+// 2026-09-13 · the money button's one string — capitals by ruling, in the
+// markup — and its one target. A PUSH TO BOOK that is a link goes to /try/.
+const GO = 'PUSH TO BOOK';
+const GO_TARGET = '/try/';
+const goOff = (g) => g.text !== GO || g.href !== GO_TARGET;
 
 // ── the in-page probe ──────────────────────────────────────────────────────
 const PROBE = () => {
@@ -136,6 +180,11 @@ const PROBE = () => {
   // 9 · CTA canon — every control or link that targets /book/
   out.bookTargets = [...document.querySelectorAll('a[href="/book/"]')]
     .filter(painted).map(txt);
+  //     ...and every painted PUSH TO BOOK that is a LINK. /try/ carries the same
+  //     control as a <button> that starts the call; it has no target to check
+  //     and is not collected.
+  out.goLinks = [...document.querySelectorAll('a.btn-go')]
+    .filter(painted).map(a => ({ text: txt(a), href: a.getAttribute('href') }));
 
   // 12 · a table that scrolls has to be reachable and has to say so.
   //      RUN 12 photographed the hub at 390 with its entire status column off
@@ -210,6 +259,9 @@ const NEW_ANCHORS = {
   '/integrations/limo-anywhere/': ['#capability', '#ladder', '#fields', '#ticket', '#talk', '#faq', '#more', '#ava-callback'],
   '/integrations/fasttrak/': ['#status', '#operation', '#intake', '#ticket', '#talk', '#faq', '#more', '#ava-callback'],
   '/limo-dispatch-automation/': ['#layer', '#compare', '#cost', '#ticket', '#talk', '#faq', '#more', '#ava-callback'],
+  // 2026-09-13 · every section id the two answer-engine pages ship
+  '/what-it-does/': ['#at-a-glance', '#on-the-call', '#the-quote', '#after-the-call', '#hear-it', '#faq', '#more'],
+  '/what-it-can-do/': ['#options', '#hear-it', '#faq', '#more'],
 };
 
 // ── shingles: 5-word windows, for the anti-doorway measure ────────────────
@@ -256,6 +308,13 @@ async function controls(page) {
     const a = document.createElement('a');
     a.href = '/negative-control-orphan/'; a.textContent = 'ctl';
     main.appendChild(a);
+    // two off-canon money buttons: the right target with the words in the wrong
+    // case, and the right words aimed at the wrong page
+    for (const [text, href] of [['Push to book', '/try/'], ['PUSH TO BOOK', '/negative-control-go/']]) {
+      const go = document.createElement('a');
+      go.className = 'btn btn-primary btn-go'; go.href = href; go.textContent = text;
+      main.appendChild(go);
+    }
     return true;
   });
   const p = await page.evaluate(PROBE);
@@ -265,6 +324,21 @@ async function controls(page) {
   if (!p.reserved) missed.push('reserved-phrase control did not fire');
   if (p.answers < 2) missed.push('extra-answer control did not fire');
   if (!p.links.includes('/negative-control-orphan/')) missed.push('link-scan control did not fire');
+  // both planted money buttons collected AND judged off canon, each on its own count
+  if (![['Push to book', '/try/'], ['PUSH TO BOOK', '/negative-control-go/']]
+    .every(([t, h]) => p.goLinks.some(g => g.text === t && g.href === h && goOff(g)))) {
+    missed.push('money-button control did not fire');
+  }
+  // the sitemap comparator must object to a sitemap built from the real list
+  // with one page dropped and /try/ added
+  {
+    const wrong = SITEMAP.slice(1).concat('/try/')
+      .map(u => '<url><loc>https://aichauffeur.ai' + u + '</loc></url>').join('');
+    const v = sitemapVerdict('<urlset>' + wrong + '</urlset>');
+    if (!(v.missing.includes(SITEMAP[0]) && v.extra.includes('/try/') && v.tryListed)) {
+      missed.push('sitemap control did not fire');
+    }
+  }
   // and the uniqueness measure must be able to report a LOW number
   const self = shingles(p.content);
   if (uniqueFraction(self, self) !== 0) missed.push('uniqueness control did not fire');
@@ -295,7 +369,7 @@ async function controls(page) {
     console.log('\n  A gate that cannot fail is not a gate. Aborting.\n');
     process.exit(2);
   }
-  console.log('  all 7 controls fired against the injected fixture\n');
+  console.log('  all 9 controls fired against the injected fixture\n');
 }
 
 // ── run ────────────────────────────────────────────────────────────────────
@@ -377,7 +451,7 @@ for (const [path] of NEW) {
 for (const [path] of ALL) {
   if (data[path].reserved) note(false, '4 · "production verified" rendered ' + path);
 }
-note(!ALL.some(([p]) => data[p].reserved), '4 · reserved phrase absent sitewide', '16/16');
+note(!ALL.some(([p]) => data[p].reserved), '4 · reserved phrase absent sitewide', ALL.length + '/' + ALL.length);
 
 // 5 · the last-updated stamp
 for (const [path] of NEW) {
@@ -420,7 +494,7 @@ for (const [path] of NEW) {
   }
   const orphans = ALL.filter(([p]) => p !== '/' && !inbound[p].length).map(([p]) => p);
   note(orphans.length === 0, '7 · zero orphaned indexable pages',
-    orphans.length ? orphans.join(' ') : '16/16 reachable in body');
+    orphans.length ? orphans.join(' ') : ALL.length + '/' + ALL.length + ' reachable in body');
 }
 
 // 8 · non-affiliation wherever a third party is named in the H1
@@ -438,6 +512,19 @@ for (const [path] of ALL) {
 }
 note(!ALL.some(([p]) => data[p].bookTargets.filter(t => t !== CTA && t !== CTA + ' →').length),
   '9 · one setup CTA string sitewide', CTA);
+// 9 · the money button — one string, one target, wherever it is a link. A count
+//     of zero fails too: a check that found nothing to judge has proved nothing
+//     about the pages that carry the button.
+{
+  let n = 0;
+  for (const [path] of ALL) {
+    n += data[path].goLinks.length;
+    const bad = data[path].goLinks.filter(goOff);
+    if (bad.length) note(false, '9 · PUSH TO BOOK off canon ' + path, bad.map(g => '"' + g.text + '" -> ' + g.href).join(' | '));
+  }
+  note(n > 0 && !ALL.some(([p]) => data[p].goLinks.some(goOff)),
+    '9 · every PUSH TO BOOK link reads one string, targets ' + GO_TARGET, n + ' painted links');
+}
 
 // 10 · chrome parity
 {
@@ -455,18 +542,19 @@ note(!ALL.some(([p]) => data[p].bookTargets.filter(t => t !== CTA && t !== CTA +
   note(ALL.every(([p]) => {
     const c = data[p].chrome;
     return c.nav === ref.nav && c.foot === ref.foot && c.drawer === ref.drawer;
-  }), '10 · nav/footer/drawer identical on all 16');
+  }), '10 · nav/footer/drawer identical on all ' + ALL.length);
 }
 
 // 11 · the sitemap
 {
   const xml = readFileSync(new URL('../chauffeur/sitemap.xml', import.meta.url).pathname.slice(1), 'utf8');
-  const locs = [...xml.matchAll(/<loc>https:\/\/aichauffeur\.ai([^<]*)<\/loc>/g)].map(m => m[1]);
-  const missing = ALL.map(([p]) => p).filter(p => !locs.includes(p));
-  const extra = locs.filter(l => !ALL.some(([p]) => p === l));
-  note(!missing.length && !extra.length, '11 · sitemap lists exactly the 16 pages',
-    locs.length + ' urls' + (missing.length ? ' MISSING ' + missing.join(' ') : '') +
-    (extra.length ? ' EXTRA ' + extra.join(' ') : ''));
+  const v = sitemapVerdict(xml);
+  note(!v.missing.length && !v.extra.length && !v.dupes.length && v.locs.length === SITEMAP.length,
+    '11 · sitemap lists exactly the ' + SITEMAP.length + ' pages',
+    v.locs.length + ' urls' + (v.missing.length ? ' MISSING ' + v.missing.join(' ') : '') +
+    (v.extra.length ? ' EXTRA ' + v.extra.join(' ') : '') +
+    (v.dupes.length ? ' DUPLICATE ' + v.dupes.join(' ') : ''));
+  note(!v.tryListed, '11 · /try/ is not in the sitemap (noindex)', v.tryListed ? 'LISTED' : '');
 }
 
 // 12 · scrollable tables, at the widths where they actually scroll

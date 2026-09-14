@@ -87,7 +87,9 @@ function startServer() {
 
 const PAGES = [
   ['/', 'home'],
-  ['/demo/', 'demo'],
+  // 2026-09-13: /demo/ left the host (it 308s to /try/); the two answer pages joined.
+  ['/what-it-does/', 'what-it-does'],
+  ['/what-it-can-do/', 'what-it-can-do'],
   ['/book/', 'book'],
   ['/how-setup-works/', 'how-setup-works'],
   ['/works-with-your-software/', 'works-with-your-software'],

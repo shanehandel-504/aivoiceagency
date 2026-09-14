@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // RUN 9 · LIVE-DIFF GATE
 // ---------------------------------------------------------------------------
-// Fetches all twelve production pages plus the three CSS homes and the shared JS
+// Fetches every production page plus the three CSS homes and the shared JS
 // with a cache-busting query, and asserts each is BYTE-IDENTICAL to the file in
 // the repo. This is the only gate that proves what shipped is what was written:
 // a Vercel project rooted at /chauffeur/ can silently serve a stale build, and
@@ -21,7 +21,7 @@ const BUST = 'run9diff=' + Date.now();
 
 const PAGES = [
   ['/', 'index.html'],
-  ['/demo/', 'demo/index.html'],
+  // 2026-09-13 · /demo/ is deleted from the repo; production 308s it to /try/.
   ['/book/', 'book/index.html'],
   ['/how-setup-works/', 'how-setup-works/index.html'],
   ['/works-with-your-software/', 'works-with-your-software/index.html'],
@@ -34,6 +34,14 @@ const PAGES = [
   ['/integrations/limo-anywhere/', 'integrations/limo-anywhere/index.html'],
   ['/integrations/fasttrak/', 'integrations/fasttrak/index.html'],
   ['/limo-dispatch-automation/', 'limo-dispatch-automation/index.html'],
+  // 2026-09-13 · the two answer-engine pages; /rates/ and /reserve/, which had
+  // shipped without this gate; and /try/. /try/ is noindex, but this gate is not
+  // about indexing — it proves what shipped is what was written, and /try/ ships.
+  ['/what-it-does/', 'what-it-does/index.html'],
+  ['/what-it-can-do/', 'what-it-can-do/index.html'],
+  ['/rates/', 'rates/index.html'],
+  ['/reserve/', 'reserve/index.html'],
+  ['/try/', 'try/index.html'],
   ['/privacy/', 'privacy/index.html'],
   ['/terms/', 'terms/index.html'],
 ];
@@ -44,6 +52,9 @@ const ASSETS = [
   ['/sitemap.xml', 'sitemap.xml'],
   ['/robots.txt', 'robots.txt'],
   ['/site.webmanifest', 'site.webmanifest'],
+  // 2026-09-13 · the answer-engine brief. aic-run10-gate.mjs asserts what it
+  // SAYS; only this proves production serves the file that says it.
+  ['/llms.txt', 'llms.txt'],
 ];
 
 const norm = (s) => s.replace(/\r\n/g, '\n');

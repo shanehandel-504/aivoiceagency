@@ -1,4 +1,4 @@
-/* AIC RUN 9 · Lighthouse gate — mobile, all twelve pages, before vs after.
+/* AIC RUN 9 · Lighthouse gate — mobile, every page in PAGES, before vs after.
  *
  * Gate: Accessibility 100 and SEO 100 on every page; Performance no lower than
  * the pre-run tree. Best-Practices is PRINTED, not chased: /book/ embeds a
@@ -26,12 +26,16 @@ const BEFORE = process.env.RUN9_BEFORE || 'http://127.0.0.1:8849';
 const OUT = path.join(__dirname, '..', 'audits', 'run9', 'lh');
 
 const PAGES = [
-  '/', '/demo/', '/book/', '/how-setup-works/', '/works-with-your-software/',
+  '/', '/book/', '/how-setup-works/', '/works-with-your-software/',
   '/limo-answering-service/', '/after-hours-limo-dispatch/', '/airport-transfer-booking/',
   '/milwaukee-limo-answering-service/', '/madison-limo-answering-service/',
   // RUN 12 · ALPHA — the integration cluster.
   '/integrations/', '/integrations/limo-anywhere/', '/integrations/fasttrak/',
   '/limo-dispatch-automation/',
+  // 2026-09-13 · /demo/ is deleted (production 308s it to /try/, which is
+  // noindex and has no SEO 100 to hold). The two answer-engine pages join, and
+  // so do /rates/ and /reserve/, which had shipped without this gate.
+  '/what-it-does/', '/what-it-can-do/', '/rates/', '/reserve/',
   '/privacy/', '/terms/',
 ];
 

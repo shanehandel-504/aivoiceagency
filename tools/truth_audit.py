@@ -145,6 +145,15 @@ def normalize(s):
           .replace("→", "->").replace(" ", " ")
           .replace("…", "..."))
     s = re.sub(r"[\s]+", " ", s)
+    # Every tag becomes a space on the way to visible text, so
+    # 'on the <a href="/integrations/">integrations page</a>.' reads
+    # "integrations page ." where the browser shows "integrations page.". A
+    # space against closing punctuation, or inside an opening bracket, is that
+    # artefact and not content, so it folds on both sides. (2026-09-13: six true
+    # FAQ answers failed on it. Tags still become spaces — dropping inline tags
+    # instead glued 47 headlines built from spans styled as separate lines.)
+    s = re.sub(r"\s+([.,;:!?)\]])", r"\1", s)
+    s = re.sub(r"([(\[])\s+", r"\1", s)
     return s.strip().lower()
 
 

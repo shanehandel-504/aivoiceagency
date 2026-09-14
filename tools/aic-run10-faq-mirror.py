@@ -71,8 +71,63 @@ def apply_to_node(node, entities):
     return hit
 
 
+def value_drift(src, entities):
+    """True if any FAQPage node on the page says something its visible copy
+    does not.
+
+    2026-09-13 · --check compares VALUES, not text. The rewrite serialised
+    compactly then, so a pretty-printed block that already said exactly what
+    the page says re-serialised to different TEXT and reported DRIFT — every
+    pretty-printed block, every run, on pages with nothing wrong with them. A
+    gate that fails a correct page teaches people to stop reading it. So the
+    block on disk is parsed, the same document is regenerated from the visible
+    copy, and the two parsed values are compared: whitespace and key order are
+    not drift; a changed, dropped or extra question is. The rewrite now keeps
+    the house format (indent=2), so write mode leaves a correct block alone."""
+    for m in LD.finditer(src):
+        try:
+            on_disk = json.loads(m.group(2))
+        except ValueError:
+            continue
+        regenerated = json.loads(m.group(2))
+        if apply_to_node(regenerated, entities) and regenerated != on_disk:
+            return True
+    return False
+
+
+def self_test():
+    """A gate that cannot fail is not a gate. Two in-memory fixtures run before
+    the real check: a pretty-printed block that mirrors its page must read
+    clean (the defect the value comparison exists to fix), and the same block
+    with one answer changed must read as drift. Returns the controls that did
+    not hold."""
+    page = ('<section id="faq"><details><summary>Is this a control?</summary>'
+            '<div>Yes, it is.</div></details></section>'
+            '<script type="application/ld+json">\n%s\n</script>')
+    good = {'@context': 'https://schema.org', '@type': 'FAQPage', 'mainEntity': [
+        {'@type': 'Question', 'name': 'Is this a control?',
+         'acceptedAnswer': {'@type': 'Answer', 'text': 'Yes, it is.'}}]}
+    bad = json.loads(json.dumps(good))
+    bad['mainEntity'][0]['acceptedAnswer']['text'] = 'A shortened answer.'
+    dead = []
+    for doc, want, name in ((good, False, 'a pretty-printed mirror reads clean'),
+                            (bad, True, 'a changed answer reads as drift')):
+        fixture = page % json.dumps(doc, indent=2, ensure_ascii=False)
+        if value_drift(fixture, visible_faq(fixture)) != want:
+            dead.append(name)
+    return dead
+
+
 def main():
     check = '--check' in sys.argv
+    if check:
+        dead = self_test()
+        for d in dead:
+            print('  ABORT  negative control did not hold: %s' % d)
+        if dead:
+            print('\n  A gate that cannot fail is not a gate. Aborting.')
+            return 2
+        print('  negative controls: pretty-printed mirror clean, changed answer caught\n')
     # RUN 12 · the depth-two glob. /integrations/limo-anywhere/ and
     # /integrations/fasttrak/ are the first pages on this host that live two
     # levels down, and until this line existed the mirror walked straight past
@@ -96,8 +151,11 @@ def main():
                 return m.group(0)
             if not apply_to_node(doc, entities):
                 return m.group(0)
-            return m.group(1) + json.dumps(doc, ensure_ascii=False,
-                                           separators=(',', ':')) + m.group(3)
+            # 2026-09-13 · the house format: every JSON-LD block on this host is
+            # json.dumps(indent=2). Compact output turned a write with nothing to
+            # fix into a hundred-line diff on every FAQ page it passed through.
+            return m.group(1) + json.dumps(doc, ensure_ascii=False, indent=2).replace(
+                '\n', '\r\n' if '\r\n' in src else '\n') + m.group(3)
 
         out = LD.sub(repl, src)
         has_faq_node = '"FAQPage"' in src or '@type":"FAQPage' in src
@@ -107,7 +165,7 @@ def main():
                 print('  NO VISIBLE Q&A but a FAQPage node ships: %s' % rel)
                 drift += 1
                 continue
-        if out != src:
+        if (value_drift(src, entities) if check else out != src):
             drift += 1
             if check:
                 print('  DRIFT  %s' % rel)

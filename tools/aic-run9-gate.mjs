@@ -18,13 +18,17 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 const require = createRequire('C:/Users/offic/Desktop/AVA-factory/adstage/package.json');
 const { chromium } = require('playwright');
 
-const ORIGIN = process.argv[2] || 'http://localhost:8848';
+// 127.0.0.1, not localhost: tools/aic-serve.mjs binds IPv4 only, and on this
+// machine localhost resolves to ::1 first and the connection is refused.
+const ORIGIN = process.argv[2] || 'http://127.0.0.1:8848';
 const OUT = new URL('../audits/run9/', import.meta.url).pathname.slice(1);
 mkdirSync(OUT, { recursive: true });
 
 const PAGES = [
   ['/', 'home'],
-  ['/demo/', 'demo'],
+  // 2026-09-13 · /demo/ is deleted from the repo. Production 308s /demo and
+  // /demo/ to /try/, which is noindex and wears no site shell, so there is no
+  // page left at that path for this gate to render.
   ['/book/', 'book'],
   ['/how-setup-works/', 'how-setup-works'],
   ['/works-with-your-software/', 'works-with-your-software'],
@@ -43,10 +47,31 @@ const PAGES = [
   ['/integrations/limo-anywhere/', 'integrations-limo-anywhere'],
   ['/integrations/fasttrak/', 'integrations-fasttrak'],
   ['/limo-dispatch-automation/', 'limo-dispatch-automation'],
+  // 2026-09-13 · the two answer-engine pages this run adds, and the two RUN 14
+  // pages this list never picked up. /rates/ and /reserve/ have shipped since
+  // 2026-08-20 and were rendered by aic-run14-gate.mjs alone — the exact silent
+  // omission the note above is about.
+  ['/what-it-does/', 'what-it-does'],
+  ['/what-it-can-do/', 'what-it-can-do'],
+  ['/rates/', 'rates'],
+  ['/reserve/', 'reserve'],
   ['/privacy/', 'privacy'],
   ['/terms/', 'terms'],
 ];
 const VIEWPORTS = [[360, 800], [390, 844], [430, 932], [768, 1024], [1024, 800], [1440, 900]];
+
+// ── the one console error this gate forgives ───────────────────────────────
+// 2026-09-13 · Every page loads Vercel Web Analytics from
+// /_vercel/insights/script.js. Until Web Analytics is switched on for the
+// project that URL is a 404 — on aic-serve and on production alike — and
+// Chromium logs "Failed to load resource" for it on every render. That is a
+// dashboard setting, not a defect in a page, so it is forgiven by EXACT match:
+// a failed load whose own URL is under /_vercel/insights/. Any other failed
+// load, and every other console error, still fails. It is counted and printed
+// once as a WARN rather than swallowed.
+const INSIGHTS = '/_vercel/insights/';
+const isInsights404 = (m) =>
+  /^Failed to load resource/.test(m.text()) && ((m.location() || {}).url || '').includes(INSIGHTS);
 
 // ── the in-page probe ──────────────────────────────────────────────────────
 const PROBE = () => {
@@ -58,17 +83,39 @@ const PROBE = () => {
     const a = fg.length > 3 ? fg[3] : 1;
     return [0, 1, 2].map(i => Math.round(fg[i] * a + bg[i] * (1 - a)));
   };
+  /* 2026-09-13 · A GRADIENT HAS NO ONE COLOUR, and this walk only read
+     background-color. PUSH TO BOOK paints its face as a ::before
+     background-IMAGE (the green ramp) over a host that paints nothing, so its
+     dark ink was measured against the page behind the button — about 1:1, a
+     failure that is not on screen. A fully painted linear-gradient on an
+     absolutely positioned ::before is a ground now. It is pushed BEFORE its
+     host's own background, because it paints above it, and every stop is a
+     candidate ground: the text is judged against the worst one, which for dark
+     ink is the darkest stop. A ramp with a transparent stop is a pattern drawn
+     over a ground (a hairline, the grid), not a ground, and is left out.
+     Ported from tools/aic-try/lib.mjs, which has judged /try/ this way since v7. */
+  const rampOf = (s) => {
+    if (s.content === 'none' || s.position !== 'absolute') return null;
+    if (!/linear-gradient\(/.test(s.backgroundImage || '')) return null;
+    const stops = (s.backgroundImage.match(/rgba?\([^)]*\)/g) || []).map(parse);
+    return stops.length && stops.every(c => c && (c.length < 4 || c[3] > 0)) ? stops : null;
+  };
   const bgOf = (el) => {
     let stack = [], n = el;
     while (n && n.nodeType === 1) {
+      const ramp = rampOf(getComputedStyle(n, '::before'));
+      if (ramp) {
+        stack.push(ramp);
+        if (ramp.every(c => c.length < 4 || c[3] >= 1)) break;
+      }
       const c = parse(getComputedStyle(n).backgroundColor);
-      if (c && (c.length < 4 || c[3] > 0)) stack.push(c);
+      if (c && (c.length < 4 || c[3] > 0)) stack.push([c]);
       if (c && (c.length < 4 || c[3] >= 1)) break;
       n = n.parentElement;
     }
-    let base = [7, 11, 20];
-    for (let i = stack.length - 1; i >= 0; i--) base = over(stack[i], base);
-    return base;
+    let bases = [[7, 11, 20]];
+    for (let i = stack.length - 1; i >= 0; i--) bases = bases.flatMap(b => stack[i].map(c => over(c, b)));
+    return bases;
   };
 
   const out = {
@@ -124,9 +171,12 @@ const PROBE = () => {
     const own = [...el.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim()).map(n => n.textContent.trim()).join(' ');
     if (!own) return;
     const fg = parse(cs.color); if (!fg) return;
-    const bg = bgOf(el);
-    const eff = over(fg, bg);
-    const cr = ratio(eff, bg);
+    // every candidate ground, and the text is judged against the worst of them
+    let cr = Infinity, bg = null;
+    for (const g of bgOf(el)) {
+      const x = ratio(over(fg, g), g);
+      if (x < cr) { cr = x; bg = g; }
+    }
     const px = parseFloat(cs.fontSize);
     const bold = (parseInt(cs.fontWeight, 10) || 400) >= 700;
     const large = px >= 24 || (px >= 18.66 && bold);
@@ -276,6 +326,19 @@ async function negativeControls(page) {
     a.style.cssText = 'display:block;width:60px;white-space:normal';
     a.textContent = 'negative control label that must wrap';
     wrap.appendChild(a); document.body.appendChild(wrap);
+    // 2026-09-13 · a label whose ONLY failing ground is a ::before ramp. It sits
+    // on a WHITE panel, so a probe that still reads background-color alone
+    // measures ~19:1 and passes it; only a probe that sees the ramp fails it.
+    const st = document.createElement('style');
+    st.textContent = '#NEGCTL-RAMP{position:relative;display:block;color:rgb(7,11,20);font-size:14px}' +
+      '#NEGCTL-RAMP::before{content:"";position:absolute;inset:0;z-index:-1;' +
+      'background-image:linear-gradient(180deg,#1A2233 0%,#0D1420 100%)}';
+    document.head.appendChild(st);
+    const panel = document.createElement('div');
+    panel.style.cssText = 'background:#FFFFFF;isolation:isolate';
+    const ink = document.createElement('span');
+    ink.id = 'NEGCTL-RAMP'; ink.textContent = 'negative control: dark ink on a dark ramp';
+    panel.appendChild(ink); document.body.appendChild(panel);
   });
   const r = await page.evaluate(PROBE);
   const failures = [];
@@ -284,6 +347,7 @@ async function negativeControls(page) {
   if (!r.contrast.length) failures.push('contrast probe did not fire');
   if (!r.accents.length) failures.push('accent probe did not fire');
   if (!r.wraps.length) failures.push('wrap probe did not fire');
+  if (!r.contrast.some(c => c.text.startsWith('negative control: dark ink on a dark ramp'))) failures.push('ramp-ground contrast probe did not fire');
   const navCtl = await page.evaluate(() => {
     const nav = document.querySelector('nav.top');
     const d = document.createElement('div');
@@ -292,6 +356,24 @@ async function negativeControls(page) {
     return true;
   }) && await page.evaluate(PROBE_SRC_NAVONLY);
   if (!navCtl) failures.push('nav-row probe did not fire');
+  // 2026-09-13 · the console filter forgives ONE failed load and must not forgive
+  // a second. A script that does not exist is planted on a fresh page, and its
+  // 404 has to land in the error list.
+  {
+    const c = await page.context().browser().newContext();
+    const p = await c.newPage();
+    const seen = [];
+    p.on('console', (m) => { if (m.type() === 'error' && !isInsights404(m)) seen.push(((m.location() || {}).url || '') + ' ' + m.text()); });
+    await p.goto(ORIGIN + '/', { waitUntil: 'networkidle' });
+    await p.evaluate(() => {
+      const s = document.createElement('script');
+      s.src = '/negative-control-missing.js';
+      document.head.appendChild(s);
+    });
+    await p.waitForTimeout(800);
+    await c.close();
+    if (!seen.some((t) => t.includes('/negative-control-missing.js'))) failures.push('console filter swallowed a failed load that is not the analytics script');
+  }
   await page.evaluate(() => location.reload());
   return failures;
 }
@@ -303,11 +385,16 @@ const page = await ctx.newPage();
 
 const ctl = await negativeControls(page);
 if (ctl.length) { console.error('NEGATIVE CONTROL FAILED:', ctl.join(' · ')); process.exit(2); }
-console.log('negative controls: all three probes fired on a broken fixture  OK\n');
+console.log('negative controls: every probe fired on a broken fixture  OK\n');
 
 const results = [];
 let consoleErrors = [];
-page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text()); });
+let insights404 = 0;
+page.on('console', m => {
+  if (m.type() !== 'error') return;
+  if (isInsights404(m)) { insights404++; return; }
+  consoleErrors.push(m.text());
+});
 page.on('pageerror', e => consoleErrors.push('PAGEERROR ' + e.message));
 
 for (const [path, tag] of PAGES) {
@@ -399,6 +486,7 @@ const line = (name, bad, extra = '') =>
 console.log(`\n══ RUN 9 RENDER GATE · ${PAGES.length} pages x ${VIEWPORTS.length} viewports = ${results.length} renders ══\n`);
 line('horizontal overflow', overflow);
 line('console / page errors', errs);
+if (insights404) console.log(`WARN  analytics script 404 — Web Analytics not enabled on the project yet  (${insights404} ignored)`);
 line('contrast below floor', contrast);
 line('control labels wrapping', wraps);
 line('accents per section > 2', accents);
