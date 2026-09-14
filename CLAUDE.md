@@ -466,6 +466,55 @@ silences internal traffic.
 - This freeze is narrower than § POLISH FREEZE and does not replace it. Where both apply, both
   must be satisfied.
 
+---
+
+## RETELL API RULES (Aug 17 2026)
+
+Three Retell list endpoints are deprecated. **Never call them again**, in a committed tool or a
+throwaway session script:
+
+| Never | Use instead |
+|---|---|
+| `POST /v2/list-calls` | `POST /v3/list-calls` |
+| `GET /list-agents` | `POST /v2/list-agents` |
+| `GET /list-phone-numbers` | `GET /v2/list-phone-numbers` |
+
+**Read a transcript in two steps.** `/v3/list-calls` deliberately omits `transcript`,
+`transcript_object`, `transcript_with_tool_calls` and `recording_url`. Take the `call_id` from the
+list, then `GET /v2/get-call/{call_id}` for the detail. There is no `/v1/get-call` and no bare
+`/get-call` — both 404. (Retell's own list-calls doc page cites `/v1/get-call/{call_id}`; that is a
+documentation error, verified against the wire 2026-08-17.)
+
+**The replacements are not drop-ins. Three shape changes, each of which fails SILENTLY.**
+
+1. **Every new list returns an object, not a bare array.** `{items, pagination_key, has_more}` —
+   `/v2/list-phone-numbers` returns `{items, has_more}`. A path-only swap leaves `.find` / `.filter`
+   / `.length` reading an object, so a correctly-bound number reads as absent and a live rail prints
+   empty. Unwrap `.items` and page on `pagination_key` while `has_more`.
+2. **`/v3/list-calls` tightened `filter_criteria`.** The v2 forms return HTTP 400:
+   - `direction` → `{type:'enum', op:'in', value:['inbound']}` — **not** a bare array.
+   - `start_timestamp` → `{type:'number', op:'eq'|'ne'|'gt'|'ge'|'lt'|'le', value:<ms>}`
+     or `{type:'range', op:'bt', value:[lo, hi]}` — **not** `{lower_threshold}`.
+   - `agent_id` still accepts a bare array. `sort_order` and `limit` are unchanged.
+3. **`/v2/list-agents` is a DIFFERENT LIST, and it is a POST.** Legacy `/list-agents` returned one
+   row **per agent version** and **capped at 100 rows** — which was silently hiding agents on this
+   account. v2 returns one row **per agent** and carries **no `version`, `is_published` or
+   `webhook_url`**. Any audit that reads those fields must enumerate with `POST /v2/list-agents`,
+   then hydrate each agent with `GET /get-agent/{agent_id}`. Per-version history is
+   `GET /get-agent-versions/{agent_id}`.
+
+**`get-agent` still returns the DRAFT, not what answers the phone.** A number serves
+`latest_published`. This migration does not change that trap — see the version-coupling rules in § 8
+work and `tools/codex-read/retell-read.mjs`, which labels the distinction on every agent read.
+
+**`tools/codex-read/_http.mjs` is a read-only transport and stays that way.** Because Retell moved
+two READ operations onto POST, it exports `postList()` with a hard allowlist —
+`/v2/list-agents` and `/v3/list-calls` only. Anything else throws `READ-ONLY GUARD`. Extend the
+allowlist only for a genuinely read-only endpoint; never to issue a write.
+
+Deprecated endpoints still return HTTP 200 today. **A green run is not evidence you are compliant** —
+grep before you claim it.
+
 ## PROMPT-FOOTER KILL (Jul 29 2026)
 
 **Never end any run, report, receipt, or prompt with "how could this prompt be better" or any
