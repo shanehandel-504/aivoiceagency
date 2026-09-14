@@ -33,10 +33,12 @@
 
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/circulant.css?v=abf8701">
-  <link rel="stylesheet" href="/assets/aic.css?v=abf8701">
+  <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
+  <link rel="stylesheet" href="/assets/aic.css?v=cf498cf2">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://circulant.app.n8n.cloud" crossorigin>
+  <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+  <script defer src="/_vercel/insights/script.js"></script>
 
   <style>
     /* /try · page scope. Every colour is a site token and the control is the
@@ -210,68 +212,10 @@
       .try-turns{max-height:13rem}
     }
 
-    /* ══════════════════════════════════════════════════════════════════
-       PUSH BUTTON v7 — GREEN, BORDERED, LIT, STEADY (Sep 13 2026 · SHIP)
-       Face: Booked-Green, one same-hue tone top to bottom. Edge: a 2px
-       bright-mint border on the site's notched .btn-primary shape. Letters:
-       near-black, bold, tracked. Light: a tight rim glow ON the button (a
-       filter, never a halo outside it), pulsing in light only — the button
-       never changes size. Hover pauses, press kills, so the site's 70ms
-       push-drop still lands. Live/connecting: dark face, green border, no
-       glow — the state is obvious and the bright thing on screen is not
-       "end". Ended: green again, lit, still. Reduced motion: steady light.
-       ══════════════════════════════════════════════════════════════════ */
-    .try{--g:#2EE6A8;--g-hi:#4AF3BE;--g-lo:#26D69B;--g-down:#22C48E;
-         --g-edge:rgba(190,255,232,.95);--g-ink:#070B14;
-         --glow:46,230,168;--glow-core:170,255,225}
+    /* PUSH BUTTON v7 lives in /assets/aic.css as .btn-go since 2026-09-13, so the
+       homepage, both new pages and /try wear one control. Only the wrapper's
+       breathing is switched off here. */
     .try[data-state="ready"] .try-push{animation:none}
-    .try .try-btn,.try .try-btn:hover,.try .try-btn:active{color:var(--g-ink)}
-    .try .try-btn{font-weight:700;font-size:1.125rem;letter-spacing:.08em;min-height:3.75rem}
-    .try .try-btn::before{
-      background:linear-gradient(180deg,var(--g-hi) 0%,var(--g) 55%,var(--g-lo) 100%);
-      border:2px solid var(--g-edge);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -2px 0 rgba(0,0,0,.20)}
-    .try .try-btn:hover::before{background:linear-gradient(180deg,#5CF6C6 0%,#3BEEB3 55%,#2EE6A8 100%);border-color:#CFFFF0}
-    .try .try-btn:active::before{background:var(--g-down);border-color:var(--g-edge)}
-    .try .try-btn:focus-visible{outline-color:rgba(var(--glow),.9)}
-    /* light pulse — both keyframes carry the same filter list so it interpolates */
-    .try[data-state="ready"] .try-btn{animation:try-glow 3.2s ease-in-out infinite;will-change:filter}
-    @keyframes try-glow{
-      0%,100%{filter:brightness(1)
-                     drop-shadow(0 8px 24px rgba(0,0,0,.35))
-                     drop-shadow(0 0 3px rgba(var(--glow-core),.60))
-                     drop-shadow(0 0 10px rgba(var(--glow),.40))}
-      50%{filter:brightness(1.06)
-                 drop-shadow(0 8px 24px rgba(0,0,0,.35))
-                 drop-shadow(0 0 5px rgba(var(--glow-core),1))
-                 drop-shadow(0 0 20px rgba(var(--glow),.85))}}
-    .try[data-state="ready"] .try-push:hover .try-btn,
-    .try[data-state="ready"] .try-push:focus-within .try-btn{animation-play-state:paused}
-    .try[data-state="ready"] .try-btn:active{animation:none}
-    /* ended: green, lit, still */
-    .try[data-state="ended"] .try-btn{
-      filter:drop-shadow(0 8px 24px rgba(0,0,0,.35)) drop-shadow(0 0 12px rgba(var(--glow),.5))}
-    /* connecting + live: dark face, green edge, ink letters, no glow */
-    .try[data-state="connecting"] .try-btn,.try[data-state="live"] .try-btn,
-    .try[data-state="connecting"] .try-btn:hover,.try[data-state="live"] .try-btn:hover{
-      color:var(--ink);filter:drop-shadow(0 8px 24px rgba(0,0,0,.35))}
-    .try[data-state="connecting"] .try-btn::before,.try[data-state="live"] .try-btn::before,
-    .try[data-state="connecting"] .try-btn:hover::before,.try[data-state="live"] .try-btn:hover::before{
-      background:var(--surface);border:2px solid rgba(var(--glow),.75);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
-    .try[data-state="live"] .try-btn:active::before{background:#0A1220}
-    @media (prefers-reduced-motion:reduce){
-      .try[data-state="ready"] .try-btn{animation:none;
-        filter:drop-shadow(0 8px 24px rgba(0,0,0,.35)) drop-shadow(0 0 12px rgba(var(--glow),.55))}
-    }
-    /* v7 addendum, measured: aic.css:1785 and :1788 still paint the button HOST
-       blue on :hover and :active (rgb(42,99,232) / rgb(26,76,194)), left over
-       from before the fill moved onto ::before. Blue on blue hid it. On the green
-       face and the dark face it shows as a blue sliver along the notch, because
-       the host's 10px corner reaches past the 8px cut — and iOS keeps :hover
-       after a tap, so it would sit on End demo for the whole call. In this
-       design the host carries no fill in any state. */
-    .try .try-btn,.try .try-btn:hover,.try .try-btn:active{background:none}
   </style>
 </head>
 <body>
@@ -295,7 +239,7 @@
         </div>
 
         <div class="try-push">
-          <button type="button" class="btn btn-primary try-btn" id="try-btn" data-event="try_call_start">PUSH TO BOOK</button>
+          <button type="button" class="btn btn-primary btn-go try-btn" id="try-btn" data-event="try_call_start">PUSH TO BOOK</button>
           <input class="try-haptic" id="try-haptic" type="checkbox" switch tabindex="-1" aria-hidden="true">
         </div>
         <p class="try-hint">Not a phone call. AI Chauffeur talks to you right here on this page — push once, then just talk. Stop any time.</p>
@@ -351,6 +295,14 @@
   </div>
 </main>
 
+<script>
+  /* Analytics: each [data-event] click is one Vercel Web Analytics event. Kept
+     apart from the call module below, which this file's owner edits alone. */
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest ? e.target.closest('[data-event]') : null;
+    if (el && typeof window.va === 'function') window.va('event', { name: el.getAttribute('data-event') });
+  }, { passive: true });
+</script>
 <script type="module">
   // /try · one browser call to the AI Chauffeur line.
   // Push: the proof is already solved -> POST to the n8n webhook -> join.

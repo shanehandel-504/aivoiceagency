@@ -1,7 +1,7 @@
 /* ============================================================================
    AI CHAUFFEUR · SHARED PAGE JS             AIC SITE RUN 1 — "OPERATOR CUT"
    ----------------------------------------------------------------------------
-   ONE source of truth for the "AVA calls you" rail. The endpoint appears in
+   ONE source of truth for the "AI Chauffeur calls you" rail. The endpoint appears in
    this file and nowhere else — CLAUDE.md § 7's principle is one swap at the
    token, not N edits across surfaces, and a lead endpoint duplicated into six
    pages is exactly the drift hazard that rule exists to prevent.
@@ -190,7 +190,7 @@
     }
   })();
 
-  /* ── "AVA calls you" ───────────────────────────────────────────────────── */
+  /* ── "AI Chauffeur calls you" ───────────────────────────────────────────────────── */
 
   /* digits only; 10 -> +1XXXXXXXXXX; 11 leading 1 -> +...; already-+ kept. */
   function toE164(raw) {
@@ -230,14 +230,14 @@
   function dialCheck(e164) {
     if (!e164) return { ok: false, msg: 'That number does not look right — check the digits.' };
     if (e164.slice(0, 2) !== '+1') {
-      return { ok: false, msg: 'AVA calls US and Canadian numbers only. Enter a 10-digit number.' };
+      return { ok: false, msg: 'AI Chauffeur calls US and Canadian numbers only. Enter a 10-digit number.' };
     }
     if (!/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(e164)) {
       return { ok: false, msg: 'That number does not look right — check the digits.' };
     }
     var npa = e164.slice(2, 5);
     if (PREMIUM_NPA.indexOf(npa) !== -1 || CARIBBEAN_NPA.indexOf(npa) !== -1) {
-      return { ok: false, msg: 'AVA cannot call that area code. Use the number you answer.' };
+      return { ok: false, msg: 'AI Chauffeur cannot call that area code. Use the number you answer.' };
     }
     if (TOLLFREE_NPA.indexOf(npa) !== -1) {
       return { ok: false, msg: 'That is a toll-free number. Enter the phone you answer.' };
@@ -412,7 +412,7 @@
       /* TCPA: fail closed. No explicit consent, no automated call — and the
          box is re-cleared on every reset so a new number needs a new tick. */
       if (!okEl || !okEl.checked) {
-        fail('Tick the box so AVA is allowed to call you.');
+        fail('Tick the box so AI Chauffeur is allowed to call you.');
         if (okEl) okEl.focus();
         return;
       }
@@ -420,7 +420,7 @@
       btn.disabled = true;
       form.classList.remove('is-err');
       if (status) status.textContent = 'Standing by';
-      setNote('Sending your number to AVA…', '');
+      setNote('Sending your number to AI Chauffeur…', '');
 
       var payload = {
         first_name: nameEl ? (nameEl.value || '').trim() : '',
@@ -469,14 +469,14 @@
            the worst thing this branch can do, so the refusal gets its own copy. */
         if (r.status === 403) {
           cellEl.setAttribute('aria-invalid', 'true');
-          fail('AVA calls US and Canadian numbers only. Or call ' + TEL_DISPLAY + ' now.');
+          fail('AI Chauffeur calls US and Canadian numbers only. Or call ' + TEL_DISPLAY + ' now.');
           cellEl.focus();
           return;
         }
-        fail('Could not reach AVA (' + r.status + '). Try again, or just call ' + TEL_DISPLAY + '.');
+        fail('Could not reach AI Chauffeur (' + r.status + '). Try again, or just call ' + TEL_DISPLAY + '.');
       }, function () {
         btn.disabled = false;
-        fail('Could not reach AVA. Try again, or just call ' + TEL_DISPLAY + '.');
+        fail('Could not reach AI Chauffeur. Try again, or just call ' + TEL_DISPLAY + '.');
       });
     });
   }
@@ -642,3 +642,12 @@
     calc.hidden = false;
   })();
 })();
+
+/* ══ 2026-09-13 · ANALYTICS ═══════════════════════════════════════════════════
+   Every [data-event] click becomes one Vercel Web Analytics custom event. The
+   queue shim in each page's <head> defines window.va before this file runs, so a
+   click made before the insights script arrives is queued rather than lost. */
+document.addEventListener('click', function (e) {
+  var el = e.target && e.target.closest ? e.target.closest('[data-event]') : null;
+  if (el && typeof window.va === 'function') window.va('event', { name: el.getAttribute('data-event') });
+}, { passive: true });

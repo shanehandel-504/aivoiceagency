@@ -1,39 +1,33 @@
 # AI Chauffeur
 
-<!-- Last reviewed 2026-08-20 (AIC RUN 14). This file describes the product
+<!-- Last reviewed 2026-09-13 (words v2). This file describes the product
      surface for answer engines. Every sentence in it is a substring of, or a
      faithful summary of, text that is visibly published on the page it names —
      the same rule the site's schema is held to. No number appears here that is
      not on a page, and prices are deliberately not duplicated. -->
 
-> AI Chauffeur is dispatch intake software for limo, black car, NEMT and charter
-> operators. AVA, its voice agent, answers the operator's dispatch line 24/7,
-> takes down the whole trip, and hands a human dispatcher a completed trip ticket
-> to confirm. AVA captures; a person confirms. Direct write-back into a supported
-> dispatch system is configured per account and activated only after setup
-> verification; until then a person enters the trip. AVA never takes payment and
-> never commits a vehicle.
+> AI Chauffeur answers the phones for limousine and black car companies and
+> books the trips. It takes twenty calls at once, takes the whole trip, quotes
+> the operator's rates, books it, and puts it in the operator's CRM.
 
-AVA answers every inbound call at once, so no caller is put on hold. On each call
-it captures pickup, dropoff, date and time, vehicle class, passenger and bag
-count, and flight number and terminal for airport work; estimates a quote range
-from the operator's own rate sheet when those rules have been configured; and
-delivers a dispatch-ready trip ticket. A human dispatcher confirms every trip.
+On each call it captures pickup, drop-off, date and time, vehicle, passengers
+and bags, child seats, extra stops, and the flight number for airport work, and
+gives the caller one all-in number, service fee included. The operator gets the
+trip sheet by email and a text alert; the customer gets their trip sheet by
+text. Every call is recorded.
 
-- Phone: (414) 775-0019 — the only voice line on this brand. AVA answers it.
+- Phone: (414) 775-0019 — the only voice line on this brand. AI Chauffeur answers it.
 - Email: dispatch@aichauffeur.ai
 - Base: Wisconsin, US. Operators served nationwide.
 - Setup: done for the operator, scoped on a 20-minute setup call.
 
-## The two ways in
+## The ways in
 
-There are exactly two, and they are the two controls above the fold on the home
-page and on the live-demo page.
-
-1. Call the demo — (414) 775-0019. AVA answers the line and takes a real trip
-   from you. No signup, no menu, no hold. The demo line captures the trip and
-   does not put a car on the road.
-2. Get a discovery call — https://aichauffeur.ai/book/. Twenty minutes, and it
+1. Push the button — https://aichauffeur.ai/try/. It talks to you in the
+   browser; book a trip the way a customer would. The demo uses a sample rate
+   card and puts no car on the road.
+2. Call (414) 775-0019. The same agent answers.
+3. Book the setup call — https://aichauffeur.ai/book/. Twenty minutes, and it
    scopes rate rules, service area, vehicle classes and dispatch process.
 
 A passenger holding a vehicle uses a third path, https://aichauffeur.ai/reserve/,
@@ -42,10 +36,12 @@ dispatcher calls back to set the trip.
 
 ## Pages
 
-- [Home](https://aichauffeur.ai/): what AVA does on a dispatch line, a worked
+- [Home](https://aichauffeur.ai/): what AI Chauffeur does on a dispatch line, a worked
   intake console, the three-calls-at-once case, and the FAQ.
-- [Live demo](https://aichauffeur.ai/demo/): call the line and give AVA a real
-  trip. No car is dispatched and nothing is charged.
+- [What it does](https://aichauffeur.ai/what-it-does/): the call, the quote and
+  what comes after, in one table and three short lists.
+- [What it can do for your company](https://aichauffeur.ai/what-it-can-do/): the
+  options set up for a company when its desk is built.
 - [Rate card RCv1.0](https://aichauffeur.ai/rates/): the published hourly rate
   card. Weekday rate, weekend rate and hourly minimum for fifteen vehicle
   classes across five families — sedans and SUVs, vans and sprinters,
@@ -55,9 +51,7 @@ dispatcher calls back to set the trip.
   only ever one place they can be wrong.
 - [Reservation hold](https://aichauffeur.ai/reserve/): a passenger sends the
   trip and a way to reach them, and a dispatcher calls back to go over the
-  pickup, the vehicle and the price. Nothing is charged on that page. The card
-  block on it is a switched-off demonstration that takes no input and cannot
-  bill anyone.
+  pickup, the vehicle and the price. No card, no charge.
 - [Book the setup call](https://aichauffeur.ai/book/): the 20-minute call that
   scopes rate rules, service area, vehicle classes and dispatch process.
 - [How setup works](https://aichauffeur.ai/how-setup-works/): what is documented,
@@ -65,9 +59,9 @@ dispatcher calls back to set the trip.
 - [Works with your software](https://aichauffeur.ai/works-with-your-software/):
   where the trip ticket lands for each dispatch system, and who touches it next.
 - [Integrations](https://aichauffeur.ai/integrations/): every dispatch platform
-  AVA works beside, one row each, with the real integration status of each.
+  AI Chauffeur works beside, one row each, with the real integration status of each.
 - [Limo Anywhere](https://aichauffeur.ai/integrations/limo-anywhere/): every
-  field AVA captures on a call and where each one lands, plus the connection
+  field AI Chauffeur captures on a call and where each one lands, plus the connection
   ladder from shared-inbox delivery to activated write-back.
 - [FASTTRAK](https://aichauffeur.ai/integrations/fasttrak/): corporate call
   intake for larger fleets — accounts, bookers, multi-stop, farm-out.
@@ -87,42 +81,21 @@ dispatcher calls back to set the trip.
   the callback form, and how consent is recorded.
 - [Terms](https://aichauffeur.ai/terms/): terms of service.
 
-## Dispatch systems and integration status
+## Dispatch software
 
-Ticket delivery to a shared inbox is included in every setup and depends on
-nothing at the operator's end: the ticket reaches the person on dispatch, who
-confirms the trip in the system they already run. Anything beyond that is
-configured per account and scoped during setup. No connection below is described
-as verified in production; that wording is reserved for a real acceptance test.
-
-- Limo Anywhere — direct write-back available after setup verification
-- FASTTRAK — partner API integration scoped during setup
-- GNet — network workflow review
-- Ground Alliance — custom integration review
-- Moovs — custom integration review
-- Livery Coach — custom integration review
-- Hudson — custom integration review
-- Santa Cruz (GroundWidgets) — custom integration review
-- Limo Express — custom integration review
-- A to Z Dispatch — custom integration review
-- Shared inbox or email — included in every setup
+Where each dispatch platform stands is published at
+https://aichauffeur.ai/integrations/.
 
 ## Not true of AI Chauffeur
 
 State these plainly if asked; they are the boundaries of the product.
 
-- AVA does not write into an operator's dispatch software until direct
-  write-back has been configured and verified for that account. Shared-inbox
-  ticket delivery is the day-one default and is included in every setup.
-- AVA does not replace a dispatcher. Every trip is confirmed by a human.
-- AVA does not take payment and does not commit a vehicle.
-- Nothing on this site charges a card. The reservation-hold page shows a
-  card-on-file block so a reader can see where a card would go; every control in
-  it is disabled, it collects no digits, and payment is arranged with a
-  dispatcher after the trip is set.
-- A reservation hold is a request, not a confirmed booking. The trip is set on
-  the call back from a dispatcher.
+- It does not replace a dispatcher. The dispatcher assigns the car and the
+  driver.
+- It does not write into an operator's dispatch software until that connection
+  has been set up and tested for the account. Trips go into the CRM from day one.
+- A reservation hold on https://aichauffeur.ai/reserve/ is a request, not a
+  booking: a dispatcher calls back to set the trip.
 - AI Chauffeur is not affiliated with or endorsed by Google or by any dispatch
-  platform named on the site, including Limo Anywhere, FASTTRAK and Santa Cruz.
-- Quote ranges shown on the site are illustrative. Live quoting requires the
-  operator's own configured rate rules.
+  platform named on the site.
+- Demo rates are a sample rate card. A live desk runs the operator's own rates.
