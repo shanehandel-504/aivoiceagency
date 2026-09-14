@@ -1,6 +1,7 @@
 # AI CHAUFFEUR — DESIGN SYSTEM
 
 **Signal v1.5** · ratified RUN 13 "STICKY + TIDY", 2026-08-07.
+**Signal v1.6** · 2026-09-13 — the words v2 rulings, gathered in § 12 and written into the sections they change. Where older text disagrees, § 12 wins.
 v1.5 changes two things and closes the build phase: the sticky rail is
 **Call + Book** (§ 3), and **there are two CSS homes, not three** (§ 1) — the
 homepage's embedded stylesheet is gone and with it the drift class that has cost
@@ -125,7 +126,7 @@ does not ship.
 - **`--action-blue`** — **filled CTA buttons only**, always with white lettering.
   It is a **fill** colour and never sets type.
 - **`--sky`** — secondary highlight and eyebrow accent.
-- **`--success-green`** — see STATE LAW below.
+- **`--success-green`** — see STATE LAW below. Since 2026-09-13 it also paints the money buttons (§ 12).
 - **`--amber`** — ringing · pending · the cost of the miss.
 - **`--miss-red`** — failure only. Never "attention".
 - **`--neutral`** — inactive · not-yet · n/a.
@@ -140,6 +141,8 @@ measures 3.61:1 on paper and is large-text only there.
 
 Green renders **only beside a label naming the action that succeeded** — TRIP
 CAPTURED, QUOTE RETURNED, READY FOR DISPATCH. Never because a flow ended.
+
+**Amended 2026-09-13 (§ 12).** Green also marks the **money buttons**: the PUSH TO BOOK controls, and the header phone chip and header Book control as outlines. That is the whole list — no other control turns green on the strength of this line.
 **Label text and colour change on the same frame.** A 450ms colour crossfade
 once left rows reading "Ringing" while still painted green, in 18.6% of frames.
 
@@ -276,6 +279,8 @@ page — and they keep the v2 recipe below: no chamfer, no exterior elevation.
 | Reduced motion | transforms and transitions off, **colour states only**, elevation holds at its resting value |
 | Label | Space Grotesk 600, sentence case. No ALL-CAPS, no emoji, no cyan. |
 
+**Amended 2026-09-13 (§ 12).** `.btn-go` is the money-button variant of this control and keeps its structure (unclipped host, chamfered `::before`). Its label is **PUSH TO BOOK, ALL-CAPS by ruling**: `#070B14` at 700 on a Booked-Green ramp with a 2px mint edge. It carries the § 4 rim glow.
+
 **THE STRUCTURE IS NOT A STYLE CHOICE.** `clip-path` is applied **after**
 `filter` and it clips **everything the element paints — its outline and its
 box-shadow included.** Read as pixels on a 200×60 fixture over `--midnight`: an
@@ -324,6 +329,8 @@ rail are chrome and stay at 44px** — the header is capped at 64px on a phone a
 at 82.
 
 ### CTA DE-DUPLICATION (ratified RUN 10)
+
+**Amended 2026-09-13 (§ 12).** The header phone chip is a **green outline at every width** on every page, and so is the header Book control. The hero PUSH TO BOOK is the only green fill on the fold. The chip rule below — filled under 1024px — is retired.
 
 **Never three filled blue phone surfaces in one viewport.** Measured on the 390
 fold before this run, the header chip and the hero primary sat 40px apart, both
@@ -501,6 +508,8 @@ same as a landing page's. Four rules, all machine-checked by
 
 ### THE CLAIM LADDER
 
+**Superseded in part, 2026-09-13 (§ 12).** AI Chauffeur **puts the trip in the CRM** today, and the copy says so plainly. Booking language is free ("books it", "every one booked"); confirmation language stays with dispatch. The ladder below still governs what this host says about writing into a **dispatch platform**.
+
 **What this brand may say about writing into a dispatch system, and in what
 order.** The whole of RUN 12's copy work was making sixteen pages say one thing.
 
@@ -550,6 +559,8 @@ order.** The whole of RUN 12's copy work was making sixteen pages say one thing.
 
 ## 4 · GLOW LAW
 
+**One exception, 2026-09-13 (§ 12): the money-button rim glow.** `.btn-go` carries a tight green glow that pulses in light only — **the button never scales** — and it may run alongside the two scenes below. Reduced motion holds it steady. No other component gets coloured light.
+
 **Ambient light exists in exactly two scenes**, both on the homepage:
 
 1. the **hero console** — an inset blue edge that breathes, paused offscreen by
@@ -594,8 +605,8 @@ faded it at the edges. That is exactly backwards.
 `chauffeur/` surface.** Copy, `<title>`, meta, OG/Twitter, JSON-LD, alt, aria,
 **class names**, and **comments**.
 
-- Voice is **"the AI Chauffeur team" / AVA / operators**. Never an individual.
-- **AVA is never "she" or "her."** Always AVA, by name. Grep-verified.
+- Voice is **"the AI Chauffeur team" / AI Chauffeur / operators**. Never an individual.
+- **The agent is AI Chauffeur on this host** (ruling 2026-09-13). The AVA name does not appear in visible text on aichauffeur.ai; code hooks such as `id="ava-callback"` and the n8n paths stay.
 - Authority rail: **BUILT BY OPERATORS · 17 YEARS IN CHAUFFEURED TRANSPORTATION ·
   SETUP DONE FOR YOU.** No personal timelines.
 - The operator section is titled **"Built by operators."**
@@ -620,7 +631,7 @@ filled half is the phone. See § 3 THE STICKY PAIR.
 Grep gates, all must read zero: `founder-led` · `request setup` ·
 `book the strategy` · `intro call`.
 
-The call is **20 minutes**. The demo is a **phone call** to 414-775-0019.
+The call is **20 minutes**. **The demo is the button at /try, or the phone** — (414) 775-0019 (ruling 2026-09-13). The button reads PUSH TO BOOK and goes to `/try/`.
 
 ### GOOGLE LEAD PROTECTION — copy law (ratified RUN 10)
 
@@ -628,9 +639,9 @@ The homepage section under that eyebrow is **fixed copy**. It ships verbatim and
 takes no additions:
 
 > **Eyebrow** GOOGLE LEAD PROTECTION
-> **H2** Google found the rider. AVA finishes the handoff.
+> **H2** Google found the rider. AI Chauffeur finishes the handoff.
 > **Body** Search and ads can make the phone ring. They can't make your dispatch
-> line answer. AVA picks up every call and takes down the route, flight,
+> line answer. AI Chauffeur picks up every call and takes down the route, flight,
 > vehicle, passengers, bags, and callback number — before the rider dials the
 > next operator on the map. Every trip you capture is a booked ride, a
 > relationship, and a review your competitor never gets.
@@ -659,7 +670,7 @@ dropped for space: this section names another company in its heading.
 
 | Group | Links |
 |---|---|
-| Product | Live demo · How setup works · Works with your software |
+| Product | Live demo (→ /try/) · What it does · What it can do · How setup works · Works with your software · Integrations |
 | Solutions | Limo answering service · After-hours limo dispatch · Airport transfer booking |
 | Locations | Milwaukee · Madison |
 
@@ -688,7 +699,7 @@ row against the bar's own content box for exactly this reason.
 
 | Column | Links |
 |---|---|
-| Product | Live demo · How setup works · Works with your software · Book the setup call |
+| Product | Live demo (→ /try/) · What it does · What it can do · How setup works · Works with your software · Integrations · Book the setup call |
 | Solutions | Limo answering service · After-hours limo dispatch · Airport transfer booking |
 | Locations | Milwaukee · Madison |
 | Company | Call (414) 775-0019 · Privacy · Terms |
@@ -1063,3 +1074,18 @@ All five have been seen in the wild.
    leaving `lockup-short.svg` — 40px away in the same header — untouched. The
    result was one brand wearing two accents, and no gate could see it because
    every individual file was internally consistent.
+
+---
+
+## 12 · SEP 13 2026 RULINGS — words v2
+
+Ratified by the owner on 2026-09-13. Brief and sources: `docs/superpowers/plans/2026-09-13-aic-words-v2.md`.
+
+- **Name.** AI Chauffeur answers. AVA does not appear in visible text on this host. Code hooks (`id="ava-callback"`, the n8n `ava-call` and `ava-intake` paths) stay.
+- **Accent.** Signal blue stays. No cyan outside the logo files.
+- **Money buttons — the whole list.** Green fill: the homepage hero and section-close PUSH TO BOOK, the PUSH TO BOOK on `/what-it-does/` and `/what-it-can-do/` (all go to `/try/`), and the `/try/` button itself. Green outline: the header phone chip and the header Book control, at every width. The `/book/` booking button lives inside the GHL widget and is set there. Every other control keeps its § 3 recipe.
+- **`.btn-go`.** Lives in `assets/aic.css` as a modifier of `.btn.btn-primary`: green ramp on the chamfered `::before`, 2px mint edge, `#070B14` label at 700 with .08em tracking, and a rim glow that pulses in light only (`@keyframes try-glow`, 3.2s). On `/try/` the faces follow `data-state`: connecting and live are a dark face with a green edge, an ink label and no glow; ended is lit and still. Reduced motion holds the glow steady. The button never scales.
+- **Copy law.** Never lead with after hours, nights or weekends on the homepage, `/what-it-does/`, `/what-it-can-do/`, `/try/`, the PDF or email; `/after-hours-limo-dispatch/` is a search page and keeps its place. Never name a CRM or dispatch product in copy. Recorded exceptions until the sweep: the two integration pages, the nav, drawer and footer links that name them, and `/works-with-your-software/`.
+- **Claims.** "Books it" and "puts it in your CRM" are set wording; confirmation language stays with dispatch. Every number on the page has a source in the brief's § 3 or a source comment beside it.
+- **Demo.** The demo is the button at `/try/`, or the phone. `/demo/` redirects to `/try/` (308).
+- **Analytics.** Vercel Web Analytics on every page; `[data-event]` clicks call `va('event', {name})`.

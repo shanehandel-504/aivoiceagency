@@ -271,6 +271,8 @@ Anchor drift is a real failure mode: this table was wrong for a week before RUN 
 
 ## § 8 · BRAND B — AI CHAUFFEUR
 
+**aichauffeur.ai law lives in `chauffeur/DESIGN-SYSTEM.md`** — Signal v1.6 and its § 12 rulings (Sep 13 2026: AI Chauffeur is the agent's only name on that host, green marks its money buttons, the demo is the button at /try). Where this section disagrees, that file wins.
+
 **Direction for future builds** (not yet on the wire):
 leather-black base · crisp white lettering · deep muted amber indicators · a 3D bow-tie mark that
 doubles as an acoustic waveform · dark luxury minimalist.
