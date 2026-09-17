@@ -1723,9 +1723,11 @@ roughly 90px more room than the string needs. nowrap stays as the belt. */
   .btn{font-size:1rem;letter-spacing:.005em;padding:.95rem 1.15rem;
     white-space:normal;text-align:center}
 }
-/* The header clearance for #ava-callback moved to the § 1 ANCHOR GUTTER
-block in assets/circulant.css — one rule for every anchor target on all
-twelve pages. A copy here would have ADDED to it, not replaced it. */
+/* The § 1 ANCHOR GUTTER block in assets/circulant.css carries the header
+clearance for every anchor target on every page — one rule, not one per
+target. A private copy here would have ADDED to it, not replaced it.
+(The target this note was written for went with the callback console on
+2026-09-17; the rule it points at is unchanged and still the only one.) */
 /* The console's own halo pulse animated box-shadow forever, on or off
 screen — the same cost this run removed from the JS loop, left running in
 CSS. It is gated on the same IntersectionObserver now. */
@@ -1843,12 +1845,16 @@ animation goes. */
   font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.16em;
   text-transform:uppercase;color:var(--sky);text-align:left}
 .cb-head:focus-visible{outline:2px solid var(--signal-blue);outline-offset:-2px}
-/* words v2, 2026-09-13. This rule was white-space:nowrap. The call-me title grew nine
-   characters to "AI Chauffeur calls you", and held to one line it pushed
-   the chevron 21px past a 360px screen on the 13 pages that carry the card (run9
-   gate). The title now takes two lines when the row cannot hold it, never
-   narrower than its longest word; the status chip and the chevron keep their
-   size. Changed here, not overridden later in the file, so no rule is cancelled. */
+/* words v2, 2026-09-13. This rule was white-space:nowrap. The call-me title grew
+   nine characters and, held to one line, pushed the chevron 21px past a 360px
+   screen on the 13 pages that carried the card (run9 gate). The retired wording is
+   deliberately not quoted here: comments ship, and a grep-based audit matches a
+   banned string in a comment and reports a clean page as dirty.
+   2026-09-17 — ALL .cb-* RULES BELOW ARE DEAD ON THIS SITE. The card, its fields
+   and its script were removed from all 13 pages that day; only /reserve/'s own
+   hold form still borrows .cb-consent. Left in place rather than unpicked because
+   .cb-form and .cb-submit sit inside five shared selector lists and this was a
+   copy release. Delete them with a parity run, not by hand. */
 .cb-title{white-space:normal;text-wrap:balance}
 /* STATE LAW. The dot and the word are one element, so they cannot disagree:
    there is no colour transition on this rule, and the class that repaints it is
@@ -2730,7 +2736,7 @@ body.home .cta-stack{margin:0 0 3rem}
 /* ══ 2026-09-13 · GREEN OUTLINE CHROME — header phone chip + Book ════════════
    Law: DESIGN-SYSTEM.md § 12. The two header controls are money buttons and
    wear green as an OUTLINE at every width, in the bar and in the drawer; the
-   hero PUSH TO BOOK is the only green fill on the fold. Same 1px border as
+   hero money button is the only green fill on the fold. Same 1px border as
    before, so the nav row keeps its measured width. Focus stays the sitewide
    Signal-blue ring. */
 .nav-cta,.nav-book,.dw-actions .nav-cta,.dw-actions .nav-book{
@@ -2748,6 +2754,19 @@ body.home .cta-stack{margin:0 0 3rem}
 .hero-pos{margin:0 0 1.75rem;max-width:30ch;font-family:var(--sans);font-weight:600;
   font-size:clamp(1.25rem,1.05rem + .9vw,1.625rem);line-height:1.3;letter-spacing:-.01em;
   color:var(--ink);text-wrap:balance}
+/* THE FOUR SENTENCES (2026-09-17). Four blocks, not four <br>s: one line each
+   across the desktop band and a natural wrap below it. THE SIZE IS MEASURED,
+   NOT PICKED. The longest of them is 44 characters and the hero column is the
+   narrow one — about 460px at 1024 and 607px at 1440 — so the ramp is the
+   one that keeps 44ch inside the column at both ends: 20px at 1024, 26px at
+   1440. Below the 1020px two-column switch the clamp floors at 19px and the
+   sentences wrap, which is what a phone wants. Re-measure the longest sentence
+   before changing either end. Weight 400 against .hero-pos's 600 is what keeps
+   two blocks of the same size from reading as one. */
+.hero-big{margin:0 0 1.5rem;font-family:var(--sans);font-weight:400;
+  font-size:clamp(1.1875rem,.33rem + 1.44vw,1.625rem);line-height:1.28;
+  letter-spacing:-.01em;color:var(--ink)}
+.hero-big .hb{display:block;text-wrap:pretty}
 .go-stack{display:flex;flex-direction:column;align-items:stretch;gap:.625rem;max-width:520px}
 .go-stack .btn-go{justify-content:center}
 .go-note,.go-tel{margin:0;font-family:var(--sans);font-size:1rem;line-height:1.5;color:var(--ink-soft);text-wrap:pretty}
@@ -2759,7 +2778,7 @@ body.home .cta-stack{margin:0 0 3rem}
 .nw{white-space:nowrap}
 /* Hero B's headline is three short sentences. From 1024px each sentence takes its
    own line — at the old size the words broke mid-phrase over four lines — so the
-   size steps down to keep "Twenty calls at once." whole inside the ~607px column
+   size steps down to keep the longest of the three whole inside the ~607px column
    at 1440 (and ~460px at 1024). Below 1024 it wraps as it always has. */
 @media(min-width:1024px){
   .hero h1.hero-h{max-width:none;font-size:clamp(2.5rem,3.9vw,3.75rem)}
@@ -2769,7 +2788,7 @@ body.home .cta-stack{margin:0 0 3rem}
 /* ══ 2026-09-13 · #built — the six things and the proof row ══════════════════
    Six short claims in two columns, a hairline above each, then the three
    numbers the section stands on in Signal blue. Every number has a source in
-   the brief (§ 3); "20" carries a source comment in the markup. */
+   the brief (§ 3) or a source comment beside it in the markup. */
 #built .built-list{list-style:none;margin:2.5rem 0 0;padding:0;display:grid;
   grid-template-columns:minmax(0,1fr);gap:1.5rem 3rem}
 @media(min-width:768px){#built .built-list{grid-template-columns:repeat(2,minmax(0,1fr))}}

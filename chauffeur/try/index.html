@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#070B14">
-  <title>Try AI Chauffeur in your browser | AI Chauffeur</title>
-  <meta name="description" content="Push the button and book a trip like you're the customer. One button, a real conversation, and a trip sheet at the end. No call, no form.">
+  <title>Try AI Chauffeur | AI Chauffeur</title>
+  <meta name="description" content="This is a demo. Act like a customer calling a limo company and answer its questions. About two minutes.">
   <meta name="robots" content="noindex,follow">
 
   <!-- /try is a link we send, not a search page: noindex, left out of
@@ -20,7 +20,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="AI Chauffeur">
   <meta property="og:title" content="Try AI Chauffeur in your browser">
-  <meta property="og:description" content="Push the button and book a trip like you're the customer.">
+  <meta property="og:description" content="This is a demo. Act like a customer calling a limo company and answer its questions. About two minutes.">
   <meta property="og:url" content="https://aichauffeur.ai/try/">
   <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
   <meta property="og:image:width" content="1200">
@@ -29,12 +29,12 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
   <meta name="twitter:title" content="Try AI Chauffeur in your browser">
-  <meta name="twitter:description" content="Push the button and book a trip like you're the customer.">
+  <meta name="twitter:description" content="This is a demo. Act like a customer calling a limo company and answer its questions. About two minutes.">
 
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
   <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
-  <link rel="stylesheet" href="/assets/aic.css?v=66ed93a7">
+  <link rel="stylesheet" href="/assets/aic.css?v=3605e089">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://circulant.app.n8n.cloud" crossorigin>
   <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
@@ -52,11 +52,17 @@
     .try-brand{display:inline-flex;align-self:flex-start;border-radius:4px}
     .try-brand img{display:block;width:135px;height:auto}
     .try a:focus-visible,.try button:focus-visible{outline:2px solid var(--signal-blue);outline-offset:3px}
-    /* ONE COLUMN AT EVERY WIDTH. At rest the page is five things — the mark,
-       the headline, one sub-line, the button, the recording line — plus the one
-       small line under the button. Everything else waits for the push. */
+    /* ONE COLUMN AT EVERY WIDTH. At rest the page is the mark, the eyebrow, the
+       headline, one sub-line, the line that says what lands here, the button and
+       the two small lines under it. Everything else waits for the push. */
     .try-grid{display:flex;flex-direction:column;gap:1.5rem}
     .try-tell{display:flex;flex-direction:column;gap:.75rem}
+    /* The eyebrow is the site recipe from .kicker minus its 1.75rem bottom
+       margin, which would fight .try-tell's own gap. Mono because § 3 gives
+       eyebrows to the mono face, --sky because that is the eyebrow accent,
+       and .75rem because 12px is the floor. */
+    .try-kicker{font-family:var(--mono);font-size:.75rem;font-weight:500;
+      letter-spacing:.16em;text-transform:uppercase;color:var(--sky)}
     .try-h{margin:0;max-width:20ch;font-family:var(--sans);font-weight:500;
       font-size:clamp(1.6875rem,1.15rem + 2.2vw,3.25rem);line-height:1.08;
       letter-spacing:-.02em;color:var(--ink);text-wrap:balance}
@@ -226,8 +232,9 @@
 
     <div class="try-grid">
       <div class="try-tell">
-        <h1 class="try-h">Push the button. Book a trip like you're the customer.</h1>
-        <p class="try-sub">This is the AI Chauffeur demo. Act like a customer, answer its questions. About two minutes.</p>
+        <span class="try-kicker">THE AI CHAUFFEUR DEMO</span>
+        <h1 class="try-h">Try AI Chauffeur.</h1>
+        <p class="try-sub">This is a demo. Act like a customer calling a limo company and answer its questions. About two minutes.</p>
       </div>
 
       <div class="try-act">
@@ -238,11 +245,14 @@
           <p class="try-copied" id="try-copied" aria-live="polite"></p>
         </div>
 
+        <p class="try-rec">When it ends, your trip sheet, the transcript, and the recording land right here. <span class="try-nb">· <a href="/privacy/">Privacy</a></span></p>
+
         <div class="try-push">
-          <button type="button" class="btn btn-primary btn-go try-btn" id="try-btn" data-event="try_call_start">PUSH TO BOOK</button>
+          <button type="button" class="btn btn-primary btn-go try-btn" id="try-btn" data-event="try_call_start">PUSH TO TRY AI</button>
           <input class="try-haptic" id="try-haptic" type="checkbox" switch tabindex="-1" aria-hidden="true">
         </div>
-        <p class="try-hint">Not a phone call. AI Chauffeur talks to you right here on this page — push once, then just talk. Stop any time.</p>
+        <p class="try-hint">Not a phone call. AI Chauffeur talks to you right here on this page — push once, then talk. Stop any time.</p>
+        <p class="try-hint">Demo only. No car is dispatched.</p>
 
         <div class="try-panel" id="try-panel" role="group" aria-label="Call status" hidden>
           <div class="try-head">
@@ -266,7 +276,6 @@
           </div>
         </div>
 
-        <p class="try-rec">Recorded so you can hear it back — right here when the call ends. <span class="try-nb">· <a href="/privacy/">Privacy</a></span></p>
 
         <p class="try-alt" id="try-alt" hidden>Or call the line: <a href="tel:+14147750019" data-event="tel_tap_try">(414) 775-0019</a></p>
 
@@ -327,7 +336,7 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
   const TAG = { ready: 'Ready', connecting: 'Connecting', live: 'Live', ended: 'Ended', failed: 'Not connected' };
-  const LABEL = { ready: 'PUSH TO BOOK', connecting: 'Connecting', live: 'End demo', ended: 'PUSH TO BOOK', failed: 'PUSH TO BOOK' };
+  const LABEL = { ready: 'PUSH TO TRY AI', connecting: 'Connecting', live: 'End demo', ended: 'PUSH TO TRY AI', failed: 'PUSH TO TRY AI' };
   // The mic hint is said once, at the only moment it is true: while the browser
   // is asking. At rest the panel does not exist, so there is nothing to say.
   const NOTE = {

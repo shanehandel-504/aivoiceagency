@@ -402,7 +402,6 @@ const BREAK_CSS =
     ['anchor clearance sees the clip', anchor.textTop < anchor.navBottom],
     ['host-clip probe sees the clipped host', s.primaries.some((x) => x.hostClip !== 'none')],
     ['chamfer probe sees the missing chamfer', s.primaries.some((x) => !/polygon/.test(x.beforeClip))],
-    ['drawer probe sees the 44px row', s.drawers.some((d) => d.headH < 64)],
     ['radius probe sees the 18px container', s.radii.some((r) => r.r > 12)],
     ['FAQ probe sees the blue perimeter', !/inset/.test(s.faqOpen.boxShadow)],
     // the rail is display:grid at 390 and hidden only by visibility + transform,
@@ -426,8 +425,12 @@ const BREAK_CSS =
 // ── P1 · ANCHOR CLEARANCE ──────────────────────────────────────────────────
 console.log('\n══ § 1 · ANCHOR CLEARANCE ══\n');
 // 2026-09-13 · #features is gone; #built replaced it in the copy run.
+// 2026-09-17 · #ava-callback went with the callback console. Nothing on the site
+// links to it and no element carries the id, so the probe would have reported it
+// MISSING at all four widths - a real reading about a target that is gone, which
+// is noise, not a finding.
 const HOME_ANCHORS = ['#demo', '#integrations', '#how', '#pain', '#built', '#crush',
-  '#lead-protection', '#setup', '#operators', '#faq', '#ava-callback'];
+  '#lead-protection', '#setup', '#operators', '#faq'];
 const anchorBad = [];
 for (const [w, h] of [[360, 800], [390, 844], [430, 932], [1440, 900]]) {
   for (const id of HOME_ANCHORS) {
@@ -681,19 +684,19 @@ const safeBad = [];
 }
 note('§ 3 safe-area inset in the one CSS home + homepage carries no second copy', safeBad, `1 component home, ${PAGES.length} pages in the sweep`);
 
-const drawers = rows.flatMap((r) => r.drawers.map((d) => ({ page: r.tag, w: r.w, ...d })));
-const drawerBad = drawers.filter((d) => d.headH < 64 || !d.chev || d.headW < d.formW - 2)
-  .map((d) => ({ page: d.page, w: d.w, headH: d.headH, chev: d.chev, headW: d.headW, formW: d.formW }));
-note('§ 5 drawer row 64px, full width, chevron', drawerBad, `${drawers.length} consoles`);
+/* § 5 DRAWER ROW + CHEVRON — RETIRED 2026-09-17, and this is why.
+   Both assertions and their negative control read PROBE_STATIC's `drawers`,
+   which is built from `.cb-form` and nothing else. The callback console was
+   removed from all 13 pages that carried it on 2026-09-17, so the collection is
+   empty on every page at every width. An empty collection makes the two filters
+   pass vacuously AND makes the control `.some(...)` return false on the broken
+   fixture — which is the gate's abort condition, correctly: a control that
+   cannot fire is a probe that is not looking.
 
-const chevBad = drawers.filter((d) => {
-  const m = (d.chevTransform || '').match(/matrix\(([^)]*)\)/);
-  if (!m) return true;
-  const n = m[1].split(',').map(Number);
-  const deg = Math.round(Math.atan2(n[1], n[0]) * 180 / Math.PI);
-  return d.open ? Math.abs(deg - 90) > 2 : Math.abs(deg) > 2;
-}).map((d) => ({ page: d.page, w: d.w, open: d.open, t: d.chevTransform }));
-note('§ 5 chevron follows the RENDERED state', chevBad);
+   Deleted rather than left dead, because the alternative is a gate that aborts
+   on every future run over a component that is gone. PROBE_STATIC still collects
+   `drawers` (harmlessly empty) so the shape of `rows` is unchanged for anything
+   downstream. Restore this block verbatim if the console ever comes back. */
 
 const radBad = rows.flatMap((r) => r.radii.map((x) => ({ page: r.tag, w: r.w, ...x })));
 note('§ 6 no container over 12px radius', radBad, 'pills exempt (radius >= half height)');

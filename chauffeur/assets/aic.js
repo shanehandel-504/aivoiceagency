@@ -1,22 +1,17 @@
 /* ============================================================================
    AI CHAUFFEUR · SHARED PAGE JS             AIC SITE RUN 1 — "OPERATOR CUT"
    ----------------------------------------------------------------------------
-   ONE source of truth for the "AI Chauffeur calls you" rail. The endpoint appears in
-   this file and nowhere else — CLAUDE.md § 7's principle is one swap at the
-   token, not N edits across surfaces, and a lead endpoint duplicated into six
-   pages is exactly the drift hazard that rule exists to prevent.
+   Shared chrome for every page on this host: nav tint, the drawer, the sticky
+   action rail, haptics and the glow gate. It posts nothing and holds no
+   endpoint — 2026-09-17 removed the lead form this file used to own, and with
+   it the only URL that was ever written here.
 
    HOST NOTE — aichauffeur.ai is a SEPARATE Vercel project rooted at
    /chauffeur/. The AVA site's site.js lives at the repo root and 404s here,
-   so the rail is re-implemented rather than imported. Endpoint and payload
-   contract are kept IDENTICAL to site.js so the n8n spine needs no branch;
-   only source / brand / tag differ so GHL can route chauffeur leads apart.
+   so this file is a re-implementation rather than an import.
    ========================================================================== */
 (function () {
   'use strict';
-
-  var ENDPOINT = 'https://circulant.app.n8n.cloud/webhook/ava-call';
-  var TEL_DISPLAY = '(414) 775-0019';
 
   /* ── RUN 11 · § 7 — ANDROID HAPTICS ────────────────────────────────────────
      Progressive enhancement in the strict sense: feature-detected, wrapped, and
@@ -29,9 +24,9 @@
      Two events, and only two:
        12ms         on a PRIMARY CTA tap. Short enough to read as the control
                     closing rather than as a notification.
-       20/40/20     on a callback SUCCESS. Three pulses, and it fires in the
-                    same block that flips the module to CALLING NOW, so the
-                    buzz and the word cannot disagree.
+
+     That is the only event left. A second pattern belonged to the lead form
+     this file used to own, and went with it on 2026-09-17.
 
      Never on a nav link, never on scroll, never on a failure. A phone that
      buzzes when something did not work teaches the reader to distrust the buzz.
@@ -190,308 +185,14 @@
     }
   })();
 
-  /* ── "AI Chauffeur calls you" ───────────────────────────────────────────────────── */
-
-  /* digits only; 10 -> +1XXXXXXXXXX; 11 leading 1 -> +...; already-+ kept. */
-  function toE164(raw) {
-    var hadPlus = (raw || '').trim().charAt(0) === '+';
-    var d = (raw || '').replace(/\D/g, '');
-    if (!d) return '';
-    if (hadPlus) return '+' + d;
-    if (d.length === 10) return '+1' + d;
-    if (d.length === 11 && d.charAt(0) === '1') return '+' + d;
-    return '';
-  }
-
-  /* ── CALLBACK GATE (client half) — 2026-09-06 ──────────────────────────────
-     INCIDENT: this form dialled a +44 121 number for 13m14s. The far end was a
-     "test call connected, you are all set to earn" recording — international
-     revenue-share fraud, paid for by us, one form submission at a time.
-
-     The old test was /^\+[1-9]\d{7,14}$/ — every country on earth. toE164 above
-     hands back '+' + digits for anything a reader types with a leading '+', so
-     a UK number was never even a special case; it was the happy path.
-
-     This is the CLIENT half and it is a COURTESY, not the defence. The real
-     gate is server-side in n8n (WF-CALLBACK-GATE), because anything here can be
-     skipped by POSTing the endpoint directly — which is exactly what a bot does.
-     What this earns is a reader who mistypes getting told so instantly instead
-     of watching a phone that never rings.
-
-     +1 only, and not every +1 is safe: 900/976 bill the caller, and the twenty
-     Caribbean area codes below are premium revenue-share numbers that LOOK
-     domestic because they are +1. That is the trap a country-code check misses.
-     ─────────────────────────────────────────────────────────────────────────── */
-  var PREMIUM_NPA   = ['900', '976'];
-  var CARIBBEAN_NPA = ['242','246','264','268','284','345','441','473','649','664',
-                       '721','758','767','784','809','829','849','868','869','876'];
-  var TOLLFREE_NPA  = ['800','833','844','855','866','877','888'];
-
-  function dialCheck(e164) {
-    if (!e164) return { ok: false, msg: 'That number does not look right — check the digits.' };
-    if (e164.slice(0, 2) !== '+1') {
-      return { ok: false, msg: 'AI Chauffeur calls US and Canadian numbers only. Enter a 10-digit number.' };
-    }
-    if (!/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(e164)) {
-      return { ok: false, msg: 'That number does not look right — check the digits.' };
-    }
-    var npa = e164.slice(2, 5);
-    if (PREMIUM_NPA.indexOf(npa) !== -1 || CARIBBEAN_NPA.indexOf(npa) !== -1) {
-      return { ok: false, msg: 'AI Chauffeur cannot call that area code. Use the number you answer.' };
-    }
-    if (TOLLFREE_NPA.indexOf(npa) !== -1) {
-      return { ok: false, msg: 'That is a toll-free number. Enter the phone you answer.' };
-    }
-    return { ok: true, msg: '' };
-  }
-
-  /* Honeypot. Built here rather than in the markup so one file covers all ten
-     pages and no page can ship the form without it. It is not hidden with
-     `display:none` alone — a field that is off-screen, unlabelled, tab-skipped
-     and autocomplete-off is invisible to a reader and to a screen reader, while
-     still being a real input a form-filling bot will populate. Any value in it
-     is a block, server-side. */
-  function addHoneypot(form) {
-    if (form.querySelector('[data-cb-hp]')) return;
-    var wrap = document.createElement('div');
-    wrap.setAttribute('aria-hidden', 'true');
-    wrap.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden';
-    var hp = document.createElement('input');
-    hp.type = 'text';
-    hp.name = 'company_url';
-    hp.setAttribute('data-cb-hp', '');
-    hp.tabIndex = -1;
-    hp.autocomplete = 'off';
-    wrap.appendChild(hp);
-    form.appendChild(wrap);
-  }
-
-  function wireForm(form) {
-    var nameEl = form.querySelector('[data-cb-name]');
-    var cellEl = form.querySelector('[data-cb-cell]');
-    var okEl   = form.querySelector('[data-cb-consent]');
-    var btn    = form.querySelector('[data-cb-submit]');
-    var note   = form.querySelector('[data-cb-note]');
-    var head   = form.querySelector('[data-cb-toggle]');
-    var body   = form.querySelector('.cb-body');
-    var status = form.querySelector('[data-cb-status]');
-    if (!cellEl || !btn || !note) return;
-
-    function setNote(msg, kind) {
-      note.textContent = msg || '';
-      note.classList.toggle('is-err', kind === 'err');
-      note.classList.toggle('is-ok', kind === 'ok');
-    }
-
-    /* ── RUN 11 · § 5 — THE THIRD STATE ──────────────────────────────────────
-       STANDING BY -> CALLING NOW was a two-state module that had a third state
-       all along and painted it in neither colour nor word: every failure left
-       the header reading STANDING BY in --neutral while the note underneath
-       said the call had not been placed. Collapsed on a phone the note is not
-       even on screen, so the module's own header was the only thing a reader
-       could see and it was wrong.
-
-       STATE LAW applies exactly as it does to the green: the class that
-       repaints the chip and the assignment that rewrites the word are ONE
-       synchronous block, and .cb-status carries transition:none, so no frame
-       can render red beside "Standing by". Miss-red is failure and only
-       failure. The sentence explaining WHAT failed stays in the note, in
-       prose — a three-word chip cannot carry a reason, and pretending it can
-       is how a status ends up meaning nothing.
-       ────────────────────────────────────────────────────────────────────── */
-    function fail(msg) {
-      form.classList.remove('is-done');
-      form.classList.add('is-err');
-      if (status) status.textContent = 'Not sent';
-      setNote(msg, 'err');
-    }
-    function clearFail() {
-      if (!form.classList.contains('is-err')) return;
-      form.classList.remove('is-err');
-      if (status) status.textContent = 'Standing by';
-      setNote('', '');
-    }
-
-    /* ── RUN 10 · COLLAPSE ────────────────────────────────────────────────────
-       The 390 fold has to carry the headline, one line of subhead, the phone
-       control AND this module. Collapsed to its 44px header row it fits; open
-       it does not. JS-gated on purpose and honest about it: this form has no
-       `action`, so with scripting off it could not submit anyway — collapsing
-       it hides nothing that would otherwise work. It ships OPEN in the markup,
-       so a crawler and a no-JS reader see the whole thing.
-       ─────────────────────────────────────────────────────────────────────── */
-    function isOpen() {
-      /* Ask the RENDERED state rather than a remembered one. CSS owns the
-         initial value (open at >=768, collapsed below) and JS owns every value
-         after that, so reading the box is the only way the two agree on frame
-         one. getClientRects() over offsetParent because the latter is null for
-         anything inside a fixed ancestor. */
-      return !!(body && body.getClientRects().length);
-    }
-    function setOpen(open) {
-      form.setAttribute('data-collapsed', open ? 'false' : 'true');
-      if (head) head.setAttribute('aria-expanded', open ? 'true' : 'false');
-    }
-
-    if (head) {
-      /* aria-expanded is NOT in the served markup. Without scripting this button
-         does nothing, and a button that statically claims a disclosure state it
-         cannot change is a lie in one direction or the other at every width. It
-         gets the attribute here, set from what CSS actually rendered. */
-      head.setAttribute('aria-expanded', isOpen() ? 'true' : 'false');
-      head.addEventListener('click', function () {
-        setOpen(!isOpen());
-      });
-      /* Tab into a collapsed body is impossible — display:none takes it out of
-         the tab order — but a browser restoring a scroll position or an autofill
-         pass can still focus inside it. Opening on focusin costs nothing and
-         removes the one state where a focused control is invisible. */
-      form.addEventListener('focusin', function (e) {
-        if (e.target !== head) setOpen(true);
-      });
-    }
-
-    /* Any in-page link to this form opens it, because landing on a collapsed
-       card is a dead end.
-
-       RUN 13 · THERE ARE NO SUCH LINKS ON THE SITE RIGHT NOW. The sticky rail
-       used to carry one — "Get a call back" — and its second control is
-       "Book the setup call" to /book/ now. The console is unchanged and is
-       still the callback path; a reader meets it by scrolling and opens it by
-       tapping its own header row. This handler is kept rather than deleted
-       because it is the correct behaviour for a link that may exist again, and
-       because deleting it would leave the next person to add one with a dead
-       end and no clue that it had ever been solved. It binds to nothing today.
-
-       A DIRECT #ava-callback URL still lands on a collapsed card on a phone —
-       this fires on click, not on a hash landing. That was equally true before
-       RUN 13; what changed is that the click path no longer exists to mask it. */
-    var jumps = document.querySelectorAll('a[href="#' + (form.id || '') + '"]');
-    for (var q = 0; q < jumps.length; q++) {
-      jumps[q].addEventListener('click', function () { setOpen(true); });
-    }
-
-    /* ── RUN 10 · READINESS ───────────────────────────────────────────────────
-       The submit rests as a ghost and only takes the filled blue once both
-       fields validate and consent is ticked, which keeps exactly one filled
-       control on the fold until the reader has actually chosen this path.
-       It is a PAINT, not a gate: the button stays enabled the whole time and
-       the submit handler still does the real validation and still explains what
-       is wrong. A disabled control that will not say why is worse than an
-       enabled one that will.
-       ─────────────────────────────────────────────────────────────────────── */
-    function refreshReady() {
-      var okCell = dialCheck(toE164(cellEl.value)).ok;
-      var okName = !nameEl || (nameEl.value || '').trim().length > 0;
-      var okBox  = !!(okEl && okEl.checked);
-      form.classList.toggle('is-ready', okCell && okName && okBox);
-      /* Touching the form is the reader answering the error. Leaving the chip
-         red while they fix it says the fix did not register. */
-      clearFail();
-    }
-    ['input', 'change'].forEach(function (ev) {
-      if (nameEl) nameEl.addEventListener(ev, refreshReady);
-      cellEl.addEventListener(ev, refreshReady);
-      if (okEl) okEl.addEventListener(ev, refreshReady);
-    });
-    refreshReady();
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      cellEl.setAttribute('aria-invalid', 'false');
-
-      var cell = toE164(cellEl.value);
-      var verdict = dialCheck(cell);
-      if (!verdict.ok) {
-        cellEl.setAttribute('aria-invalid', 'true');
-        fail(verdict.msg);
-        cellEl.focus();
-        return;
-      }
-
-      /* TCPA: fail closed. No explicit consent, no automated call — and the
-         box is re-cleared on every reset so a new number needs a new tick. */
-      if (!okEl || !okEl.checked) {
-        fail('Tick the box so AI Chauffeur is allowed to call you.');
-        if (okEl) okEl.focus();
-        return;
-      }
-
-      btn.disabled = true;
-      form.classList.remove('is-err');
-      if (status) status.textContent = 'Standing by';
-      setNote('Sending your number to AI Chauffeur…', '');
-
-      var payload = {
-        first_name: nameEl ? (nameEl.value || '').trim() : '',
-        phone: cell,
-        source: 'aichauffeur',
-        brand: 'AI Chauffeur',
-        tag: 'aichauffeur',
-        page: location.pathname,
-        selected_role: 'Limo / Black Car Operator',
-        business_type: 'Ground Transportation',
-        email: '',
-        tcpa_consent: true,
-        tcpa_consent_at: new Date().toISOString(),
-        /* Always sent, even empty. The server treats absent and empty alike
-           (both pass) ON PURPOSE: a cached copy of this file that predates the
-           honeypot must not lock every real lead out during rollover. The field
-           earns its keep against bots that fill the rendered DOM; the +1-only
-           rule is what stops the fraud dialer. */
-        company_url: (function () {
-          var hp = form.querySelector('[data-cb-hp]');
-          return hp ? (hp.value || '') : '';
-        })()
-      };
-
-      fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).then(function (r) {
-        if (r.ok) {
-          /* STATE LAW — the class that repaints the chip and the word inside it
-             change in the same synchronous block, so no frame can render green
-             beside a label that still says the call has not been placed. */
-          form.classList.remove('is-err');
-          form.classList.add('is-done');
-          if (status) status.textContent = 'Calling now';
-          setNote('Your phone rings in seconds. That call is the product.', 'ok');
-          /* § 7 — the ONLY success buzz on this site, and it fires inside the
-             same block that paints the chip green and writes the word. */
-          buzz([20, 40, 20]);
-          return;
-        }
-        btn.disabled = false;
-        /* 403 is the server callback gate refusing this number, not an outage.
-           Telling a reader to "try again" when the answer will never change is
-           the worst thing this branch can do, so the refusal gets its own copy. */
-        if (r.status === 403) {
-          cellEl.setAttribute('aria-invalid', 'true');
-          fail('AI Chauffeur calls US and Canadian numbers only. Or call ' + TEL_DISPLAY + ' now.');
-          cellEl.focus();
-          return;
-        }
-        fail('Could not reach AI Chauffeur (' + r.status + '). Try again, or just call ' + TEL_DISPLAY + '.');
-      }, function () {
-        btn.disabled = false;
-        fail('Could not reach AI Chauffeur. Try again, or just call ' + TEL_DISPLAY + '.');
-      });
-    });
-  }
-
-  var forms = document.querySelectorAll('[data-cb-form]');
-  for (var i = 0; i < forms.length; i++) { addHoneypot(forms[i]); wireForm(forms[i]); }
-
   /* ── RUN 7 · TASK A — MOBILE STICKY ACTION RAIL ────────────────────────────
      Two independent conditions, ANDed, both driven by IntersectionObserver so
      nothing here runs on the scroll thread:
 
        armed      the hero CTA cluster has left the top of the viewport, so the
                   operator no longer has a control on screen.
-       suppressed an inline primary, the callback console, the booking calendar
-                  or the footer is on screen. Something the bar restates is
+       suppressed an inline primary, the booking calendar or the footer is on
+                  screen. Something the bar restates is
                   already visible, so the bar would be noise at best and a lid
                   over an input at worst.
 

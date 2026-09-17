@@ -35,7 +35,7 @@
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
   <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
-  <link rel="stylesheet" href="/assets/aic.css?v=66ed93a7">
+  <link rel="stylesheet" href="/assets/aic.css?v=3605e089">
   <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
   <script defer src="/_vercel/insights/script.js"></script>
 
@@ -646,7 +646,7 @@
   <a class="rail-book" href="/rates/" data-event="rates_click_rail">See the rate card</a>
 </div>
 
-<script src="/assets/aic.js?v=691514c2"></script>
+<script src="/assets/aic.js?v=f56b90bd"></script>
 
 <script>
 /* ============================================================================
@@ -654,9 +654,11 @@
    ----------------------------------------------------------------------------
    WHY THIS IS NOT WIRED THROUGH assets/aic.js:
 
-   aic.js owns [data-cb-form] and posts a two-field payload to the /ava-call
-   webhook. This form is a different shape (four fields plus a trip in the
-   reader's own words) and it belongs to a different spine — AI Chauffeur Client Intake
+   aic.js USED TO own [data-cb-form] and post a two-field payload to the /ava-call
+   webhook; that handler and the card it served were removed sitewide on
+   2026-09-17, so there is nothing left in that file to bind to. This form was
+   always a different shape (four fields plus a trip in the reader's own words)
+   and it belongs to a different spine — AI Chauffeur Client Intake
    at /ava-intake, which is the workflow that upserts to GHL, writes the full
    formatted note and fires the owner alert. Binding this form with
    [data-cb-form] would have handed it to the callback rail and silently sent a
