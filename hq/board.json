@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-22T10:44:26-05:00",
+  "updated": "2026-09-22T13:36:00-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -75,6 +75,13 @@
     }
   ],
   "items": [
+    {
+      "id": "ai100x-phone-cockpit",
+      "title": "AI100X phone cockpit — private passcode-gated phone dashboard (Today + Pipeline, spoken morning brief)",
+      "url": "https://ai100x-cockpit.vercel.app/",
+      "status": "live",
+      "label": "LIVE on the project URL (2026-09-22, be87cf2, dpl_5ayXAAhr1EsWmniYybEei8kNLs1o; roll back by promoting dpl_3JiheMkAR6n6EBbYEazY5g6zWnwy). Separate PRIVATE repo + Vercel project; the ai100x.ai site is untouched. Numbers are read live from GHL + Retell at request time, Chicago today / Monday week, and a failed source shows a reason with Retry instead of a zero. Retell listing uses POST /v3/list-calls per the RETELL API RULES; the Dell collector still calls the retired v2 and was left alone. Gate: SHA-256 + timingSafeEqual passcode, 800 ms on a miss, 10 misses per address in 10 min, 180-day HMAC cookie (HttpOnly, Secure, SameSite=Strict). noindex on every route, data private+no-store, public/ is the only served folder. PENDING: cockpit.ai100x.ai needs one record at the registrar; until then the project URL is the link. Taps (Mark done / Not today / Approve) are remembered per phone only — server write-back is the named next step."
+    },
     {
       "id": "aic-copy-cleanup",
       "title": "aichauffeur.ai copy + cleanup — callback box removed, 100-calls hero, PUSH TO CALL AI / PUSH TO TRY AI",
@@ -837,6 +844,10 @@
     {
       "ts": "2026-09-22T10:44:26-05:00",
       "entry": "L8 COCKPIT HYGIENE LIVE (Dell-local; no site files changed). KILLED the terminal popups: CockpitMetrics, HermesBrainIngest, NotionInboxIngest and Cockpit100X now launch via conhost.exe --headless, same schedule and user; 13-min watch before = 3 windows from those jobs, 10-min watch after = 0 of 256 processes. Cockpit100X was down (exit 0xC000013A, window closed) and is back on :4100. Hermes trial-home gateway (60 s poller, no jobs) stopped, Startup entry disabled not deleted. L8 status live (board said live while the cockpit was down; now true). Roll back: Register-ScheduledTask -Xml from C:\\Users\\offic\\100x-cockpit\\backup\\tasks-2026-09-22 (commands in reports/2026-09-22-l8-popup-kill.md, each tested on a disabled copy)."
+    },
+    {
+      "ts": "2026-09-22T13:36:00-05:00",
+      "entry": "AI100X PHONE COCKPIT LIVE (be87cf2 in the new private repo ai100x-cockpit; deploy dpl_5ayXAAhr1EsWmniYybEei8kNLs1o READY; roll back by promoting dpl_3JiheMkAR6n6EBbYEazY5g6zWnwy). A phone-first dashboard behind a four-word passcode: Today (spoken morning brief, Do this next, Leads/Calls/Booked, Needs you) and Pipeline (Deals, Your lines with each line last call time, Running now). Proof: 23/23 gate+header+leak checks on production (no cookie 401, wrong passcode 401 after ~950 ms, forged cookie 401, cookie carries HttpOnly+Secure+SameSite=Strict+Max-Age=15552000, X-Robots-Tag noindex on /, /cockpit and /api/pulse, data Cache-Control private no-store, 0 secret hits across 22 Doppler values and 5 key patterns in both the deployed static files and all 29 tracked repo files); 8/8 renders clean at 390x844, 320x568, 430x932 and 1440x900 with scrollWidth equal to the viewport and no console errors; 16/16 interaction checks incl. lowest measured text contrast 5.5:1; numbers verified side by side against the metrics collector logic on the same window, 8/8 match, plus 6/6 on the collector rolling window where the counts are non-zero. Two defects found and fixed before close: /cockpit 404d because the rewrite pointed at /index.html under cleanUrls, and the leak scanner held the never-show numbers as literals, so it now matches them by hash. Secrets live in Doppler and Vercel only and moved over stdin; none passed through a log, a commit or a chat. OPEN: one registrar record for the subdomain; server write-back for taps."
     }
   ]
 }
