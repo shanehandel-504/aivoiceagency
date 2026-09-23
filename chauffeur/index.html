@@ -57,6 +57,18 @@
        RUN 13 · THE HOMEPAGE COMES HOME. -->
   <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
   <link rel="stylesheet" href="/assets/aic.css?v=3605e089">
+  <style>
+  .qr-dialog{background:#12121A;color:#EEF0F4;border:1px solid rgba(255,255,255,.06);padding:2rem;max-width:22rem;width:calc(100% - 2rem);text-align:center;font-family:'Space Grotesk',sans-serif;margin:auto}
+  .qr-dialog::backdrop{background:rgba(10,10,15,.8)}
+  .qr-close{position:absolute;top:.5rem;right:.75rem;background:none;border:0;color:#8A93A6;font-size:1.5rem;line-height:1;cursor:pointer}
+  .qr-close:hover{color:#EEF0F4}
+  .qr-title{font-size:1.125rem;margin:0 0 1rem}
+  .qr-card{background:#F7F8FA;padding:1rem;width:13.5rem;margin:0 auto}
+  .qr-card svg{display:block;width:100%;height:auto}
+  .qr-num{font-family:'JetBrains Mono',monospace;font-size:1.25rem;letter-spacing:.04em;margin:1rem 0 1.25rem;user-select:all}
+  .qr-alt{color:#8A93A6;margin:0 0 .5rem}
+  .qr-note{color:#8A93A6;font-size:.875rem;margin:.75rem 0 0}
+  </style>
   <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
   <script defer src="/_vercel/insights/script.js"></script>
 
@@ -309,7 +321,7 @@
 
       <div class="go-stack">
         <a href="tel:+14147750019" class="btn btn-primary btn-go" data-event="tel_tap_hero">PUSH TO CALL AI</a>
-        <p class="go-note">Push it and your phone calls AI Chauffeur. Talk to it like a customer would. About two minutes.</p>
+        <p class="go-note" id="hero-go-note">Push it and your phone calls AI Chauffeur. Talk to it like a customer would. About two minutes.</p>
       </div>
 
     </div>
@@ -1284,6 +1296,35 @@
 </div>
 
 <script src="/assets/aic.js?v=f56b90bd"></script>
+
+<dialog id="call-qr" class="qr-dialog" aria-labelledby="qr-title">
+  <button type="button" class="qr-close" aria-label="Close">×</button>
+  <p id="qr-title" class="qr-title">Scan it with your phone. Your phone calls AI Chauffeur.</p>
+  <div class="qr-card"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33"><path stroke="#14161c" d="M4 4.5h7m1 0h1m4 0h1m1 0h1m2 0h7m-25 1h1m5 0h1m2 0h7m2 0h1m5 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h2m1 0h1m1 0h2m2 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m1 0h5m2 0h1m2 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m1 0h1m1 0h1m1 0h1m2 0h2m1 0h1m5 0h1m-25 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-16 1h3m2 0h2m-15 1h7m2 0h1m5 0h1m2 0h2m3 0h1m-25 1h4m6 0h5m2 0h1m4 0h1m-23 1h1m3 0h1m1 0h2m1 0h1m3 0h6m2 0h1m1 0h2m-25 1h1m2 0h3m2 0h1m2 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m-24 1h2m3 0h1m1 0h3m1 0h1m1 0h3m1 0h3m1 0h3m-25 1h1m1 0h3m3 0h1m1 0h1m6 0h1m3 0h2m-23 1h1m1 0h1m1 0h1m1 0h2m6 0h2m1 0h3m1 0h4m-25 1h1m2 0h1m1 0h1m1 0h4m1 0h1m1 0h2m1 0h1m3 0h1m2 0h1m-25 1h1m1 0h1m3 0h1m1 0h6m1 0h10m-17 1h1m5 0h1m1 0h1m3 0h4m-24 1h7m1 0h3m1 0h3m1 0h1m1 0h1m1 0h1m1 0h3m-25 1h1m5 0h1m1 0h5m1 0h3m3 0h2m2 0h1m-25 1h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h8m1 0h1m1 0h1m-25 1h1m1 0h3m1 0h1m1 0h2m1 0h5m2 0h4m1 0h2m-25 1h1m1 0h3m1 0h1m1 0h1m5 0h2m1 0h1m6 0h1m-25 1h1m5 0h1m1 0h2m1 0h2m3 0h3m2 0h1m2 0h1m-25 1h7m2 0h2m2 0h1m1 0h1m1 0h3m2 0h3"/></svg></div>
+  <p class="qr-num">(414) 775-0019</p>
+  <p class="qr-alt">No phone handy?</p>
+  <a href="/try/" class="btn btn-primary btn-go" data-event="qr_try">PUSH TO TRY AI</a>
+  <p class="qr-note">Not a phone call — it talks to you in your browser. About two minutes.</p>
+</dialog>
+
+<script>
+(function () {
+  var ua = navigator.userAgent || '';
+  var phone = /iPhone|iPod|Android.*Mobile/i.test(ua) ||
+              (navigator.userAgentData && navigator.userAgentData.mobile === true);
+  if (phone) return;
+  var dlg = document.getElementById('call-qr');
+  if (!dlg || typeof dlg.showModal !== 'function') return;
+  var note = document.getElementById('hero-go-note');
+  if (note) note.textContent = 'Push it and scan the code with your phone. Your phone calls AI Chauffeur. Talk to it like a customer would. About two minutes.';
+  document.querySelectorAll('a[href^="tel:"]').forEach(function (a) {
+    if (a.getAttribute('data-event') === 'tel_tap_hero') a.setAttribute('data-event', 'qr_open_hero');
+    a.addEventListener('click', function (e) { e.preventDefault(); dlg.showModal(); });
+  });
+  dlg.querySelector('.qr-close').addEventListener('click', function () { dlg.close(); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
 
 </body>
 </html>
