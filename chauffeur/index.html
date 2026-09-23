@@ -7,18 +7,6 @@
   <title>AI Chauffeur — One call or a thousand. Every one answered. Every one booked.</title>
   <meta name="description" content="AI Chauffeur answers your limo phone, quotes the job, books the trip, puts it in your CRM. From one call to a thousand is a setting — it grows with you. Your people run the cars. AI Chauffeur runs the phones.">
 
-  <!-- Favicon set derived from mark-compact.svg with a dark ground baked in:
-       the bars are near-white and would disappear against a light-mode tab
-       strip. THE LOGO IS A CLOSED SYSTEM (RUN 10 amendment). Its bar and knot
-       values are the kit's, not the site's, and they are written down in exactly
-       two places on purpose — assets/brand/README.md and the LOGO CANON appendix
-       of DESIGN-SYSTEM.md. They are deliberately NOT quoted here: the knot's hex
-       is grep-gated to the brand folder and the root icon files, and a comment
-       that repeats a gated string makes every future audit report a clean page
-       as dirty. RUN 9 repainted these files to the site palette on the reasoning
-       that a derived favicon is not supplied artwork. That was wrong — a favicon
-       IS the mark at 16px — and it forked the brand from the lockup sitting 40px
-       away in the same header. Reverted. Do not harmonize them again. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
@@ -39,22 +27,9 @@
   <meta name="twitter:title" content="Limo Answering Service — Takes the Whole Trip">
   <meta name="twitter:description" content="AI Chauffeur answers your limo phone, quotes the job, books the trip, puts it in your CRM. From one call to a thousand is a setting — it grows with you. Your people run the cars. AI Chauffeur runs the phones.">
 
-  <!-- RUN 8 · FONT LOCK — self-hosted. The @font-face lives in the stylesheet,
-       so without a preload the browser cannot discover either file until the CSS
-       has parsed and matched a rule against it. The href must be the SAME STRING
-       as the src, and crossorigin is required even same-origin because fonts are
-       always fetched in CORS mode — miss either and the file is fetched twice. -->
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
-  <!-- RUN 13 · TWO CSS HOMES, AND THIS PAGE IS NO LONGER SPECIAL.
-       This page was standalone through RUN 3.5 and carried its own embedded
-       copy of the shell until RUN 13 — the third CSS home, and the reason a
-       rule written for "the stylesheet" could land on one head and ship a site
-       wearing two. The homepage now loads exactly what the other fifteen pages
-       load, in the same order: the document layer first, the component layer
-       second. There is no local block left for either of them to lose to.
-       Rules that are genuinely this page's own live in aic.css under
-       RUN 13 · THE HOMEPAGE COMES HOME. -->
+
   <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
   <link rel="stylesheet" href="/assets/aic.css?v=3605e089">
   <style>
@@ -72,30 +47,6 @@
   <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
   <script defer src="/_vercel/insights/script.js"></script>
 
-  <!-- ══ RUN 10 · TASK G — THE AEO LAYER ═══════════════════════════════════
-       ONE @graph, five nodes, cross-referenced by @id. It replaced two separate
-       ld+json scripts that between them declared an Organization and a
-       LocalBusiness with different descriptions of the same company, one of
-       which carried an operating history that contradicts the page's own copy.
-       Two schema blocks on one page are two answers to the same question.
-
-       WHAT IS DELIBERATELY ABSENT, each for a reason:
-         · no streetAddress — there is no public storefront, and a fabricated
-           one is the false-LocalBusiness pattern this brand had to strip once
-           already. addressRegion WI / addressCountry US is true and checkable.
-         · no offers node — nothing on this site carries a price, so an offer
-           would be the only place a number appeared, and it would be invented.
-         · no sameAs to the parent brand. These are separate brands with
-           separate numbers, and linking them in schema is the same
-           cross-contamination the token law forbids in CSS.
-         · featureList is the six bullet leads of the #built section, word for
-           word, because tools/truth_audit.py matches schema to visible text.
-           Rulings of 2026-09-13: it books the trip and puts it in the CRM; the
-           texts it sends are the owner's alert and the customer's trip sheet.
-       The FAQPage node mirrors the visible Q&A on this page verbatim; it is
-       generated from the rendered copy by tools/aic-run10-faq-mirror.py so the
-       two cannot drift.
-       ═══════════════════════════════════════════════════════════════════════ -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -236,11 +187,6 @@
 </head>
 <body class="home">
 
-<!-- RUN 14 · Seventeen of the eighteen pages on this host opened with this link
-     and closed it on a <main id="main"> landmark. The homepage did not, and the
-     homepage has the longest nav to skip past: three dropdown groups, two CTAs
-     and a burger, ahead of the H1. A keyboard reader had to tab through all of
-     it on the one page most likely to be their first. -->
 <a class="skip" href="#main">Skip to content</a>
 
 <nav class="top">
@@ -289,34 +235,17 @@
 <main id="main">
 
 <section class="hero" data-lit="bright">
-  <!-- Two columns from 1020px: the CTA stack is max-width 520px, so on a wide
-       screen a single column left the entire right half of the fold empty and
-       pushed the dispatch console — the thing that shows what AI Chauffeur does —
-       below it. Console sits beside the stack now and both are in the fold.
-       One column below 1020px, unchanged. -->
+
   <div class="wrap hero-grid">
     <div class="hero-left">
     <span class="kicker">FOR LIMOUSINE AND BLACK CAR COMPANIES</span>
-    <!-- source: "100 calls at once" is the owner's ruling for this release (the
-         copy-and-cleanup brief, 2026-09-17), and it is a client desk's provisioned
-         capacity, not the browser demo's cap. What the wire said on 2026-09-13:
-         the Retell account carried 20 base concurrency at GET /get-concurrency,
-         purchasable per client. Both numbers are recorded here on purpose — do
-         not quietly reconcile one to the other. -->
+
     <h1 class="hero-h"><span class="h-line">One call or a thousand.</span> <span class="h-line">Every one answered.</span> <em class="h-line">Every one booked.</em></h1>
-    <!-- Four sentences, four blocks rather than four <br>s: each takes its own line
-         where the column can hold it and wraps on its own below that. -->
+
     <p class="hero-big"><span class="hb">AI Chauffeur answers your limo phone.</span> <span class="hb">Quotes the job. Books the trip. Puts it in your CRM.</span> <span class="hb">Never a busy signal, never voicemail.</span> <span class="hb">From one call to a thousand is a setting — it grows with you.</span></p>
     <p class="hero-sub">It takes the whole trip like your best dispatcher — flight number, meet and greet, passengers, bags, child seats, gate codes. It quotes your rates. It books it. It puts it in your CRM.</p>
     <p class="hero-pos">Your people run the cars. <span class="nw">AI Chauffeur</span> runs the phones.</p>
 
-    <!-- ══ HERO B · THE PUSH (2026-09-17) ════════════════════════════════════
-         One green fill on the fold and it dials. The browser call lives on /try/
-         alone now; nothing on this page opens one. [data-rail-after] stays on
-         .cta-stack, so the sticky rail still arms once this cluster has left the
-         top of the viewport. The lead form that used to sit under the button went
-         on 2026-09-17 and took a [data-rail-hide] with it, which the rail does not
-         need: the footer, the calendar and every inline primary are still observed. -->
     <div class="cta-stack" data-rail-after>
 
       <div class="go-stack">
@@ -325,7 +254,7 @@
       </div>
 
     </div>
-    </div><!-- /.hero-left -->
+    </div>
 
     <div class="console hero-console" id="hero-console">
       <div class="console-bar">
@@ -333,28 +262,16 @@
           <div class="dots"><span></span><span></span><span></span></div>
           Dispatch Console <span class="hc-state ringing" id="hc-state">Ringing</span>
         </div>
-        <!-- ══ RUN 7 · TASK C — THE HONESTY CHIP ═══════════════════════════
-             This slot used to assert liveness beside a pulsing green dot on a
-             console showing a caller who does not exist. Nothing here is
-             live and the trip is invented, so the chip now says so. It is the
-             ONE honesty phrase in the console; the sample ticket further down
-             carries its own "Sample intake" title and the FAQ carries the
-             quote-range caveat, and none of the three repeat each other. -->
+
         <span class="hc-honest">Interactive demo · illustrative trip data</span>
       </div>
 
-      <!-- ══ RUN 7 · TASK C — PERSISTENT RESULT HEADER ═══════════════════════
-           The loop is 11 seconds long and most people do not watch a loop.
-           This line is static, always complete, and states the outcome the
-           animation below is acting out, so the console reads correctly at a
-           glance with the motion ignored — or switched off entirely. -->
       <p class="hc-result">
         <span class="hc-r">Call answered</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">Quoted</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">Booked</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">In your CRM</span>
       </p>
 
       <div class="hc-transcript" id="hc-transcript" aria-live="polite">
-        <!-- B1 · emoji-as-icon is banned (CLAUDE.md § 3). Inline SVG inherits
-             currentColor and renders identically on every platform. -->
+
         <span class="hc-line" data-hc-line="0"><svg class="hc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Inbound call · +1 (414) 555-0182</span>
         <span class="hc-line" data-hc-line="1"><span class="hc-who">AI CHAUFFEUR:</span> AI Chauffeur, where are you headed today?</span>
         <span class="hc-line" data-hc-line="2"><span class="hc-who">Caller:</span> Downtown Marriott to MKE airport, 5:45 AM tomorrow.</span>
@@ -369,9 +286,7 @@
         <div class="c-card">
           <div class="c-label">Route + quote</div>
           <div class="c-main" data-hc-stage="2">Downtown MKE Hotel → MKE Airport T-C</div>
-          <!-- source: $78 is what the rate engine returns for this trip — downtown Milwaukee
-               to MKE, executive sedan, zone row base 65 + 20% service fee
-               (automation/rate-engine/wf-rate.02-compute-quote.js:442-458). -->
+
           <div class="c-sub" data-hc-stage="3">$145</div>
         </div>
       </div>
@@ -396,10 +311,7 @@
         </div>
         <div class="c-card">
           <div class="c-label">Handoff</div>
-          <!-- RUN 7 · amber to green. Amber means still ringing / still
-               pending. A ticket that is ready for the dispatcher is the end of
-               intake — the thing this console exists to reach — and green is
-               the colour for reached. -->
+
           <span class="badge badge-green" data-hc-stage="8">In your CRM</span>
         </div>
       </div>
@@ -411,22 +323,10 @@
 <section id="demo" data-lit="technical">
   <div class="wrap">
     <div class="sec-kicker">The dispatch flow</div>
-    <!-- CLAIM SAFETY (RUN 7): both the heading and the sub described a record
-         appearing INSIDE the operator's dispatch software. AI Chauffeur captures and
-         hands over; a human enters it. Two other pages already deny writeback
-         in their FAQ, so this was the page contradicting the site. The retired
-         wording is deliberately not reproduced here — see the note above the
-         integrations section: comments ship, and a quoted claim in a comment
-         will be matched by the next grep-based audit. -->
+
     <h2 class="sec-h">From phone call to trip ticket — <em>captured, quoted, and handed over.</em></h2>
     <p class="sec-sub">A caller speaks naturally. AI Chauffeur takes the trip, quotes your rate sheet, handles mid-call changes, and books it. The fastest way to judge that is to <a href="/try/">try AI Chauffeur</a> yourself.</p>
 
-    <!-- data-rail-hide: this is the one interactive control on the site the
-         sticky rail was measurably parking on top of — 25px of the 50px play
-         button covered, leaving less than the 44px touch minimum exposed. No
-         <input> is involved, so it passed the letter of "never overlaps
-         inputs" while failing the point of it. Same mechanism as the form and
-         the calendar. -->
     <div class="demo-play-bar" data-rail-hide>
       <button type="button" id="demo-play-btn" class="demo-play-btn" data-state="idle" aria-controls="demo-audio">
         <span class="play-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
@@ -498,16 +398,7 @@
 
 <section id="integrations" data-lit="calm">
   <div class="wrap">
-    <!-- ══ COMPATIBILITY, NOT INTEGRATION ════════════════════════════════
-         Phase 1 is capture only. This section is worded so it cannot be read
-         as AI Chauffeur delivering records into dispatch software, routing drivers, or
-         passing work to affiliates. It captures; a human confirms.
 
-         NOTE TO FUTURE EDITORS: do not restate the old wording here, even to
-         explain what was removed. RUN 1 spelled the retired phrases out in a
-         comment, and because comments ship, a later grep-based audit matched
-         them in the live HTML and reported the page as still carrying claims
-         it had not carried for a day. Describe the rule, never quote it. -->
     <div class="sec-kicker">No rip-out</div>
     <h2 class="sec-h">Works with <em>what you already run.</em></h2>
     <p class="sec-sub">AI Chauffeur takes the call, books the trip, and puts it in your CRM; your dispatcher runs it. It can also be connected to the dispatch software you already run. No switch, no rip-out — here is exactly how it <a href="/works-with-your-software/">sits beside the dispatch software you already run</a>.</p>
@@ -554,31 +445,20 @@
   <div class="wrap">
     <div class="sec-kicker">Why this matters</div>
     <h2 class="sec-h">Every missed call is a ride going to <em>someone else.</em></h2>
-    <!-- CLAIM SAFETY (RUN 2): this sentence survived RUN 1's integrations
-         rewrite and still described AI Chauffeur producing a reservation record in the
-         operator's system. Phase 1 is capture only. Corrected to the same
-         language every interior page uses: AI Chauffeur captures, the dispatcher
-         confirms. -->
-    <!-- the inline max-width/font-size override is gone: .sec-sub already
-         governs size and measure sitewide, and a one-off style attribute is a
-         rule no one will find when the system changes. -->
+
     <p class="sec-sub">Voicemail, the same five questions every call, three calls hitting at once. AI Chauffeur picks up all of them and takes the whole trip down, so your dispatcher gets a finished trip instead of building one from scratch. That is the job a <a href="/limo-answering-service/">limo answering service built for dispatch</a> is supposed to do, and it matters most for <a href="/after-hours-limo-dispatch/">the calls your office can't get to</a>.</p>
   </div>
 </section>
 
-<!-- ══ 2026-09-13 · #built — replaces the "What it does" block ═════════════════
-     Six claims, the proof row and the second push. Every number has a source in
-     docs/superpowers/plans/2026-09-13-aic-words-v2.md § 3. -->
 <section id="built" data-lit="flat">
   <div class="wrap">
     <h2 class="sec-h">Built for the day the phones blow up. <em>Not a chatbot.</em></h2>
 
     <ul class="built-list">
-      <!-- source: "100 calls at once" = the owner's ruling, 2026-09-17. The Retell
-           account read 20 base concurrency at GET /get-concurrency on 2026-09-13. -->
+
       <li><strong>One call or a thousand.</strong> Every one answered by name. Every one worked to a booked trip. Your phone stops going to voicemail.</li>
       <li><strong>The whole trip, like a dispatcher.</strong> Pickup, drop, date, time, <a href="/airport-transfer-booking/">flight number</a>, curbside or meet and greet, passengers, bags, child seats, extra stops, gate codes, notes for the chauffeur.</li>
-      <!-- source: 18 priced vehicle classes, sedan to a 56-passenger coach, any U.S. route — automation/rate-engine/wf-rate.02-compute-quote.js:15 and :23-42 -->
+
       <li><strong>Your rates, quoted live.</strong> It knows your rate sheet. Eighteen kinds of vehicles, sedan to <span class="nw">56-passenger</span> coach, anywhere in the U.S. One clean number, service fee included.</li>
       <li><strong>Booked. In your CRM.</strong> The trip is written where your dispatcher works.</li>
       <li><strong>Trip sheet on your phone.</strong> Text to you, text to the customer, the recording and every word of the call attached.</li>
@@ -601,26 +481,12 @@
   <div class="wrap">
     <div class="crush">
       <div class="sec-kicker" style="position:relative">The Crush</div>
-      <!-- ══ B6 · the visitor's OWN clock ═══════════════════════════════
-           Rendered client-side from the device time. No stat, no claim, no
-           invented number — just the hour the operator is actually reading
-           this at, mapped to the window it belongs to. Empty (and fully
-           hidden) with JS off, so nothing renders as a blank line. -->
+
       <p class="crush-now" id="crush-now" hidden></p>
       <h2 class="crush-h">When three calls hit at once and the next ride goes to <em>whoever answers first.</em></h2>
-      <!-- This list used to include confirmation as an everyday AI Chauffeur value.
-           Phase 1 is capture only — a human confirms. Replaced with what
-           actually happens. -->
+
       <p class="crush-p">The Crush is what limo and black car operators call those moments — Friday airport rush, prom night, the concert that ends at 11 PM. AI Chauffeur is built to absorb those windows and never lets a call sit on hold. The everyday value is a cleaner trip sheet: the whole trip taken down the first time, so your dispatcher is confirming instead of chasing. The Crush is when it earns the keep.</p>
 
-      <!-- ══ RUN 7 · TASK G — THE CRUSH, ACTED OUT ═══════════════════════════
-           The heading claims three calls land at once and all three get taken.
-           These are those three calls. They ship in their RESTING state, which
-           is the true one — captured — so the markup reads correctly with JS
-           off, with reduced motion on, and to a screen reader. Only when the
-           section is scrolled into view and motion is allowed does the scene
-           rewind to Ringing and resolve, amber to green, one beat apart.
-           No red: nothing here fails. No particles, no alarm. -->
       <div class="ledger" data-ledger>
         <div class="lg-head"><span>Dispatch ledger</span><span class="lg-note">Illustrative</span></div>
         <div class="lg-row is-done" data-lg-row>
@@ -646,46 +512,22 @@
         </div>
       </div>
 
-      <!-- RUN 11 · SECONDARY, and the reason is a measurement. § 3 of
-           DESIGN-SYSTEM.md has said "one primary per viewport" since RUN 10,
-           and three filled section CTAs sat 520-670px apart on this page:
-           Crush -> GOOGLE LEAD PROTECTION -> Setup. Any two adjacent ones share
-           a viewport at EVERY width, and at 768 all the middle one had to do
-           was clear 28px of scroll for two of them to be on screen together.
-           RUN 10's probe measured the opening fold only, which is where the
-           defect it was written for lived, so this one was never seen.
-           The label, the target and the analytics event are unchanged; only the
-           LEVEL moves, to the ratified secondary. The one filled ask on the
-           page below the hero now sits in "Setup, done for you" — the section
-           whose subject IS the call. -->
       <a href="/book/" class="btn btn-ghost" data-event="book_click_crush">
         Book the setup call
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
-      <!-- entry point to the missed-night calculator (TASK C) -->
+
       <p class="crush-calc-link"><a href="/after-hours-limo-dispatch/#missed-night">Work out what the calls your office can't get to cost you →</a></p>
     </div>
   </div>
 </section>
 
-<!-- ══ RUN 10 · TASK F — GOOGLE LEAD PROTECTION ═══════════════════════════════
-     § 6 COPY SOURCE governs every word here. This section describes a MECHANISM
-     — search and ads make a phone ring, an unanswered phone hands the rider to
-     the next operator — and never a ranking, a placement or an algorithmic
-     outcome. Nothing on this page is attributed to Google as a quotation,
-     because a paraphrase presented as "Google says" is attribution fraud. The
-     final line is the required non-affiliation statement and it is not
-     decorative: this section names another company in its heading.
-     ═════════════════════════════════════════════════════════════════════════ -->
 <section id="lead-protection" data-lit="flat">
   <div class="wrap">
     <div class="sec-kicker">GOOGLE LEAD PROTECTION</div>
     <h2 class="sec-h">Google found the rider. AI Chauffeur finishes the handoff.</h2>
     <p class="sec-sub">Search and ads can make the phone ring. They can't make your dispatch line answer. AI Chauffeur picks up every call and takes down the route, flight, vehicle, passengers, bags, and callback number — before the rider dials the next operator on the map. Every trip you capture is a booked ride, a relationship, and a review your competitor never gets.</p>
-    <!-- RUN 11 · SECONDARY. See the note on the Crush CTA above. The GOOGLE
-         LEAD PROTECTION copy law fixes this section's STRING and its TARGET,
-         both of which are unchanged; it says nothing about the control's level,
-         and the level is what "one primary per viewport" governs. -->
+
     <a href="/book/" class="btn btn-ghost" data-event="book_click_glp">
       Book the setup call
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -701,15 +543,7 @@
         <div class="sec-kicker">Setup, done for you</div>
         <h3 class="setup-h">Setup, <em>done for you.</em></h3>
         <p class="setup-p">First operators get setup done for them — your rate rules, service area, vehicle types, and dispatch process documented and configured by our team. A few slots open at a time.</p>
-        <!-- B8 · pricing POSTURE only: no price for THIS SERVICE appears on any
-             chauffeur page. RUN 7 correction — the note here used to claim no
-             dollar figure appeared anywhere at all, which was not true and was
-             the kind of comment a later audit trusts instead of checking.
-             2026-09-13: this page carries one sample fare, $78 in the hero
-             console — the rate engine's own number for that trip. Sample fare
-             ranges still ship in labelled sample tickets on
-             /limo-answering-service/ and /works-with-your-software/; those are a
-             caller's quote in a marked sample, not the price of this service. -->
+
         <p class="setup-p" style="margin-top:1rem;color:var(--ink-mute)">Every build is custom to your operation — your rates, your service area, your vehicle classes. We scope it on the setup call.</p>
       </div>
       <div class="setup-cta">
@@ -723,21 +557,9 @@
   </div>
 </section>
 
-<!-- ══ BUILT BY OPERATORS ════════════════════════════════════════════════
-     RUN 9 · this section used to be about a person: two personal timelines and
-     a promise phrased around one individual. § E takes the individual out of
-     every chauffeur surface and puts the team in. What survives is the part
-     that was ever load-bearing — the operating history — stated as ours.
-     The retired phrase is deliberately not quoted here; comments ship, and a
-     grep-based audit will match a quoted string in a comment and report a page
-     as still carrying copy it dropped a run ago. -->
 <section id="operators" data-lit="warm">
   <div class="wrap">
-    <!-- Two paragraphs and no card. The card framed a history as one more
-         product feature sitting in the same chrome as the trip ticket. The
-         authority rail below is mono because those three items are facts on a
-         record, not a sales sentence — which is exactly the line mono is for.
-         No photo, no testimonial, no outcome number, no individual named. -->
+
     <div class="operators-block">
       <div class="sec-kicker">Operator-built</div>
       <h2 class="operators-h">Built by operators.</h2>
@@ -786,13 +608,7 @@
       <summary>How fast can it go live?</summary>
       <div>Setup is done for you by our team. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented.</div>
     </details>
-    <!-- AIC SITE RUN 1 — this answer and the setup card three sections up gave
-         the same meeting two different names and two different lengths, on the
-         same scroll. RUN 7 finished the job: one name, one length, sitewide.
-         Do NOT restate the retired wording here. Comments ship, and a
-         grep-based audit will match a quoted phrase in a comment and report a
-         page as still carrying copy it dropped a run ago — which is exactly
-         what happened to the integrations note at the top of this file. -->
+
     <details>
       <summary>What about pricing?</summary>
       <div>Every build is custom to your operation — your rates, your service area, your vehicle classes. We scope it on the setup call, once we know your call volume, fleet size, and how you dispatch. That call runs 20 minutes.</div>
@@ -806,18 +622,6 @@
 
 </main>
 
-<!-- ══ § G · FAT FOOTER ══════════════════════════════════════════════════
-     Four columns plus the NAP block, identical on all twelve pages. This is
-     the only surface where every indexable page is reachable from every
-     other one, and it is what closed the orphan gap: before this run
-     /airport-transfer-booking/ and /madison-limo-answering-service/ each had
-     ZERO incoming internal links from anywhere on the site.
-
-     data-rail-hide: the sticky rail suppresses itself once the footer is on
-     screen. The footer carries the number and the setup CTA already, so a bar
-     restating them would be noise — and body.rail-on comes off with it, which
-     is what removes the reserved 72px and leaves the document ending on the
-     last line of content instead of on dead scroll. -->
 <footer data-rail-hide>
   <div class="wrap">
     <div class="foot-grid">
@@ -1228,10 +1032,6 @@
 })();
 </script>
 
-<!-- Shared chrome: nav tint, the drawer, the sticky action rail, haptics and the
-     glow gate. It holds no endpoint - the lead form it used to carry went on
-     2026-09-17 and took the only URL in the file with it. -->
-<!-- § G · MOBILE DRAWER — every indexable page, real hrefs, no injection. -->
 <div class="nav-drawer" id="nav-drawer" data-drawer>
   <div class="dw-top">
     <a href="/" class="brand" aria-label="AI Chauffeur home">
@@ -1289,7 +1089,6 @@
   </div>
 </div>
 
-<!-- RUN 7 · TASK A — mobile sticky action rail -->
 <div class="rail" data-rail>
   <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="rail-label"><span class="rail-verb">Call </span>(414) 775-0019</span></a>
   <a class="rail-book" href="/book/" data-event="book_click_rail">Book the setup call</a>
