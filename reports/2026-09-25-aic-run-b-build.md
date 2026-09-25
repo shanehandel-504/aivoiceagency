@@ -83,9 +83,9 @@ GOTCHAS
    say its own line on silence: "Just checking in—are you ready to request a trip? Would you
    like airport, point to point, or by the hour?" It does not use N09-SILENCE1. The global
    prompt also says never ask if the caller is still there.
-   On the same web call, "end call after 20 s of silence" did not end it: the page hung up at
-   80 s. Your choice: nudge max 0 (no invented line; relies on the silence hang-up, which
-   still needs a phone test), or keep it.
+   /try overrides the silence hang-up to 60 s (WF-TRY-WEBCALL agent_override), so the agent's
+   own 20 s value only applies on 5008 phone calls, and that is untested. Your choice: nudge
+   max 0 (no invented line; the call just hangs up on silence), or keep it.
 2. $vars.OWNER_ALERT_CONTACT_ID POINTS AT A DELETED GHL CONTACT (GHL: "Contact not found").
    Any rail whose owner text falls back to that variable texts nobody. This rail is not
    affected, because it finds the owner row by $vars.OWNER_CELL. Not changed here; other
