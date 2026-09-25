@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-25T14:40:00-05:00",
+  "updated": "2026-09-25T16:44:15-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -471,10 +471,10 @@
     },
     {
       "id": "aic-capture-desk",
-      "title": "AI Chauffeur Capture Desk — RUN A: archive-first + preconditions",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/tree/main/archive",
-      "status": "run-a-archive-complete",
-      "label": "RUN A COMPLETE (2026-09-25, 7189a10). NOTHING LIVE CHANGED: 8/8 number bindings, AIC v27 / Reliable v29 / sales v49, flow timestamps, all 29 n8n version ids (rail 0652d902-…), the rail node hash that holds TENANTS, and 7 rate-table row counts all read identical before and after. FROZEN COPY: agent_932712356e6093929d711033d2 \"AIC-FULL-ARCHIVE (frozen 2026-09-25)\", v0 unpublished, no number, on its own flow conversation_flow_fe11945611fa (0 content diffs vs flow v27; 9/9 component refs resolve). ARCHIVE: 12 Retell + 15 n8n files + ROLLBACK-BUNDLE (R1 pin phone to v27 · R2 republish v27 · R3 serve the frozen copy · R5 restore n8n) + ARCHIVE-INDEX (16 capabilities). Redaction: 8 values in 5 files, exact-value sweep of 24 secrets + 3 private numbers = 0 survivors, negative control 9/9. /archive 404 on aichauffeur.ai, aivoiceagency.ai and ai100x.ai. CALENDAR VERDICT: UaxV0ENx2cEUYs6qeWZ7 (AIChauffeur Setup Call, the /book calendar) is trustworthy WITH FIXES — open hours real (Mon–Fri 1–6 PM CT), free-slots exact, create 201 / delete 200 on the ZZ sink; reads 0.2–0.5 s, but create 1.2–2.7 s will not fit a 3 s book_slot. FAILURE CAUSE: caller-first ordering (the agents had no availability tool) plus a booking rail that misreads the calendar (8–18 fence vs 13–18 real, no 4-hour notice, exact-minute match on a 15-min grid) and calls all of it \"slot_taken\"; 0 of 38 attempts carried an Eastern time, so the time-zone hypothesis is rejected. RECORDING VERDICT: Retell links are public, unsigned and never expire; they play as-is in Chromium and WebKit. Sheets credential: none. Data Tables: yes. /trip rewrite: feasible. Original Aug 17 name: found (Notion receipt). REPO IS PUBLIC — /archive is off the websites, not off GitHub."
+      "title": "AI Chauffeur Capture Desk — RUN B: test agent live on 409-5008 + calendar rail + post-call rail v2 + trip sheet + site copy",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-25-aic-run-b-build.md",
+      "status": "run-b-test-agent-live",
+      "label": "RUN B LIVE (2026-09-25). TEST AGENT agent_e41b2e957f1de46cf23dc25a84 (AIC-LEAN-TEST) v0 published on flow conversation_flow_c3c710be6c94 v0 — 91 nodes, 49 approved lines as static nodes + 4 composer frames = 53/53 byte-exact, global prompt 1381/1381 chars. Bound in+out on 414-409-5008 and reachable at aichauffeur.ai/try?agent=test. 0019 AND ITS LIVE AGENT UNCHANGED (same binding, same version list). RAIL TkETvvnABhUPd7ME v2 e161d03b (53 nodes, Error Sentry attached): per-call dedup, TRIP REQUEST — DEMO label, trip-sheet store + /trip/{ref} page (WF-TRIP-SHEET 3PfmC7sxOjUHI0rE), GHL safeguard (never renames an existing contact), trip log sheet, owner email with EXCEPTIONS line, owner + caller SMS, MISSED CAPTURE branch, owner contact resolved read-only (§ 9). Sim #1 replay: every leg green, second POST sent nothing. WF-AIC-SALES-CAL TLoF7bzuPYy1NAW1 (server p50: slots 372 ms, book 91 ms, alert 83 ms). Site b92668d. OPEN: silence reminder makes the LLM speak an unapproved check-in line; $vars.OWNER_ALERT_CONTACT_ID points at a deleted GHL contact. Undo steps U1–U5 in the private archive repo."
     }
   ],
   "log": [
@@ -893,6 +893,10 @@
     {
       "ts": "2026-09-25T14:40:00-05:00",
       "entry": "AIC CAPTURE DESK RUN A — ARCHIVE COMPLETE (7189a10). Archive agent agent_932712356e6093929d711033d2 (flow conversation_flow_fe11945611fa), unpublished, no number. Calendar verdict: UaxV0ENx2cEUYs6qeWZ7 trustworthy with fixes — book_slot needs >=8 s (GHL create 1.2–2.7 s), agent-first slot offering, rail fence and reason codes rebuilt. Recording verdict: browser-playable as-is (public unsigned CloudFront WAV). Live changes: none — before/after snapshot identical."
+    },
+    {
+      "ts": "2026-09-25T16:44:15-05:00",
+      "entry": "AIC CAPTURE DESK RUN B — TEST AGENT LIVE on 409-5008 (agent_e41b2e957f1de46cf23dc25a84 v0). Rail v2 e161d03b live (was 0652d902); WF-AIC-SALES-CAL + WF-TRIP-SHEET published; /try?agent=test live (WF-TRY-WEBCALL b81c966b, site b92668d). Replay proof: trip sheet 200 on aichauffeur.ai/trip, owner email + SMS 201, caller SMS 201, GHL tag+note without rename, dedup second run sent nothing. Web call 5 s on the test agent → one MISSED CAPTURE owner alert. 0019 + live agent unchanged. Two open items for Shane: the silence nudge wording, and the dead OWNER_ALERT_CONTACT_ID variable."
     }
   ]
 }
