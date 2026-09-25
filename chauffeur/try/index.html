@@ -320,6 +320,8 @@
   const SDK_URL = 'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@3.0.1/+esm';
   const WEBHOOK = 'https://circulant.app.n8n.cloud/webhook/7b9e6dee2ce9ce780673725e0448791f';
   const RECEIPT = 'https://circulant.app.n8n.cloud/webhook/try/receipt';
+  // ?agent=test routes the call to the test desk; anything else, or nothing, sends no key.
+  const AGENT_KEY = new URLSearchParams(location.search).get('agent') === 'test' ? 'test' : '';
   const LINE = '<a href="tel:+14147750019" data-event="tel_tap_try">(414) 775-0019</a>';
   const IN_APP = /FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|Twitter|musical_ly|BytedanceWebview|Snapchat/i;
   const SHARE = 'https://aichauffeur.ai/try';
@@ -775,7 +777,9 @@
       if (!proof) return fail();
       armed = null; // single use here and single use in n8n
       // 3 · n8n checks the proof and its limits, then creates the call
-      const r = await within(post({ step: 'call', nonce: proof.nonce, counter: String(proof.counter) }), 15000);
+      const fields = { step: 'call', nonce: proof.nonce, counter: String(proof.counter) };
+      if (AGENT_KEY) fields.agent_key = AGENT_KEY;
+      const r = await within(post(fields), 15000);
       if (!r.ok) { arm(); return fail(); }
       const d = await r.json();
       if (state !== 'connecting' || mine !== runId) return;

@@ -144,7 +144,7 @@
           "name": "Can it quote rides?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. It quotes your rates on the call and gives one clean number, service fee included. The demo runs a sample rate card. Yours runs your rates."
+            "text": "Yes. It quotes your rates on the call and gives one clean number, service fee included. The demo runs a sample trip ticket. Yours runs your rates."
           }
         },
         {
@@ -267,7 +267,7 @@
       </div>
 
       <p class="hc-result">
-        <span class="hc-r">Call answered</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">Quoted</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">Booked</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">In your CRM</span>
+        <span class="hc-r">Call answered</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">Captured</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">Ticketed</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">In your CRM</span>
       </p>
 
       <div class="hc-transcript" id="hc-transcript" aria-live="polite">
@@ -307,7 +307,7 @@
       <div class="console-grid">
         <div class="c-card">
           <div class="c-label">Trip sheet</div>
-          <span class="badge badge-green" data-hc-stage="7">Booked</span>
+          <span class="badge badge-green" data-hc-stage="7">Ticketed</span>
         </div>
         <div class="c-card">
           <div class="c-label">Handoff</div>
@@ -315,7 +315,7 @@
           <span class="badge badge-green" data-hc-stage="8">In your CRM</span>
         </div>
       </div>
-      <div class="c-meta" data-hc-stage="9">Call received · 05:45 AM · Booked</div>
+      <div class="c-meta" data-hc-stage="9">Call received · 05:45 AM · Ticketed</div>
     </div>
   </div>
 </section>
@@ -471,6 +471,12 @@
       <li class="proof-text">Every call recorded, every trip sheet texted</li>
     </ul>
 
+    <h3 class="sec-kicker built-close">Included · Custom options</h3>
+    <ul class="built-list">
+      <li><strong>INCLUDED IN THE CAPTURE DESK</strong>24/7 capture · trip ticket · owner and caller text · recording and transcript · trip log sheet</li>
+      <li><strong>CUSTOM OPTIONS</strong>your rates in your territory · writing into your CRMs · appointment booking on your calendar · website talk button · multi-language · knowledge answers · confirmations</li>
+    </ul>
+
     <p class="sec-sub built-close">Put it on every reservation call, or only the calls your office can't get to. Try AI Chauffeur and hear it work.</p>
     <a href="/try/" class="btn btn-primary btn-go" data-event="close_push_to_book">PUSH TO TRY AI</a>
     <p class="built-links"><a href="/what-it-does/">See everything it does</a> · <a href="/what-it-can-do/">See what it can do for your company</a></p>
@@ -598,7 +604,7 @@
     </details>
     <details>
       <summary>Can it quote rides?</summary>
-      <div>Yes. It quotes your rates on the call and gives one clean number, service fee included. The demo runs a sample rate card. Yours runs your rates.</div>
+      <div>Yes. It quotes your rates on the call and gives one clean number, service fee included. The demo runs a sample trip ticket. Yours runs your rates.</div>
     </details>
     <details>
       <summary>Does it work with my CRM or dispatch software?</summary>
@@ -775,8 +781,8 @@
 
      RINGING          amber, the only beat where amber appears
      CALL ANSWERED    blue — the line is picked up and the trip is being taken
-     QUOTED           green — one all-in number came back
-     BOOKED           green, and the filled fields pick up a green inset rule
+     CAPTURED         green — the trip details are in
+     TICKETED         green, and the filled fields pick up a green inset rule
      IN YOUR CRM      green, held 3.6s, then a quiet reset   (ruling 2026-09-13)
 
    Only ONE state colour is on screen at any instant, so the section never
@@ -841,8 +847,8 @@
     { t:3900,  fn:()=>{ stage(4).forEach(show); }},
     { t:4500,  fn:()=>{ stage(5).forEach(show); }},
     { t:5100,  fn:()=>{ stage(6).forEach(show); }},
-    { t:5800,  fn:()=>{ setState('Quoted','captured'); stage(3).forEach(show); }},
-    { t:6800,  fn:()=>{ show(line(3)); setState('Booked','captured');
+    { t:5800,  fn:()=>{ setState('Captured','captured'); stage(3).forEach(show); }},
+    { t:6800,  fn:()=>{ show(line(3)); setState('Ticketed','captured');
                         root.classList.add('hc-captured'); stage(7).forEach(show); }},
     { t:8200,  fn:()=>{ setState('In your CRM','ready');
                         stage(8).forEach(show); stage(9).forEach(show); }},
