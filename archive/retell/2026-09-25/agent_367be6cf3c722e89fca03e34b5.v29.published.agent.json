@@ -1,0 +1,381 @@
+{
+  "_archive": {
+    "run": "AIC CAPTURE DESK — RUN A",
+    "exported_at": "2026-09-25T19:33:11.464Z",
+    "note": "Reliable tenant — LIVE, bound to +14144095008 via latest_published. Draft v30 differs only in version_description/base_version; flow v30 identical to v29."
+  },
+  "agent_id": "agent_367be6cf3c722e89fca03e34b5",
+  "channel": "voice",
+  "last_modification_timestamp": 1788727582979,
+  "agent_name": "Reliable Limo Reservation Desk — AVA (Demo)",
+  "version_description": "",
+  "response_engine": {
+    "type": "conversation-flow",
+    "conversation_flow_id": "conversation_flow_36c260d873de",
+    "version": 29
+  },
+  "webhook_url": "https://circulant.app.n8n.cloud/webhook/demo-postcall",
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "end_call_after_silence_ms": 60000,
+  "version": 29,
+  "base_version": 28,
+  "assigned_tags": [],
+  "is_published": true,
+  "version_title": "",
+  "post_call_analysis_model": "gpt-4.1",
+  "pii_config": {
+    "categories": [],
+    "mode": "post_call"
+  },
+  "handbook_config": {
+    "natural_filler_words": false,
+    "high_empathy": false,
+    "ai_disclosure": true
+  },
+  "timezone": "America/Chicago",
+  "post_call_analysis_data": [
+    {
+      "name": "trip_type",
+      "description": "The primary type of trip requested on this call.",
+      "required": true,
+      "choices": [
+        "airport",
+        "point_to_point",
+        "hourly",
+        "charter"
+      ],
+      "type": "enum"
+    },
+    {
+      "name": "return_leg_requested",
+      "required": true,
+      "type": "boolean",
+      "description": "Whether the caller also booked a return/second leg in this call."
+    },
+    {
+      "name": "leg_1_summary",
+      "required": true,
+      "type": "string",
+      "description": "Full captured details of the first leg: airline/flight/date/airport and pickup/drop-off for airport trips, or pickup/drop-off/date/time/occasion for ground service trips, plus passengers, luggage, and meet style or vehicle preference if given."
+    },
+    {
+      "required": false,
+      "description": "The airport or FBO for leg 1, if leg 1 was an airport trip. Blank if leg 1 wasn't an airport trip.",
+      "type": "string",
+      "name": "airport"
+    },
+    {
+      "type": "string",
+      "description": "The date of leg 1's trip (the flight date for airport trips, or the service date for ground trips).",
+      "name": "pickup_date",
+      "required": false
+    },
+    {
+      "name": "pickup_time",
+      "type": "string",
+      "description": "The pickup or drop-off time captured for leg 1.",
+      "required": false
+    },
+    {
+      "name": "passengers",
+      "description": "The number of passengers captured for leg 1.",
+      "type": "number",
+      "required": false
+    },
+    {
+      "required": false,
+      "description": "The number of bags captured for leg 1.",
+      "type": "number",
+      "name": "luggage"
+    },
+    {
+      "description": "The airline and flight number, or aircraft tail number for a private flight, captured for leg 1. Blank if leg 1 wasn't an airport trip.",
+      "name": "airline_flight",
+      "type": "string",
+      "required": false
+    },
+    {
+      "description": "Full captured details of the second (return) leg, independently captured from leg 1. Leave blank if no return leg was requested.",
+      "required": false,
+      "type": "string",
+      "name": "leg_2_summary"
+    },
+    {
+      "description": "The airport or FBO for leg 2 (the return leg), if leg 2 was an airport trip. Blank if there was no return leg or it wasn't an airport trip.",
+      "type": "string",
+      "name": "leg_2_airport",
+      "required": false
+    },
+    {
+      "type": "string",
+      "description": "The date of leg 2's (return leg's) trip. Blank if there was no return leg.",
+      "name": "leg_2_pickup_date",
+      "required": false
+    },
+    {
+      "name": "leg_2_pickup_time",
+      "type": "string",
+      "required": false,
+      "description": "The pickup or drop-off time captured for leg 2. Blank if there was no return leg."
+    },
+    {
+      "description": "The number of passengers captured for leg 2. Blank if there was no return leg.",
+      "type": "number",
+      "name": "leg_2_passengers",
+      "required": false
+    },
+    {
+      "required": false,
+      "name": "leg_2_luggage",
+      "description": "The number of bags captured for leg 2. Blank if there was no return leg.",
+      "type": "number"
+    },
+    {
+      "type": "string",
+      "name": "leg_2_airline_flight",
+      "required": false,
+      "description": "The airline and flight number, or aircraft tail number for a private flight, captured for leg 2. Blank if there was no return leg or it wasn't an airport trip."
+    },
+    {
+      "type": "boolean",
+      "required": true,
+      "name": "oversized_flag",
+      "description": "Whether the caller's party size or luggage was flagged as exceeding standard vehicle capacity, requiring dispatch to arrange a larger vehicle."
+    },
+    {
+      "name": "oversized_note",
+      "required": false,
+      "type": "string",
+      "description": "Details on the oversized party/luggage situation, if oversized_flag is true."
+    },
+    {
+      "description": "Whether the caller corrected a previously given detail during the call.",
+      "type": "boolean",
+      "required": true,
+      "name": "correction_made"
+    },
+    {
+      "description": "What was corrected, if correction_made is true (e.g., 'pickup time changed from 2pm to 3pm').",
+      "required": false,
+      "type": "string",
+      "name": "correction_note"
+    },
+    {
+      "name": "urgent_request_flag",
+      "required": true,
+      "description": "Whether the caller raised an active trip issue, a complex unsupported change, or insisted on speaking with a human.",
+      "type": "boolean"
+    },
+    {
+      "required": false,
+      "description": "The reason given for the urgent/unsupported request, if urgent_request_flag is true.",
+      "type": "string",
+      "name": "urgent_reason"
+    },
+    {
+      "required": true,
+      "description": "The caller's name, captured for dispatch to use in the callback.",
+      "name": "caller_name",
+      "type": "string"
+    },
+    {
+      "required": true,
+      "type": "string",
+      "name": "caller_callback_number",
+      "description": "The best callback number the caller provided for dispatch."
+    },
+    {
+      "type": "string",
+      "name": "special_notes",
+      "required": false,
+      "description": "Any other freeform detail relevant to dispatch that doesn't fit the structured fields above."
+    },
+    {
+      "required": false,
+      "name": "flight_type",
+      "choices": [
+        "commercial",
+        "private",
+        "not_applicable"
+      ],
+      "description": "Whether the flight involved was commercial or private/charter, or not applicable if the trip wasn't airport-related.",
+      "type": "enum"
+    },
+    {
+      "name": "pickup_method",
+      "choices": [
+        "inside_meet",
+        "curbside",
+        "not_applicable"
+      ],
+      "description": "The meet style chosen for airport arrivals: an inside meet with signage, curbside/express, or not applicable if not an airport arrival.",
+      "required": false,
+      "type": "enum"
+    },
+    {
+      "description": "The exact name or text requested for the chauffeur's greeting sign, if an inside meet was chosen.",
+      "name": "signage_text",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "type": "enum",
+      "choices": [
+        "airport",
+        "transfer",
+        "hourly",
+        "charter"
+      ],
+      "required": true,
+      "description": "The type of ground/airport service captured for this call's primary leg.",
+      "name": "service_mode"
+    },
+    {
+      "name": "booker_is_passenger",
+      "required": true,
+      "description": "Whether the person who called is also the passenger riding in the vehicle.",
+      "type": "boolean"
+    },
+    {
+      "description": "The passenger's on-board contact mobile number, if the booker is not the passenger.",
+      "type": "string",
+      "name": "passenger_obc_number",
+      "required": false
+    },
+    {
+      "description": "The caller's own mobile number, captured for dispatch to text and use as a callback number.",
+      "name": "caller_mobile",
+      "type": "string",
+      "required": true
+    },
+    {
+      "type": "string",
+      "required": false,
+      "name": "caller_email",
+      "description": "The caller's email address, if given, for dispatch to send a copy of the request."
+    },
+    {
+      "description": "Whether the caller gave permission to be texted about this request.",
+      "name": "sms_consent",
+      "required": true,
+      "type": "boolean"
+    },
+    {
+      "type": "string",
+      "description": "The caller's feedback on how the call went, captured in the closing beat after the reservation was recapped.",
+      "required": false,
+      "name": "prospect_feedback"
+    },
+    {
+      "required": false,
+      "choices": [
+        "yes",
+        "no",
+        "maybe"
+      ],
+      "type": "enum",
+      "name": "interest_level",
+      "description": "Whether the caller expressed interest in someone following up about setting up a system like this for their own company."
+    },
+    {
+      "required": false,
+      "name": "followup_preference",
+      "type": "string",
+      "description": "The caller's own verbatim words for any specific day, time, or scheduling preference they gave when answering whether they'd like a follow-up call about setting up this system on their own line, captured exactly as said with no paraphrasing, interpretation, or date normalization. This value is for internal dispatch use only and must never be spoken back to the caller.",
+      "conditional_prompt": "Include this field only if the caller stated a specific day, time, or scheduling preference in their answer to the follow-up interest question. If the caller answered only with a plain yes/no or agreement and named no day or time, leave this field out entirely."
+    },
+    {
+      "type": "number",
+      "name": "quote_total",
+      "required": false,
+      "description": "The total quoted price for the trip, only if a specific dollar figure was actually stated during the call."
+    },
+    {
+      "description": "A quote or reservation reference number, only if one was actually stated during the call.",
+      "required": false,
+      "type": "string",
+      "name": "quote_id"
+    },
+    {
+      "description": "The vehicle class named to the caller for leg 1 based on party size and luggage (e.g., sedan, SUV, stretch limousine, 18-to-20-passenger bus, 24-passenger bus), or whatever alternate class the caller requested instead. Left blank if leg 1's party was genuinely oversized (exceeds stretch-limo capacity), since dispatch determines the exact bus size in that case.",
+      "type": "string",
+      "required": false,
+      "name": "vehicle_class"
+    },
+    {
+      "required": false,
+      "name": "leg_2_vehicle_class",
+      "description": "The vehicle class named to the caller for leg 2 (the return leg), same rules as vehicle_class. Blank if there was no return leg, or if leg 2's party was genuinely oversized.",
+      "type": "string"
+    },
+    {
+      "description": "The company name the trip is traveling under, if the caller confirmed this is a company account. Blank if traveling personally.",
+      "name": "company_account",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "choices": [
+        "email",
+        "text"
+      ],
+      "description": "How the trip confirmation copy will be delivered: email, or text if the email address remained uncertain after two attempts to confirm it and the caller was offered a text confirmation instead.",
+      "required": false,
+      "name": "confirmation_delivery_method",
+      "type": "enum"
+    },
+    {
+      "type": "boolean",
+      "description": "Whether the caller reported a mistake, error, or problem with how the reservation desk handled this call, captured at the feedback beat before the close.",
+      "required": false,
+      "name": "call_quality_complaint"
+    }
+  ],
+  "voice_id": "cartesia-Kate",
+  "voice_model": "sonic-3-latest",
+  "voice_temperature": 1,
+  "voice_speed": 1,
+  "enable_dynamic_voice_speed": true,
+  "volume": 1,
+  "voice_emotion": "happy",
+  "enable_backchannel": false,
+  "backchannel_frequency": 0.7,
+  "backchannel_words": [
+    "mm-hmm",
+    "I see",
+    "got it",
+    "right",
+    "okay",
+    "sure thing"
+  ],
+  "reminder_trigger_ms": 6000,
+  "max_call_duration_ms": 720000,
+  "interruption_sensitivity": 0.82,
+  "boosted_keywords": [
+    "Kankakee",
+    "Bourbonnais",
+    "Bradley",
+    "Manteno",
+    "Joliet",
+    "Naperville",
+    "Bolingbrook",
+    "Oak Brook",
+    "Schaumburg",
+    "Chicago",
+    "Milwaukee",
+    "O'Hare",
+    "Midway",
+    "FBO",
+    "Signature Flight Support",
+    "Atlantic Aviation",
+    "Kewaskum",
+    "Milwaukee Mitchell",
+    "Reliable Limo"
+  ],
+  "ambient_sound_volume": 0.3,
+  "responsiveness": 0.9,
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {}
+}

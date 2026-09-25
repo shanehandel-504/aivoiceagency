@@ -1,0 +1,229 @@
+{
+  "_archive": {
+    "run": "AIC CAPTURE DESK — RUN A",
+    "exported_at": "2026-09-25T19:33:11.463Z",
+    "note": "UNPUBLISHED DRAFT. Differs from v27 on max_call_duration_ms (900000 -> 720000) and end_call_after_silence_ms (unset -> 60000). Its flow v28 is byte-identical to flow v27 apart from version fields, so no separate flow file."
+  },
+  "agent_id": "agent_2d1d687eb85e6d5d0e720795c2",
+  "channel": "voice",
+  "last_modification_timestamp": 1788725917008,
+  "agent_name": "AI CHAUFFEUR FLOW v1",
+  "response_engine": {
+    "type": "conversation-flow",
+    "conversation_flow_id": "conversation_flow_ec560891b66b",
+    "version": 28
+  },
+  "webhook_url": "https://circulant.app.n8n.cloud/webhook/demo-postcall",
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "end_call_after_silence_ms": 60000,
+  "version": 28,
+  "base_version": 27,
+  "assigned_tags": [],
+  "is_published": false,
+  "post_call_analysis_model": "gpt-4.1",
+  "pii_config": {
+    "mode": "post_call",
+    "categories": []
+  },
+  "handbook_config": {
+    "default_personality": false,
+    "nato_phonetic_alphabet": false,
+    "echo_verification": false,
+    "ai_disclosure": true,
+    "scope_boundaries": true,
+    "speech_normalization": true,
+    "natural_filler_words": false,
+    "conversational_personality": false,
+    "high_empathy": false,
+    "smart_matching": true
+  },
+  "timezone": "America/Chicago",
+  "post_call_analysis_data": [
+    {
+      "type": "string",
+      "description": "The kind of trip booked or discussed: airport arrival, airport departure, or charter (point-to-point or hourly).",
+      "name": "trip_type"
+    },
+    {
+      "description": "The date of pickup or flight, as discussed on the call - resolved to an absolute calendar date using the year and date the call actually took place. Never default to a stale or training-data year (e.g. 2024); if the agent stated a specific resolved date during the call, use that exact date and year.",
+      "type": "string",
+      "name": "pickup_date"
+    },
+    {
+      "name": "pickup_time",
+      "description": "The pickup time, or flight time used to derive it.",
+      "type": "string"
+    },
+    {
+      "name": "passenger_count",
+      "type": "number",
+      "description": "Number of passengers for the trip."
+    },
+    {
+      "type": "number",
+      "name": "bag_count",
+      "description": "Number of bags/luggage pieces for the trip."
+    },
+    {
+      "type": "string",
+      "description": "The vehicle class quoted or assigned for the trip (e.g. Executive Sedan, Executive SUV, Sprinter Van, Stretch Limousine).",
+      "name": "vehicle_class"
+    },
+    {
+      "description": "Airline and flight number, if this was an airport trip.",
+      "name": "airline_flight",
+      "type": "string",
+      "required": false
+    },
+    {
+      "type": "string",
+      "description": "The city for the non-airport end of the trip - the drop-off city on an arrival, the pickup city on a departure, or the starting city for a charter.",
+      "name": "origin_city"
+    },
+    {
+      "name": "dropoff_address",
+      "description": "The drop-off address or destination for the trip.",
+      "type": "string"
+    },
+    {
+      "name": "caller_name",
+      "type": "string",
+      "description": "The name given for the reservation contact."
+    },
+    {
+      "type": "string",
+      "description": "The mobile number given for the reservation contact.",
+      "name": "caller_mobile"
+    },
+    {
+      "type": "string",
+      "name": "caller_email",
+      "description": "The email address given for the reservation contact."
+    },
+    {
+      "required": false,
+      "type": "string",
+      "description": "The name requested on the meet-and-greet sign, if applicable.",
+      "name": "sign_text"
+    },
+    {
+      "description": "Gate code or entry instructions given for a residential pickup or drop-off, if any.",
+      "required": false,
+      "type": "string",
+      "name": "gate_code"
+    },
+    {
+      "description": "Any special notes given for the driver.",
+      "name": "special_notes",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "required": false,
+      "type": "string",
+      "description": "Whether one or more child seats were requested and, if so, the type of each (infant, convertible, or booster).",
+      "name": "child_seats"
+    },
+    {
+      "name": "sms_consent",
+      "description": "Whether the caller agreed to receive text updates at their mobile number.",
+      "type": "boolean"
+    },
+    {
+      "type": "boolean",
+      "description": "Whether a follow-up appointment call about running AI Chauffeur was booked.",
+      "name": "appointment_booked"
+    },
+    {
+      "name": "interest_level",
+      "type": "string",
+      "description": "The caller's level of interest in the follow-up appointment offer, or in the ride itself if no appointment was discussed.",
+      "required": false
+    },
+    {
+      "name": "demo_feedback",
+      "required": false,
+      "description": "The caller's verbatim answer describing what they thought of the demo.",
+      "type": "string"
+    },
+    {
+      "type": "string",
+      "name": "quote_total",
+      "description": "The all-in quoted or committed price for the trip, including the service fee."
+    },
+    {
+      "name": "meet_style",
+      "description": "Curbside or meet-and-greet pickup style chosen for an airport arrival, if applicable.",
+      "required": false,
+      "type": "string"
+    },
+    {
+      "type": "string",
+      "required": false,
+      "description": "The name of the caller's company or organization, if mentioned during the call.",
+      "name": "company_name"
+    },
+    {
+      "name": "quote_id",
+      "required": false,
+      "description": "The rate engine's quote identifier for the final quote given.",
+      "type": "string"
+    },
+    {
+      "description": "The prior quote identifier that was replaced, if the caller's trip was corrected and re-quoted during the call.",
+      "type": "string",
+      "required": false,
+      "name": "superseded_quote_id"
+    },
+    {
+      "required": false,
+      "name": "dispatch_preference_notes",
+      "description": "Any out-of-scope request or preference the caller raised during the call that dispatch should see (e.g. drinks on board), if any.",
+      "type": "string"
+    }
+  ],
+  "voice_id": "cartesia-Kate",
+  "voice_model": "sonic-3.6",
+  "voice_temperature": 0.72,
+  "voice_speed": 1,
+  "enable_dynamic_voice_speed": true,
+  "volume": 1,
+  "voice_emotion": "calm",
+  "enable_backchannel": true,
+  "backchannel_frequency": 0.35,
+  "reminder_trigger_ms": 10000,
+  "reminder_max_count": 1,
+  "max_call_duration_ms": 720000,
+  "interruption_sensitivity": 0.82,
+  "boosted_keywords": [
+    "Kewaskum",
+    "West Bend",
+    "Hartford",
+    "Slinger",
+    "Jackson",
+    "Germantown",
+    "Menomonee Falls",
+    "Milwaukee",
+    "Madison",
+    "Green Bay",
+    "O'Hare",
+    "Midway",
+    "Mitchell",
+    "FBO",
+    "Signature Flight Support",
+    "Atlantic Aviation"
+  ],
+  "responsiveness": 0.9,
+  "pronunciation_dictionary": [
+    {
+      "alphabet": "ipa",
+      "phoneme": "ˈeɪvə",
+      "word": "AVA"
+    }
+  ],
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {},
+  "denoising_mode": "noise-cancellation"
+}

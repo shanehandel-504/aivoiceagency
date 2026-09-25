@@ -1,0 +1,124 @@
+{
+  "_archive": {
+    "run": "AIC CAPTURE DESK — RUN A",
+    "exported_at": "2026-09-25T19:33:11.462Z",
+    "note": "LOCAL component \"Closing\" — embedded in the v27 flow (duplicated here for readability). Account has ZERO shared/library components (GET /list-conversation-flow-components = [])."
+  },
+  "nodes": [
+    {
+      "display_position": {
+        "y": 6,
+        "x": 6
+      },
+      "id": "closing_ask",
+      "tools": [
+        {
+          "variables": [
+            {
+              "type": "boolean",
+              "name": "appointment_booked",
+              "description": "True only if the caller said yes to the follow-up callback offer"
+            },
+            {
+              "name": "interest_level",
+              "type": "string",
+              "description": "The caller's level of interest in the follow-up callback offer, or in the ride itself if declined"
+            }
+          ],
+          "name": "save_closing_interest",
+          "speak_after_execution": true,
+          "description": "Save whether the caller wants a follow-up callback about running AI Chauffeur, and their interest level.",
+          "type": "extract_dynamic_variable"
+        }
+      ],
+      "type": "subagent",
+      "instruction": {
+        "type": "prompt",
+        "text": "First say: 'You just watched AI Chauffeur quote, catch a correction, and book the whole trip in one call — no hold, no missed call.' Then ask exactly: 'Want that running on your own line? Say yes and our team will follow up.' Wait for a yes or no answer. If the answer is unclear, off-topic, or doesn't resolve to yes or no, ask that exact question once more, plainly - then accept whatever the caller says next and proceed with it, without asking a third time.\nIf the answer resolves to yes, say exactly: 'Perfect.'\nIf the answer resolves to no (or an unclear answer is being treated as no after the second attempt), say exactly: 'No problem.'\nSay nothing else after that line - a closing line follows separately in the next step.\nBase appointment_booked and interest_level strictly on the caller's answer to this question - never on anything said earlier in the call, such as their feedback answer.\nUse the save_closing_interest tool once, with appointment_booked set to true only for a yes answer, and interest_level capturing how interested the caller sounded."
+      },
+      "edges": [
+        {
+          "id": "edge_closing_ask_answered",
+          "destination_node_id": "closing_signature",
+          "transition_condition": {
+            "prompt": "The caller has resolved the callback offer to yes or no, or, after being asked once more, given any further answer",
+            "type": "prompt"
+          }
+        }
+      ],
+      "name": "Closing - Offer Callback"
+    },
+    {
+      "speak_during_execution": false,
+      "display_position": {
+        "y": 6,
+        "x": 750
+      },
+      "id": "closing_exit",
+      "name": "Closing Exit",
+      "type": "end"
+    },
+    {
+      "edges": [
+        {
+          "id": "edge_closing_feedback_answered",
+          "transition_condition": {
+            "prompt": "The caller has given any answer, however brief or off-topic, to the feedback question",
+            "type": "prompt"
+          },
+          "destination_node_id": "closing_ask"
+        }
+      ],
+      "display_position": {
+        "y": 6,
+        "x": -250
+      },
+      "name": "Closing - Demo Feedback",
+      "type": "subagent",
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask exactly: 'Before you go — what did you think of AI Chauffeur?' Wait for the caller's answer, however brief or detailed, and capture it word for word - do not paraphrase, judge, or ask a follow-up question about it. Give at most a short natural acknowledgment (e.g. 'Thanks for that.') and then stop - the next question is asked separately. Immediately after the caller answers, use the save_demo_feedback tool once, passing their verbatim answer to this specific question - never the desk's own prior lines (like a booking confirmation) or anything said elsewhere in the call."
+      },
+      "id": "closing_feedback",
+      "tools": [
+        {
+          "speak_after_execution": true,
+          "description": "Save the caller's verbatim feedback about the demo.",
+          "type": "extract_dynamic_variable",
+          "name": "save_demo_feedback",
+          "variables": [
+            {
+              "type": "string",
+              "name": "demo_feedback",
+              "description": "The caller's answer, captured word for word, describing what they thought of the demo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "skip_response_edge": {
+        "id": "edge_closing_signature_skip",
+        "transition_condition": {
+          "prompt": "Skip response",
+          "type": "prompt"
+        },
+        "destination_node_id": "closing_exit"
+      },
+      "id": "closing_signature",
+      "name": "Closing - Signature",
+      "display_position": {
+        "x": 1086,
+        "y": 6
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Thanks for calling AI Chauffeur — we answer twenty-four seven, first ring, never a missed call, never a voicemail."
+      },
+      "type": "conversation"
+    }
+  ],
+  "name": "Closing",
+  "conversation_flow_component_id": "conversation_flow_component_fc58ffdd5d9c",
+  "start_node_id": "closing_feedback"
+}

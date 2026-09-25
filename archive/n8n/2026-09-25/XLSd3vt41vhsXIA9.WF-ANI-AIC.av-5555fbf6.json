@@ -1,0 +1,495 @@
+{
+  "_archive": {
+    "run": "AIC CAPTURE DESK — RUN A",
+    "exported_at": "2026-09-25T19:33:11.477Z",
+    "note": "EXTRA — the ANI tool the AIC flow actually calls (/webhook/tools/ani-lookup). The brief named WF-ANI-AVA, which serves the 8930 sales line.",
+    "active": true,
+    "versionId": "5555fbf6-73c1-42a2-b12c-029699c0b806",
+    "activeVersionId": "5555fbf6-73c1-42a2-b12c-029699c0b806",
+    "activeVersion_equals_draft": true,
+    "dropped": [
+      "activeVersion (identical to nodes/connections — verified)",
+      "shared (owner project + email)"
+    ]
+  },
+  "id": "XLSd3vt41vhsXIA9",
+  "name": "WF-ANI — AI Chauffeur Caller Lookup v1.0",
+  "description": null,
+  "active": true,
+  "activeVersionId": "5555fbf6-73c1-42a2-b12c-029699c0b806",
+  "createdAt": "2026-08-03T18:43:20.741Z",
+  "updatedAt": "2026-08-25T17:01:34.345Z",
+  "isArchived": false,
+  "versionId": "5555fbf6-73c1-42a2-b12c-029699c0b806",
+  "versionCounter": 15,
+  "sourceWorkflowId": null,
+  "triggerCount": 2,
+  "nodes": [
+    {
+      "id": "n_hook",
+      "name": "ANI Lookup Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -460,
+        0
+      ],
+      "webhookId": "ani-lookup-run2",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tools/ani-lookup",
+        "authentication": "none",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "n_norm",
+      "name": "Verify + Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// WF-ANI · node \"Verify + Normalize\"\n// Auth accepts EITHER credential, evaluated independently, passing if either matches:\n//   • x-rate-secret       — the shared secret verbatim (what the Retell custom tool sends)\n//   • x-retell-signature  — HMAC-SHA256 of the exact body under RATE_SHARED_SECRET\n// Aug 24 2026 FIX: the old ladder tested the signature FIRST and only fell through to the\n// shared secret when no signature header existed. Retell attaches x-retell-signature to\n// every tool call and signs it with ITS OWN key, so the shared-secret branch became\n// unreachable and every lookup 401'd. The 401 body is a well-formed known_caller:false,\n// so the flow read it as \"not a customer\" and greeted warm callers cold — silently.\nconst crypto = require('crypto');\n\nconst item = $input.first().json || {};\nconst headers = item.headers || {};\nconst body = item.body || {};\n\nconst SECRET = ($vars && $vars.RATE_SHARED_SECRET) || '';\n\nconst hdr = (k) => {\n  const lk = String(k).toLowerCase();\n  const keys = Object.keys(headers);\n  for (let i = 0; i < keys.length; i++) {\n    if (String(keys[i]).toLowerCase() === lk) return String(headers[keys[i]] == null ? '' : headers[keys[i]]);\n  }\n  return '';\n};\n\nconst ctEq = (a, b) => {\n  if (typeof a !== 'string' || typeof b !== 'string') return false;\n  const ba = Buffer.from(a, 'utf8');\n  const bb = Buffer.from(b, 'utf8');\n  if (ba.length !== bb.length) return false;\n  return crypto.timingSafeEqual(ba, bb);\n};\n\nlet auth_ok = false;\nlet auth_mode = 'none';\nlet auth_reason = '';\n\nif (!SECRET) {\n  auth_reason = 'RATE_SHARED_SECRET is not set in n8n Variables';\n} else {\n  const sig = hdr('x-retell-signature');\n  const shared = hdr('x-rate-secret');\n  const tried = [];\n\n  if (shared) {\n    tried.push('shared');\n    if (ctEq(shared, SECRET)) { auth_ok = true; auth_mode = 'shared'; }\n  }\n\n  if (!auth_ok && sig) {\n    tried.push('hmac');\n    const expected = crypto.createHmac('sha256', SECRET).update(JSON.stringify(body)).digest('hex');\n    const parts = String(sig).split(/[,;\\s]+/);\n    for (let i = 0; i < parts.length; i++) {\n      const p = parts[i];\n      if (!p) continue;\n      const eq = p.indexOf('=');\n      const cand = eq >= 0 ? p.slice(eq + 1).trim() : p.trim();\n      if (ctEq(cand.toLowerCase(), expected)) { auth_ok = true; auth_mode = 'hmac'; break; }\n    }\n  }\n\n  if (!auth_ok) {\n    auth_mode = tried.length ? tried.join('+') : 'none';\n    auth_reason = tried.length\n      ? ('no supplied credential matched (tried: ' + tried.join(', ') + ')')\n      : 'neither x-rate-secret nor x-retell-signature was supplied';\n  }\n}\n\nconst args = body.args || body.arguments || body.parameters || body;\nconst call = body.call || {};\n\nconst str = (v) => (v === undefined || v === null) ? '' : String(v).trim();\n\n// E.164 normalization. NANP numbers arrive as digits, +1XXXXXXXXXX, or spoken-with-punctuation.\nconst rawPhone = str(args.phone_e164 || args.phone || args.from_number || call.from_number);\nlet digits = rawPhone.replace(/[^0-9]/g, '');\nif (digits.length === 10) digits = '1' + digits;\nconst phone_e164 = digits ? ('+' + digits) : '';\nconst phone_valid = /^\\+[1-9]\\d{7,14}$/.test(phone_e164);\n\nreturn [{\n  json: {\n    auth_ok: auth_ok,\n    auth_mode: auth_mode,\n    auth_reason: auth_reason,\n    phone_e164: phone_e164,\n    phone_valid: phone_valid,\n    phone_query: encodeURIComponent(phone_e164),\n    tenant_id: str(args.tenant_id || body.tenant_id) || 'demo',\n    call_id: str(args.call_id || body.call_id || call.call_id),\n    started_ms: Date.now()\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "n_auth",
+      "name": "Authorized?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -20,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c_auth",
+              "leftValue": "={{ $json.auth_ok }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "n_401",
+      "name": "Respond Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        160
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ known_caller: false, first_name: null, company_name: null, account_type: null, last_trip: null, rate_plan: null, ghl_contact_id: null, data_verified: false, reason: $json.auth_reason }) }}",
+        "options": {
+          "responseCode": 401
+        }
+      }
+    },
+    {
+      "id": "n_ghl",
+      "name": "GHL Contact By Phone",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        310,
+        -180
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "alwaysOutputData": true,
+      "parameters": {
+        "method": "GET",
+        "url": "https://services.leadconnectorhq.com/contacts/search/duplicate",
+        "authentication": "genericCredentialType",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 2500,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "locationId",
+              "value": "sdShCZCaxce8DHKbYcIl"
+            },
+            {
+              "name": "number",
+              "value": "={{ $json.phone_e164 }}"
+            }
+          ]
+        },
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "n_build",
+      "name": "Build ANI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        530,
+        -80
+      ],
+      "parameters": {
+        "jsCode": "// WF-ANI · node \"Build ANI Response\"\n// One GHL round trip only. /contacts/search/duplicate carries customFields (measured\n// 2026-08-03: median ~200ms, cf present), so identity + last trip + billing all come\n// from a single call. Budget raised Aug 22: 360ms caused coin-flip recognition on\n// GHL's slow moments (p95 runs 1–2s) — warm callers were greeted cold. 2500ms rides\n// under the opening greeting, so recognition succeeds through normal CRM jitter while\n// a truly dead CRM still degrades to a fast miss instead of holding the line.\nconst n = $('Verify + Normalize').first().json;\nconst res = $input.first().json || {};\n\n// Hard endpoint budget. The GHL node's own timeout is set at this value so a slow CRM\n// degrades to a fast-miss instead of holding the agent on a silent line.\nconst BUDGET_MS = 2500;\n\n// GHL contact custom-field ids (contact model). Verified against the live location.\nconst F = {\n  trip_type: 'qta1B3kERujMTLNDlj66',\n  pickup_datetime: 'HOfBlSbheMOtChBuK0vU',\n  pickup_address: 'L9FS4ZqII0OvQe5KESh7',\n  dropoff_address: 'ISMLWbZhk0V9eVHXut86',\n  vehicle_class: 'OtmDBeaHItbSvOUHRTGY',\n  billing_type: 'Z36xyFEoF9brVdNeKAIP',\n  tenant: '16MIe7L45qETn9TtcOK5'\n};\n\nconst elapsed = Date.now() - (n.started_ms || Date.now());\n\n// neverError is on the HTTP node, so a timeout / 401 / 5xx arrives as an ITEM, not a throw.\n// A failed lookup must never be reported as a verified \"not a customer\" — that is the\n// false-verification shape this endpoint exists to avoid. Any non-2xx, any error field,\n// or a body with neither `contact` nor a trace id counts as a failure, not a miss.\nconst sc = Number(res.statusCode || res.status || 0);\nconst httpFailed = !!(\n  res.error ||\n  res.message === 'error' ||\n  res.code ||\n  (sc && (sc < 200 || sc >= 300)) ||\n  (!Object.prototype.hasOwnProperty.call(res, 'contact') && !res.traceId)\n);\nconst contact = (!httpFailed && res && res.contact) ? res.contact : null;\n\nconst cfMap = {};\nconst cfArr = (contact && Array.isArray(contact.customFields)) ? contact.customFields : [];\nfor (let i = 0; i < cfArr.length; i++) {\n  const f = cfArr[i] || {};\n  const id = f.id || f.fieldId || '';\n  const v = (f.value !== undefined && f.value !== null) ? f.value : f.field_value;\n  if (id) cfMap[id] = (v === undefined || v === null) ? '' : String(v);\n}\nconst cf = (k) => (cfMap[F[k]] || '').trim();\n\nconst nn = (v) => {\n  const s = (v === undefined || v === null) ? '' : String(v).trim();\n  return s === '' ? null : s;\n};\n\nlet reason = '';\nlet data_verified = false;\nlet known = false;\n\nif (!n.auth_ok) {\n  reason = 'unauthorized';\n} else if (!n.phone_valid) {\n  reason = 'NO_ANI — caller id was absent or not a dialable number';\n} else if (httpFailed) {\n  reason = 'FAST_MISS — CRM lookup failed or did not answer inside the ' + BUDGET_MS +\n           'ms budget (http ' + (sc || 'n/a') + ')';\n} else if (!contact || !contact.id) {\n  reason = 'NO_MATCH — no CRM record for this number';\n  data_verified = true; // the lookup completed; \"not a customer\" is a verified answer\n} else {\n  known = true;\n  data_verified = true;\n  reason = 'MATCH';\n}\n\n// account_type: corporate when the CRM says so (direct bill / new account) or a company\n// is on file. Never guessed from the area code.\nconst billing = cf('billing_type').toUpperCase();\nlet account_type = null;\nif (known) {\n  if (billing === 'DIRECT_BILL' || billing === 'NEW_ACCOUNT') account_type = 'corporate';\n  else if (billing === 'CC_ON_FILE') account_type = 'retail';\n  else account_type = nn(contact.companyName) ? 'corporate' : 'retail';\n}\n\n// last_trip is only reported when the CRM actually holds one. Never invented.\nlet last_trip = null;\nif (known) {\n  const when = cf('pickup_datetime');\n  const what = cf('trip_type');\n  const from = cf('pickup_address');\n  const to = cf('dropoff_address');\n  const veh = cf('vehicle_class');\n  if (when || what || from) {\n    last_trip = {\n      trip_type: nn(what),\n      pickup_datetime: nn(when),\n      pickup_address: nn(from),\n      dropoff_address: nn(to),\n      vehicle_class: nn(veh)\n    };\n  }\n}\n\n// rate_plan mirrors the billing arrangement on the record. Null when unset — a\n// missing plan prints \"— NOT PROVIDED\" rather than defaulting a customer onto retail.\nconst rate_plan = known ? (nn(billing) ? billing : null) : null;\n\nreturn [{\n  json: {\n    known_caller: known,\n    first_name: known ? nn(contact.firstName) : null,\n    company_name: known ? nn(contact.companyName) : null,\n    account_type: account_type,\n    last_trip: last_trip,\n    rate_plan: rate_plan,\n    ghl_contact_id: known ? nn(contact.id) : null,\n    data_verified: data_verified,\n    reason: reason,\n    phone_e164: n.phone_e164 || null,\n    tenant_id: n.tenant_id,\n    call_id: n.call_id,\n    lookup_ms: elapsed\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "n_resp",
+      "name": "Respond ANI",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        750,
+        -80
+      ],
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "n_hasani",
+      "name": "Has ANI?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        90,
+        -80
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c_ani",
+              "leftValue": "={{ $json.phone_valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "74fce530-0d38-44a6-bc9e-098abcdea72a",
+      "name": "Chauffeur Inbound Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -460,
+        -320
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "options": {},
+        "path": "chauffeur-inbound-lookup",
+        "responseMode": "responseNode"
+      },
+      "webhookId": "2ae210d0-cd08-4746-8852-31a93ed336ce"
+    },
+    {
+      "id": "e0bb3b6d-2ef7-40b6-8479-7d174c107678",
+      "name": "Inbound Extract",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        -320
+      ],
+      "parameters": {
+        "jsCode": "// Pre-call inbound extract. Retell inbound_call_webhook posts { event, call_inbound: { agent_id, from_number, to_number } }.\nconst b = ($input.first().json || {}).body || {};\nconst ci = b.call_inbound || {};\nconst s = (v) => (v == null ? '' : String(v)).trim();\nlet d = s(ci.from_number || b.from_number).replace(/[^0-9]/g, '');\nif (d.length === 10) d = '1' + d;\nconst e164 = d ? ('+' + d) : '';\nreturn [{ json: {\n  from_e164: e164,\n  valid: /^\\+[1-9]\\d{7,14}$/.test(e164),\n  agent_id: s(ci.agent_id || b.agent_id),\n  to_number: s(ci.to_number || b.to_number),\n  t0: Date.now()\n} }];",
+        "language": "javaScript",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "aa884c5a-4dd9-4951-9e60-d70b563463d0",
+      "name": "GHL Inbound Lookup",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -20,
+        -320
+      ],
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "method": "GET",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 1500
+        },
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "locationId",
+              "value": "sdShCZCaxce8DHKbYcIl"
+            },
+            {
+              "name": "number",
+              "value": "={{ $json.from_e164 }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "sendQuery": true,
+        "url": "https://services.leadconnectorhq.com/contacts/search/duplicate"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wOmBNtlzVgn2fVAc",
+          "name": "GHL Header Auth"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "id": "cce018c0-e6cb-4bc6-9979-cd71d47bce01",
+      "name": "Build Inbound Vars",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        -320
+      ],
+      "parameters": {
+        "jsCode": "// Pre-call variable builder. RECOGNITION-SILENCE LAW: any failure, timeout, bad ANI,\n// or tenant mismatch degrades to cold — recognition never guesses. All values are\n// STRINGS because Retell dynamic_variables reject nested objects and nulls.\n// TENANT-ISOLATION LAW: identity (name/company) may be shared across the location;\n// trip details surface ONLY when the contact's tenant field says AI Chauffeur and\n// the call is on the AI Chauffeur agent. Reliable callers never hear another desk's trip.\nconst x = $('Inbound Extract').first().json;\nconst res = $input.first().json || {};\nconst CHAUF = 'agent_2d1d687eb85e6d5d0e720795c2';\nconst s = (v) => (v == null ? '' : String(v)).trim();\nconst sc = Number(res.statusCode || res.status || 0);\nconst failed = !!(res.error || res.code || (sc && (sc < 200 || sc >= 300)) || (!Object.prototype.hasOwnProperty.call(res, 'contact') && !res.traceId));\nconst c = (!failed && res.contact) ? res.contact : null;\nconst F = { trip: 'qta1B3kERujMTLNDlj66', when: 'HOfBlSbheMOtChBuK0vU', pu: 'L9FS4ZqII0OvQe5KESh7', doff: 'ISMLWbZhk0V9eVHXut86', veh: 'OtmDBeaHItbSvOUHRTGY', ten: '16MIe7L45qETn9TtcOK5' };\nconst cfm = {};\nfor (const f of (c && Array.isArray(c.customFields) ? c.customFields : [])) { const id = f.id || f.fieldId; const v = (f.value !== undefined && f.value !== null) ? f.value : f.field_value; if (id) cfm[id] = s(v); }\nconst cf = (k) => cfm[F[k]] || '';\nconst known = !!(x.valid && !failed && c && c.id);\nconst verified = !!(x.valid && !failed);\nconst tenOk = cf('ten') === 'AI Chauffeur';\nconst chaufLine = (x.agent_id === '' || x.agent_id === CHAUF);\nconst VM = { sedan_exec: 'Executive Sedan', sedan_luxury: 'Luxury Sedan', suv_exec: 'Executive SUV', suv_premium: 'Premium Executive SUV', van_exec: 'Executive Van', van_ada: 'ADA Accessible Van', sprinter_exec_14: 'Executive Sprinter Coach', sprinter_luxury: 'Luxury Sprinter Coach', limo_stretch: 'Stretch Limousine', limo_super_stretch: 'Super Stretch Limousine', limo_hummer: 'Hummer Limousine', party_bus_20: 'Party Bus (20)', party_bus_30: 'Party Bus (30)', party_bus_40: 'Party Bus (40)', mini_coach_32: 'Mini Coach (32)', mini_coach_38: 'Mini Coach (38)', motorcoach_56: 'Motorcoach (56)', motorcoach_premium: 'Premium Motorcoach' };\nconst TT = (t) => { const q = t.toLowerCase(); if (!q) return ''; if (q.indexOf('airport') > -1) return 'airport transfer'; if (q.indexOf('hour') > -1) return 'hourly charter'; if (q.indexOf('point') > -1 || q === 'p2p') return 'point-to-point trip'; return t.replace(/[_-]+/g, ' '); };\nconst veh = VM[cf('veh').toLowerCase()] || cf('veh').replace(/[_-]+/g, ' ');\nconst shortAddr = (a) => a ? a.split(',')[0].trim() : '';\nlet when = '';\nconst rawWhen = cf('when');\nconst dt = new Date(rawWhen);\nif (rawWhen && !isNaN(dt.getTime())) { const days = Math.round((Date.now() - dt.getTime()) / 86400000); if (days <= 0) when = 'today'; else if (days === 1) when = 'yesterday'; else if (days < 7) when = 'in the last week'; else if (days < 32) when = 'last month'; else when = 'back in ' + dt.toLocaleString('en-US', { month: 'long' }); }\nconst first = known ? s(c.firstName).split(/\\s+/)[0] : '';\nconst co = known ? s(c.companyName) : '';\nconst trip = !!(known && tenOk && chaufLine && (cf('trip') || cf('doff') || cf('veh')));\nconst mode = (!verified || !known || !first) ? 'cold' : (co ? 'corporate' : (trip ? 'known_with_trip' : 'known'));\nconst vars = {\n  caller_known: known ? 'true' : 'false',\n  data_verified: verified ? 'true' : 'false',\n  caller_first_name: first,\n  caller_company: co,\n  account_type: known ? (co ? 'corporate' : 'retail') : '',\n  last_trip_known: trip ? 'true' : 'false',\n  last_trip_type: trip ? TT(cf('trip')) : '',\n  last_trip_vehicle: trip ? veh : '',\n  last_trip_pickup: trip ? shortAddr(cf('pu')) : '',\n  last_trip_dropoff: trip ? shortAddr(cf('doff')) : '',\n  last_trip_when: trip ? when : '',\n  recognition_mode: mode,\n  lookup_ms: String(Date.now() - (x.t0 || Date.now()))\n};\nreturn [{ json: { vars } }];",
+        "language": "javaScript",
+        "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "b04f94c5-a51a-4c89-81e6-221187e2aecb",
+      "name": "Respond Inbound",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        420,
+        -320
+      ],
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { call_inbound: { dynamic_variables: $json.vars } } }}"
+      }
+    }
+  ],
+  "connections": {
+    "ANI Lookup Webhook": {
+      "main": [
+        [
+          {
+            "node": "Verify + Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify + Normalize": {
+      "main": [
+        [
+          {
+            "node": "Authorized?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Authorized?": {
+      "main": [
+        [
+          {
+            "node": "Has ANI?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHL Contact By Phone": {
+      "main": [
+        [
+          {
+            "node": "Build ANI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build ANI Response": {
+      "main": [
+        [
+          {
+            "node": "Respond ANI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has ANI?": {
+      "main": [
+        [
+          {
+            "node": "GHL Contact By Phone",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build ANI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chauffeur Inbound Webhook": {
+      "main": [
+        [
+          {
+            "node": "Inbound Extract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inbound Extract": {
+      "main": [
+        [
+          {
+            "node": "GHL Inbound Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GHL Inbound Lookup": {
+      "main": [
+        [
+          {
+            "node": "Build Inbound Vars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Inbound Vars": {
+      "main": [
+        [
+          {
+            "node": "Respond Inbound",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodeGroups": [],
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "SlnAeMrVRORsF0w7",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "pinData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "tags": []
+}

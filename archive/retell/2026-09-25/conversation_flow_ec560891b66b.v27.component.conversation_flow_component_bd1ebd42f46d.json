@@ -1,0 +1,738 @@
+{
+  "_archive": {
+    "run": "AIC CAPTURE DESK — RUN A",
+    "exported_at": "2026-09-25T19:33:11.461Z",
+    "note": "LOCAL component \"N05-N06 Rate and Capacity Pipeline\" — embedded in the v27 flow (duplicated here for readability). Account has ZERO shared/library components (GET /list-conversation-flow-components = [])."
+  },
+  "start_node_id": "n05_capacity",
+  "conversation_flow_component_id": "conversation_flow_component_bd1ebd42f46d",
+  "tools": [
+    {
+      "speak_after_execution": false,
+      "url": "https://circulant.app.n8n.cloud/webhook/tools/rate-lookup",
+      "speak_during_execution": false,
+      "tool_id": "tool_rate_lookup",
+      "name": "rate_lookup",
+      "type": "custom",
+      "parameters": {
+        "properties": {
+          "origin": {
+            "description": "The city name for the non-airport end of the trip - used only as the pricing zone-lookup key. This does not represent or imply the direction of travel (for an airport arrival, the airport is the true start of the trip even though this field holds the drop-off city) - use trip_origin and trip_destination for anything that needs to state or reason about direction.",
+            "type": "string",
+            "const": "{{origin_city}}"
+          },
+          "passengers": {
+            "const": "{{passenger_count}}",
+            "type": "string",
+            "description": "Number of passengers - the already-settled count, sent automatically. Never a value you invent or re-derive."
+          },
+          "leg_2_summary": {
+            "type": "string",
+            "const": "{{leg_2_summary}}",
+            "description": "Summary of a second trip leg, if any."
+          },
+          "vehicle_key": {
+            "description": "The vehicle class key selected by the capacity matrix.",
+            "const": "{{vehicle_class}}",
+            "type": "string"
+          },
+          "account_type": {
+            "description": "retail or corporate.",
+            "const": "{{account_type}}",
+            "type": "string"
+          },
+          "trip_destination": {
+            "description": "The true end point of this trip in plain English, correctly ordered by direction - the passenger's drop-off address for an airport arrival, the airport for an airport departure, or the drop-off address/duration for a charter/point-to-point trip. Pairs with trip_origin.",
+            "type": "string",
+            "const": "{{dropoff_or_duration}}"
+          },
+          "hours": {
+            "type": "number",
+            "description": "Requested charter hours, if hourly. The engine may enforce a higher minimum - see billable_hours in the response."
+          },
+          "trip_origin": {
+            "description": "The true starting point of this trip in plain English, correctly ordered by direction - the airport for an airport arrival (the caller lands there first), or the pickup address for an airport departure or a charter/point-to-point trip. Use this (with trip_destination) to build any customer-facing wording of the route, such as the quote confirmation message - never derive direction from `origin`.",
+            "const": "{{pickup_location}}",
+            "type": "string"
+          },
+          "trip_type": {
+            "const": "{{rate_trip_type}}",
+            "description": "Exactly 'airport' for any airport arrival or departure trip, or 'hourly' for a charter/hourly trip.",
+            "type": "string"
+          },
+          "bags": {
+            "description": "Number of bags/luggage pieces.",
+            "const": "{{bag_count}}",
+            "type": "string"
+          },
+          "addons": {
+            "items": {
+              "properties": {
+                "qty": {
+                  "type": "number",
+                  "description": "Quantity of this add-on, defaults to 1 if omitted"
+                },
+                "key": {
+                  "enum": [
+                    "meet_greet",
+                    "child_seat"
+                  ],
+                  "description": "meet_greet or child_seat",
+                  "type": "string"
+                },
+                "seat_type": {
+                  "description": "Required when key is child_seat: infant, convertible, or booster",
+                  "type": "string",
+                  "enum": [
+                    "infant",
+                    "convertible",
+                    "booster"
+                  ]
+                }
+              },
+              "required": [
+                "key"
+              ],
+              "type": "object"
+            },
+            "description": "Requested add-ons that affect pricing. Include one entry with key 'meet_greet' whenever pickup_style is meet-and-greet. Include one separate entry with key 'child_seat' for each individual child seat needed - set that entry's seat_type (infant, convertible, or booster) and qty, based on child_seat_count and child_seat_types (usually qty 1 per entry, or the count of seats sharing that exact type). Omit entirely if there are no add-ons.",
+            "type": "array"
+          },
+          "airport": {
+            "description": "The airport code, when the trip involves an airport.",
+            "type": "string",
+            "const": "{{airport_code}}"
+          },
+          "leg_1_summary": {
+            "type": "string",
+            "description": "Summary of the primary trip leg.",
+            "const": "{{leg_1_summary}}"
+          },
+          "pickup_at": {
+            "description": "Pickup date/time - determines weekday vs weekend pricing.",
+            "const": "{{rate_pickup_at}}",
+            "type": "string"
+          },
+          "stops_count": {
+            "type": "number",
+            "description": "Number of stops on the trip beyond the single pickup and single drop-off, if any"
+          }
+        },
+        "required": [
+          "trip_type",
+          "vehicle_key"
+        ],
+        "type": "object"
+      },
+      "response_variables": {
+        "spoken_trip": "spoken_trip",
+        "quote_id": "quote_id",
+        "rate_status": "status",
+        "quote_source": "quote_source",
+        "route_miles": "route_miles",
+        "superseded_quote_id": "superseded_quote_id",
+        "minimum_applied": "minimum_applied",
+        "all_in_total": "all_in_total",
+        "suggested_vehicle": "suggested_vehicle",
+        "capacity_ok": "capacity_ok",
+        "billable_hours": "billable_hours",
+        "message": "message",
+        "vehicle": "vehicle"
+      },
+      "headers": {
+        "x-rate-secret": "[REDACTED-x-rate-secret]"
+      },
+      "method": "POST",
+      "query_params": {
+        "pricing_mode": "{{pricing_mode}}",
+        "test_mode": "{{test_mode}}",
+        "tenant": "{{tenant}}"
+      },
+      "description": "Looks up the applicable rate for the trip. Returns a status of exactly one of: QUOTED, CAPTURE_ONLY, CORPORATE_RATE_REQUIRED, NO_ROUTE_FOUND, INPUT_INCOMPLETE, HUMAN_REVIEW_REQUIRED, RATE_ENGINE_FAILED, or UNAUTHORIZED. When QUOTED, `message` is the only spoken price source — it already contains the vehicle, route, one whole-dollar total, and the service fee note; never construct a price sentence from other fields. Also returns capacity_ok (present as false only when the assumed vehicle doesn't fit), suggested_vehicle (present when a better vehicle fits), quote_source, quote_id, superseded_quote_id (set when this quote replaces an earlier one), route_miles, vehicle, all_in_total, and billable_hours (the engine-enforced hours for hourly trips, which may differ from what the caller requested). Pricing-affecting add-ons (meet-and-greet, child seats) are sent via addons and priced into the total by the engine."
+    }
+  ],
+  "name": "N05-N06 Rate and Capacity Pipeline",
+  "nodes": [
+    {
+      "else_edge": {
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        },
+        "id": "edge_n05_else",
+        "destination_node_id": "n05b_rate_guard"
+      },
+      "type": "code",
+      "code": "function extractCity(raw) {\n  if (!raw) return null;\n  const text = String(raw).trim();\n  if (!text) return null;\n  const STATE_NAMES = ['alabama','alaska','arizona','arkansas','california','colorado','connecticut','delaware','florida','georgia','hawaii','idaho','illinois','indiana','iowa','kansas','kentucky','louisiana','maine','maryland','massachusetts','michigan','minnesota','mississippi','missouri','montana','nebraska','nevada','new hampshire','new jersey','new mexico','new york','north carolina','north dakota','ohio','oklahoma','oregon','pennsylvania','rhode island','south carolina','south dakota','tennessee','texas','utah','vermont','virginia','washington','west virginia','wisconsin','wyoming','alberta','british columbia','manitoba','new brunswick','newfoundland and labrador','nova scotia','ontario','prince edward island','quebec','saskatchewan','northwest territories','nunavut','yukon'];\n  const parts = text.split(',').map(function(s) { return s.trim(); }).filter(Boolean);\n  if (parts.length <= 1) return parts[0] || null;\n  const last = parts[parts.length - 1];\n  const lastLower = last.toLowerCase();\n  const looksLikeStateOrZip = /^[A-Za-z]{2}(\\s+\\d{5}(-\\d{4})?)?$/.test(last) || /^\\d{5}(-\\d{4})?$/.test(last) || /^[A-Za-z]\\d[A-Za-z]\\s*\\d[A-Za-z]\\d$/.test(last) || STATE_NAMES.indexOf(lastLower) !== -1;\n  if (looksLikeStateOrZip && parts.length >= 2) {\n    return parts[parts.length - 2];\n  }\n  return last;\n}\n\nfunction toEngineDateTime(raw) {\n  if (!raw) return null;\n  const text = String(raw).trim();\n  if (!text) return null;\n  // The rate engine's date parser rejects a leading weekday name and the\n  // word 'at' between date and time (e.g. 'Tuesday, August 25, 2026 at\n  // 10:00 AM'). Strip those, then normalize to an unambiguous format.\n  const cleaned = text.replace(/^[A-Za-z]+day,?\\s*/i, '').replace(/\\s+at\\s+/i, ' ').trim();\n  const parsed = new Date(cleaned);\n  if (isNaN(parsed.getTime())) {\n    return cleaned;\n  }\n  const yyyy = parsed.getFullYear();\n  const mm = String(parsed.getMonth() + 1).padStart(2, '0');\n  const dd = String(parsed.getDate()).padStart(2, '0');\n  const hh = String(parsed.getHours()).padStart(2, '0');\n  const min = String(parsed.getMinutes()).padStart(2, '0');\n  const hasTime = /\\d{1,2}:\\d{2}/.test(cleaned);\n  return hasTime ? (yyyy + '-' + mm + '-' + dd + 'T' + hh + ':' + min + ':00') : (yyyy + '-' + mm + '-' + dd);\n}\n\n// If the caller already manually confirmed a specific vehicle class earlier\n// in this call (via N07 Capacity Mismatch), never recompute or overwrite it -\n// a later correction (address, time, etc.) re-running this node must not\n// silently discard that choice and fall back to a passenger-count guess.\nif (dv.vehicle_manually_confirmed === 'true' && dv.vehicle_class) {\n  const legDirection = dv.leg_direction || '';\n  const rate_trip_type = legDirection === 'charter' ? 'hourly' : 'airport';\n  let origin_city = null;\n  if (legDirection === 'arrival') {\n    origin_city = extractCity(dv.dropoff_or_duration);\n  } else if (legDirection === 'departure') {\n    origin_city = extractCity(dv.pickup_location);\n  } else if (legDirection === 'charter') {\n    origin_city = extractCity(dv.pickup_location);\n  }\n  let rate_pickup_at = null;\n  if (legDirection === 'charter') {\n    rate_pickup_at = toEngineDateTime(dv.pickup_datetime);\n  } else if (legDirection === 'arrival') {\n    rate_pickup_at = toEngineDateTime(dv.flight_date);\n  } else if (legDirection === 'departure') {\n    rate_pickup_at = toEngineDateTime((dv.flight_date && dv.pickup_time) ? (dv.flight_date + ' ' + dv.pickup_time) : dv.flight_date);\n  }\n  return {\n    vehicle_class: dv.vehicle_class,\n    vehicle_class_label: dv.vehicle_class_label || dv.vehicle_class,\n    vehicle_root: dv.vehicle_root || dv.vehicle_class,\n    oversized: false,\n    oversized_reason: null,\n    larger_class_name: null,\n    rate_trip_type,\n    origin_city,\n    rate_pickup_at\n  };\n}\n\nconst pax = Number(dv.passenger_count);\nconst stops = Number(dv.stops_count);\nconst stretchExplicit = dv.stretch_requested === 'true';\nconst wheelchairLift = dv.wheelchair_lift_needed === 'true';\nconst oversizedItem = dv.oversized_item_needed === 'true';\n\nlet vehicle_class = null;\nlet vehicle_class_label = null;\nlet oversized = false;\nlet oversized_reason = null;\nlet larger_class_name = null;\n\n// Escalate to dispatch only when the engine genuinely cannot price this:\n// equipment the engine has no field for yet, too many stops, or a group\n// bigger than any single vehicle. Everything else self-quotes - the\n// engine's own capacity_ok / suggested_vehicle (see N07 Capacity Check)\n// is the authority on vehicle fit, not a client-side matrix.\nif (wheelchairLift || oversizedItem) {\n  oversized = true;\n  oversized_reason = 'equipment';\n} else if (Number.isFinite(stops) && stops > 3) {\n  oversized = true;\n  oversized_reason = 'stops';\n} else if (Number.isFinite(pax) && pax > 56) {\n  oversized = true;\n  oversized_reason = 'passengers';\n  larger_class_name = 'motorcoach';\n} else if (stretchExplicit) {\n  vehicle_class = 'stretch';\n  vehicle_class_label = 'Stretch Limousine';\n} else if (Number.isFinite(pax) && pax <= 3) {\n  vehicle_class = 'sedan';\n  vehicle_class_label = 'Executive Sedan';\n} else if (Number.isFinite(pax) && pax <= 6) {\n  vehicle_class = 'suv';\n  vehicle_class_label = 'Executive SUV';\n} else {\n  // 7 to 56 passengers (or passenger count not yet finalized): start\n  // with the Sprinter as a reasonable guess. N07 Capacity Check reads\n  // capacity_ok / suggested_vehicle from the engine and N07 Capacity\n  // Mismatch corrects the vehicle and re-quotes automatically.\n  vehicle_class = 'van_sprinter';\n  vehicle_class_label = 'Sprinter Van';\n}\n\n// vehicle_root is a normalized root word used ONLY to compare vehicle_class\n// against the rate engine's suggested_vehicle (N07 Capacity Check), since\n// the engine's suggested_vehicle uses a different, branded key convention\n// for the same class (e.g. 'sedan' here vs 'sedan_exec' from the engine;\n// 'van_sprinter' here vs 'sprinter_exec_14' from the engine). Comparing\n// vehicle_class directly against suggested_vehicle by exact string always\n// mismatches even when there's no real upgrade, so N07 instead checks\n// whether suggested_vehicle CONTAINS this root - a true mismatch (e.g. a\n// bag-count-driven upgrade) still gets caught because the engine's\n// suggested_vehicle for the larger class won't contain this root either.\nlet vehicle_root = vehicle_class;\nif (vehicle_class === 'van_sprinter') {\n  vehicle_root = 'sprinter';\n}\n\nconst legDirection = dv.leg_direction || '';\nconst rate_trip_type = legDirection === 'charter' ? 'hourly' : 'airport';\n\n// origin_city is the ZONE-LOOKUP KEY - it must be the bare city name only,\n// never a full street address, or the engine's exact-zone lane misses the\n// row and silently falls through to national mileage pricing. The full\n// address is still sent separately as pickup_address on commit - this\n// field is for rate lookup only. Never restrict the city itself to a\n// fixed list, so trips outside Wisconsin still resolve correctly.\nlet origin_city = null;\nif (legDirection === 'arrival') {\n  origin_city = extractCity(dv.dropoff_or_duration);\n} else if (legDirection === 'departure') {\n  origin_city = extractCity(dv.pickup_location);\n} else if (legDirection === 'charter') {\n  origin_city = extractCity(dv.pickup_location);\n}\n\nlet rate_pickup_at = null;\nif (legDirection === 'charter') {\n  rate_pickup_at = toEngineDateTime(dv.pickup_datetime);\n} else if (legDirection === 'arrival') {\n  rate_pickup_at = toEngineDateTime(dv.flight_date);\n} else if (legDirection === 'departure') {\n  rate_pickup_at = toEngineDateTime((dv.flight_date && dv.pickup_time) ? (dv.flight_date + ' ' + dv.pickup_time) : dv.flight_date);\n}\n\nreturn { vehicle_class, vehicle_class_label, vehicle_root, oversized, oversized_reason, larger_class_name, rate_trip_type, origin_city, rate_pickup_at };",
+      "display_position": {
+        "y": 1782,
+        "x": 6
+      },
+      "name": "N05 Capacity Matrix",
+      "edges": [
+        {
+          "id": "edge_n05_oversized",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "right": "true",
+                "operator": "==",
+                "left": "{{oversized}}"
+              }
+            ],
+            "operator": "||"
+          },
+          "destination_node_id": "exit_oversized"
+        }
+      ],
+      "wait_for_result": true,
+      "id": "n05_capacity",
+      "response_variables": {
+        "larger_class_name": "larger_class_name",
+        "vehicle_class": "vehicle_class",
+        "vehicle_root": "vehicle_root",
+        "rate_trip_type": "rate_trip_type",
+        "vehicle_class_label": "vehicle_class_label",
+        "rate_pickup_at": "rate_pickup_at",
+        "oversized_reason": "oversized_reason",
+        "oversized": "oversized",
+        "origin_city": "origin_city"
+      }
+    },
+    {
+      "speak_during_execution": false,
+      "name": "Exit - Oversized (N05)",
+      "type": "end",
+      "display_position": {
+        "x": 534,
+        "y": 1470
+      },
+      "id": "exit_oversized"
+    },
+    {
+      "instruction": {
+        "type": "static_text",
+        "text": "One moment while I check the rate."
+      },
+      "type": "function",
+      "tool_type": "local",
+      "edges": [
+        {
+          "transition_condition": {
+            "equations": [
+              {
+                "right": "QUOTED",
+                "operator": "==",
+                "left": "{{rate_status}}"
+              }
+            ],
+            "operator": "||",
+            "type": "equation"
+          },
+          "destination_node_id": "n07_capacity_check",
+          "id": "edge_n06_success"
+        },
+        {
+          "destination_node_id": "n07_capture_only",
+          "transition_condition": {
+            "operator": "||",
+            "type": "equation",
+            "equations": [
+              {
+                "operator": "==",
+                "left": "{{rate_status}}",
+                "right": "CAPTURE_ONLY"
+              }
+            ]
+          },
+          "id": "edge_n06_capture_only"
+        },
+        {
+          "id": "edge_n06_corporate",
+          "transition_condition": {
+            "operator": "||",
+            "equations": [
+              {
+                "right": "CORPORATE_RATE_REQUIRED",
+                "left": "{{rate_status}}",
+                "operator": "=="
+              }
+            ],
+            "type": "equation"
+          },
+          "destination_node_id": "n07_quote_corporate"
+        },
+        {
+          "id": "edge_n06_no_route",
+          "destination_node_id": "n07_no_route",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "right": "NO_ROUTE_FOUND",
+                "left": "{{rate_status}}",
+                "operator": "=="
+              }
+            ]
+          }
+        },
+        {
+          "id": "edge_n06_human_review",
+          "destination_node_id": "n07_human_review",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{rate_status}}",
+                "operator": "==",
+                "right": "HUMAN_REVIEW_REQUIRED"
+              }
+            ]
+          }
+        },
+        {
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "right": "RATE_ENGINE_FAILED",
+                "operator": "==",
+                "left": "{{rate_status}}"
+              },
+              {
+                "operator": "==",
+                "right": "UNAUTHORIZED",
+                "left": "{{rate_status}}"
+              }
+            ]
+          },
+          "destination_node_id": "n07_rate_failed",
+          "id": "edge_n06_failed"
+        },
+        {
+          "transition_condition": {
+            "operator": "||",
+            "equations": [
+              {
+                "right": "INPUT_INCOMPLETE",
+                "operator": "==",
+                "left": "{{rate_status}}"
+              }
+            ],
+            "type": "equation"
+          },
+          "destination_node_id": "n06_missing_slot_guard",
+          "id": "edge_n06_incomplete"
+        }
+      ],
+      "else_edge": {
+        "transition_condition": {
+          "prompt": "Else",
+          "type": "prompt"
+        },
+        "destination_node_id": "n07_rate_failed",
+        "id": "edge_n06_else"
+      },
+      "speak_during_execution": true,
+      "display_position": {
+        "y": 2070,
+        "x": 534
+      },
+      "name": "N06 Rate Engine",
+      "id": "n06_rate_engine",
+      "tool_id": "tool_rate_lookup",
+      "wait_for_result": true
+    },
+    {
+      "skip_response_edge": {
+        "id": "edge_std_skip",
+        "transition_condition": {
+          "prompt": "Skip response",
+          "type": "prompt"
+        },
+        "destination_node_id": "exit_ready_for_readback"
+      },
+      "name": "N07 Quote - Standard",
+      "id": "n07_quote_standard",
+      "instruction": {
+        "type": "prompt",
+        "text": "Say exactly the contents of {{message}}, word for word - do not add, remove, paraphrase, or reorder anything in it. If {{account_type}} is not 'corporate', add exactly one more sentence immediately after: \"I don't show a card on file for you — I'll text you a secure booking link.\" Say nothing else."
+      },
+      "display_position": {
+        "x": 1086,
+        "y": 6
+      },
+      "type": "conversation"
+    },
+    {
+      "type": "conversation",
+      "display_position": {
+        "x": 1086,
+        "y": 606
+      },
+      "name": "N07 Quote - Corporate",
+      "instruction": {
+        "text": "That'll be our {{vehicle_class_label}} — booking to the contract rate.",
+        "type": "static_text"
+      },
+      "skip_response_edge": {
+        "id": "edge_corp_skip",
+        "transition_condition": {
+          "prompt": "Skip response",
+          "type": "prompt"
+        },
+        "destination_node_id": "exit_ready_for_readback"
+      },
+      "id": "n07_quote_corporate"
+    },
+    {
+      "type": "end",
+      "speak_during_execution": true,
+      "name": "N07 No Route Found (10c)",
+      "id": "n07_no_route",
+      "instruction": {
+        "type": "static_text",
+        "text": "No approved rate for that route. I'll capture the trip for dispatch review."
+      },
+      "display_position": {
+        "x": 1086,
+        "y": 2382
+      }
+    },
+    {
+      "id": "n07_human_review",
+      "instruction": {
+        "type": "static_text",
+        "text": "This needs dispatch review — they'll call you back with the number."
+      },
+      "display_position": {
+        "y": 2982,
+        "x": 1086
+      },
+      "speak_during_execution": true,
+      "type": "end",
+      "name": "N07 Human Review Required (10d)"
+    },
+    {
+      "instruction": {
+        "type": "static_text",
+        "text": "Can't verify the rate right now. I'll capture the details and have dispatch call you."
+      },
+      "display_position": {
+        "x": 1086,
+        "y": 3582
+      },
+      "speak_during_execution": true,
+      "name": "N07 Rate Engine Failed (10e)",
+      "id": "n07_rate_failed",
+      "type": "end"
+    },
+    {
+      "id": "exit_ready_for_readback",
+      "display_position": {
+        "y": 894,
+        "x": 1614
+      },
+      "type": "end",
+      "name": "Exit - Ready for Readback (N07)",
+      "speak_during_execution": false
+    },
+    {
+      "type": "subagent",
+      "instruction": {
+        "type": "prompt",
+        "text": "Briefly acknowledge whatever the caller just gave you, referencing it specifically, then in the same breath check which of passenger count, pickup date/time, pickup location, or drop-off/duration is still missing or unclear, and ask for exactly that one item - nothing else. Do not re-ask anything already provided, and do not mention any technical failure - this is a normal follow-up question."
+      },
+      "edges": [
+        {
+          "id": "edge_missing_slot_provided",
+          "destination_node_id": "n05_capacity",
+          "transition_condition": {
+            "prompt": "Caller has provided the missing detail",
+            "type": "prompt"
+          }
+        }
+      ],
+      "name": "N06 Ask Missing Slot (Rate Engine)",
+      "display_position": {
+        "y": 2310,
+        "x": -138
+      },
+      "tools": [
+        {
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true,
+          "description": "Save whichever missing trip detail the caller just provided so the rate engine can be retried.",
+          "variables": [
+            {
+              "type": "number",
+              "name": "passenger_count",
+              "description": "Number of passengers"
+            },
+            {
+              "description": "Pickup date and time",
+              "type": "string",
+              "name": "pickup_datetime"
+            },
+            {
+              "name": "pickup_location",
+              "type": "string",
+              "description": "Pickup location"
+            },
+            {
+              "description": "Drop-off location, or duration in hours for an hourly charter",
+              "type": "string",
+              "name": "dropoff_or_duration"
+            }
+          ],
+          "name": "save_missing_rate_detail"
+        }
+      ],
+      "id": "n06_ask_missing_slot"
+    },
+    {
+      "display_position": {
+        "y": 1782,
+        "x": -330
+      },
+      "edges": [
+        {
+          "transition_condition": {
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{missing_slot_retry_count}}",
+                "operator": ">=",
+                "right": "3"
+              }
+            ],
+            "type": "equation"
+          },
+          "id": "edge_missing_slot_guard_exhausted",
+          "destination_node_id": "n06_missing_slot_exhausted"
+        }
+      ],
+      "type": "code",
+      "response_variables": {
+        "missing_slot_retry_count": "missing_slot_retry_count"
+      },
+      "else_edge": {
+        "id": "edge_missing_slot_guard_else",
+        "destination_node_id": "n06_ask_missing_slot",
+        "transition_condition": {
+          "prompt": "Else",
+          "type": "prompt"
+        }
+      },
+      "name": "N06 Missing Slot - Repeat Guard",
+      "id": "n06_missing_slot_guard",
+      "code": "const prevCount = Number(dv.missing_slot_retry_count) || 0;\nconst count = prevCount + 1;\nreturn { missing_slot_retry_count: count };",
+      "wait_for_result": true
+    },
+    {
+      "display_position": {
+        "y": 2118,
+        "x": -666
+      },
+      "speak_during_execution": true,
+      "id": "n06_missing_slot_exhausted",
+      "instruction": {
+        "type": "static_text",
+        "text": "I've got what you've given me. I'll have dispatch pull this together and confirm the rate with you."
+      },
+      "name": "N06 Missing Slot - Exhausted (Guard)",
+      "type": "end"
+    },
+    {
+      "instruction": {
+        "text": "Can't quote a firm number for this one - I'll capture it and have dispatch price it by hand.",
+        "type": "static_text"
+      },
+      "speak_during_execution": true,
+      "display_position": {
+        "y": 2814,
+        "x": 534
+      },
+      "type": "end",
+      "name": "N07 Capture Only (Rate System)",
+      "id": "n07_capture_only"
+    },
+    {
+      "else_edge": {
+        "transition_condition": {
+          "prompt": "Else",
+          "type": "prompt"
+        },
+        "id": "edge_cap_ok_else",
+        "destination_node_id": "n07_quote_standard"
+      },
+      "display_position": {
+        "y": 1326,
+        "x": 870
+      },
+      "type": "branch",
+      "id": "n07_capacity_check",
+      "edges": [
+        {
+          "id": "edge_cap_confirmed_skip",
+          "transition_condition": {
+            "equations": [
+              {
+                "left": "{{vehicle_manually_confirmed}}",
+                "right": "true",
+                "operator": "=="
+              }
+            ],
+            "type": "equation",
+            "operator": "||"
+          },
+          "destination_node_id": "n07_quote_standard"
+        },
+        {
+          "transition_condition": {
+            "equations": [
+              {
+                "right": "false",
+                "operator": "==",
+                "left": "{{capacity_ok}}"
+              }
+            ],
+            "type": "equation",
+            "operator": "||"
+          },
+          "id": "edge_cap_mismatch_ok",
+          "destination_node_id": "n07_capacity_mismatch"
+        },
+        {
+          "destination_node_id": "n07_capacity_mismatch",
+          "transition_condition": {
+            "equations": [
+              {
+                "operator": "exists",
+                "left": "{{suggested_vehicle}}"
+              },
+              {
+                "operator": "not_contains",
+                "left": "{{suggested_vehicle}}",
+                "right": "{{vehicle_root}}"
+              }
+            ],
+            "operator": "&&",
+            "type": "equation"
+          },
+          "id": "edge_cap_mismatch_suggested"
+        }
+      ],
+      "name": "N07 Capacity Check"
+    },
+    {
+      "edges": [
+        {
+          "id": "edge_cap_requote",
+          "destination_node_id": "n05b_rate_guard",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "The caller named any specific vehicle class in their reply - whether agreeing to the recommendation, naming a third alternative, or asking to keep a different class than what was assumed"
+          }
+        },
+        {
+          "transition_condition": {
+            "equations": [
+              {
+                "left": "{{vehicle_manually_confirmed}}",
+                "right": "true",
+                "operator": "=="
+              }
+            ],
+            "operator": "||",
+            "type": "equation"
+          },
+          "destination_node_id": "n05b_rate_guard",
+          "id": "edge_cap_requote_confirmed_pending"
+        }
+      ],
+      "tools": [
+        {
+          "speak_after_execution": true,
+          "description": "Save the vehicle class the caller agreed to move to.",
+          "name": "confirm_vehicle_recommendation",
+          "variables": [
+            {
+              "description": "Set to whichever specific vehicle class the caller named: the engine's suggested_vehicle value if they agree with the recommendation, or their explicitly requested class (sedan, suv, van_sprinter, or stretch) if they name anything else - including the originally-assumed class if they ask to keep that one by name.",
+              "type": "string",
+              "name": "vehicle_class"
+            },
+            {
+              "description": "Always set to true when this tool is called - marks that the caller has explicitly settled on a vehicle class, so this node is never re-entered for the rest of the call.",
+              "name": "vehicle_manually_confirmed",
+              "type": "boolean"
+            }
+          ],
+          "type": "extract_dynamic_variable"
+        }
+      ],
+      "id": "n07_capacity_mismatch",
+      "name": "N07 Capacity Mismatch - Recommend Vehicle",
+      "type": "subagent",
+      "else_edge": {
+        "id": "edge_cap_keep_else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        },
+        "destination_node_id": "n07_quote_standard"
+      },
+      "instruction": {
+        "text": "Tell the caller you'd recommend the {{suggested_vehicle}} for this trip instead of what was assumed - if {{capacity_ok}} is false, briefly note their party or luggage doesn't fit the vehicle currently assumed; otherwise just note it's the better fit. Ask if that works for them.\n\nIf the caller names ANY specific vehicle class at all in their reply - whether that's agreeing to the recommendation, naming a third alternative, or asking to keep a class different from what was currently assumed - call confirm_vehicle_recommendation exactly once this turn with that named vehicle, then immediately transition. Do not call the tool more than once for the same decision, and do not wait for further confirmation before transitioning. Never speak a next-topic line (contact info, readback, or anything else) before that transition happens - the tool call and the transition happen together, in the same turn, with nothing else in between.\n\nOnly skip the tool and just move on (no requote) if the caller declines to change anything without naming any specific vehicle class - e.g. 'just keep going' or 'whatever you had already' with no class mentioned.",
+        "type": "prompt"
+      },
+      "display_position": {
+        "y": 582,
+        "x": 438
+      }
+    },
+    {
+      "display_position": {
+        "y": 2838,
+        "x": 198
+      },
+      "edges": [
+        {
+          "id": "edge_guard_invalid",
+          "transition_condition": {
+            "equations": [
+              {
+                "left": "{{rate_input_valid}}",
+                "right": "false",
+                "operator": "=="
+              }
+            ],
+            "operator": "||",
+            "type": "equation"
+          },
+          "destination_node_id": "n07_rate_failed"
+        }
+      ],
+      "type": "code",
+      "code": "const required = {\n  origin_city: dv.origin_city,\n  rate_pickup_at: dv.rate_pickup_at,\n  leg_1_summary: dv.leg_1_summary,\n  vehicle_class: dv.vehicle_class,\n  passenger_count: dv.passenger_count,\n  rate_trip_type: dv.rate_trip_type\n};\nlet rate_input_valid = true;\nfor (const key in required) {\n  const val = required[key];\n  if (val === undefined || val === null || val === '' || String(val).includes('{{') || String(val).includes('}}')) {\n    rate_input_valid = false;\n    break;\n  }\n}\nreturn { rate_input_valid };",
+      "else_edge": {
+        "id": "edge_guard_valid",
+        "destination_node_id": "n06_rate_engine",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "response_variables": {
+        "rate_input_valid": "rate_input_valid"
+      },
+      "wait_for_result": true,
+      "name": "N05B Rate Input Guard",
+      "id": "n05b_rate_guard"
+    }
+  ]
+}
