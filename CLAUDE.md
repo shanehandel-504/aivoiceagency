@@ -503,7 +503,9 @@ documentation error, verified against the wire 2026-08-17.)
    account. v2 returns one row **per agent** and carries **no `version`, `is_published` or
    `webhook_url`**. Any audit that reads those fields must enumerate with `POST /v2/list-agents`,
    then hydrate each agent with `GET /get-agent/{agent_id}`. Per-version history is
-   `GET /get-agent-versions/{agent_id}`.
+   `GET /list-agent-versions/{agent_id}` — it returns `{items, has_more}`; unwrap `.items`.
+   (`GET /get-agent-versions/{agent_id}` was removed 2026-09-15; `/list-agent-versions` is the
+   path that worked on 2026-09-26.)
 
 **`get-agent` still returns the DRAFT, not what answers the phone.** A number serves
 `latest_published`. This migration does not change that trap — see the version-coupling rules in § 8
