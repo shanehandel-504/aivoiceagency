@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-26T12:35:41-05:00",
+  "updated": "2026-09-26T14:38:22-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -471,10 +471,10 @@
     },
     {
       "id": "aic-capture-desk",
-      "title": "AI Chauffeur Capture Desk — RUN C: gotchas closed, 41/41 sim gate, desk v1 staged for Shane",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-26-aic-run-c.md",
-      "status": "run-c-acceptance-ready",
-      "label": "RUN C (2026-09-26). 0019 + 409-5008 + /try (no parameter) all reach the capture desk agent agent_e41b2e957f1de46cf23dc25a84 (0019 bound by Shane 11:38 CT); the pre-desk agent agent_2d1d687eb85e6d5d0e720795c2 stays published v27, unbound, as the rollback. Desk v1 is an UNPUBLISHED DRAFT awaiting Shane: N02-DIR (\"Landing or flying out?\"), N09-AI with go-back, start-over and greeting interruptions land on N01-NUDGE, sign name defaults to the caller, reminders OFF (Retell improvised a check-in even with the new prompt sentence; 20 s silence hang-up proven). Sim gate 41/41 (24 baseline + 17 exceptions, every tool mocked). Rail 15a7c3bc: caller text ends \"Reply STOP to opt out.\" and is skipped with \"caller opted out\" when GHL has SMS DND on; demo trip sheets read CAPTURED / DEMO COMPLETE. Calendar 9411b33d offers two different days. OWNER_ALERT_CONTACT_ID fixed (was a deleted contact). OPEN: 6 of 8 GHL automation triggers unread (builder froze Chrome); GHL appends its own STOP footer + \"Thanks, AI Voice Agency\" to first texts."
+      "title": "AI Chauffeur Capture Desk — LIVE, frozen 2026-09-26 (RUN D post-publish verify)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-26-aic-run-d-freeze.md",
+      "status": "live",
+      "label": "LIVE — frozen 2026-09-26 (RUN D). The capture desk agent agent_e41b2e957f1de46cf23dc25a84 v1 (published by Shane 1:19 PM CT) answers 0019 in + out, 5008 in + out and /try with no parameter; bindings unchanged. v2 is an UNPUBLISHED DRAFT awaiting Shane: the setup-call time travels as appt_date / appt_time / appt_timezone (flow v2 N08-BOOKED placeholders + book_slot variables; words unchanged; sims X09 + X10 pass). Rail 15a7c3bc → 79a5e162 (one STOP line: GHL footer now \"Reply STOP to opt out.\", the rail's own line removed; trip date never takes the setup-call time), calendar rail 9411b33d → 18bd10cd (returns both name sets), trip sheet e92d57a1 → 82ea5266 + homepage 27fcc16: \"multi-language (50+ languages)\". Open: no acceptance calls on v1 yet; GHL sender line \"Thanks, AI Voice Agency\" needs Shane's attestation to switch off; 2c tag exclusions not added (the GHL builder renders but takes no clicks); booking confirmation text — SHANE REVIEWS WORDING."
     }
   ],
   "log": [
@@ -901,6 +901,10 @@
     {
       "ts": "2026-09-26T12:35:41-05:00",
       "entry": "AIC CAPTURE DESK RUN C — ACCEPTANCE READY (one item open: 2c). Desk v1 staged as an unpublished draft for Shane; sim gate 41/41; rail e161d03b → 15a7c3bc, calendar c58f71de → 9411b33d, trip sheet 2dab7f6d → e92d57a1, /try b81c966b → 7f2d8225 (all via MCP update_workflow + publish_workflow after an inactive staging copy); OWNER_ALERT_CONTACT_ID repointed at the live owner-alert contact and a test owner text delivered. 2c open: GHL builder froze Chrome — 6 automation triggers still to read; no GHL filter changed."
+    },
+    {
+      "ts": "2026-09-26T14:38:22-05:00",
+      "entry": "AIC CAPTURE DESK RUN D — LIVE, FROZEN 2026-09-26 (RUN INCOMPLETE: acceptance calls, sender line, 2c). Desk v1 verified on 0019, 5008 and /try (all latest_published = v1); v2 DRAFT staged with the appt_* rename. Rail 15a7c3bc → 79a5e162, calendar 9411b33d → 18bd10cd, trip sheet e92d57a1 → 82ea5266 (all via inactive staging copy → MCP update_workflow → publish_workflow), GHL opt-out text \"Reply STOP to opt out.\", homepage 27fcc16. 0 acceptance calls since the publish. 2c: 5 of 6 triggers read, no filter changed. T1–T10 logged in the Tuning Tower; next tuning round runs on AIC-TEST-2 bound to 5008."
     }
   ]
 }
