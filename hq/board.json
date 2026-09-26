@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-26T14:38:22-05:00",
+  "updated": "2026-09-26T16:36:06-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -475,6 +475,13 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-26-aic-run-d-freeze.md",
       "status": "live",
       "label": "LIVE — frozen 2026-09-26 (RUN D). The capture desk agent agent_e41b2e957f1de46cf23dc25a84 v1 (published by Shane 1:19 PM CT) answers 0019 in + out, 5008 in + out and /try with no parameter; bindings unchanged. v2 is an UNPUBLISHED DRAFT awaiting Shane: the setup-call time travels as appt_date / appt_time / appt_timezone (flow v2 N08-BOOKED placeholders + book_slot variables; words unchanged; sims X09 + X10 pass). Rail 15a7c3bc → 79a5e162 (one STOP line: GHL footer now \"Reply STOP to opt out.\", the rail's own line removed; trip date never takes the setup-call time), calendar rail 9411b33d → 18bd10cd (returns both name sets), trip sheet e92d57a1 → 82ea5266 + homepage 27fcc16: \"multi-language (50+ languages)\". Open: no acceptance calls on v1 yet; GHL sender line \"Thanks, AI Voice Agency\" needs Shane's attestation to switch off; 2c tag exclusions not added (the GHL builder renders but takes no clicks); booking confirmation text — SHANE REVIEWS WORDING."
+    },
+    {
+      "id": "ava-transfer-precondition",
+      "title": "AVA SALES — transfer precondition + v49 forensics (2026-09-26)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-26-ava-transfer-precondition.md",
+      "status": "live",
+      "label": "DONE 2026-09-26 — the gate for the v50b build. RECOMMENDED HANDOFF: AGENT SWAP (agent_swap → desk agent_e41b2e957f1de46cf23dc25a84 @ latest_published, webhook_setting both_agents, post_call_analysis_setting both_agents). Measured: the swap had the desk talking 1.15–1.22 s after the trigger, same call_id, caller number carried, one bill. The warm transfer never bridged into the AI desk: Retell's human check gave up after 30 s with both legs AI-billed. Live AVA v49 untouched (prompt 4,711 tokens cl100k_base, byte-exact snapshot + v43→v49 diff + last-20 latency CSV in ops/tuning, now .vercelignore'd). Test agent agent_44b48507d38c0bfc29a3150a74 v4 (probe tools, webhook → ZZ SINK hF7cxEn0SuVaEnnL), bound to no number. DEMO-POOL-05 borrowed 15:46–16:29 CT and restored exactly; it is still in + out on ZZ-PROBE-36 since Aug 30 (Shane's call). The pool placed 0 outbound calls in 30 days; the homepage status rail shows DEMO-POOL-03's number."
     }
   ],
   "log": [
@@ -905,6 +912,10 @@
     {
       "ts": "2026-09-26T14:38:22-05:00",
       "entry": "AIC CAPTURE DESK RUN D — LIVE, FROZEN 2026-09-26 (RUN INCOMPLETE: acceptance calls, sender line, 2c). Desk v1 verified on 0019, 5008 and /try (all latest_published = v1); v2 DRAFT staged with the appt_* rename. Rail 15a7c3bc → 79a5e162, calendar 9411b33d → 18bd10cd, trip sheet e92d57a1 → 82ea5266 (all via inactive staging copy → MCP update_workflow → publish_workflow), GHL opt-out text \"Reply STOP to opt out.\", homepage 27fcc16. 0 acceptance calls since the publish. 2c: 5 of 6 triggers read, no filter changed. T1–T10 logged in the Tuning Tower; next tuning round runs on AIC-TEST-2 bound to 5008."
+    },
+    {
+      "ts": "2026-09-26T16:36:06-05:00",
+      "entry": "AVA TRANSFER PRECONDITION + v49 FORENSICS — COMPLETE. Part 1 read-only: v49 snapshot (4,711 tokens), v43→v49 diff, 8-number audit, pool-origin check (0 outbound to the three callers; 0 pool outbound in 30 d), last-20 latency (median e2e p50 1,618 ms / p90 2,793 ms). Part 2 on the test agent only (v3, v4 published; ZZ SINK hF7cxEn0SuVaEnnL created): T1 warm transfer ×1 = no bridge (human check timed out at 30 s, 23.41¢ across two legs); T2 agent swap ×1 phone + ×1 web = desk voice in 1.2 s, one call, one bill. Recommend agent swap for v50b handoff_to_desk. DEMO-POOL-05 restored exactly; live agent, desk agent and all 8 number bindings verified identical to pre-run. ops/ added to .vercelignore (it was publicly served)."
     }
   ]
 }
