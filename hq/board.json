@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-25T16:44:15-05:00",
+  "updated": "2026-09-26T12:35:41-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -471,10 +471,10 @@
     },
     {
       "id": "aic-capture-desk",
-      "title": "AI Chauffeur Capture Desk — RUN B: test agent live on 409-5008 + calendar rail + post-call rail v2 + trip sheet + site copy",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-25-aic-run-b-build.md",
-      "status": "run-b-test-agent-live",
-      "label": "RUN B LIVE (2026-09-25). TEST AGENT agent_e41b2e957f1de46cf23dc25a84 (AIC-LEAN-TEST) v0 published on flow conversation_flow_c3c710be6c94 v0 — 91 nodes, 49 approved lines as static nodes + 4 composer frames = 53/53 byte-exact, global prompt 1381/1381 chars. Bound in+out on 414-409-5008 and reachable at aichauffeur.ai/try?agent=test. 0019 AND ITS LIVE AGENT UNCHANGED (same binding, same version list). RAIL TkETvvnABhUPd7ME v2 e161d03b (53 nodes, Error Sentry attached): per-call dedup, TRIP REQUEST — DEMO label, trip-sheet store + /trip/{ref} page (WF-TRIP-SHEET 3PfmC7sxOjUHI0rE), GHL safeguard (never renames an existing contact), trip log sheet, owner email with EXCEPTIONS line, owner + caller SMS, MISSED CAPTURE branch, owner contact resolved read-only (§ 9). Sim #1 replay: every leg green, second POST sent nothing. WF-AIC-SALES-CAL TLoF7bzuPYy1NAW1 (server p50: slots 372 ms, book 91 ms, alert 83 ms). Site b92668d. OPEN: silence reminder makes the LLM speak an unapproved check-in line; $vars.OWNER_ALERT_CONTACT_ID points at a deleted GHL contact. Undo steps U1–U5 in the private archive repo."
+      "title": "AI Chauffeur Capture Desk — RUN C: gotchas closed, 41/41 sim gate, desk v1 staged for Shane",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-26-aic-run-c.md",
+      "status": "run-c-acceptance-ready",
+      "label": "RUN C (2026-09-26). 0019 + 409-5008 + /try (no parameter) all reach the capture desk agent agent_e41b2e957f1de46cf23dc25a84 (0019 bound by Shane 11:38 CT); the pre-desk agent agent_2d1d687eb85e6d5d0e720795c2 stays published v27, unbound, as the rollback. Desk v1 is an UNPUBLISHED DRAFT awaiting Shane: N02-DIR (\"Landing or flying out?\"), N09-AI with go-back, start-over and greeting interruptions land on N01-NUDGE, sign name defaults to the caller, reminders OFF (Retell improvised a check-in even with the new prompt sentence; 20 s silence hang-up proven). Sim gate 41/41 (24 baseline + 17 exceptions, every tool mocked). Rail 15a7c3bc: caller text ends \"Reply STOP to opt out.\" and is skipped with \"caller opted out\" when GHL has SMS DND on; demo trip sheets read CAPTURED / DEMO COMPLETE. Calendar 9411b33d offers two different days. OWNER_ALERT_CONTACT_ID fixed (was a deleted contact). OPEN: 6 of 8 GHL automation triggers unread (builder froze Chrome); GHL appends its own STOP footer + \"Thanks, AI Voice Agency\" to first texts."
     }
   ],
   "log": [
@@ -897,6 +897,10 @@
     {
       "ts": "2026-09-25T16:44:15-05:00",
       "entry": "AIC CAPTURE DESK RUN B — TEST AGENT LIVE on 409-5008 (agent_e41b2e957f1de46cf23dc25a84 v0). Rail v2 e161d03b live (was 0652d902); WF-AIC-SALES-CAL + WF-TRIP-SHEET published; /try?agent=test live (WF-TRY-WEBCALL b81c966b, site b92668d). Replay proof: trip sheet 200 on aichauffeur.ai/trip, owner email + SMS 201, caller SMS 201, GHL tag+note without rename, dedup second run sent nothing. Web call 5 s on the test agent → one MISSED CAPTURE owner alert. 0019 + live agent unchanged. Two open items for Shane: the silence nudge wording, and the dead OWNER_ALERT_CONTACT_ID variable."
+    },
+    {
+      "ts": "2026-09-26T12:35:41-05:00",
+      "entry": "AIC CAPTURE DESK RUN C — ACCEPTANCE READY (one item open: 2c). Desk v1 staged as an unpublished draft for Shane; sim gate 41/41; rail e161d03b → 15a7c3bc, calendar c58f71de → 9411b33d, trip sheet 2dab7f6d → e92d57a1, /try b81c966b → 7f2d8225 (all via MCP update_workflow + publish_workflow after an inactive staging copy); OWNER_ALERT_CONTACT_ID repointed at the live owner-alert contact and a test owner text delivered. 2c open: GHL builder froze Chrome — 6 automation triggers still to read; no GHL filter changed."
     }
   ]
 }
