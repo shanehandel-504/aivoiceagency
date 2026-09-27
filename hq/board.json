@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-26T16:36:06-05:00",
+  "updated": "2026-09-27T11:42:30-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -482,6 +482,13 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-26-ava-transfer-precondition.md",
       "status": "live",
       "label": "DONE 2026-09-26 — the gate for the v50b build. RECOMMENDED HANDOFF: AGENT SWAP (agent_swap → desk agent_e41b2e957f1de46cf23dc25a84 @ latest_published, webhook_setting both_agents, post_call_analysis_setting both_agents). Measured: the swap had the desk talking 1.15–1.22 s after the trigger, same call_id, caller number carried, one bill. The warm transfer never bridged into the AI desk: Retell's human check gave up after 30 s with both legs AI-billed. Live AVA v49 untouched (prompt 4,711 tokens cl100k_base, byte-exact snapshot + v43→v49 diff + last-20 latency CSV in ops/tuning, now .vercelignore'd). Test agent agent_44b48507d38c0bfc29a3150a74 v4 (probe tools, webhook → ZZ SINK hF7cxEn0SuVaEnnL), bound to no number. DEMO-POOL-05 borrowed 15:46–16:29 CT and restored exactly; it is still in + out on ZZ-PROBE-36 since Aug 30 (Shane's call). The pool placed 0 outbound calls in 30 days; the homepage status rail shows DEMO-POOL-03's number."
+    },
+    {
+      "id": "ava-v50b-build",
+      "title": "AVA SALES — v50b build on the test agent (2026-09-26/27)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-26-ava-v50b-build.md",
+      "status": "pending",
+      "label": "RUN INCOMPLETE — gate open on Shane's three real calls to the probe line (morning of 2026-09-27). Built on the TEST agent only: Grok v50b prompt byte-exact (1,223 tokens vs v49's 4,711; ~2,624 LLM tokens per request vs 5,587), {{opening_line}} with a COLD default proven on two web calls, WF-AVA-SALES-CAL (availability-first, ZZ TEST calendar, retry cap), handoff_to_desk agent swap to the desk's published version, industry + handoff_attempted analysis. Test agent now v7 = v5 + interruption 0.90 (barge-in: 0.82 0/4, 0.90 7/7). AVA post-call rail switched (serving e08eb55f; rollback cc6f3ccd): swap calls get no AVA text and alert HANDOFF TO DESK, transportation callers get the AI Chauffeur demo line, the always-running strategy-call email is off, book_slot bookings read as BOOKED. WF-ANI-AVA openers staged, held for the promote. Grok blockers: bridge line never spoken before the handoff (0/15 sims); no re-ask after a barge-in. Live 8930 v49 untouched."
     }
   ],
   "log": [
@@ -916,6 +923,10 @@
     {
       "ts": "2026-09-26T16:36:06-05:00",
       "entry": "AVA TRANSFER PRECONDITION + v49 FORENSICS — COMPLETE. Part 1 read-only: v49 snapshot (4,711 tokens), v43→v49 diff, 8-number audit, pool-origin check (0 outbound to the three callers; 0 pool outbound in 30 d), last-20 latency (median e2e p50 1,618 ms / p90 2,793 ms). Part 2 on the test agent only (v3, v4 published; ZZ SINK hF7cxEn0SuVaEnnL created): T1 warm transfer ×1 = no bridge (human check timed out at 30 s, 23.41¢ across two legs); T2 agent swap ×1 phone + ×1 web = desk voice in 1.2 s, one call, one bill. Recommend agent swap for v50b handoff_to_desk. DEMO-POOL-05 restored exactly; live agent, desk agent and all 8 number bindings verified identical to pre-run. ops/ added to .vercelignore (it was publicly served)."
+    },
+    {
+      "ts": "2026-09-27T11:42:30-05:00",
+      "entry": "AVA v50b BUILD — RUN INCOMPLETE (gate: 3 real calls tomorrow). Test agent agent_44b48507… v5 = Grok v50b FINAL PROMPT byte-exact (sha 2b212b0b…), v7 = v5 + interruption 0.90 (Shane). Sims 57 + web calls 16: branch 9/9 zero-echo, neutral path 3/3, price bounds 6/6, handoff fallback 3/3, calendar-error 3/3, \"Hi.\" 3/3, COLD 16/16 web calls; blockers for Grok: bridge line 0/15, no re-ask after barge-in. WF-AVA-SALES-CAL fMwY56uNlJaDzkcd live on a ZZ TEST calendar (10/10 unit + retry cap). AVA post-call rail 6r8YHuMEJbxeDyT5 switched to e08eb55f after hash-verified parity with staging (rollback cc6f3ccd; Error Sentry attached). WF-ANI-AVA staged (RuC3gKs6YtK4ampQ), held for promote. Exposure fix a0ca584: CLAUDE.md, audits/, config-snapshots/, ops/ now 404 on aivoiceagency.ai; board L2 pool digits masked. Probe line …8976 bound to the test agent (latest_published) overnight. Live 8930 and the desk agent untouched."
     }
   ]
 }
