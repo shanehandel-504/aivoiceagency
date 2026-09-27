@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-27T11:42:30-05:00",
+  "updated": "2026-09-27T13:04:21-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -489,6 +489,13 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-26-ava-v50b-build.md",
       "status": "pending",
       "label": "RUN INCOMPLETE — gate open on Shane's three real calls to the probe line (morning of 2026-09-27). Built on the TEST agent only: Grok v50b prompt byte-exact (1,223 tokens vs v49's 4,711; ~2,624 LLM tokens per request vs 5,587), {{opening_line}} with a COLD default proven on two web calls, WF-AVA-SALES-CAL (availability-first, ZZ TEST calendar, retry cap), handoff_to_desk agent swap to the desk's published version, industry + handoff_attempted analysis. Test agent now v7 = v5 + interruption 0.90 (barge-in: 0.82 0/4, 0.90 7/7). AVA post-call rail switched (serving e08eb55f; rollback cc6f3ccd): swap calls get no AVA text and alert HANDOFF TO DESK, transportation callers get the AI Chauffeur demo line, the always-running strategy-call email is off, book_slot bookings read as BOOKED. WF-ANI-AVA openers staged, held for the promote. Grok blockers: bridge line never spoken before the handoff (0/15 sims); no re-ask after a barge-in. Live 8930 v49 untouched."
+    },
+    {
+      "id": "aic-round2-staged",
+      "title": "AI Chauffeur capture desk — round 2, staged on AIC-TEST-2 (2026-09-27)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-27-aic-round2-staged.md",
+      "status": "pending",
+      "label": "RUN INCOMPLETE — Grok lines pending / 3 real calls / publish. AIC-TEST-2 (test line …5008) v1: charter, one-way and hours capture; capture-only capacity, re-run after a mid-call correction; the two Grok marker nodes gated off; sims 11/11. /try live: no Quote row, Duration row, Booked-Green live meter (c590e1c); receipt workflow switched (active dd2fb9c5, rollback 7f2d8225). Desk ticket rail patched and tested but NOT switched: gate short one field (Vehicle) on the two old Nobu calls, which the old flow recorded as Sprinter Van; staging WcMOi7GdVoIGUlwU. Sep 26 test tickets deleted. Live desk 0019 unchanged."
     }
   ],
   "log": [
@@ -927,6 +934,10 @@
     {
       "ts": "2026-09-27T11:42:30-05:00",
       "entry": "AVA v50b BUILD — RUN INCOMPLETE (gate: 3 real calls tomorrow). Test agent agent_44b48507… v5 = Grok v50b FINAL PROMPT byte-exact (sha 2b212b0b…), v7 = v5 + interruption 0.90 (Shane). Sims 57 + web calls 16: branch 9/9 zero-echo, neutral path 3/3, price bounds 6/6, handoff fallback 3/3, calendar-error 3/3, \"Hi.\" 3/3, COLD 16/16 web calls; blockers for Grok: bridge line 0/15, no re-ask after barge-in. WF-AVA-SALES-CAL fMwY56uNlJaDzkcd live on a ZZ TEST calendar (10/10 unit + retry cap). AVA post-call rail 6r8YHuMEJbxeDyT5 switched to e08eb55f after hash-verified parity with staging (rollback cc6f3ccd; Error Sentry attached). WF-ANI-AVA staged (RuC3gKs6YtK4ampQ), held for promote. Exposure fix a0ca584: CLAUDE.md, audits/, config-snapshots/, ops/ now 404 on aivoiceagency.ai; board L2 pool digits masked. Probe line …8976 bound to the test agent (latest_published) overnight. Live 8930 and the desk agent untouched."
+    },
+    {
+      "ts": "2026-09-27T13:04:21-05:00",
+      "entry": "AIC ROUND 2 STAGED — RUN INCOMPLETE (Grok lines pending / 3 real calls / publish). AIC-TEST-2 agent_9ebb41c9… v1 on …5008 (flow conversation_flow_9cf4ddd5b734 v1: is_charter/one_way/hours extraction, capture-only N05 + n06_capacity after a correction, N03C-2-CHARTER + N04-HOURS gated off); sim gate 11/11 on v1 (v0 9/10: X1 correction kept the old vehicle, fixed in v1); 20 s silence web call clean. WF-AIC-SALES-CAL ALLOWED + AIC-TEST-2 (active 28ba9379, rollback 18bd10cd). WF-TRY-WEBCALL receipt switched: pickup as captured, no quote key, duration (active dd2fb9c5, rollback 7f2d8225; hash-verified). /try page c590e1c deployed READY: Quote row removed, Duration row, live meter #2EE6A8; gateway transport measured: 0 update events mid-call. Desk rail TkETvvnABhUPd7ME patched in staging WcMOi7GdVoIGUlwU, 4 pinned real-payload replays structurally clean, one caller text per swapped call proven; NOT switched: Vehicle Sprinter Van vs Motorcoach on the two old Nobu payloads (old v27 flow label). n8n Variable AVA_LINES added. Cleanup: trip_sheets rows 3/4/5, trip-log rows 11-13, two house-contact notes deleted; ghost owner email trashed. Live desk agent and 0019 untouched."
     }
   ]
 }
