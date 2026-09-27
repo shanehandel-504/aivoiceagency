@@ -1089,3 +1089,9 @@ Ratified by the owner on 2026-09-13. Brief and sources: `docs/superpowers/plans/
 - **Claims.** "Books it" and "puts it in your CRM" are set wording; confirmation language stays with dispatch. Every number on the page has a source in the brief's § 3 or a source comment beside it.
 - **Demo.** The demo is the button at `/try/`, or the phone. `/demo/` redirects to `/try/` (308).
 - **Analytics.** Vercel Web Analytics on every page; `[data-event]` clicks call `va('event', {name})`.
+
+### 2026-09-27 · round 2 (the owner's overnight brief)
+
+- **Live meter.** On `/try/` the live-state meter bars paint `--success-green` (`#2EE6A8`, the base of the `.btn-go` ramp): the meter is the call that button started. The LIVE chip stays `--signal-blue`. This is a named exception to § 2 STATE LAW and the only one.
+- **Receipt.** The `/try/` trip sheet has no Quote row: the desk captures and does not quote. A Duration row shows only when the caller gave hours or said one way. Pickup is the address as captured (the flow's `pickup_location`), never a bare city.
+- **Live thread.** The gateway transport that v3 create-web-call hands `/try/` calls emits no `update` event mid-call. Measured 2026-09-27 on `retell-client-js-sdk@3.0.1`, the latest: 0 update events in a 35-second call while the server recorded 3 turns. The thread fills from the redacted receipt after the call, and nothing stands in for it while the call runs.

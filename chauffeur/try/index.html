@@ -90,7 +90,7 @@
     .try-tag[data-state="connecting"]{color:var(--amber)}
     .try-tag[data-state="live"]{color:var(--signal-blue)}
     /* ENDED STAYS NEUTRAL. Green is reserved for a label naming the thing that
-       succeeded — a trip captured, a quote returned — and a call that stopped is
+       succeeded — a trip captured — and a call that stopped is
        not one of those. Painting it green would say the call went well, which
        this chip has no way of knowing. */
     .try-tag[data-state="failed"]{color:var(--miss-red)}
@@ -113,7 +113,10 @@
     .try-meter{flex:1;display:grid;grid-template-columns:repeat(32,minmax(0,1fr));gap:3px;height:36px}
     .try-meter i{display:block;height:100%;background:var(--line);
       transform:scaleY(.08);transform-origin:50% 50%}
-    .try[data-state="live"] .try-meter i{background:var(--signal-blue)}
+    /* Live, the bars take the PUSH button's green (--success-green, the base of
+       the .btn-go ramp): the meter is the call that button started. Owner's
+       ruling 2026-09-27, DESIGN-SYSTEM § 12. The LIVE chip keeps signal blue. */
+    .try[data-state="live"] .try-meter i{background:var(--success-green)}
 
     /* THE THREAD. Agent left, you right, a mono stamp from the start of the
        call. Every line is written with textContent — the words come off the
@@ -470,10 +473,13 @@
   function meterIdle() { level.fill(0); pending = null; bars.forEach((el) => { el.style.transform = ''; }); }
 
   /* ── THE THREAD ─────────────────────────────────────────────────────────
-     retell-client-js-sdk@3.0.1 emits `update` with the whole transcript so far
-     as {role, content}. It is cumulative, so this redraws from the array and
-     keeps the stamp each turn was first seen at. textContent, never innerHTML:
-     these words come off the wire. */
+     retell-client-js-sdk@3.0.1 documents an `update` event carrying the recent
+     transcript as {role, content}. On the gateway transport that v3
+     create-web-call hands these calls, it does not arrive: measured 2026-09-27,
+     a 35-second call on SDK 3.0.1 (the latest) delivered 0 update events while
+     the server recorded 3 turns. The listener stays for a transport that does
+     emit; it redraws from the array and keeps the stamp each turn was first
+     seen at. textContent, never innerHTML: these words come off the wire. */
   const stamps = [];
   let sig = '';
   // The mono slot carries the time a turn arrived when the turn arrived live.
@@ -654,7 +660,7 @@
     dl.append(dt, dd);
   }
   function showReceipt(r) {
-    const trip = ['pickup', 'dropoff', 'date', 'time', 'vehicle', 'quote'];
+    const trip = ['pickup', 'dropoff', 'date', 'time', 'vehicle', 'duration'];
     // passenger_count is excluded from this test on purpose: the analyser
     // returns 1 by default, so a card keyed on it would open on every call and
     // say nothing but "Passengers 1".
@@ -676,7 +682,9 @@
       row(rowsEl, 'Time', r.time);
       row(rowsEl, 'Passengers', r.passengers);
       row(rowsEl, 'Vehicle', r.vehicle);
-      row(rowsEl, 'Quote', r.quote);
+      // The desk captures and does not quote, so there is no Quote row. How long
+      // shows only when the caller gave hours or said one way.
+      if (r.duration) row(rowsEl, 'Duration', r.duration);
       if (r.ticket) row(rowsEl, 'Ticket', r.ticket);
       texted.hidden = !r.mobile_captured;
       ticket.hidden = false;
