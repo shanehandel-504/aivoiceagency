@@ -179,6 +179,28 @@
     .try-rows dd[data-empty="true"]{color:var(--ink-mute)}
     .try-texted{margin:.875rem 0 0;padding-top:.875rem;border-top:1px solid var(--line);
       font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft)}
+    /* THE EMAIL FIELD. Under the ticket, one visible label, one field, one control,
+       one line of state. Field recipe from the callback console (§ 3.5): input
+       ground, hairline, a signal-blue focus border and ring, no inset shadow. The
+       state line changes word and colour on the same frame (STATE LAW): green only
+       when the sheet was sent, red only when the address failed. */
+    .try-mail{margin:.875rem 0 0;padding-top:.875rem;border-top:1px solid var(--line)}
+    .try-mail[hidden]{display:none}
+    .try-mail-l{display:block;margin:0 0 .5rem;font-family:var(--sans);font-weight:500;font-size:.9375rem;
+      line-height:1.4;color:var(--ink)}
+    .try-mail-row{display:flex;gap:.5rem;align-items:stretch}
+    .try-mail-in{flex:1;min-width:0;min-height:48px;padding:0 .75rem;background:var(--input-bg);color:var(--ink);
+      border:1px solid var(--line);border-radius:6px;font-family:var(--sans);font-size:1rem}
+    .try-mail-in::placeholder{color:var(--ink-mute)}
+    .try-mail-in:focus{outline:none;border-color:var(--signal-blue);box-shadow:0 0 0 3px rgba(61,123,255,.15)}
+    .try-mail-in:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
+    .try-mail-go{flex:none;min-height:48px;padding:0 1.25rem}
+    .try-mail-go[aria-disabled="true"]{cursor:progress}
+    .try-mail-msg{margin:.5rem 0 0;font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft);transition:none}
+    .try-mail-msg:empty{display:none}
+    .try-mail-msg[data-state="sent"]{color:var(--success-green)}
+    .try-mail-msg[data-state="bad"]{color:var(--miss-red)}
+    .try-hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
     .try-player audio{display:block;width:100%;margin-top:.75rem;height:40px}
     .try-rnote{margin:0;font-family:var(--sans);font-size:.9375rem;line-height:1.55;color:var(--ink-soft)}
     .try-share{width:100%;justify-content:center}
@@ -289,6 +311,15 @@
             <h2>Here's what just happened.</h2>
             <dl class="try-rows" id="try-rows"></dl>
             <p class="try-texted" id="try-texted" hidden>The same details were texted to the number you gave.</p>
+            <form class="try-mail" id="try-mail" novalidate hidden>
+              <label class="try-mail-l" for="try-mail-in">Email me this trip sheet</label>
+              <div class="try-mail-row">
+                <input class="try-mail-in" id="try-mail-in" name="email" type="email" inputmode="email" autocomplete="email" spellcheck="false" placeholder="you@company.com">
+                <button type="submit" class="btn btn-ghost try-mail-go" id="try-mail-go" data-event="try_email_send">Send</button>
+              </div>
+              <input class="try-hp" id="try-mail-hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <p class="try-mail-msg" id="try-mail-msg" aria-live="polite"></p>
+            </form>
           </div>
 
           <div class="try-card try-player" id="try-player" hidden>
@@ -323,6 +354,7 @@
   const SDK_URL = 'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@3.0.1/+esm';
   const WEBHOOK = 'https://circulant.app.n8n.cloud/webhook/7b9e6dee2ce9ce780673725e0448791f';
   const RECEIPT = 'https://circulant.app.n8n.cloud/webhook/try/receipt';
+  const EMAIL = 'https://circulant.app.n8n.cloud/webhook/try/email';
   // ?agent=test routes the call to the test desk; anything else, or nothing, sends no key.
   const AGENT_KEY = new URLSearchParams(location.search).get('agent') === 'test' ? 'test' : '';
   const LINE = '<a href="tel:+14147750019" data-event="tel_tap_try">(414) 775-0019</a>';
@@ -337,6 +369,8 @@
   const result = $('try-result'), building = $('try-building'), ticket = $('try-ticket'),
     rowsEl = $('try-rows'), texted = $('try-texted'), player = $('try-player'),
     audioEl = $('try-audio'), rnote = $('try-rnote');
+  const mailForm = $('try-mail'), mailIn = $('try-mail-in'), mailGo = $('try-mail-go'),
+    mailHp = $('try-mail-hp'), mailMsg = $('try-mail-msg');
   const bars = Array.from(document.querySelectorAll('#try-meter i'));
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -652,13 +686,64 @@
      n8n reads the call record and hands back the trip and nothing else — no
      name, no number, no email. Polled every five seconds for forty-five, which
      is the window the call analysis lands in. */
+  // A field with no value prints nothing: no dash, no placeholder, no row.
   function row(dl, label, value) {
+    if (!value) return;
     const dt = document.createElement('dt');
     dt.textContent = label;
     const dd = document.createElement('dd');
-    if (value) { dd.textContent = value; } else { dd.textContent = '—'; dd.dataset.empty = 'true'; }
+    dd.textContent = value;
     dl.append(dt, dd);
   }
+
+  /* ── THE EMAIL FIELD ────────────────────────────────────────────────────
+     Posts form-encoded (a simple request, no preflight) to the n8n webhook,
+     which checks the call and sends the sheet. The page shows one of three
+     fixed lines and nothing else. The hidden field is a trap for scripts. */
+  const MAIL_OK = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/;
+  let mailBusy = false;
+  function mailSay(kind, masked) {
+    const text = kind === 'sent' ? ('Sent to ' + masked + '.')
+      : kind === 'bad' ? "That email didn't look right."
+      : kind === 'already' ? 'Already sent for this call.' : '';
+    mailMsg.dataset.state = text ? kind : '';
+    mailMsg.textContent = text;
+  }
+  function mailReset(show) {
+    mailForm.hidden = !show;
+    mailIn.value = '';
+    mailHp.value = '';
+    mailSay('');
+    mailGo.setAttribute('aria-disabled', 'false');
+    mailBusy = false;
+  }
+  mailIn.addEventListener('input', () => { if (mailMsg.dataset.state === 'bad') mailSay(''); });
+  mailForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (mailBusy || !callId) return;
+    const v = mailIn.value.trim();
+    if (!MAIL_OK.test(v)) { mailSay('bad'); return; }
+    mailBusy = true;
+    mailGo.setAttribute('aria-disabled', 'true');
+    const mine = runId;
+    let result = '', masked = '';
+    try {
+      const r = await within(fetch(EMAIL, {
+        method: 'POST', cache: 'no-store', credentials: 'omit',
+        body: new URLSearchParams({ call_id: callId, email: v, website: mailHp.value }),
+      }), 20000);
+      const j = await r.json();
+      result = String(j.result || '');
+      masked = String(j.masked || '');
+    } catch (x) { result = ''; }
+    if (mine !== runId) return;
+    mailBusy = false;
+    mailGo.setAttribute('aria-disabled', 'false');
+    if (result === 'sent' && masked) mailSay('sent', masked);
+    else if (result === 'bad_address') mailSay('bad');
+    else if (result === 'already_sent') mailSay('already');
+    else mailSay('');
+  });
   function showReceipt(r) {
     const trip = ['pickup', 'dropoff', 'date', 'time', 'vehicle', 'duration'];
     // passenger_count is excluded from this test on purpose: the analyser
@@ -686,7 +771,10 @@
       // shows only when the caller gave hours or said one way.
       if (r.duration) row(rowsEl, 'Duration', r.duration);
       if (r.ticket) row(rowsEl, 'Ticket', r.ticket);
+      // The address arrives masked from n8n (sh•••@gmail.com); the full one never reaches the page.
+      if (r.email) row(rowsEl, 'Email', r.email);
       texted.hidden = !r.mobile_captured;
+      mailReset(!!r.can_email);
       ticket.hidden = false;
     }
     if (r && r.recording_url) {
@@ -754,6 +842,7 @@
     building.hidden = true;
     ticket.hidden = true;
     texted.hidden = true;
+    mailReset(false);
     player.hidden = true;
     rnote.hidden = true;
     rnote.textContent = '';
