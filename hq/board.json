@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-28T12:20:00-05:00",
+  "updated": "2026-09-28T13:52:12-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -510,6 +510,13 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-28-aic-polish.md",
       "status": "live",
       "label": "LIVE 2026-09-28: FOOTER PICK A on owner email + caller sheet (receipt line from the call's own timestamps), sheet cleanup (no empty fields, no RATE tile on capture-only, OTHER CAPTURED FIELDS deduped, masked Email row), one date/time formatter, approved caller / owner-alert / setup-call texts, caller text as MMS with the new card, /try \"Email me this trip sheet\". Rail cb2be407, trip sheet fba68670, /try 2d5bfc5c, reply handler 41Xu5hfIfJPn3IF1 live. PARKED: the GHL \"Customer Replied\" trigger (click card in the report); AIC_REPLY_LINE stays off until it is live."
+    },
+    {
+      "id": "aic-polish-addendum-1",
+      "title": "AI Chauffeur polish addendum 1 — booking timeout · failed-booking text · setup alerts · exceptions · phone mask (2026-09-28)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-28-aic-polish-addendum-1.md",
+      "status": "live",
+      "label": "LIVE 2026-09-28: calendar create waits 10 s (was 6) + one verify read on a timeout or 5xx (found = BOOKED, absent = FAILED, never a second create); a failed setup call texts the scheduling link (text consent only); setup-call owner text + card email rebuilt (call / text the booking link / trip sheet, Option A footer, no reason codes); EXCEPTIONS lists the missing or unclear fields and adds \" · CHECK\"; \"Demo\" caller contacts get the captured name + company; caller sheet + caller email mask the number; no same-day setup slots; AVA \"Ensure Owner Contact\" is a read-only search and do-not-drip is back; /try text line only when a text went out; TRIP: / \"trip ref\". Rail 6f9abc8f, sales cal 4cedca1d, /try 4514c0c1, AVA e0454827 live. Cards: GHL minimum notice (A7), first-text footer (A10). Phone agent v3 untouched."
     }
   ],
   "log": [
@@ -964,6 +971,10 @@
     {
       "ts": "2026-09-28T12:20:00-05:00",
       "entry": "AIC POLISH LIVE — rail TkETvvnABhUPd7ME 601b1332 -> cb2be407 (via 2084e86b, 16:28Z-16:43Z), WF-TRIP-SHEET 82ea5266 -> fba68670, WF-TRY-WEBCALL dd2fb9c5 -> 2d5bfc5c, WF-AIC-SALES-CAL 18bd10cd unchanged, WF-AIC-TEXT-REPLY 41Xu5hfIfJPn3IF1 new (68c88c1a); every switch = staging replay -> MCP update_workflow -> ZERO DIFF -> publish -> Error Sentry asserted. Site cae41c0 (/try email field + trip-text-card.jpg). Gates: staging P1-P7 265/265, replies + /try cases all as specified, live 39/39 + 10/10. Live proof: Sep 28 call replayed as AIC-A6POLISH-9511 — MMS delivered with the card; one real /try call + email submit (sent, then already sent). Own-number text guard v2 fixed in-run (v1 could text the AVA line's owner-alert contact; nothing reached it). Parked: GHL reply trigger. Found: owner-alert row lost do-not-drip to an AVA-side upsert (6r8YHuMEJbxeDyT5, exec 11123); /try \"texted to the number you gave\" shows when nothing was texted (pre-existing). Phone agent v3 untouched."
+    },
+    {
+      "ts": "2026-09-28T13:52:12-05:00",
+      "entry": "AIC POLISH ADDENDUM 1 LIVE — rail TkETvvnABhUPd7ME cb2be407 -> 6f9abc8f, WF-AIC-SALES-CAL TLoF7bzuPYy1NAW1 18bd10cd -> 4cedca1d (stale draft 28ba9379 overwritten, never published), WF-TRY-WEBCALL 9nKn8i2dRuALikuv 2d5bfc5c -> 4514c0c1, AVA 6r8YHuMEJbxeDyT5 e08eb55f -> e0454827 (one node: Ensure Owner Contact upsert -> read-only search); trip sheet fba68670 + reply handler 68c88c1a unchanged; every switch = staging replay (all sends to the ZZ sink) -> MCP update_workflow -> ZERO DIFF -> publish -> Error Sentry asserted. Gates: rail replays 143/143 (7e4f, 8da, P1); calendar pinned timeout / 5xx tests 11255-11259; no-same-day slot tests 11262 + 11263; /try receipt 11290 (no text line); AVA replay 11325 (do-not-drip survives). A0: the prospect's setup call (Sep 28, 1:00 PM CT) read only, untouched. Cards: GHL minimum notice (A7, no setting matches \"never the same day\"), first-text footer (A10, screen setting only). Found: WF-NEWSLETTER + AVA book_appointment still upsert the owner-alert row with a fixed tag list; the frozen agent gives book_slot 8 s, less than the new 10 s wait (T12); trip sheets stored before the switch still print the caller number in full. Phone agent v3 untouched."
     }
   ]
 }
