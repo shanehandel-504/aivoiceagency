@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-27T16:34:00-05:00",
+  "updated": "2026-09-28T09:09:10-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -471,10 +471,10 @@
     },
     {
       "id": "aic-capture-desk",
-      "title": "AI Chauffeur Capture Desk — LIVE, frozen 2026-09-26 (RUN D post-publish verify)",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-26-aic-run-d-freeze.md",
+      "title": "AI Chauffeur Capture Desk — LIVE v3 (round 2), frozen through 2026-10-28",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-28-aic-round2-live.md",
       "status": "live",
-      "label": "LIVE — frozen 2026-09-26 (RUN D). The capture desk agent agent_e41b2e957f1de46cf23dc25a84 v1 (published by Shane 1:19 PM CT) answers 0019 in + out, 5008 in + out and /try with no parameter; bindings unchanged. v2 is an UNPUBLISHED DRAFT awaiting Shane: the setup-call time travels as appt_date / appt_time / appt_timezone (flow v2 N08-BOOKED placeholders + book_slot variables; words unchanged; sims X09 + X10 pass). Rail 15a7c3bc → 79a5e162 (one STOP line: GHL footer now \"Reply STOP to opt out.\", the rail's own line removed; trip date never takes the setup-call time), calendar rail 9411b33d → 18bd10cd (returns both name sets), trip sheet e92d57a1 → 82ea5266 + homepage 27fcc16: \"multi-language (50+ languages)\". Open: no acceptance calls on v1 yet; GHL sender line \"Thanks, AI Voice Agency\" needs Shane's attestation to switch off; 2c tag exclusions not added (the GHL builder renders but takes no clicks); booking confirmation text — SHANE REVIEWS WORDING."
+      "label": "LIVE v3 on 414-775-0019, the test line …5008 and /try (all latest_published): Grok's round-2 lines (reservation system greetings, charter date/time/hours ask, hours-or-one-way ask, read-back names the vehicle). Ticket rail on the round-2 version 601b1332 (flow-first fields, charter / one way / hours, bags only when given, desk call-back line). /try check call on v3 PASS. Frozen through 2026-10-28. Rollback: desk \"restore v1\"; rail publish 79a5e162."
     },
     {
       "id": "ava-transfer-precondition",
@@ -500,9 +500,9 @@
     {
       "id": "aic-round2-final",
       "title": "AI Chauffeur capture desk — round 2 FINAL: Grok lines in, sims, calls, rail gate (2026-09-27)",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-27-aic-round2-promote.md",
-      "status": "pending",
-      "label": "RUN INCOMPLETE — rail switch blocked by the session permission classifier; desk v3 promote not started (depends on the switch). AIC-TEST-2 (test line …5008) v2 LIVE on the test line: Grok's lines byte-exact (reservation system greetings, charter date/time/hours ask, hours-or-one-way ask, read-back names the vehicle), 0 unapproved lines, sims 12/12, one_way scoped to point-to-point charters. Three synthesized real web calls: every captured field PASS. Staged rail replay of calls 1 + 2: every expected field PASS (desk callback line rule added in staging). Live rail 79a5e162 and live desk v1 unchanged. Snapshot + rollback section 10 in the private archive. Call-3 test booking deleted."
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-28-aic-round2-live.md",
+      "status": "live",
+      "label": "Round 2 LIVE 2026-09-28: rail switched (601b1332), desk v3 published by API on Shane's approval, routes verified, /try check call PASS, AIC-TEST-2 archived, owner do-not-drip tag added. One close-out item open: AIC-TEST-2 still in the calendar tool's allow list (the publish was refused by the session permission check)."
     }
   ],
   "log": [
@@ -949,6 +949,10 @@
     {
       "ts": "2026-09-27T16:34:00-05:00",
       "entry": "AIC ROUND 2 FINAL — RUN INCOMPLETE (rail switch blocked by the session permission classifier; desk v3 not promoted). AIC-TEST-2 agent_9ebb41c9… v2 published on …5008 (flow conversation_flow_9cf4ddd5b734 v2 = v1 + Grok lines: N01-P/N01-B, global first sentence, N03C-2-CHARTER, N04-HOURS, composer vehicle + duration frames; charter_lines_live true; one_way explicit-only + n06_oneway clamp; n04_extract reads charter/one-way). Validator 0 unapproved; 52/52 code tests; sim batch test_batch_ac2f471c11fb 10/10 + G1 greetings + silence web call = 12/12 (first batch test_batch_1ca2f968d7ef caught spurious one_way, fixed). Step 3 as synthesized real web calls (Shane ruling): call_f65cd4d9… / call_0aac88ba… / call_d7312d49… all field checks PASS. Staging rail WcMOi7GdVoIGUlwU (+ desk-line rule) pinned replays execs 11057 / 11058 GATE PASS. Switch via MCP update_workflow refused by the permission classifier; live rail 79a5e162 unchanged; AIC-TEST-2 webhook still ZZ sink. Owner do-not-drip tag refused the same way. Snapshot + rollback section 10 in the private archive (a87f292). Call-3 test appointment deleted. Board masked: owner-alert email, a prospect email, the test line."
+    },
+    {
+      "ts": "2026-09-28T09:09:10-05:00",
+      "entry": "AIC ROUND 2 LIVE — desk v3 published by API (Shane approval 2026-09-28): flow = AIC-TEST-2 flow v2 with zero differences (Grok lines, charter capture, vehicle read-back, one_way scoped), capture-desk analysis set; voice/model/timings/tool endpoints/webhook untouched. Rail TkETvvnABhUPd7ME switched via MCP update_workflow + hash check + publish: active 601b1332 (rollback 79a5e162), Error Sentry attached. AIC-TEST-2 v3 (webhook on the live rail) then archived: …5008 back to the desk. Routes verified: 0019 in+out, …5008 in+out, /try -> desk latest_published = v3. /try real-page check call_69e064af… PASS (reservation system; written for an Executive Sedan); rail exec 11099 clean; its trip sheet deleted (404). Owner-alert contact tagged do-not-drip. OPEN: AIC-TEST-2 still in WF-AIC-SALES-CAL ALLOWED (publish 18bd10cd refused by the permission check). T11 logged. Frozen through 2026-10-28."
     }
   ]
 }
