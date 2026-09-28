@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-28T09:09:10-05:00",
+  "updated": "2026-09-28T12:20:00-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -503,6 +503,13 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-28-aic-round2-live.md",
       "status": "live",
       "label": "Round 2 LIVE 2026-09-28: rail switched (601b1332), desk v3 published by API on Shane's approval, routes verified, /try check call PASS, AIC-TEST-2 archived, owner do-not-drip tag added. One close-out item open: AIC-TEST-2 still in the calendar tool's allow list (the publish was refused by the session permission check)."
+    },
+    {
+      "id": "aic-polish",
+      "title": "AI Chauffeur polish — footers · sheet cleanup · texts + card · email capture (2026-09-28)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-28-aic-polish.md",
+      "status": "live",
+      "label": "LIVE 2026-09-28: FOOTER PICK A on owner email + caller sheet (receipt line from the call's own timestamps), sheet cleanup (no empty fields, no RATE tile on capture-only, OTHER CAPTURED FIELDS deduped, masked Email row), one date/time formatter, approved caller / owner-alert / setup-call texts, caller text as MMS with the new card, /try \"Email me this trip sheet\". Rail cb2be407, trip sheet fba68670, /try 2d5bfc5c, reply handler 41Xu5hfIfJPn3IF1 live. PARKED: the GHL \"Customer Replied\" trigger (click card in the report); AIC_REPLY_LINE stays off until it is live."
     }
   ],
   "log": [
@@ -953,6 +960,10 @@
     {
       "ts": "2026-09-28T09:09:10-05:00",
       "entry": "AIC ROUND 2 LIVE — desk v3 published by API (Shane approval 2026-09-28): flow = AIC-TEST-2 flow v2 with zero differences (Grok lines, charter capture, vehicle read-back, one_way scoped), capture-desk analysis set; voice/model/timings/tool endpoints/webhook untouched. Rail TkETvvnABhUPd7ME switched via MCP update_workflow + hash check + publish: active 601b1332 (rollback 79a5e162), Error Sentry attached. AIC-TEST-2 v3 (webhook on the live rail) then archived: …5008 back to the desk. Routes verified: 0019 in+out, …5008 in+out, /try -> desk latest_published = v3. /try real-page check call_69e064af… PASS (reservation system; written for an Executive Sedan); rail exec 11099 clean; its trip sheet deleted (404). Owner-alert contact tagged do-not-drip. OPEN: AIC-TEST-2 still in WF-AIC-SALES-CAL ALLOWED (publish 18bd10cd refused by the permission check). T11 logged. Frozen through 2026-10-28."
+    },
+    {
+      "ts": "2026-09-28T12:20:00-05:00",
+      "entry": "AIC POLISH LIVE — rail TkETvvnABhUPd7ME 601b1332 -> cb2be407 (via 2084e86b, 16:28Z-16:43Z), WF-TRIP-SHEET 82ea5266 -> fba68670, WF-TRY-WEBCALL dd2fb9c5 -> 2d5bfc5c, WF-AIC-SALES-CAL 18bd10cd unchanged, WF-AIC-TEXT-REPLY 41Xu5hfIfJPn3IF1 new (68c88c1a); every switch = staging replay -> MCP update_workflow -> ZERO DIFF -> publish -> Error Sentry asserted. Site cae41c0 (/try email field + trip-text-card.jpg). Gates: staging P1-P7 265/265, replies + /try cases all as specified, live 39/39 + 10/10. Live proof: Sep 28 call replayed as AIC-A6POLISH-9511 — MMS delivered with the card; one real /try call + email submit (sent, then already sent). Own-number text guard v2 fixed in-run (v1 could text the AVA line's owner-alert contact; nothing reached it). Parked: GHL reply trigger. Found: owner-alert row lost do-not-drip to an AVA-side upsert (6r8YHuMEJbxeDyT5, exec 11123); /try \"texted to the number you gave\" shows when nothing was texted (pre-existing). Phone agent v3 untouched."
     }
   ]
 }
