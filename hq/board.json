@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-28T13:52:12-05:00",
+  "updated": "2026-09-28T17:58:37-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -517,6 +517,20 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-28-aic-polish-addendum-1.md",
       "status": "live",
       "label": "LIVE 2026-09-28: calendar create waits 10 s (was 6) + one verify read on a timeout or 5xx (found = BOOKED, absent = FAILED, never a second create); a failed setup call texts the scheduling link (text consent only); setup-call owner text + card email rebuilt (call / text the booking link / trip sheet, Option A footer, no reason codes); EXCEPTIONS lists the missing or unclear fields and adds \" · CHECK\"; \"Demo\" caller contacts get the captured name + company; caller sheet + caller email mask the number; no same-day setup slots; AVA \"Ensure Owner Contact\" is a read-only search and do-not-drip is back; /try text line only when a text went out; TRIP: / \"trip ref\". Rail 6f9abc8f, sales cal 4cedca1d, /try 4514c0c1, AVA e0454827 live. Cards: GHL minimum notice (A7), first-text footer (A10). Phone agent v3 untouched."
+    },
+    {
+      "id": "aic-addendum-2",
+      "title": "AI Chauffeur addendum 2 — privacy takedown · old sheets masked · tag guards · late-book text · prospect contact · demo sentence (2026-09-28)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-28-aic-addendum-2.md",
+      "status": "live",
+      "label": "LIVE 2026-09-28: the two older test trip sheets are taken down (404, no number); every stored trip sheet masks the caller's number on its public page and email view (stored data full, owner surfaces unchanged); WF-NEWSLETTER + AVA book_appointment read the owner-alert row instead of rewriting it (do-not-drip stays); a caller who heard the calendar fail but was booked anyway gets the late-book text after a GHL read-back, with consent, unless GHL already confirmed (alert: \"Booked — caller texted\"); the prospect's contact named; the new demo sentence on every sheet and caller email. Rail abb5d3fe, trip sheet 484c0a36, newsletter fe57b793, AVA book d470c8aa. B4 (Cal.com) not built: no key. Phone agent v3 untouched."
+    },
+    {
+      "id": "aic-calcom-booking",
+      "title": "AI Chauffeur setup calls on Cal.com (addendum 2 · B4) — waiting on a Cal.com API key",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-28-aic-addendum-2.md",
+      "status": "pending",
+      "label": "PENDING: no Cal.com API key in Doppler ava-prod/prd. Card: Cal.com → Settings → Developer → API Keys → create; add to Doppler as CALCOM_API_KEY; connect a calendar in Cal.com. Then B4 runs: event type, booking behind the same webhooks, 20-booking speed gate (p95 ≤ 3 s), background GHL copy."
     }
   ],
   "log": [
@@ -975,6 +989,10 @@
     {
       "ts": "2026-09-28T13:52:12-05:00",
       "entry": "AIC POLISH ADDENDUM 1 LIVE — rail TkETvvnABhUPd7ME cb2be407 -> 6f9abc8f, WF-AIC-SALES-CAL TLoF7bzuPYy1NAW1 18bd10cd -> 4cedca1d (stale draft 28ba9379 overwritten, never published), WF-TRY-WEBCALL 9nKn8i2dRuALikuv 2d5bfc5c -> 4514c0c1, AVA 6r8YHuMEJbxeDyT5 e08eb55f -> e0454827 (one node: Ensure Owner Contact upsert -> read-only search); trip sheet fba68670 + reply handler 68c88c1a unchanged; every switch = staging replay (all sends to the ZZ sink) -> MCP update_workflow -> ZERO DIFF -> publish -> Error Sentry asserted. Gates: rail replays 143/143 (7e4f, 8da, P1); calendar pinned timeout / 5xx tests 11255-11259; no-same-day slot tests 11262 + 11263; /try receipt 11290 (no text line); AVA replay 11325 (do-not-drip survives). A0: the prospect's setup call (Sep 28, 1:00 PM CT) read only, untouched. Cards: GHL minimum notice (A7, no setting matches \"never the same day\"), first-text footer (A10, screen setting only). Found: WF-NEWSLETTER + AVA book_appointment still upsert the owner-alert row with a fixed tag list; the frozen agent gives book_slot 8 s, less than the new 10 s wait (T12); trip sheets stored before the switch still print the caller number in full. Phone agent v3 untouched."
+    },
+    {
+      "ts": "2026-09-28T17:58:37-05:00",
+      "entry": "AIC ADDENDUM 2 — RUN INCOMPLETE (B4 Cal.com: no API key in Doppler; card in the report). B1 first: the two older test trip sheets deleted 22:02Z, both pages 404 \"isn't available\" on both hosts, 0 numbers. LIVE via staging copy -> pinned replay (sends to the ZZ sink) -> MCP update_workflow -> ZERO DIFF -> publish -> Error Sentry asserted: WF-NEWSLETTER YIhCCJe3Qiz9G6Vq 2180c750 -> fe57b793 and AVA book_appointment c5GPBkma1HyvonEa 142029ee -> d470c8aa (B3, node \"Ensure Owner Contact\" -> read-only search; replays 11365 + 11371, 14/14, do-not-drip present, owner row not written); WF-TRIP-SHEET 3PfmC7sxOjUHI0rE fba68670 -> 484c0a36 (B2 caller number masked on every stored sheet + B7 sentence; staging 32/32; live 20/20 clean); rail TkETvvnABhUPd7ME 6f9abc8f -> abb5d3fe (B5 late-book confirmation + B7 at the source; rail gate 280/280 incl. real GHL reads, \"Booked — caller texted\", no text without a verified appointment + consent + no GHL confirmation). B6: prospect contact named (guarded PUT, caller contact only). Sales cal 4cedca1d, /try 4514c0c1, AVA e0454827, reply 68c88c1a unchanged. Found: GHL texts every setup-call booking itself; pre-polish sheets keep ISO dates and \"Not Stated\". Phone agent v3 untouched."
     }
   ]
 }
