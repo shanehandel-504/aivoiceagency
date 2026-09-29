@@ -13,31 +13,6 @@ WHAT HAPPENED, IN PLAIN ENGLISH
 - All 9 crawlers get the full page and its headline on all 6 money pages, and Vercel's firewall blocks none of them.
 - One thing is missing: the AVA llms.txt has no line sending transportation callers to AI Chauffeur, because no AVA page says that today.
 
-DONE
-| Step | Files changed | Verified by | Live |
-|---|---|---|---|
-| 1 Sitemap lastmod from git | scripts/stamp-sitemap.mjs (new) · .githooks/pre-commit (new) · sitemap.xml · chauffeur/sitemap.xml · core.hooksPath=.githooks (this clone) | `node scripts/stamp-sitemap.mjs --check` → IN SYNC 79/79 · 6 hand checks vs `git log -1 --format=%cI -- <file>` all MATCH · both sitemaps parse | yes |
-| 2 IndexNow | 69c6723b4b145a13877f1c954bdb0e09.txt · chauffeur/69c6723b4b145a13877f1c954bdb0e09.txt · scripts/indexnow-ping.mjs | `node scripts/indexnow-ping.mjs --urls=<6 money URLs>` → key files verified live · aivoiceagency.ai 202 · aichauffeur.ai 202 | yes |
-| 3 Cross-host seal | vercel.json | `curl -sI` + `curl -sIL` on 30 /chauffeur paths → 301 to the same path, final 200 on aichauffeur.ai (30/30) · dead path → 301 → 404 · canonicals 62/62 + 20/20 self, live 200 · each sitemap own host only · each robots.txt → own sitemap | yes |
-| 3B Private pages | vercel.json · chauffeur/vercel.json | `curl -sI https://aivoiceagency.ai/hq/board.json` → 200 + X-Robots-Tag · trip page GET → 200 + X-Robots-Tag (`curl -I` → 404 + header) · 0 private URLs in sitemaps, llms.txt, ping list | yes |
-| 4 Crawler check | none | curl × 9 UAs × 6 money URLs → 54/54 200 with the H1 · `npx vercel@61.0.0 firewall status / rules list / traffic` under `doppler run` | yes |
-| 5 llms.txt | llms.txt · chauffeur/llms.txt | verifier: 87 + 92 segments verbatim from live pages, 48 links 200 · red test caught 9/9 planted defects | yes (AVA pointer missing) |
-| 6 Verification files | none | all four fill-in slots blank → skipped | n/a |
-| 7 Board + readback | hq/board.json · reports/2026-09-29-indexing-run-1.md | board.json parses · deployment READY | yes |
-
-CRAWLERS — 6 money URLs × 9 user-agents (curl, no redirect follow)
-| Money URL | Googlebot | Bingbot | GPTBot | ChatGPT-User | OAI-SearchBot | ClaudeBot | PerplexityBot | Google-Extended | Applebot |
-|---|---|---|---|---|---|---|---|---|---|
-| aichauffeur.ai/ | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
-| aichauffeur.ai/what-it-does | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
-| aichauffeur.ai/limo-answering-service | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
-| aichauffeur.ai/integrations/limo-anywhere | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
-| aichauffeur.ai/book | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
-| aivoiceagency.ai/ | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
-| robots.txt (live, both hosts) | allow | allow | allow | allow | allow | allow | allow | allow | allow (* group) |
-| Vercel firewall (both projects, CLI 61.0.0) | not configured · 0 custom rules | Bot Protection Off | AI Bots Allow | BotID Basic | Attack Mode Off | OWASP Off | DDoS mitigations Active | 25 h: 186 mitigations (AVA 34 · AIC 152) | bot "(not set)" on all 186 → 0 verified crawlers denied or challenged |
-H1s: "One call or a thousand. Every one answered. Every one booked." · "What it does" · "The limo answering service that never puts a caller on hold." · "AI Chauffeur works beside Limo Anywhere." · "Book the setup call." · "3AM. GOOGLE WAS LISTENING." Every body was byte-for-byte the size a browser gets.
-
 IDS / ROLLBACK
 - Commits: ca815c4 (S1) · 0ecbb51 (S2) · 0a0050f (S3 + 3B) · 4d66b46 (S5) · this readback + board (S7).
 - Built from 4d66b46: aivoiceagency dpl_FHP5tALm2TWEPGDR8ctGN53oZ3F7 · aichauffeur dpl_6x4u9P61n7Bh3g19ZhVod1BSqN5j (both READY).
@@ -61,3 +36,28 @@ GOTCHAS
 - The Aug 7 IndexNow key file 7f6e…dfb still serves on both roots, unused.
 - "Last reviewed: 2026-09-28" is written as instructed. The run executed on 2026-09-29 (Central).
 - Probe trap: with MSYS_NO_PATHCONV=1, Git Bash hands native curl a literal /dev/null, which exits 23: no -L follow and an empty redirect_url. The first Step 3 pass read 0/30; the fixed probe read 30/30.
+
+DONE
+| Step | Files changed | Verified by | Live |
+|---|---|---|---|
+| 1 Sitemap lastmod from git | scripts/stamp-sitemap.mjs (new) · .githooks/pre-commit (new) · sitemap.xml · chauffeur/sitemap.xml · core.hooksPath=.githooks (this clone) | `node scripts/stamp-sitemap.mjs --check` → IN SYNC 79/79 · 6 hand checks vs `git log -1 --format=%cI -- <file>` all MATCH · both sitemaps parse | yes |
+| 2 IndexNow | 69c6723b4b145a13877f1c954bdb0e09.txt · chauffeur/69c6723b4b145a13877f1c954bdb0e09.txt · scripts/indexnow-ping.mjs | `node scripts/indexnow-ping.mjs --urls=<6 money URLs>` → key files verified live · aivoiceagency.ai 202 · aichauffeur.ai 202 | yes |
+| 3 Cross-host seal | vercel.json | `curl -sI` + `curl -sIL` on 30 /chauffeur paths → 301 to the same path, final 200 on aichauffeur.ai (30/30) · dead path → 301 → 404 · canonicals 62/62 + 20/20 self, live 200 · each sitemap own host only · each robots.txt → own sitemap | yes |
+| 3B Private pages | vercel.json · chauffeur/vercel.json | `curl -sI https://aivoiceagency.ai/hq/board.json` → 200 + X-Robots-Tag · trip page GET → 200 + X-Robots-Tag (`curl -I` → 404 + header) · 0 private URLs in sitemaps, llms.txt, ping list | yes |
+| 4 Crawler check | none | curl × 9 UAs × 6 money URLs → 54/54 200 with the H1 · `npx vercel@61.0.0 firewall status / rules list / traffic` under `doppler run` | yes |
+| 5 llms.txt | llms.txt · chauffeur/llms.txt | verifier: 87 + 92 segments verbatim from live pages, 48 links 200 · red test caught 9/9 planted defects | yes (AVA pointer missing) |
+| 6 Verification files | none | all four fill-in slots blank → skipped | n/a |
+| 7 Board + readback | hq/board.json · reports/2026-09-29-indexing-run-1.md | board.json parses · deployment READY | yes |
+
+CRAWLERS — 6 money URLs × 9 user-agents (curl, no redirect follow)
+H1s: "One call or a thousand. Every one answered. Every one booked." · "What it does" · "The limo answering service that never puts a caller on hold." · "AI Chauffeur works beside Limo Anywhere." · "Book the setup call." · "3AM. GOOGLE WAS LISTENING." Every body was byte-for-byte the size a browser gets.
+| Money URL | Googlebot | Bingbot | GPTBot | ChatGPT-User | OAI-SearchBot | ClaudeBot | PerplexityBot | Google-Extended | Applebot |
+|---|---|---|---|---|---|---|---|---|---|
+| aichauffeur.ai/ | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
+| aichauffeur.ai/what-it-does | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
+| aichauffeur.ai/limo-answering-service | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
+| aichauffeur.ai/integrations/limo-anywhere | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
+| aichauffeur.ai/book | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
+| aivoiceagency.ai/ | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 | 200 · H1 |
+| robots.txt (live, both hosts) | allow | allow | allow | allow | allow | allow | allow | allow | allow (* group) |
+| Vercel firewall (both projects, CLI 61.0.0) | not configured · 0 custom rules | Bot Protection Off | AI Bots Allow | BotID Basic | Attack Mode Off | OWASP Off | DDoS mitigations Active | 25 h: 186 mitigations (AVA 34 · AIC 152) | bot "(not set)" on all 186 → 0 verified crawlers denied or challenged |
