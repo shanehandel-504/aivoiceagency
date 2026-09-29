@@ -32,12 +32,18 @@
 //   node scripts/indexnow-ping.mjs --host=aichauffeur.ai
 //   node scripts/indexnow-ping.mjs --dry-run        # build + validate, no POST
 //   node scripts/indexnow-ping.mjs --sitemap=./sitemap.xml --host=aivoiceagency.ai
+//   node scripts/indexnow-ping.mjs --urls=https://aichauffeur.ai/,https://aivoiceagency.ai/
 //
 // EXIT CODES  0 = every host accepted · 1 = any host failed or was rejected
+//
+// INDEXING RUN 1 · Sep 28 2026 — new key (the Aug 7 key file 7f6e…dfb still
+// serves at both roots and is no longer used here); --urls submits exactly the
+// URLs given, one body per host; the private-path guard below means a trip
+// sheet, the ops ledger or a run report can never be submitted.
 // ============================================================================
 
 const ENDPOINT = 'https://api.indexnow.org/indexnow';
-const KEY = '7f6e54227b2f4a609ddf3040a7d86dfb';
+const KEY = '69c6723b4b145a13877f1c954bdb0e09';
 
 // IndexNow caps a single submission at 10,000 URLs. Both hosts are far under
 // that today; the chunking below is here so a future sitemap growing past the
@@ -74,6 +80,17 @@ const ONLY_HOST = flag('host');
 const DRY_RUN = flag('dry-run') === true;
 const SITEMAP_OVERRIDE = flag('sitemap');
 const SKIP_VERIFY = flag('no-verify') === true;
+
+// --urls: submit exactly these (comma-separated) instead of each host's
+// sitemap. Each URL rides in its own host's body; a host with none is skipped.
+const URLS = typeof flag('urls') === 'string'
+  ? flag('urls').split(',').map((u) => u.trim()).filter(Boolean)
+  : null;
+
+// Trip sheets, the ops ledger and run reports are public addresses that must
+// never be offered to a search engine. Both hosts send X-Robots-Tag: noindex on
+// them; this guard makes sure the pinger can never hand one over either.
+const PRIVATE_PATH = /^\/(trip|hq|reports)(\/|$)/i;
 
 // ---------------------------------------------------------------------------
 // helpers
@@ -171,15 +188,19 @@ async function submitHost(entry) {
   const sitemap = SITEMAP_OVERRIDE || entry.sitemap;
 
   console.log(`\n=== ${host} ===`);
-  console.log(`sitemap      ${sitemap}`);
+  console.log(`source       ${URLS ? '--urls' : sitemap}`);
   console.log(`keyLocation  ${keyLocation}`);
 
   let urls;
-  try {
-    urls = extractLocs(await readSitemap(sitemap));
-  } catch (err) {
-    console.log(`STATUS       FAIL — ${err.message}`);
-    return false;
+  if (URLS) {
+    urls = URLS.filter((u) => { try { return new URL(u).hostname === host; } catch { return false; } });
+  } else {
+    try {
+      urls = extractLocs(await readSitemap(sitemap));
+    } catch (err) {
+      console.log(`STATUS       FAIL — ${err.message}`);
+      return false;
+    }
   }
 
   if (urls.length === 0) {
@@ -190,12 +211,16 @@ async function submitHost(entry) {
   // Same-host guard. Anything outside `host` is dropped and named, never sent.
   const kept = [];
   const foreign = [];
+  let privateDropped = 0;
   for (const u of urls) {
     let parsed;
     try { parsed = new URL(u); } catch { foreign.push(`${u} (unparseable)`); continue; }
+    if (PRIVATE_PATH.test(parsed.pathname)) { privateDropped++; continue; }
     if (parsed.hostname === host) kept.push(parsed.toString());
     else foreign.push(u);
   }
+  // Counted, never printed: a trip URL carries a caller's trip id.
+  if (privateDropped) console.log(`PRIVATE      ${privateDropped} /trip/, /hq/ or /reports/ URL(s) dropped, NOT submitted`);
 
   const deduped = [...new Set(kept)];
   console.log(`urls         ${deduped.length} in-host${deduped.length !== kept.length ? ` (${kept.length - deduped.length} duplicate dropped)` : ''}`);
@@ -261,7 +286,16 @@ async function submitHost(entry) {
 // ---------------------------------------------------------------------------
 // main
 // ---------------------------------------------------------------------------
-const targets = ONLY_HOST ? HOSTS.filter((h) => h.host === ONLY_HOST) : HOSTS;
+const hostOf = (u) => { try { return new URL(u).hostname; } catch { return null; } };
+if (URLS) {
+  const unknown = URLS.filter((u) => !HOSTS.some((h) => h.host === hostOf(u)));
+  if (unknown.length) {
+    console.error(`--urls holds URL(s) on no registered host: ${unknown.join(', ')}`);
+    process.exit(1);
+  }
+}
+const targets = (ONLY_HOST ? HOSTS.filter((h) => h.host === ONLY_HOST) : HOSTS)
+  .filter((h) => !URLS || URLS.some((u) => hostOf(u) === h.host));
 
 if (targets.length === 0) {
   console.error(`No registered host matches --host=${ONLY_HOST}`);
