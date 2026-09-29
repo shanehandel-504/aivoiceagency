@@ -1,0 +1,14 @@
+#!/bin/sh
+# ============================================================================
+# pre-commit — refresh sitemap <lastmod> from git · INDEXING RUN 1 · Sep 28 2026
+# ----------------------------------------------------------------------------
+# Active only when:   git config core.hooksPath .githooks   (once per clone)
+# The logic lives in scripts/stamp-sitemap.mjs --hook. It stays silent unless
+# the commit stages a sitemap page, a sitemap or a vercel.json, and it blocks a
+# commit only when a sitemap <loc> has no committed source file to date.
+# ============================================================================
+if ! command -v node >/dev/null 2>&1; then
+  echo "pre-commit: node not found, sitemap lastmod NOT refreshed" >&2
+  exit 0
+fi
+exec node scripts/stamp-sitemap.mjs --hook
