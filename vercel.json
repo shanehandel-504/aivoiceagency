@@ -5,7 +5,13 @@
     { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }] },
     { "source": "/js/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }] },
     { "source": "/css/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }] },
-    { "source": "/data/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }] }
+    { "source": "/data/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }] },
+    { "source": "/trip", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }] },
+    { "source": "/trip/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }] },
+    { "source": "/hq", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }] },
+    { "source": "/hq/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }] },
+    { "source": "/reports", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }] },
+    { "source": "/reports/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }] }
   ],
   "redirects": [
     {
@@ -78,25 +84,25 @@
       "has": [{ "type": "host", "value": "aivoiceagency.ai" }],
       "source": "/chauffeur",
       "destination": "https://aichauffeur.ai/",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "has": [{ "type": "host", "value": "www.aivoiceagency.ai" }],
       "source": "/chauffeur",
       "destination": "https://aichauffeur.ai/",
-      "permanent": true
+      "statusCode": 301
     },
     {
       "has": [{ "type": "host", "value": "aivoiceagency.ai" }],
-      "source": "/chauffeur/:path*",
-      "destination": "https://aichauffeur.ai/",
-      "permanent": true
+      "source": "/chauffeur/:path(.*)",
+      "destination": "https://aichauffeur.ai/:path",
+      "statusCode": 301
     },
     {
       "has": [{ "type": "host", "value": "www.aivoiceagency.ai" }],
-      "source": "/chauffeur/:path*",
-      "destination": "https://aichauffeur.ai/",
-      "permanent": true
+      "source": "/chauffeur/:path(.*)",
+      "destination": "https://aichauffeur.ai/:path",
+      "statusCode": 301
     },
     {
       "has": [{ "type": "host", "value": "aivoiceagency.ai" }],
