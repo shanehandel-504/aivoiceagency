@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-29T11:29:35-05:00",
+  "updated": "2026-09-30T13:41:49-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -545,6 +545,13 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-29-aic-b4-followup.md",
       "status": "live",
       "label": "LIVE 2026-09-29: Cal.com notice 1 day -> 60 minutes (a 4 PM caller is offered 1 PM the next weekday, as GHL did); same-day is still never offered (A7) and book_slot now refuses it too (the existing FAILED answer, nothing new spoken); the live read offered Wed Sep 30 + Thu Oct 1 and removed Cal.com's 10 same-day times. Every phone booking gets the approved line \"AI Chauffeur — your setup call is booked: {slot}. Questions? Call 414-775-0019\" after a Cal.com read-back, with consent, unless GHL already confirmed; one text per booking (caller_texted_at); alert \"Booked — caller texted\". WF-AIC-SALES-CAL ce62eb39 -> d66218e1, rail abb5d3fe -> c7bd86fd. Found: GHL copies send a Google Calendar invitation to contacts that have an email address (card 4). Phone agent v3 untouched."
+    },
+    {
+      "id": "ava-measurement-fix-v2",
+      "title": "AVA measurement fix v2 — one real booking = one count, source kept, test traffic out (2026-09-30)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-09-29-measurement-fix.md",
+      "status": "live",
+      "label": "LIVE 2026-09-30 ~13:19 CT (7cd8529 + d8f5ef5); RUN INCOMPLETE on T2 only. Booking events send booking_method, not source, so GA4 keeps the visit's real source; /booked counts a booking only with a leadconnectorhq.com / msgsndr.com referrer (the one trace GHL's redirect leaves); nothing is tracked on any host but aivoiceagency.ai / aichauffeur.ai (+ www). 63/63 pages on ?v=7cd8529. T1 PASS · T2 real booking NOT DONE (GHL's widget sits behind Cloudflare Turnstile and answered 429 x3; 0 appointments created) · T2-sim PASS · T3 PASS · T4 PASS · T5 PASS. Key event = booking_complete only; Ads imports booking_complete. Cards: GA4 custom dimension booking_method; unwanted referrals leadconnectorhq.com + msgsndr.com; optional human T2."
     }
   ],
   "log": [
@@ -1019,6 +1026,10 @@
     {
       "ts": "2026-09-29T13:35:53-05:00",
       "entry": "AIC B4 FOLLOW-UP — LIVE. C1: WF-AIC-SALES-CAL TLoF7bzuPYy1NAW1 ce62eb39 -> d66218e1 (new IF \"Same Day?\" before Prior Booking: a same-day slot gets the existing FAILED answer, reason same_day_slot), then, last, the Cal.com minimum notice 1440 -> 60 min (read back; 17 other fields unchanged). Live open-slots read 11801 after the change: offered Wed Sep 30 + Thu Oct 1; first three eligible Wed Sep 30 x3; Cal.com returned 10 same-day times, 0 offered. C2: rail TkETvvnABhUPd7ME abb5d3fe -> c7bd86fd: every BOOKED row with a Cal.com id -> Cal.com read-back (booking id, event type, accepted, call id, slot) -> consent -> GHL-confirmation check -> one text, the approved B5 line byte-exact; booking stamp caller_texted_at (new sales_bookings column); alert \"Booked — caller texted\". Both via staging copy -> pinned replays (sends to the ZZ sink) -> MCP update_workflow -> ZERO DIFF -> publish -> Error Sentry asserted; staging = live node for node. Gates: C1/A7/A1 29/29; C2 18/18; B5 61/61; Addendum 2 rail gate 280/280 (node-path changes counted: N1/N3 swap the GHL read for the Cal.com read, N2 +1 node, GHL-era rows 63/65 -> 50 nodes and no text); local 35/35; banned words 0; privacy scan clean (self-test 8/8). Cleanup: 2 Cal.com test bookings cancelled, 2 GHL copies deleted, staging archived, 3 staging tables deleted. Found: every GHL copy and deletion sends the contact a Google Calendar invitation or cancellation email (B4's copies too) — card 4. Other listed versions unchanged; phone agent v3 untouched."
+    },
+    {
+      "ts": "2026-09-30T13:41:49-05:00",
+      "entry": "AVA MEASUREMENT FIX v2 — LIVE, RUN INCOMPLETE (T2). js/tracking.js 7cd8529: booking_complete / booking_confirmed send booking_method (was source, which GA4 read as the session source: 'booked_page' 82 sessions / 'ghl_postmessage' 28 in 90 days); /booked fires only with a leadconnectorhq.com / msgsndr.com referrer (read from GHL's widget code: it redirects from inside its iframe and adds no query params; GA4 shows 27 /booked views in 90 days, all with an empty referrer; the calendar redirect is off, ThankYouMessage); NOTRACK on any host outside aivoiceagency.ai / aichauffeur.ai (+ www). Sweep: 261 files, 2 renames, both in tracking.js. d8f5ef5: tracking.js ?v=7cd8529 on the 63 pages that load it (63/63 live), sitemap 59 lastmods by the hook. Private pages: trip sheets (n8n WF-TRIP-SHEET), /hq, /reports load no analytics; payload scan 0 hits. Tests (every hit aborted, tag libraries served locally): C0 old code bare /booked -> ep.source=booked_page; T1 0 · T1b 1+1, refresh 0 · T2 real booking blocked: GHL Turnstile -> 429 at 13:21 / 13:24 / 13:36 CT, 0 appointments, 0 contacts, nothing to clean · T2-sim (GHL's own completion line in the real iframe, x2) exactly 1 booking, booking_method=ghl_postmessage, no ep.source · T3 one session id, utm claude_test kept, 0 source overrides (old code: ep.source=ghl_postmessage) · T4 0 (old code 117) · T5 0. GA4 key event booking_complete only; Ads imports booking_complete (7687285865). ZZ sink row unchanged; § 9 owner row untouched (its tag reads owner-alert, not owner-alerts). Phone agent and n8n untouched."
     }
   ]
 }
