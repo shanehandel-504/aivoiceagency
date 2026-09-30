@@ -22,14 +22,19 @@
   }
 
   /* -------------------------------------------- INTERNAL / BOT SELF-TAG -- */
-  /* Never pollute analytics with our own traffic. Three off-switches, any one
+  /* Never pollute analytics with our own traffic. Four off-switches, any one
    * of which silences EVERY fire (GA4 / gtag / Google Ads / Meta):
+   *   - a host not in PROD_HOSTS     localhost, 127.0.0.1, Vercel previews,
+   *                                  file:// — 216 of 957 GA4 sessions came
+   *                                  from localhost / 127.0.0.1 before this
    *   - navigator.webdriver          Playwright / headless / THE EYE gate runs
    *   - localStorage ava_internal    an operator device we've opted out
    *   - ?notrack=1 in the URL        one-shot opt-out; also PERSISTS the flag
    * When NOTRACK holds, no tag ever initializes and fb() / ga() are no-ops —
    * the page itself is untouched.                                           */
+  var PROD_HOSTS = ['aivoiceagency.ai', 'www.aivoiceagency.ai', 'aichauffeur.ai', 'www.aichauffeur.ai'];
   var NOTRACK = (function () {
+    if (PROD_HOSTS.indexOf(location.hostname) === -1) return true;
     try {
       var q = new URLSearchParams(location.search);
       if (q.get('notrack') === '1') {
@@ -312,11 +317,20 @@
   }, true);
 
   /* ==================== BOOKING CONVERSION (the money) ================== */
-  /* Primary: /booked thank-you page (GHL post-booking redirect).           */
-  /* Fallback: GHL widget postMessage on /book.                             */
-  /* Dedupe: sessionStorage flag — a booking never double-counts.           */
+  /* One real booking = one count. Two rails, one dedupe:
+   *   /book    the GHL widget's own postMessage ("msgsndr-booking-complete").
+   *   /booked  the GHL post-booking redirect — counted ONLY with proof.
+   * Proof, read from the widget's own code 2026-09-30: after a booking it
+   * sets window.top.location from inside its iframe on api.leadconnectorhq.com
+   * and adds no query parameters of its own, so the one trace a real redirect
+   * leaves is a leadconnectorhq.com / msgsndr.com document.referrer. A typed
+   * URL, a social link, a crawler or a fresh tab has none and fires nothing.
+   * A refresh keeps the referrer; the sessionStorage flag stops the recount.
+   * The parameter is booking_method, never `source`: gtag reads `source` as
+   * the campaign source and overwrote the visit's real one (google,
+   * chatgpt.com, aichauffeur.ai) with "booked_page" / "ghl_postmessage".   */
   var bookingFiredThisPage = false;
-  function fireBookingConversion(source) {
+  function fireBookingConversion(method) {
     if (bookingFiredThisPage) return;
     try {
       if (sessionStorage.getItem('ava_booking_tracked')) return;
@@ -324,12 +338,16 @@
     } catch (e) { /* storage blocked — in-memory flag still dedupes this page */ }
     bookingFiredThisPage = true;
     fb('Schedule');
-    ga('booking_complete', { source: source }); // /booked — GA4 conversion event; Ads run via the GA4 import (acct 916-658-0915)
-    ga('booking_confirmed', { source: source }); // legacy alias (kept for existing GA4 config)
+    ga('booking_complete', { booking_method: method }); // GA4 key event; Ads run via the GA4 import (acct 916-658-0915)
+    ga('booking_confirmed', { booking_method: method }); // legacy alias (kept for existing GA4 config)
   }
 
   if (PATH === '/booked') {
-    fireBookingConversion('booked_page');
+    var fromGhl = false;
+    try {
+      fromGhl = /(^|\.)leadconnectorhq\.com$|(^|\.)msgsndr\.com$/.test(new URL(document.referrer).hostname);
+    } catch (e) { /* no referrer, or not a URL — no proof, no count */ }
+    if (fromGhl) fireBookingConversion('booked_page');
   }
 
   if (PATH === '/book') {
