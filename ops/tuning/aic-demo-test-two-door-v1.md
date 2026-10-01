@@ -4,16 +4,23 @@
 > n8n rail. Promote is a separate paste after Shane's test calls. Built from paste v1.5 (Sep 30 2026).
 > No secret value, no private number and no webhook path is in this file. The transfer number lives only in Doppler.
 
+> **Updated 2026-10-01 — the published version is v7.** Two changes since v5, both on the test agent only:
+> **v6** (follow-through run): the silence nudge fires twice before the line ends (§ 7).
+> **v7** (paste 19, Shane's rulings of Oct 1): the setup call is taken any day of the week, never the same day, and the same-day line
+> is new (§ 4.2, § 6); the callback window counts Saturday and Sunday (§ 8.3); the facts sheet is v1.1 (§ 10). The two spoken
+> texts of v7 are Grok-authored and were pasted byte for byte. One shared rail changed with v7: the setup-call calendar's own
+> schedule in Cal.com now includes Saturday and Sunday (§ 8.1), and that reaches live callers too.
+
 ## 1 · At a glance
 
 | | |
 |---|---|
 | Test agent | `agent_9ebb41c9bd8af214649328f107` "AIC-TEST-2" |
-| Published version | **v5** (v4 = the first two-door publish, 2026-10-01T03:26:48.830Z; v5 = v4 plus the wording fixes found on battery pass 3, 2026-10-01T03:43:42.718Z) |
-| Conversation flow | `conversation_flow_9cf4ddd5b734` v5 · 221 nodes (live desk v4: 106) |
+| Published version | **v7** (v4 = the first two-door publish, 2026-10-01T03:26:48.830Z; v5 = v4 plus the wording fixes found on battery pass 3, 2026-10-01T03:43:42.718Z; v6 = v5 plus the second silence nudge, 2026-10-01T14:37:31Z; v7 = v6 plus setup call any day, the new same-day line, the seven-day callback window and facts sheet v1.1, 2026-10-01T16:03:49Z) |
+| Conversation flow | `conversation_flow_9cf4ddd5b734` v7 · 221 nodes (live desk v4: 106) |
 | Built on | the live desk's published flow (`conversation_flow_c3c710be6c94` v4), copied in, then extended. Every line the live desk says is still there, byte for byte, except the 2 listed in § 9 |
 | Model | gpt-4.1, cascading, high priority, temperature 0.15 (same as live) |
-| Knowledge base | "AIC-FACTS-v1" `knowledge_base_93ced71a2c1504c8` · on the two answering nodes of the test flow only |
+| Knowledge base | "AIC-FACTS-v1.1" `knowledge_base_fdb70f2225bf5b63` · on the two answering nodes of the test flow only, from v7 (v5 and v6 read "AIC-FACTS-v1" `knowledge_base_93ced71a2c1504c8`, which is unchanged) |
 | Hold audio | Retell asset `asset_194cec46941c` · source file `assets/audio/aic-hold-pitch-v1.mp3` |
 | Transfer briefing agent | `agent_63db656e3a68b737fe61cb78db` "AIC-TRANSFER-BRIEF (team briefing, press 1 to accept)" |
 | Live desk | `agent_e41b2e957f1de46cf23dc25a84` · untouched |
@@ -75,7 +82,12 @@ RULES FOR THE WHOLE CALL. If the caller pauses mid-answer, wait. Never answer a 
 RULES FOR THE DEMO. Your only job is to capture the trip request. If a required item is still missing after the caller finishes, ask for that one item only. Never quote or estimate a fare. Never look anything up. Never take payment. Never promise a chauffeur is assigned or a vehicle is available or suitable. Ask the bundled questions exactly as written. Never split them. Ask for a field only if the caller has not already given it. One question per turn. On fare questions give the fare line and return to the pending question. Speak airports by name never by code. Mention the recording only in the opening. If challenged use the objection lines. Offer only the times the calendar tool returned. On failure use the failure line.
 ```
 
-### 4.2 The questions part — node `d2` (13685 characters)
+### 4.2 The questions part — node `d2` (13722 characters)
+
+The `## THE SETUP CALL` section below is FINAL TEXT A of paste 19 (Grok-authored), in place since v7, byte for byte: the section went
+from 1,141 to 1,178 characters and the node from 13,685 to 13,722. Nothing else in the node changed. The two sentences that differ from
+v5/v6: the first bullet read "on a weekday afternoon" where it now reads "any day of the week including weekends", and the fourth
+bullet ended "If they asked for today, add that it cannot be the same day."
 
 ```
 ## THE QUESTIONS PART OF THE CALL
@@ -113,10 +125,10 @@ Four steps of this call run on their own: booking the setup call, connecting the
 - Right after the price, in the same answer, offer the twenty-minute setup call. That offer replaces the usual check-in question.
 
 ## THE SETUP CALL
-- It is twenty minutes with the team, on a weekday afternoon, never the same day as this call.
+- It is twenty minutes with the team, any day of the week including weekends, never the same day as this call.
 - Offer it after your second or third answer. If the caller already said no, do not push.
 - When the caller says yes to it, or asks to book it, your part is over: the booking step reads the real open times and books it. You never name a day or a time, never ask about texts, and never say it is set.
-- If the caller asks to book it and you are the one speaking, say one short line and nothing else, such as "Sure, let's get that booked. Ready for the open times?" If they asked for today, add that it cannot be the same day.
+- If the caller asks to book it and you are the one speaking, say one short line and nothing else, such as "Sure, let's get that booked. Ready for the open times?" If they asked for today, say nothing is open today and offer the next open times.
 - You can never book, set or confirm a time yourself, and you never say a confirmation text is coming. If the caller picks a time, asks to hear the times again, or wants to book after all, your part is over: the booking step takes over.
 - Say it is booked only if "Setup call so far" above says booked. If it says the calendar failed, the caller was already told the team will text a scheduling link after the call. If it says the caller did not pick a time, that is fine: ask if there is anything else.
 
@@ -212,7 +224,7 @@ The node's only tool is `end_call`: End the call. Use it after your one closing 
 | `hau_ask_t` | Got it. How did you hear about us? |
 | `bk_consent_p` | Okay to text the confirmation to the number you're calling from? |
 | `bk_consent_b` | Okay to text the confirmation to that number? |
-| `n08_sameday` | The setup call can't be the same day. The next open times are {{slot_1}} and {{slot_2}} — which works? |
+| `n08_sameday` | Nothing's open today. The next open times are {{slot_1}} and {{slot_2}} — which works? |
 | `any_else_say` | Anything else I can help with? |
 | `gotit_say` | {{summary_plain}} |
 | `g_tp_say` | The text is part of the demo. Is that okay? |
@@ -222,6 +234,11 @@ The node's only tool is `end_call`: End the call. Use it after your one closing 
 | `team_offer` | I can try to connect you with the team right now. Would you also like to book a twenty-minute setup call, in case the team isn't available? |
 | `tr_after_say` | {{tr_line}} |
 
+`n08_sameday` is FINAL TEXT B of paste 19 (Grok-authored), in place since v7, byte for byte (102 → 86 characters). Through v6 the
+line was `The setup call can't be the same day. The next open times are {{slot_1}} and {{slot_2}} — which works?`; the words
+"can't be the same day" are retired (Shane's ruling, Oct 1 2026). The node is reached only after the calendar was read, when a caller
+turns down both offered times and names a time today, so both times in the line are real open times and never today.
+
 Lines built by code, always in the same shape:
 
 - `tr_after_say` (no live connection happened): `The team isn't available right now. They'll call you back <when>, and they have your details.` ·
@@ -229,7 +246,9 @@ Lines built by code, always in the same shape:
   callback chosen: `Okay. The team will call you back <when>, and they have your details.` — then `Your setup call still stands.` when one is
   booked, and one question: `Would you like to book a twenty-minute setup call as well?` or `Anything else I can help with?`
 - `<when>` comes from the Central clock: `within a couple of hours` (a business day, 8 AM–6 PM), `this morning` (a business day before 8 AM),
-  otherwise the actual next business morning: `tomorrow morning` or the weekday, e.g. `Monday morning` (weekends and six US holidays skipped).
+  otherwise the actual next business morning: `tomorrow morning`, or the weekday when tomorrow is skipped, e.g. `Saturday morning`.
+  **Since v7 every day of the week is a business day**, Saturday and Sunday included; only the six US holidays are skipped. Through v6
+  weekends were skipped too (a Friday-night caller heard `Monday morning`). The wording of the lines did not change (§ 8.3).
 - `d2_bye` (the close of the questions part): `Thanks for calling. [Your setup call is booked, and the team will call you then. | The team has your details. | both]
   You can find more at A I chauffeur dot A I. Goodbye.` · a caller who said they are selling: `Thanks for calling. The team isn't taking vendor calls. You can find more at A I chauffeur dot A I. Goodbye.` ·
   a wrong-line passenger: `Thanks for calling. Goodbye.`
@@ -244,7 +263,7 @@ Lines built by code, always in the same shape:
 | Dynamic responsiveness | true | true | unchanged |
 | Interruption sensitivity | 0.82 | 0.9 | caller first: the agent stops 0.7–0.9 s after the caller starts talking |
 | Backchannel | true @ 0.35 | true @ 0.1 | low, so an "mm-hm" does not land on a caller mid-piece |
-| Silence reminder | 8000 ms × 0 | 10000 ms × 1 | one nudge, after the 8-second thinking window |
+| Silence reminder | 8000 ms × 0 | 10000 ms × 2 (× 1 through v5) | two nudges since v6 (Shane's ruling, Oct 1 2026): after about 11 s of silence, again about 11 s later, then the line ends 20 s after that |
 | End call after silence | 20000 ms | 20000 ms | unchanged |
 | Model | gpt-4.1 (cascading, high priority true), temp 0.15 | gpt-4.1 (cascading, high priority true), temp 0.15 | same as live; no smaller model was qualified in this run |
 | Knowledge base retrieval | (none on live) | top 10 chunks, score ≥ 0.25, on the two answering nodes only | the whole facts sheet is in front of the model on every answer; the demo nodes do no retrieval |
@@ -265,8 +284,18 @@ A second check catches it when the first one misses: the trip read itself report
 | `book_slot` | Books the chosen setup-call time on the AI Chauffeur calendar. Idempotent per call and slot. | POST to the n8n booking workflow (host only: `circulant.app.n8n.cloud`; path and secret header value withheld) | 8000 ms | real_name, company, call_id, slot_iso, caller_phone |
 | `team_alert` | Tells the team right away that a caller on the demo wants to talk. Fire and forget. | POST to the n8n booking workflow (host only: `circulant.app.n8n.cloud`; path and secret header value withheld) | 2000 ms | company, name, topic, call_id, phone |
 
-These three are the live desk's tools, carried over as they are. The booking workflow answers only the agents on its own allow-list
-(see the report: the test agent is not on it yet).
+These three are the live desk's tools, carried over as they are. The booking workflow answers only the agents on its own allow-list;
+the test agent has been on it since 2026-10-01 (follow-through run).
+
+**Which days the calendar offers, and where "never the same day" lives (2026-10-01, paste 19).** The booking workflow has no
+weekday filter and never had one: the weekday-only times came from the calendar itself. The setup-call event in Cal.com has its own
+availability schedule ("AI Chauffeur Setup Call hours", Central time, used by that event only). Through Sep 30 it read Monday to
+Friday, 1 PM to 6 PM; since Oct 1 it reads Monday to Sunday, 1 PM to 6 PM. Nothing else on the event changed (20 minutes, 60-minute
+minimum notice, no buffers, 20-minute steps, the same questions). This schedule is the one shared rail: the live desk books through
+the same event, so live callers are offered weekend times too.
+"Never the same day" is unchanged and is enforced in three places: the workflow's slot picker offers nothing before the day after
+the call; the workflow's booking step refuses a same-day time; and in this flow `pick_calc` catches a caller who asks for today and
+sends them to the same-day line (§ 6).
 
 ### 8.2 Warm transfer to the team — node `tr_call`
 
@@ -359,10 +388,10 @@ const dstOn = nowMs >= Date.UTC(yr, 2, nthDow(yr, 2, 0, 2), 8) && nowMs < Date.U
 const ct = new Date(nowMs + (dstOn ? -5 : -6) * 3600000);
 const hour = ct.getUTCHours() + ct.getUTCMinutes() / 60;
 const today = Date.UTC(ct.getUTCFullYear(), ct.getUTCMonth(), ct.getUTCDate());
-// Business days: Monday to Friday, minus New Year's Day, Memorial Day, Independence Day, Labor Day, Thanksgiving, Christmas.
+// Business days: every day of the week, Saturday and Sunday included, minus New Year's Day, Memorial Day, Independence Day, Labor Day, Thanksgiving, Christmas.
 const isHoliday = (ms) => { const d = new Date(ms); const y = d.getUTCFullYear(), m = d.getUTCMonth(), day = d.getUTCDate();
   return (m === 0 && day === 1) || (m === 4 && day === lastDow(y, 4, 1)) || (m === 6 && day === 4) || (m === 8 && day === nthDow(y, 8, 1, 1)) || (m === 10 && day === nthDow(y, 10, 4, 4)) || (m === 11 && day === 25); };
-const isBiz = (ms) => { const w = new Date(ms).getUTCDay(); return w >= 1 && w <= 5 && !isHoliday(ms); };
+const isBiz = (ms) => !isHoliday(ms);
 let callback;
 if (isBiz(today) && hour >= 8 && hour < 18) callback = 'within a couple of hours';
 else if (isBiz(today) && hour < 8) callback = 'this morning';
@@ -388,6 +417,38 @@ return {
   door_now: quick ? 'demo' : 'questions'
 };
 ```
+
+**The callback window, old → new (v7, 2026-10-01, paste 19).** Two lines of `d2_state` changed and nothing else in the node
+(6,071 → 6,038 characters). The comment above `isBiz`, and `isBiz` itself:
+
+```js
+// through v6
+// Business days: Monday to Friday, minus New Year's Day, Memorial Day, Independence Day, Labor Day, Thanksgiving, Christmas.
+const isBiz = (ms) => { const w = new Date(ms).getUTCDay(); return w >= 1 && w <= 5 && !isHoliday(ms); };
+// since v7
+// Business days: every day of the week, Saturday and Sunday included, minus New Year's Day, Memorial Day, Independence Day, Labor Day, Thanksgiving, Christmas.
+const isBiz = (ms) => !isHoliday(ms);
+```
+
+Saturday and Sunday now count for "within a couple of hours" (8 AM–6 PM Central) and for "this morning" (before 8 AM). The six
+holidays are still skipped, and the words of the lines are the same. Both versions of the node were run side by side on 21 clock
+times; every other output of the node is identical before and after:
+
+| Central clock | Through v6 | Since v7 |
+|---|---|---|
+| a weekday, 2 PM | within a couple of hours | within a couple of hours |
+| Friday 8:30 PM | Monday morning | tomorrow morning |
+| Saturday 7 AM | Monday morning | this morning |
+| Saturday 10 AM | Monday morning | within a couple of hours |
+| Saturday 6 PM | Monday morning | tomorrow morning |
+| Sunday 2 PM | tomorrow morning | within a couple of hours |
+| Sunday 9 PM | tomorrow morning | tomorrow morning |
+| the night before Thanksgiving | Friday morning | Friday morning |
+| Christmas Eve 7 PM (a Thursday in 2026) | Monday morning | Saturday morning |
+| Christmas Day 10 AM (a Friday in 2026) | Monday morning | tomorrow morning |
+| Friday July 3, 7 PM (July 4 is a Saturday in 2026) | Monday morning | Sunday morning |
+
+The hours the team can be reached live did not change: 7 AM to 9 PM Central, every day, as before.
 
 `tr_prep` — the interview check and the private briefing:
 
@@ -484,9 +545,21 @@ return { same_day_ask: (s('chosen') === 'other' && same) ? 'true' : 'false' };
 
 ## 10 · Knowledge base
 
-"AIC-FACTS-v1" · `knowledge_base_93ced71a2c1504c8` · 10 text sources, one per section of FACTS SHEET v1, loaded verbatim (the reassembled text matched the pasted sheet byte for byte).
+**Since v7:** "AIC-FACTS-v1.1" · `knowledge_base_fdb70f2225bf5b63` · 10 text sources holding the 15 sections of FACTS SHEET v1.1, loaded
+verbatim and read back from Retell equal to the file, source by source. The sheet itself is in `ops/tuning/aic-facts-sheet-v1.1.md`.
 Attached at node level to `d2` and `d2_quick` on the test flow only; the live flow has no knowledge base. With 10 chunks retrieved at a 0.25 score floor,
 the whole sheet reaches the model on every answer.
+
+v1.1 is v1 with two entries changed (paste 19, Shane's rulings of Oct 1 2026) and nothing else:
+
+| Entry | v1 | v1.1 |
+|---|---|---|
+| THE SETUP CALL | Twenty minutes with the team, Monday to Friday afternoons, booked on this call. The caller gets a confirmation text. | Twenty minutes with the team, any day of the week, booked on this call, never the same day. The caller gets a confirmation text. |
+| REACHING THE TEAM (on this demo line), the callback window | …the team calls back within a couple of hours during business hours, Monday to Friday, 8 AM to 6 PM Central, or the caller books the 20-minute setup call. | …the team calls back within a couple of hours during business hours, 8 AM to 6 PM Central, seven days a week, or the caller books the 20-minute setup call. |
+
+A Retell knowledge-base source cannot be edited in place, only added or deleted, and nothing is deleted on this agent. So v1.1 is a new
+knowledge base, and "AIC-FACTS-v1" · `knowledge_base_93ced71a2c1504c8` (10 text sources, FACTS SHEET v1, loaded verbatim) is untouched:
+it is what v5 and v6 read, which keeps v6 a true rollback.
 
 ## 11 · Post-call analysis schema (36 fields: 24 from live, 12 added)
 
@@ -533,6 +606,10 @@ The 14 fields the paste names are marked ★. Two of them (`caller_name`, `compa
 
 ## 12 · Rollback
 
-- The test agent's earlier versions are all still there (0–3 published before this run, 4 and 5 from this run). Nothing was deleted.
+- The test agent's earlier versions are all still there (0–3 published before this run, 4 and 5 from this run, 6 and 7 from Oct 1). Nothing was deleted.
+- To go back from v7 to v6 (weekday wording, the old same-day line, the Monday-to-Friday callback window, facts sheet v1): pin the test
+  number to version 6, or publish a new version copied from v6. Both knowledge bases stay in place.
+- To take the weekend times back out of the calendar: set the Cal.com schedule "AI Chauffeur Setup Call hours" back to Monday to Friday,
+  1 PM to 6 PM Central (switch Saturday and Sunday off). That is the shared rail, so it also changes what live callers are offered.
 - To take the test number back to what it answered before: point the inbound side of the number ending 8976 at `agent_44b48507d38c0bfc29a3150a74` with no version pin.
 - The live desk needs no rollback: it was never written.

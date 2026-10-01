@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-01T10:03:58-05:00",
+  "updated": "2026-10-01T11:15:22-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -556,9 +556,9 @@
     {
       "id": "aic-two-door-test",
       "title": "AI Chauffeur demo line — two-door + slow-talker build on the TEST agent (2026-09-30, follow-through 2026-10-01)",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-01-aic-two-door-followthrough.md",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-01-aic-setup-call-any-day.md",
       "status": "pending",
-      "label": "test agent complete; awaiting Shane's 8 live calls + words OK. AIC-TEST-2 v6 is published and answers the test line ending 8976 (two doors: the demo and the questions part; slow-talker handling; hold pitch; briefing agent). Follow-through 2026-10-01: the setup-call booking workflow now accepts the test agent (WF-AIC-SALES-CAL d66218e1 -> a0a29858, one id added to each of its two checks, staged against the test sink first); a real web call booked a setup call from the test agent and the booking was cancelled; the silence nudge now fires twice before the line ends (v5 -> v6, one setting, no words changed); the whole 49-case set on v6 scored 46/49 (Retell's judge 48 pass / 1 fail) and the three misses are wording, listed for Grok with two dead-air wording items. Live 414-775-0019 was read-only: its agent and flow are identical to the Sep 30 snapshot. Not done here: promotion to the live line (its own run, after the eight calls and the words)."
+      "label": "setup call any day + smooth same-day line live on TEST. AIC-TEST-2 v7 is published and answers the test line ending 8976. The setup call is offered any day of the week, weekends included, never the same day; a caller who asks for today hears \"Nothing's open today\" and the next open times; after a missed team the callback promise now counts Saturday and Sunday (within a couple of hours, 8 AM to 6 PM Central, six holidays skipped); the facts sheet is v1.1. The two new spoken texts are Grok's, pasted byte for byte. Shared rail: the setup-call calendar's own schedule in Cal.com went from Monday to Friday to Monday to Sunday, 1 PM to 6 PM Central, so live 414-775-0019 callers are offered weekend times too; the live agent and flow are identical to the Sep 30 snapshot. Simulations on v7: 10 of 11 by my checks, 11 of 11 by Retell's judge; the one miss is wording and is listed for Grok. Still open: Shane's 8 live calls + words OK. Not done here: promotion to the live line."
     }
   ],
   "log": [
@@ -1049,6 +1049,10 @@
     {
       "ts": "2026-10-01T10:55:00-05:00",
       "entry": "AIC as-built check run — read-only, report saved."
+    },
+    {
+      "ts": "2026-10-01T11:15:22-05:00",
+      "entry": "AIC SETUP CALL ANY DAY — live on TEST (paste 19). AIC-TEST-2 v7 published = v6 + Grok text A in the questions node's setup-call section (1141 -> 1178 chars) + Grok text B on the same-day line (102 -> 86 chars) + the callback-window code counting Saturday and Sunday (six holidays still skipped) + facts sheet v1.1 as a new knowledge base (v1 untouched). Cal.com schedule \"AI Chauffeur Setup Call hours\": Mon-Fri 13:00-18:00 -> Mon-Sun 13:00-18:00 Central; event type untouched. SHARED RAIL: live callers are offered weekend times too. Booking workflow unchanged, serving a0a29858: it had no weekday filter, and never-same-day stays in both of its guards. Simulations on published v7: s1 fail on one strict check (the questions node said \"can't be booked for today\" instead of \"nothing is open today\"; the fixed line was exact) -> Grok item; s2, s3, s4, f, f2, i, o, q1-q3 pass; Retell's judge 11 pass / 0 fail. One real web call was offered Friday + Saturday, heard the new same-day line, booked the Saturday slot through the live rail (runs 11983 + 11984) and was cancelled. Live 414-775-0019 agent + flow identical to the Sep 30 snapshot. Rollback: pin the test line to v6; set the Cal.com schedule back to Mon-Fri."
     }
   ]
 }
