@@ -52,8 +52,10 @@ DONE
 | Live 0019 untouched | confirmed | live versions 0P,1P,2D,3P,4P before and after; agent and flow identical to the snapshot; 0019, 5008, 8930 and the four pool numbers answer what they answered before; no n8n write |
 
 IDS, COMMITS, ROLLBACK
-- Commit b57d81f: snapshot, build doc, battery table, hold pitch, board line. This report is the commit after it.
-  Undo: git revert the two commits.
+- Commit b57d81f: snapshot, build doc, battery table, hold pitch, board line. Commit c1f5f71: this report.
+  Both pushed to main and deployed: the board line is live at aivoiceagency.ai/hq/board.json (entry 120) and the
+  hold pitch at aivoiceagency.ai/assets/audio/aic-hold-pitch-v1.mp3. The ops and reports files are not served.
+  Undo: git revert the commits.
 - Test agent AIC-TEST-2: v4 (first two-door build) and v5 (v4 + wording fixes) are new. Versions 0 to 3 are still
   there. Nothing was deleted.
 - Test number 8976. It was the AVA sales test line (AVA SALES v37 TEST, agent_44b48507d38c0bfc29a3150a74, no
@@ -109,6 +111,8 @@ GOTCHAS
 12. The transfer number showed once in this session's own scratch output during an early probe (Retell echoes a
    transfer's arguments). I changed the tool to mask it. It is in no file, no commit, and no report; my last
    sweep of every committed file for it, digits or spoken, came back clean.
-13. Not from this run, but I tripped over it: the public board file already carries, in older log entries, the
+13. The hold pitch file sits in the folder the paste named, and that folder is served by the AVA site. So the
+   AI Chauffeur pitch can be fetched from the AVA domain by anyone who has the address. Nothing links to it.
+14. Not from this run, but I tripped over it: the public board file already carries, in older log entries, the
    GHL location id, some phone-shaped strings, 14 workflow addresses and 3 email addresses. Worth a look.
 ```
