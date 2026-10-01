@@ -53,3 +53,38 @@ GOTCHAS
 - tools/feed-verify.mjs, tools/run9-meta.py and tools/run9-claim-sweep.py still describe the old homepage.
 - Chris is an ElevenLabs default voice due to retire Dec 31 2026. The finished recording is unaffected.
 ```
+
+## REV B · same evening · Shane's phone test
+
+```
+===== SHANE READBACK — COPY ALL =====
+MISSION: fix what Shane hit on his iPhone the first hour the page was live.
+STATUS: COMPLETE. Live on https://aivoiceagency.ai/ and /book.
+
+WHAT CHANGED
+1. The page follows the call. Tap play and the transcript comes up under the menu; as the job ticket
+   fills, the page eases down so the newest line stays on screen; at the end it stops on the result
+   card. The moment the visitor scrolls, the page lets go.
+2. The waveform no longer grabs a scroll. Swipe up or down over it and the page scrolls. A tap jumps
+   to that point. A sideways drag scrubs.
+3. The "page grows and floats" bug: the waveform canvas could feed its own pixel width back into the
+   layout on big, sharp phones (seen once at 440 px wide, 3x), which widened the whole page and made
+   Safari zoom. The canvas is now out of layout. The site-wide slide-in effect is also off on the
+   homepage, so sections hold still while you scroll.
+4. The transcript box scrolls itself again (it was stuck on the first two lines).
+5. The four calls are boxed buttons (two by two on a phone), the picked one in cyan, with a label
+   "Four sample calls · Pick one". Green stays reserved for "booked".
+6. When a call ends, a "Next: the plumbing call →" button sits under the result card.
+7. FAQ rewritten in plain words ("routes the call by your rules" is gone).
+8. Price card line is now "Setup is quoted on your call." (call minutes no longer mentioned there).
+9. iPhone no longer turns the sample phone numbers and addresses in the ticket into links.
+10. /book has "← Back to the homepage" at the top.
+11. The eight hub-page pills now say "1-MIN SAMPLE CALL · HEAR THE FULL CALL" and open the matching
+    recorded call (plumbing pages → plumbing, medical → dental, transportation → limousine).
+
+GOTCHAS
+- Not fixed here, lives in GoHighLevel: the booking calendar description says "30 minutes" (law: 15),
+  and the confirmation message is signed "- Shane" (law: caller-facing copy never names Shane).
+- tools/stamp.py was NOT run in full: it would have rewritten 23 AI Chauffeur pages while another
+  session works on that site. Pills were applied with its own inject_pill only.
+```

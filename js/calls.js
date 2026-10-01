@@ -1,10 +1,21 @@
 /* ============================================================
-   AVA SAMPLE CALLS — js/calls.js (Oct 1 2026)
+   AVA SAMPLE CALLS — js/calls.js (Oct 1 2026, rev b)
    Four recorded sample calls. The recording is the clock: every
    transcript line, ticket row and waveform bar is a pure function
    of audio.currentTime, so scrubbing back un-fills the ticket.
    The HTML ships the finished limousine call (JS off = whole story).
    Never autoplays. Audio loads on the first tap, not on page load.
+
+   rev b (Shane, phone test):
+   - the page follows the call: on play it brings the transcript up,
+     then eases down as the ticket fills, so nobody has to scroll.
+     Any scroll by the visitor hands control straight back.
+   - the waveform no longer steals a scroll: vertical swipes pass
+     through, a tap seeks, a sideways drag scrubs.
+   - the canvas sits out of layout, so it can never widen the page.
+   - transcript box scrolls itself again (offset math was wrong).
+   - ?trade=plumbing|dental|black-car… and #stage land on the right call.
+   - a finished call offers the next one.
    Vanilla JS, no deps.
    ============================================================ */
 (function () {
@@ -18,14 +29,16 @@
     tabs: q('[data-tabs]'), shows: q('[data-shows]'), play: q('[data-play]'), label: q('[data-playlabel]'),
     biz: q('[data-biz]'), clock: q('[data-clock]'), wave: q('[data-wave]'), cv: q('[data-wave] canvas'),
     chapters: q('[data-chapters]'), script: q('[data-script]'), fields: q('[data-fields]'), status: q('[data-status]'),
-    booked: q('[data-booked]'), blab: q('[data-blab]'), bbig: q('[data-bbig]'), bsmall: q('[data-bsmall]'), err: q('[data-err]')
+    booked: q('[data-booked]'), blab: q('[data-blab]'), bbig: q('[data-bbig]'), bsmall: q('[data-bsmall]'), err: q('[data-err]'),
+    call: q('[data-callpane]'), ticket: q('[data-ticketpane]'), next: q('[data-next]'), nextName: q('[data-nextname]')
   };
   var g2 = el.cv.getContext('2d');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var player = new Audio(); player.preload = 'none';
   var m4a = !!player.canPlayType && player.canPlayType('audio/mp4; codecs="mp4a.40.2"') !== '';
   var V = window.__ASSET_V ? '?v=' + window.__ASSET_V : '';
-  var cur = 0, tl = null, t = 0, playing = false, raf = 0, col = {};
+  var cur = 0, tl = null, t = 0, playing = false, raf = 0, col = {}, finished = false;
+  var follow = false, lastNow = 0;
 
   function fmt(s) { s = Math.max(0, Math.floor(s)); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
   function colors() {
@@ -48,10 +61,13 @@
     for (var i = 0; i < tl.L.length; i++) if (x >= tl.L[i].s && x < tl.L[i].e) return tl.L[i].who;
     return null;
   }
+
+  /* ---------- waveform (the canvas is absolutely positioned: its pixel size never feeds layout) ---------- */
   function draw(now) {
-    var w = el.cv.clientWidth, h = el.cv.clientHeight, dpr = window.devicePixelRatio || 1;
-    if (!w || !h) return;
-    if (el.cv.width !== Math.round(w * dpr) || el.cv.height !== Math.round(h * dpr)) { el.cv.width = Math.round(w * dpr); el.cv.height = Math.round(h * dpr); }
+    var w = el.wave.clientWidth, h = el.wave.clientHeight, dpr = Math.min(3, window.devicePixelRatio || 1);
+    if (!w || !h || w > 4000) return;
+    var pw = Math.round(w * dpr), ph = Math.round(h * dpr);
+    if (el.cv.width !== pw || el.cv.height !== ph) { el.cv.width = pw; el.cv.height = ph; }
     g2.setTransform(dpr, 0, 0, dpr, 0, 0); g2.clearRect(0, 0, w, h);
     var bars = Math.max(40, Math.floor(w / 5)), step = w / bars;
     for (var i = 0; i < bars; i++) {
@@ -64,6 +80,38 @@
     }
     if (t < tl.total) { g2.fillStyle = col.a; g2.fillRect(Math.min(w - 1, t / tl.total * w), 0, 1, h); }
   }
+
+  /* ---------- guided scroll: the page follows the call until the visitor scrolls ---------- */
+  function navBottom() { var n = document.querySelector('.bnav'); return n ? Math.max(0, n.getBoundingClientRect().bottom) : 0; }
+  function barTop() { var b = document.querySelector('.bs-callbar'); var r = b && b.getBoundingClientRect(); return r && r.height && r.top > 0 ? r.top : innerHeight; }
+  function followTarget() {
+    var top = navBottom() + 8, bottom = barTop() - 12, y = window.pageYOffset;
+    var want = y + el.call.getBoundingClientRect().top - top;          /* transcript pane up under the nav */
+    var lastRow = null, rows = el.fields.children;
+    for (var i = 0; i < rows.length; i++) if (rows[i].classList.contains('on')) lastRow = rows[i];
+    var focus = t >= tl.bookedT ? (el.next && !el.next.hidden ? el.next : el.booked) : lastRow;
+    if (focus) {
+      var r = focus.getBoundingClientRect();
+      if (r.bottom > bottom) want = Math.max(want, y + r.bottom - bottom);   /* ease down only as far as the newest line */
+    }
+    var max = document.documentElement.scrollHeight - innerHeight;
+    return Math.max(0, Math.min(max, want));
+  }
+  function stepFollow(now) {
+    if (!follow) return;
+    var y = window.pageYOffset, target = followTarget(), d = target - y;
+    if (Math.abs(d) < 1) return;
+    var dt = Math.min(0.05, Math.max(0.001, (now - (lastNow || now)) / 1000 || 0.016));
+    var k = reduce ? 1 : 1 - Math.pow(0.04, dt);                    /* frame-rate independent ease, ~0.8 s to settle */
+    window.scrollTo(0, y + d * k);
+  }
+  function stopFollow() { follow = false; }
+  ['wheel', 'touchmove'].forEach(function (n) { window.addEventListener(n, stopFollow, { passive: true }); });
+  window.addEventListener('keydown', function (e) {
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].indexOf(e.key) >= 0 && !el.wave.contains(e.target) && !el.play.contains(e.target)) stopFollow();
+  });
+
+  /* ---------- render ---------- */
   function render(now) {
     var c = CALLS[cur], lis = el.script.children, nowEl = null, i;
     for (i = 0; i < tl.L.length; i++) {
@@ -71,7 +119,11 @@
       lis[i].className = l.who + (st ? ' ' + st : '');
       if (st === 'now') nowEl = lis[i];
     }
-    if (nowEl && playing) el.script.scrollTop = Math.max(0, nowEl.offsetTop - el.script.offsetTop - el.script.clientHeight / 2 + nowEl.clientHeight / 2);
+    if (nowEl && playing) {
+      var box = el.script, br = box.getBoundingClientRect(), lr = nowEl.getBoundingClientRect();
+      var want = box.scrollTop + (lr.top - br.top) - Math.max(0, (box.clientHeight - lr.height) / 2);
+      box.scrollTop = reduce ? want : box.scrollTop + (want - box.scrollTop) * 0.18;
+    }
     var rows = el.fields.children, on = 0;
     for (i = 0; i < tl.F.length; i++) { var hit = t >= tl.F[i].t; rows[i].classList.toggle('on', hit); if (hit) on++; }
     var done = t >= tl.bookedT;
@@ -85,15 +137,20 @@
     el.wave.setAttribute('aria-valuetext', fmt(t) + ' of ' + fmt(tl.total));
     el.play.classList.toggle('on', playing);
     el.play.setAttribute('aria-pressed', String(playing));
-    el.label.textContent = playing ? 'Pause' : (t > 0 && t < tl.total) ? 'Resume the call' : 'Play the sample call';
+    el.label.textContent = playing ? 'Pause' : (t > 0 && t < tl.total) ? 'Resume the call' : finished ? 'Play it again' : 'Play the sample call';
+    if (el.next) el.next.hidden = !(finished && !playing);
     draw(now || 0);
   }
   function frame(now) {
-    if (!playing) return;
-    if (player.readyState > 0 && !player.seeking) t = Math.min(player.currentTime, tl.total);
+    if (!playing && !follow) return;
+    if (playing && player.readyState > 0 && !player.seeking) t = Math.min(player.currentTime, tl.total);
     render(now);
+    stepFollow(now); lastNow = now;
+    if (!playing && follow && Math.abs(followTarget() - window.pageYOffset) < 1) follow = false;   /* finish the last glide to the result card */
     raf = requestAnimationFrame(frame);
   }
+
+  /* ---------- audio ---------- */
   function ensure() {
     var c = CALLS[cur];
     if (player.getAttribute('data-id') === c.id) return;
@@ -110,20 +167,22 @@
     if (el.err) el.err.hidden = true;
     var fresh = player.getAttribute('data-id') !== CALLS[cur].id;
     ensure();
-    if (t >= tl.total - 0.06) { t = 0; el.script.scrollTop = 0; }
+    if (t >= tl.total - 0.06) { t = 0; el.script.scrollTop = 0; finished = false; }
     if (fresh || Math.abs(player.currentTime - t) > 0.25) setTime(t);
     var p = player.play();
     if (p && p.catch) p.catch(function () {});
-    playing = true; cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
+    playing = true; follow = true; lastNow = 0;
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
   }
-  function pause() { playing = false; player.pause(); cancelAnimationFrame(raf); render(performance.now()); }
+  function pause() { playing = false; follow = false; player.pause(); cancelAnimationFrame(raf); render(performance.now()); }
   function seek(x) {
     t = Math.max(0, Math.min(tl.total, x));
+    if (t < tl.total) finished = false;
     if (player.getAttribute('data-id') === CALLS[cur].id) setTime(t);
     render(performance.now());
   }
   function load(i, autoplay, keepHash) {
-    cancelAnimationFrame(raf); playing = false; player.pause(); cur = i;
+    cancelAnimationFrame(raf); playing = false; player.pause(); cur = i; finished = false;
     var c = CALLS[i]; tl = build(c);
     [].forEach.call(el.tabs.children, function (b, j) { b.setAttribute('aria-selected', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
     el.shows.textContent = c.shows; el.biz.textContent = c.biz;
@@ -141,11 +200,12 @@
     [[PICKUP, 'Answered'], [tl.detailsT, 'Details taken'], [tl.bookedT, c.booked.label]].forEach(function (m, k) {
       var d = document.createElement('div'); d.className = 'cx-chap' + (k > 0 ? ' r' : ''); d.style.left = (m[0] / tl.total * 100) + '%'; d.textContent = m[1]; el.chapters.appendChild(d);
     });
+    if (el.nextName) el.nextName.textContent = CALLS[(i + 1) % CALLS.length].tab.toLowerCase();
     el.wave.setAttribute('aria-valuemax', Math.round(tl.total));
     el.script.scrollTop = 0;
     t = tl.total;                          /* rest state: the finished call, ticket full */
     if (autoplay) play(); else render(performance.now());
-    if (!keepHash) { try { history.replaceState(null, '', '#' + c.id); } catch (e) {} }
+    if (!keepHash) { try { history.replaceState(null, '', location.pathname + '#' + c.id); } catch (e) {} }
   }
 
   /* ---------- wiring ---------- */
@@ -156,35 +216,57 @@
     load(n, playing); el.tabs.children[n].focus();
   });
   el.play.addEventListener('click', function () { playing ? pause() : play(); });
-  player.addEventListener('ended', function () { t = tl.total; playing = false; cancelAnimationFrame(raf); render(performance.now()); });
-  player.addEventListener('pause', function () { if (playing && !player.ended && !player.seeking) { playing = false; cancelAnimationFrame(raf); render(performance.now()); } });
+  if (el.next) el.next.addEventListener('click', function () { var n = (cur + 1) % CALLS.length; load(n, true); });
+  player.addEventListener('ended', function () {
+    t = tl.total; playing = false; finished = true; render(performance.now());
+    if (follow) { cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); }   /* glide on to the result card, then stop */
+  });
+  player.addEventListener('pause', function () { if (playing && !player.ended && !player.seeking) { playing = false; follow = false; cancelAnimationFrame(raf); render(performance.now()); } });
   player.addEventListener('error', function () {
     if (!player.getAttribute('src')) return;
-    playing = false; cancelAnimationFrame(raf); if (el.err) el.err.hidden = false; render(performance.now());
+    playing = false; follow = false; cancelAnimationFrame(raf); if (el.err) el.err.hidden = false; render(performance.now());
   });
-  var drag = false;
+
+  /* waveform: mouse drags scrub; touch taps seek, sideways drags scrub, vertical swipes scroll the page */
+  var drag = null;
   function at(e) { var r = el.wave.getBoundingClientRect(); seek((e.clientX - r.left) / r.width * tl.total); }
-  el.wave.addEventListener('pointerdown', function (e) { drag = true; try { el.wave.setPointerCapture(e.pointerId); } catch (_) {} at(e); });
-  el.wave.addEventListener('pointermove', function (e) { if (drag) at(e); });
-  ['pointerup', 'pointercancel'].forEach(function (n) { el.wave.addEventListener(n, function () { drag = false; }); });
+  el.wave.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'mouse') { drag = { mode: 'scrub' }; try { el.wave.setPointerCapture(e.pointerId); } catch (_) {} at(e); return; }
+    drag = { mode: 'pending', x: e.clientX, y: e.clientY };
+  });
+  el.wave.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    if (drag.mode === 'pending') {
+      var dx = Math.abs(e.clientX - drag.x), dy = Math.abs(e.clientY - drag.y);
+      if (dy > 8 && dy >= dx) { drag = null; return; }
+      if (dx > 12 && dx > dy * 1.5) { drag.mode = 'scrub'; try { el.wave.setPointerCapture(e.pointerId); } catch (_) {} }
+    }
+    if (drag && drag.mode === 'scrub') at(e);
+  });
+  el.wave.addEventListener('pointerup', function (e) { if (drag && drag.mode === 'pending') at(e); drag = null; });
+  el.wave.addEventListener('pointercancel', function () { drag = null; });
   el.wave.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowRight') seek(t + 5); else if (e.key === 'ArrowLeft') seek(t - 5);
     else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); playing ? pause() : play(); }
   });
-  /* hero CTA: scroll to the instrument and start the call inside the same tap (iOS needs the gesture) */
+
+  /* hero CTA: start the call inside the same tap (iOS needs the gesture); the follow brings the page down */
   [].forEach.call(document.querySelectorAll('[data-watch]'), function (a) {
-    a.addEventListener('click', function (e) {
-      e.preventDefault();
-      var sec = root.querySelector('[data-stage]') || document.getElementById('watch');
-      if (sec) sec.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-      if (!playing) play();
-    });
+    a.addEventListener('click', function (e) { e.preventDefault(); if (!playing) play(); else { follow = true; } });
   });
   if ('ResizeObserver' in window) new ResizeObserver(function () { if (tl) draw(performance.now()); }).observe(el.wave);
   if ('MutationObserver' in window) new MutationObserver(function () { colors(); if (tl) draw(performance.now()); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+  /* deep links: #limousine · #plumbing · #heating · #dental, and the hub-page pills (?trade=…#stage) */
+  var TRADE = { plumbing: 'plumbing', plumber: 'plumbing', hvac: 'heating', heating: 'heating', cooling: 'heating', dental: 'dental', dentist: 'dental', medical: 'dental',
+    limo: 'limousine', limousine: 'limousine', 'black-car': 'limousine', chauffeur: 'limousine', transportation: 'limousine' };
   colors();
-  var want = (location.hash || '').replace('#', ''), idx = -1;
+  var want = (location.hash || '').replace('#', ''), idx = -1, trade = (location.search.match(/[?&]trade=([^&#]+)/) || [])[1];
+  if (trade) { try { trade = decodeURIComponent(trade).toLowerCase(); } catch (e) {} if (TRADE[trade]) want = TRADE[trade]; }
   CALLS.forEach(function (c, i) { if (c.id === want) idx = i; });
   load(idx < 0 ? 0 : idx, false, true);
+  if (trade || location.hash === '#stage') {               /* old pills point at #stage, which no longer exists: bring the player up */
+    var sec = document.getElementById('watch');
+    if (sec) requestAnimationFrame(function () { sec.scrollIntoView({ block: 'start' }); });
+  }
 })();

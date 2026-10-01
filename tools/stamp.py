@@ -197,12 +197,12 @@ V = [('Verticals', None)]
 W = [('Wisconsin', None)]
 PAGES = [
     dict(f='index.html',                                   kind='home',      trail=None),
-    dict(f='book/index.html',                              kind='book',      trail=[('Book', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'book')),
-    dict(f='home-services/index.html',                     kind='circulant', trail=V+[('Home Services', None)], pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'circ')),
-    dict(f='medical-practices/index.html',                 kind='circulant', trail=V+[('Medical Practices', None)], pill=P('dental', 'VISIT BOOKED', 'TMRW 11:20 AM', 'circ')),
-    dict(f='professional-services/index.html',             kind='circulant', trail=V+[('Professional Services', None)], pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'circ')),
-    dict(f='hospitality/index.html',                       kind='circulant', trail=V+[('Hospitality', None)], pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'circ')),
-    dict(f='ground-transportation/index.html',             kind='circulant', trail=V+[('Transportation', None)], pill=P('black-car', 'RIDE BOOKED', 'TMRW 3:45 AM', 'circ')),
+    dict(f='book/index.html',                              kind='book',      trail=[('Book', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TMRW 7:00 AM', 'book')),
+    dict(f='home-services/index.html',                     kind='circulant', trail=V+[('Home Services', None)], pill=P('plumbing', 'JOB BOOKED', 'TMRW 7:00 AM', 'circ')),
+    dict(f='medical-practices/index.html',                 kind='circulant', trail=V+[('Medical Practices', None)], pill=P('dental', 'VISIT BOOKED', 'TODAY 2:30 PM', 'circ')),
+    dict(f='professional-services/index.html',             kind='circulant', trail=V+[('Professional Services', None)], pill=P('plumbing', 'JOB BOOKED', 'TMRW 7:00 AM', 'circ')),
+    dict(f='hospitality/index.html',                       kind='circulant', trail=V+[('Hospitality', None)], pill=P('plumbing', 'JOB BOOKED', 'TMRW 7:00 AM', 'circ')),
+    dict(f='ground-transportation/index.html',             kind='circulant', trail=V+[('Transportation', None)], pill=P('black-car', 'SENT TO DISPATCH', 'TMRW 4:30 AM', 'circ')),
     dict(f='milwaukee/index.html',                         kind='circulant', trail=W+[('Milwaukee', None)]),
     dict(f='madison/index.html',                           kind='circulant', trail=W+[('Madison', None)]),
     dict(f='green-bay/index.html',                         kind='circulant', trail=W+[('Green Bay', None)]),
@@ -224,8 +224,8 @@ PAGES = [
     # page the compact Backstage 2.0 component links to; it owns the canonical
     # agent roster and keeps its RUN 3.5 GLOSS treatment.
     dict(f='backstage/index.html',                         kind='circulant', trail=[('Backstage', None)], jsonld=True),
-    dict(f='overview.html',                                kind='insert',    trail=[('Overview', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'ovw')),
-    dict(f='roi/index.html',                               kind='insert',    trail=[('ROI Calculator', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TUE 7:00 AM', 'roi')),
+    dict(f='overview.html',                                kind='insert',    trail=[('Overview', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TMRW 7:00 AM', 'ovw')),
+    dict(f='roi/index.html',                               kind='insert',    trail=[('ROI Calculator', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TMRW 7:00 AM', 'roi')),
     dict(f='methodology.html',                             kind='legal',     trail=[('Methodology', None)], jsonld=True),
     # RUN 9.5: the privacy policy MOVED privacy.html -> /privacy/ (SMS/TCR rebuild).
     # privacy.html is deleted and 301s to /privacy in vercel.json — do not re-add it here
@@ -362,13 +362,13 @@ def pill_html(pill):
     return ('<!-- BRIDGE:PILL -->\n'
             '<div class="dp-wrap">\n'
             '  <a class="dp-pill ava-pulse" href="/?trade=%s#stage" data-event="demo_pill_tap" '
-            'data-trade="%s" aria-label="Watch AVA book it &mdash; 11.3-second sample call">\n'
+            'data-trade="%s" aria-label="Hear AVA book it &mdash; one-minute sample call">\n'
             '    <span class="dp-orbs" aria-hidden="true"><i></i><i></i><i></i><i></i></span>\n'
             '    <span class="dp-copy">\n'
-            '      <span class="dp-kicker"><b>11.3s</b> SAMPLE CALL</span>\n'
+            '      <span class="dp-kicker"><b>1-MIN</b> SAMPLE CALL</span>\n'
             '      <span class="dp-result">CALL RESULT &rarr; <b>%s</b> &middot; %s</span>\n'
             '    </span>\n'
-            '    <span class="dp-go">WATCH THE FULL CALL <span aria-hidden="true">&rarr;</span></span>\n'
+            '    <span class="dp-go">HEAR THE FULL CALL <span aria-hidden="true">&rarr;</span></span>\n'
             '  </a>\n'
             '</div>\n'
             '<!-- /BRIDGE:PILL -->') % (pill['trade'], pill['trade'], pill['result'], pill['when'])

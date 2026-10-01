@@ -7,6 +7,7 @@
 <meta name="description" content="AVA answers calls and books jobs — a done-for-you AI receptionist for local service businesses. We build it around your calls, launch it on your existing number, and run it for you. From $497/month.">
 <link rel="canonical" href="https://aivoiceagency.ai/">
 <meta name="theme-color" content="#0A0A0F">
+<meta name="format-detection" content="telephone=no, address=no">
 <script>(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
 
 <!-- Open Graph / Twitter -->
@@ -36,7 +37,7 @@
 <link rel="stylesheet" href="/assets/circulant.css?v=abf8701">
 <link rel="stylesheet" href="/assets/guide.css?v=abf8701">
 <link rel="stylesheet" href="/css/backstage.css?v=abf8701">
-<link rel="stylesheet" href="/css/calls.css?v=s1001a">
+<link rel="stylesheet" href="/css/calls.css?v=s1001b">
 
 <script type="application/ld+json">
 {
@@ -231,6 +232,7 @@
   <div class="g-wrap">
     <h2 class="cx-vh">Sample calls</h2>
     <div class="cx-demo" data-calls>
+      <p class="g-eyebrow">Four sample calls &middot; Pick one</p>
       <div class="cx-tabs" role="tablist" aria-label="Pick a sample call" data-tabs>
         <button class="cx-tab" type="button" role="tab" id="tab-limousine" aria-selected="true" tabindex="0" data-event="sample_tab_limousine">Limousine</button>
         <button class="cx-tab" type="button" role="tab" id="tab-plumbing" aria-selected="false" tabindex="-1" data-event="sample_tab_plumbing">Plumbing</button>
@@ -240,7 +242,7 @@
       <p class="cx-shows" data-shows>This call shows the whole trip taken, the trip sheet going to dispatch, and the caller told that dispatch will confirm.</p>
 
       <div class="cx-stage" data-stage>
-        <div class="cx-pane cx-call">
+        <div class="cx-pane cx-call" data-callpane>
           <div class="cx-callhead">
             <button class="cx-btn cx-btn--go cx-play" type="button" aria-pressed="false" data-play data-event="sample_play_calls">
               <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 1.5v13l11-6.5z"/></svg>
@@ -278,7 +280,7 @@
           <p class="cx-err" data-err hidden>The recording did not load. Every call is written out below.</p>
         </div>
 
-        <aside class="cx-pane cx-ticket" aria-label="Job ticket">
+        <aside class="cx-pane cx-ticket" aria-label="Job ticket" data-ticketpane>
           <div class="cx-thead"><h3>Job ticket</h3><span class="cx-status" data-status>complete</span></div>
           <dl class="cx-fields" data-fields>
             <div class="cx-row on"><dt>Drop-off</dt><dd>O'Hare, 7:00 AM flight</dd></div>
@@ -298,6 +300,7 @@
             <span class="cx-bbig" data-bbig>Tomorrow 4:30 AM</span>
             <span class="cx-bsmall" data-bsmall>SUV to O'Hare, $145 all in</span>
           </div>
+          <button class="cx-btn cx-next" type="button" data-next hidden data-event="sample_next_calls"><span>Next: the <span data-nextname>plumbing</span> call &rarr;</span></button>
         </aside>
       </div>
 
@@ -404,42 +407,36 @@
 <!-- ===================== THE SEVEN QUESTIONS (glass accordions · answers in DOM) ===================== -->
 <section class="bs-section" id="questions">
   <div class="g-wrap">
-    <p class="g-eyebrow">The questions operators ask</p>
+    <p class="g-eyebrow">Questions owners ask</p>
     <h2 class="bs-h2">Straight answers.</h2>
     <div class="bs-qa-grid">
       <details class="bs-qa" open>
         <summary>What does AVA do when your phone rings?</summary>
-        <div class="bs-qa-a"><p>AVA picks up in one ring, any hour of the day. It greets the caller in your business's voice, listens to what they need, and pulls out the details that matter — name, number, address, what's wrong, and how urgent it is. Then it does the receptionist's real job: it books the appointment into your calendar or routes the call by your rules. The caller gets a confirmation text. You get a summary the moment it lands.</p></div>
+        <div class="bs-qa-a"><p>AVA answers on the first ring, day or night. It talks with the caller, gets their name, number, address and what they need, and puts the job on your calendar. The caller gets a text with the time. You get a text and an email with the job.</p></div>
       </details>
       <details class="bs-qa">
         <summary>Can AVA book jobs on my calendar?</summary>
-        <div class="bs-qa-a">
-          <p>Yes — that's the point of the whole machine. During setup we connect AVA to the calendar you already run your day from. On a call, AVA offers real open slots, holds the appointment, writes the job into your CRM if you use one, and texts both sides. No phone tag, no sticky notes.</p>
-          <div class="wiring-panel">
-            <div class="wp-orb"><span class="orb" data-state="done" style="--size:56px;--lane:var(--lane-tools)"><i>✓</i></span><span>AVA</span></div>
-            <ul><li>Calendar</li><li>CRM</li><li>SMS</li><li>Owner</li></ul>
-          </div>
-        </div>
+        <div class="bs-qa-a"><p>Yes. We connect AVA to the calendar you already use. On the call, AVA offers open times, books the one the caller picks, and texts them the details. If you use a CRM, the job can go there too.</p></div>
       </details>
       <details class="bs-qa">
         <summary>What happens when a call is urgent?</summary>
-        <div class="bs-qa-a"><p>You set the triage rules; AVA runs them. A burst pipe, sparks at an outlet, no heat in January — whatever you define as urgent gets flagged on the call, moved to the front of the schedule or transferred live, and your cell gets an alert immediately. Routine calls book like routine calls. Emergencies act like emergencies.</p></div>
+        <div class="bs-qa-a"><p>You tell us what counts as urgent: a burst pipe, no heat in January, a patient in pain. When AVA hears it, that call goes to the front of the line. AVA can send it straight to your cell, and you get a text right away.</p></div>
       </details>
       <details class="bs-qa">
         <summary>Can AVA work with my existing phone number?</summary>
-        <div class="bs-qa-a"><p>Yes. Nothing changes for your customers — they dial the number they've always dialed. We launch AVA on your existing line, and your forwarding rules decide what it takes: every call, after-hours only, or just the overflow when your team is already on the phone.</p></div>
+        <div class="bs-qa-a"><p>Yes. Your customers call the same number they always have. You choose what AVA answers: every call, only after hours, or only when your team is already on the phone.</p></div>
       </details>
       <details class="bs-qa">
         <summary>Does AVA replace my receptionist or dispatcher?</summary>
-        <div class="bs-qa-a"><p>No. AVA covers what they physically can't: 2 AM, Sunday, both lines ringing at once, and the calls that come in while they're already helping someone. Keep your people on the work only people can do — AVA takes the ringing phone they had to keep dropping everything for.</p></div>
+        <div class="bs-qa-a"><p>No. AVA picks up the calls your people can&rsquo;t get to: nights, weekends, and when two lines ring at once. Your team keeps doing the work only people can do.</p></div>
       </details>
       <details class="bs-qa">
-        <summary>What happens when AVA cannot handle a call?</summary>
-        <div class="bs-qa-a"><p>It follows the fallback rule you chose: transfer straight to your cell, take a message and text it to you, or schedule a callback. You define the trigger words, the VIP callers, and the situations that always go to a human. You can also take over or pause AVA any time you want.</p></div>
+        <summary>What happens when AVA can't handle a call?</summary>
+        <div class="bs-qa-a"><p>You pick what happens. AVA can send the call to your cell, take a message and text it to you, or set up a callback. You can name callers who always go straight to you, and you can pause AVA any time.</p></div>
       </details>
       <details class="bs-qa" id="cost">
         <summary>How much does AVA cost?</summary>
-        <div class="bs-qa-a"><p>AVA is <b>$497 a month</b> on your existing number, month to month. That covers every call answered, jobs put on your calendar, a confirmation text to your customer, a text and an email to you with the job, every call recorded and written out, and your own dashboard with every call. Setup and call minutes are quoted on your call. Limousine and black car companies run on AI Chauffeur, from $997 a month. Want AVA inside your CRM or scheduling software? Book a call with the team and we scope your build.</p></div>
+        <div class="bs-qa-a"><p>AVA is <b>$497 a month</b> on your existing number, month to month. That covers every call answered, jobs put on your calendar, a text to your customer, a text and an email to you with the job, every call recorded and written out, and your own dashboard with every call. Setup is quoted on your call. Limousine and black car companies run on AI Chauffeur, from $997 a month. Want AVA inside your CRM or scheduling software? Book a call with the team and we scope your build.</p></div>
       </details>
     </div>
   </div>
@@ -465,7 +462,7 @@
         <p class="cx-pbig">$497 a month</p>
         <p class="cx-psub">Your existing number. Month to month.</p>
         <a class="cx-btn cx-btn--go" href="/book" data-event="book_click_pricing">Put AVA on my line</a>
-        <p class="cx-pfine">Setup and call minutes are quoted on your call.</p>
+        <p class="cx-pfine">Setup is quoted on your call.</p>
         <p class="cx-pfine">Limousine and black car companies run on <a href="https://aichauffeur.ai/" data-event="aic_link_pricing" style="color:inherit;text-decoration:underline">AI Chauffeur</a>, from $997 a month.</p>
       </div>
       <ul class="cx-incl">
@@ -633,6 +630,6 @@
 
 <script src="/js/backstage.js?v=abf8701" defer></script>
 <script src="/js/ava-signal.js?v=abf8701" defer></script>
-<script src="/js/calls.js?v=s1001a" defer></script>
+<script src="/js/calls.js?v=s1001b" defer></script>
 </body>
 </html>

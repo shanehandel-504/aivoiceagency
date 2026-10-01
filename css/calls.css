@@ -6,7 +6,13 @@
    CIRCULANT-X: flat, sharp corners, hairlines, tokens only, so the
    light toggle flips it with the rest of the site.
    Cyan = AVA. Green = the job is captured (only when it is).
+   rev b (Oct 1, Shane's phone test): call buttons you can see,
+   waveform that lets the page scroll, canvas out of layout,
+   homepage sections no longer slide in (bridge reveal off here).
    ============================================================ */
+
+/* the site-wide scroll reveal (bridge.js .brv) made this page drift as it scrolled; on the homepage everything holds still */
+body.backstage main > section.brv{opacity:1;transform:none;transition:none}
 
 /* ---------- hero ---------- */
 .cx-hero{padding:56px 0 8px}
@@ -31,13 +37,21 @@
 .cx-sec{padding:40px 0 64px}
 .cx-vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .cx-demo{display:flex;flex-direction:column;gap:16px}
-.cx-tabs{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--line)}
-.cx-tab{background:none;border:0;border-bottom:2px solid transparent;border-radius:0;min-height:44px;
-  padding:10px 0;margin-right:22px;color:var(--neutral);font:500 17px/1.2 "Space Grotesk",sans-serif;cursor:pointer;
-  transition:color .2s}
-.cx-tab:hover{color:var(--text)}
-.cx-tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--cyan)}
+.cx-demo .g-eyebrow{margin:0}
+/* the four calls are real buttons now: boxed, full-strength text, the picked one in cyan */
+.cx-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,max-content));gap:10px}
+.cx-tab{box-sizing:border-box;display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 20px;
+  background:var(--panel);border:1px solid color-mix(in srgb,var(--text) 28%,transparent);border-radius:0;
+  color:var(--text);font:600 16px/1.15 "Space Grotesk",sans-serif;cursor:pointer;text-align:left;
+  transition:border-color .18s ease,background .18s ease,color .18s ease}
+.cx-tab::before{content:"";flex:none;width:0;height:0;border-style:solid;border-width:5px 0 5px 8px;
+  border-color:transparent transparent transparent currentColor;opacity:.55}
+.cx-tab:hover{border-color:var(--cyan)}
+.cx-tab[aria-selected="true"]{color:var(--cyan);border-color:var(--cyan);background:color-mix(in srgb,var(--cyan) 12%,var(--panel))}
+.cx-tab[aria-selected="true"]::before{opacity:1}
 .cx-tab:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.cx-next{min-height:52px;width:100%;justify-content:space-between;border-color:var(--cyan)}
+.cx-next[hidden]{display:none}
 .cx-shows{color:var(--neutral);font-size:15px;line-height:1.5;margin:0;max-width:60em}
 
 .cx-s{display:none}
@@ -54,8 +68,8 @@
 .cx-biz{font-weight:600;font-size:17px;color:var(--text)}
 .cx-clock{font-family:var(--g-mono);font-variant-numeric:tabular-nums;color:var(--neutral);font-size:13px}
 
-.cx-wave{height:96px;cursor:pointer;touch-action:none;position:relative}
-.cx-wave canvas{display:block;width:100%;height:100%}
+.cx-wave{height:96px;cursor:pointer;touch-action:pan-y;position:relative;overflow:hidden}
+.cx-wave canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
 .cx-wave:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .cx-chapters{position:relative;height:34px;font-family:var(--g-mono);font-size:12px;color:var(--neutral)}
 .cx-chap{position:absolute;top:0;display:flex;flex-direction:column;gap:2px;white-space:nowrap}
@@ -97,6 +111,9 @@
 .cx-tx{display:flex;flex-direction:column}
 .cx-tx .bs-clip-tx{margin-top:0}
 
+/* FAQ: same flat, sharp language as the rest of the page */
+#questions .bs-qa{border-radius:0;box-shadow:none}
+
 /* ---------- where the job goes ---------- */
 .cx-lands{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 28px;border-top:1px solid var(--line);margin-top:20px}
 .cx-land{padding:20px 0 0;display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -127,10 +144,10 @@
   .cx-pane{padding:16px}
   .cx-call{gap:12px}
   .cx-wave{height:64px}
-  .cx-script{max-height:132px}
-  .cx-tabs{flex-wrap:nowrap}
-  .cx-tab{font-size:15px;margin-right:16px;white-space:nowrap}
-  .cx-tab:last-child{margin-right:0}
+  .cx-script{max-height:176px}
+  .cx-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .cx-tab{min-height:48px;padding:0 14px;font-size:15.5px}
+  .cx-callhead .cx-btn{min-height:48px}
   .cx-l{display:none}
   .cx-s{display:inline}
   .cx-ticket{gap:12px}
