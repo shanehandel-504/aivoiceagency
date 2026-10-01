@@ -221,8 +221,8 @@ Verbatim. Never touch without a CEO order. **Re-verified against production 2026
 
 **Homepage hero, verified Oct 1 2026:** `<h1>` = `AVA answers your phone. Every call. Books the job.` ·
 sub = `Play a sample call. The job ticket fills in while AVA is still on the phone.` The page is a
-conversion page built around four recorded sample calls (`css/calls.css`, `js/calls.js`,
-`/audio/samples/v2/`). The pre-change homepage is kept at `legacy/index-3am-2026-10-01.html`.
+conversion page built around five recorded sample calls (`css/calls.css`, `js/calls.js`,
+`/audio/samples/v3/`; v2 kept, additive law) — limousine, plumbing, heating, dental, live transfer. The pre-change homepage is kept at `legacy/index-3am-2026-10-01.html`.
 Anchor drift is a real failure mode: this table was wrong for a week before RUN 9.5.
 **Re-verify against prod before citing a row, and stamp the date when you do.**
 

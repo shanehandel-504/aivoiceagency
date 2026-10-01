@@ -9,6 +9,8 @@
    rev b (Oct 1, Shane's phone test): call buttons you can see,
    waveform that lets the page scroll, canvas out of layout,
    homepage sections no longer slide in (bridge reveal off here).
+   rev c (Oct 1, 6 PM): five calls (live transfer), a finished call
+   offers the strategy call, nothing under 12px.
    ============================================================ */
 
 /* the site-wide scroll reveal (bridge.js .brv) made this page drift as it scrolled; on the homepage everything holds still */
@@ -38,8 +40,8 @@ body.backstage main > section.brv{opacity:1;transform:none;transition:none}
 .cx-vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .cx-demo{display:flex;flex-direction:column;gap:16px}
 .cx-demo .g-eyebrow{margin:0}
-/* the four calls are real buttons now: boxed, full-strength text, the picked one in cyan */
-.cx-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,max-content));gap:10px}
+/* the calls are real buttons: boxed, full-strength text, the picked one in cyan */
+.cx-tabs{display:flex;flex-wrap:wrap;gap:10px}
 .cx-tab{box-sizing:border-box;display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 20px;
   background:var(--panel);border:1px solid color-mix(in srgb,var(--text) 28%,transparent);border-radius:0;
   color:var(--text);font:600 16px/1.15 "Space Grotesk",sans-serif;cursor:pointer;text-align:left;
@@ -52,6 +54,11 @@ body.backstage main > section.brv{opacity:1;transform:none;transition:none}
 .cx-tab:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .cx-next{min-height:52px;width:100%;justify-content:space-between;border-color:var(--cyan)}
 .cx-next[hidden]{display:none}
+/* after a call ends: the one ask, then the next call */
+.cx-after{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:16px}
+.cx-after[hidden]{display:none}
+.cx-ahead{margin:0;font-size:19px;font-weight:600;line-height:1.25;color:var(--text);text-wrap:balance}
+.cx-after .cx-btn{width:100%}
 .cx-shows{color:var(--neutral);font-size:15px;line-height:1.5;margin:0;max-width:60em}
 
 .cx-s{display:none}
@@ -107,7 +114,8 @@ body.backstage main > section.brv{opacity:1;transform:none;transition:none}
 .cx-booked.on .cx-blab{color:var(--green)}
 .cx-booked.on .cx-bbig{color:var(--text)}
 .cx-booked.on .cx-bsmall{color:var(--body-dim)}
-.cx-demo .bs-disclosure{margin-top:0}
+.cx-demo .bs-disclosure{margin-top:0;font-size:12px}
+.cx-tx .spk{font-size:12px}
 .cx-tx{display:flex;flex-direction:column}
 .cx-tx .bs-clip-tx{margin-top:0}
 
@@ -145,7 +153,8 @@ body.backstage main > section.brv{opacity:1;transform:none;transition:none}
   .cx-call{gap:12px}
   .cx-wave{height:64px}
   .cx-script{max-height:176px}
-  .cx-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .cx-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .cx-tab:last-child:nth-child(odd){grid-column:1/-1}
   .cx-tab{min-height:48px;padding:0 14px;font-size:15.5px}
   .cx-callhead .cx-btn{min-height:48px}
   .cx-l{display:none}
@@ -153,7 +162,7 @@ body.backstage main > section.brv{opacity:1;transform:none;transition:none}
   .cx-ticket{gap:12px}
   .cx-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px}
   .cx-row{grid-template-columns:minmax(0,1fr);gap:1px;padding:7px 0;align-content:start}
-  .cx-row dt{padding-top:0;font-size:11.5px}
+  .cx-row dt{padding-top:0;font-size:12px}
   .cx-row dd{font-size:14.5px;line-height:1.3}
   .cx-booked{padding:12px 14px}
   .cx-bbig{font-size:22px}

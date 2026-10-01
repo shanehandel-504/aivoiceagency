@@ -88,3 +88,45 @@ GOTCHAS
 - tools/stamp.py was NOT run in full: it would have rewritten 23 AI Chauffeur pages while another
   session works on that site. Pills were applied with its own inject_pill only.
 ```
+
+---
+
+## REV C — Oct 1 2026, evening (Shane's 6 PM asks)
+
+```
+===== SHANE READBACK — COPY ALL =====
+MISSION: text + email at the end of every call, a live-transfer call, base price only, cleaner /book.
+STATUS: COMPLETE. Live on https://aivoiceagency.ai/ and /book.
+
+WHAT CHANGED
+1. Every sample call now ends with AVA saying "I'm sending you a text and an email right now" and
+   what the email has (trip details, visit details and company info, the new patient form). You hear
+   a text ping and then an email chime.
+2. New fifth call: Live transfer. Brightline Electric. A restaurant loses half its kitchen power on a
+   Friday night. AVA checks it is safe, takes the details, gets the owner, briefs him, and the owner
+   picks up. The ticket ends on "Connected to the owner · Mike on the line".
+3. The player now rests READY: empty ticket, 0:00, "Waiting for the call". Press play and it fills.
+4. When a call ends: "Want AVA answering your phone?" + Book the AVA strategy call + Next call.
+5. Price card: Base price, $497 a month, "Full price in writing before you start." No setup line,
+   no minutes line. AI Chauffeur from $997 a month stays under it.
+6. FAQ cost answer matches. The urgent-call answer now points at the live transfer call.
+7. /book: headline "Book the AVA strategy call", pill removed, the Book buttons that pointed at the
+   page you are already on are hidden there.
+8. Search/AI files (llms.txt, page data) list five calls and drop the old Google line.
+
+DONE
+| What                         | Live | Proof                                         |
+| Five calls, audio v3         | yes  | /audio/samples/v3/*.m4a + .mp3, STT-checked   |
+| Ready state + after-call CTA | yes  | rendered 375 / 390 / 440 / 1440, 0 errors     |
+| Base-price-only card         | yes  | #pricing                                      |
+| /book cleanup                | yes  | /book                                         |
+Rollback: git revert the rev C commit (v2 audio is untouched and still on the server).
+
+GOTCHAS
+- The sample calls say "a text and an email", but AVA never asks the caller for an email. A sharp
+  owner may ask how. The page's own claims stay to what ships today: a text to the customer, a text
+  and an email to the owner. Fix if wanted: one email question per call, free re-record until Oct 12.
+- GoHighLevel, not the repo: the calendar on /book still reads "AVA Demo Call" and "30 minutes",
+  and the booking confirmation is signed "- Shane".
+- tools/stamp.py still not run in full (it rewrites 23 AI Chauffeur pages).
+```

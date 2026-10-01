@@ -197,7 +197,7 @@ V = [('Verticals', None)]
 W = [('Wisconsin', None)]
 PAGES = [
     dict(f='index.html',                                   kind='home',      trail=None),
-    dict(f='book/index.html',                              kind='book',      trail=[('Book', None)], jsonld=True, pill=P('plumbing', 'JOB BOOKED', 'TMRW 7:00 AM', 'book')),
+    dict(f='book/index.html',                              kind='book',      trail=[('Book', None)], jsonld=True, pill=None),   # Oct 1 rev c: no pill on the booking page (one job per page)
     dict(f='home-services/index.html',                     kind='circulant', trail=V+[('Home Services', None)], pill=P('plumbing', 'JOB BOOKED', 'TMRW 7:00 AM', 'circ')),
     dict(f='medical-practices/index.html',                 kind='circulant', trail=V+[('Medical Practices', None)], pill=P('dental', 'VISIT BOOKED', 'TODAY 2:30 PM', 'circ')),
     dict(f='professional-services/index.html',             kind='circulant', trail=V+[('Professional Services', None)], pill=P('plumbing', 'JOB BOOKED', 'TMRW 7:00 AM', 'circ')),
