@@ -416,12 +416,12 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
     var TOLLFREE_NPA  = ['800','833','844','855','866','877','888'];
 
     function dialCheck(e164) {
-      if (!e164) return { ok: false, msg: 'Enter a real mobile number (e.g. 305 555 1212).' };
+      if (!e164) return { ok: false, msg: 'Enter a real mobile number (e.g. 414 555 0100).' };
       if (e164.slice(0, 2) !== '+1') {
         return { ok: false, msg: 'AVA calls US and Canadian numbers only. Enter a 10-digit number.' };
       }
       if (!/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(e164)) {
-        return { ok: false, msg: 'Enter a real mobile number (e.g. 305 555 1212).' };
+        return { ok: false, msg: 'Enter a real mobile number (e.g. 414 555 0100).' };
       }
       var npa = e164.slice(2, 5);
       if (PREMIUM_NPA.indexOf(npa) !== -1 || CARIBBEAN_NPA.indexOf(npa) !== -1) {

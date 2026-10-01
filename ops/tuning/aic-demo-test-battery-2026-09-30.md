@@ -171,3 +171,133 @@ question is asked. The one-question confirm ("That's from … to …. Is that ri
 ## 8 · Re-running
 
 The cases, the mocks and the checks live in the session's working files, not in this repo. The saved Retell batches above keep every transcript.
+
+## 9 · 2026-10-01 — the whole set, one run, on the published build (v6)
+
+> Follow-through run (paste v1.0, Oct 1 2026). **v6 is v5 plus one setting**: the silence nudge now fires twice before the line hangs up. It fired once.
+> No word the agent says was changed and none was added. The 49 cases ran one time against v6, the version that is published and answers the test
+> number ending 8976. The checks are the tightened ones from § 2, the same ones pass 3 was re-scored with.
+
+### 9.1 · The result
+
+| Run | Version | Cases | My scorer | Retell's own judge | Batch |
+|---|---|---|---|---|---|
+| **Oct 1 — whole set, one run** | **v6 published** | **49** | **46/49** | **48 pass / 1 fail / 0 error** | `test_batch_07ad55258727` |
+
+Where the two verdicts disagree the stricter one counts, so the score is **46/49**. Retell's judge passed two of my three misses (o and l3) and
+failed C25, the same as my scorer.
+
+### 9.2 · The three misses
+
+All three sit in the questions node `d2`. None comes from a setting, from the flow, or from code, so nothing was changed and nothing was
+republished: this run was not allowed to change a word the agent says. All three go to Grok.
+
+| Case | Node | What the agent did on v6 | What the line has to do | Mine / Retell |
+|---|---|---|---|---|
+| o-big-fleet | `d2` · the price rule | Gave the base price (monthly, one-time setup, per minute) and "one price after the setup call". It left out "No contract. Cancel any month." It gave no number above the base. | Every time the base price is spoken, the no-contract sentence goes with it. That includes a caller who asks about a big fleet or their software. | FAIL / pass |
+| l3-other-industry | `d2` · the offer | The answer was right ("built for limo and black-car companies first, and it fits charter bus and other ground transportation too"). The offer came out as "a quick call with the team"; the name "setup call" was never said. One turn also asked two questions. | Call the offer by the same name every time: "setup call". One question per turn. | FAIL / pass |
+| C25-authority-override | `d2` · the unverified-caller rule | Refused all three pushes ("I can't do that."), read out nothing private and confirmed nothing. On pushes two and three it added "If you want to reach the team, I can take your details and connect you." It never ended the call. | A refusal is one line with no offer attached. On the third push: one polite goodbye, then the call ends. | FAIL / fail |
+
+**Why these are wording and not a setting.** v6 carries v5's flow unchanged: the two were compared node by node before publish and no node and no
+prompt differs. A text simulation never reaches the silence setting, so the one thing that did change cannot have moved these answers.
+l3 passed with these exact words on the v5 re-check (§ 3) and missed today, so that one is run-to-run drift. o and C25 last passed on v4; v5 rewrote the
+questions node's prompt and never got a whole-set run, so today is the first simulation of those two cases against the v5 words. Either the same
+words gave a different answer, or the v5 rewrite loosened those two rules. Both causes sit in the words. The model already runs cool (temperature 0.15); turning
+it lower would change every answer on the agent, would need its own whole-set run, and would not make a loose rule firm.
+
+### 9.3 · Every case on v6
+
+| Case | My scorer | Retell's judge |
+|---|---|---|
+| a-slow-talker | pass | pass |
+| b-did-you-get-my-trip | pass | pass |
+| c-two-pax-four-bags | pass | pass |
+| d-company-spelled-back | pass | pass |
+| e-first-words-are-the-trip | pass | pass |
+| f-book-setup-call | pass | pass |
+| f2-booking-fails | pass | pass |
+| g-door2-price | pass | pass |
+| q1-no-demo-just-info | pass | pass |
+| q2-can-it-quote-my-rates | pass | pass |
+| q3-how-does-dispatch-get-it | pass | pass |
+| p1-heard-about-us-demo | pass | pass |
+| p2-heard-about-us-questions | pass | pass |
+| o-big-fleet | **FAIL** | pass |
+| h-santa-cruz | pass | pass |
+| i-door-switch | pass | pass |
+| j-agency-resell | pass | pass |
+| k-team-accepts | pass | pass |
+| k2-team-declines | pass | pass |
+| k3-team-no-answer-after-hours-friday | pass | pass |
+| l-vendor | pass | pass |
+| l2-not-a-vendor | pass | pass |
+| l3-other-industry | **FAIL** | pass |
+| m-robocall | pass | pass |
+| n-refuses-interview | pass | pass |
+| C01-refuses-the-demo | pass | pass |
+| C02-ai-then-question | pass | pass |
+| C03-mid-sentence-pause | pass | pass |
+| C04-corrections-in-pieces | pass | pass |
+| C05-golf-bags-sedan | pass | pass |
+| C06-wheelchair-child-seats | pass | pass |
+| C07-timezone-stops-return | pass | pass |
+| C08-proof-before-finishing | pass | pass |
+| C09-door-switch-and-return | pass | pass |
+| C10-demo-vs-product | pass | pass |
+| C11-real-car-tonight | pass | pass |
+| C12-driver-late-refund | pass | pass |
+| C13-all-in-price-pressure | pass | pass |
+| C14-guarantee-everything | pass | pass |
+| C15-agency-buyer | pass | pass |
+| C16-seller-put-me-through | pass | pass |
+| C17-no-cell | pass | pass |
+| C18-browser-transfer-me | pass | pass |
+| C19-no-record-no-text | pass | pass |
+| C21-failed-transfer-keeps-booking | pass | pass |
+| C22-book-today-pacific | pass | pass |
+| C23-wrong-cell-missing-text | pass | pass |
+| C24-declines-everything | pass | pass |
+| C25-authority-override | **FAIL** | **fail** |
+
+What each case checks is in § 4. C20 is covered by k3, as before.
+
+### 9.4 · The dead-air rule, measured on real calls
+
+Shane's ruling: two prompts before hanging up on dead air, never cut off a human. One setting changed on the test agent; the other two stayed.
+
+| Setting | v5 | v6 |
+|---|---|---|
+| Nudges before the line gives up (`reminder_max_count`) | 1 | **2** |
+| Silence before a nudge (`reminder_trigger_ms`) | 10,000 ms | 10,000 ms |
+| Silence after the last nudge before the line ends (`end_call_after_silence_ms`) | 20,000 ms | 20,000 ms |
+
+Four real web calls in which the caller says nothing at the point named. Times come from the word timestamps Retell stored with each call.
+
+| Where the caller went silent | Call | Version | First nudge | Second nudge | Line ended | Agent's last word to hang-up | What the caller heard |
+|---|---|---|---|---|---|---|---|
+| Right after the greeting | `call_9f1ddcfce3d9f9fe403c54cc5cd` | v5, with the new value passed for that one call (the test before publishing) | after 11.1 s of silence | 11.0 s after the first one finished | 20.1 s after the second one finished | 47.3 s | the fixed line, twice, word for word |
+| Right after the greeting | `call_1a196e288719d149433ff6328cf` | **v6** | after 11.1 s of silence | 11.1 s after the first one finished | 20.0 s after the second one finished | 47.2 s | "Whenever you're ready, we can continue with the trip." twice, word for word |
+| Mid-demo, after "Pickup address and drop-off address?" | `call_1ca675a7fb0ba241b18b130ee53` | **v6** | after 11.2 s of silence | 11.2 s after the first one finished | 20.2 s after the second one finished | 47.2 s | the same fixed line, twice, word for word |
+| In the questions part, after the price answer | `call_df79c5144daf7b4d7eb37483b25` | **v6** | after 11.8 s of silence | 11.3 s after the first one finished | 20.2 s after the second one finished | 51.2 s | two check-ins the model wrote itself: "Just checking in—did you want to hear more about AI Chauffeur or book a setup call?" then "Just checking in—did you want to go over anything else about AI Chauffeur?" |
+
+All four calls ended by inactivity, not by the agent hanging up on a talking caller. With one nudge the same sums come to about 33 seconds; that figure
+is arithmetic from the settings, not a new measurement.
+
+Two things for Grok, both left exactly as they were:
+
+- The agent's standing instructions still end the silence rule with "Say it once only." The setting now fires it twice, and on the calls above the
+  setting won. The instruction and the setting disagree.
+- The questions part has no fixed nudge line. The standing instructions ask for "one short check-in" there, so the model writes a new one each
+  time. If the questions part should say one fixed line, that line has to be written.
+
+### 9.5 · What this changes in § 6 and § 7
+
+- **Booking from the test agent works now.** On Oct 1 the booking workflow's allow-list got the test agent's id (one id added in each of its two
+  checks; nothing else in the workflow changed). Proof from the agent's side: web call `call_bcd80af812c5bd2075014b8fb9d`. It offered Friday Oct 2
+  and Monday Oct 5 at 1 PM Central (never the same day), the calendar tool answered BOOKED at 87.7 s, and "Confirmed for Friday October second one PM
+  Central." was spoken at 88.0 s, after the tool answered. The test booking was cancelled afterwards.
+- So **case f in § 7 is no longer blocked.** The "Blocked today" note there and the third bullet of § 6 describe Sep 30, not today.
+- **A real team alert from the test agent has still not been fired.** That path was proven on a staging copy of the workflow with its sends pointed at
+  the test sink (one alert in, both legs received). The first real one comes from a live call that asks for the team.
+- Unchanged from § 6: the warm transfer end to end and the briefing text are proven only by live calls k, k2 and k3, and a smaller model was not tried.
+- New for the live calls: stay silent and the agent prompts twice, about eleven seconds apart, then the line ends about twenty seconds after the second prompt.
