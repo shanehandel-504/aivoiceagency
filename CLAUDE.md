@@ -214,13 +214,15 @@ Verbatim. Never touch without a CEO order. **Re-verified against production 2026
 
 | # | Anchor | Where it lives — verified on prod |
 |---|---|---|
-| A1 | `3AM. GOOGLE WAS LISTENING.` | **LIVE — homepage `<h1>`**, `index.html:148`. Also `/lsa` `<title>` + OG/meta; the `/lsa` on-page H1 is its own line, "Your phone went to voicemail. *Google was listening.*" **Frozen through Aug 27 2026** under HOMEPAGE FREEZE LAW. |
-| A2 | `Every missed call hands the job to the next name on the map →` | **LIVE — homepage hero sub**, `index.html:149` (`.bs-sub`). No longer reserved; the slot is built. Frozen with A1. |
+| A1 | `3AM. GOOGLE WAS LISTENING.` | **OFF THE HOMEPAGE since Oct 1 2026** (CEO order, Sep 30 ruling: nobody outside the trade reads it). Still LIVE as the `/lsa` `<title>` + OG/meta and in the footer "Insights" links. Do not put it back on the homepage. |
+| A2 | `Every missed call hands the job to the next name on the map →` | **OFF THE HOMEPAGE since Oct 1 2026** (left with A1). Not live on any page; held in reserve. |
 | A3 | `One call. Sixteen agents.` | **LIVE — `/backstage`, `/watch`, `/staging/xray`** (`.bs-theater-sub`). **Not on the homepage** — the 16-agent theater moved off it in RUN 4. Any claim that A3 sits in `index.html` is stale. |
 | A4 | `AVA answers calls and books jobs.` | **LIVE — homepage metadata only**: `meta[name=description]`, `og:title`, `twitter:title` (`index.html:7,15,21`). It is **not** the homepage `<title>` (that reads "AI Receptionist That Books Appointments 24/7 \| AI Voice Agency") and **not** the H1. The `<h1>` form survives only at `/staging/xray.html:116`. |
 
-A1 + A2 are the homepage hero pair and are **already on the wire** — the X-Ray swap
-(`/staging/xray.html`, fires only on **GO SWAP**) is what still carries the A4 H1.
+**Homepage hero, verified Oct 1 2026:** `<h1>` = `AVA answers your phone. Every call. Books the job.` ·
+sub = `Play a sample call. The job ticket fills in while AVA is still on the phone.` The page is a
+conversion page built around four recorded sample calls (`css/calls.css`, `js/calls.js`,
+`/audio/samples/v2/`). The pre-change homepage is kept at `legacy/index-3am-2026-10-01.html`.
 Anchor drift is a real failure mode: this table was wrong for a week before RUN 9.5.
 **Re-verify against prod before citing a row, and stamp the date when you do.**
 
@@ -419,6 +421,15 @@ One push = one live unit.
 After THE FINAL CUT (2026-07-09), the homepage (`index.html` + `/assets/funnel.*` + `ava-pod.js` /
 `ava-theater.js`) is **FROZEN**. Bug fixes only. New features / redesigns require an explicit
 un-freeze from Shane. `/lsa` is likewise frozen as authored.
+
+**Oct 1 2026 — explicit CEO un-freeze, used once.** The homepage was rebuilt as a conversion page
+(hero, four recorded sample calls with a synced job ticket, "where the job goes", one price card).
+The status rail, the 3AM strip, the 16-agent replay and the three-tier pricing left the page; the
+theater still lives at `/backstage` and `/watch`. `feed.css` / `feed.js` no longer load on `/`.
+The freeze applies again to the new page: bug fixes only until Shane says otherwise.
+Homepage pricing law (Oct 1 2026): ONE base price on the page ($497 a month), the AI Chauffeur
+line under it (from $997 a month), no per-minute rate, no price for CRM or integration work, and
+never the word "custom".
 
 ---
 

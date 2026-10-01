@@ -1,0 +1,148 @@
+/* ============================================================
+   AVA SAMPLE CALLS — css/calls.css (Oct 1 2026)
+   The homepage as a conversion page: one left-aligned statement,
+   then one instrument. The call plays on the left, the job ticket
+   fills on the right. Everything else on the page stays quiet.
+   CIRCULANT-X: flat, sharp corners, hairlines, tokens only, so the
+   light toggle flips it with the rest of the site.
+   Cyan = AVA. Green = the job is captured (only when it is).
+   ============================================================ */
+
+/* ---------- hero ---------- */
+.cx-hero{padding:56px 0 8px}
+.cx-hero .g-eyebrow{margin-bottom:16px}
+.cx-hero h1{font-size:clamp(40px,8.4vw,88px);line-height:.98;letter-spacing:-.035em;font-weight:600;
+  margin:0 0 20px;color:var(--text);text-wrap:balance;max-width:12.5em}
+.cx-sub{color:var(--body-dim);font-size:clamp(17px,2.2vw,21px);line-height:1.45;max-width:34em;margin:0 0 26px}
+.cx-hcta{display:flex;flex-wrap:wrap;gap:10px}
+.cx-btn{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:52px;padding:0 24px;border:1px solid var(--line);border-radius:0;background:var(--panel);
+  color:var(--text);font:700 15px/1 "Space Grotesk",sans-serif;letter-spacing:.04em;text-decoration:none;
+  cursor:pointer;transition:transform .18s cubic-bezier(.16,1,.3,1),border-color .18s ease}
+.cx-btn:hover{transform:translateY(-2px);border-color:var(--cyan);color:var(--text)}
+.cx-btn:active{transform:translateY(1px)}
+.cx-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.cx-btn svg{flex:none;width:13px;height:15px;fill:currentColor}
+.cx-btn--go{background:var(--cyan);border-color:var(--cyan);color:var(--canvas)}
+.cx-btn--go:hover{color:var(--canvas)}
+.cx-hero .bs-micro{margin:14px 0 0}
+
+/* ---------- the instrument ---------- */
+.cx-sec{padding:40px 0 64px}
+.cx-vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.cx-demo{display:flex;flex-direction:column;gap:16px}
+.cx-tabs{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.cx-tab{background:none;border:0;border-bottom:2px solid transparent;border-radius:0;min-height:44px;
+  padding:10px 0;margin-right:22px;color:var(--neutral);font:500 17px/1.2 "Space Grotesk",sans-serif;cursor:pointer;
+  transition:color .2s}
+.cx-tab:hover{color:var(--text)}
+.cx-tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--cyan)}
+.cx-tab:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.cx-shows{color:var(--neutral);font-size:15px;line-height:1.5;margin:0;max-width:60em}
+
+.cx-s{display:none}
+.cx-stage{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:16px;align-items:start}
+.cx-pane{background:var(--panel);border:1px solid var(--line);padding:22px;min-width:0}
+.cx-call{display:flex;flex-direction:column;gap:18px}
+.cx-callhead{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px}
+.cx-play{min-height:52px;padding:0 20px;font-size:16px;letter-spacing:.01em}
+.cx-play svg{width:16px;height:16px}
+.cx-play .i-pause{display:none}
+.cx-play.on .i-play{display:none}
+.cx-play.on .i-pause{display:block}
+.cx-meta{display:flex;flex-direction:column;gap:2px;min-width:0}
+.cx-biz{font-weight:600;font-size:17px;color:var(--text)}
+.cx-clock{font-family:var(--g-mono);font-variant-numeric:tabular-nums;color:var(--neutral);font-size:13px}
+
+.cx-wave{height:96px;cursor:pointer;touch-action:none;position:relative}
+.cx-wave canvas{display:block;width:100%;height:100%}
+.cx-wave:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.cx-chapters{position:relative;height:34px;font-family:var(--g-mono);font-size:12px;color:var(--neutral)}
+.cx-chap{position:absolute;top:0;display:flex;flex-direction:column;gap:2px;white-space:nowrap}
+.cx-chap::before{content:"";width:1px;height:8px;background:var(--neutral)}
+.cx-chap.r{transform:translateX(-100%);align-items:flex-end}
+.cx-chap.on{color:var(--text)}
+.cx-chap.on::before{background:var(--cyan)}
+
+.cx-script{list-style:none;margin:0;padding:0 6px 0 0;display:flex;flex-direction:column;gap:12px;
+  max-height:300px;overflow-y:auto;scrollbar-width:thin;position:relative}
+.cx-script li{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;opacity:.36;transition:opacity .25s}
+.cx-script li.past{opacity:.78}
+.cx-script li.now{opacity:1}
+.cx-who{font-family:var(--g-mono);font-size:12px;padding-top:4px;color:var(--neutral)}
+.cx-script .a .cx-who{color:var(--cyan)}
+.cx-say{font-size:16.5px;line-height:1.45;color:var(--text)}
+.cx-err{margin:0;color:var(--body-dim);font-size:14px}
+
+.cx-ticket{display:flex;flex-direction:column;gap:16px}
+.cx-thead{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.cx-thead h3{font-size:15px;font-weight:600;margin:0;letter-spacing:.02em;color:var(--text)}
+.cx-status{font-family:var(--g-mono);font-size:12px;color:var(--neutral)}
+.cx-fields{margin:0;display:flex;flex-direction:column}
+.cx-row{display:grid;grid-template-columns:112px minmax(0,1fr);gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.cx-row dt{font-family:var(--g-mono);font-size:12px;color:var(--neutral);padding-top:3px}
+.cx-row dd{margin:0;font-size:15.5px;color:var(--text);opacity:0;transform:translateY(3px);transition:opacity .3s,transform .3s}
+.cx-row.on dd{opacity:1;transform:none}
+.cx-booked{border:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:4px;
+  transition:background .4s,border-color .4s}
+.cx-blab{font-family:var(--g-mono);font-size:12px;color:var(--neutral)}
+.cx-bbig{font-size:26px;font-weight:600;letter-spacing:-.01em;line-height:1.15;color:var(--neutral)}
+.cx-bsmall{font-size:14.5px;color:var(--neutral)}
+.cx-booked:not(.on) .cx-bbig,.cx-booked:not(.on) .cx-bsmall{visibility:hidden}
+.cx-booked.on{border-color:var(--green);background:color-mix(in srgb,var(--green) 10%,transparent)}
+.cx-booked.on .cx-blab{color:var(--green)}
+.cx-booked.on .cx-bbig{color:var(--text)}
+.cx-booked.on .cx-bsmall{color:var(--body-dim)}
+.cx-demo .bs-disclosure{margin-top:0}
+.cx-tx{display:flex;flex-direction:column}
+.cx-tx .bs-clip-tx{margin-top:0}
+
+/* ---------- where the job goes ---------- */
+.cx-lands{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 28px;border-top:1px solid var(--line);margin-top:20px}
+.cx-land{padding:20px 0 0;display:flex;flex-direction:column;gap:6px;min-width:0}
+.cx-land h3{margin:0;font-size:18px;font-weight:600;color:var(--text)}
+.cx-land p{margin:0;color:var(--body-dim);font-size:15px;line-height:1.55}
+
+/* ---------- price card ---------- */
+.cx-pricing{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) minmax(0,1.1fr);gap:28px 36px;
+  border-top:1px solid var(--line);padding-top:32px;margin-top:20px;align-items:start}
+.cx-pcol{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cx-plabel{font-family:var(--g-mono);font-size:12px;color:var(--neutral)}
+.cx-pbig{white-space:nowrap;font-size:clamp(30px,3.5vw,42px);font-weight:600;letter-spacing:-.03em;line-height:1;margin:0;color:var(--text)}
+.cx-psub{margin:0;color:var(--body-dim);font-size:16px}
+.cx-pfine{margin:6px 0 0;color:var(--neutral);font-size:13.5px;line-height:1.55;max-width:26em}
+.cx-pcol .cx-btn{margin-top:14px;align-self:flex-start}
+.cx-incl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;min-width:0}
+.cx-incl li{padding:10px 0 10px 20px;border-top:1px solid var(--line);position:relative;font-size:16px;color:var(--text)}
+.cx-incl li::before{content:"";position:absolute;left:0;top:18px;width:7px;height:7px;background:var(--cyan)}
+.cx-scope{background:var(--panel);border:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.cx-scope h3{margin:0;font-size:20px;font-weight:600;line-height:1.25;text-wrap:balance;color:var(--text)}
+.cx-scope p{margin:0;color:var(--body-dim);font-size:15.5px;line-height:1.55}
+.cx-scope .cx-btn{align-self:flex-start;margin-top:4px}
+
+@media (max-width:820px){
+  .cx-hero{padding:36px 0 4px}
+  .cx-sec{padding:28px 0 48px}
+  .cx-stage{grid-template-columns:minmax(0,1fr)}
+  .cx-pane{padding:16px}
+  .cx-call{gap:12px}
+  .cx-wave{height:64px}
+  .cx-script{max-height:132px}
+  .cx-tabs{flex-wrap:nowrap}
+  .cx-tab{font-size:15px;margin-right:16px;white-space:nowrap}
+  .cx-tab:last-child{margin-right:0}
+  .cx-l{display:none}
+  .cx-s{display:inline}
+  .cx-ticket{gap:12px}
+  .cx-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px}
+  .cx-row{grid-template-columns:minmax(0,1fr);gap:1px;padding:7px 0;align-content:start}
+  .cx-row dt{padding-top:0;font-size:11.5px}
+  .cx-row dd{font-size:14.5px;line-height:1.3}
+  .cx-booked{padding:12px 14px}
+  .cx-bbig{font-size:22px}
+  .cx-lands{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:8px}
+  .cx-pricing{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){
+  .cx-btn,.cx-tab,.cx-script li,.cx-row dd,.cx-booked{transition:none}
+}

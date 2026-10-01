@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Receptionist That Books Appointments 24/7 | AI Voice Agency</title>
+<meta name="description" content="AVA answers calls and books jobs — a done-for-you AI receptionist for local service businesses. We build it around your calls, launch it on your existing number, and run it for you. From $497/month.">
+<link rel="canonical" href="https://aivoiceagency.ai/">
+<meta name="theme-color" content="#0A0A0F">
+<script>(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aivoiceagency.ai/">
+<meta property="og:title" content="AVA answers calls and books jobs | AI Voice Agency">
+<meta property="og:description" content="Watch a scripted sample call: a 16-agent AI receptionist turns one ringing phone into a booked job in 11.3 seconds. Done for you, on your existing number. From $497/month.">
+<meta property="og:image" content="https://aivoiceagency.ai/assets/og-backstage.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AVA answers calls and books jobs | AI Voice Agency">
+<meta name="twitter:description" content="Watch a scripted sample call: a 16-agent AI receptionist takes one ringing phone from hello to on-the-calendar. Done for you. From $497/month.">
+<meta name="twitter:image" content="https://aivoiceagency.ai/assets/og-backstage.png">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%2300D4FF'/%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%2300D4FF' stroke-opacity='.35' stroke-width='2'/%3E%3C/svg%3E">
+<!-- Self-hosted Space Grotesk variable woff2 (OFL) — no external font round-trip -->
+<link rel="preload" href="/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<!-- RUN 3.5 · the mono IS above the fold here (status rail, micro line, sample-call
+     chip), so a font-display:swap reflow measured CLS 0.0063 — the law is 0.00.
+     Preloaded. Measured LCP is 136ms against a 400ms budget, so the extra 31KB in
+     the critical path is affordable and the swap never happens. -->
+<link rel="preload" href="/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url('/fonts/space-grotesk.woff2') format('woff2')}
+</style>
+<link rel="stylesheet" href="/assets/circulant.css?v=abf8701">
+<link rel="stylesheet" href="/assets/guide.css?v=abf8701">
+<link rel="stylesheet" href="/css/backstage.css?v=abf8701">
+<link rel="stylesheet" href="/css/feed.css?v=abf8701">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aivoiceagency.ai/#organization",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "telephone": "+1-414-240-8930",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Kewaskum",
+        "addressRegion": "WI"
+      },
+      "sameAs": [
+        "https://www.facebook.com/AIVoiceAgency",
+        "https://www.instagram.com/aivoiceagency.ai",
+        "https://x.com/AIVoiceAgency",
+        "https://www.youtube.com/@aivoiceagency",
+        "https://www.tiktok.com/@aivoiceagency.ai",
+        "https://www.linkedin.com/company/aivoiceagency"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aivoiceagency.ai/#website",
+      "name": "AI Voice Agency",
+      "url": "https://aivoiceagency.ai/",
+      "publisher": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://aivoiceagency.ai/#ava-service",
+      "name": "Done-for-you AI receptionist",
+      "description": "Every missed call signals Google to stop sending you new customers. AVA answers in one ring, 24/7 — the job stays yours.",
+      "areaServed": {
+        "@type": "State",
+        "name": "Wisconsin"
+      },
+      "provider": {
+        "@id": "https://aivoiceagency.ai/#organization"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "497",
+        "priceCurrency": "USD"
+      }
+    }
+  ]
+}
+</script>
+<script src="/js/tracking.js?v=7cd8529" async></script>
+<!-- BRIDGE:HEAD -->
+<script>window.__ASSET_V='abf8701';(function(){try{var t=localStorage.getItem('bs-theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#F4F6FA')}}catch(e){}})()</script>
+<link rel="stylesheet" href="/assets/bridge.css?v=abf8701">
+<script src="/js/bridge.js?v=abf8701" defer></script>
+<!-- /BRIDGE:HEAD -->
+</head>
+<body class="backstage">
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1029719056532809&ev=PageView&noscript=1"/></noscript>
+<a class="bs-skiplink" href="#main">Skip to content</a>
+
+<!-- ===================== NAV ===================== -->
+<!-- BRIDGE:NAV -->
+<nav class="bnav" aria-label="Main">
+  <a class="bnav-brand" href="/"><span class="bdot" aria-hidden="true"></span>AI VOICE AGENCY</a>
+  <button class="bnav-burger" aria-expanded="false" aria-controls="bnavMenu" aria-label="Menu">MENU</button>
+  <div class="bnav-menu" id="bnavMenu">
+    <div class="bnav-group">
+      <button class="bnav-top" type="button" aria-expanded="false">Verticals</button>
+      <div class="bnav-drop">
+        <a href="/home-services">AI receptionist for home services</a>
+        <a href="/medical-practices">AI receptionist for medical practices</a>
+        <a href="/professional-services">AI receptionist for professional services</a>
+        <a href="/hospitality">AI receptionist for hospitality &amp; events</a>
+        <a href="/ground-transportation">AI receptionist for transportation</a>
+      </div>
+    </div>
+    <div class="bnav-group">
+      <button class="bnav-top" type="button" aria-expanded="false">Wisconsin</button>
+      <div class="bnav-drop">
+        <a href="/milwaukee">Milwaukee answering service</a>
+        <a href="/madison">Madison answering service</a>
+        <a href="/green-bay">Green Bay answering service</a>
+        <a href="/wisconsin-limo">Wisconsin limo &amp; livery</a>
+      </div>
+    </div>
+    <a class="bnav-top" href="/live" data-event="hear_ava_live_nav">Hear AVA Live</a>
+    <a class="bnav-top" href="/#pricing">Pricing</a>
+    <a class="bnav-top" href="/roi">ROI</a>
+    <a class="bnav-cta" href="/book" data-event="book_click_nav">Book the AVA strategy call</a>
+    <a class="bnav-tel" href="tel:+14142408930" data-event="tel_tap_nav">414-240-8930</a>
+  </div>
+</nav>
+<!-- /BRIDGE:NAV -->
+
+<main id="main">
+
+<!-- ===================== AVA STATUS RAIL (RUN 3 · commit 2, corrected in c4) ===
+     REPLAY of REAL demo-line events, ALL from one source:
+     reports/2026-07-22-run15-e2e-proof.md — the Run 1.5 end-to-end live proof.
+     Real text out, real outbound from 414-946-6486 (DEMO-POOL-03), answered,
+     57s talk time, 8/8 variables off a live scrape, real post-call text.
+
+     The brief's cycle ended SLOT HELD -> JOB BOOKED. That call was a SYSTEM
+     TEST: it never held a slot and never booked a job. The only other candidate
+     source, the plumbing audio, is disclosed further down this page as a
+     scripted scenario. NO FABRICATION outranks the state list, so the rail
+     shows the five hops that actually happened. See js/ava-signal.js.
+
+     Rows are in the initial DOM (real, readable with JS off) and the height is
+     fixed at both breakpoints, so CLS stays 0. -->
+<div class="bs-rail" data-rail>
+  <div class="bs-rail-head">
+    <span class="bs-rail-label">RECENT ACTIVITY — DEMO LINE</span>
+    <span class="bs-rail-tag">REPLAY</span>
+  </div>
+  <ol class="bs-rail-feed" data-rail-feed>
+    <li data-age="0" data-tone="done"><span class="bs-rail-at" data-rail-at>22:32:29</span><span class="bs-rail-state" data-rail-state>RECAP SENT</span><span class="bs-rail-line" data-rail-line>POST-CALL TEXT LANDED IN 0.9s</span></li>
+    <li data-age="1" data-tone="work"><span class="bs-rail-at" data-rail-at>22:31:12</span><span class="bs-rail-state" data-rail-state>INTENT FOUND</span><span class="bs-rail-line" data-rail-line>8/8 CALLER DETAILS READ FROM A LIVE SCRAPE</span></li>
+    <li data-age="2" data-tone="work"><span class="bs-rail-at" data-rail-at>22:31:06</span><span class="bs-rail-state" data-rail-state>ANSWERED</span><span class="bs-rail-line" data-rail-line>PICKED UP · 57s TALK TIME</span></li>
+  </ol>
+</div>
+
+<!-- ===================== HERO · LAYER 1 (the LCP is this text) ===================== -->
+<section class="bs-hero">
+  <div class="g-wrap">
+    <p class="g-eyebrow">Done-for-you AI receptionist</p>
+    <h1>3AM. GOOGLE WAS LISTENING.</h1>
+    <p class="bs-sub">Every missed call hands the job to the next name on the map →</p>
+    <p class="bs-support">Every missed call signals Google to stop sending you new customers. AVA answers in one ring, 24/7 — the job stays yours.</p>
+    <div class="bs-hcta">
+      <a class="cta" href="tel:+14142408930" data-event="tel_tap_hero">CALL AVA LIVE</a>
+      <a class="cta--quiet ava-pulse" href="#watch" data-watch data-event="watch_tap_hero"><svg width="13" height="15" viewBox="0 0 13 15" aria-hidden="true" focusable="false"><path d="M1 1.6v11.8a.6.6 0 0 0 .93.5l9.2-5.9a.6.6 0 0 0 0-1L1.93 1.1A.6.6 0 0 0 1 1.6Z" fill="currentColor"/></svg>WATCH AVA BOOK IT</a>
+    </div>
+    <p class="bs-micro">Tap to start · Captions on · No form</p>
+    <a class="bs-result" href="#watch" data-watch data-event="result_tap_hero">
+      <!-- RUN 3.5 · ONE element, not four. The old cluster stacked four coloured
+           orbs carrying four identical ticks, which is decoration pretending to
+           be data: it never told you WHICH four things, and the hues repeated
+           the lane rainbow the theater already retired. A recorded call is a
+           waveform. One element, one hue (cyan = inspect the system). -->
+      <span class="signal-pill" aria-hidden="true">
+        <span class="bs-wavethumb">
+          <svg viewBox="0 0 40 22" width="40" height="22" focusable="false" aria-hidden="true">
+            <g fill="currentColor">
+              <rect x="0"  y="8"   width="3" height="6"  rx="1.5"/>
+              <rect x="5"  y="4.5" width="3" height="13" rx="1.5"/>
+              <rect x="10" y="1"   width="3" height="20" rx="1.5"/>
+              <rect x="15" y="6"   width="3" height="10" rx="1.5"/>
+              <rect x="20" y="2.5" width="3" height="17" rx="1.5"/>
+              <rect x="25" y="7"   width="3" height="8"  rx="1.5"/>
+              <rect x="30" y="4"   width="3" height="14" rx="1.5"/>
+              <rect x="35" y="8.5" width="3" height="5"  rx="1.5"/>
+            </g>
+          </svg>
+        </span>
+        <span class="sp-secs">11.3s</span>
+        <span class="sp-status">SAMPLE CALL</span>
+      </span>
+      <span class="bs-result-line">CALL RESULT → <b>JOB BOOKED · TUE 7:00 AM</b></span>
+    </a>
+    <ul class="bs-chipsrow">
+      <li>Done for you</li>
+      <li>Your existing number</li>
+      <li>From $497/mo</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== 3AM STRIP · the one above-fold miss moment (links to /lsa) =====================
+     RUN 3: red + amber appear HERE and nowhere else above the fold. Colours are
+     token-driven (they were hardcoded #101018/#EEF0F4, so the strip stayed black
+     when the light toggle flipped). Red = the miss. Amber = the cost of it. -->
+<a class="bs-3am" href="/lsa" data-event="lsa_strip_hero">
+  <span class="bs-3am-trace"><span class="bs-3am-dot" aria-hidden="true"></span>3:04 AM · MISSED → VOICEMAIL</span>
+  <span class="bs-3am-cost">Google logs every call your line doesn't answer. See what that signal does →</span>
+</a>
+
+<!-- ===================== THE THEATER · LAYER 2 (tap to start — never autoplays) ===================== -->
+<!-- ===================== BACKSTAGE 2.0 · RESULT-FIRST COMPONENT (RUN 4) =======
+     Replaces the old 16-agent theater on the homepage. The theater itself was
+     not deleted — it MOVED, intact, to /backstage/, which this component links.
+
+     PROGRESSIVE ENHANCEMENT LAW: what ships in this HTML is the FINAL LOCKED
+     STATE. A visitor with no JS gets the whole story — the result chip, all
+     four completed phases, the outcome strip and both CTAs. js/feed.js rewinds
+     it to `boot` and plays it forward; it never builds the story from nothing.
+
+     DUAL-MODE HONESTY LAW: there is NO timer, NO waveform and NO playhead in
+     summary mode. The .fd-audio block below is [hidden] and CSS keeps it
+     display:none in every non-audio state. Those three things exist only when
+     a real 46-second file is actually playing. ============================== -->
+<section class="bs-section fd-sec" id="watch">
+  <div class="g-wrap">
+    <div class="fd" data-feed data-state="final">
+
+      <div class="fd-top">
+        <span class="fd-anchor"><span class="fd-dot" aria-hidden="true"></span>SYSTEM REPLAY &middot; 2:14 AM &middot; <b>&ldquo;water heater leaking&rdquo;</b></span>
+        <span class="fd-chip" data-chip>RESULT: JOB BOOKED</span>
+      </div>
+
+      <h2 class="fd-h">One call. 16 agents. One booked job.</h2>
+
+      <div class="fd-crew">
+        <span class="fd-glyphs" aria-hidden="true">
+          <span class="fd-glyph is-on" data-glyph>IN</span><span class="fd-glyph is-on" data-glyph>TR</span><span class="fd-glyph is-on" data-glyph>TO</span><span class="fd-glyph is-on" data-glyph>OU</span>
+        </span>
+        <span class="fd-more is-in" data-more aria-hidden="true">+12</span>
+        <span class="fd-status" data-status>Job on the board &middot; customer texted</span>
+      </div>
+
+      <p class="fd-sum" data-sumlabel>8.5-sec summary &middot; of a 46-sec sample</p>
+
+      <ol class="fd-phases" data-phases>
+        <li class="fd-phase is-in is-done" data-phase="intake">
+          <span class="fd-ph-eyebrow">Intake</span>
+          <span class="fd-ph-line">Heard the 2AM emergency</span>
+          <span class="fd-ph-detail">water heater &middot; active leak</span>
+        </li>
+        <li class="fd-phase is-in is-done" data-phase="triage">
+          <span class="fd-ph-eyebrow">Triage</span>
+          <span class="fd-ph-line">Flagged it urgent</span>
+          <span class="fd-ph-detail">after-hours rules matched</span>
+        </li>
+        <li class="fd-phase is-in is-done" data-phase="booking">
+          <span class="fd-ph-eyebrow">Booking</span>
+          <span class="fd-ph-line">Found Tuesday 7:00 AM open</span>
+          <span class="fd-ph-detail">first slot on the route</span>
+        </li>
+        <li class="fd-phase is-in is-done" data-phase="output">
+          <span class="fd-ph-eyebrow">Output</span>
+          <span class="fd-ph-line">Booked it &middot; texted the customer</span>
+          <span class="fd-ph-detail">job on the board &middot; recap sent</span>
+        </li>
+      </ol>
+
+      <p class="fd-strip" data-strip>&#10003; 4 phases complete &middot; JOB BOOKED</p>
+
+      <p class="fd-outcome" data-outcome><b>Tue 7:00 AM</b> &middot; customer texted &middot; already on your board</p>
+
+      <!-- AUDIO MODE ONLY. Real file, real AnalyserNode, real playhead. -->
+      <div class="fd-audio" data-audiozone hidden>
+        <div class="fd-wave" data-wave><canvas></canvas></div>
+        <div class="fd-arow">
+          <span class="fd-time" data-time>0:00 / 0:46</span>
+          <input type="range" class="fd-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the sample call">
+        </div>
+      </div>
+
+      <div class="fd-ctas">
+        <button class="fd-cta fd-cta--cyan" type="button" data-hear data-event="hear_call_tap">&#9656; Hear the real call</button>
+        <button class="fd-cta fd-cta--ghost" type="button" data-expand aria-expanded="false" aria-controls="fdRoster" data-event="backstage_expand">See all 16 agents</button>
+        <button class="fd-cta fd-cta--ghost" type="button" data-replay>&#8634; Replay</button>
+      </div>
+
+      <!-- ROSTER — the canonical 16. Same names, same lanes, same one-liners as
+           the deep page at /backstage/. There is exactly ONE naming set. -->
+      <div class="fd-roster" id="fdRoster" data-roster hidden>
+        <div class="fd-lane" data-lane="intake">
+          <span class="fd-lane-label">Intake</span>
+          <ul class="fd-agents">
+            <li class="fd-agent"><b>LISTENER</b><span>answered on ring 1</span></li>
+            <li class="fd-agent"><b>CALLER ID</b><span>captured name + mobile number</span></li>
+            <li class="fd-agent"><b>AUDIO CLEANUP</b><span>filtered background water + truck noise</span></li>
+            <li class="fd-agent"><b>TRANSCRIBER</b><span>transcribed &ldquo;water heater is leaking&rdquo;</span></li>
+          </ul>
+        </div>
+        <div class="fd-lane" data-lane="triage">
+          <span class="fd-lane-label">Triage</span>
+          <ul class="fd-agents">
+            <li class="fd-agent"><b>REQUEST</b><span>identified water heater repair</span></li>
+            <li class="fd-agent"><b>URGENCY</b><span>flagged active leak &middot; time-sensitive</span></li>
+            <li class="fd-agent"><b>EMERGENCY RULES</b><span>matched your after-hours rule</span></li>
+            <li class="fd-agent"><b>TONE READ</b><span>read stressed caller &middot; kept it short</span></li>
+          </ul>
+        </div>
+        <div class="fd-lane" data-lane="tools">
+          <span class="fd-lane-label">Tools</span>
+          <ul class="fd-agents">
+            <li class="fd-agent"><b>CALENDAR</b><span>opened your service calendar</span></li>
+            <li class="fd-agent"><b>AVAILABILITY</b><span>found Tue 7:00 AM open on the route</span></li>
+            <li class="fd-agent"><b>SCHEDULER</b><span>held the 7:00 AM slot</span></li>
+            <li class="fd-agent"><b>CRM WRITE</b><span>job created: name &middot; address &middot; photos</span></li>
+          </ul>
+        </div>
+        <div class="fd-lane" data-lane="output">
+          <span class="fd-lane-label">Output</span>
+          <ul class="fd-agents">
+            <li class="fd-agent"><b>MORNING BOARD</b><span>added to tomorrow&rsquo;s morning board</span></li>
+            <li class="fd-agent"><b>CONFIRMATION TEXT</b><span>confirmation text sent to the caller</span></li>
+            <li class="fd-agent"><b>CALL RECORDING</b><span>recorded &middot; transcript saved to the job</span></li>
+            <li class="fd-agent"><b>OWNER ALERT</b><span>booked-job ping sent to your cell</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="fd-foot">
+        <span>Disclosed scripted sample &middot; 0:46</span>
+        <a href="/backstage/" data-event="backstage_deep_link">Full backstage view &rarr;</a>
+      </p>
+
+      <audio data-fdaudio preload="none" crossorigin="anonymous">
+        <source src="/audio/v2/plumbing/full.mp3?v=abf8701" type="audio/mpeg">
+      </audio>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HEAR AVA (real-call audio · additive, Run 1.6) ===================== -->
+<section class="bs-section" id="hear">
+  <div class="g-wrap">
+    <!-- RUN 3 · TRUTH FIX. The heading said "a real call" and the disclosure
+         eight lines below said "Scripted scenarios, not customer recordings."
+         Both cannot be true. The disclosure is the accurate one, so the heading
+         now matches it: the VOICE is real, the scenario is scripted. Nothing on
+         this site claims a customer recording until one is cleared to ship. -->
+    <p class="g-eyebrow">AVA's real voice</p>
+    <h2 class="bs-h2">Hear AVA run the call.</h2>
+    <p class="bs-cutaway">The theater above is the transmission. This is the audio — AVA's real voice, working a scripted scenario end to end.</p>
+    <!-- RUN 3: ONE featured scenario carries the Living Waveform; the other two
+         are compact selectable records. Three stacked equal players gave three
+         equal invitations and got three equal shrugs. All three transcripts stay
+         in the DOM — they are the page's answer-engine content. -->
+    <div class="bs-cliptabs" role="tablist" aria-label="Pick a recorded call">
+      <button class="bs-cliptab is-on" type="button" role="tab" aria-selected="true"  data-cliptab="0" data-event="hear_tab_plumbing">PLUMBING</button>
+      <button class="bs-cliptab" type="button" role="tab" aria-selected="false" data-cliptab="1" data-event="hear_tab_hvac">HVAC</button>
+      <button class="bs-cliptab" type="button" role="tab" aria-selected="false" data-cliptab="2" data-event="hear_tab_electrical">ELECTRICAL</button>
+    </div>
+    <div class="bs-clips">
+      <article class="bs-clip is-open" data-clip>
+        <div class="bs-clip-top">
+          <button class="bs-clip-play" type="button" data-play aria-label="Play the plumbing call" aria-pressed="false" data-event="hear_play_plumbing">▶</button>
+          <div class="bs-clip-meta">
+            <span class="bs-clip-label">Booked a 7:00 AM leak visit · quoted the $59 trip fee</span>
+            <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the plumbing call">
+          </div>
+          <span class="bs-clip-time" data-time>0:00 / 0:46</span>
+        </div>
+        <!-- LIVING WAVEFORM. Idle = a pure-CSS cyan sine. On play, ava-signal.js
+             attaches an AnalyserNode to this exact <audio> element, so the trace
+             is the real file's amplitude — not a canned animation. -->
+        <div class="ava-wave" data-wave aria-hidden="true"><span class="ava-wave-idle"></span><canvas></canvas></div>
+        <audio data-audio preload="none" crossorigin="anonymous"><source src="/audio/v2/plumbing/full.mp3?v=abf8701" type="audio/mpeg"></audio>
+        <details class="bs-clip-tx">
+          <summary>Read the transcript</summary>
+          <div class="tx-body">
+            <p><span class="spk">AVA</span>Thanks for calling — this is AVA. How can I help?</p>
+            <p><span class="spk">Caller</span>My water heater is leaking all over the garage floor. Like, right now.</p>
+            <p><span class="spk">AVA</span>Okay — you called the right place. Quick check: is it spraying, or seeping from the bottom?</p>
+            <p><span class="spk">Caller</span>Seeping. I already shut the water off at the—</p>
+            <p><span class="spk">AVA</span>Perfect — you're ahead of me. That was the exact right move, Sarah.</p>
+            <p><span class="spk">Caller</span>Can someone come tonight? What's that cost?</p>
+            <p><span class="spk">AVA</span>Tonight's emergency visit is one-forty-nine. Or seven A-M tomorrow is our standard fifty-nine dollar trip fee. Which works?</p>
+            <p><span class="spk">Caller</span>Seven's fine. It's contained.</p>
+            <p><span class="spk">AVA</span>Seven A-M tomorrow, booked. Confirmation text is on its way to you right now.</p>
+            <p><span class="spk">AVA</span>Keep a couple towels on it tonight — you handled this exactly right.</p>
+          </div>
+        </details>
+      </article>
+      <article class="bs-clip" data-clip>
+        <div class="bs-clip-top">
+          <button class="bs-clip-play" type="button" data-play aria-label="Play the HVAC call" aria-pressed="false" data-event="hear_play_hvac">▶</button>
+          <div class="bs-clip-meta">
+            <span class="bs-clip-label">Booked a 9:00 AM AC diagnostic · waived if the repair follows</span>
+            <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the HVAC call">
+          </div>
+          <span class="bs-clip-time" data-time>0:00 / 0:49</span>
+        </div>
+        <audio data-audio preload="none"><source src="/audio/v2/hvac/full.mp3?v=abf8701" type="audio/mpeg"></audio>
+        <details class="bs-clip-tx">
+          <summary>Read the transcript</summary>
+          <div class="tx-body">
+            <p><span class="spk">AVA</span>Thanks for calling — this is AVA. What's going on with your system?</p>
+            <p><span class="spk">Caller</span>Yeah, my AC died about an hour ago. It's ninety-one degrees in my house right now.</p>
+            <p><span class="spk">AVA</span>Ninety-one — that's miserable. Let's get you cooled down fast. Is the unit doing anything at all, or completely dead?</p>
+            <p><span class="spk">Caller</span>Completely dead. Breaker looks fine, I already checked the—</p>
+            <p><span class="spk">AVA</span>Got it — dead unit, breaker's good. That's exactly what the tech needs to know.</p>
+            <p><span class="spk">Caller</span>How much is this gonna run me?</p>
+            <p><span class="spk">AVA</span>The diagnostic visit is eighty-nine dollars, and it's waived if you go ahead with the repair. First opening is tomorrow at nine A-M — want it?</p>
+            <p><span class="spk">Caller</span>Yeah. Take it.</p>
+            <p><span class="spk">AVA</span>Nine A-M — you're booked. I'm texting your confirmation right now — reply to that text if anything changes.</p>
+            <p><span class="spk">AVA</span>Stay near a fan tonight, Mike. We've got you.</p>
+          </div>
+        </details>
+      </article>
+      <article class="bs-clip" data-clip>
+        <div class="bs-clip-top">
+          <button class="bs-clip-play" type="button" data-play aria-label="Play the electrical call" aria-pressed="false" data-event="hear_play_electrical">▶</button>
+          <div class="bs-clip-meta">
+            <span class="bs-clip-label">Booked a Thursday 2:00 PM panel inspection</span>
+            <input type="range" class="bs-clip-scrub" data-scrub min="0" max="100" step="0.1" value="0" aria-label="Seek within the electrical call">
+          </div>
+          <span class="bs-clip-time" data-time>0:00 / 0:46</span>
+        </div>
+        <audio data-audio preload="none"><source src="/audio/v2/electrical/full.mp3?v=abf8701" type="audio/mpeg"></audio>
+        <details class="bs-clip-tx">
+          <summary>Read the transcript</summary>
+          <div class="tx-body">
+            <p><span class="spk">AVA</span>Thanks for calling — this is AVA. What's the electrical doing?</p>
+            <p><span class="spk">Caller</span>Breaker in the kitchen keeps tripping. Third time today.</p>
+            <p><span class="spk">AVA</span>Third time — okay, it's telling on itself. Any burning smell, or warm outlets anywhere?</p>
+            <p><span class="spk">Caller</span>No, nothing like that. It just—</p>
+            <p><span class="spk">AVA</span>Good — no smell means no emergency. If that ever changes, that's a nine-one-one first, then us.</p>
+            <p><span class="spk">Caller</span>So what do you charge to look at it?</p>
+            <p><span class="spk">AVA</span>Panel-and-circuit inspection is seventy-five, and it's applied to any work we do. I've got Thursday at two P-M open.</p>
+            <p><span class="spk">Caller</span>Thursday works.</p>
+            <p><span class="spk">AVA</span>Thursday, two P-M — you're on the schedule. Texting your confirmation now.</p>
+            <p><span class="spk">AVA</span>Leave that breaker off till we're out, Dave. Better safe.</p>
+          </div>
+        </details>
+      </article>
+    </div>
+    <p class="bs-disclosure">Sample calls — AVA's real voice, sample data. Scripted scenarios, not customer recordings.</p>
+  </div>
+</section>
+
+<!-- ===================== THE SEVEN QUESTIONS (glass accordions · answers in DOM) ===================== -->
+<section class="bs-section" id="questions">
+  <div class="g-wrap">
+    <p class="g-eyebrow">The questions operators ask</p>
+    <h2 class="bs-h2">Straight answers.</h2>
+    <div class="bs-qa-grid">
+      <details class="bs-qa" open>
+        <summary>What does AVA do when your phone rings?</summary>
+        <div class="bs-qa-a"><p>AVA picks up in one ring, any hour of the day. It greets the caller in your business's voice, listens to what they need, and pulls out the details that matter — name, number, address, what's wrong, and how urgent it is. Then it does the receptionist's real job: it books the appointment into your calendar or routes the call by your rules. The caller gets a confirmation text. You get a summary the moment it lands.</p></div>
+      </details>
+      <details class="bs-qa">
+        <summary>Can AVA book jobs on my calendar?</summary>
+        <div class="bs-qa-a">
+          <p>Yes — that's the point of the whole machine. During setup we connect AVA to the calendar you already run your day from. On a call, AVA offers real open slots, holds the appointment, writes the job into your CRM if you use one, and texts both sides. No phone tag, no sticky notes.</p>
+          <div class="wiring-panel">
+            <div class="wp-orb"><span class="orb" data-state="done" style="--size:56px;--lane:var(--lane-tools)"><i>✓</i></span><span>AVA</span></div>
+            <ul><li>Calendar</li><li>CRM</li><li>SMS</li><li>Owner</li></ul>
+          </div>
+        </div>
+      </details>
+      <details class="bs-qa">
+        <summary>What happens when a call is urgent?</summary>
+        <div class="bs-qa-a"><p>You set the triage rules; AVA runs them. A burst pipe, sparks at an outlet, no heat in January — whatever you define as urgent gets flagged on the call, moved to the front of the schedule or transferred live, and your cell gets an alert immediately. Routine calls book like routine calls. Emergencies act like emergencies.</p></div>
+      </details>
+      <details class="bs-qa">
+        <summary>Can AVA work with my existing phone number?</summary>
+        <div class="bs-qa-a"><p>Yes. Nothing changes for your customers — they dial the number they've always dialed. We launch AVA on your existing line, and your forwarding rules decide what it takes: every call, after-hours only, or just the overflow when your team is already on the phone.</p></div>
+      </details>
+      <details class="bs-qa">
+        <summary>Does AVA replace my receptionist or dispatcher?</summary>
+        <div class="bs-qa-a"><p>No. AVA covers what they physically can't: 2 AM, Sunday, both lines ringing at once, and the calls that come in while they're already helping someone. Keep your people on the work only people can do — AVA takes the ringing phone they had to keep dropping everything for.</p></div>
+      </details>
+      <details class="bs-qa">
+        <summary>What happens when AVA cannot handle a call?</summary>
+        <div class="bs-qa-a"><p>It follows the fallback rule you chose: transfer straight to your cell, take a message and text it to you, or schedule a callback. You define the trigger words, the VIP callers, and the situations that always go to a human. You can also take over or pause AVA any time you want.</p></div>
+      </details>
+      <details class="bs-qa" id="cost">
+        <summary>How much does AVA cost?</summary>
+        <div class="bs-qa-a"><p>The Starter System is <b>$497 a month plus a $497 one-time setup</b>. Setup is the done-for-you part: we map your calls, build AVA around them, test it with you on real calls, launch it on your number, and keep running and tuning it after it's live. Growth is $997 a month plus a $1,500 setup. Operations builds start around $1,997 a month and are scoped on your call volume. Voice minutes bill by usage. No contracts — cancel anytime.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WORTH IT? → PRICING ===================== -->
+<section class="bs-section--tight">
+  <div class="g-wrap">
+    <div class="bs-ob" style="max-width:68ch">
+      <h3>“Is it worth $497 a month?”</h3>
+      <p>Run it against your own numbers, not ours. Take your average job value and count the calls that hit voicemail last month. If AVA books even one job a month you would have missed, check the math for your trade — then <a href="/roi" data-event="roi_click_pricing" style="color:var(--cyan)">run your own numbers in the calculator</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="bs-section" id="pricing">
+  <div class="g-wrap">
+    <p class="g-eyebrow">Pricing — scoped before you pay</p>
+    <h2 class="bs-h2">Put AVA on your line.</h2>
+    <div class="bs-ptabs" role="group" aria-label="What size is your operation?">
+      <button class="bs-ptab is-on" type="button" aria-pressed="true"  data-fit="starter"    data-event="fit_tap_pricing">Solo</button>
+      <button class="bs-ptab" type="button" aria-pressed="false" data-fit="growth"     data-event="fit_tap_pricing">Multi-truck</button>
+      <button class="bs-ptab" type="button" aria-pressed="false" data-fit="operations" data-event="fit_tap_pricing">Multi-location</button>
+    </div>
+    <div class="bs-tiers">
+      <div class="bs-tier is-reco is-picked" data-tier="starter">
+        <p class="t-flag">START HERE</p>
+        <p class="t-name">Starter System</p>
+        <p class="t-price">$497<span>/mo</span></p>
+        <p class="t-setup">+ $497 setup · + voice usage</p>
+        <ul>
+          <li>One line, answered 24/7 — nights, weekends, overflow</li>
+          <li>Callers qualified + jobs put on your calendar</li>
+          <li>Missed-call recovery + text-back in seconds</li>
+          <li>Calls summarized, recorded, transcribed</li>
+          <li>Owner alerted the moment it matters</li>
+        </ul>
+        <p class="t-terms">Month-to-month. No contract.</p>
+        <a class="bs-cta ava-pulse" href="/book" data-event="book_click_pricing">Put AVA on my line</a>
+      </div>
+      <div class="bs-tier" data-tier="growth">
+        <!-- RUN 3: the old "most operators" chip is dead — it implied data we have never
+             published. "RECOMMENDED" is our recommendation, and says so. -->
+        <p class="t-flag">RECOMMENDED</p>
+        <p class="t-name">Growth System</p>
+        <p class="t-price">$997<span>/mo</span></p>
+        <p class="t-setup">+ $1,500 setup · + voice usage</p>
+        <ul>
+          <li>Everything in Starter</li>
+          <li>New leads called back in seconds — speed-to-lead</li>
+          <li>7-day follow-up that chases every no-book</li>
+          <li>Simple CRM writeback — one supported system</li>
+        </ul>
+        <a class="bs-cta bs-cta-line ava-pulse" href="/book" data-event="book_click_pricing">Build my Growth system</a>
+      </div>
+      <div class="bs-tier" data-tier="operations">
+        <p class="t-flag">CUSTOM BUILD</p>
+        <p class="t-name">Operations System</p>
+        <p class="t-price">From $1,997<span>/mo</span></p>
+        <p class="t-setup">+ scoped setup · + voice usage</p>
+        <ul>
+          <li>Custom intake + advanced routing</li>
+          <li>Deep CRM + industry-software writeback</li>
+          <li>Live warm transfers + escalation rules</li>
+          <li>Multi-line, multi-location, multi-language</li>
+        </ul>
+        <a class="bs-cta bs-cta-line ava-pulse" href="/book" data-event="book_click_pricing">Scope it</a>
+      </div>
+    </div>
+    <!-- RUN 3: the blanket "No contracts" claim is gone. Starter is
+         month-to-month and says so on its own card; contracts DO exist on the
+         higher tiers, so a sitewide no-contract line would be false. -->
+    <p style="font-family:var(--g-mono);font-size:12.5px;color:var(--neutral);margin-top:16px">Starter is month-to-month. Growth and Operations terms are set during scoping. Final scope depends on call volume, handoff rules, and the systems AVA works alongside.</p>
+  </div>
+</section>
+
+<!-- ===================== BOOK ===================== -->
+<section class="bs-section bs-center" id="book-cta">
+  <div class="g-wrap">
+    <h2 class="bs-h2">Fifteen minutes. We map your calls.</h2>
+    <a class="bs-cta bs-cta-cyan ava-pulse" href="/book" data-event="book_click_gate">Book My AVA Strategy Call</a>
+    <p class="bs-escape">Or just call AVA — <a href="tel:+14142408930" data-event="tel_tap_escape">414-240-8930</a>. It books the call itself.</p>
+  </div>
+</section>
+
+<!-- ===================== AEO FACT BLOCK ===================== -->
+<section class="bs-section--tight">
+  <div class="g-wrap">
+    <p style="font-family:var(--g-mono);font-size:13px;line-height:1.8;color:var(--ink-mute);max-width:80ch">AVA is a done-for-you AI receptionist service from AI Voice Agency, based in Kewaskum, Wisconsin. AVA answers business phone lines 24/7, qualifies callers, books appointments into the business calendar, and sends text confirmations to the caller and the owner. Pricing: Starter is $497 per month plus $497 setup, Growth is $997 per month plus $1,500 setup, Operations plans start at $1,997 per month and are custom-scoped. No contracts. Setup takes days and works with your existing phone number. Live demo line: 414-240-8930. Booking: aivoiceagency.ai/book.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOT BAND: socials · news · signature ===================== -->
+<section class="bs-footband">
+  <div class="g-wrap">
+    <div class="bs-footgrid">
+      <div>
+        <h3>FOLLOW THE BUILD</h3>
+        <div class="bs-social">
+          <a href="https://www.facebook.com/AIVoiceAgency" rel="noopener" data-event="social_tap_footer">Facebook</a>
+          <a href="https://www.instagram.com/aivoiceagency.ai" rel="noopener" data-event="social_tap_footer">Instagram</a>
+          <a href="https://x.com/AIVoiceAgency" rel="noopener" data-event="social_tap_footer">X</a>
+          <a href="https://www.youtube.com/@aivoiceagency" rel="noopener" data-event="social_tap_footer">YouTube</a>
+          <a href="https://www.tiktok.com/@aivoiceagency.ai" rel="noopener" data-event="social_tap_footer">TikTok</a>
+          <a href="https://www.linkedin.com/company/aivoiceagency" rel="noopener" data-event="social_tap_footer">LinkedIn</a>
+        </div>
+      </div>
+      <div class="bs-news">
+        <h3>FROM THE WIRE</h3>
+        <a href="/lsa">3AM. Google was listening</a>
+        <a href="/blog/what-happens-when-you-call-ava">What happens when you call AVA</a>
+        <a href="/blog/wisconsin-limo-crush">The Wisconsin limo call crush</a>
+        <a href="/blog/home-services-30-percent-missed">The 30% missed-call problem</a>
+        <a href="/videos">Videos</a>
+      </div>
+    </div>
+    <p class="bs-sig">AI VOICE AGENCY · KEWASKUM, WI</p>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<!-- BRIDGE:FOOTER -->
+<footer class="bfoot">
+  <div class="bfoot-wrap">
+    <div class="bfoot-grid">
+      <div class="bfoot-brand">
+        <span class="bmark"><span class="bdot" aria-hidden="true"></span>AI VOICE AGENCY</span>
+        <p class="bfoot-tag">The AI receptionist for local service businesses. Answers in one ring. Books the job.</p>
+        <span class="bfoot-built">Built in Wisconsin</span>
+      </div>
+      <details class="bfoot-col" open>
+        <summary>Verticals</summary>
+        <div class="bfoot-items">
+          <a href="/home-services">AI receptionist for home services</a>
+          <a href="/medical-practices">AI receptionist for medical practices</a>
+          <a href="/professional-services">AI receptionist for professional services</a>
+          <a href="/hospitality">AI receptionist for hospitality &amp; events</a>
+          <a href="/ground-transportation">AI receptionist for transportation</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>Wisconsin</summary>
+        <div class="bfoot-items">
+          <a href="/milwaukee">Milwaukee</a>
+          <a href="/madison">Madison</a>
+          <a href="/green-bay">Green Bay</a>
+          <a href="/wisconsin-limo">Wisconsin Limo</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>By city &amp; trade</summary>
+        <div class="bfoot-items">
+          <span class="bfoot-sub">By trade</span>
+          <a href="/plumber-answering-service">Plumber answering service</a>
+          <a href="/hvac-answering-service">HVAC answering service</a>
+          <a href="/electrician-answering-service">Electrician answering service</a>
+          <a href="/24-hour-answering-service">24-hour answering service</a>
+          <span class="bfoot-sub">Milwaukee</span>
+          <a href="/milwaukee-hvac">HVAC answering</a>
+          <a href="/milwaukee-plumbing">Plumbing answering</a>
+          <a href="/milwaukee-electrical">Electrical answering</a>
+          <a href="/milwaukee-dental">Dental answering</a>
+          <a href="/milwaukee-roofing">Roofing answering</a>
+          <span class="bfoot-sub">Madison</span>
+          <a href="/madison-hvac">HVAC answering</a>
+          <a href="/madison-plumbing">Plumbing answering</a>
+          <a href="/madison-electrical">Electrical answering</a>
+          <a href="/madison-dental">Dental answering</a>
+          <a href="/madison-roofing">Roofing answering</a>
+          <span class="bfoot-sub">West Bend</span>
+          <a href="/west-bend-hvac">HVAC answering</a>
+          <a href="/west-bend-plumbing">Plumbing answering</a>
+          <a href="/west-bend-electrical">Electrical answering</a>
+          <a href="/west-bend-dental">Dental answering</a>
+          <a href="/west-bend-roofing">Roofing answering</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>Insights</summary>
+        <div class="bfoot-items">
+          <a href="/blog">The AVA blog</a>
+          <a href="/lsa">3AM. Google was listening</a>
+          <a href="/blog/what-happens-when-you-call-ava">What happens when you call AVA</a>
+          <a href="/blog/wisconsin-limo-crush">The Wisconsin limo call crush</a>
+          <a href="/blog/home-services-30-percent-missed">The 30% missed-call problem</a>
+          <a href="/guides/furnace-short-cycling.html">Furnace short cycling</a>
+          <a href="/guides/ac-running-but-not-cooling.html">AC running but not cooling</a>
+          <a href="/videos">Videos</a>
+          <a href="/watch">Watch AVA book a job</a>
+        </div>
+      </details>
+      <details class="bfoot-col" open>
+        <summary>Company</summary>
+        <div class="bfoot-items">
+          <a href="/overview">Overview</a>
+          <a href="/deck">Interactive deck</a>
+          <a href="/roi">ROI Calculator</a>
+          <a href="/methodology.html">Methodology</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/terms.html">Terms</a>
+          <a href="/sms-policy.html">SMS Policy</a>
+        </div>
+      </details>
+    </div>
+    <div class="bfoot-action">
+      <a class="bf-tel" href="tel:+14142408930" data-event="tel_tap_footer">Hear AVA live — 414-240-8930</a>
+      <a class="bf-book" href="/book" data-event="book_click_footer">Book the AVA strategy call</a>
+    </div>
+    <p class="bfoot-legal">AVA is an AI assistant. Demo calls are scripted samples using AVA's demo voice and sample data. &copy; 2026 AI Voice Agency.</p>
+  </div>
+</footer>
+<!-- /BRIDGE:FOOTER -->
+
+<!-- ===================== PERSISTENT CALLBAR (every viewport) ===================== -->
+<div class="bs-callbar">
+  <a class="bs-cb-tel ava-pulse" href="tel:+14142408930" data-event="tel_tap_callbar">CALL AVA — 414-240-8930</a>
+  <a class="bs-cb-book" href="/book" data-event="book_click_callbar">BOOK</a>
+</div>
+
+<script src="/js/backstage.js?v=abf8701" defer></script>
+<script src="/js/ava-signal.js?v=abf8701" defer></script>
+<script src="/js/feed.js?v=abf8701" defer></script>
+</body>
+</html>
