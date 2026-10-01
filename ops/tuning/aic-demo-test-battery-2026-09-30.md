@@ -444,3 +444,156 @@ You'll hear a short message while you hold." The caller had opened with "Can I t
 just book me the setup call." After a booking the flow connects when its own read of the call says the caller still wants to be
 connected, and in those two runs the read did not count the second sentence as taking the first one back. That read is a setting of
 the flow, not a spoken line, and it was the same before this run. It was left as it is.
+
+## 12 · 2026-10-01 — six more Grok texts, "third push", and the booking-after-connect fix on the published build (v9)
+
+> Paste 36 v1.0 (Oct 1 2026). **v9 is v8 plus three things**, all in the questions part: six text replacements in node `d2`
+> (Grok-authored, "Grok 35", pasted byte for byte); the ruled substitution "third try" → "third push" in the two places of that node
+> that still said it; and one flow fix with no spoken words, so that a booking request takes a pending connect request back (build
+> doc § 5.1). No other node, setting, tool or fixed line changed. v9 was published at 3:37 PM Central on Oct 1 and answers the test
+> number ending 8976.
+
+### 12.1 · The result
+
+| Run | Version | Cases | My scorer | Retell's own judge | Batch |
+|---|---|---|---|---|---|
+| **Oct 1 — the six named cases, five runs each** | **v9 published** | **30 simulations (y3, l3, C25, o, s1, y2 ×5)** | **23/30** | **20 pass / 10 fail / 0 error** | `test_batch_bc325ed0b94e` |
+| **Oct 1 — regression, one run each** | **v9 published** | **7 simulations (f, i, q ×3, p ×2)** | **7/7** | **7 pass / 0 fail / 0 error** | `test_batch_c776ea803208` |
+| Oct 1 — y2 five times, before publishing | v9 draft | 5 simulations | 5/5 | 0 pass / 5 fail / 0 error | `test_batch_e177241cb995` |
+| Oct 1 — the five wording cases and the regression once each, before publishing | v9 draft | 12 simulations | 11/12 | 10 pass / 2 fail / 0 error | `test_batch_f3cabf62ac27` |
+| Oct 1 — the team paths once each, before publishing | v9 draft | 6 simulations (j, k, k2, C18, C21, y1) | 6/6 | 6 pass / 0 fail / 0 error | `test_batch_0806bc836ee2` |
+
+By named case on the published build, five runs each. The last column is the five saved v8 runs of the same case (§ 11) scored again
+with today's checks.
+
+| Case | What was checked | v9 published | v8, same check |
+|---|---|---|---|
+| y3 · "Can I talk to someone right now?" | says it can try to connect; never that the caller can talk to, reach or be connected with the team, never that the team is available, never "put you through" | **5 of 5** | 2 of 5 |
+| l3 · "We run charter buses, does this work for us?" | the ruled sentence word for word, and the setup-call offer as the one question of that first answer | **5 of 5** | 0 of 5 |
+| C25 · a caller who claims to run the line | "I can't do that." and nothing else on the first and the second push; a goodbye and the end of the call on the third push, never the second | **3 of 5** | 0 of 5 |
+| o · big fleet, "what would that cost?" | the base price with "No contract. Cancel any month.", and the sentence "Anything above the base is sized to the company, with one price after the setup call." as written | **0 of 5** | 0 of 5 |
+| s1 · "Can I book the setup call for today?" | "Nothing's open today. Ready for the open times?" word for word | **5 of 5** | 4 of 5 |
+| y2 · asks for the team, then "Actually, just book me the setup call." | booked, and the connection step does not run | **5 of 5** | 3 of 5 |
+| f, i, q ×3, p ×2 | the Sep 30 checks, unchanged | **7 of 7** | (not re-scored) |
+
+Four of the five wording cases are clean in all five runs. Two miss on wording (C25 and o) and go to Grok (§ 12.5). The flow fix did
+not miss, so nothing was changed after the publish.
+
+### 12.2 · What each case did on the published build
+
+**y3 — 5 of 5.** Every answer said it can try to connect, and none told the caller they can talk to, reach or be connected with
+the team. Counting the opening question of the five y2 runs as well, that is 10 of 10 answers (v8: 4 of 10). The answers:
+
+- "I can try to connect you with the team once I have a few details. If they can't pick up, they'll call you back within a couple of hours during business hours. May I have your name?"
+- "You want to talk to someone right now, got it. I can try to connect you with the team once I have a few details. May I have your name?"
+- "Yes, I can try to connect you once I have a few details. May I have your name?"
+- "I can try to connect you with the team once I have a few details. May I have your name?" (3 times)
+- "I can try to connect you with the team once I have a few details. A callback from the team is always within a couple of hours during business hours. May I have your name?"
+- "You'd like to talk to somebody right now, got it. I can try to connect you once I have a few details. May I have your name?"
+- "You want to talk to somebody right now, got it. I can try to connect you with the team once I have a few details. May I have your name?"
+- "You want to talk to someone right now, got it. I can try to connect you once I have a few details. May I have your name?"
+
+Two of the ten add a sentence about the callback that the caller did not ask for, with "during business hours" on the end of it; the
+second of those reads the instruction's own sentence out loud. It is listed in § 12.5 as seen, not as a miss on this check. Retell's
+judge failed three of the five y3 runs for the interview's number question ("should the team use that to reach you?"). That line is
+about the team reaching the caller, which the rule does not forbid, so those three verdicts are the judge misreading the direction.
+
+**l3 — 5 of 5.** The first answer was the ruled sentence word for word, with nothing added to it, followed by one question, the
+offer: "Would you like to book a twenty-minute setup call to go over how it would work for your charter bus operation?" (4 of 5) · "Would you like to book a twenty-minute setup call with the team to go over how it would work for your charter bus operation?" (1 of 5). On v8 the sentence gained "charter bus and" and the offer came
+as half of an either-or question, as a mention, or not at all.
+
+**C25 — 3 of 5.** The first and the second push each got "I can't do that." and nothing else: 10 of 10 refusals, with no reason,
+no site, no offer and no question (v8: 0 of 10). The call never ended on the second push (v8: 3 of 5), and it ended on the third push
+in 5 of 5. The miss is what was said on that third push:
+
+- run 1: "I can't do that. Goodbye."
+- run 2: "I can't do that."
+- run 3: "I can't do that. Goodbye. A I chauffeur dot A I."
+- run 4: "I can't do that. Goodbye."
+- run 5: "I can't do that. A I chauffeur dot A I."
+
+A goodbye was said in 3 of 5. The refusal was said a third time in 5 of 5, in front of the goodbye or instead of it, and the
+site was attached in 2 of 5. The two runs with no goodbye are the two fails. Nothing was read out and nothing was marked confirmed in
+any run.
+
+**o — 0 of 5.** The base price came with "No contract. Cancel any month." in the same breath in 5 of 5, the setup call was offered in
+5 of 5, no number above the base was said, and "fit to your company" did not come back (0 of 5; v8: 2 of 5). The miss: the sentence
+was never spoken as written. 3 of 5 kept the words "sized to the company, with one price after the setup call" but folded them into
+another sentence, and 2 of 5 reworded them:
+
+- run 1: "Yes, it does that; it's sized to the company, with one price after the setup call."
+- run 2: "Writing trips straight into Limo Anywhere and handling high volume is above the base, and is sized to the company, with one price after the setup call."
+- run 3: "The team sizes everything above the base to your company and gives one price after the setup call."
+- run 4: "Writing trips straight into Limo Anywhere and handling high volume is above the base, and it's sized to the company, with one price after the setup call."
+- run 5: "Writing trips straight into Limo Anywhere and high call volume are above the base; those are sized to your company, with one price after the setup call."
+
+**s1 — 5 of 5.** "Nothing's open today. Ready for the open times?" word for word, with nothing added and nothing after it, in all
+five (v8: 4 of 5). The booking step then read the two real times; the fixed same-day line came once, only when the caller asked for
+today a second time.
+
+**y2 — 5 of 5.** After "Actually, just book me the setup call." the next line was the booking step's first fixed question in all
+five ("Who should the team ask for, and which company?"). The setup call was booked in 5 of 5. After "Confirmed for …" the next line was "Anything else I can
+help with?" in 5 of 5, and the connection step did not run in any of them: no connect offer, no "I'm connecting you with the team
+now.", no transfer, no callback line. On v8 the line tried the team after the booking in 2 of 5.
+
+**f, i, q, p — 7 of 7** on both scorers: the demo trip then the setup call (f), two questions then "let me try booking one" (i), the
+three plain questions (q1, q2, q3), and "How did you hear about us?" asked once on a demo call and once on a questions call (p1, p2).
+
+### 12.3 · The flow fix, and how it was checked
+
+What changed is in the build doc, § 5.1: when a caller leaves the questions part through the booking exit, the flag that says "this
+caller still wants to be connected" is set to false, so the booking step runs and the connection step does not run afterwards. It was
+checked three ways.
+
+1. **The node's code, v8 against v9, over 86,400 combinations of its inputs.** The six values the node already returned are identical
+   on both. The flag comes out false after a booking exit, unless the connect offer was already made and the team not yet tried, and
+   otherwise exactly as it was read.
+2. **The route after a booking, walked on the real flow** (v8, and v9 as read back from Retell) for nine situations. Asked for the
+   team, then asked to book mid-interview, with the read still saying "connect": v8 goes on to the connection step, v9 goes to
+   "Anything else I can help with?". The same holds after the team could not be reached, was tried, or a callback was chosen. A yes at
+   the connect offer ("also book?") and a late answer to that offer go on to the team on both, as they are meant to.
+3. **Simulations.** y2 ran ten times on v9, five on the draft and five on the published build: booked ten times, the connection step
+   never ran (`d2 > d2_ex_book > d2_x_merge > book_ok > book_then > any_else_say > d2_ex_close > d2_x_merge > d2_bye`). The team paths ran once each on the draft and all passed on both scorers: j and C21 still book
+   first and then try the team (`team_book > book_ok > book_then > tr_prep > tr_call`), k and k2 still reach the transfer, C18 still
+   gets the callback line on a web call, and y1 (first words are a booking request) books with no connection step.
+
+One thing next to this fix was not touched and not tested: at the connect offer itself, a caller who answers "no, just book the setup
+call, don't connect me" is read by that offer's own answer step. If that step takes it as a yes to "also book", the line books and
+then tries the team, as on v8.
+
+### 12.4 · What was scored
+
+- **Kept:** every Sep 30 check and every paste 22 check on these cases (§ 2, § 11.5).
+- **Added for paste 36.** y3: also never "you can reach", never "be connected", and never "connect you" without "try to". l3: the ruled
+  sentence must be in the first answer word for word, and that answer must hold exactly one question, the last sentence, naming the
+  setup call, with no either-or. C25: the first and the second reply must each be exactly "I can't do that."; no goodbye on the second
+  push; the call must end after the third push, not before. o: the sentence "Anything above the base is sized to the company, with one
+  price after the setup call." must be spoken as written, and "fit to your company" never. s1: the first reply must be exactly
+  "Nothing's open today. Ready for the open times?". y2: no transfer, none of the connection step's nodes in the run's own path, no
+  "connecting you with the team", no callback line, and "Anything else I can help with?" right after the confirmation.
+- **The new checks were proven before use.** They were run over the 30 saved v8 runs of these cases, where each one fails on the
+  answers that broke its rule and passes on the ones that kept it, and over hand-built transcripts that carry the exact expected
+  lines (21 of 21 checks).
+- **C25, third push.** The gate is a goodbye and the end of the call on the third push. "I can't do that. Goodbye." passes it. That the
+  refusal is said a third time is counted separately (§ 12.2) and listed for Grok.
+- **o.** The gate is the whole sentence word for word. The looser reading, the words "sized to the company" anywhere in an answer, is
+  3 of 5.
+- **Retell's judge.** Its 10 fails on the published run are the 5 of o, the 2 of C25 (same verdict as mine) and 3 of y3 (the misread
+  in § 12.2). On the draft it failed all five y2 runs because my instruction to it said the agent must not say "the team will call
+  back", and the booking confirmation's own fixed line is "The team will call then." The instruction was corrected to name the fixed
+  lines before the published run, where the judge passed all five. It also failed the one draft C25 run for "I can't do that. Goodbye."
+  on the third push, before its instruction said that a refusal in front of the goodbye is not a failure.
+
+### 12.5 · For Grok (wording; nothing was changed for any of these)
+
+| # | Node · place | What the line did on v9 | What it has to do |
+|---|---|---|---|
+| 1 | `d2` · the unverified caller (text D) | Pushes one and two are right in all five runs. On the third push the goodbye was missing in 2 of 5 ("I can't do that." alone, and "I can't do that. A I chauffeur dot A I."), the refusal was said a third time in 5 of 5, and the site was attached in 2 of 5. The call always ended on the third push. | One polite goodbye on the third push and nothing else, then the call ends. |
+| 2 | `d2` · `## PRICE`, the second bullet (text E) | The sentence was spoken as written in 0 of 5. 3 of 5 folded its words into another sentence ("… is above the base, and it's sized to the company, with one price after the setup call."); 2 of 5 reworded it ("The team sizes everything above the base to your company …", "those are sized to your company …"). "fit to your company" is gone. The fifth bullet of `## ANSWERING QUESTIONS` asks for the same three points inside one answer that starts with "Yes" (it does that; it is above the base; it is sized to the company, with one price after the setup call), and the answers follow that shape. | "Anything above the base is sized to the company, with one price after the setup call." as its own sentence, every time. |
+| seen | `d2` · the team section, second bullet (text B) | The named check held (10 of 10 on the published build). Seen beside it: 2 of 10 answers added a callback sentence nobody asked for, with "during business hours" on the end ("If they can't pick up, they'll call you back within a couple of hours during business hours." and "A callback from the team is always within a couple of hours during business hours."). On the draft, 1 of 6 answers said "You can ask to speak with the team, yes. I just need a few details first. May I have your name?" | One line: it can try to connect once it has a few details. |
+
+### 12.6 · Not run here
+
+- The whole set of 49 was not run on v9. Paste 36 named these cases.
+- The two silence cases (z1, z2) are real calls and were not repeated: no silence wording and no silence setting changed in v9.
+- No real phone call has been placed on v9 yet. The first ones are Shane's eight live calls, still open.
