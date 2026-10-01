@@ -512,5 +512,30 @@ def main():
     print('--- %d/%d version-only pages armored ---' % (vchanged, len(VERSION_ONLY)))
 
 
+USAGE = '''usage: python tools/stamp.py
+
+Stamps every registered page in place: global nav / breadcrumbs / footer / call bar
+between the BRIDGE:* markers, plus the ?v=<git hash> cache token on first-party
+assets (PAGES and VERSION_ONLY). Run it from the repo root.
+
+It takes no options and has no dry run: a plain run rewrites the pages.
+
+  -h, --help   show this message and exit (nothing is stamped)'''
+
+
+def guard(argv):
+    """The stamp takes no arguments. Before this guard an argument was ignored and the
+    full stamp ran, so `--help` rewrote ~79 pages. Now -h / --help prints the usage and
+    any other argument is refused; either way nothing is stamped."""
+    if not argv:
+        return
+    if '-h' in argv or '--help' in argv:
+        print(USAGE)
+        sys.exit(0)
+    sys.stderr.write('stamp.py: unknown argument: %s (nothing stamped)\n\n%s\n' % (' '.join(argv), USAGE))
+    sys.exit(2)
+
+
 if __name__ == '__main__':
+    guard(sys.argv[1:])
     main()

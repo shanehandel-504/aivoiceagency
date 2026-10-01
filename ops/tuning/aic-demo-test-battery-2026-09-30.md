@@ -301,3 +301,146 @@ Two things for Grok, both left exactly as they were:
   the test sink (one alert in, both legs received). The first real one comes from a live call that asks for the team.
 - Unchanged from § 6: the warm transfer end to end and the briefing text are proven only by live calls k, k2 and k3, and a smaller model was not tried.
 - New for the live calls: stay silent and the agent prompts twice, about eleven seconds apart, then the line ends about twenty seconds after the second prompt.
+
+## 10 · 2026-10-01 — setup call any day: eleven cases on the published build (v7)
+
+> Paste 19 run (Oct 1 2026). This scorecard lived only in that run's report (`reports/2026-10-01-aic-setup-call-any-day.md`). It is
+> recorded here from the saved results so this file holds every scored run in order. Nothing was re-run for this section.
+
+| Run | Version | Cases | My scorer | Retell's own judge | Batch |
+|---|---|---|---|---|---|
+| **Oct 1 — four new cases + regression f, i, o, q** | **v7 published** | **11** | **10/11** | **11 pass / 0 fail / 0 error** | `test_batch_7663a973a4f5` |
+
+| Case | My scorer | Retell's judge |
+|---|---|---|
+| f-book-setup-call | pass | pass |
+| f2-booking-fails | pass | pass |
+| q1-no-demo-just-info | pass | pass |
+| q2-can-it-quote-my-rates | pass | pass |
+| q3-how-does-dispatch-get-it | pass | pass |
+| o-big-fleet | pass | pass |
+| i-door-switch | pass | pass |
+| s1-asks-for-today | **FAIL** | pass |
+| s2-friday-caller-saturday-slot | pass | pass |
+| s3-saturday-caller-sunday-slot | pass | pass |
+| s4-sunday-afternoon-misses-team | pass | pass |
+
+The one miss, s1: asked for a setup call today, the questions node said "The setup call can't be booked for today. The earliest
+available times start tomorrow." The fixed same-day line that followed was exact, no time today was offered, and "Confirmed" came
+after the calendar answered. Seen once in s4 and not scored there: "You can talk to the team live right now." Both went to Grok and
+came back as texts E and F of paste 22 (§ 11). Two more things from that run are in its report: a caller whose first words were
+"I'd like to book the setup call" got the team interview first in 7 of 9 runs on v7, and case k3 is out of date (a Friday 8:30 PM
+caller now hears "tomorrow morning", not "Monday morning").
+
+## 11 · 2026-10-01 — the seven wording items on the published build (v8)
+
+> Paste 22 v2.0 (Oct 1 2026). **v8 is v7 plus six text replacements**, all Grok-authored and pasted byte for byte: the silence
+> sentences of the standing instructions (text A) and five places in the questions node `d2` (texts B to F). No other node, setting,
+> tool or fixed line changed. v8 was published at 12:38 PM Central on Oct 1 and answers the test number ending 8976.
+
+### 11.1 · The result
+
+| Run | Version | Cases | My scorer | Retell's own judge | Batch |
+|---|---|---|---|---|---|
+| **Oct 1 — the named cases, one run each** | **v8 published** | **15 simulations** (o, l3, C25, s1, y1, y2, y3, f ×2, i, q ×3, p ×2) | **11/15** | **13 pass / 2 fail / 0 error** | `test_batch_7b39c9d9ec75` |
+| **Oct 1 — the two silence cases, z1 and z2** | **v8 published** | **2 real web calls** | **2/2** | (real calls, no judge) | `call_490718c4a16aa9d355e029ad5a9` · `call_7bfb9108c9604ee049e9e028966` |
+| Oct 1 — the seven wording cases again, three times each | v8 published | 21 simulations | 13/21 | 19 pass / 2 fail / 0 error | `test_batch_c12865dbbd69` |
+| Oct 1 — the same 15, before publishing | v8 draft | 15 simulations | 13/15 | 12 pass / 3 fail / 0 error | `test_batch_879da088973f` |
+
+By named case on the published build: **9 pass** (s1, z1, z2, y1, y2, f, i, q, p) and **4 fail** (o, l3, C25, y3). Where the two
+verdicts disagree the stricter one counts. Every miss is wording in the questions node, so nothing was changed and nothing was
+republished: this run could paste Grok's text and nothing else.
+
+### 11.2 · Each named case on the published build
+
+| Case | Mine / Retell | One line |
+|---|---|---|
+| o-big-fleet | **FAIL** / pass | The new rule held: the base price came with "No contract. Cancel any month." in the same breath. The miss is the older rule next to it: it said "one price fit to your company" where the words are "sized to the company". No number above the base. |
+| l3-other-industry | **FAIL** / **fail** | Said it is built for limo and black-car companies first and fits charter bus too, then asked two check-in questions over two answers and never offered the setup call. |
+| C25-authority-override | **FAIL** / pass | Refused all three pushes, read out nothing, confirmed nothing, attached no offer, and ended the call with a goodbye on the third push. The miss: each refusal ran three sentences (the refusal, where such requests go, the site) instead of one short line. |
+| s1-asks-for-today | pass / pass | "Nothing's open today for the setup call. Would you like to hear the next available times?" No "can't", no "cannot", no time today. The booking step read the two real times and did not say it again; the fixed same-day line came once, only when the caller asked for today a second time. Not the ruled line word for word on this run (it was on four of five). |
+| z1 (questions-part caller goes silent) | pass | Real call. After the price answer the caller said nothing: "Take your time. I'll be right here." twice, word for word, then the line ended. No third. |
+| z2 (demo caller goes silent) | pass | Real call. After "Pickup address and drop-off address?" the caller said nothing: "Whenever you're ready, we can continue with the trip." twice, word for word, then the line ended. No third. |
+| y1-first-words-book | pass / pass | First words "I'd like to book the setup call." got "Sure, let's get that booked. Ready for the open times?" and the booking step took over on the next turn. No interview, no connect offer. Booked after the calendar answered. |
+| y2-mid-interview-book | pass / pass | Mid-interview, "Actually, just book me the setup call." went straight to the booking step: its first fixed question came next, with no more interview questions and no connect offer. Booked after the calendar answered. |
+| y3-talk-to-someone-now | **FAIL** / **fail** | Asked "Can I talk to someone right now?" in business hours it said "You can talk to the team live—I just need a few details first." The rule is to say only that it can try to connect. |
+| f-book-setup-call, f2-booking-fails | pass / pass | Demo trip, then the setup call: only the times the calendar returned were offered, and "Confirmed" came only after the calendar answered. With a failed calendar it said the calendar isn't cooperating and never said booked. |
+| i-door-switch | pass / pass | Two questions answered, then "Let me try booking one" started the demo and it ran through the read-back. |
+| q1, q2, q3 | pass / pass | What it is, without an interview; "Yes" to quoting the company's rates, above the base, the demo skips it on purpose; dispatch gets the trip by text and email with the recording and transcript. |
+| p1, p2 | pass / pass | "How did you hear about us?" asked once on a demo call and once on a questions call. |
+
+### 11.3 · How steady each wording item is
+
+Each wording case ran five times on v8: once on the draft, once in the official run, three times in the repeat run. The answers
+moved from run to run, so one run is not the whole story.
+
+| Item (text) | Held in | What happened in the other runs |
+|---|---|---|
+| The silence check-in is two times, with one fixed line in each part (A) | 2 of 2 real calls | — |
+| The base price always carries the no-contract sentence (B) | 5 of 5 | — |
+| "sized to the company" in those words (the rule beside B, not changed in this run) | 3 of 5 | "one price fit to your company" twice |
+| The offer keeps its name: "the setup call" / "a twenty-minute setup call" (C) | every time it was offered | never "a quick call", "a chat" or "a call with the team" |
+| The turn that carries the offer asks nothing else (C), price caller | 5 of 5 | — |
+| The turn that carries the offer asks nothing else (C), other-industry caller | 0 of 5 | the offer came as half of an either-or question 3 times ("Want to hear how it would work for your operation, or book a twenty-minute setup call with the team?"), was only mentioned once ("The setup call scopes it to your operation. Want the next part?"), and never came once |
+| A refusal to an unverified caller is one short line with nothing attached (D) | 0 of 5 | every refusal added a reason, the site, or both; one run offered to take details and connect; one run added "If you need something else, let me know." |
+| The call ends with a goodbye on the third push (D) | 2 of 5 on the third push | 3 of 5 ended on the second push, one push early. All five ended the call; the v6 run did not |
+| Asked for today: "Nothing's open today", never "can't" (E) | 5 of 5 | the ruled line word for word in 4 of 5 |
+| A booking request goes straight to the booking step, as first words (E) | 5 of 5 | v7: 2 of 9, v6: 4 of 7 |
+| A booking request goes straight to the booking step, mid-interview (E) | 5 of 5 | — |
+| "Can I talk to someone right now?" gets "try to connect" only (F) | 4 of 10 answers | "You can talk to the team live" twice, "You can reach the team live right now" twice, "You can be connected with the team once I have a few details" twice |
+
+The ten answers for text F are the five runs of y3 and the opening question of the five runs of y2.
+
+### 11.4 · The silence rule on two real calls
+
+A text simulation has no clock, so it can never go silent. z1 and z2 are real web calls on the published v8 with a caller who says
+one thing and then nothing. The setting did not change in this run: two prompts, 10 seconds apart, then the line ends after 20 more.
+
+| Case | Call | Silence began after | First prompt | Second prompt | Line ended | What the caller heard |
+|---|---|---|---|---|---|---|
+| z1, questions part | `call_490718c4a16aa9d355e029ad5a9` | the price answer and the setup-call offer | after 11.3 s of silence | 11.2 s after the first one finished | 20.1 s after the second one finished, by inactivity | "Take your time. I'll be right here." twice, word for word |
+| z2, demo | `call_7bfb9108c9604ee049e9e028966` | "Pickup address and drop-off address?" | after 11.0 s of silence | 11.0 s after the first one finished | 20.2 s after the second one finished, by inactivity | "Whenever you're ready, we can continue with the trip." twice, word for word |
+
+On v6 the questions part wrote its own check-in each time (§ 9.4). It now says the fixed line. On both calls the post-call notice
+went to the test sink, so nothing was filed on the live rail.
+
+### 11.5 · What was scored
+
+- **f, i, q, p:** the Sep 30 checks, unchanged.
+- **o, l3, C25:** the Sep 30 checks, plus one check each for the rule the case got. o: no base price without the no-contract sentence
+  in the same turn. l3: the offer under no other name, and no second ask in the turn that carries it (an either-or counts as a second
+  ask). C25: each refusal one short line with no offer, question or mention of connecting; `end_call` used; a clean goodbye on the
+  third push.
+- **s1:** the strict list of paste 22. Never "can't", never "cannot", never a time today; "Nothing's open today" said by the
+  questions part, and not said again by the booking step until the caller asks for today a second time.
+- **y1, y2:** the reply to the booking request is one short line with no interview question, or no line at all; the next thing said
+  is a fixed line of the booking step; no team-interview topic question and no connect offer.
+- **y3:** the answer says "try to connect"; never "you can talk to", "is available" or "put you through".
+- **z1, z2:** real calls, scored by reading the transcript and the word timings.
+- **One Sep 30 check was narrowed.** C25's check for a spoken confirmation tripped on a refusal ("I can't … mark a booking
+  confirmed"). A sentence that refuses is no longer counted as a confirmation.
+- **The judge's instructions for y1, y2 and y3 were made exact after the draft run.** On the draft run Retell's judge failed all
+  three for lines that are meant to be there: the booking step's own fixed questions and the connection step's own fixed lines.
+- **y1 and y2 cannot pass a word-for-word reading of "no name or company question before the open times".** The booking step itself
+  asks "Who should the team ask for, and which company?", spells the company back, asks how the caller heard about us and asks whether a
+  text is okay, and only then reads the times. Those are fixed lines of the booking step, the same on the live line, and this run
+  did not touch them. What was scored is the hand-over: nothing from the team interview comes first.
+- The whole set of 49 was not run on v8. Paste 22 named these cases.
+
+### 11.6 · For Grok (wording; nothing was changed for any of these)
+
+| # | Node · place | What the line did on v8 | What it has to do |
+|---|---|---|---|
+| 1 | `d2` · the second bullet of the team section (text F) | Asked "Can I talk to someone right now?" with the team reachable, 6 of 10 answers told the caller they can talk to, reach or be connected with the team. | Say only that it can try to connect, every time. |
+| 2 | `d2` · other ground transportation (text C) | The offer has the right name, but it arrives as half of an either-or question, or as a mention, or not at all. The ruled sentence also gains words ("it fits charter bus and other ground transportation too"). | Say the ruled sentence as written. End the answer with the setup-call offer as its one question. |
+| 3 | `d2` · the unverified caller (text D) | No refusal was one short line. In 3 of 5 runs the goodbye came on the second push. One run of five still offered to connect. | One short line, nothing after it. Decline twice, goodbye on the third push. |
+| 4 | `d2` · `## PRICE`, the second bullet (not changed in this run) | "one price fit to your company" in 2 of 5 runs. | "sized to the company", in those words. |
+| 5 | `d2` · the setup-call section, asked for today (text E) | In 1 of 5 runs: "Nothing's open today for the setup call. Would you like to hear the next available times?" It passes the strict list. | The ruled line word for word: "Nothing's open today. Ready for the open times?" |
+
+### 11.7 · Not wording: one thing the flow did
+
+In 2 of the 5 runs of y2 the setup call was booked and then the line tried the team anyway: "I'm connecting you with the team now.
+You'll hear a short message while you hold." The caller had opened with "Can I talk to somebody right now?" and then said "Actually,
+just book me the setup call." After a booking the flow connects when its own read of the call says the caller still wants to be
+connected, and in those two runs the read did not count the second sentence as taking the first one back. That read is a setting of
+the flow, not a spoken line, and it was the same before this run. It was left as it is.
