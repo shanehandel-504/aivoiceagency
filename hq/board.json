@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-09-30T13:41:49-05:00",
+  "updated": "2026-09-30T22:26:48-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -1030,6 +1030,10 @@
     {
       "ts": "2026-09-30T13:41:49-05:00",
       "entry": "AVA MEASUREMENT FIX v2 — LIVE, RUN INCOMPLETE (T2). js/tracking.js 7cd8529: booking_complete / booking_confirmed send booking_method (was source, which GA4 read as the session source: 'booked_page' 82 sessions / 'ghl_postmessage' 28 in 90 days); /booked fires only with a leadconnectorhq.com / msgsndr.com referrer (read from GHL's widget code: it redirects from inside its iframe and adds no query params; GA4 shows 27 /booked views in 90 days, all with an empty referrer; the calendar redirect is off, ThankYouMessage); NOTRACK on any host outside aivoiceagency.ai / aichauffeur.ai (+ www). Sweep: 261 files, 2 renames, both in tracking.js. d8f5ef5: tracking.js ?v=7cd8529 on the 63 pages that load it (63/63 live), sitemap 59 lastmods by the hook. Private pages: trip sheets (n8n WF-TRIP-SHEET), /hq, /reports load no analytics; payload scan 0 hits. Tests (every hit aborted, tag libraries served locally): C0 old code bare /booked -> ep.source=booked_page; T1 0 · T1b 1+1, refresh 0 · T2 real booking blocked: GHL Turnstile -> 429 at 13:21 / 13:24 / 13:36 CT, 0 appointments, 0 contacts, nothing to clean · T2-sim (GHL's own completion line in the real iframe, x2) exactly 1 booking, booking_method=ghl_postmessage, no ep.source · T3 one session id, utm claude_test kept, 0 source overrides (old code: ep.source=ghl_postmessage) · T4 0 (old code 117) · T5 0. GA4 key event booking_complete only; Ads imports booking_complete (7687285865). ZZ sink row unchanged; § 9 owner row untouched (its tag reads owner-alert, not owner-alerts). Phone agent and n8n untouched."
+    },
+    {
+      "ts": "2026-09-30T22:26:48-05:00",
+      "entry": "AIC two-door + slow-talker build on TEST agent — published, awaiting the simulation battery + Shane's 8 live calls (paste v1.4)"
     }
   ]
 }
