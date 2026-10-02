@@ -23,9 +23,13 @@ Rendering the video/reel itself is the `ava-factory` skill's lane. This one is t
 - Sourced stats are the only stats. Current citable set: AgentZap 47% of calls outside 9–5 /
   73%-higher conversion · ServiceTitan 10–14.1% of HVAC calls after-hours · ~50→~3 shops answering
   2PM vs 2AM. **Cite the source in the post.** No unattributed percentages.
-- Demo language only: **captured · routed · dispatcher will confirm**. Never "booked," "confirmed,"
-  or "guaranteed" as a claim about the service (§ FORBIDDEN WORDS). Natural booking language is fine
-  inside a clearly-labeled sample-call transcript, and only there.
+- **"BOOKED" is the catchphrase** (CEO ruling, Oct 2 2026 — see § FORBIDDEN WORDS). A reservation
+  entered is booked; dispatch confirming the driver is a separate step. Use it on covers, end cards,
+  captions and sample calls — "Booked." is how a video ends. "Confirmed" and "guaranteed" stay out of
+  claims about the service.
+- Sample calls and demo scenarios are storytelling: they show what the line can be set up to do
+  (rate quotes, calendar, CRM, texts, emails, documents). Label them as sample or demo scenarios;
+  never call a scripted call a "real call".
 - "Google says" = **verbatim quote only** (§ 6). Paraphrase is not attribution.
 - AVA is "AVA." Never "she," never "her."
 - Show the seams. A post that admits what AVA does *not* do outperforms one that claims everything,
@@ -112,7 +116,8 @@ reach-tag that has nothing to do with the post. Never more than 5 — a tag wall
 
 - [ ] Anchored to a real artifact. Named.
 - [ ] Zero fabricated numbers, customers, or outcomes. Sources cited.
-- [ ] No "booked / confirmed / guaranteed / locked in" as a claim. No AVA she/her.
+- [ ] No "confirmed / guaranteed / locked in" as a claim ("booked" is approved). No AVA she/her.
+- [ ] A scripted sample call is labeled sample / demo scenario, never "real call".
 - [ ] "Google says" content is a verbatim quote, or the phrase isn't used.
 - [ ] First line works alone.
 - [ ] One CTA. Pin comment written. `414-240-8930` and nothing else.
