@@ -31,7 +31,7 @@
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
 
   <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
-  <link rel="stylesheet" href="/assets/aic.css?v=s1002b">
+  <link rel="stylesheet" href="/assets/aic.css?v=s1003a">
   <style>
   .qr-dialog{background:#12121A;color:#EEF0F4;border:1px solid rgba(255,255,255,.06);padding:2rem;max-width:22rem;width:calc(100% - 2rem);text-align:center;font-family:'Space Grotesk',sans-serif;margin:auto}
   .qr-dialog::backdrop{background:rgba(10,10,15,.8)}
@@ -256,267 +256,205 @@
     </div>
     </div>
 
-    <div class="console hero-console" id="hero-console">
-      <div class="console-bar">
-        <div class="console-title">
-          <div class="dots"><span></span><span></span><span></span></div>
-          Dispatch Console <span class="hc-state ringing" id="hc-state">Ringing</span>
+    <!-- 2026-10-02 · THE HERO PLAYS THE CALLS (owner's direction, Oct 2, 5:18 PM).
+         The scripted dispatch console that stood here is gone: the recorded call
+         and its trip sheet are the real version of what it acted out. #demo moved
+         with the player, so /#demo, ?call= and the #demo-scoped rules all land here.
+         The play control is an outline on purpose: PUSH TO CALL AI is the one
+         filled control in this fold. Behaviour: /assets/aic-calls.js, unchanged.
+         The HTML ships the finished first call, so a reader with no JS gets the story. -->
+    <div class="hero-calls" id="demo" role="region" aria-label="Six sample calls" data-rail-hide>
+      <div class="sc" data-calls>
+        <button type="button" id="demo-play-btn" class="demo-call-btn sc-play" data-state="idle" aria-pressed="false" data-event="sample_play_hero">
+          <span class="play-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          <span class="play-label">Play the sample call</span>
+        </button>
+        <div class="sc-tabs" role="tablist" aria-label="Pick a sample call" data-tabs>
+            <button class="sc-tab" type="button" role="tab" id="sc-tab-airport" aria-selected="true" tabindex="0" data-event="sample_tab_airport"><span class="sc-l">O'Hare pickup</span><span class="sc-s">Airport</span></button>
+            <button class="sc-tab" type="button" role="tab" id="sc-tab-corporate" aria-selected="false" tabindex="-1" data-event="sample_tab_corporate"><span class="sc-l">Corporate account</span><span class="sc-s">Corporate</span></button>
+            <button class="sc-tab" type="button" role="tab" id="sc-tab-wedding" aria-selected="false" tabindex="-1" data-event="sample_tab_wedding"><span class="sc-l">Wedding by the hour</span><span class="sc-s">Wedding</span></button>
+            <button class="sc-tab" type="button" role="tab" id="sc-tab-driver" aria-selected="false" tabindex="-1" data-event="sample_tab_driver"><span class="sc-l">Where's my driver</span><span class="sc-s">My driver</span></button>
+            <button class="sc-tab" type="button" role="tab" id="sc-tab-rebook" aria-selected="false" tabindex="-1" data-event="sample_tab_rebook"><span class="sc-l">Cancel and rebook</span><span class="sc-s">Rebook</span></button>
+            <button class="sc-tab" type="button" role="tab" id="sc-tab-group" aria-selected="false" tabindex="-1" data-event="sample_tab_group"><span class="sc-l">Group job, first quote</span><span class="sc-s">Group of 26</span></button>
         </div>
+        <p class="sc-shows" data-shows>This call shows a rate quoted from the company's own rate sheet, the flight tracked, and the trip booked with a receipt by text and email.</p>
+        <div class="sc-stage">
+          <div class="console sc-call" data-callpane>
+            <div class="console-bar">
+              <div class="console-title"><div class="dots" aria-hidden="true"><span></span><span></span><span></span></div><span class="sc-biz" data-biz>Corbel Black Car</span></div>
+              <span class="sc-clock" data-clock>1:09 / 1:09</span>
+            </div>
+            <div class="sc-wave" data-wave role="slider" tabindex="0" aria-label="Position in the call" aria-valuemin="0" aria-valuemax="69" aria-valuenow="69"><canvas></canvas></div>
+            <div class="sc-chapters" data-chapters aria-hidden="true">
+              <div class="sc-chap on" style="left:5.198%">Answered</div>
+              <div class="sc-chap r on" style="left:65.178%">Trip taken</div>
+              <div class="sc-chap r on" style="left:99.134%">Booked</div>
+            </div>
+            <ol class="sc-script" data-script>
+              <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">Corbel Black Car, reservations.</span></li>
+              <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">Hi. I land at O'Hare tonight and need a car to Evanston. What's that run?</span></li>
+              <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">A sedan from O'Hare to Evanston is $115, plus tolls and gratuity. Which airline and flight?</span></li>
+              <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">United 1242. It lands at 9:40.</span></li>
+              <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">I'll track that flight, so your pickup moves with it. How many passengers and bags?</span></li>
+              <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">Just me. Two bags... actually, three. One's a golf bag.</span></li>
+              <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">Golf bag noted for your chauffeur. Inside at baggage claim, with a name sign?</span></li>
+              <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">Inside is good.</span></li>
+              <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">And the drop-off address?</span></li>
+              <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">1820 Hinman Avenue, Evanston.</span></li>
+              <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">Your name and cell?</span></li>
+              <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">Mark Delaney. 312-555-0148.</span></li>
+              <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">Email for the receipt?</span></li>
+              <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">mark@delaneyhq.com</span></li>
+              <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">Mark Delaney, tonight, United 1242, inside at baggage claim to Hinman Avenue, $115 plus tolls and gratuity. You're booked. Trip sheet and receipt are on the way by text and email, and your chauffeur's name and car come by text before you land.</span></li>
+              <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">Perfect. Thanks.</span></li>
+            </ol>
+            <p class="sc-err" data-err hidden>The recording did not load. Every call is written out below.</p>
+          </div>
 
-        <span class="hc-honest">Interactive demo · illustrative trip data</span>
+          <aside class="console sc-ticket" aria-label="Trip sheet" data-ticketpane>
+            <div class="console-bar">
+              <div class="console-title"><div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>Trip sheet</div>
+              <span class="sc-state is-done" data-status>Booked</span>
+            </div>
+            <dl class="sc-fields" data-fields>
+              <div class="sc-row on"><dt>Pickup</dt><dd>O'Hare, tonight</dd></div>
+              <div class="sc-row on"><dt>Drop-off</dt><dd>1820 Hinman Ave, Evanston</dd></div>
+              <div class="sc-row on"><dt>Rate quoted</dt><dd>$115 + tolls, gratuity</dd></div>
+              <div class="sc-row on"><dt>Flight</dt><dd>United 1242, lands 9:40 PM</dd></div>
+              <div class="sc-row on"><dt>Flight tracking</dt><dd>On, pickup moves with it</dd></div>
+              <div class="sc-row on"><dt>Passengers</dt><dd>1, with 3 bags</dd></div>
+              <div class="sc-row on"><dt>Chauffeur note</dt><dd>Golf bag</dd></div>
+              <div class="sc-row on"><dt>Meet</dt><dd>Inside, baggage claim, name sign</dd></div>
+              <div class="sc-row on"><dt>Passenger</dt><dd>Mark Delaney, 312-555-0148</dd></div>
+              <div class="sc-row on"><dt>Email</dt><dd>mark@delaneyhq.com</dd></div>
+              <div class="sc-row on"><dt>Status</dt><dd>Booked</dd></div>
+              <div class="sc-row on"><dt>Text + email</dt><dd>Trip sheet and receipt</dd></div>
+              <div class="sc-row on"><dt>Chauffeur</dt><dd>Name and car by text before landing</dd></div>
+            </dl>
+            <div class="sc-result on" data-booked>
+              <span class="sc-rlab" data-blab>Booked</span>
+              <span class="sc-rbig" data-bbig>Tonight 9:40 PM</span>
+              <span class="sc-rsmall" data-bsmall>Sedan, O'Hare to Evanston, $115</span>
+            </div>
+            <div class="sc-after" data-after hidden>
+              <p class="sc-ahead">Want AI Chauffeur answering your phone?</p>
+              <a class="demo-call-btn" href="/book/" data-event="book_click_aftercall">Book the setup call</a>
+              <button class="demo-call-btn" type="button" data-next data-event="sample_next_demo"><span>Next: the <span data-nextname>corporate account</span> call &rarr;</span></button>
+            </div>
+          </aside>
+        </div>
+        <p class="sc-note">Sample calls: built scenarios, sample trips and rates, recorded voices. Every voice you hear here can answer the phone for your company.</p>
       </div>
-
-      <p class="hc-result">
-        <span class="hc-r">Call answered</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">Captured</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">Ticketed</span><span class="hc-arrow" aria-hidden="true">→</span><span class="hc-r">In your CRM</span>
-      </p>
-
-      <div class="hc-transcript" id="hc-transcript" aria-live="polite">
-
-        <span class="hc-line" data-hc-line="0"><svg class="hc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Inbound call · +1 (414) 555-0182</span>
-        <span class="hc-line" data-hc-line="1"><span class="hc-who">AI CHAUFFEUR:</span> AI Chauffeur, where are you headed today?</span>
-        <span class="hc-line" data-hc-line="2"><span class="hc-who">Caller:</span> Downtown Marriott to MKE airport, 5:45 AM tomorrow.</span>
-        <span class="hc-line" data-hc-line="3"><span class="hc-who">AI CHAUFFEUR:</span> Got it — one passenger, executive sedan. Booked. Your trip sheet is on its way.</span>
-      </div>
-      <div class="console-grid">
-        <div class="c-card">
-          <div class="c-label">Inbound caller</div>
-          <div class="c-main" data-hc-stage="1">James R.</div>
-          <div class="c-sub" data-hc-stage="1">+1 (414) 555-0182 · Inbound</div>
-        </div>
-        <div class="c-card">
-          <div class="c-label">Route + quote</div>
-          <div class="c-main" data-hc-stage="2">Downtown MKE Hotel → MKE Airport T-C</div>
-
-          <div class="c-sub" data-hc-stage="3">$145</div>
-        </div>
-      </div>
-      <div class="c-row">
-        <div class="c-card">
-          <div class="c-label">Vehicle</div>
-          <div class="c-main" data-hc-stage="4">Executive Sedan</div>
-        </div>
-        <div class="c-card">
-          <div class="c-label">Pickup</div>
-          <div class="c-main" data-hc-stage="5">5:45 AM</div>
-        </div>
-        <div class="c-card">
-          <div class="c-label">Passengers</div>
-          <div class="c-main" data-hc-stage="6">1</div>
-        </div>
-      </div>
-      <div class="console-grid">
-        <div class="c-card">
-          <div class="c-label">Trip sheet</div>
-          <span class="badge badge-green" data-hc-stage="7">Ticketed</span>
-        </div>
-        <div class="c-card">
-          <div class="c-label">Handoff</div>
-
-          <span class="badge badge-green" data-hc-stage="8">In your CRM</span>
-        </div>
-      </div>
-      <div class="c-meta" data-hc-stage="9">Call received · 05:45 AM · Ticketed</div>
     </div>
   </div>
 </section>
 
-<section id="demo" data-lit="technical">
+<section id="calls" data-lit="technical">
   <div class="wrap">
     <div class="sec-kicker">The dispatch flow</div>
 
     <h2 class="sec-h">From phone call to trip ticket — <em>captured, quoted, and handed over.</em></h2>
     <p class="sec-sub">A caller speaks naturally. AI Chauffeur takes the trip, quotes your rate sheet, handles mid-call changes, and books it. The fastest way to judge that is to <a href="/try/">try AI Chauffeur</a> yourself.</p>
 
-    <!-- RUN S1 · SAMPLE CALLS (Oct 2 2026). Built scenarios on recorded voices; the
-         recording is the clock (/assets/aic-calls.js). What ships in this HTML is the
-         FINISHED first call and every transcript, so a reader or an answer engine with
-         no JS still gets the whole story. Never autoplays; no audio until the first tap. -->
-    <div class="sc" data-calls>
-      <p class="sc-eyebrow">Six sample calls · pick one</p>
-      <div class="sc-tabs" role="tablist" aria-label="Pick a sample call" data-tabs>
-          <button class="sc-tab" type="button" role="tab" id="sc-tab-airport" aria-selected="true" tabindex="0" data-event="sample_tab_airport"><span class="sc-l">O'Hare pickup</span><span class="sc-s">Airport</span></button>
-          <button class="sc-tab" type="button" role="tab" id="sc-tab-corporate" aria-selected="false" tabindex="-1" data-event="sample_tab_corporate"><span class="sc-l">Corporate account</span><span class="sc-s">Corporate</span></button>
-          <button class="sc-tab" type="button" role="tab" id="sc-tab-wedding" aria-selected="false" tabindex="-1" data-event="sample_tab_wedding"><span class="sc-l">Wedding by the hour</span><span class="sc-s">Wedding</span></button>
-          <button class="sc-tab" type="button" role="tab" id="sc-tab-driver" aria-selected="false" tabindex="-1" data-event="sample_tab_driver"><span class="sc-l">Where's my driver</span><span class="sc-s">My driver</span></button>
-          <button class="sc-tab" type="button" role="tab" id="sc-tab-rebook" aria-selected="false" tabindex="-1" data-event="sample_tab_rebook"><span class="sc-l">Cancel and rebook</span><span class="sc-s">Rebook</span></button>
-          <button class="sc-tab" type="button" role="tab" id="sc-tab-group" aria-selected="false" tabindex="-1" data-event="sample_tab_group"><span class="sc-l">Group job, first quote</span><span class="sc-s">Group of 26</span></button>
-      </div>
-      <p class="sc-shows" data-shows>This call shows a rate quoted from the company's own rate sheet, the flight tracked, and the trip booked with a receipt by text and email.</p>
-
-      <div class="demo-play-bar" data-rail-hide>
-        <button type="button" id="demo-play-btn" class="demo-play-btn" data-state="idle" aria-pressed="false" data-event="sample_play_demo">
-          <span class="play-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
-          <span class="play-label">Play the sample call</span>
-        </button>
-        <a href="/try/" class="demo-call-btn" data-event="try_click_demo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg><span>Run it yourself</span></a>
-      </div>
-
-      <div class="sc-stage">
-        <div class="console sc-call" data-callpane>
-          <div class="console-bar">
-            <div class="console-title"><div class="dots" aria-hidden="true"><span></span><span></span><span></span></div><span class="sc-biz" data-biz>Corbel Black Car</span></div>
-            <span class="sc-clock" data-clock>1:09 / 1:09</span>
-          </div>
-          <div class="sc-wave" data-wave role="slider" tabindex="0" aria-label="Position in the call" aria-valuemin="0" aria-valuemax="69" aria-valuenow="69"><canvas></canvas></div>
-          <div class="sc-chapters" data-chapters aria-hidden="true">
-            <div class="sc-chap on" style="left:5.198%">Answered</div>
-            <div class="sc-chap r on" style="left:65.178%">Trip taken</div>
-            <div class="sc-chap r on" style="left:99.134%">Booked</div>
-          </div>
-          <ol class="sc-script" data-script>
-            <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">Corbel Black Car, reservations.</span></li>
-            <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">Hi. I land at O'Hare tonight and need a car to Evanston. What's that run?</span></li>
-            <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">A sedan from O'Hare to Evanston is $115, plus tolls and gratuity. Which airline and flight?</span></li>
-            <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">United 1242. It lands at 9:40.</span></li>
-            <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">I'll track that flight, so your pickup moves with it. How many passengers and bags?</span></li>
-            <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">Just me. Two bags... actually, three. One's a golf bag.</span></li>
-            <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">Golf bag noted for your chauffeur. Inside at baggage claim, with a name sign?</span></li>
-            <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">Inside is good.</span></li>
-            <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">And the drop-off address?</span></li>
-            <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">1820 Hinman Avenue, Evanston.</span></li>
-            <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">Your name and cell?</span></li>
-            <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">Mark Delaney. 312-555-0148.</span></li>
-            <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">Email for the receipt?</span></li>
-            <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">mark@delaneyhq.com</span></li>
-            <li class="a past"><span class="sc-who">AI Chauffeur</span><span class="sc-say">Mark Delaney, tonight, United 1242, inside at baggage claim to Hinman Avenue, $115 plus tolls and gratuity. You're booked. Trip sheet and receipt are on the way by text and email, and your chauffeur's name and car come by text before you land.</span></li>
-            <li class="c past"><span class="sc-who">Caller</span><span class="sc-say">Perfect. Thanks.</span></li>
-          </ol>
-          <p class="sc-err" data-err hidden>The recording did not load. Every call is written out below.</p>
-        </div>
-
-        <aside class="console sc-ticket" aria-label="Trip sheet" data-ticketpane>
-          <div class="console-bar">
-            <div class="console-title"><div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>Trip sheet</div>
-            <span class="sc-state is-done" data-status>Booked</span>
-          </div>
-          <dl class="sc-fields" data-fields>
-            <div class="sc-row on"><dt>Pickup</dt><dd>O'Hare, tonight</dd></div>
-            <div class="sc-row on"><dt>Drop-off</dt><dd>1820 Hinman Ave, Evanston</dd></div>
-            <div class="sc-row on"><dt>Rate quoted</dt><dd>$115 + tolls, gratuity</dd></div>
-            <div class="sc-row on"><dt>Flight</dt><dd>United 1242, lands 9:40 PM</dd></div>
-            <div class="sc-row on"><dt>Flight tracking</dt><dd>On, pickup moves with it</dd></div>
-            <div class="sc-row on"><dt>Passengers</dt><dd>1, with 3 bags</dd></div>
-            <div class="sc-row on"><dt>Chauffeur note</dt><dd>Golf bag</dd></div>
-            <div class="sc-row on"><dt>Meet</dt><dd>Inside, baggage claim, name sign</dd></div>
-            <div class="sc-row on"><dt>Passenger</dt><dd>Mark Delaney, 312-555-0148</dd></div>
-            <div class="sc-row on"><dt>Email</dt><dd>mark@delaneyhq.com</dd></div>
-            <div class="sc-row on"><dt>Status</dt><dd>Booked</dd></div>
-            <div class="sc-row on"><dt>Text + email</dt><dd>Trip sheet and receipt</dd></div>
-            <div class="sc-row on"><dt>Chauffeur</dt><dd>Name and car by text before landing</dd></div>
-          </dl>
-          <div class="sc-result on" data-booked>
-            <span class="sc-rlab" data-blab>Booked</span>
-            <span class="sc-rbig" data-bbig>Tonight 9:40 PM</span>
-            <span class="sc-rsmall" data-bsmall>Sedan, O'Hare to Evanston, $115</span>
-          </div>
-          <div class="sc-after" data-after hidden>
-            <p class="sc-ahead">Want AI Chauffeur answering your phone?</p>
-            <a class="demo-call-btn" href="/book/" data-event="book_click_aftercall">Book the setup call</a>
-            <button class="demo-call-btn" type="button" data-next data-event="sample_next_demo"><span>Next: the <span data-nextname>corporate account</span> call &rarr;</span></button>
-          </div>
-        </aside>
-      </div>
-
-      <p class="sc-note">Sample calls: built scenarios, sample trips and rates, recorded voices. Every voice you hear here can answer the phone for your company.</p>
-      <div class="sc-tx">
-        <details>
-          <summary>Read the O'Hare pickup call</summary>
-          <p><span class="spk">AI Chauffeur</span>Corbel Black Car, reservations.</p>
-          <p><span class="spk">Caller</span>Hi. I land at O'Hare tonight and need a car to Evanston. What's that run?</p>
-          <p><span class="spk">AI Chauffeur</span>A sedan from O'Hare to Evanston is $115, plus tolls and gratuity. Which airline and flight?</p>
-          <p><span class="spk">Caller</span>United 1242. It lands at 9:40.</p>
-          <p><span class="spk">AI Chauffeur</span>I'll track that flight, so your pickup moves with it. How many passengers and bags?</p>
-          <p><span class="spk">Caller</span>Just me. Two bags... actually, three. One's a golf bag.</p>
-          <p><span class="spk">AI Chauffeur</span>Golf bag noted for your chauffeur. Inside at baggage claim, with a name sign?</p>
-          <p><span class="spk">Caller</span>Inside is good.</p>
-          <p><span class="spk">AI Chauffeur</span>And the drop-off address?</p>
-          <p><span class="spk">Caller</span>1820 Hinman Avenue, Evanston.</p>
-          <p><span class="spk">AI Chauffeur</span>Your name and cell?</p>
-          <p><span class="spk">Caller</span>Mark Delaney. 312-555-0148.</p>
-          <p><span class="spk">AI Chauffeur</span>Email for the receipt?</p>
-          <p><span class="spk">Caller</span>mark@delaneyhq.com</p>
-          <p><span class="spk">AI Chauffeur</span>Mark Delaney, tonight, United 1242, inside at baggage claim to Hinman Avenue, $115 plus tolls and gratuity. You're booked. Trip sheet and receipt are on the way by text and email, and your chauffeur's name and car come by text before you land.</p>
-          <p><span class="spk">Caller</span>Perfect. Thanks.</p>
-        </details>
-        <details>
-          <summary>Read the corporate account call</summary>
-          <p><span class="spk">AI Chauffeur</span>Larkin &amp; Ashe Chauffeur, reservations.</p>
-          <p><span class="spk">Caller</span>Hi, it's Priya at Dunmore Capital. I need a car for Mr. Whitfield tomorrow morning.</p>
-          <p><span class="spk">AI Chauffeur</span>Hi, Priya. I have the Dunmore account up. Picking him up at home in Winnetka?</p>
-          <p><span class="spk">Caller</span>Yes, at home. 6:45 AM.</p>
-          <p><span class="spk">AI Chauffeur</span>And where's he headed?</p>
-          <p><span class="spk">Caller</span>Oak Brook, 900 Commerce Parkway. But first a stop at our office, 150 North Carrow in the Loop, for Ms. Okafor.</p>
-          <p><span class="spk">AI Chauffeur</span>Two passengers after the stop. Sedan, or the SUV?</p>
-          <p><span class="spk">Caller</span>The SUV. Just laptops.</p>
-          <p><span class="spk">AI Chauffeur</span>Billed to the Dunmore account, as usual. Text his cell, and email you?</p>
-          <p><span class="spk">Caller</span>Right. The email comes to me, not him.</p>
-          <p><span class="spk">AI Chauffeur</span>Mr. Whitfield, tomorrow, 6:45 AM, SUV from Winnetka, a stop at 150 North Carrow for Ms. Okafor, then 900 Commerce Parkway, Oak Brook. You're booked. He gets the text with his chauffeur's details, and you get the email with a calendar invite.</p>
-          <p><span class="spk">Caller</span>Perfect. That's everything.</p>
-        </details>
-        <details>
-          <summary>Read the wedding call</summary>
-          <p><span class="spk">AI Chauffeur</span>Tavenner Limousine, reservations.</p>
-          <p><span class="spk">Caller</span>Hi! I need something big for my sister's wedding on Saturday. What's your hourly, and is there a minimum?</p>
-          <p><span class="spk">AI Chauffeur</span>A 14-passenger Sprinter limo is $165 an hour, five-hour minimum, plus fuel and gratuity. How many in the party?</p>
-          <p><span class="spk">Caller</span>Twelve. Maybe eleven.</p>
-          <p><span class="spk">AI Chauffeur</span>The Sprinter covers twelve. Start time and first pickup?</p>
-          <p><span class="spk">Caller</span>1 PM, at the bride's house. 940 Linden Avenue, Wilmette.</p>
-          <p><span class="spk">AI Chauffeur</span>And the second pickup?</p>
-          <p><span class="spk">Caller</span>The groomsmen, Alder House Hotel in Evanston. Then church, then the reception at Briar Hall.</p>
-          <p><span class="spk">AI Chauffeur</span>Five hours, one to six?</p>
-          <p><span class="spk">Caller</span>Make it six. Photos always run long.</p>
-          <p><span class="spk">AI Chauffeur</span>Six hours. Name, cell and email?</p>
-          <p><span class="spk">Caller</span>Jenna Ruiz. 847-555-0163. jenna@ruizfamily.com</p>
-          <p><span class="spk">AI Chauffeur</span>Jenna, Saturday at 1, Sprinter limo for twelve, six hours, two pickups, church, then Briar Hall. $990, plus fuel and gratuity. You're booked. The deposit link to hold the Sprinter is in your texts, and the contract's in your email.</p>
-          <p><span class="spk">Caller</span>Got it. Paying the deposit now.</p>
-        </details>
-        <details>
-          <summary>Read the where's my driver call</summary>
-          <p><span class="spk">AI Chauffeur</span>Ironbridge Livery, reservations.</p>
-          <p><span class="spk">Caller</span>Yeah, I'm outside at Midway, and there's no car. Where's my driver?</p>
-          <p><span class="spk">AI Chauffeur</span>Let's find him. Name on the reservation?</p>
-          <p><span class="spk">Caller</span>Brandt. Tom Brandt.</p>
-          <p><span class="spk">AI Chauffeur</span>Got you, Mr. Brandt. 6:15 pickup at Midway, going to the Loop. Which door are you at?</p>
-          <p><span class="spk">Caller</span>Door three, lower level. No, wait... door two. I walked down.</p>
-          <p><span class="spk">AI Chauffeur</span>Door two, lower level. What should your chauffeur look for?</p>
-          <p><span class="spk">Caller</span>Gray coat. Black roller bag.</p>
-          <p><span class="spk">AI Chauffeur</span>I'm texting your chauffeur your door and your coat right now.</p>
-          <p><span class="spk">AI Chauffeur</span>And I'm bringing dispatch on. Stay with me.</p>
-          <p><span class="spk">AI Chauffeur</span>Dispatch, Tom Brandt, Midway, lower level, door two. Gray coat, black roller bag, 6:15 pickup. The chauffeur has the text.</p>
-          <p><span class="spk">Dispatch</span>Mr. Brandt, this is dispatch. Your chauffeur has your door. Stay right at door two.</p>
-          <p><span class="spk">Caller</span>Okay. Door two.</p>
-        </details>
-        <details>
-          <summary>Read the cancel and rebook call</summary>
-          <p><span class="spk">AI Chauffeur</span>Kestrel Row Car Service, reservations.</p>
-          <p><span class="spk">Caller</span>Hi, it's Paul Grant. I need to cancel tomorrow's airport run. The meeting moved. But I need Thursday instead.</p>
-          <p><span class="spk">AI Chauffeur</span>There you are, Mr. Grant. Tomorrow's inside 24 hours, so dispatch handles that cancel and will call you. Thursday, I can book right now. Same pickup, 3310 North Clark?</p>
-          <p><span class="spk">Caller</span>Same place. 5 AM. O'Hare, American 2301.</p>
-          <p><span class="spk">AI Chauffeur</span>A sedan with two bags, like tomorrow's?</p>
-          <p><span class="spk">Caller</span>Make it the SUV. My partner's coming now. Two of us.</p>
-          <p><span class="spk">AI Chauffeur</span>SUV for two. Same cell and email on file?</p>
-          <p><span class="spk">Caller</span>Same ones.</p>
-          <p><span class="spk">AI Chauffeur</span>Thursday, 5 AM, SUV for two, North Clark to O'Hare, American 2301. You're booked. Tomorrow's cancel is with dispatch now, and your new trip sheet is on the way by text and email.</p>
-          <p><span class="spk">Caller</span>Perfect. Thanks.</p>
-        </details>
-        <details>
-          <summary>Read the group of 26 call</summary>
-          <p><span class="spk">AI Chauffeur</span>Greyhaven Limousine, reservations.</p>
-          <p><span class="spk">Caller</span>Hi. Client dinner Thursday, twenty-six people. I'm calling three companies. First one with a number gets it.</p>
-          <p><span class="spk">AI Chauffeur</span>Then let's get you a number. Pickup time and place?</p>
-          <p><span class="spk">Caller</span>5:30 PM, the Harbor Line Hotel, downtown Milwaukee. Going to Stonecroft Supper Club in Cedarburg.</p>
-          <p><span class="spk">AI Chauffeur</span>And the ride back?</p>
-          <p><span class="spk">Caller</span>Ten. Make that ten thirty.</p>
-          <p><span class="spk">AI Chauffeur</span>Ten thirty. One coach, everyone together?</p>
-          <p><span class="spk">Caller</span>One coach. And two display cases.</p>
-          <p><span class="spk">AI Chauffeur</span>A 28-passenger minicoach, round trip to Cedarburg, is $1,320, plus gratuity. Want it?</p>
-          <p><span class="spk">Caller</span>That was fast. Yes. Book it.</p>
-          <p><span class="spk">AI Chauffeur</span>Name, cell and email?</p>
-          <p><span class="spk">Caller</span>Renee Vasquez. 414-555-0174. renee@corvaneevents.com</p>
-          <p><span class="spk">AI Chauffeur</span>Renee, Thursday, 5:30, minicoach for twenty-six, Harbor Line to Stonecroft and back at 10:30. $1,320, plus gratuity. You're booked. The quote and contract are in your email, and dispatch already has it.</p>
-          <p><span class="spk">Caller</span>Done. The other two haven't even called me back.</p>
-        </details>
-      </div>
+    <!-- every word of the six calls the hero plays (RUN S1) -->
+    <div class="sc-tx">
+      <details>
+        <summary>Read the O'Hare pickup call</summary>
+        <p><span class="spk">AI Chauffeur</span>Corbel Black Car, reservations.</p>
+        <p><span class="spk">Caller</span>Hi. I land at O'Hare tonight and need a car to Evanston. What's that run?</p>
+        <p><span class="spk">AI Chauffeur</span>A sedan from O'Hare to Evanston is $115, plus tolls and gratuity. Which airline and flight?</p>
+        <p><span class="spk">Caller</span>United 1242. It lands at 9:40.</p>
+        <p><span class="spk">AI Chauffeur</span>I'll track that flight, so your pickup moves with it. How many passengers and bags?</p>
+        <p><span class="spk">Caller</span>Just me. Two bags... actually, three. One's a golf bag.</p>
+        <p><span class="spk">AI Chauffeur</span>Golf bag noted for your chauffeur. Inside at baggage claim, with a name sign?</p>
+        <p><span class="spk">Caller</span>Inside is good.</p>
+        <p><span class="spk">AI Chauffeur</span>And the drop-off address?</p>
+        <p><span class="spk">Caller</span>1820 Hinman Avenue, Evanston.</p>
+        <p><span class="spk">AI Chauffeur</span>Your name and cell?</p>
+        <p><span class="spk">Caller</span>Mark Delaney. 312-555-0148.</p>
+        <p><span class="spk">AI Chauffeur</span>Email for the receipt?</p>
+        <p><span class="spk">Caller</span>mark@delaneyhq.com</p>
+        <p><span class="spk">AI Chauffeur</span>Mark Delaney, tonight, United 1242, inside at baggage claim to Hinman Avenue, $115 plus tolls and gratuity. You're booked. Trip sheet and receipt are on the way by text and email, and your chauffeur's name and car come by text before you land.</p>
+        <p><span class="spk">Caller</span>Perfect. Thanks.</p>
+      </details>
+      <details>
+        <summary>Read the corporate account call</summary>
+        <p><span class="spk">AI Chauffeur</span>Larkin &amp; Ashe Chauffeur, reservations.</p>
+        <p><span class="spk">Caller</span>Hi, it's Priya at Dunmore Capital. I need a car for Mr. Whitfield tomorrow morning.</p>
+        <p><span class="spk">AI Chauffeur</span>Hi, Priya. I have the Dunmore account up. Picking him up at home in Winnetka?</p>
+        <p><span class="spk">Caller</span>Yes, at home. 6:45 AM.</p>
+        <p><span class="spk">AI Chauffeur</span>And where's he headed?</p>
+        <p><span class="spk">Caller</span>Oak Brook, 900 Commerce Parkway. But first a stop at our office, 150 North Carrow in the Loop, for Ms. Okafor.</p>
+        <p><span class="spk">AI Chauffeur</span>Two passengers after the stop. Sedan, or the SUV?</p>
+        <p><span class="spk">Caller</span>The SUV. Just laptops.</p>
+        <p><span class="spk">AI Chauffeur</span>Billed to the Dunmore account, as usual. Text his cell, and email you?</p>
+        <p><span class="spk">Caller</span>Right. The email comes to me, not him.</p>
+        <p><span class="spk">AI Chauffeur</span>Mr. Whitfield, tomorrow, 6:45 AM, SUV from Winnetka, a stop at 150 North Carrow for Ms. Okafor, then 900 Commerce Parkway, Oak Brook. You're booked. He gets the text with his chauffeur's details, and you get the email with a calendar invite.</p>
+        <p><span class="spk">Caller</span>Perfect. That's everything.</p>
+      </details>
+      <details>
+        <summary>Read the wedding call</summary>
+        <p><span class="spk">AI Chauffeur</span>Tavenner Limousine, reservations.</p>
+        <p><span class="spk">Caller</span>Hi! I need something big for my sister's wedding on Saturday. What's your hourly, and is there a minimum?</p>
+        <p><span class="spk">AI Chauffeur</span>A 14-passenger Sprinter limo is $165 an hour, five-hour minimum, plus fuel and gratuity. How many in the party?</p>
+        <p><span class="spk">Caller</span>Twelve. Maybe eleven.</p>
+        <p><span class="spk">AI Chauffeur</span>The Sprinter covers twelve. Start time and first pickup?</p>
+        <p><span class="spk">Caller</span>1 PM, at the bride's house. 940 Linden Avenue, Wilmette.</p>
+        <p><span class="spk">AI Chauffeur</span>And the second pickup?</p>
+        <p><span class="spk">Caller</span>The groomsmen, Alder House Hotel in Evanston. Then church, then the reception at Briar Hall.</p>
+        <p><span class="spk">AI Chauffeur</span>Five hours, one to six?</p>
+        <p><span class="spk">Caller</span>Make it six. Photos always run long.</p>
+        <p><span class="spk">AI Chauffeur</span>Six hours. Name, cell and email?</p>
+        <p><span class="spk">Caller</span>Jenna Ruiz. 847-555-0163. jenna@ruizfamily.com</p>
+        <p><span class="spk">AI Chauffeur</span>Jenna, Saturday at 1, Sprinter limo for twelve, six hours, two pickups, church, then Briar Hall. $990, plus fuel and gratuity. You're booked. The deposit link to hold the Sprinter is in your texts, and the contract's in your email.</p>
+        <p><span class="spk">Caller</span>Got it. Paying the deposit now.</p>
+      </details>
+      <details>
+        <summary>Read the where's my driver call</summary>
+        <p><span class="spk">AI Chauffeur</span>Ironbridge Livery, reservations.</p>
+        <p><span class="spk">Caller</span>Yeah, I'm outside at Midway, and there's no car. Where's my driver?</p>
+        <p><span class="spk">AI Chauffeur</span>Let's find him. Name on the reservation?</p>
+        <p><span class="spk">Caller</span>Brandt. Tom Brandt.</p>
+        <p><span class="spk">AI Chauffeur</span>Got you, Mr. Brandt. 6:15 pickup at Midway, going to the Loop. Which door are you at?</p>
+        <p><span class="spk">Caller</span>Door three, lower level. No, wait... door two. I walked down.</p>
+        <p><span class="spk">AI Chauffeur</span>Door two, lower level. What should your chauffeur look for?</p>
+        <p><span class="spk">Caller</span>Gray coat. Black roller bag.</p>
+        <p><span class="spk">AI Chauffeur</span>I'm texting your chauffeur your door and your coat right now.</p>
+        <p><span class="spk">AI Chauffeur</span>And I'm bringing dispatch on. Stay with me.</p>
+        <p><span class="spk">AI Chauffeur</span>Dispatch, Tom Brandt, Midway, lower level, door two. Gray coat, black roller bag, 6:15 pickup. The chauffeur has the text.</p>
+        <p><span class="spk">Dispatch</span>Mr. Brandt, this is dispatch. Your chauffeur has your door. Stay right at door two.</p>
+        <p><span class="spk">Caller</span>Okay. Door two.</p>
+      </details>
+      <details>
+        <summary>Read the cancel and rebook call</summary>
+        <p><span class="spk">AI Chauffeur</span>Kestrel Row Car Service, reservations.</p>
+        <p><span class="spk">Caller</span>Hi, it's Paul Grant. I need to cancel tomorrow's airport run. The meeting moved. But I need Thursday instead.</p>
+        <p><span class="spk">AI Chauffeur</span>There you are, Mr. Grant. Tomorrow's inside 24 hours, so dispatch handles that cancel and will call you. Thursday, I can book right now. Same pickup, 3310 North Clark?</p>
+        <p><span class="spk">Caller</span>Same place. 5 AM. O'Hare, American 2301.</p>
+        <p><span class="spk">AI Chauffeur</span>A sedan with two bags, like tomorrow's?</p>
+        <p><span class="spk">Caller</span>Make it the SUV. My partner's coming now. Two of us.</p>
+        <p><span class="spk">AI Chauffeur</span>SUV for two. Same cell and email on file?</p>
+        <p><span class="spk">Caller</span>Same ones.</p>
+        <p><span class="spk">AI Chauffeur</span>Thursday, 5 AM, SUV for two, North Clark to O'Hare, American 2301. You're booked. Tomorrow's cancel is with dispatch now, and your new trip sheet is on the way by text and email.</p>
+        <p><span class="spk">Caller</span>Perfect. Thanks.</p>
+      </details>
+      <details>
+        <summary>Read the group of 26 call</summary>
+        <p><span class="spk">AI Chauffeur</span>Greyhaven Limousine, reservations.</p>
+        <p><span class="spk">Caller</span>Hi. Client dinner Thursday, twenty-six people. I'm calling three companies. First one with a number gets it.</p>
+        <p><span class="spk">AI Chauffeur</span>Then let's get you a number. Pickup time and place?</p>
+        <p><span class="spk">Caller</span>5:30 PM, the Harbor Line Hotel, downtown Milwaukee. Going to Stonecroft Supper Club in Cedarburg.</p>
+        <p><span class="spk">AI Chauffeur</span>And the ride back?</p>
+        <p><span class="spk">Caller</span>Ten. Make that ten thirty.</p>
+        <p><span class="spk">AI Chauffeur</span>Ten thirty. One coach, everyone together?</p>
+        <p><span class="spk">Caller</span>One coach. And two display cases.</p>
+        <p><span class="spk">AI Chauffeur</span>A 28-passenger minicoach, round trip to Cedarburg, is $1,320, plus gratuity. Want it?</p>
+        <p><span class="spk">Caller</span>That was fast. Yes. Book it.</p>
+        <p><span class="spk">AI Chauffeur</span>Name, cell and email?</p>
+        <p><span class="spk">Caller</span>Renee Vasquez. 414-555-0174. renee@corvaneevents.com</p>
+        <p><span class="spk">AI Chauffeur</span>Renee, Thursday, 5:30, minicoach for twenty-six, Harbor Line to Stonecroft and back at 10:30. $1,320, plus gratuity. You're booked. The quote and contract are in your email, and dispatch already has it.</p>
+        <p><span class="spk">Caller</span>Done. The other two haven't even called me back.</p>
+      </details>
     </div>
   </div>
 </section>
@@ -811,109 +749,10 @@
 /* nav tint + the AI Chauffeur-calls-you rail now live in /assets/aic.js */
 
 
-/* #demo is the sample-call instrument now: /assets/aic-calls.js (RUN S1, Oct 2 2026) */
+/* #demo is the sample-call instrument, in the hero since 2026-10-02: /assets/aic-calls.js */
 
-/* ══ RUN 7 · TASK C — HERO DISPATCH CONSOLE, STATE PROGRESSION ══════════════
-   An 11.8s loop through five named states, in the order a real call goes:
-
-     RINGING          amber, the only beat where amber appears
-     CALL ANSWERED    blue — the line is picked up and the trip is being taken
-     CAPTURED         green — the trip details are in
-     TICKETED         green, and the filled fields pick up a green inset rule
-     IN YOUR CRM      green, held 3.6s, then a quiet reset   (ruling 2026-09-13)
-
-   Only ONE state colour is on screen at any instant, so the section never
-   exceeds two accents even though the sequence touches three.
-
-   Two things changed beyond the states themselves. It no longer runs while
-   off-screen — the old version fired a setTimeout chain from page load and
-   kept looping forever whether or not anybody could see it, which is battery
-   an operator on a phone at 2AM should not be spending. And the reduced-motion
-   branch now settles on IN YOUR CRM rather than an intermediate label,
-   so a reader who never sees the animation still sees the outcome. The
-   persistent result header above the fields says the same thing in text.
-   ═══════════════════════════════════════════════════════════════════════════ */
-(function heroConsole(){
-  const root = document.getElementById('hero-console');
-  if (!root) return;
-  const stateEl = document.getElementById('hc-state');
-  const lines  = Array.from(root.querySelectorAll('.hc-line'));
-  const stages = Array.from(root.querySelectorAll('[data-hc-stage]'));
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const stage = n => stages.filter(s => +s.dataset.hcStage === n);
-  const line  = n => lines.find(x => +x.dataset.hcLine === n);
-  const show  = el => { if (el) el.classList.add('on'); };
-  function setState(text, cls){
-    if (!stateEl) return;
-    stateEl.textContent = text;
-    stateEl.className = 'hc-state ' + cls;
-  }
-  /* "Fields complete in green" is per CARD, not all at once. Marking every card
-     green at TRIP CAPTURED painted the Route + Quote card complete for 1.2s
-     while its quote line was still empty — a card claiming a value it did not
-     have yet. A card turns green only when every stage inside it is on. */
-  const cards = Array.from(root.querySelectorAll('.console-grid .c-card, .c-row'));
-  function markFilled(){
-    cards.forEach(c => {
-      const own = c.querySelectorAll('[data-hc-stage]');
-      const done = own.length > 0 &&
-        Array.from(own).every(s => s.classList.contains('on'));
-      c.classList.toggle('is-filled', done);
-    });
-  }
-  function settle(){
-    stages.forEach(el => el.classList.add('on'));
-    lines.forEach(el => el.classList.add('on'));
-    root.classList.add('hc-captured');
-    markFilled();
-    setState('In your CRM','ready');
-  }
-
-  if (reduced || !('IntersectionObserver' in window)) { settle(); return; }
-
-  const TIMELINE = [
-    { t:0,     fn:()=>{ stages.forEach(el=>el.classList.remove('on'));
-                        lines.forEach(el=>el.classList.remove('on'));
-                        cards.forEach(c=>c.classList.remove('is-filled'));
-                        root.classList.remove('hc-captured');
-                        setState('Ringing','ringing'); }},
-    { t:1100,  fn:()=>{ show(line(0)); }},
-    { t:1900,  fn:()=>{ setState('Call answered','live'); show(line(1)); stage(1).forEach(show); }},
-    { t:3100,  fn:()=>{ show(line(2)); stage(2).forEach(show); }},
-    { t:3900,  fn:()=>{ stage(4).forEach(show); }},
-    { t:4500,  fn:()=>{ stage(5).forEach(show); }},
-    { t:5100,  fn:()=>{ stage(6).forEach(show); }},
-    { t:5800,  fn:()=>{ setState('Captured','captured'); stage(3).forEach(show); }},
-    { t:6800,  fn:()=>{ show(line(3)); setState('Ticketed','captured');
-                        root.classList.add('hc-captured'); stage(7).forEach(show); }},
-    { t:8200,  fn:()=>{ setState('In your CRM','ready');
-                        stage(8).forEach(show); stage(9).forEach(show); }},
-    /* 3.6s hold lives in the gap between 8200 and the 11800 restart. The reset
-       step clears .on and the existing .55s opacity transition fades the
-       fields out on its own — that IS the quiet reset, no extra machinery. */
-  ];
-
-  let timers = [], running = false;
-  function stop(){ timers.forEach(clearTimeout); timers = []; running = false; }
-  function run(){
-    stop();
-    running = true;
-    TIMELINE.forEach(step => timers.push(setTimeout(function(){ step.fn(); markFilled(); }, step.t)));
-    timers.push(setTimeout(run, 11800));
-  }
-
-  new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      /* hc-onscreen also gates the console's CSS halo pulse — same observer,
-         same reason: nothing about this console should burn a phone battery
-         while it is nowhere near the screen. */
-      root.classList.toggle('hc-onscreen', e.isIntersecting);
-      if (e.isIntersecting){ if (!running) run(); }
-      else stop();
-    });
-  }, { threshold: 0.25 }).observe(root);
-})();
+/* The hero dispatch console and its 11.8s loop were retired 2026-10-02: the hero
+   plays the recorded sample calls now (/assets/aic-calls.js). */
 
 /* ══ RUN 7 · TASK F — FOUR-STAGE PROGRESSION RAIL ═══════════════════════════
    One pass on viewport entry, then it rests complete. It is not a loop: a

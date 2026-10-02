@@ -561,6 +561,8 @@ order.** The whole of RUN 12's copy work was making sixteen pages say one thing.
 
 **One exception, 2026-09-13 (§ 12): the money-button rim glow.** `.btn-go` carries a tight green glow that pulses in light only — **the button never scales** — and it may run alongside the two scenes below. Reduced motion holds it steady. No other component gets coloured light.
 
+**Amended 2026-10-02 (§ 12, round 3): scene 1 is retired.** The hero console left the page, and its breathing edge went with it. The Crush is the one ambient scene now, beside the `.btn-go` rim.
+
 **Ambient light exists in exactly two scenes**, both on the homepage:
 
 1. the **hero console** — an inset blue edge that breathes, paused offscreen by
@@ -1095,3 +1097,12 @@ Ratified by the owner on 2026-09-13. Brief and sources: `docs/superpowers/plans/
 - **Live meter.** On `/try/` the live-state meter bars paint `--success-green` (`#2EE6A8`, the base of the `.btn-go` ramp): the meter is the call that button started. The LIVE chip stays `--signal-blue`. This is a named exception to § 2 STATE LAW and the only one.
 - **Receipt.** The `/try/` trip sheet has no Quote row: the desk captures and does not quote. A Duration row shows only when the caller gave hours or said one way. Pickup is the address as captured (the flow's `pickup_location`), never a bare city.
 - **Live thread.** The gateway transport that v3 create-web-call hands `/try/` calls emits no `update` event mid-call. Measured 2026-09-27 on `retell-client-js-sdk@3.0.1`, the latest: 0 update events in a 35-second call while the server recorded 3 turns. The thread fills from the redacted receipt after the call, and nothing stands in for it while the call runs.
+
+### 2026-10-02 · round 3 (the hero plays the calls)
+
+- **The hero's right column is the six-call player.** `#demo` is a `div.hero-calls` in the hero now, holding the play control, the six tabs, the call and the trip sheet, and the sample-calls note. The scripted dispatch console and its 11.8 s loop are retired; the recorded call and its trip sheet are the real version of what it acted out. The six transcripts stay below the hero in `section#calls`.
+- **One filled control in the fold.** The player's play control is an outline (`.demo-call-btn.sc-play`: a blue line and a blue glyph). PUSH TO CALL AI stays the only fill in the hero.
+- **Anchors.** `#demo` is not a `section`, so the § 1 gutter rule does not reach it; it carries `scroll-margin-top:16px` itself. `/#demo`, `?call=<id>` and every `#demo`-scoped rule in `aic.css` land on the hero player.
+- **No demo pair on any page.** The pair left with the swap. `aic-run11-gate.mjs` plants its own pair for its negative control.
+- **Phones.** Under 768px the hero subhead is hidden: it repeats the four sentences above it, and dropping it puts the player one short scroll under PUSH TO CALL AI. It returns from 768px up. One DOM, one crawlable paragraph.
+- **Two-column hero (1020px and up).** The call and the trip sheet stack, the tabs use their short names (two or three to a row by width), and the trip sheet packs two fields to a row. From 821 to 1019px the hero is one column and the side-by-side stage stays.

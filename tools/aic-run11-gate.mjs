@@ -376,6 +376,18 @@ const BREAK_CSS =
       plant('negctl-go', fixed + 'top:340px', 'negative control ramp'),
       plant('negctl-flat', fixed + 'top:420px;background:rgb(34,196,142)', 'negative control pressed'));
     document.querySelector('main').append(plant('btn btn-primary negctl-halo', '', 'negative control halo'));
+    // 2026-10-02 · the homepage's demo pair left with the hero swap (the hero
+    // plays the sample calls behind ONE outline control), so no page carries a
+    // .demo-play-bar any more. Planted, not borrowed: the pair control brings
+    // its own pair, at the end of <main>, and BREAK_CSS unequalises it.
+    if (!document.querySelector('.demo-play-bar')) {
+      const bar = document.createElement('div');
+      bar.className = 'demo-play-bar negctl-pair';
+      const b1 = document.createElement('button'); b1.type = 'button'; b1.className = 'demo-play-btn'; b1.textContent = 'negative control play';
+      const b2 = plant('demo-call-btn', '', 'negative control pair');
+      bar.append(b1, b2);
+      document.querySelector('main').append(bar);
+    }
   });
   // scrollIntoView() honours scroll-padding/scroll-margin exactly as a fragment
   // jump does, and with scroll-behavior forced to auto it lands in one frame.
@@ -511,6 +523,10 @@ note('anchor targets clear the fixed header', anchorBad,
     // Scroll, settle, then read — and read the console's own box to be sure it
     // really is on screen rather than trusting the scroll offset.
     for (const target of ['#ava-callback', 'footer']) {
+      // 2026-10-02 · #ava-callback went with the callback console on 2026-09-17,
+      // and this step crashed the gate on every run since. A target the page no
+      // longer carries is skipped, not failed; the footer still proves the law.
+      if (!(await p.evaluate((sel) => !!document.querySelector(sel), target))) continue;
       await p.evaluate((sel) => {
         document.documentElement.style.scrollBehavior = 'auto';
         document.querySelector(sel).scrollIntoView({ block: 'center' });
@@ -544,11 +560,14 @@ note('anchor targets clear the fixed header', anchorBad,
     await p.goto('about:blank');
     await p.goto(ORIGIN + '/limo-answering-service/#ava-callback', { waitUntil: 'load', timeout: 30000 });
     await p.waitForTimeout(1400);
-    const deep = await p.evaluate(() => ({
-      top: Math.round(document.querySelector('#ava-callback').getBoundingClientRect().top),
-      navBottom: Math.round(document.querySelector('nav.top').getBoundingClientRect().bottom),
-    }));
-    if (deep.top < deep.navBottom) pathBad.push({ w, why: 'deep link to console lands clipped', ...deep });
+    // 2026-10-02 · skipped, not failed, when the page no longer carries the form
+    // (see the suppressor loop above).
+    const deep = await p.evaluate(() => {
+      const el = document.querySelector('#ava-callback');
+      return el ? { top: Math.round(el.getBoundingClientRect().top),
+        navBottom: Math.round(document.querySelector('nav.top').getBoundingClientRect().bottom) } : null;
+    });
+    if (deep && deep.top < deep.navBottom) pathBad.push({ w, why: 'deep link to console lands clipped', ...deep });
 
     await p.goto(ORIGIN + '/limo-answering-service/', { waitUntil: 'networkidle' });
     await p.keyboard.press('Tab');
@@ -859,15 +878,19 @@ note('§ 7 feature-detected and wrapped in source', srcBad);
   if (onScroll.length !== 0) hapBad.push({ where: 'scroll', got: onScroll });
 
   // failure must NOT buzz
+  // 2026-10-02 · the callback form went with the callback console on 2026-09-17;
+  // with no form on the page the third-state half is skipped, not failed.
+  let onFail = [], errState = { word: 'n/a (no callback form)', colour: '' };
+  if (await p.$('[data-cb-submit]')) {
   await p.evaluate(() => { window.__buzz.length = 0; });
   const head = await p.$('[data-cb-toggle]');
   const shownBody = await p.evaluate(() => !!document.querySelector('.cb-body')?.getClientRects().length);
   if (head && !shownBody) { await head.click(); await p.waitForTimeout(200); }
   await p.click('[data-cb-submit]');
   await p.waitForTimeout(400);
-  const onFail = await p.evaluate(() => window.__buzz.slice());
+  onFail = await p.evaluate(() => window.__buzz.slice());
   if (onFail.length !== 0) hapBad.push({ where: 'callback failure', got: onFail });
-  const errState = await p.evaluate(() => {
+  errState = await p.evaluate(() => {
     const f = document.querySelector('.cb-form');
     return { isErr: f.classList.contains('is-err'), word: f.querySelector('.cb-status').textContent.trim(),
              colour: getComputedStyle(f.querySelector('.cb-status')).color,
@@ -876,6 +899,7 @@ note('§ 7 feature-detected and wrapped in source', srcBad);
   });
   if (!errState.isErr || errState.word.toLowerCase() !== 'not sent') hapBad.push({ where: 'error state word', got: errState });
   if (errState.transition !== '0s') hapBad.push({ where: 'STATE LAW: status must not transition', got: errState.transition });
+  }
   note('§ 7/§ 5 haptics + third state, runtime', hapBad,
     `primary=${JSON.stringify(onPrimary)} nav=${onNav.length} scroll=${onScroll.length} fail=${onFail.length} chip="${errState.word}" ${errState.colour}`);
   await ctx.close();
