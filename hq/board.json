@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-01T19:10:54-05:00",
+  "updated": "2026-10-02T11:04:19-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -556,9 +556,9 @@
     {
       "id": "aic-two-door-test",
       "title": "AI Chauffeur demo line — two-door + slow-talker build, LIVE on 414-775-0019 (2026-10-01)",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-01-aic-promote.md",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-02-aic-post-promote.md",
       "status": "live",
-      "label": "two-door agent live on 414-775-0019 since 5:38 PM CT Oct 1. \"AIC-LIVE two-door\" v11 answers 0019, pinned (v9's words: v10 renamed it, v11 carries the rotated booking header, nothing else). The old capture desk was not edited and is the one-action rollback; it still answers the line ending 5008 and the Try button. Gate before the switch: the whole set of 49 on v9, 48 of 49 strict (the one miss is the scorer's), Retell 48 of 49, every safety case passing; greeting byte-identical to Sep 30. Acceptance on 0019, real web calls: demo trip → trip sheet to dispatch by text and email; setup call → booked through the live calendar and cancelled, \"Nothing's open today\" word for word; live connect → a web call cannot transfer, so the callback line and the owner alert fired, no dead air. Booking secret rotated, old value dropped from n8n. The test number ending 8976 is back on the AVA sales test agent. Still open: press 1 on a real call from a phone other than the cell the transfer rings; the caller's own text (own-number test calls cannot prove it); Grok 37 items."
+      "label": "two-door agent live on 414-775-0019 since 5:38 PM CT Oct 1, still on v11 (pinned). Oct 2 (paste 38, RUN INCOMPLETE): v12 published but NOT on 0019 — Grok 40 texts 1–3 + the today-in-yes fix passed the whole set of 49 twice (46 and 48 of 49 strict, every safety case passing) and missed two of four targeted sets (the above-base sentence 3 of 5, the \"talk to someone now\" words 2 of 5), so the number was not re-pinned. Live since 10:42 AM CT Oct 2: the briefing the team hears on a warm transfer (v1: say \"connect\" or press 1; anything else gets one re-prompt). AVA Demo Call calendar: \"15 minutes\" and the booking confirmation signed \"AVA Team\". Open: a Grok round on texts 2 and 3; Shane's real-phone proof of \"connect\" and press 1; the confirmation email + text signature (GHL workflow, by hand); the caller's own text needs a Doppler secret for a test phone."
     },
     {
       "id": "ava-homepage-sample-calls",
@@ -1085,6 +1085,10 @@
     {
       "ts": "2026-10-01T19:10:54-05:00",
       "entry": "AIC TWO-DOOR PROMOTE — LIVE on 414-775-0019 (paste 34 v1.2). Path A: 0019 rebound to the two-door agent at 5:38 PM CT (\"AIC-LIVE two-door\" v10 = v9 renamed; re-pinned to v11 at 6:11 PM for the secret rotation). The promote needed 0 n8n changes (the agent already posted to the live rail and sat on both allow-lists); the old desk was not edited (rollback = one number binding). Gate: the whole set of 49 on v9, 48/49 strict, Retell 48/49, safety 5/5; greeting byte-identical. Acceptance: five web calls (demo trip; two setup calls booked and cancelled in Cal.com + GHL; live connect → callback line + owner alert, web calls cannot transfer; a round trip on the new secret via the ZZ sink). SALES_CAL_SECRET rotated: both booking workflows accepted old + new for 60 minutes (WF-AIC-SALES-CAL 14bce088, WF-AVA-SALES-CAL 0968c734), header-only versions two-door v11 / old desk v5 / AVA test v8, old value dropped at 7:10 PM CT. 8976 back on the AVA sales test agent. Snapshot ops/tuning/0019-two-door-live-snapshot-2026-10-01.md. Report reports/2026-10-01-aic-promote.md."
+    },
+    {
+      "ts": "2026-10-02T11:04:19-05:00",
+      "entry": "AIC POST-PROMOTE POLISH — RUN INCOMPLETE (paste 38 v1). 0019 stays on two-door v11. v12 published 10:29 AM CT (Grok 40 texts 1–3 byte-exact in d2; today-in-yes fix, no new words: the first reading of the times uses the existing today line); battery on v12: whole set of 49 twice 46/49 + 48/49 strict, safety 5/5 both → pass; targeted 5 each: third push 5/5, above-base sentence 3/5 (needs 4), talk-to-someone words 2/5 (needs 5), yes + today 5/5 → fail → no re-pin, no acceptance calls. Briefing agent v1 published 10:42 AM CT (text 4a/4b/4c; accept = \"connect\" / \"connect me\" or keypad 1; anything else one re-prompt then cancel; 6 of 6 cases 5/5 on the playground) — live on the transfer path (called at latest_published). GHL AVA Demo Call: description 30 → 15 minutes, on-screen confirmation signed AVA Team; email/SMS templates live in a GHL workflow → by hand. Caller-text proof skipped: no test-phone secret in Doppler. Snapshot ops/tuning/0019-two-door-live-snapshot-2026-10-02.md · battery § 14 · report reports/2026-10-02-aic-post-promote.md."
     }
   ]
 }

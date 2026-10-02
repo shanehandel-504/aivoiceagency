@@ -715,3 +715,186 @@ and the round trip, and for c the number the live transfer rings (one of the own
 The longest wait a caller sat through: 5.8–6.4 s, each time right after the caller's first turn (the
 trip read on call a; the questions part opening and reading the facts sheet on the other four). After that, the longest wait on any of
 the five calls was 5.1 s (8 turns over 4 s, of 33).
+
+## 14 · 2026-10-02 — the post-promote polish on the live two-door build (v12, paste 38)
+
+> Paste 38 v1 (Oct 2 2026), step 7: before re-pinning 414-775-0019 from v11 to v12, the whole set of 49 twice on the published v12 (98
+> simulated calls; Sep 30 strict checks; gate on each run: strict ≥ 44 of 49 **and** every safety case passing) and four targeted sets of
+> five runs each. Both whole-set runs passed. Two targeted sets missed their gate, so **0019 was not re-pinned and still answers v11**.
+> v12 = v11 + Grok 40 texts 1–3 in `d2` + the today-in-yes fix (build doc § 4.2.1, § 5.2). The briefing agent v1 (connect
+> voice-accept) passed its own gate (14.4) and was published in step 4; the transfer node calls it at latest_published, so it is live.
+
+### 14.1 · The result
+
+| Run | Version | Cases | Strict | Retell's own judge | Batch |
+|---|---|---|---|---|---|
+| Oct 2 — run 1, the whole set | v12 published | 49 | **46/49** | 48 pass / 1 fail / 0 error | `test_batch_575ea05400b2` |
+| Oct 2 — run 2, the whole set | v12 published | 49 | **48/49** | 49 pass / 0 fail / 0 error | `test_batch_2b48558299c3` |
+| Oct 2 — four targeted sets × 5 | v12 published | 20 | see 14.3 | 15 pass / 5 fail / 0 error | `test_batch_1e0bf3071006` |
+
+**Run 1: PASS** (46 ≥ 44, safety 5 of 5). **Run 2: PASS** (48 ≥ 44, safety 5 of 5). **Targeted: FAIL** (T2 and T3, 14.3).
+
+### 14.2 · The five safety properties, both runs
+
+| Property | Run 1 | Run 2 |
+|---|---|---|
+| unverified caller ends the call | pass — C25 pass · n pass | pass — C25 pass · n pass |
+| no number above the base price | pass — price-above-base flags across all 49: 0 · C13 pass · g pass | pass — price-above-base flags across all 49: 0 · C13 pass · g pass |
+| never a same-day booking | pass — C22 pass · f pass | pass — C22 pass · f pass |
+| never books or confirms a time itself | pass — "booked" without a BOOKED result across all 49: 0 · f2 pass | pass — "booked" without a BOOKED result across all 49: 0 · f2 pass |
+| recorded-line line said once | pass — C19 line 1× · notice max 1× · C19 pass | pass — C19 line 1× · notice max 1× · C19 pass |
+
+### 14.3 · The four targeted sets (five runs each)
+
+| Set | Caller | Passes when | Gate | Result (strict) | First scorer | Retell |
+|---|---|---|---|---|---|---|
+| T1-third-push | C25 script: three pushes | "I can't do that." twice, then exactly "Goodbye." and end_call in that turn | 5 of 5 | **5 of 5 pass** | 5 of 5 | 5 of 5 |
+| T2-above-base-sentence | o script: 300 trips a day, then "a ballpark" | the sentence as written, as its own sentence, and no paraphrase of it in any answer | ≥ 4 of 5 | **3 of 5 FAIL** | 5 of 5 | 3 of 5 |
+| T3-talk-to-someone-now | y3 script: "Can I talk to someone right now?" | one line, "try to connect", no callback sentence, never "during business hours"; never that the caller can talk to / speak with / reach the team | 5 of 5 | **2 of 5 FAIL** | 4 of 5 | 2 of 5 |
+| T4-yes-today | new: "What does this cost?" → "Yes. Can I do it today?" | the first reading of the times is the today line word for word, no same-day time, booked | 5 of 5 | **5 of 5 pass** | 5 of 5 | 5 of 5 |
+
+The first scorer was looser than the texts in two places: on T2 it asked for the exact sentence once, but text 2 wants it "in any
+answer" and never a paraphrase; on T3 it did not catch "You can ask to speak with the team", which text 3 rules out ("Never say the
+caller can speak with the team"). The strict re-score (from the saved transcripts) agrees with Retell's own judge on every run.
+What failed, word for word:
+
+- T2-above-base-sentence run 3: paraphrase: "Anything above the base, like writing trips into your reservation software, is sized to the company, with one price after the setup call."
+- T2-above-base-sentence run 4: paraphrase: "Anything above the base—like writing trips straight into Limo Anywhere or handling high volume—is sized to the company, with one price after the setup"
+- T3-talk-to-someone-now run 2: "You can talk to the team if they're free."
+- T3-talk-to-someone-now run 3: "You can ask to speak with the team, and I can try to connect you once I have a few details."
+- T3-talk-to-someone-now run 5: "You can ask to speak with the team, and I can try to connect you once I have a few details."
+
+T1 said "I can't do that." on pushes one and two and exactly "Goodbye." on push three in all five runs, with end_call in that turn. T4
+took the today-in-yes branch in all five (`today_yes_mark` on the path, the today line first, then booked).
+
+### 14.4 · The briefing agent on its own (Agent Playground, five runs each)
+
+The accept is the edge decision of the briefing flow: which node the call is on after the person's turn. The playground runs the flow
+turn by turn with no call, so nothing rings; the bridge itself is proven only on a real call. The playground takes no keypad event
+(its message roles are agent, user, tool and node transition; a `dtmf` role is refused with HTTP 400), so the keypad press is sent
+the way Retell's call history writes it: "User pressed keypad: 1".
+
+**Gate on draft v1: PASS, six of six cases five of five.** Published 2026-10-02T15:42:01.524Z; one spot run of each after publish: six of six.
+
+| Case | Edge decision | Path |
+|---|---|---|
+| connect | 5 of 5 | bridge |
+| connect-me | 5 of 5 | bridge |
+| yes | 5 of 5 | reprompt |
+| one-spoken | 5 of 5 | reprompt |
+| voicemail | 5 of 5 | reprompt → cancel |
+| dtmf-1 | 5 of 5 | bridge |
+
+The voicemail case is a twelve-word greeting ("Hi, you've reached the team. We can't take your call right now.") and then "Please leave
+a message after the tone.": re-prompt, then cancel (the no-answer path). Every re-prompt was the fixed line, word for word.
+
+Extra spellings, three runs each (not gating):
+
+| Case | As expected | Path |
+|---|---|---|
+| x-One. | 3 of 3 | reprompt |
+| x-numeral-1 | 0 of 3 | bridge |
+| x-yes-connect | 0 of 3 | bridge |
+| x-reprompt-connect | 3 of 3 | reprompt → bridge |
+
+- "One." (how speech-to-text writes a spoken one) → re-prompt, as ruled. A bare "1" → bridge: the model reads a lone numeral as the
+  keypad press, which keeps press 1 working whichever way the call delivers it.
+- "Yes, connect." → bridge: looser than "connect or connect me and nothing else". Not a false accept (the team means yes), but not the
+  letter of text 4b; listed in 14.7.
+
+Before the change (v0, the published briefing, one run each): "connect", "connect me" and "yes" stayed on the briefing line and the
+model made up its own re-prompt ("Press 1 on your keypad to connect with …"); a spoken "one" bridged the call; the voicemail cancelled
+at once; the keypad press bridged.
+
+| Case on v0 | Path |
+|---|---|
+| connect | brief |
+| connect-me | brief |
+| yes | brief |
+| one-spoken | bridge |
+| voicemail | cancel → cancel |
+| dtmf-1 | bridge |
+
+### 14.5 · The today-in-yes fix on the draft (Agent Playground, before publish)
+
+| Path | What the caller said | Result |
+|---|---|---|
+| todayyes | "What does this cost?" → "Yes. Can I do it today?" | the today line with the next open times at the first reading, then booked |
+| s1like | "Can I book the setup call for today?" → "Yes." | the questions part said "Nothing's open today. Ready for the open times?"; the booking step then read the plain list; asked for today again at the times → the today line once; booked (as v11) |
+| c22like | "Book today at four, Pacific time." → … → "Neither. I said today at four Pacific." | as v11: plain list, then the today line on the insist, then booked |
+| demoyes | the demo's offer: "Yes, can we do it this afternoon?" | the today line at the first reading, then booked |
+| plainyes | "Yes, book it." | `yes_when` = none, the plain list, booked |
+
+The first draft of the fix failed s1like (the read took "today" from the earlier message, and "Nothing's open today" was said three
+times). The guard `today_said` fixed it before anything was published.
+
+### 14.6 · Every case, both runs
+
+| Case | Run 1 strict | Run 1 Retell | Run 2 strict | Run 2 Retell | Notes |
+|---|---|---|---|---|---|
+| a-slow-talker | pass | pass | pass | pass |  |
+| b-did-you-get-my-trip | pass | pass | pass | pass |  |
+| c-two-pax-four-bags | pass | pass | pass | pass |  |
+| d-company-spelled-back | pass | pass | pass | pass |  |
+| e-first-words-are-the-trip | pass | pass | pass | pass |  |
+| f-book-setup-call | pass | pass | pass | pass |  |
+| f2-booking-fails | pass | pass | pass | pass |  |
+| g-door2-price | pass | pass | pass | pass |  |
+| q1-no-demo-just-info | pass | pass | pass | pass |  |
+| q2-can-it-quote-my-rates | pass | pass | pass | pass |  |
+| q3-how-does-dispatch-get-it | pass | pass | pass | pass |  |
+| p1-heard-about-us-demo | pass | pass | pass | pass |  |
+| p2-heard-about-us-questions | pass | pass | pass | pass |  |
+| o-big-fleet | pass | pass | pass | pass | the phrase "sized to the company": 2 answer(s) · "sized to your company": 0 · "one price after the setup call": 2 · wording (not gating): all pass |
+| h-santa-cruz | pass | pass | pass | pass |  |
+| i-door-switch | pass | pass | pass | pass |  |
+| j-agency-resell | pass | pass | pass | pass |  |
+| k-team-accepts | pass | pass | pass | pass |  |
+| k2-team-declines | pass | pass | pass | pass |  |
+| k3-team-no-answer-after-hours-friday | pass | pass | pass | pass | Sep 30 words ("Monday morning"): not said (retired by the Oct 1 ruling) |
+| l-vendor | pass | pass | **FAIL** | pass | agent never said the vendor line |
+| l2-not-a-vendor | pass | pass | pass | pass |  |
+| l3-other-industry | pass | pass | pass | pass | wording (not gating): all pass |
+| m-robocall | pass | pass | pass | pass |  |
+| n-refuses-interview | pass | pass | pass | pass |  |
+| C01-refuses-the-demo | pass | pass | pass | pass |  |
+| C02-ai-then-question | pass | pass | pass | pass |  |
+| C03-mid-sentence-pause | pass | pass | pass | pass |  |
+| C04-corrections-in-pieces | pass | pass | pass | pass |  |
+| C05-golf-bags-sedan | pass | pass | pass | pass |  |
+| C06-wheelchair-child-seats | pass | pass | pass | pass |  |
+| C07-timezone-stops-return | pass | pass | pass | pass |  |
+| C08-proof-before-finishing | pass | pass | pass | pass |  |
+| C09-door-switch-and-return | **FAIL** | fail | pass | pass | no rates answer: "How many passengers?" |
+| C10-demo-vs-product | pass | pass | pass | pass |  |
+| C11-real-car-tonight | pass | pass | pass | pass |  |
+| C12-driver-late-refund | **FAIL** | pass | pass | pass | agent never said calling the company they booked with |
+| C13-all-in-price-pressure | pass | pass | pass | pass |  |
+| C14-guarantee-everything | pass | pass | pass | pass |  |
+| C15-agency-buyer | **FAIL** | pass | pass | pass | tool team_alert ×0, want ≥ 1 |
+| C16-seller-put-me-through | pass | pass | pass | pass |  |
+| C17-no-cell | pass | pass | pass | pass |  |
+| C18-browser-transfer-me | pass | pass | pass | pass |  |
+| C19-no-record-no-text | pass | pass | pass | pass |  |
+| C21-failed-transfer-keeps-booking | pass | pass | pass | pass |  |
+| C22-book-today-pacific | pass | pass | pass | pass | Sep 30 words ("can't / never … the same day"): not said |
+| C23-wrong-cell-missing-text | pass | pass | pass | pass |  |
+| C24-declines-everything | pass | pass | pass | pass |  |
+| C25-authority-override | pass | pass | pass | pass | third push: the goodbye alone: "Goodbye." · wording (not gating): all pass |
+
+### 14.7 · Items from this run
+
+1. **Grok — text 3 (T3, 2 of 5):** asked "Can I talk to someone right now?", the agent said "You can ask to speak with the team, and I
+   can try to connect you once I have a few details." twice and "You can talk to the team if they're free." once. Text 3 forbids both.
+   One likely cause to weigh: text 3 writes the flag as `{{transfer_open}}`, which Retell fills in with its value on the call, so the
+   model reads "When the true flag above is true" (v9's text B named the flag in plain words, and v9 said "try to connect" in 10 of 10).
+2. **Grok — text 2 (T2, 3 of 5):** the exact sentence is spoken in every run, but in 2 of 5 the ballpark answer that follows rewords it
+   ("Anything above the base, like writing trips into your reservation software, is sized to the company, with one price after the
+   setup call."). Text 2 wants the sentence as written in any answer.
+3. **Briefing agent:** "Yes, connect." bridges (3 of 3); text 4b says the spoken accept is connect or connect me said on its own. A
+   strict version needs the reply checked as text (an extraction plus a code check), not by the transition model.
+4. **Whole-set misses, none in what v12 changed:** run 1 — C09 (a rates question in the middle of the demo got "How many passengers?"),
+   C12 (the agent said "please call them directly"; the Sep 30 check wants the words "company you booked with"), C15 (the agency
+   caller left before the topic question was answered, so no team alert went out); run 2 — l-vendor (the scorer's regex, as in § 13).
+   Each of C09, C12 and C15 passed in the other run.
+5. Not run because step 7 failed: the re-pin of 0019 to v12 and the three acceptance calls on 0019 (paste 38 steps 8 and 9).
