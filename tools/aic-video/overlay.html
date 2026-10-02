@@ -1,0 +1,173 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>AIC video 01 overlay</title>
+<style>
+@font-face{font-family:SG;src:url(space-grotesk.woff2) format('woff2');font-weight:300 700}
+@font-face{font-family:JBM;src:url(jetbrains-mono.woff2) format('woff2');font-weight:400 700}
+:root{--void:#0A0A0F;--panel:#12121A;--line:#23232E;--ink:#EEF0F4;--mute:#7E8299;--cyan:#00D4FF;--green:#2EE6A8;--amber:#FFB020;--neutral:#8A93A6}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;background:transparent;overflow:hidden}
+body{font-family:SG,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+.abs{position:absolute}
+/* top rail */
+#tag{left:60px;top:145px;font:500 24px/1 JBM,monospace;letter-spacing:.14em;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:12px 16px}
+#logo{right:60px;top:136px;width:330px;height:62px;background:var(--void);border:1px solid var(--line);padding:10px 16px}
+#logo img{width:100%;height:100%;object-fit:contain;object-position:left center}
+/* call card */
+#call{left:60px;top:214px;width:960px;background:rgba(10,10,15,.9);border:1px solid var(--line);padding:22px 28px 20px}
+#call .r1{display:flex;align-items:center;justify-content:space-between}
+#call .st{display:flex;align-items:center;gap:14px;font:600 24px/1 JBM,monospace;letter-spacing:.14em}
+#call .dot{width:16px;height:16px}
+#call .clk{font:500 46px/1 JBM,monospace;color:var(--ink);letter-spacing:.02em}
+#call .biz{margin-top:12px;font:600 46px/1.1 SG;color:var(--ink)}
+#call .biz small{font:400 28px/1 SG;color:var(--mute);margin-left:14px}
+#wave{margin-top:16px;height:64px;display:flex;align-items:center;gap:7px}
+#wave i{display:block;width:13px;background:var(--ink)}
+/* caption */
+#cap{left:60px;top:478px;width:960px}
+#cap .who{font:600 26px/1 JBM,monospace;letter-spacing:.14em;margin-bottom:18px;display:inline-block;background:var(--void);padding:10px 14px}
+#cap .txt{font:600 62px/1.24 SG;letter-spacing:-.005em}
+#cap .txt span.l{background:var(--void);padding:2px 16px 6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+#cap b{font-weight:600}
+/* cover */
+#cover{left:60px;top:470px;width:960px}
+#cover .eb{display:inline-block;font:700 54px/1 SG;letter-spacing:.03em;color:var(--cyan);background:var(--void);padding:14px 18px 12px}
+#cover .h{margin-top:18px;font:700 156px/1.02 SG;letter-spacing:-.02em}
+#cover .h span,#cover .s span{background:var(--void);padding:0 18px 8px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+#cover .s{margin-top:26px;font:500 48px/1.32 SG}
+/* trip sheet */
+#sheet{left:60px;top:1128px;width:840px;background:rgba(18,18,26,.94);border:1px solid var(--line)}
+#sheet .hd{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--line)}
+#sheet .hd .t{font:600 24px/1 JBM,monospace;letter-spacing:.14em;color:var(--ink)}
+#sheet .chip{font:700 24px/1 JBM,monospace;letter-spacing:.12em;padding:10px 14px;border:1px solid var(--neutral);color:var(--neutral)}
+#sheet .chip.bk{background:var(--green);border-color:var(--green);color:var(--void)}
+#rows{position:relative;height:300px;overflow:hidden}
+.row{position:absolute;left:0;right:0;height:75px;display:flex;align-items:center;border-bottom:1px solid var(--line);padding:0 24px}
+.row .bar{position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--green)}
+.row .k{width:220px;font:500 22px/1.2 JBM,monospace;letter-spacing:.12em;color:var(--mute)}
+.row .k em{display:block;font-style:normal;color:var(--green);font-size:18px;margin-top:4px}
+.row .v{flex:1;font:600 40px/1.1 SG;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:clip}
+/* end card */
+#end{left:0;top:0;width:1080px;height:1920px;background:var(--void)}
+#end .bk{position:absolute;left:0;right:0;top:560px;text-align:center;font:700 250px/1 SG;letter-spacing:-.03em;color:var(--green)}
+#end .l1{position:absolute;left:0;right:0;top:890px;text-align:center;font:600 62px/1.2 SG;color:var(--ink)}
+#end .l2{position:absolute;left:0;right:0;top:960px;text-align:center;font:500 42px/1.3 SG;color:var(--mute)}
+#end .rule{position:absolute;left:390px;width:300px;top:1090px;height:1px;background:var(--line)}
+#end .l3{position:absolute;left:0;right:0;top:1140px;text-align:center;font:600 48px/1.25 SG;color:var(--ink)}
+#end .l4{position:absolute;left:0;right:0;top:1300px;text-align:center;font:500 30px/1 JBM,monospace;letter-spacing:.14em;color:var(--mute)}
+#end img{position:absolute;left:310px;top:1400px;width:460px}
+#flash{left:0;top:0;width:1080px;height:1920px;background:var(--green)}
+/* green cover (approved option A) */
+#cv{left:0;top:0;width:1080px;height:1920px;background:rgb(61,223,164);overflow:hidden}
+#cvbg{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 1290px}
+#cv .t{position:absolute;left:70px;right:70px;top:150px;color:var(--void)}
+#cv .t .e{font:700 64px/1 SG;letter-spacing:.01em}
+#cv .t .h{margin-top:26px;font:700 188px/.92 SG;letter-spacing:-.035em}
+#cv .m{position:absolute;left:70px;bottom:120px;width:150px}
+#cv .d{position:absolute;right:70px;bottom:132px;font:600 26px/1 JBM,monospace;letter-spacing:.16em;color:var(--void)}
+/* plain-English callout */
+#co{left:60px;top:1030px;background:var(--green);color:var(--void);font:700 42px/1 SG;letter-spacing:.005em;padding:18px 22px 17px;transform-origin:left center}
+#end .l5{position:absolute;left:0;right:0;top:1214px;text-align:center;font:500 40px/1.25 SG;color:var(--mute)}
+
+</style></head>
+<body>
+<div id="tag" class="abs">DEMO SCENARIO</div>
+<div id="logo" class="abs"><img src="lockup-short.svg" alt=""></div>
+<div id="call" class="abs">
+  <div class="r1"><div class="st"><span class="dot"></span><span class="stt"></span></div><div class="clk">00:00</div></div>
+  <div class="biz">Corbel Black Car<small>answered by AI Chauffeur</small></div>
+  <div id="wave"></div>
+</div>
+<div id="cap" class="abs"><div class="who"></div><div class="txt"><span class="l"></span></div></div>
+<div id="sheet" class="abs"><div class="hd"><span class="t">TRIP SHEET</span><span class="chip">TAKING DETAILS</span></div><div id="rows"></div></div>
+<div id="end" class="abs">
+  <div class="bk">BOOKED.</div>
+  <div class="l1">This could be your phone.</div>
+  <div class="rule"></div>
+  <div class="l3">Get this on your phones.</div>
+  <div class="l5">Link in bio.</div>
+  <div class="l4">DEMO SCENARIO</div>
+  <img src="lockup-short.svg" alt="">
+</div>
+<div id="co" class="abs"></div>
+<div id="flash" class="abs"></div>
+<div id="cv" class="abs"><img id="cvbg" src="cover_bg_green.png" alt="">
+  <div class="t"><div class="e">BUSINESS OWNERS:</div><div class="h">THIS COULD BE YOUR PHONE.</div></div>
+  <img class="m" src="mark-black.svg" alt=""><div class="d">DEMO SCENARIO</div></div>
+<script>
+let D=null;
+const $=s=>document.querySelector(s);
+const NB=46; const wave=$('#wave'); for(let i=0;i<NB;i++){wave.appendChild(document.createElement('i'))}
+const ease=x=>1-Math.pow(1-Math.min(1,Math.max(0,x)),3);
+function clockAt(t){
+  // map vt -> source call time since pickup
+  let st=null; for(let i=D.vt0.length-1;i>=0;i--){ if(t>=D.vt0[i]){ st=D.segs[i][0]+(t-D.vt0[i]); break; } }
+  const s=Math.max(0,st-D.pick); const m=Math.floor(s/60), ss=Math.floor(s%60);
+  return String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+}
+window.setData=d=>{D=d};
+window.render=function(t){
+  const E=D.events, ring=t<E.pickup, booked=t>=E.booked, inEnd=t>=E.callEnd;
+  // status line
+  const dot=$('#call .dot'), stt=$('#call .stt');
+  if(ring){ const on=(Math.floor(t*4)%2===0); dot.style.background=on?'var(--amber)':'transparent'; dot.style.border='2px solid var(--amber)'; stt.textContent='INCOMING CALL'; stt.style.color='var(--amber)'; }
+  else if(booked){ dot.style.background='var(--green)'; dot.style.border='2px solid var(--green)'; stt.textContent='BOOKED ON THE CALL'; stt.style.color='var(--green)'; }
+  else { dot.style.background='var(--green)'; dot.style.border='2px solid var(--green)'; stt.textContent='ON THE CALL'; stt.style.color='var(--ink)'; }
+  $('#call .clk').textContent= ring?'00:00':clockAt(t);
+  // waveform: history scrolling right->left
+  const bars=wave.children;
+  for(let k=0;k<NB;k++){
+    const tt=t-(NB-1-k)*0.045; const idx=Math.floor(tt*D.rmsRate);
+    let v=(idx>=0&&idx<D.rms.length)?D.rms[idx]:0;
+    const h=6+v*58; bars[k].style.height=h.toFixed(1)+'px';
+    bars[k].style.background= ring?'var(--amber)':'var(--ink)';
+  }
+  // cover
+  const cvl=$('#cv');
+  if(t<E.pickup){ cvl.style.display='block'; const f=Math.floor(t*30); const burst=(t<1.2)&&((t%0.4)<0.28);
+    const r=burst?((f%2)?1.6:-1.6):0, dx=burst?((f%2)?6:-6):0; $('#cvbg').style.transform='translateX('+dx+'px) rotate('+r+'deg)';
+  } else { cvl.style.display='none'; }
+  const col=$('#co'); let cc=null; for(const x of (D.callouts||[])){ if(t>=x.t && t<x.e) cc=x; }
+  if(cc && t<E.callEnd){ col.style.display='block'; col.textContent=cc.txt; const a=Math.min(1,(t-cc.t)/0.12), z=Math.min(1,(cc.e-t)/0.12);
+    col.style.opacity=Math.min(a,z); col.style.transform='scale('+(0.9+0.1*ease(a))+')'; } else { col.style.display='none'; }
+  // caption
+  const cap=$('#cap'); let c=null; for(const x of D.caps){ if(t>=x.s && t<x.e) c=x; }
+  if(c && !ring){
+    cap.style.opacity=1;
+    const who=$('#cap .who'); who.textContent= c.who==='a'?'AI CHAUFFEUR':'CALLER'; who.style.color= c.who==='a'?'var(--cyan)':'var(--ink)';
+    const html=c.words.map(w=>{ const said=t>=w.s; const isBk=/^booked/i.test(w.w); const col= said?(isBk?'var(--green)':'var(--ink)'):'var(--mute)'; return '<b style="color:'+col+'">'+w.w.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</b>'; }).join(' ');
+    $('#cap .txt .l').innerHTML=html;
+    const k=Math.min(1,(t-c.s)/0.12); cap.style.transform='translateY('+((1-ease(k))*18)+'px)';
+  } else { cap.style.opacity=0; }
+  // trip sheet
+  const sh=$('#sheet'); const si=Math.min(1,Math.max(0,(t-E.pickup)/0.22));
+  sh.style.opacity= t<E.pickup?0:ease(si); sh.style.transform='translateY('+((1-ease(si))*40)+'px)';
+  const chip=$('#sheet .chip'); if(booked){chip.textContent='BOOKED';chip.className='chip bk';} else {chip.textContent='TAKING DETAILS';chip.className='chip';}
+  // rows: newest first, dedupe by key (latest value wins, flagged updated)
+  const seen={}; let list=[];
+  for(const f of D.fields){ if(t<f.t) continue; if(seen[f.k]){ list=list.filter(r=>r.k!==f.k); list.push({k:f.k,v:f.v,t:f.t,upd:true}); } else { list.push({k:f.k,v:f.v,t:f.t,upd:false}); } seen[f.k]=1; }
+  const cnt=list.length; list.reverse(); list=list.slice(0,4);
+  const rows=$('#rows'); rows.innerHTML='';
+  if(cnt===0){ rows.style.height='0px'; } else { const e0=ease(Math.min(1,(t-list[0].t)/0.2)); const n=Math.min(4,cnt); rows.style.height=(((cnt<=4)?(n-1+e0):4)*75)+'px'; }
+  list.forEach((r,i)=>{
+    const age=t-r.t; const ent=Math.min(1,age/0.2);
+    const el=document.createElement('div'); el.className='row';
+    el.style.top=(i*75 - (1-ease(ent))*(i===0?75:0) + (i>0? (1-ease(Math.min(1,(t-list[0].t)/0.2)))*-75 :0))+'px';
+    el.style.opacity= i===0? ease(ent):1;
+    const fresh=age<1.6;
+    el.innerHTML=(fresh?'<span class="bar"></span>':'')+'<span class="k">'+r.k+(r.upd?'<em>UPDATED</em>':'')+'</span><span class="v">'+r.v.replace(/&/g,'&amp;')+'</span>';
+    rows.appendChild(el);
+  });
+  // end card
+  const end=$('#end'), fl=$('#flash');
+  if(inEnd){
+    end.style.display='block'; const k=(t-E.callEnd);
+    const s=1.28-0.28*ease(k/0.14); $('#end .bk').style.transform='scale('+s.toFixed(4)+')';
+    const fade=x=>Math.min(1,Math.max(0,x));
+    $('#end .l1').style.opacity=fade((k-0.35)/0.2); $('#end .l5').style.opacity=fade((k-0.8)/0.2);
+    $('#end .rule').style.opacity=fade((k-0.6)/0.2); $('#end .l3').style.opacity=fade((k-0.75)/0.2);
+    $('#end .l4').style.opacity=fade((k-0.85)/0.2); end.querySelector('img').style.opacity=fade((k-0.95)/0.25);
+    fl.style.display= k<1/30*2? 'block':'none'; fl.style.opacity= k<1/30?0.9:0.35;
+  } else { end.style.display='none'; fl.style.display='none'; }
+};
+</script>
+</body></html>

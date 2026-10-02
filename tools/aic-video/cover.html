@@ -1,0 +1,46 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>AIC cover options</title>
+<style>
+@font-face{font-family:SG;src:url(space-grotesk.woff2) format('woff2');font-weight:300 700}
+@font-face{font-family:JBM;src:url(jetbrains-mono.woff2) format('woff2');font-weight:400 700}
+:root{--void:#0A0A0F;--ink:#EEF0F4;--green:#2EE6A8;--cyan:#00D4FF}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;font-family:SG,sans-serif}
+.v{position:absolute;inset:0;display:none}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* A — green field */
+#A{background:var(--green)}
+#A .bg{object-position:center 70%}
+#A .t{position:absolute;left:70px;right:70px;top:150px;color:var(--void)}
+#A .t .e{font:700 64px/1 SG;letter-spacing:.01em}
+#A .t .h{margin-top:26px;font:700 188px/.92 SG;letter-spacing:-.035em}
+#A .m{position:absolute;left:70px;bottom:120px;width:150px}
+#A .d{position:absolute;right:70px;bottom:132px;font:600 26px/1 JBM,monospace;letter-spacing:.16em;color:var(--void)}
+/* B — black + green word, real frame */
+#B{background:var(--void)}
+#B .bg{top:auto;bottom:0;height:50%;object-position:center 72%}
+#B .shade{position:absolute;left:0;right:0;top:0;height:50%;background:var(--void)}
+#B .t{position:absolute;left:70px;right:70px;top:170px}
+#B .t .e{font:600 60px/1 SG;color:var(--ink)}
+#B .t .h1{margin-top:28px;font:700 186px/.92 SG;letter-spacing:-.035em;color:var(--ink)}
+#B .t .h2{font:700 186px/.92 SG;letter-spacing:-.035em;color:var(--green)}
+#B .d{position:absolute;left:70px;bottom:120px;font:600 26px/1 JBM,monospace;letter-spacing:.16em;color:var(--ink);background:var(--void);padding:12px 16px}
+/* C — car photo + green band */
+#C{background:var(--void)}
+#C .bg{transform:translateY(400px)}
+#C .band{position:absolute;left:0;right:0;top:170px;background:var(--green);padding:46px 70px 54px}
+#C .band .e{font:700 60px/1 SG;color:var(--void)}
+#C .band .h{margin-top:22px;font:700 176px/.92 SG;letter-spacing:-.035em;color:var(--void)}
+#C .d{position:absolute;left:70px;bottom:120px;font:600 26px/1 JBM,monospace;letter-spacing:.16em;color:var(--ink);background:var(--void);padding:12px 16px}
+</style></head><body>
+<div id="A" class="v"><img class="bg" src="cover_bg_green.png" alt="">
+  <div class="t"><div class="e">BUSINESS OWNERS:</div><div class="h">THIS COULD BE YOUR PHONE.</div></div>
+  <img class="m" src="mark-black.svg" alt=""><div class="d">DEMO SCENARIO</div></div>
+<div id="B" class="v"><img class="bg" src="still_phone.png" alt=""><div class="shade"></div>
+  <div class="t"><div class="e">Business owners:</div><div class="h1">THIS COULD BE</div><div class="h2">YOUR PHONE.</div></div>
+  <div class="d">DEMO SCENARIO</div></div>
+<div id="C" class="v"><img class="bg" src="still_car.png" alt="">
+  <div class="band"><div class="e">BUSINESS OWNERS:</div><div class="h">THIS COULD BE YOUR PHONE.</div></div>
+  <div class="d">DEMO SCENARIO</div></div>
+<script>const v=new URLSearchParams(location.search).get('v')||'A';document.getElementById(v).style.display='block';</script>
+</body></html>
