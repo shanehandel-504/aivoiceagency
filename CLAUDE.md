@@ -365,7 +365,8 @@ It self-tags as internal (`NOTRACK`) on webdriver / `ava_internal` / `?notrack=1
 - "locked" / "locked in" — use "set" or "decided"
 - "she" / "her" for AVA — always "AVA"
 - "Certainly!" / "Great question!" / "I understand"
-- "booked" / "confirmed" / "payment required" / "guaranteed" — banned in marketing CLAIMS about AVA's service. Natural booking language IS allowed inside clearly-labeled sample call dialogue.
+- "confirmed" / "payment required" / "guaranteed" — banned in marketing CLAIMS about AVA's service. Natural booking language IS allowed inside clearly-labeled sample call dialogue.
+- **"booked" is APPROVED — it is the catchphrase** (CEO ruling, Oct 2 2026). A reservation entered is booked; dispatch confirming the driver is a separate, later step and is never called "confirmed" in our copy. Use it in sample calls, result cards, heroes and social. It never describes a real action that failed: a real write is called booked only after it succeeded.
 
 ## GUARDRAILS
 
