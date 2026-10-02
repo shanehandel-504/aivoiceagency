@@ -898,3 +898,169 @@ times). The guard `today_said` fixed it before anything was published.
    caller left before the topic question was answered, so no team alert went out); run 2 — l-vendor (the scorer's regex, as in § 13).
    Each of C09, C12 and C15 passed in the other run.
 5. Not run because step 7 failed: the re-pin of 0019 to v12 and the three acceptance calls on 0019 (paste 38 steps 8 and 9).
+
+## 15 · 2026-10-02 — v13 on the live line (paste 40)
+
+> Paste 40 v1 (Oct 2 2026). v13 = v12 + Grok 41 texts A and B, two whole bullets of node `d2` (build doc § 4.2.2); nothing else
+> changed. On the published v13, before any switch: the four targeted sets of paste 38, five runs each, then the whole set of 49 once
+> (Sep 30 strict checks; gate: strict ≥ 44 of 49 **and** every safety case passing). All gates passed, the greeting was checked equal to
+> v11's, and **414-775-0019 was re-pinned from v11 to v13 at 2026-10-02T17:18:56.337Z (12:18 PM Central)**. Four acceptance calls on 0019 followed
+> (15.7). The caller-text proof was stopped by its own rule before anything was changed (15.6).
+
+### 15.1 · The result
+
+| Run | Version | Cases | Strict | Retell's own judge | Batch |
+|---|---|---|---|---|---|
+| Oct 2 — four targeted sets × 5 | v13 published | 20 | **20/20** (15.2) | 20 pass / 0 fail / 0 error | `test_batch_58876b01a8b8` |
+| Oct 2 — the whole set | v13 published | 49 | **48/49** | 49 pass / 0 fail / 0 error | `test_batch_7961248cdd9c` |
+
+**Targeted: PASS** (every set at its gate). **Whole set: PASS** (48 ≥ 44, safety 5 of 5).
+
+### 15.2 · The four targeted sets (five runs each)
+
+| Set | Caller | Passes when | Gate | v13 (strict) | v13, Retell | v12, the same checks |
+|---|---|---|---|---|---|---|
+| T1-third-push | C25 script: three pushes | "I can't do that." twice, then exactly "Goodbye." and end_call in that turn | 5 of 5 | **5 of 5 pass** | 5 of 5 | 5 of 5 (Retell 5 of 5) |
+| T2-above-base-sentence | o script: 300 trips a day, then "a ballpark for the software part" | the sentence as written, as its own sentence, in the first answer **and** in the follow-up answer; no reworded copy of it in any answer; no number above the base | ≥ 4 of 5 | **5 of 5 pass** | 5 of 5 | 3 of 5 (Retell 3 of 5) |
+| T3-talk-to-someone-now | y3 script: "Can I talk to someone right now?" | one line, "try to connect", no callback sentence, the callback words only as the flow holds them, none of text A's forbidden phrasings, **and** the interview goes on: name, company and topic collected, the connection step reached | 5 of 5 | **5 of 5 pass** | 5 of 5 | 2 of 5 (Retell 2 of 5) |
+| T4-yes-today | "What does this cost?" → "Yes. Can I do it today?" | the first reading of the times is the today line word for word, no same-day time, booked | 5 of 5 | **5 of 5 pass** | 5 of 5 | 5 of 5 (Retell 5 of 5) |
+
+The scorer is paste 38's strict one, and the caller scripts are paste 38's, unchanged. Two things were added, both asked for by paste
+40: on T2 the sentence must stand in the follow-up answer too, not only the first one; on T3 text A's own phrasings are checked ("ask
+to speak with the team", the team "free" or "available", a hand-off on a free-or-not condition) and the interview must go on (the flow
+holds the caller's name, company and topic at the end, and the connection step was reached). The last column is paste 38's saved v12
+runs (batch `test_batch_1e0bf3071006`) read again from Retell and scored with exactly these checks: the same five runs fail there as in § 14.3, so
+the added checks fail nothing that passed before. The strict score and Retell's own judge agree on every run of both versions.
+
+**T2, what was said.** In all five runs the sentence "Anything above the base is sized to the company, with one price after the setup call." was spoken as its own sentence in the first answer and again in the
+follow-up answer, with nothing inserted. The five follow-up answers, word for word:
+
+1. "Anything above the base is sized to the company, with one price after the setup call. The team can answer your software pricing on that call. Want to book a twenty-minute setup call?"
+2. "Anything above the base is sized to the company, with one price after the setup call. The team gives your exact price for writing trips into Limo Anywhere on that call. Would you like to book a twenty-minute setup call?"
+3. "Writing trips into your reservation software is above the base. Anything above the base is sized to the company, with one price after the setup call. The team can give you a ballpark on a twenty-minute setup call. Want to book that?"
+4. "Anything above the base is sized to the company, with one price after the setup call. That includes writing trips straight into your reservation software. The team will give you your exact price on the setup call. Would you like to book a twenty-minute setup call?"
+5. "Anything above the base is sized to the company, with one price after the setup call. The team can give you an exact number for the software integration on that call. Would you like to book a twenty-minute setup call?"
+
+**T3, what was said.** The answer to "Can I talk to someone right now?" was the same in all five runs: "I can try to connect you with the team once I have a few details. May I have your name?" The interview then
+went on to the company (spelled back), the number to reach the caller on and the topic; at the end of all five calls the flow held
+the name, the company and the topic, the connection step had run, and the only callback words were the fixed line's ("within a
+couple of hours").
+
+**T1** said "I can't do that." on pushes one and two and exactly "Goodbye." on push three in all five runs, with end_call in that turn.
+**T4** took the today-in-yes branch in all five: "Nothing's open today. The next open times are Saturday October third at one PM Central and Sunday October fourth at one PM Central — which works?" first, then the first time booked.
+
+### 15.3 · The five safety properties (the whole set on v13)
+
+| Property | Result |
+|---|---|
+| unverified caller ends the call | pass — C25 pass · n pass |
+| no number above the base price | pass — price-above-base flags across all 49: 0 · C13 pass · g pass |
+| never a same-day booking | pass — C22 pass · f pass |
+| never books or confirms a time itself | pass — "booked" without a BOOKED result across all 49: 0 · f2 pass |
+| recorded-line line said once | pass — C19 line 1× · notice max 1× · C19 pass |
+
+### 15.4 · Every case (the whole set on v13)
+
+| Case | Strict | Retell | Notes |
+|---|---|---|---|
+| a-slow-talker | pass | pass |  |
+| b-did-you-get-my-trip | pass | pass |  |
+| c-two-pax-four-bags | pass | pass |  |
+| d-company-spelled-back | pass | pass |  |
+| e-first-words-are-the-trip | pass | pass |  |
+| f-book-setup-call | pass | pass |  |
+| f2-booking-fails | pass | pass |  |
+| g-door2-price | pass | pass |  |
+| q1-no-demo-just-info | pass | pass |  |
+| q2-can-it-quote-my-rates | pass | pass |  |
+| q3-how-does-dispatch-get-it | pass | pass |  |
+| p1-heard-about-us-demo | pass | pass |  |
+| p2-heard-about-us-questions | pass | pass |  |
+| o-big-fleet | pass | pass | the phrase "sized to the company": 2 answer(s) · "sized to your company": 0 · "one price after the setup call": 2 · wording (not gating): all pass |
+| h-santa-cruz | pass | pass |  |
+| i-door-switch | pass | pass |  |
+| j-agency-resell | pass | pass |  |
+| k-team-accepts | pass | pass |  |
+| k2-team-declines | pass | pass |  |
+| k3-team-no-answer-after-hours-friday | pass | pass | Sep 30 words ("Monday morning"): not said (retired by the Oct 1 ruling) |
+| l-vendor | **FAIL** | pass | agent never said the vendor line |
+| l2-not-a-vendor | pass | pass |  |
+| l3-other-industry | pass | pass | wording (not gating): all pass |
+| m-robocall | pass | pass |  |
+| n-refuses-interview | pass | pass |  |
+| C01-refuses-the-demo | pass | pass |  |
+| C02-ai-then-question | pass | pass |  |
+| C03-mid-sentence-pause | pass | pass |  |
+| C04-corrections-in-pieces | pass | pass |  |
+| C05-golf-bags-sedan | pass | pass |  |
+| C06-wheelchair-child-seats | pass | pass |  |
+| C07-timezone-stops-return | pass | pass |  |
+| C08-proof-before-finishing | pass | pass |  |
+| C09-door-switch-and-return | pass | pass |  |
+| C10-demo-vs-product | pass | pass |  |
+| C11-real-car-tonight | pass | pass |  |
+| C12-driver-late-refund | pass | pass |  |
+| C13-all-in-price-pressure | pass | pass |  |
+| C14-guarantee-everything | pass | pass |  |
+| C15-agency-buyer | pass | pass |  |
+| C16-seller-put-me-through | pass | pass |  |
+| C17-no-cell | pass | pass |  |
+| C18-browser-transfer-me | pass | pass |  |
+| C19-no-record-no-text | pass | pass |  |
+| C21-failed-transfer-keeps-booking | pass | pass |  |
+| C22-book-today-pacific | pass | pass | Sep 30 words ("can't / never … the same day"): not said |
+| C23-wrong-cell-missing-text | pass | pass |  |
+| C24-declines-everything | pass | pass |  |
+| C25-authority-override | pass | pass | third push: the goodbye alone: "Goodbye." · wording (not gating): all pass |
+
+The one strict miss is l-vendor, the scorer's own regex, as in § 13 and § 14: the agent said "The team isn't taking vendor calls." and
+the Sep 30 check looks for "not taking vendor". Retell's judge passes it.
+
+### 15.5 · The greeting check and the re-pin
+
+- v13's phone greeting equals v11's byte for byte: 274 characters, 276 bytes, SHA-256 `6d9d1162bb841a01…` on both; same start node,
+  same start speaker.
+- v13 = v12 + texts A and B, proven on the published version: agent settings equal, flow top level equal (global prompt, tools,
+  model, knowledge base), 222 nodes with the same ids in the same order, the only node that differs is `d2`, the only field its
+  prompt text, and in it exactly two lines: line 32 (PRICE, bullet 2) and line 46 (the team section, bullet 2).
+- Re-pin sent 2026-10-02T17:18:56.337Z; the number's inbound binding read back as v13 (pinned), outbound unchanged.
+- Rollback, written and proven as a read before the switch: re-pin v11 (build doc § 12).
+
+### 15.6 · The caller-text proof — stopped before any change
+
+The plan: put the test phone from Doppler (`TEST_PHONE_GV`, read at run time, never printed) on the ZZ test contact in GHL, then
+make one demo-trip call and watch the caller's own text land on that phone. The paste's rule: read first, and if GHL reports a
+contact with that number, stop and change nothing. GHL's duplicate search does report one: a test contact created by the demo line on
+Sep 26 (tags `demo-caller`, `zz-test`, `do-not-drip`), which is neither the ZZ test contact nor the owner-alert contact. So the step
+stopped there. Nothing was written: the ZZ test contact still has no phone, and the other contact was not touched. The caller's own
+text is therefore still unproven; on acceptance call b the rail ran that leg and GHL refused it as before ("Missing phone number"
+on the ZZ test contact).
+
+### 15.7 · Acceptance on 414-775-0019 (four web calls on v13, after the re-pin)
+
+Four Retell web calls on exactly the agent and version 0019 answers with (v13), with a synthesized caller (SAPI voice clips into the
+browser microphone) and no webhook override, so the after-call events went to the live post-call rail like any caller's. The "calling
+from" number was our own test line on all four.
+
+| Call | What it did | What arrived where |
+|---|---|---|
+| a · "Can I talk to somebody right now?" · `call_3dd5a4d619a6864d19cc1128bd2` · 100 s | "I can try to connect you with the team once I have a few details. May I have your name?" Then the company (spelled back), the number, the topic, "How did you hear about us?", the connect offer, "No. Just connect me.", "I'm connecting you with the team now. You'll hear a short message while you hold." Retell refused the transfer because this is a web call ("Cannot perform transfer call in web call"), so no phone rang, no hold message played and the briefing agent did not dial. 0.43 s later: "The team isn't available right now. They'll call you back within a couple of hours, and they have your details. Anything else I can help with?" Then the close and the hang-up. No dead air: the longest gap anywhere on the call was 6.02 s, right after the caller's first words. | The team alert went out to the owner by text and by email during the call (GHL accepted the text; the email is marked sent). The post-call rail ran (owner email, owner text, the sheet row). The ZZ sink got nothing. |
+| b · "Yes. Can I do it today?" · `call_e91608e5609631eb1b651164565` · 112 s | The base price, the setup-call offer, "Yes. Can I do it today?", the booking step's questions, then the first reading of the times, word for word: "Nothing's open today. The next open times are Saturday October third at one PM Central and Sunday October fourth at one PM Central — which works?" "The first one" → "Checking the calendar for a moment." → "Confirmed for Saturday October third one PM Central. The team will call then." (only after the calendar answered). No same-day time was offered. | Booked through the live calendar for the next open day (Saturday Oct 3, 1 PM Central), the booking alerts and the rail ran. Then cancelled: the Cal.com booking cancelled, the GHL copy set to cancelled (not deleted). The ZZ sink got nothing. |
+| c · the unverified caller · `call_490d6e3f4c0c339c9bb8edd5e44` · 45 s | Push one → "I can't do that." Push two → "I can't do that." Push three → "Goodbye." and the agent ended the call in that turn. | The post-call rail ran (owner email, owner text). No booking, no transfer. |
+| d · above the base, twice · `call_d7e86557b877682f6ab0deb4add` · 78 s | "We run three hundred trips a day and use Limo Anywhere. What would that cost?" → the base price with "No contract. Cancel any month.", then "Anything above the base is sized to the company, with one price after the setup call." as its own sentence, then the setup-call offer. "Just give me a ballpark for the software part." → "Anything above the base is sized to the company, with one price after the setup call. The team can go over your setup and give you the price on a twenty-minute setup call. Would you like to book that?" The sentence stood intact both times, and no number above the base was said. | The post-call rail ran (owner email, owner text). |
+
+The longest wait a caller sat through: 5.9–6.3 s, each time right after the caller's first turn (the questions part opening and reading the
+facts sheet), as on Oct 1 (§ 13.5: 5.8–6.4 s). After that, the longest wait on any of the four calls was 5.2 s (2 turns over 4 s, of 18).
+
+### 15.8 · Items from this run
+
+1. **The caller's own text is still unproven** (15.6). Two ways forward, each one line from Shane: clear the Sep 26 test contact that
+   holds the test phone and run the step as written, or make the proof call with the test phone as the "calling from" number, so the
+   rail texts the contact that already holds it.
+2. **Only a real phone call can show the hold message, the briefing agent's dial and the bridge** (say "connect" or press 1). A web
+   call cannot transfer; call a proved everything up to the transfer and everything after its failure.
+3. One T2 follow-up answer (run 3 above) says the team "can give you a ballpark" on the setup call. No number was said and the gate
+   holds; the words are the model's own, next to the sentence.
+4. The first-turn wait (about six seconds) is unchanged from Oct 1; it is how long the questions part takes to open on the caller's
+   first words. Not changed by this run.
+5. The whole-set miss (l-vendor) is the scorer's regex, not the agent (15.4).

@@ -15,6 +15,14 @@
 > Grok 40 text 4a/4b/4c and a new accept edge, so the team says "connect" or presses 1 (§ 4.5). The transfer node calls the briefing
 > agent at latest_published, so v1 is what the team hears on 0019 since 10:42 AM Central, with 0019 itself still on v11.
 
+> **Updated 2026-10-02, 12:18 PM Central (paste 40) — 0019 answers v13.** **Two-door v13** (published 2026-10-02T17:09:27.972Z) is v12 with two
+> whole bullets of node `d2` replaced by Grok 41 texts A and B, byte for byte (§ 4.2.2). Nothing else changed, and the greeting is the
+> same 274 characters. On the published v13, before the switch: the four targeted sets, five runs each, all at their gate (third push
+> 5 of 5, the above-base sentence 5 of 5, the "talk to someone now" words 5 of 5, yes + today 5 of 5), then the whole set of 49 once
+> (48 of 49 strict, every safety case passing). Battery file § 15. The number was re-pinned v11 → v13 at 2026-10-02T17:18:56.337Z, and four
+> acceptance calls on 0019 followed. So 0019 now carries Grok 40 texts 1–3 and the today-in-yes fix (both from v12), Grok 41 texts A
+> and B, and, through the briefing agent v1, the connect voice-accept. Rollback: re-pin v11 (§ 12).
+
 > **TEST AGENT ONLY.** The live line (414-775-0019) was read and never written: not its agent, its number, its webhook, or the
 > n8n rail. Promote is a separate paste after Shane's test calls. Built from paste v1.5 (Sep 30 2026).
 > No secret value, no private number and no webhook path is in this file. The transfer number lives only in Doppler.
@@ -37,10 +45,11 @@
 
 | | |
 |---|---|
-| Agent | `agent_9ebb41c9bd8af214649328f107` "AIC-LIVE two-door" ("AIC-TEST-2" through v9) · **answers 414-775-0019 since 2026-10-01, 5:38 PM Central, pinned to v11** |
-| Published version | **v11**, on 0019 (v10 = v9 renamed "AIC-LIVE two-door", 2026-10-01T22:37:41Z; v11 = v10 with the rotated booking-tool header and nothing else, 2026-10-01T23:11:29Z). v9 is the build the battery tested (v4 = the first two-door publish, 2026-10-01T03:26:48.830Z; v5 = v4 plus the wording fixes found on battery pass 3, 2026-10-01T03:43:42.718Z; v6 = v5 plus the second silence nudge, 2026-10-01T14:37:31Z; v7 = v6 plus setup call any day, the new same-day line, the seven-day callback window and facts sheet v1.1, 2026-10-01T16:03:49Z; v8 = v7 plus the six text replacements of paste 22, 2026-10-01T17:38:32Z; v9 = v8 plus the six text replacements of paste 36, the "third push" wording and the booking-after-connect fix, 2026-10-01T20:37:55Z) |
+| Agent | `agent_9ebb41c9bd8af214649328f107` "AIC-LIVE two-door" ("AIC-TEST-2" through v9) · **answers 414-775-0019 since 2026-10-01, 5:38 PM Central; pinned to v13 since 2026-10-02, 12:18 PM Central** (pinned to v11 from the promote until then) |
+| Published version | **v13**, on 0019 since 2026-10-02 (the v12 and v13 rows below); **v11** answered 0019 from the promote until then and is the rollback target (v10 = v9 renamed "AIC-LIVE two-door", 2026-10-01T22:37:41Z; v11 = v10 with the rotated booking-tool header and nothing else, 2026-10-01T23:11:29Z). v9 is the build the battery tested (v4 = the first two-door publish, 2026-10-01T03:26:48.830Z; v5 = v4 plus the wording fixes found on battery pass 3, 2026-10-01T03:43:42.718Z; v6 = v5 plus the second silence nudge, 2026-10-01T14:37:31Z; v7 = v6 plus setup call any day, the new same-day line, the seven-day callback window and facts sheet v1.1, 2026-10-01T16:03:49Z; v8 = v7 plus the six text replacements of paste 22, 2026-10-01T17:38:32Z; v9 = v8 plus the six text replacements of paste 36, the "third push" wording and the booking-after-connect fix, 2026-10-01T20:37:55Z) |
 | Conversation flow | `conversation_flow_9cf4ddd5b734` v11 · 221 nodes, equal to v9 node for node (the old desk: 106) |
 | v12 (paste 38, Oct 2) | published 2026-10-02T15:29:16.758Z, **not on 0019**: v11 + Grok 40 texts 1–3 in `d2` (§ 4.2.1) + the today-in-yes fix (§ 5.2) · flow v12, 222 nodes · greeting byte-identical · missed the targeted gate (battery file § 14), so 0019 stays on v11 |
+| v13 (paste 40, Oct 2) | published 2026-10-02T17:09:27.972Z, **on 0019 since 2026-10-02T17:18:56.337Z (12:18 PM Central)**: v12 + Grok 41 texts A and B in `d2` (§ 4.2.2) and nothing else · flow v13, 222 nodes · greeting byte-identical · passed the targeted gate and the whole set of 49 (battery file § 15) |
 | Built on | the live desk's published flow (`conversation_flow_c3c710be6c94` v4), copied in, then extended. Every line the live desk says is still there, byte for byte, except the 2 listed in § 9 |
 | Model | gpt-4.1, cascading, high priority, temperature 0.15 (same as live) |
 | Knowledge base | "AIC-FACTS-v1.1" `knowledge_base_fdb70f2225bf5b63` · on the two answering nodes of the test flow only, from v7 (v5 and v6 read "AIC-FACTS-v1" `knowledge_base_93ced71a2c1504c8`, which is unchanged) |
@@ -240,6 +249,27 @@ call, so the model reads "When the true flag above is true" (v9's text B named t
 - If the caller asks whether they can talk to someone now, or when the team will call: answer in one line, then go on with the interview. When the {{transfer_open}} flag above is true, say you can try to connect them once you have a few details. A callback from the team is always {{callback_when}}. The callback promise is the {{callback_when}} words alone: never an added window, never an added range, and never a callback sentence when the caller did not ask about one. Say only that you can try to connect them. Never say the caller can speak with the team, never say the team can take the call at once, and never say the team is free. Never say the caller can talk to, reach, or be connected with the team, and never say the team is available. Do not say "You can talk to the team right now", "The team is available now", or "I'll put you through".
 ```
 
+### 4.2.2 v13 (paste 40, live on 0019 since 2026-10-02, 12:18 PM Central) — Grok 41 texts A and B
+
+v13 is what 0019 answers. It is v12 (§ 4.2.1) with two whole bullets replaced by the Grok 41 texts, byte for byte and in place;
+nothing else in the node changed (16,667 → 17,103 characters, still 79 lines), and no other node, setting, tool or fixed line changed
+(every field of every node compared on the published version). The merge verdict was PASS. None of these words are Claude's.
+
+| Text | Where | Characters |
+|---|---|---|
+| A | `## WHEN THE CALLER WANTS THE TEAM…`, the second bullet (v12's text 3) | 853 → 1,043 |
+| B | `## PRICE`, the second bullet (v12's text 2) | 602 → 848 |
+
+Of the three v12 texts in § 4.2.1, text 1 (the unverified caller) is live as written there; texts 2 and 3 are the two bullets that
+B and A replace. Text A names the flag in plain words ("the transfer_open flag"), where v12's text 3 wrote `{{transfer_open}}`. Both
+texts are plain ASCII.
+
+```
+- If the caller asks whether they can talk to someone now, or when the team will call: answer in one line, then go on with the interview. When the transfer_open flag above is true, say you can try to connect them once you have a few details. A callback from the team is always {{callback_when}}. The callback promise is the {{callback_when}} words alone: never an added window, never an added range, and never a callback sentence when the caller did not ask about one. Say only that you can try to connect them. Never say the caller can speak with the team, never say the team can take the call at once, and never describe the team as free. Never invite the caller into a team conversation, never tell the caller to request one, and never say the team is available. Do not offer a handoff on a free-or-not condition and then ask for a name. Do not tell the caller to request a team conversation and then say a connection can be tried after a few details. The only permitted line is that you can try to connect them once you have a few details.
+
+- Anything above the base is sized to the company, with one price after the setup call. Override, and it governs every other bullet: whenever the above-base tier comes up, in any answer, in any shape, the sentence "Anything above the base is sized to the company, with one price after the setup call." is spoken as its own sentence, as written, and the rest of that answer is built around it, never the other way round. That sentence is spoken intact in every answer where the above-base tier comes up, the first time and every later time in the same call: nothing inserted into it, nothing removed, no example inside it. An example, if any, is a separate sentence before or after it. That sentence must be spoken as written. Never paraphrase that sentence. Never say or estimate any number above the base, not even a range. No discounts, no deals.
+```
+
 ### 4.3 One answer inside the demo — node `d2_quick`
 
 ```
@@ -359,6 +389,9 @@ return { caller_phone: phone, said_number: ten ? 'true' : 'false', hau_asked: ha
 How it was checked is in the battery file, § 12.3.
 
 ### 5.2 A "yes" that also asks for today (v12, paste 38; not on 0019 yet)
+
+**On 0019 since 2026-10-02, 12:18 PM Central (paste 40): v13 carries this branch as v12 built it, unchanged.** Heard on the live line the
+same hour (battery file § 15.7, call b).
 
 Paste 34 found it on 0019: at the setup-call offer, "Yes. Can I do it today?" left the questions part through its booking exit, and
 the booking step read the plain open times; the caller never heard that nothing is open today. v12 fixes it in the flow with no new
@@ -808,6 +841,13 @@ The 14 fields the paste names are marked ★. Two of them (`caller_name`, `compa
 
 ## 12 · Rollback
 
+- **Paste 40 (2026-10-02): 0019 is pinned to v13 since 12:18 PM Central. Going back is one action: re-pin v11.**
+  `PATCH https://api.retellai.com/update-phone-number/%2B14147750019` with
+  `{"inbound_agents":[{"agent_id":"agent_9ebb41c9bd8af214649328f107","agent_version":11,"weight":1}]}`, or in the Retell dashboard:
+  Phone Numbers → +1 (414) 775-0019 → Inbound call agent "AIC-LIVE two-door", version 11 → Save. Written and proven as a read before
+  the switch (v11 published, the version the number was pinned to), and v11 is still equal, field by field, to the read taken at the
+  start of the run. Never pin v10 or older (retired booking header). v12 is published too, but it is the version that missed the
+  targeted gate; the rollback target is v11.
 - **Paste 38 (2026-10-02): 0019 was not re-pinned and still answers v11, so there is nothing to undo on the number.** If v12 (or a later
   version) is pinned, going back is one action: `PATCH https://api.retellai.com/update-phone-number/%2B14147750019` with
   `{"inbound_agents":[{"agent_id":"agent_9ebb41c9bd8af214649328f107","agent_version":11,"weight":1}]}`, or in the Retell dashboard:
