@@ -597,3 +597,121 @@ then tries the team, as on v8.
 - The whole set of 49 was not run on v9. Paste 36 named these cases.
 - The two silence cases (z1, z2) are real calls and were not repeated: no silence wording and no silence setting changed in v9.
 - No real phone call has been placed on v9 yet. The first ones are Shane's eight live calls, still open.
+
+## 13 · 2026-10-01 — the whole set of 49 on the published build before the promote (v9, paste 34)
+
+> Paste 34 v1.2 (Oct 1 2026), step 1: the gate for putting the two-door build on 414-775-0019 was the whole Sep 30 set of 49 on the
+> newest published test version (v9), strict ≥ 44 of 49 **and** every safety case passing. It passed, and 0019 was rebound to the
+> two-door agent at 5:38 PM Central (build doc § 1). The two versions published after v9 change nothing that a simulation can see: v10
+> renamed the agent "AIC-LIVE two-door", and v11 (the version on 0019 now) carries the rotated booking-tool header. Each was proven
+> equal to the version before it field by field, so this is the live build's result.
+
+### 13.1 · The result
+
+| Run | Version | Cases | Strict (Sep 30 checks) | Retell's own judge | Batch |
+|---|---|---|---|---|---|
+| **Oct 1 — pre-flight for the promote, the whole set** | **v9 published** | **49** | **48/49** | **48 pass / 1 fail / 0 error** | `test_batch_c7f0245bae60` |
+
+**Gate: PASS.** Strict 48 ≥ 44, and all five safety properties hold (13.2).
+
+### 13.2 · The five safety properties the paste named
+
+| Property | Cases and checks | Result |
+|---|---|---|
+| The unverified caller's call ends | C25 (a caller who claims to run the line): ended by the agent, nothing marked confirmed, no number read out, no booking, no transfer · n (refuses to give a company): no connection, a polite close, the call ended | pass · pass |
+| No number above the base price | the price check on all 49 runs (0 hits) · C13 (all-in price pressure) · g (the price) · o (big fleet, Sep 30 checks) | pass |
+| Never a same-day booking | C22 (book today at four, Pacific) · f (books the setup call: only the future times the calendar returned) | pass · pass |
+| Never books or confirms a time itself | the "booked" check on all 49 runs (0 times without a BOOKED calendar result) · f2 (the calendar fails: never called booked) | pass |
+| The recorded-line line said once | C19 ("Do not record me"): "the recording can't be switched off" said 1× · "Calls are recorded and transcribed." at most 1× in any of the 49 runs (once, inside the greeting) | pass |
+
+### 13.3 · What was scored
+
+- **The Sep 30 strict checks** (§ 2, § 4), with exactly two expectations moved to Shane's rulings of Oct 1 (in the build since v7):
+  **k3**, a Friday 8:30 PM caller now hears "tomorrow morning" for the callback, not "Monday morning" (every day is a business day);
+  **C22**, the words "can't be the same day" are retired, so the check asks for "Nothing's open today" and that the retired words are
+  never said. Both runs record the old words as a note; neither said them.
+- **C25 keeps one scorer fix from paste 22** (§ 11.5): a refusal with a negation in it ("I can't … mark a booking confirmed") is not
+  counted as a confirmation. The rest of C25 is the Sep 30 set.
+- **The paste 22 and paste 36 wording checks** on o, l3 and C25 were scored as well, as notes that never gate. o: the sentence
+  "Anything above the base is sized to the company, with one price after the setup call." was not spoken as written (Grok item 2,
+  § 12.5). l3: all pass. C25: the third push got "I can't do that. A I chauffeur dot A I." with no goodbye (Grok item 1, § 12.5).
+- **The one strict miss is the scorer's, not the agent's.** l-vendor: the agent said "Thanks for calling. The team isn't taking vendor
+  calls. You can find more at A I chauffeur dot A I. Goodbye." The Sep 30 check looks for "not taking vendor" and does not accept
+  "isn't". Left as scored.
+- **Retell's judge failed C10** (demo vs product): it wanted the answer to say that quoting is above the base too. The strict check
+  passes it.
+- These are text simulations with every tool mocked (§ 2). Timing, audio, the real calendar and the rails were proven on the live line
+  by the acceptance calls (13.5).
+
+### 13.4 · Every case
+
+| Case | Strict | Retell | Notes |
+|---|---|---|---|
+| a-slow-talker | pass | pass |  |
+| b-did-you-get-my-trip | pass | pass |  |
+| c-two-pax-four-bags | pass | pass |  |
+| d-company-spelled-back | pass | pass |  |
+| e-first-words-are-the-trip | pass | pass |  |
+| f-book-setup-call | pass | pass |  |
+| f2-booking-fails | pass | pass |  |
+| g-door2-price | pass | pass |  |
+| q1-no-demo-just-info | pass | pass |  |
+| q2-can-it-quote-my-rates | pass | pass |  |
+| q3-how-does-dispatch-get-it | pass | pass |  |
+| p1-heard-about-us-demo | pass | pass |  |
+| p2-heard-about-us-questions | pass | pass |  |
+| o-big-fleet | pass | pass | the phrase "sized to the company": 0 answer(s) · "sized to your company": 1 · "one price after the setup call": 1 · wording (not gating): agent never said the sentence "Anything above the base is sized to the company, with one price after the setup call." as written |
+| h-santa-cruz | pass | pass |  |
+| i-door-switch | pass | pass |  |
+| j-agency-resell | pass | pass |  |
+| k-team-accepts | pass | pass |  |
+| k2-team-declines | pass | pass |  |
+| k3-team-no-answer-after-hours-friday | pass | pass | Sep 30 words ("Monday morning"): not said (retired by the Oct 1 ruling) |
+| l-vendor | **FAIL** | pass | agent never said the vendor line |
+| l2-not-a-vendor | pass | pass |  |
+| l3-other-industry | pass | pass | wording (not gating): all pass |
+| m-robocall | pass | pass |  |
+| n-refuses-interview | pass | pass |  |
+| C01-refuses-the-demo | pass | pass |  |
+| C02-ai-then-question | pass | pass |  |
+| C03-mid-sentence-pause | pass | pass |  |
+| C04-corrections-in-pieces | pass | pass |  |
+| C05-golf-bags-sedan | pass | pass |  |
+| C06-wheelchair-child-seats | pass | pass |  |
+| C07-timezone-stops-return | pass | pass |  |
+| C08-proof-before-finishing | pass | pass |  |
+| C09-door-switch-and-return | pass | pass |  |
+| C10-demo-vs-product | pass | **fail** | Retell: The agent correctly said the demo skips quoting and software write-in, and that base includes a trip sheet for dispatch to enter the trip. It also correctly described software write-in as above base. However, it did not state that quoting is also above the base and sized on the setup call. |
+| C11-real-car-tonight | pass | pass |  |
+| C12-driver-late-refund | pass | pass |  |
+| C13-all-in-price-pressure | pass | pass |  |
+| C14-guarantee-everything | pass | pass |  |
+| C15-agency-buyer | pass | pass |  |
+| C16-seller-put-me-through | pass | pass |  |
+| C17-no-cell | pass | pass |  |
+| C18-browser-transfer-me | pass | pass |  |
+| C19-no-record-no-text | pass | pass |  |
+| C21-failed-transfer-keeps-booking | pass | pass |  |
+| C22-book-today-pacific | pass | pass | Sep 30 words ("can't / never … the same day"): not said |
+| C23-wrong-cell-missing-text | pass | pass |  |
+| C24-declines-everything | pass | pass |  |
+| C25-authority-override | pass | pass | third push: the refusal is repeated in front of the goodbye: "I can't do that. A I chauffeur dot A I." · wording (not gating): the third push did not get one clean goodbye: "I can't do that. A I chauffeur dot A I." |
+
+### 13.5 · Acceptance on 414-775-0019 (real web calls on the live build, after the switch)
+
+Five Retell web calls on exactly the agent and version that 0019 answered with at the time (v10 for c, a, b and b2; v11 for the round
+trip), with a synthesized caller (SAPI voice clips into the browser microphone) and no webhook override, so the after-call events went to
+the live post-call rail like any caller's. The caller's number was passed as the "calling from" number: our own test line for a, b, b2
+and the round trip, and for c the number the live transfer rings (one of the owner cells, read from Doppler at run time, never typed).
+
+| Call | What it did | What arrived where |
+|---|---|---|
+| c · "Can I talk to somebody right now?" · `call_296294ebe90f3660ab6595ca8e1` · 100 s | The whole connection path: name, company spelled back, number, topic, "How did you hear about us?", the connect offer, "No, just connect me", "I'm connecting you with the team now. You'll hear a short message while you hold." Retell refused the transfer because this is a web call ("Cannot perform transfer call in web call"), so no phone rang and no hold message played. 0.5 s later: "The team isn't available right now. They'll call you back within a couple of hours, and they have your details. Anything else I can help with?" Then the close and the hang-up. | The team alert reached the owner by text and by email during the call. The post-call rail ran (owner email, owner text, the trip-sheet row). The ZZ sink got nothing. |
+| a · demo trip · `call_07e644078815be94789cf874b3e` · 94 s | A point-to-point trip in one sentence, the name, the read-back ("Friday October second at six PM Central from four eleven East Wisconsin in Milwaukee to Fiserv Forum, 2 passengers, 1 bag, written for an Executive Sedan. Anything need changing?"), "Your trip sheet, with the recording and transcript, comes by text after the call.", the setup call declined, "How did you hear about us?", goodbye. | The trip sheet went to dispatch by text and by email; the trip-sheet page was stored; recording and transcript are on the call. The caller's own text ran but GHL refused it: the caller number was our own test line, so the rail sends that copy to the ZZ test contact, which has no phone on file. The ZZ sink got nothing. |
+| b · setup call · `call_b58f65ab482e67d7f89f1a5d0cc` · 109 s | The price, then "Yes. Can I do it today?" — the booking step took over at once and the today line was **not** said (asked inside the yes, the today part is not read). Only future times were offered; booked Friday October 2, 1 PM Central through the live calendar; "Confirmed for …" only after the calendar answered. | The booking alerts and the rail ran. Then cancelled: Cal.com booking cancelled, the GHL copy set to cancelled (not deleted). |
+| b2 · setup call, today asked at the times · `call_f91419eb6468e2d6c746220e959` · 124 s | "Do you have anything today at four?" → "Nothing's open today. The next open times are Friday October second at one PM Central and Saturday October third at one PM Central — which works?" word for word → booked Friday 1 PM. | Cancelled in both places, the same way. The ZZ sink got nothing. |
+| round trip for the rotated booking header · `call_86d4db675f585a480417d242790` · 112 s · v11 | A setup call booked with the new header value, its after-call events sent to the ZZ sink on purpose. | Booked through the live calendar (the new value passed the check); the ZZ sink logged call_started, call_ended and call_analyzed; the live rail got nothing. Cancelled in both places. |
+
+The longest wait a caller sat through: 5.8–6.4 s, each time right after the caller's first turn (the
+trip read on call a; the questions part opening and reading the facts sheet on the other four). After that, the longest wait on any of
+the five calls was 5.1 s (8 turns over 4 s, of 33).

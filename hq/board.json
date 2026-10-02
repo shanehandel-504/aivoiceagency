@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-01T18:55:00-05:00",
+  "updated": "2026-10-01T19:10:54-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -555,10 +555,10 @@
     },
     {
       "id": "aic-two-door-test",
-      "title": "AI Chauffeur demo line — two-door + slow-talker build on the TEST agent (2026-09-30, follow-through 2026-10-01)",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-01-aic-polish-v9.md",
-      "status": "pending",
-      "label": "v9 on TEST: Grok 35 texts, third-push, booking-after-connect fix. AIC-TEST-2 v9 is published and answers the test line ending 8976. Six Grok texts went into the questions part byte for byte, \"third try\" now reads \"third push\" in the two places that still said it, and a caller who asks for the team and then asks to book the setup call is booked without the line trying the team afterwards. On the published build, five runs each: \"try to connect\" 5 of 5 (10 of 10 answers; v8 was 4 of 10); the other-industry sentence word for word with the setup-call offer as its one question 5 of 5; \"Nothing's open today. Ready for the open times?\" word for word 5 of 5; a booking request after a connect request 5 of 5 booked with no connection step (v8 tried the team in 2 of 5). Regression f, i, q, p: 7 of 7. Not held, listed for Grok: the unverified caller's third push (the two refusals are exact, but the goodbye is missing in 2 of 5) and the \"sized to the company\" sentence (never spoken as written, 0 of 5). The live agent and flow are identical to the Sep 30 snapshot; no n8n, GHL or Cal.com change. Still open: Shane's 8 live calls + words OK. Not done here: promotion to the live line."
+      "title": "AI Chauffeur demo line — two-door + slow-talker build, LIVE on 414-775-0019 (2026-10-01)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-01-aic-promote.md",
+      "status": "live",
+      "label": "two-door agent live on 414-775-0019 since 5:38 PM CT Oct 1. \"AIC-LIVE two-door\" v11 answers 0019, pinned (v9's words: v10 renamed it, v11 carries the rotated booking header, nothing else). The old capture desk was not edited and is the one-action rollback; it still answers the line ending 5008 and the Try button. Gate before the switch: the whole set of 49 on v9, 48 of 49 strict (the one miss is the scorer's), Retell 48 of 49, every safety case passing; greeting byte-identical to Sep 30. Acceptance on 0019, real web calls: demo trip → trip sheet to dispatch by text and email; setup call → booked through the live calendar and cancelled, \"Nothing's open today\" word for word; live connect → a web call cannot transfer, so the callback line and the owner alert fired, no dead air. Booking secret rotated, old value dropped from n8n. The test number ending 8976 is back on the AVA sales test agent. Still open: press 1 on a real call from a phone other than the cell the transfer rings; the caller's own text (own-number test calls cannot prove it); Grok 37 items."
     },
     {
       "id": "ava-homepage-sample-calls",
@@ -1081,6 +1081,10 @@
     {
       "ts": "2026-10-01T18:55:00-05:00",
       "entry": "AVA HOMEPAGE REV C — Shane's 6 PM asks (cloud session). Audio v3, additive: /audio/samples/v3/{limousine,plumbing,heating,dental,transfer}.{m4a,mp3}; the four existing calls now close with 'I'm sending you a text and an email right now' plus a text ping and an email chime; new live-transfer call (Brightline Electric: AVA checks safety, takes details, briefs the owner, owner picks up). Zara = AVA, male callers + a male owner voice, Eleven v4, 0 credits, -16 LUFS, every take checked by speech-to-text. js/calls.js: five calls, Owner speaker, ready rest state, after-call block (strategy call + next call), transfer is done when the owner picks up. index.html: price card base only, FAQ cost + urgent answers, AEO block, og/twitter 'five sample calls', JSON-LD AudioObjects on v3 + Service description without the Google claim. llms.txt to match. book/index.html: h1 + meta to 'AVA strategy call', pill removed (tools/stamp.py PAGES book pill=None), self-link book buttons hidden. Product claims on the page stay to what ships today: a confirmation text to the customer; a text and an email to the owner. Open in GoHighLevel (not the repo): the calendar widget still reads 'AVA Demo Call' and '30 minutes'. No Retell, GHL, n8n or Twilio write."
+    },
+    {
+      "ts": "2026-10-01T19:10:54-05:00",
+      "entry": "AIC TWO-DOOR PROMOTE — LIVE on 414-775-0019 (paste 34 v1.2). Path A: 0019 rebound to the two-door agent at 5:38 PM CT (\"AIC-LIVE two-door\" v10 = v9 renamed; re-pinned to v11 at 6:11 PM for the secret rotation). The promote needed 0 n8n changes (the agent already posted to the live rail and sat on both allow-lists); the old desk was not edited (rollback = one number binding). Gate: the whole set of 49 on v9, 48/49 strict, Retell 48/49, safety 5/5; greeting byte-identical. Acceptance: five web calls (demo trip; two setup calls booked and cancelled in Cal.com + GHL; live connect → callback line + owner alert, web calls cannot transfer; a round trip on the new secret via the ZZ sink). SALES_CAL_SECRET rotated: both booking workflows accepted old + new for 60 minutes (WF-AIC-SALES-CAL 14bce088, WF-AVA-SALES-CAL 0968c734), header-only versions two-door v11 / old desk v5 / AVA test v8, old value dropped at 7:10 PM CT. 8976 back on the AVA sales test agent. Snapshot ops/tuning/0019-two-door-live-snapshot-2026-10-01.md. Report reports/2026-10-01-aic-promote.md."
     }
   ]
 }

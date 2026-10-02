@@ -1,5 +1,12 @@
 # AI CHAUFFEUR DEMO LINE — TWO-DOOR + SLOW-TALKER BUILD · TEST AGENT · v1 (2026-09-30)
 
+> **LIVE since 2026-10-01, 5:38 PM Central (paste 34): this build answers 414-775-0019.** Path A, the number was rebound to this
+> agent; the old capture desk was not edited and is the one-action rollback (§ 12). Two versions came after v9 and neither changes
+> what a caller hears: **v10** renamed the agent "AIC-LIVE two-door", and **v11** carries the rotated booking-tool header (§ 8.1).
+> 0019 is pinned to v11, so a later publish on this agent does not reach the live line until the number is re-pinned. The test
+> number ending 8976 went back to the AVA sales test agent. The gate before the switch: the whole set of 49 on v9, 48 of 49 strict,
+> every safety case passing (battery file § 13).
+
 > **TEST AGENT ONLY.** The live line (414-775-0019) was read and never written: not its agent, its number, its webhook, or the
 > n8n rail. Promote is a separate paste after Shane's test calls. Built from paste v1.5 (Sep 30 2026).
 > No secret value, no private number and no webhook path is in this file. The transfer number lives only in Doppler.
@@ -22,15 +29,15 @@
 
 | | |
 |---|---|
-| Test agent | `agent_9ebb41c9bd8af214649328f107` "AIC-TEST-2" |
-| Published version | **v9** (v4 = the first two-door publish, 2026-10-01T03:26:48.830Z; v5 = v4 plus the wording fixes found on battery pass 3, 2026-10-01T03:43:42.718Z; v6 = v5 plus the second silence nudge, 2026-10-01T14:37:31Z; v7 = v6 plus setup call any day, the new same-day line, the seven-day callback window and facts sheet v1.1, 2026-10-01T16:03:49Z; v8 = v7 plus the six text replacements of paste 22, 2026-10-01T17:38:32Z; v9 = v8 plus the six text replacements of paste 36, the "third push" wording and the booking-after-connect fix, 2026-10-01T20:37:55Z) |
-| Conversation flow | `conversation_flow_9cf4ddd5b734` v9 · 221 nodes (live desk v4: 106) |
+| Agent | `agent_9ebb41c9bd8af214649328f107` "AIC-LIVE two-door" ("AIC-TEST-2" through v9) · **answers 414-775-0019 since 2026-10-01, 5:38 PM Central, pinned to v11** |
+| Published version | **v11**, on 0019 (v10 = v9 renamed "AIC-LIVE two-door", 2026-10-01T22:37:41Z; v11 = v10 with the rotated booking-tool header and nothing else, 2026-10-01T23:11:29Z). v9 is the build the battery tested (v4 = the first two-door publish, 2026-10-01T03:26:48.830Z; v5 = v4 plus the wording fixes found on battery pass 3, 2026-10-01T03:43:42.718Z; v6 = v5 plus the second silence nudge, 2026-10-01T14:37:31Z; v7 = v6 plus setup call any day, the new same-day line, the seven-day callback window and facts sheet v1.1, 2026-10-01T16:03:49Z; v8 = v7 plus the six text replacements of paste 22, 2026-10-01T17:38:32Z; v9 = v8 plus the six text replacements of paste 36, the "third push" wording and the booking-after-connect fix, 2026-10-01T20:37:55Z) |
+| Conversation flow | `conversation_flow_9cf4ddd5b734` v11 · 221 nodes, equal to v9 node for node (the old desk: 106) |
 | Built on | the live desk's published flow (`conversation_flow_c3c710be6c94` v4), copied in, then extended. Every line the live desk says is still there, byte for byte, except the 2 listed in § 9 |
 | Model | gpt-4.1, cascading, high priority, temperature 0.15 (same as live) |
 | Knowledge base | "AIC-FACTS-v1.1" `knowledge_base_fdb70f2225bf5b63` · on the two answering nodes of the test flow only, from v7 (v5 and v6 read "AIC-FACTS-v1" `knowledge_base_93ced71a2c1504c8`, which is unchanged) |
 | Hold audio | Retell asset `asset_194cec46941c` · source file `assets/audio/aic-hold-pitch-v1.mp3` |
 | Transfer briefing agent | `agent_63db656e3a68b737fe61cb78db` "AIC-TRANSFER-BRIEF (team briefing, press 1 to accept)" |
-| Live desk | `agent_e41b2e957f1de46cf23dc25a84` · untouched |
+| Old capture desk (the rollback) | `agent_e41b2e957f1de46cf23dc25a84` · v4 never written · v5 = v4 with the rotated booking-tool header and nothing else (2026-10-01T23:11:31Z) · still answers the line ending 5008 and the site's Try button |
 
 ## 2 · The greeting (byte-exact from live)
 
@@ -365,6 +372,12 @@ A second check catches it when the first one misses: the trip read itself report
 These three are the live desk's tools, carried over as they are. The booking workflow answers only the agents on its own allow-list;
 the test agent has been on it since 2026-10-01 (follow-through run).
 
+**The header's value was rotated on 2026-10-01 (paste 34, step 7; it had been printed on screen on Sep 30).** A new value went to
+Doppler `SALES_CAL_SECRET` and to the n8n variable the two booking workflows check. For 60 minutes both workflows also accepted the old
+value, from a second n8n variable `SALES_CAL_SECRET_PREV`; at 7:10 PM Central that variable was deleted, so the old value no longer passes. The
+three agents that answer a number carry the new value: this agent's v11, the old desk's v5 and the AVA sales test agent's v8 (each a
+header-only version). Older versions of those agents still carry the old value and can no longer book or alert.
+
 **Which days the calendar offers, and where "never the same day" lives (2026-10-01, paste 19).** The booking workflow has no
 weekday filter and never had one: the weekday-only times came from the calendar itself. The setup-call event in Cal.com has its own
 availability schedule ("AI Chauffeur Setup Call hours", Central time, used by that event only). Through Sep 30 it read Monday to
@@ -691,15 +704,23 @@ The 14 fields the paste names are marked ★. Two of them (`caller_name`, `compa
 
 ## 12 · Rollback
 
-- The test agent's earlier versions are all still there (0–3 published before this run, 4 and 5 from this run, 6, 7, 8 and 9 from Oct 1). Nothing was deleted.
-- To go back from v9 to v8 (the wording before paste 36 in seven lines of the questions node, "third try" in two places, and the
-  old read of a booking request after a connect request): pin the test number to version 8, or publish a new version copied from v8.
-- To go back from v8 to v7 (the wording before paste 22: the old silence sentences and the five places in the questions node): pin the
-  test number to version 7, or publish a new version copied from v7.
-- To go back from v7 to v6 (weekday wording, the old same-day line, the Monday-to-Friday callback window, facts sheet v1): pin the test
-  number to version 6, or publish a new version copied from v6. Both knowledge bases stay in place.
+- **The live line, since 2026-10-01 (paste 34): one action.** `PATCH https://api.retellai.com/update-phone-number/%2B14147750019`
+  with `{"inbound_agents":[{"agent_id":"agent_e41b2e957f1de46cf23dc25a84","agent_version":"latest_published","weight":1}]}`, or in the
+  Retell dashboard: Phone Numbers → +1 (414) 775-0019 → Inbound call agent "AI CHAUFFEUR — CAPTURE DESK" (latest published) → Save.
+  That is the Sep 30 record of the number, and the capture desk answers again on the next call. Its newest published version is v5,
+  which is v4 with the rotated booking header and nothing else, so it speaks exactly as it did on Sep 30. Proven executable read-only
+  before the switch. Outbound on 0019 was never changed.
+- This agent's earlier versions are all still there (0–3 published before the build, 4 and 5 from Sep 30, 6, 7, 8 and 9 from Oct 1,
+  10 and 11 from the promote). Nothing was deleted.
+- **Going back to older words** (v8's before paste 36, v7's before paste 22, v6's before paste 19): v10 and everything before it carry the
+  retired booking header, so pinning 0019 to one of them would break booking and the team alert. Publish a new version copied from the
+  one you want, with the current header (the header-only fork used for v11), then pin 0019 to it. The two knowledge bases stay in place.
 - To take the weekend times back out of the calendar: set the Cal.com schedule "AI Chauffeur Setup Call hours" back to Monday to Friday,
-  1 PM to 6 PM Central (switch Saturday and Sunday off). That is the shared rail, so it also changes what live callers are offered.
+  1 PM to 6 PM Central (switch Saturday and Sunday off). That is the shared rail, so it also changes what the old desk's callers are offered.
 - To reopen the six holidays: delete the six date overrides (§ 8.1) from the same Cal.com schedule. That is the shared rail too.
-- To take the test number back to what it answered before: point the inbound side of the number ending 8976 at `agent_44b48507d38c0bfc29a3150a74` with no version pin.
-- The live desk needs no rollback: it was never written.
+- The test number ending 8976 answers the AVA sales test agent again (latest published, v8), as it did before Sep 30. Its outbound side
+  was never changed.
+- The booking workflows' secret check (paste 34): WF-AIC-SALES-CAL serves `14bce088` (before: `a0a29858`), WF-AVA-SALES-CAL serves
+  `0968c734` (before: `8e0c5c3a`). Publishing the earlier version back is safe at any time: with the second variable deleted, the
+  new check accepts exactly what the old one did.
+- The old capture desk's v4 was never written; v5 (the rotated header) is the only version added to it.
