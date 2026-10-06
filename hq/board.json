@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-06T14:40:05-05:00",
+  "updated": "2026-10-06T17:53:24-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -591,6 +591,13 @@
       "status": "live",
       "label": "LIVE (2026-10-06). The video-01 build kit, promoted into a reusable kit at tools/video-kit/ so every chat and every Code session starts from the same files. Additive: tools/aic-video/ is untouched and stays the frozen video-01 reference. In it: the bootstrap (HAVE / MISSING table), brand tokens and logos for AVA and AI Chauffeur, the call overlay, the cover, the SELL and REACH end cards, the Google-style UI layer, the transcriber, shoot-sync, assemble with the house export and loudness presets, and a README. Checked on the Dell: the kit rebuilds video 01's data and cut audio exactly, its overlay matches the frozen one box for box (0.0 px), and a full render and assemble of the video-01 job meets the house standard (1080x1920, 30 fps constant, H.264 high 4.2, -14.1 LUFS, true peak -3.5 dBTP). Not run on Linux yet: the first cloud session runs the bootstrap first. It never ships to the public site (.vercelignore excludes tools). Start at tools/video-kit/docs/README.md.",
       "updated": "2026-10-06T14:40:05-05:00"
+    },
+    {
+      "id": "ava-limo-transfer-prep",
+      "title": "AVA limo transfer — prep (test agent)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-06-ava-limo-transfer-prep.md",
+      "status": "live",
+      "label": "PREP LIVE on the AVA TEST agent only (2026-10-06); the live line 414-240-8930 still serves v49 and was not touched. The test agent's handoff now swaps a limo caller, on the same call, to the AI Chauffeur two-door agent pinned to version 13 (was the old capture desk). Test agent v8 → v10, prompt byte-identical. The setup-call booking workflow now accepts a call that started on AVA. Check call: handoff fired, AI Chauffeur phone greeting 1.11 s after \"Hear it now.\" Probe line ending 8976 answers with the test agent. Waiting on: Shane's one test call, the words paste, then the promote paste."
     }
   ],
   "log": [
@@ -1137,6 +1144,10 @@
     {
       "ts": "2026-10-06T14:40:05-05:00",
       "entry": "video-kit v1 landed at tools/video-kit/ (additive; aic-video frozen). 53 files: bootstrap, brand tokens for both brands, overlay + cover + SELL and REACH end-card templates, the Google-style UI layer, transcriber, shoot-sync, assemble presets, README. Dry run on the Dell: bootstrap ALL PRESENT, three test PNGs with errors [], boom 48 kHz mono 1.8 s. The kit's build_data.py rebuilds video 01's data.json and call_cut.wav exactly. No site page, phone agent, Retell, GHL, n8n or Vercel setting was touched."
+    },
+    {
+      "ts": "2026-10-06T17:53:24-05:00",
+      "entry": "AVA limo transfer prep (paste CC-AVA-LIMO-TRANSFER-PREP-v1), test agent only. As-built snapshot ops/tuning/ava-test-pre-limo-transfer-snapshot-2026-10-06.md. AVA TEST agent v8 → v9 (handoff_to_desk, still an agent swap with the same name, re-pointed from the old capture desk to the AI Chauffeur two-door agent, pinned to version 13 by number) → v10 (default variables mirror the 0019 flow's five start values); prompt SHA-256 unchanged at every step. n8n: WF-AIC-SALES-CAL serves 47af9608 (rollback 14bce088): the two allow-lists gain the AVA TEST agent and the live AVA agent, nothing else; proven on an inactive staging copy with every write sent to the ZZ sink, draft and serving hash-equal to it; live check with no slot went from agent_not_allowed to missing_slot. The AI Chauffeur post-call rail (c7bd86fd) and the AVA post-call rail (e0454827) already handled a handed-off call; no change. Probe line ending 8976 was already bound to the test agent; nothing sent. One check call, a web call of 38.6 s, no simulation: handoff fired, phone greeting 1.11 s after \"Hear it now.\", filed by the AI Chauffeur rail as AI Chauffeur via AVA line with 414-775-0019 as the desk number; its trip-sheet page was taken down after. End-state check 22/22: live AVA v49, the two-door agent v13 on 0019, the old desk and the briefing agent did not move. Open: a handed-off call will likely hear the recording notice twice (the 0019 flow reads AVA's opener as the cut-off greeting); no bridge line is spoken before the handoff; the call clock stays AVA's 10 minutes. Report reports/2026-10-06-ava-limo-transfer-prep.md."
     }
   ]
 }
