@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>video-kit: call overlay</title>
+<link rel="stylesheet" href="../brand/circulant.css">
+<link rel="stylesheet" href="kit.css">
+<style>
+/* templates/overlay.html - the call overlay. Generalized from tools/aic-video/overlay.html (video 01).
+   Brand comes from ?brand=ava|aic. Every word on screen comes from data.json or brand/<id>.json.
+
+   LAYOUT LAW, 1080x1920. These are the video-01 numbers; presets/layout.json is the same table.
+     tag + lockup    y136-198       call card   y214-440       caption   y478-800
+     callout         y1030-1106     trip sheet  y1128-1500, x60-900 (clear of the right-side buttons)
+     b-roll subject  y800-1128      kept clear: frame or crop every shot to put the subject there */
+
+/* top rail */
+#tag{left:60px;top:145px;font:500 24px/1 var(--mono);letter-spacing:.14em;color:var(--ink);background:var(--void);border:1px solid var(--line);padding:12px 16px}
+#logo{right:60px;top:136px;width:330px;height:62px;background:var(--void);border:1px solid var(--line);padding:10px 16px}
+#logo img{display:block;width:100%;height:100%;object-fit:contain;object-position:left center}
+/* call card (void at 90%) */
+#call{left:60px;top:214px;width:960px;background:rgba(10,10,15,.9);border:1px solid var(--line);padding:22px 28px 20px}
+#call .r1{display:flex;align-items:center;justify-content:space-between}
+#call .st{display:flex;align-items:center;gap:14px;font:600 24px/1 var(--mono);letter-spacing:.14em}
+#call .dot{width:16px;height:16px}
+#call .clk{font:500 46px/1 var(--mono);color:var(--ink);letter-spacing:.02em}
+#call .biz{margin-top:12px;font:600 46px/1.1 var(--sg);color:var(--ink);white-space:nowrap;overflow:hidden}
+#call .biz small{font:400 28px/1 var(--sg);color:var(--mute);margin-left:14px}
+#call .biz.solo small{margin-left:0}
+#wave{margin-top:16px;height:64px;display:flex;align-items:center;gap:7px}
+#wave i{display:block;width:13px;background:var(--ink)}
+/* caption */
+#cap{left:60px;top:478px;width:960px}
+#cap .who{font:600 26px/1 var(--mono);letter-spacing:.14em;margin-bottom:18px;display:inline-block;background:var(--void);padding:10px 14px}
+#cap .txt{font:600 62px/1.24 var(--sg);letter-spacing:-.005em}
+#cap .txt span.l{background:var(--void);padding:2px 16px 6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+#cap b{font-weight:600}
+/* plain-English callout */
+#co{left:60px;top:1030px;background:var(--green);color:var(--void);font:700 42px/1 var(--sg);letter-spacing:.005em;padding:18px 22px 17px;transform-origin:left center}
+/* trip sheet (panel at 94%) */
+#sheet{left:60px;top:1128px;width:840px;background:rgba(18,18,26,.94);border:1px solid var(--line)}
+#sheet .hd{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--line)}
+#sheet .hd .t{font:600 24px/1 var(--mono);letter-spacing:.14em;color:var(--ink)}
+#sheet .chip{font:700 24px/1 var(--mono);letter-spacing:.12em;padding:10px 14px;border:1px solid var(--neutral);color:var(--neutral)}
+#sheet .chip.bk{background:var(--green);border-color:var(--green);color:var(--void)}
+#rows{position:relative;height:300px;overflow:hidden}
+.row{position:absolute;left:0;right:0;height:75px;display:flex;align-items:center;border-bottom:1px solid var(--line);padding:0 24px}
+.row .bar{position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--green)}
+.row .k{width:220px;font:500 22px/1.2 var(--mono);letter-spacing:.12em;color:var(--mute)}
+.row .k em{display:block;font-style:normal;color:var(--green);font-size:18px;margin-top:4px}
+.row .v{flex:1;font:600 40px/1.1 var(--sg);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:clip}
+</style></head>
+<body>
+<div id="tag" class="abs"></div>
+<div id="logo" class="abs"><img alt=""></div>
+<div id="call" class="abs">
+  <div class="r1"><div class="st"><span class="dot"></span><span class="stt"></span></div><div class="clk">00:00</div></div>
+  <div class="biz"><span class="n"></span><small></small></div>
+  <div id="wave"></div>
+</div>
+<div id="cap" class="abs"><div class="who"></div><div class="txt"><span class="l"></span></div></div>
+<div id="sheet" class="abs"><div class="hd"><span class="t"></span><span class="chip"></span></div><div id="rows"></div></div>
+<div id="end" class="full"></div>
+<div id="endr" class="full"></div>
+<div id="co" class="abs"></div>
+<div id="flash" class="full"></div>
+<div id="cv" class="full"></div>
+<script src="kit.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = VK.$, ease = VK.ease, esc = VK.esc;
+  var D = null, T = {}, endKind = 'sell', hasCover = true, hasSheet = true;
+  var NB = 46, wave = $('#wave');
+  for (var n = 0; n < NB; n++) wave.appendChild(document.createElement('i'));
+  var cover = VK.cover($('#cv')), sell = VK.endSell($('#end'), $('#flash')), reach = VK.endReach($('#endr'));
+
+  // The call clock shows source time since pickup, so it jumps at every cut. That is the honest clock.
+  function clockAt(t) {
+    var st = null;
+    for (var i = D.vt0.length - 1; i >= 0; i--) { if (t >= D.vt0[i]) { st = D.segs[i][0] + (t - D.vt0[i]); break; } }
+    var s = Math.max(0, st - D.pick), m = Math.floor(s / 60), ss = Math.floor(s % 60);
+    return String(m).padStart(2, '0') + ':' + String(ss).padStart(2, '0');
+  }
+
+  window.setData = function (d) {
+    D = d || {};
+    VK.useData(D);
+    var B = VK.brand, x = D.display || {}, sh = x.sheet || {}, bsh = B.sheet || {}, st = x.status || {};
+    T = {
+      tag: VK.pick(x.tag, B.demoTag, 'DEMO SCENARIO'),      // every produced call carries it, first frame to last
+      biz: VK.pick(x.biz),
+      by: VK.pick(x.answeredBy, B.answeredBy),
+      who: Object.assign({ a: 'AI', c: 'CALLER' }, B.speakers || {}, x.speakers || {}),
+      sheet: VK.pick(sh.title, bsh.title, 'DETAILS'),
+      open: VK.pick(sh.open, bsh.open, 'TAKING DETAILS'),
+      done: VK.pick(sh.booked, bsh.booked, 'BOOKED'),
+      ring: VK.pick(st.ring, 'INCOMING CALL'),
+      on: VK.pick(st.on, 'ON THE CALL'),
+      booked: VK.pick(st.booked, 'BOOKED ON THE CALL')
+    };
+    $('#tag').textContent = T.tag;
+    var lockup = (B.logo || {}).lockup;
+    if (lockup) $('#logo img').src = VK.brandUrl(lockup); else $('#logo').style.display = 'none';
+    $('#call .biz .n').textContent = T.biz;
+    $('#call .biz small').textContent = T.by;
+    $('#call .biz').classList.toggle('solo', !T.biz);
+    $('#sheet .hd .t').textContent = T.sheet;
+    hasSheet = !!(D.fields && D.fields.length) && x.sheet !== false;
+
+    // cover: the first seconds of the film, up to pickup. "cover": false turns it off.
+    var cv = D.cover;
+    hasCover = !(cv === false || cv === 'none');
+    cv = (cv && typeof cv === 'object') ? cv : {};
+    cover.set({
+      color: VK.pick(VK.q('color'), cv.color, (B.covers || {}).nextColor, '#B026FF'),
+      headline: VK.pick(VK.q('headline'), cv.headline, 'BUSINESS OWNERS: THIS COULD BE YOUR PHONE.'),
+      img: VK.pick(VK.q('img'), cv.img) || null,
+      tag: T.tag,
+      size: cv.size,
+      shake: Object.assign({ until: Math.max(0, D.events.pickup - 0.4) }, cv.shake || {})
+    });
+
+    // end card: "sell" (every call video), "reach", or "none"
+    endKind = String(VK.pick(VK.q('endcard'), D.endcard, 'sell'));
+    var e = D.end || {}, be = B.endcard || {}, lg = B.logo || {};
+    sell.set(Object.assign({}, be.sell || {}, e, { tag: VK.pick(e.tag, T.tag), lockup: lg.endLockup || lg.lockup }));
+    reach.set({ line: VK.pick(e.line, (be.reach || {}).line), tag: T.tag, lockup: lg.endLockup || lg.lockup });
+  };
+
+  window.render = function (t) {
+    var E = D.events, ring = t < E.pickup, booked = t >= E.booked, inEnd = t >= E.callEnd;
+    // status line: amber blinks at 4 Hz while it rings, then green
+    var dot = $('#call .dot'), stt = $('#call .stt');
+    if (ring) { var on = (Math.floor(t * 4) % 2 === 0); dot.style.background = on ? 'var(--amber)' : 'transparent'; dot.style.border = '2px solid var(--amber)'; stt.textContent = T.ring; stt.style.color = 'var(--amber)'; }
+    else if (booked) { dot.style.background = 'var(--green)'; dot.style.border = '2px solid var(--green)'; stt.textContent = T.booked; stt.style.color = 'var(--green)'; }
+    else { dot.style.background = 'var(--green)'; dot.style.border = '2px solid var(--green)'; stt.textContent = T.on; stt.style.color = 'var(--ink)'; }
+    $('#call .clk').textContent = ring ? '00:00' : clockAt(t);
+    // waveform: history scrolling right to left
+    var bars = wave.children;
+    for (var k = 0; k < NB; k++) {
+      var tt = t - (NB - 1 - k) * 0.045, idx = Math.floor(tt * D.rmsRate);
+      var v = (idx >= 0 && idx < D.rms.length) ? D.rms[idx] : 0;
+      bars[k].style.height = (6 + v * 58).toFixed(1) + 'px';
+      bars[k].style.background = ring ? 'var(--amber)' : 'var(--ink)';
+    }
+    // cover
+    var cvl = $('#cv');
+    if (hasCover && ring) { cvl.style.display = 'block'; cover.render(t); } else { cvl.style.display = 'none'; }
+    // callout
+    var col = $('#co'), cc = null, list = D.callouts || [];
+    for (var a = 0; a < list.length; a++) { if (t >= list[a].t && t < list[a].e) cc = list[a]; }
+    if (cc && !inEnd) {
+      col.style.display = 'block'; col.textContent = cc.txt;
+      var ain = Math.min(1, (t - cc.t) / 0.12), aout = Math.min(1, (cc.e - t) / 0.12);
+      col.style.opacity = Math.min(ain, aout); col.style.transform = 'scale(' + (0.9 + 0.1 * ease(ain)) + ')';
+    } else { col.style.display = 'none'; }
+    // caption: one block at a time, words light up as said, "booked" turns green
+    var cap = $('#cap'), c = null, caps = D.caps || [];
+    for (var b = 0; b < caps.length; b++) { if (t >= caps[b].s && t < caps[b].e) c = caps[b]; }
+    if (c && !ring) {
+      cap.style.opacity = 1;
+      var who = $('#cap .who');
+      who.textContent = T.who[c.who] || String(c.who).toUpperCase();
+      who.style.color = c.who === 'a' ? 'var(--accent)' : 'var(--ink)';
+      $('#cap .txt .l').innerHTML = c.words.map(function (w) {
+        var said = t >= w.s, isBk = /^booked/i.test(w.w);
+        return '<b style="color:' + (said ? (isBk ? 'var(--green)' : 'var(--ink)') : 'var(--mute)') + '">' + esc(w.w) + '</b>';
+      }).join(' ');
+      cap.style.transform = 'translateY(' + ((1 - ease(Math.min(1, (t - c.s) / 0.12))) * 18) + 'px)';
+    } else { cap.style.opacity = 0; }
+    // trip sheet
+    var sh = $('#sheet'), si = Math.min(1, Math.max(0, (t - E.pickup) / 0.22));
+    sh.style.opacity = (ring || !hasSheet) ? 0 : ease(si); sh.style.transform = 'translateY(' + ((1 - ease(si)) * 40) + 'px)';
+    var chip = $('#sheet .chip');
+    if (booked) { chip.textContent = T.done; chip.className = 'chip bk'; } else { chip.textContent = T.open; chip.className = 'chip'; }
+    // rows: newest first, one row per key (the latest value wins and is flagged UPDATED), four visible
+    var seen = {}, rowsList = [], F = D.fields || [];
+    for (var f = 0; f < F.length; f++) {
+      var fd = F[f];
+      if (t < fd.t) continue;
+      if (seen[fd.k]) { rowsList = rowsList.filter(function (r) { return r.k !== fd.k; }); rowsList.push({ k: fd.k, v: fd.v, t: fd.t, upd: true }); }
+      else { rowsList.push({ k: fd.k, v: fd.v, t: fd.t, upd: false }); }
+      seen[fd.k] = 1;
+    }
+    var cnt = rowsList.length; rowsList.reverse(); rowsList = rowsList.slice(0, 4);
+    var rows = $('#rows'); rows.innerHTML = '';
+    if (cnt === 0) { rows.style.height = '0px'; }
+    else { var e0 = ease(Math.min(1, (t - rowsList[0].t) / 0.2)), nn = Math.min(4, cnt); rows.style.height = (((cnt <= 4) ? (nn - 1 + e0) : 4) * 75) + 'px'; }
+    rowsList.forEach(function (r, i) {
+      var age = t - r.t, ent = Math.min(1, age / 0.2);
+      var el = document.createElement('div'); el.className = 'row';
+      el.style.top = (i * 75 - (1 - ease(ent)) * (i === 0 ? 75 : 0) + (i > 0 ? (1 - ease(Math.min(1, (t - rowsList[0].t) / 0.2))) * -75 : 0)) + 'px';
+      el.style.opacity = i === 0 ? ease(ent) : 1;
+      el.innerHTML = (age < 1.6 ? '<span class="bar"></span>' : '') + '<span class="k">' + esc(r.k) + (r.upd ? '<em>UPDATED</em>' : '') + '</span><span class="v">' + esc(r.v) + '</span>';
+      rows.appendChild(el);
+    });
+    // end card
+    var kk = inEnd ? t - E.callEnd : -1;
+    sell.render(endKind === 'sell' ? kk : -1);
+    reach.render(endKind === 'reach' ? kk : -1);
+  };
+})();
+</script>
+</body></html>

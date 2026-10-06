@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>video-kit: cover</title>
+<link rel="stylesheet" href="../brand/circulant.css">
+<link rel="stylesheet" href="kit.css">
+</head>
+<body>
+<div id="cv" class="full"></div>
+<script src="kit.js"></script>
+<script>
+/* templates/cover.html - the cover. Option A of tools/aic-video/cover.html, the approved one, generalized.
+   One bright color field, one line, one object. Never busy. A new color every video.
+   The cover is also the first 1.6 s of the film: the phone shakes in bursts with the ring.
+
+   THE TWO VARIABLES. Set them here, or per job in data.json ("cover": {"color": ..., "headline": ...}),
+   or per render in the URL (render.py --set color=#B026FF --set "headline=..."). URL beats job beats here. */
+var COLOR    = '';   // '' = the next color in presets/covers.json. Green #3DDFA4 was used Oct 2 2026; purple #B026FF is next.
+var HEADLINE = 'BUSINESS OWNERS: THIS COULD BE YOUR PHONE.';   // words up to the first colon are set small above the rest
+
+/* Also read, from the URL or from "cover" in data.json:
+     img    a generated plate (the object on the same flat color), job-relative. Without one the drawn phone shows.
+            Sample the plate's field and use that hex as COLOR, or the shake shows a seam.
+     still  1 = no shake. Use it for the cover PNG:  render.py test 0 --overlay templates/cover.html --set still=1 */
+window.DURATION = 1.6;   // the cover holds 1.6 s, then a hard cut on the second ring
+(function () {
+  'use strict';
+  var cover = VK.cover(VK.$('#cv'));
+  window.setData = function (d) {
+    d = d || {};
+    VK.useData(d);
+    var c = (d.cover && typeof d.cover === 'object') ? d.cover : {}, B = VK.brand, x = d.display || {};
+    cover.set({
+      color: VK.pick(VK.q('color'), c.color, COLOR, (B.covers || {}).nextColor, '#B026FF'),
+      headline: VK.pick(VK.q('headline'), c.headline, HEADLINE),
+      img: VK.pick(VK.q('img'), c.img) || null,
+      tag: VK.pick(VK.q('tag'), x.tag, B.demoTag, 'DEMO SCENARIO'),
+      size: c.size,
+      still: VK.q('still') === '1' || c.still === true,
+      shake: c.shake
+    });
+  };
+  window.render = function (t) { cover.render(t); };
+})();
+</script>
+</body></html>

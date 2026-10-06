@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>video-kit: SELL end card</title>
+<link rel="stylesheet" href="../brand/circulant.css">
+<link rel="stylesheet" href="kit.css">
+</head>
+<body>
+<div id="end" class="full"></div>
+<div id="flash" class="full"></div>
+<script src="kit.js"></script>
+<script>
+/* templates/endcard-sell.html - the SELL end card. Every call video ends on it.
+
+     BOOKED.
+     This could be your phone.
+     Get this on your phones.
+     Link in bio.
+     DEMO SCENARIO
+     [lockup]
+
+   BOOKED. slams from 1.28 to 1 in 0.14 s under a two-frame green flash. Put the boom (bin/make_boom.py)
+   on that frame. The lines follow at +0.35, +0.6, +0.75, +0.8, +0.85 s and the lockup at +0.95 s.
+   The words live in brand/<id>.json ("endcard.sell"). A job may override one in data.json ("end": {"line1": ...}).
+   overlay.html draws this same card at the end of the call, so use this file only for a film with no call overlay.
+   URL: at=SECONDS moves the slam (default 0). Never put a price or a phone number on this card. */
+window.DURATION = 3.0;
+(function () {
+  'use strict';
+  var sell = VK.endSell(VK.$('#end'), VK.$('#flash')), at = 0;
+  window.setData = function (d) {
+    d = d || {};
+    VK.useData(d);
+    var B = VK.brand, e = d.end || {}, lg = B.logo || {}, x = d.display || {};
+    at = parseFloat(VK.q('at') || 0) || 0;
+    sell.set(Object.assign({}, (B.endcard || {}).sell || {}, e, {
+      tag: VK.pick(e.tag, x.tag, B.demoTag, 'DEMO SCENARIO'),
+      lockup: lg.endLockup || lg.lockup
+    }));
+  };
+  window.render = function (t) { sell.render(t - at); };
+})();
+</script>
+</body></html>

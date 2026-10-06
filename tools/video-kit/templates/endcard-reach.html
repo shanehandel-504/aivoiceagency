@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>video-kit: REACH end card</title>
+<link rel="stylesheet" href="../brand/circulant.css">
+<link rel="stylesheet" href="kit.css">
+</head>
+<body>
+<div id="end" class="full"></div>
+<script src="kit.js"></script>
+<script>
+/* templates/endcard-reach.html - the REACH end card, for fiction and comedy. The quiet one.
+
+     [lockup]
+     one line
+
+   No price. No phone number. No feature list. No boom. Never force the SELL card onto a REACH film.
+   The line: URL ?line=... , else data.json "end": {"line": ...}, else brand/<id>.json "endcard.reach.line".
+   DEMO SCENARIO shows only when the film carries produced call audio: ?demo=1, or "end": {"demo": true}.
+   URL: at=SECONDS moves the start (default 0). */
+window.DURATION = 3.0;
+(function () {
+  'use strict';
+  var reach = VK.endReach(VK.$('#end')), at = 0;
+  window.setData = function (d) {
+    d = d || {};
+    VK.useData(d);
+    var B = VK.brand, e = d.end || {}, lg = B.logo || {}, x = d.display || {};
+    at = parseFloat(VK.q('at') || 0) || 0;
+    var demo = VK.q('demo') === '1' || e.demo === true;
+    reach.set({
+      line: VK.pick(VK.q('line'), e.line, ((B.endcard || {}).reach || {}).line),
+      tag: demo ? VK.pick(e.tag, x.tag, B.demoTag, 'DEMO SCENARIO') : '',
+      lockup: lg.endLockup || lg.lockup
+    });
+  };
+  window.render = function (t) { reach.render(t - at); };
+})();
+</script>
+</body></html>

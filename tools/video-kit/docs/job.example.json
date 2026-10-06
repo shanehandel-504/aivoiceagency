@@ -1,0 +1,42 @@
+{
+  "_note": "Video 01, the O'Hare call, as a job. Run it from the repo root: python3 tools/video-kit/bin/build_data.py tools/video-kit/docs/job.example.json --out /tmp/job . Copy this file to start a new video. Sample data only: the business and the passenger are made up.",
+  "brand": "aic",
+  "id": "airport",
+  "call": {
+    "words": "../../aic-video/calls/airport.json",
+    "audio": "../../../chauffeur/audio/samples/v1/airport.m4a"
+  },
+  "fps": 30,
+  "endSeconds": 3.0,
+  "segments": [[2.00, 6.08], [6.25, 15.97], [17.80, 23.55], [58.30, 62.10], [65.85, 66.75]],
+  "fix": { "940.": "9:40.", "booked!": "booked.", "Inside": "inside", "Baggage": "baggage", "Claim": "claim" },
+  "events": { "booked": 58.63, "ping": 65.95 },
+  "fields": [
+    { "k": "PICKUP", "v": "O'Hare, tonight", "at": 7.80 },
+    { "k": "DROP-OFF", "v": "Evanston", "at": 9.02 },
+    { "k": "VEHICLE", "v": "Sedan", "at": 11.0 },
+    { "k": "RATE", "v": "$115 + tolls, gratuity", "at": 13.05 },
+    { "k": "FLIGHT", "v": "United 1242 · lands 9:40", "at": 18.13 },
+    { "k": "TRACKING", "v": "On · pickup moves with it", "at": 21.29 },
+    { "k": "BAGS", "v": "3 · one golf bag", "at": [58.30, 0.12] },
+    { "k": "MEET", "v": "Inside, baggage claim", "at": [58.30, 0.26] },
+    { "k": "DROP-OFF", "v": "1820 Hinman Ave, Evanston", "at": [58.30, 0.40] },
+    { "k": "PASSENGER", "v": "Mark Delaney", "at": [58.30, 0.54] },
+    { "k": "RECEIPT", "v": "Text + email", "at": 65.95 }
+  ],
+  "callouts": [
+    { "txt": "ANSWERED ON THE FIRST RING", "from": ["pickup", 0.15], "to": 6.0 },
+    { "txt": "YOUR RATES, QUOTED", "from": 13.05, "to": 15.9 },
+    { "txt": "FLIGHT TRACKED", "from": 21.29, "to": 23.5 },
+    { "txt": "BOOKED INTO YOUR CRM", "from": 58.63, "to": 62.05 },
+    { "txt": "TEXT + EMAIL SENT", "from": 65.90, "to": "callEnd" }
+  ],
+  "display": {
+    "biz": "Corbel Black Car"
+  },
+  "cover": {
+    "color": "#3DDFA4",
+    "headline": "BUSINESS OWNERS: THIS COULD BE YOUR PHONE."
+  },
+  "endcard": "sell"
+}

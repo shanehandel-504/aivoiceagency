@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>video-kit: UI layer</title>
+<link rel="stylesheet" href="../brand/circulant.css">
+<link rel="stylesheet" href="kit.css">
+<style>
+/* templates/ui-google.html - the Google-style UI layer.
+   A product film lets the product's own interface carry the story. This is ours: an interface laid
+   over real footage, drawn in code, timed to the audio. Our pattern, our tokens. No Apple or Google
+   marks, no screenshot of anyone's UI, no images at all. Same contract as overlay.html:
+   setData(d), render(t), transparent 1080x1920. It can be stacked over overlay.html (assemble.sh --ui).
+
+   data.json:  { "fps": 30, "events": { "total": 9 }, "ui": [ item, item, ... ] }
+   Every item has "type" and "t" (the second it starts). Any item may move with "x", "y", "w" (pixels).
+
+     search   text, label, hold          types itself, one character every 45-70 ms, cursor blinks
+     notify   app, title, body, state    slides from the top in 0.25 s, holds 1.8 s ("hold"), slides out
+              state: booked | incoming | missed   (a colored edge; use it only when it is true)
+     slot     day, times[], at, title, sub, pop, hold    a calendar; the slot pops in and the chip turns BOOKED
+     bubble   label, from, text, status, hold            the confirmation text, as the customer reads it
+     tag      text, e                    the micro tag. EDITED FOR TIME goes wherever a cut could
+                                         make something look faster than it was
+
+   Show only what happened in the film. A notification, a booking or a number that did not happen is banned.
+   No private numbers and no real names on screen. */
+.it{position:absolute;display:none}
+.lab{display:inline-block;font:600 24px/1 var(--mono);letter-spacing:.14em;color:var(--ink);background:var(--void);padding:10px 14px}
+.lab.q{color:var(--mute);padding-left:0}
+
+/* search bar (panel at 96%) */
+.se .bar{margin-top:14px;height:112px;background:rgba(18,18,26,.96);border:1px solid var(--line);display:flex;align-items:center;padding:0 30px;gap:26px}
+.se .gl{position:relative;width:46px;height:46px;flex:none}
+.se .gl i{position:absolute;left:0;top:0;width:32px;height:32px;border:5px solid var(--mute)}
+.se .gl b{position:absolute;left:29px;top:31px;width:20px;height:5px;background:var(--mute);transform:rotate(45deg);transform-origin:left center}
+.se .tx{display:flex;align-items:center;gap:6px;min-width:0}
+.se .q{font:500 48px/1.2 var(--sg);color:var(--ink);white-space:pre;overflow:hidden}
+.se .cur{width:4px;height:54px;background:var(--accent);flex:none}
+
+/* notification card */
+.no{z-index:5;background:rgba(18,18,26,.96);border:1px solid var(--line);padding:26px 30px 30px 36px}
+.no .sb{position:absolute;left:0;top:0;bottom:0;width:7px}
+.no .r1{display:flex;align-items:center;gap:12px}
+.no .sq{width:18px;height:18px;background:var(--accent);flex:none}
+.no .app{font:600 22px/1 var(--mono);letter-spacing:.14em;color:var(--ink)}
+.no .now{margin-left:auto;font:500 22px/1 var(--mono);letter-spacing:.14em;color:var(--mute)}
+.no .ti{margin-top:16px;font:600 46px/1.15 var(--sg);color:var(--ink)}
+.no .bo{margin-top:8px;font:400 38px/1.25 var(--sg);color:var(--ink)}
+
+/* calendar slot (panel at 94%, the trip-sheet surface) */
+.sl{background:rgba(18,18,26,.94);border:1px solid var(--line)}
+.sl .hd{display:flex;align-items:center;padding:20px 24px;border-bottom:1px solid var(--line)}
+.sl .hd .t{font:600 24px/1 var(--mono);letter-spacing:.14em;color:var(--ink)}
+.sl .hd .day{margin-left:18px;font:500 24px/1 var(--mono);letter-spacing:.14em;color:var(--mute)}
+.sl .chip{margin-left:auto;font:700 24px/1 var(--mono);letter-spacing:.12em;padding:10px 14px;border:1px solid var(--neutral);color:var(--neutral)}
+.sl .chip.bk{background:var(--green);border-color:var(--green);color:var(--void)}
+.sl .tr{position:relative;height:96px;display:flex;align-items:center;border-bottom:1px solid var(--line)}
+.sl .tr:last-child{border-bottom:0}
+.sl .tm{width:200px;padding-left:24px;font:500 22px/1 var(--mono);letter-spacing:.12em;color:var(--mute);flex:none}
+.sl .cell{position:relative;flex:1;align-self:stretch;border-left:1px solid var(--line)}
+.sl .blk{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:0 24px 0 28px;background:var(--panel);transform-origin:left center}
+.sl .blk .bar{position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--green)}
+.sl .blk .ti{font:600 40px/1.1 var(--sg);color:var(--ink);white-space:nowrap;overflow:hidden}
+.sl .blk .su{margin-top:6px;font:500 22px/1 var(--mono);letter-spacing:.12em;color:var(--mute);white-space:nowrap;overflow:hidden}
+
+/* text bubble: our own shape, a flat panel with a square-cut tail */
+.bu .bb{position:relative;margin-top:14px;background:var(--panel);border:1px solid var(--line);padding:26px 30px 30px}
+.bu .bb:after{content:"";position:absolute;left:44px;bottom:-11px;width:20px;height:20px;background:var(--panel);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+.bu .tx{font:500 44px/1.26 var(--sg);color:var(--ink)}
+.bu .st{margin-top:30px;display:flex;align-items:center;gap:12px;font:600 22px/1 var(--mono);letter-spacing:.14em;color:var(--green)}
+.bu .st i{display:block;width:14px;height:14px;background:var(--green)}
+
+/* micro tag */
+.tg{font:500 22px/1 var(--mono);letter-spacing:.14em;color:var(--mute);background:var(--void);border:1px solid var(--line);padding:10px 14px;white-space:nowrap}
+</style></head>
+<body>
+<script src="kit.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = VK.$, ease = VK.ease, clamp = VK.clamp;
+  var parts = [], total = 1e9;
+
+  // Where each part sits unless the item moves it. The lower panels share the trip-sheet zone
+  // (x60-900, y1128 down), clear of the right-side buttons and of the b-roll subject band.
+  var HOME = {
+    search: { x: 60, y: 214, w: 960 },
+    notify: { x: 60, y: 136, w: 960 },
+    slot: { x: 60, y: 1128, w: 840 },
+    bubble: { x: 60, y: 1128, w: 840 },
+    tag: { x: 60, y: 1548 }
+  };
+  var EDGE = { booked: 'var(--green)', incoming: 'var(--amber)', missed: 'var(--miss-red)' };
+
+  function num(v, d) { return (typeof v === 'number' && isFinite(v)) ? v : d; }
+  function make(it, cls, html) {
+    var el = document.createElement('div'), h = HOME[it.type];
+    el.className = 'it ' + cls; el.innerHTML = html;
+    el.style.left = num(it.x, h.x) + 'px'; el.style.top = num(it.y, h.y) + 'px';
+    if (h.w || it.w) el.style.width = num(it.w, h.w) + 'px';
+    document.body.appendChild(el);
+    return el;
+  }
+  // 0 outside [t0, t1), else the in/out fade. 0.12 s each way.
+  function fade(t, t0, t1) { return (t < t0 || t >= t1) ? 0 : Math.min(clamp((t - t0) / 0.12), clamp((t1 - t) / 0.12)); }
+
+  var BUILD = {
+    // Search bar that types itself. One character every 45-70 ms; the cursor holds while typing, then blinks.
+    search: function (it) {
+      var el = make(it, 'se', '<div class="lab"></div><div class="bar"><span class="gl"><i></i><b></b></span><span class="tx"><span class="q"></span><span class="cur"></span></span></div>');
+      var lab = $('.lab', el), q = $('.q', el), cur = $('.cur', el);
+      var text = String(it.text || ''), label = it.label === undefined ? 'SEARCH' : it.label;
+      lab.textContent = label; lab.style.display = label ? 'inline-block' : 'none';
+      var lead = 0.2, cum = [], acc = 0;
+      for (var i = 0; i < text.length; i++) { acc += (45 + 25 * VK.rnd(i, num(it.seed, 1))) / 1000; cum.push(acc); }
+      var t0 = it.t, done = t0 + lead + acc, t1 = num(it.e, done + num(it.hold, 1.2));
+      return function (t) {
+        var a = fade(t, t0, t1);
+        if (!a) { el.style.display = 'none'; return; }
+        el.style.display = 'block'; el.style.opacity = a;
+        el.style.transform = 'translateY(' + ((1 - ease((t - t0) / 0.12)) * 18).toFixed(2) + 'px)';
+        var n = 0, tt = t - t0 - lead;
+        while (n < cum.length && cum[n] <= tt) n++;
+        q.textContent = text.slice(0, n);
+        cur.style.opacity = (t < done || Math.floor((t - done) / 0.53) % 2 === 0) ? 1 : 0;
+      };
+    },
+    // Notification card. Slides from the top in 0.25 s, holds 1.8 s, slides back out in 0.2 s.
+    notify: function (it) {
+      var el = make(it, 'no', '<span class="sb"></span><div class="r1"><span class="sq"></span><span class="app"></span><span class="now"></span></div><div class="ti"></div><div class="bo"></div>');
+      $('.app', el).textContent = VK.pick(it.app, VK.brand.agent, '').toUpperCase();
+      $('.now', el).textContent = it.when === undefined ? 'NOW' : it.when;
+      $('.ti', el).textContent = it.title || '';
+      $('.bo', el).textContent = it.body || ''; $('.bo', el).style.display = it.body ? 'block' : 'none';
+      $('.sb', el).style.background = EDGE[it.state] || 'transparent';
+      var t0 = it.t, tOut = t0 + 0.25 + num(it.hold, 1.8), t1 = tOut + 0.2, y = num(it.y, HOME.notify.y), travel = 0;
+      return function (t) {
+        if (t < t0 || t >= t1) { el.style.display = 'none'; return; }
+        el.style.display = 'block';
+        if (!travel) travel = y + el.offsetHeight + 8;
+        var off = (1 - ease((t - t0) / 0.25) + ease((t - tOut) / 0.2)) * travel;
+        el.style.transform = 'translateY(' + (-off).toFixed(2) + 'px)';
+      };
+    },
+    // Calendar-slot pop. The calendar rises in; the slot pops from 0.9 to 1 in 0.12 s and the chip turns BOOKED.
+    slot: function (it) {
+      var times = (it.times && it.times.length) ? it.times : ['', '', ''], rows = '';
+      for (var i = 0; i < times.length; i++) rows += '<div class="tr"><span class="tm"></span><span class="cell"></span></div>';
+      var el = make(it, 'sl', '<div class="hd"><span class="t"></span><span class="day"></span><span class="chip"></span></div><div class="grid">' + rows + '</div>');
+      $('.hd .t', el).textContent = it.label === undefined ? 'CALENDAR' : it.label;
+      $('.hd .day', el).textContent = it.day || '';
+      var tm = el.querySelectorAll('.tm'), cells = el.querySelectorAll('.cell'), chip = $('.chip', el);
+      for (var j = 0; j < times.length; j++) tm[j].textContent = times[j];
+      var at = Math.min(times.length - 1, Math.max(0, num(it.at, 1)));
+      cells[at].innerHTML = '<div class="blk"><span class="bar"></span><div class="ti"></div><div class="su"></div></div>';
+      var blk = $('.blk', el);
+      $('.blk .ti', el).textContent = it.title || '';
+      $('.blk .su', el).textContent = it.sub || ''; $('.blk .su', el).style.display = it.sub ? 'block' : 'none';
+      var open = it.open === undefined ? 'OPEN' : it.open, bkd = it.booked === undefined ? 'BOOKED' : it.booked;
+      var t0 = it.t, tp = t0 + num(it.pop, 0.6), t1 = num(it.e, tp + 0.12 + num(it.hold, 2.0));
+      return function (t) {
+        if (t < t0 || t >= t1) { el.style.display = 'none'; return; }
+        el.style.display = 'block';
+        var k = ease((t - t0) / 0.22);
+        el.style.opacity = Math.min(k, clamp((t1 - t) / 0.12));
+        el.style.transform = 'translateY(' + ((1 - k) * 40).toFixed(2) + 'px)';
+        var p = (t - tp) / 0.12;
+        blk.style.opacity = clamp(p); blk.style.transform = 'scale(' + (0.9 + 0.1 * ease(p)).toFixed(4) + ')';
+        if (t >= tp) { chip.textContent = bkd; chip.className = 'chip bk'; } else { chip.textContent = open; chip.className = 'chip'; }
+      };
+    },
+    // Text-bubble confirmation, in our own styling.
+    bubble: function (it) {
+      var el = make(it, 'bu', '<span class="lab"></span><span class="lab q"></span><div class="bb"><div class="tx"></div></div><div class="st"><i></i><span></span></div>');
+      var labs = el.querySelectorAll('.lab'), label = it.label === undefined ? 'TEXT MESSAGE' : it.label;
+      labs[0].textContent = label; labs[0].style.display = label ? 'inline-block' : 'none';
+      labs[1].textContent = String(it.from || '').toUpperCase(); labs[1].style.display = it.from ? 'inline-block' : 'none';
+      $('.tx', el).textContent = it.text || '';
+      $('.st span', el).textContent = it.status || ''; $('.st', el).style.display = it.status ? 'flex' : 'none';
+      var t0 = it.t, t1 = num(it.e, t0 + 0.12 + num(it.hold, 2.4));
+      return function (t) {
+        var a = fade(t, t0, t1);
+        if (!a) { el.style.display = 'none'; return; }
+        el.style.display = 'block'; el.style.opacity = a;
+        el.style.transform = 'translateY(' + ((1 - ease((t - t0) / 0.12)) * 18).toFixed(2) + 'px)';
+      };
+    },
+    // Micro tag.
+    tag: function (it) {
+      var el = make(it, 'tg', '');
+      el.textContent = it.text === undefined ? 'EDITED FOR TIME' : it.text;
+      var t0 = num(it.t, 0), t1 = num(it.e, total);
+      return function (t) {
+        // a tag that is there from the start is there in full on frame one
+        var a = (t0 <= 0 && t >= 0 && t < t1) ? clamp((t1 - t) / 0.12) : fade(t, t0, t1);
+        el.style.display = a ? 'block' : 'none'; el.style.opacity = a;
+      };
+    }
+  };
+
+  window.setData = function (d) {
+    d = d || {};
+    VK.useData(d);
+    total = num((d.events || {}).total, 1e9);
+    [].slice.call(document.querySelectorAll('.it')).forEach(function (n) { n.remove(); });
+    parts = (d.ui || []).map(function (it, i) {
+      if (!BUILD[it.type]) { console.error('ui item ' + i + ': unknown type "' + it.type + '" (search, notify, slot, bubble, tag)'); return null; }
+      if (it.type !== 'tag' && typeof it.t !== 'number') { console.error('ui item ' + i + ' (' + it.type + '): needs "t", the second it starts'); return null; }
+      return BUILD[it.type](it);
+    }).filter(Boolean);
+  };
+  window.render = function (t) { for (var i = 0; i < parts.length; i++) parts[i](t); };
+})();
+</script>
+</body></html>

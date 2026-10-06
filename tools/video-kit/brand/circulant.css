@@ -1,0 +1,49 @@
+/* tools/video-kit/brand/circulant.css
+   CIRCULANT tokens for video. Every template links this one file first.
+   The values are CLAUDE.md § 2. Do not add a hex here that is not in that table.
+
+   Type: Space Grotesk for words, JetBrains Mono for the micro layer (tags, labels, the call clock).
+   The font files come from bin/bootstrap.sh (Space Grotesk 2.0.0, JetBrains Mono 2.304, both OFL). */
+
+@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:300 700;font-display:block;
+  src:url("../fonts/space-grotesk/SpaceGrotesk-VF.woff2") format("woff2"),
+      url("../fonts/space-grotesk/SpaceGrotesk-VF.ttf") format("truetype")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:block;
+  src:url("../fonts/jetbrains-mono/JetBrainsMono-Regular.woff2") format("woff2"),
+      url("../fonts/jetbrains-mono/JetBrainsMono-Regular.ttf") format("truetype")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:block;
+  src:url("../fonts/jetbrains-mono/JetBrainsMono-Medium.woff2") format("woff2"),
+      url("../fonts/jetbrains-mono/JetBrainsMono-Medium.ttf") format("truetype")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:600;font-display:block;
+  src:url("../fonts/jetbrains-mono/JetBrainsMono-SemiBold.woff2") format("woff2"),
+      url("../fonts/jetbrains-mono/JetBrainsMono-SemiBold.ttf") format("truetype")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:700;font-display:block;
+  src:url("../fonts/jetbrains-mono/JetBrainsMono-Bold.woff2") format("woff2"),
+      url("../fonts/jetbrains-mono/JetBrainsMono-Bold.ttf") format("truetype")}
+
+:root{
+  /* surface */
+  --void:#0A0A0F;          /* background. never pure black */
+  --panel:#12121A;         /* one step up from the void */
+  --line:#23232E;          /* hairline. the only thing that separates a panel from the void */
+  /* type */
+  --ink:#EEF0F4;           /* all copy. never pure white */
+  --mute:#7E8299;          /* quiet copy, labels, words not yet said */
+  /* accent */
+  --cyan:#00D4FF;          /* AVA's accent */
+  /* meaning. a semantic color appears only when its meaning is true on screen */
+  --booked-green:#2EE6A8;  /* on the call · captured · BOOKED. the same on both brands */
+  --amber:#FFB020;         /* incoming · ringing */
+  --miss-red:#FF3B4E;      /* a missed call. nothing else */
+  --neutral:#8A93A6;       /* inactive · not yet */
+
+  --green:var(--booked-green);            /* the short name the video-01 overlay used */
+  --sg:"Space Grotesk",sans-serif;
+  --mono:"JetBrains Mono",monospace;
+
+  /* The brand accent. brand/<id>.json is the authority: render.py hands it to the page and
+     kit.js sets --accent from it. The two rules below only cover a template opened by hand. */
+  --accent:var(--cyan);
+}
+:root[data-brand="ava"]{--accent:var(--cyan)}
+:root[data-brand="aic"]{--accent:var(--amber)}
