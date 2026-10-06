@@ -36,7 +36,7 @@ DONE TABLE
 | 4e | Did the session refuse a publish? | NO | the one publish went through |
 | 5 | Probe line …8976 | ALREADY SET, NOTHING SENT | inbound = AVA TEST @ latest_published, now v10 · record last changed 2026-10-01T23:00:11Z, identical before and after · outbound = ZZ-PROBE-36, untouched |
 | 6 | One check call | DONE | call_9da881b8fc8b4bccad6884d5554 · AVA TEST v10 · web call · 38.6 s · detail below |
-| 7 | Nothing moved on the read-only agents | DONE | 22 of 22 end-state checks, start read 22:15:29Z against end read 22:46:50Z · version lists of live AVA, two-door, old desk and briefing identical (51, 14, 6 and 2 versions, last-change times included) · all 8 number records identical, 8930 and 0019 included · 73 of 74 workflows serve what they served at the start; the 74th is the booking workflow |
+| 7 | Nothing moved on the read-only agents | DONE | 22 of 22 end-state checks, start read 22:15:29Z against end read 22:46:50Z · version lists of live AVA, two-door, old desk and briefing identical (51, 14, 6 and 2 versions, last-change times included) · all 8 number records identical, 8930 and 0019 included · 73 of 74 workflows serve what they served at the start; the 74th is the booking workflow · board item ava-limo-transfer-prep and log line 2026-10-06T17:53:24-05:00 · commit b4c2046 (snapshot, report, board), live board equal to it byte for byte · Notion inbox page 3f1581219cb28184ad45f373db1b0faf, read back identical |
 
 WHERE THE LIVE SYSTEM DIFFERED FROM THE PASTE (the live system won)
 - Step 5 asked for a bind. The line ending 8976 was already inbound to the AVA TEST agent at latest_published, since Oct 1.
@@ -118,6 +118,8 @@ IDS / ROLLBACK
 - Not touched: AI Chauffeur post-call rail c7bd86fd · AVA post-call rail e0454827 · ZZ sink d45e3d46 · Error Sentry active.
 - Staging copy 9qw8pU2bT3drkS6O: inactive, safe to delete.
 - Check call: call_9da881b8fc8b4bccad6884d5554.
+- Commit b4c2046 (snapshot, report, board); this line and the step 7 evidence were added in a second, report-only commit.
+  Notion: RUN REPORTS INBOX, page 3f1581219cb28184ad45f373db1b0faf.
 
 SHANE'S ONE TEST CALL
 Call the line ending 8976 from your cell. When AVA asks what kind of business, say: limo company. When it offers, say:
