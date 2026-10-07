@@ -39,7 +39,7 @@ DONE TABLE
 | 4 · S4 | Reservation alone | PASS | test_job_26cc123fd4c1 · "Just to confirm, is your business a limousine or car service?" · after the no: "Thanks for clarifying. When a call is missed at your restaurant, what happens next?" · no limo word after the no |
 | 4 · S5 | Limo on a later turn, and the AI question | PASS (not a gate) | test_job_ff99a5ae233b · "I'm AI. Limousine and black-car companies have their own agent, AI Chauffeur, where you can try a reservation like a customer and get your questions answered. Want me to transfer you now?" · the next turn stayed on the offer, no discovery |
 | 4 · gate | S1 to S4 all pass | NOT PASSED | S2 failed · batch test_batch_748dc91c20e3, 00:54:10Z (7:54 PM CT), against v11 · five runs, none errored, none started twice · Retell's own judge: 4 pass, 1 fail (S2) |
-| 5 | Close | DONE | 28 of 28 end-state checks, start read 00:46:08Z against end read 01:00:17Z · version lists of live AVA, two-door, old desk and briefing identical (51, 14, 6 and 2 versions, last-change times and labels included) · all 8 number records identical, 8930 and 0019 included · the served objects equal field for field: two-door agent v13, its flow v13, live AVA v49 · n8n: read requests only; 75 workflows, 28 active, none changed since the start read · the two pages that read the board, /hq and /work, rendered at 390×844 and 1440×900 with the new board: the new line shows, no console error · board item ava-limo-transfer-words (pending) and log line 2026-10-06T20:08:47-05:00 · commit and Notion page: added after filing |
+| 5 | Close | DONE | 28 of 28 end-state checks, start read 00:46:08Z against end read 01:00:17Z · version lists of live AVA, two-door, old desk and briefing identical (51, 14, 6 and 2 versions, last-change times and labels included) · all 8 number records identical, 8930 and 0019 included · the served objects equal field for field: two-door agent v13, its flow v13, live AVA v49 · n8n: read requests only; 75 workflows, 28 active, none changed since the start read · the two pages that read the board, /hq and /work, rendered at 390×844 and 1440×900 with the new board: the new line shows, no console error · board item ava-limo-transfer-words (pending) and log line 2026-10-06T20:08:47-05:00 · commit fcab436 (prompt file, report, board), live board equal to it byte for byte · Notion inbox page 3f2581219cb2813ba4b0d35ca767b2b6, read back identical |
 
 WHERE THE LIVE SYSTEM DIFFERED FROM THE PASTE
 - Nowhere. Every id, version and hash the paste named matched what Retell returned: the test agent served v10, its
@@ -209,7 +209,8 @@ IDS / ROLLBACK
   test_case_bef7d96abe87, S3 test_case_7e3f6788aa47, S4 test_case_b25c9ea8e604, S5 test_case_83e7074a95cc.
 - Not touched: live AVA v49 on 414-240-8930 · two-door v13 on 414-775-0019 · the old capture desk · the briefing agent
   · every n8n workflow.
-- Commit and Notion page: added after filing.
+- Commit fcab436 (prompt file, report, board); this line and the step 5 evidence were added in a second, report-only
+  commit. Notion: RUN REPORTS INBOX, page 3f2581219cb2813ba4b0d35ca767b2b6.
 
 SHANE'S THREE TEST CALLS (to the line ending 8976, from your cell)
 - The gate says not yet: S2 failed, and Call 3 walks that same path. The calls are written out so they are ready when
