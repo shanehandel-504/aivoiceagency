@@ -205,8 +205,8 @@ console.log(`  ${liveOk ? 'PASS' : 'FAIL'}  LIVE agent untouched         v${live
 /* ---------- 5 · prove web-test-callable ----------------------------------- */
 let webCall = null;
 try {
-  webCall = await call('POST', '/v2/create-web-call', { agent_id: check.agent_id });
-  console.log(`  PASS  web-test-callable        call_id=${webCall.call_id} status=${webCall.call_status}`);
+  webCall = await call('POST', '/v3/create-web-call', { agent_id: check.agent_id }); // v3 answers call_id, access_token, transport, ice_servers, expires_at
+  console.log(`  PASS  web-test-callable        call_id=${webCall.call_id} transport=${webCall.transport}`);
 } catch (e) {
   pass = false;
   console.log('  FAIL  web-test-callable        ' + e.message);

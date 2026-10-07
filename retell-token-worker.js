@@ -3,6 +3,9 @@
 // Job: Issue Retell access token to frontend
 // Deploy: Cloudflare Dashboard → Workers → New
 // Env vars needed: RETELL_API_KEY
+//
+// 2026-10-07 — Not deployed (see KNOWN_ISSUES.md); kept as source. Endpoint moved to v3 on 2026-10-07.
+// Checked 2026-10-07: no "retell-token" Worker answers on the account (workers.dev returns 404, error 1042).
 // ════════════════════════════════════════════
 
 export default {
@@ -42,7 +45,7 @@ export default {
         );
 
       // Request token from Retell
-      const retellRes = await fetch('https://api.retellai.com/v2/create-web-call', {
+      const retellRes = await fetch('https://api.retellai.com/v3/create-web-call', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${env.RETELL_API_KEY}`,

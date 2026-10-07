@@ -95,8 +95,8 @@ chk('live handbook untouched', live.handbook_config, src.handbook_config);
 chk('8930 still bound to live', (liveNums.inbound_agents || [])[0].agent_id, LIVE_AGENT);
 chk('8930 serves', (liveNums.inbound_agents || [])[0].agent_version, 'latest_published');
 
-const wc = await call('POST', '/v2/create-web-call', { agent_id: AID });
-console.log(`\n  ${wc.call_id ? 'PASS' : 'FAIL'}  web-test-callable              call_id=${wc.call_id} status=${wc.call_status} agent_v=${wc.agent_version}`);
+const wc = await call('POST', '/v3/create-web-call', { agent_id: AID }); // v3 answers call_id, access_token, transport, ice_servers, expires_at
+console.log(`\n  ${wc.call_id ? 'PASS' : 'FAIL'}  web-test-callable              call_id=${wc.call_id} transport=${wc.transport}`);
 if (!wc.call_id) pass = false;
 
 writeFileSync(join(IN, 'v37-verify.json'), JSON.stringify({ agent: a, bound: bound.length, web_call: wc.call_id, pass }, null, 2));

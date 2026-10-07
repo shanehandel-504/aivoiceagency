@@ -238,8 +238,8 @@ chk('8930 serves latest_published', (n8930After.inbound_agents || [])[0]?.agent_
 console.log('\n=== 7 · WEB TEST CALL ===');
 let wc = null;
 try {
-  wc = await call('POST', '/v2/create-web-call', { agent_id: TEST_AGENT });
-  console.log(`  PASS  web-test-callable  call_id=${wc.call_id} status=${wc.call_status} agent_v=${wc.agent_version}`);
+  wc = await call('POST', '/v3/create-web-call', { agent_id: TEST_AGENT }); // v3 answers call_id, access_token, transport, ice_servers, expires_at
+  console.log(`  PASS  web-test-callable  call_id=${wc.call_id} transport=${wc.transport}`);
   if (!wc.access_token) { console.log('  FAIL  no access_token returned'); pass = false; }
 } catch (e) { pass = false; console.log('  FAIL  web-test-callable  ' + e.message); }
 

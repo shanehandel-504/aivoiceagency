@@ -43,7 +43,7 @@ export default async function handler(req, res) {
   if (limited(ip)) return res.status(429).json({ error: 'Rate limit — try again in a bit.' });
 
   try {
-    const r = await fetch('https://api.retellai.com/v2/create-web-call', {
+    const r = await fetch('https://api.retellai.com/v3/create-web-call', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ agent_id: agentId })
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       return res.status(r.status).json({ error: 'Retell API error', detail });
     }
     const data = await r.json();
-    return res.status(200).json({ access_token: data.access_token, call_id: data.call_id });
+    return res.status(200).json({ access_token: data.access_token, call_id: data.call_id, expires_at: data.expires_at });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
