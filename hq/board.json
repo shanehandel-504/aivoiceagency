@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-07T12:57:03-05:00",
+  "updated": "2026-10-07T13:50:26-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -601,10 +601,10 @@
     },
     {
       "id": "ava-limo-transfer-words",
-      "title": "AVA limo transfer — words (test agent)",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-07-ava-limo-transfer-words-v2.md",
-      "status": "pending",
-      "label": "RUN INCOMPLETE — the simulation gate did not pass (2026-10-07, words run 2). On the AVA TEST agent only; the live line 414-240-8930 still serves v49 and was not touched. Test agent v11 → v12: Grok's v50e prompt placed byte for byte (7,759 characters); the prompt is the only change. Three simulations, one run each, on the three saved cases from Oct 6: S1 the Oct 6 caller PASS (offer in the first reply, the bridge line spoken, handoff fired on \"Yes.\"), S2 the no path FAIL (the cap held at three transfer questions and the question after the first no came alone, but after the caller's last no AVA gave no demo number and no setup call), S3 plumber with a fleet PASS. Probe line ending 8976 answers with v12. Waiting on: a Grok patch for the end of the no path and a new words paste; Shane's three test calls come after that. Run 1 (v50d, Oct 6): reports/2026-10-06-ava-limo-transfer-words.md."
+      "title": "AVA limo transfer — LIVE on 414-240-8930",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-07-ava-limo-go-live.md",
+      "status": "live",
+      "label": "LIVE on 414-240-8930 since 2026-10-07, 1:47 PM CT. A limo or black-car caller is told those companies have their own agent, AI Chauffeur, and is asked to be transferred; a yes hands the same call to the AI Chauffeur agent (two-door, version 13). Live AVA agent v49 → v51: Grok's v50e prompt placed byte for byte (7,759 characters), with the tested speech settings and the four tools of the test agent. Phone bookings now go through WF-AVA-SALES-CAL on the real AVA Demo Call calendar. The caller lookup on 8930 serves the four v50e openers. Rollback is three publishes: a new agent version made from v49, booking 0968c734, caller lookup b67ac140. Not done yet: Shane's check call on the live line. Parked for Grok: the last turn of the no path (run 2, S2). Earlier runs: reports/2026-10-07-ava-limo-transfer-words-v2.md, reports/2026-10-06-ava-limo-transfer-words.md."
     },
     {
       "id": "setup-call-reminders",
@@ -1189,6 +1189,10 @@
     {
       "ts": "2026-10-07T12:57:03-05:00",
       "entry": "CC-REMINDERS v1.1 — WF-SETUP-CALL-REMINDERS 618G34AR1xQTr3Uf. (1) Timer bounded to 6 AM–7 PM Central at 11:59 AM CT: about 4,700 runs a month, down from 8,640; only the timer step changed. (2) First real send at 12:45:00 PM CT on that version: the 15-minute text and the owner ping, both delivered. (3) v1.1 live at 12:45:49 PM CT: calls booked on the aichauffeur.ai/book widget are a second AI Chauffeur source with the same three texts, quiet hours and never-twice table. Widget consent = GoHighLevel's booking text on record for that booking + not on do-not-disturb. New rule: the 9 AM text needs the booking to exist before 9 AM that day. Proven on the inactive staging copy first (three runs, would-be texts to the ZZ sink only, nobody texted); live differs from the tested build only by live mode, its table and the real text step; 16 of 19 steps untouched. No send is planned in the next 72 hours. The Oct 7 1:00 PM CT booking shows cancelled in Cal.com at 12:47:55 PM CT, after its texts; this run only reads Cal.com."
+    },
+    {
+      "ts": "2026-10-07T13:50:26-05:00",
+      "entry": "AVA limo transfer GO-LIVE on 414-240-8930, on Shane's go in the session. Three changes, each checked before the next. 1) Booking: WF-AVA-SALES-CAL now serves 17f9249b (was 0968c734): calendar ZZ TEST → AVA Demo Call in four places, notify on, the live AVA agent added to the allow-list; checked live: open times come from the real calendar, the live agent passes the booking gate, an unknown agent is refused. 2) Openers: WF-ANI-AVA now serves 804b5b4c (was b67ac140) with the two values of the copy staged on Sep 26; a lookup for a made-up 555 number returns the v50e COLD opener word for word. 3) Agent: live AVA v49 → v51, published 1:47 PM CT: Grok's v50e prompt byte for byte (SHA-256 b622d7eb…7d8bf1e0 read back on the draft and on the published version), the test agent's four tools, start values, the tested speech settings; the live line keeps its own post-call rail. 19/19 checks on the draft and on the published version. End-state check 30/30: the test agent, the two-door agent v13 on 0019, the old desk, the briefing agent and all eight number records did not move; in n8n only these two workflows changed by this run. No test call was placed; no call had reached the new agent at the end read. Next: Shane's check call. Report reports/2026-10-07-ava-limo-go-live.md."
     }
   ]
 }
