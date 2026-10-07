@@ -6,6 +6,7 @@
 //
 // 2026-10-07 — Not deployed (see KNOWN_ISSUES.md); kept as source. Endpoint moved to v3 on 2026-10-07.
 // Checked 2026-10-07: no "retell-token" Worker answers on the account (workers.dev returns 404, error 1042).
+// KNOWN_ISSUES.md is about the account's one deployed Worker, aichauffeur-token, which serves a web page, not this code.
 // ════════════════════════════════════════════
 
 export default {
