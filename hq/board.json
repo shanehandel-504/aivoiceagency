@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-07T11:16:37-05:00",
+  "updated": "2026-10-07T12:31:46-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -612,6 +612,13 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-05-cc-reminders-v1.md",
       "status": "live",
       "label": "LIVE 2026-10-07, 11:07 AM CT: n8n WF-SETUP-CALL-REMINDERS v1.0 (618G34AR1xQTr3Uf) checks every 5 minutes. AI Chauffeur setup calls booked by phone get three texts: 24 hours before, 9 AM the day of, 15 minutes before. Shane gets a CALL IN 15 text before every call. A text goes only with consent on record, never to a number on do-not-disturb, only 9 AM to 8 PM the caller's time, and never twice (table setup_call_reminders). A send that fails is tried once more, then Shane gets one email. AVA strategy calls: GoHighLevel already texts those 24 hours, 1 hour and 15 minutes before, so only the owner ping is on for AVA. Not covered: AI Chauffeur calls booked on the aichauffeur.ai/book widget (they are not in Cal.com). OPEN, Shane to decide: at every 5 minutes around the clock the timer alone is 8,640 runs a month, and the quota audit projects 10,080 against 10,000. Kill switch: unpublish the workflow; the table stays."
+    },
+    {
+      "id": "retell-web-call-v3",
+      "title": "Retell Create Web Call: repo moved from v2 to v3; the tuning check call still needs v2 until it is rebuilt before Oct 18 2026 (CC-AEO-GO v1, Part 1 only, 2026-10-07)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-07-retell-web-call-v3.md",
+      "status": "live",
+      "label": "LIVE 2026-10-07, 11:27 AM CT (59e34b8); RUN INCOMPLETE on the check-call harness only. Every create-web-call site in the repo now posts to /v3: api/web-call.js, retell-token-worker.js and three test-build tools. Checked on production: POST /api/web-call answers 503, web-call not configured: Vercel is missing the Retell key or the web agent id for it, and no page links to it. n8n read through the API: five create-web-call nodes, all already v3. The Oct 5 11:00 AM CT flag: no web call was created that day; most likely it was the cockpit metrics job on the Dell, which asked Retell for the call list at a retired address every 30 minutes. That job is on v3 now, with the same figures. OPEN, needs Shane: the scripted check call that tuning runs place still needs v2 and stops working Oct 18 unless it is rebuilt for v3 (a few paid test calls). Phone lines and /try are not affected. Parts 2 to 4 of CC-AEO-GO v1 (pricing pages, answers press, IndexNow) were not run."
     }
   ],
   "log": [
@@ -1174,6 +1181,10 @@
     {
       "ts": "2026-10-07T11:16:37-05:00",
       "entry": "CC-REMINDERS v1 — setup-call reminders live (24h · 9 AM · 15 min + owner ping), WF-SETUP-CALL-REMINDERS 618G34AR1xQTr3Uf. Live 11:07 AM CT Oct 7, a day after the brief's Oct 6 deadline: the Oct 7 1:00 PM CT call got no 24-hour or 9 AM text (both windows had passed and nothing is sent late); its 15-minute text and the owner ping are planned for 12:45 PM CT. Built as a staging copy first: six staging runs, every would-be text posted to the ZZ sink, none to GoHighLevel; dedupe, the consent gate, quiet hours and the fail-once-retry-then-email route proven there. AI Chauffeur phone bookings (Cal.com): all three texts on. AVA (/book calendar): owner ping only, because the GoHighLevel workflow \"AVA Demo Call — Reminder Engine v1\" already texts 24 h, 1 h and 15 min before. Reply route could not be wired from the API, so the 24-hour text ends \"Questions? Call 414-775-0019\". Read only and unmoved: both phone lines, every Retell agent, WF-AIC-SALES-CAL, WF-AVA-SALES-CAL, the post-call rail. Open decision: the 5-minute timer is 8,640 runs a month; the quota audit projects 10,080 of 10,000."
+    },
+    {
+      "ts": "2026-10-07T12:31:46-05:00",
+      "entry": "CC-AEO-GO v1, PART 1 ONLY (Shane cut the run to the v3 part) — Retell web call v3 · 2026-10-07. Repo call sites moved to /v3/create-web-call in 59e34b8: api/web-call.js (the 200 answer also passes expires_at), retell-token-worker.js (not deployed), three retell-v37 tools. Test first: 2 of 14 checks failed on the old endpoint, 14 of 14 pass after. Live: Vercel deployment dpl_3CLUapakYRBTYRxedhtLJc1ZVPzH is READY on aivoiceagency.ai; POST /api/web-call = 503 web-call not configured; no web call was created by the check. n8n through the public API: 77 workflows, five create-web-call nodes, all v3, no retired Retell path, draft equals published on all 29 active. Retell log: zero web calls on Oct 5. On the Dell: the CockpitMetrics job called POST /v2/list-calls every 30 minutes; moved to /v3/list-calls with a backup beside it; v3 gave the same three figures on the same window, and the 11:30 AM scheduled run wrote ok true. Not migrated: the scripted check call that tuning runs place. It still needs v2 and stops working Oct 18 unless rebuilt. Waiting on Shane's go: a few paid test calls. Phone lines and /try are not affected. Read only and unmoved: both phone lines, every Retell agent, every n8n workflow. Parts 2 to 4 (pricing pages, answers press, IndexNow) not run."
     }
   ]
 }
