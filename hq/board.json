@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-06T20:08:47-05:00",
+  "updated": "2026-10-07T10:01:45-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -602,9 +602,9 @@
     {
       "id": "ava-limo-transfer-words",
       "title": "AVA limo transfer — words (test agent)",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-06-ava-limo-transfer-words.md",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-07-ava-limo-transfer-words-v2.md",
       "status": "pending",
-      "label": "RUN INCOMPLETE — the simulation gate did not pass (2026-10-06). On the AVA TEST agent only; the live line 414-240-8930 still serves v49 and was not touched. Test agent v10 → v11: Grok's v50d prompt placed byte for byte (7,072 characters), the handoff tool now restarts the call clock at the handoff, and its description (never spoken) says only when to call it. Five simulations, one run each: S1 the Oct 6 caller PASS (offer in the first reply, handoff fired on \"Yes.\"; the bridge line was not spoken), S2 the no path FAIL (five transfer offers where the cap is three, no demo number, no setup call), S3 plumber with a fleet PASS, S4 reservation alone PASS, S5 limo on a later turn PASS. Probe line ending 8976 answers with v11. Waiting on: a Grok patch for the no path and a new words paste; Shane's three test calls come after that."
+      "label": "RUN INCOMPLETE — the simulation gate did not pass (2026-10-07, words run 2). On the AVA TEST agent only; the live line 414-240-8930 still serves v49 and was not touched. Test agent v11 → v12: Grok's v50e prompt placed byte for byte (7,759 characters); the prompt is the only change. Three simulations, one run each, on the three saved cases from Oct 6: S1 the Oct 6 caller PASS (offer in the first reply, the bridge line spoken, handoff fired on \"Yes.\"), S2 the no path FAIL (the cap held at three transfer questions and the question after the first no came alone, but after the caller's last no AVA gave no demo number and no setup call), S3 plumber with a fleet PASS. Probe line ending 8976 answers with v12. Waiting on: a Grok patch for the end of the no path and a new words paste; Shane's three test calls come after that. Run 1 (v50d, Oct 6): reports/2026-10-06-ava-limo-transfer-words.md."
     }
   ],
   "log": [
@@ -1159,6 +1159,10 @@
     {
       "ts": "2026-10-06T20:08:47-05:00",
       "entry": "AVA limo transfer words (paste CC-AVA-LIMO-TRANSFER-WORDS-v1), test agent only. RUN INCOMPLETE: the simulation gate did not pass. AVA TEST agent v10 → v11, published 7:50 PM CT: the system prompt is Grok's v50d, merge-judged PASS, cut out of the paste by script and placed byte for byte (7,072 characters, SHA-256 939ed322…f583f9026d on the paste, on the draft and on the published version read back; file ops/tuning/ava-8930-v50d-final.md). handoff_to_desk gains use_swap_agent_max_duration true (a handed-off caller gets the AI Chauffeur agent's own call length from the handoff) and a description that says only when the tool is called. Begin message, default opening line, the other three tools and every agent setting unchanged: the leaf diff against the before-read shows three paths. Five Retell simulations, one run each, batch test_batch_748dc91c20e3: S1 PASS, S2 FAIL, S3 PASS, S4 PASS, S5 PASS. S2: the transfer was offered five times (the cap is three), and after the caller's last no AVA gave no demo number and did not go to the setup call. S1: the handoff fired right after \"Yes.\" with no bridge line. The simulations created no call record and no n8n execution. End-state check 28/28: live AVA v49, the two-door agent v13 on 0019, the old desk, the briefing agent and all eight numbers did not move. Next: a Grok patch for the no path, a new words paste, then Shane's three test calls. Report reports/2026-10-06-ava-limo-transfer-words.md."
+    },
+    {
+      "ts": "2026-10-07T10:01:45-05:00",
+      "entry": "AVA limo transfer words, run 2 (paste AVA LIMO WORDS v2), test agent only. RUN INCOMPLETE: the simulation gate did not pass. AVA TEST agent v11 → v12, published 9:52 AM CT: the system prompt is Grok's v50e, merge-judged PASS, cut out of the paste by script and placed byte for byte (7,759 characters, SHA-256 b622d7eb…7d8bf1e0 on the paste, on the draft and on the published version read back; file ops/tuning/ava-8930-v50e-final.md). The prompt is the only change: the leaf diff against the before-read shows one path. Tools, the call-clock switch, the tool description, version pin 13, the five start variables, voice and every speech setting unchanged. Three Retell simulations, one run each, on the three saved cases from Oct 6 (same caller lines, same mocks), batch test_batch_2d10065ca8ff: S1 PASS, S2 FAIL, S3 PASS. S2: three transfer questions in the call (the cap held) and \"What do you want to know?\" asked alone after the first no, but the reply to the caller's last no was \"What else do you want to know?\": no demo number, no setup call. S1: the bridge line was spoken before the handoff. The simulations created no call record and no n8n execution. End-state check 29/29: live AVA v49, the two-door agent v13 on 0019, the old desk, the briefing agent and all eight numbers did not move; n8n unchanged (75 workflows, 28 active). Next: a Grok patch for the end of the no path, a new words paste, then Shane's three test calls. Report reports/2026-10-07-ava-limo-transfer-words-v2.md."
     }
   ]
 }
