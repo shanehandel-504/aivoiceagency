@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-07T10:01:45-05:00",
+  "updated": "2026-10-07T11:16:37-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -605,6 +605,13 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-07-ava-limo-transfer-words-v2.md",
       "status": "pending",
       "label": "RUN INCOMPLETE — the simulation gate did not pass (2026-10-07, words run 2). On the AVA TEST agent only; the live line 414-240-8930 still serves v49 and was not touched. Test agent v11 → v12: Grok's v50e prompt placed byte for byte (7,759 characters); the prompt is the only change. Three simulations, one run each, on the three saved cases from Oct 6: S1 the Oct 6 caller PASS (offer in the first reply, the bridge line spoken, handoff fired on \"Yes.\"), S2 the no path FAIL (the cap held at three transfer questions and the question after the first no came alone, but after the caller's last no AVA gave no demo number and no setup call), S3 plumber with a fleet PASS. Probe line ending 8976 answers with v12. Waiting on: a Grok patch for the end of the no path and a new words paste; Shane's three test calls come after that. Run 1 (v50d, Oct 6): reports/2026-10-06-ava-limo-transfer-words.md."
+    },
+    {
+      "id": "setup-call-reminders",
+      "title": "Setup-call reminder texts — 24 hours · 9 AM · 15 minutes + owner ping (CC-REMINDERS v1, 2026-10-07)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-05-cc-reminders-v1.md",
+      "status": "live",
+      "label": "LIVE 2026-10-07, 11:07 AM CT: n8n WF-SETUP-CALL-REMINDERS v1.0 (618G34AR1xQTr3Uf) checks every 5 minutes. AI Chauffeur setup calls booked by phone get three texts: 24 hours before, 9 AM the day of, 15 minutes before. Shane gets a CALL IN 15 text before every call. A text goes only with consent on record, never to a number on do-not-disturb, only 9 AM to 8 PM the caller's time, and never twice (table setup_call_reminders). A send that fails is tried once more, then Shane gets one email. AVA strategy calls: GoHighLevel already texts those 24 hours, 1 hour and 15 minutes before, so only the owner ping is on for AVA. Not covered: AI Chauffeur calls booked on the aichauffeur.ai/book widget (they are not in Cal.com). OPEN, Shane to decide: at every 5 minutes around the clock the timer alone is 8,640 runs a month, and the quota audit projects 10,080 against 10,000. Kill switch: unpublish the workflow; the table stays."
     }
   ],
   "log": [
@@ -1163,6 +1170,10 @@
     {
       "ts": "2026-10-07T10:01:45-05:00",
       "entry": "AVA limo transfer words, run 2 (paste AVA LIMO WORDS v2), test agent only. RUN INCOMPLETE: the simulation gate did not pass. AVA TEST agent v11 → v12, published 9:52 AM CT: the system prompt is Grok's v50e, merge-judged PASS, cut out of the paste by script and placed byte for byte (7,759 characters, SHA-256 b622d7eb…7d8bf1e0 on the paste, on the draft and on the published version read back; file ops/tuning/ava-8930-v50e-final.md). The prompt is the only change: the leaf diff against the before-read shows one path. Tools, the call-clock switch, the tool description, version pin 13, the five start variables, voice and every speech setting unchanged. Three Retell simulations, one run each, on the three saved cases from Oct 6 (same caller lines, same mocks), batch test_batch_2d10065ca8ff: S1 PASS, S2 FAIL, S3 PASS. S2: three transfer questions in the call (the cap held) and \"What do you want to know?\" asked alone after the first no, but the reply to the caller's last no was \"What else do you want to know?\": no demo number, no setup call. S1: the bridge line was spoken before the handoff. The simulations created no call record and no n8n execution. End-state check 29/29: live AVA v49, the two-door agent v13 on 0019, the old desk, the briefing agent and all eight numbers did not move; n8n unchanged (75 workflows, 28 active). Next: a Grok patch for the end of the no path, a new words paste, then Shane's three test calls. Report reports/2026-10-07-ava-limo-transfer-words-v2.md."
+    },
+    {
+      "ts": "2026-10-07T11:16:37-05:00",
+      "entry": "CC-REMINDERS v1 — setup-call reminders live (24h · 9 AM · 15 min + owner ping), WF-SETUP-CALL-REMINDERS 618G34AR1xQTr3Uf. Live 11:07 AM CT Oct 7, a day after the brief's Oct 6 deadline: the Oct 7 1:00 PM CT call got no 24-hour or 9 AM text (both windows had passed and nothing is sent late); its 15-minute text and the owner ping are planned for 12:45 PM CT. Built as a staging copy first: six staging runs, every would-be text posted to the ZZ sink, none to GoHighLevel; dedupe, the consent gate, quiet hours and the fail-once-retry-then-email route proven there. AI Chauffeur phone bookings (Cal.com): all three texts on. AVA (/book calendar): owner ping only, because the GoHighLevel workflow \"AVA Demo Call — Reminder Engine v1\" already texts 24 h, 1 h and 15 min before. Reply route could not be wired from the API, so the 24-hour text ends \"Questions? Call 414-775-0019\". Read only and unmoved: both phone lines, every Retell agent, WF-AIC-SALES-CAL, WF-AVA-SALES-CAL, the post-call rail. Open decision: the 5-minute timer is 8,640 runs a month; the quota audit projects 10,080 of 10,000."
     }
   ]
 }
