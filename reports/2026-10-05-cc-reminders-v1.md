@@ -3,6 +3,7 @@
 Brief dated 2026-10-05 · run 2026-10-07 · paste CC-REMINDERS v1 · one new n8n workflow, built in staging first.
 Read only and unmoved: both phone lines (414-775-0019, 414-240-8930), every Retell agent, WF-AIC-SALES-CAL, WF-AVA-SALES-CAL, the post-call rail.
 Nothing sensitive is in this file: no key, no header value, no private number, no caller name, no contact id, no Cal.com id. Caller numbers are last four digits only.
+Later the same day: the timer decision below was made (hours bounded) and v1.1 added the web-widget bookings. See reports/2026-10-07-cc-reminders-v1-1.md.
 
 ```
 ===== SHANE READBACK — COPY ALL =====
@@ -49,7 +50,7 @@ DONE TABLE
 | 4 · Reply route | Fallback used. No branch added. | n8n: the one reply workflow (WF-AIC-TEXT-REPLY) has one run on record, Sep 28, and its switch AIC_REPLY_LINE is off · the GHL workflow API is read-only, so a "customer replied" trigger cannot be made from here · GHL user alert settings are not readable by API | yes |
 | 5 · Dry run | Six staging runs. Texts went to the ZZ sink only. | 12475 real clock, 72 hours: 2 planned, 2 posted, 2 rows marked sent · 12478 clock set to Mon Oct 5 noon CT: the 24-hour and 9 AM texts planned and posted, the other two read "already sent" · 12481 same clock again: nothing sent · 12482 to 12484 dead address: failed, tried once more, final failure routed to the owner email (email step switched off for the test, so no email went out), then nothing | staging |
 | 6 · Publish | New workflow "WF-SETUP-CALL-REMINDERS v1.0" (618G34AR1xQTr3Uf), active. Staging left inactive. | publish_workflow → active version f3b42591-1f5e-45d0-9ae2-4042d80a66b2 · read back: active true, draft = active version, the ACTIVE graph vs the tested build ZERO DIFF on 19 steps, Error Sentry SlnAeMrVRORsF0w7 attached and itself active · the three rails still on the versions read in step 1 (47af9608, 0968c734, c7bd86fd) | YES |
-| 7 · First live proof | Slack post in #social, "REMINDERS LIVE — next sends:" (last four digits only). | first timed run 12485 at 11:10:07 AM CT: live mode, 1 booking, plan shows the 15-minute text and your ping at 12:45 PM CT, nothing sent, live table empty · the first real send (12:45 PM CT) had not happened when this was filed | YES, first send pending |
+| 7 · First live proof | Slack post in #social, "REMINDERS LIVE — next sends:" (last four digits only). | first timed run 12485 at 11:10:07 AM CT: live mode, 1 booking, plan shows the 15-minute text and your ping at 12:45 PM CT, nothing sent, live table empty · the first real send (12:45 PM CT) had not happened when this was filed · ADDED AFTER FILING: run 12524 at 12:45:00 PM CT handed on 2 texts, GoHighLevel accepted both (HTTP 201, message ids) and shows both delivered: the caller's 15-minute text and the owner ping; live table: both rows sent | YES, first send proven |
 | 8 · Board + report | hq/board.json item setup-call-reminders (live) + one log entry. This report. | board file round-trips byte for byte before the write · commit "board: CC-REMINDERS v1" | YES |
 
 THE DRY-RUN TABLE (step 5)

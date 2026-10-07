@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-07T12:31:46-05:00",
+  "updated": "2026-10-07T12:57:03-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -608,10 +608,10 @@
     },
     {
       "id": "setup-call-reminders",
-      "title": "Setup-call reminder texts — 24 hours · 9 AM · 15 minutes + owner ping (CC-REMINDERS v1, 2026-10-07)",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-05-cc-reminders-v1.md",
+      "title": "Setup-call reminder texts — 24 hours · 9 AM · 15 minutes + owner ping (CC-REMINDERS v1.1, 2026-10-07)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-07-cc-reminders-v1-1.md",
       "status": "live",
-      "label": "LIVE 2026-10-07, 11:07 AM CT: n8n WF-SETUP-CALL-REMINDERS v1.0 (618G34AR1xQTr3Uf) checks every 5 minutes. AI Chauffeur setup calls booked by phone get three texts: 24 hours before, 9 AM the day of, 15 minutes before. Shane gets a CALL IN 15 text before every call. A text goes only with consent on record, never to a number on do-not-disturb, only 9 AM to 8 PM the caller's time, and never twice (table setup_call_reminders). A send that fails is tried once more, then Shane gets one email. AVA strategy calls: GoHighLevel already texts those 24 hours, 1 hour and 15 minutes before, so only the owner ping is on for AVA. Not covered: AI Chauffeur calls booked on the aichauffeur.ai/book widget (they are not in Cal.com). OPEN, Shane to decide: at every 5 minutes around the clock the timer alone is 8,640 runs a month, and the quota audit projects 10,080 against 10,000. Kill switch: unpublish the workflow; the table stays."
+      "label": "LIVE. n8n WF-SETUP-CALL-REMINDERS v1.1 (618G34AR1xQTr3Uf) checks every 5 minutes, 6 AM to 7 PM Central (about 4,700 runs a month). AI Chauffeur setup calls, booked by phone or on the aichauffeur.ai/book widget, get three texts: 24 hours before, 9 AM the day of, 15 minutes before. Shane gets a CALL IN 15 text before every call. A caller text goes only with a booking text on record for that booking, never to a number on do-not-disturb, only 9 AM to 8 PM the caller's time, and never twice (table setup_call_reminders). The 9 AM text needs the booking to exist before 9 AM that day. A send that fails is tried once more, then Shane gets one email. AVA strategy calls: GoHighLevel already texts those 24 hours, 1 hour and 15 minutes before, so only the owner ping is on for AVA. First real send Oct 7, 12:45 PM CT: the 15-minute text and the owner ping, both delivered. Not covered: appointments added by hand inside GoHighLevel. Kill switch: unpublish the workflow; the table stays. First report: reports/2026-10-05-cc-reminders-v1.md."
     },
     {
       "id": "retell-web-call-v3",
@@ -1185,6 +1185,10 @@
     {
       "ts": "2026-10-07T12:31:46-05:00",
       "entry": "CC-AEO-GO v1, PART 1 ONLY (Shane cut the run to the v3 part) — Retell web call v3 · 2026-10-07. Repo call sites moved to /v3/create-web-call in 59e34b8: api/web-call.js (the 200 answer also passes expires_at), retell-token-worker.js (not deployed), three retell-v37 tools. Test first: 2 of 14 checks failed on the old endpoint, 14 of 14 pass after. Live: Vercel deployment dpl_3CLUapakYRBTYRxedhtLJc1ZVPzH is READY on aivoiceagency.ai; POST /api/web-call = 503 web-call not configured; no web call was created by the check. n8n through the public API: 77 workflows, five create-web-call nodes, all v3, no retired Retell path, draft equals published on all 29 active. Retell log: zero web calls on Oct 5. On the Dell: the CockpitMetrics job called POST /v2/list-calls every 30 minutes; moved to /v3/list-calls with a backup beside it; v3 gave the same three figures on the same window, and the 11:30 AM scheduled run wrote ok true. Not migrated: the scripted check call that tuning runs place. It still needs v2 and stops working Oct 18 unless rebuilt. Waiting on Shane's go: a few paid test calls. Phone lines and /try are not affected. Read only and unmoved: both phone lines, every Retell agent, every n8n workflow. Parts 2 to 4 (pricing pages, answers press, IndexNow) not run."
+    },
+    {
+      "ts": "2026-10-07T12:57:03-05:00",
+      "entry": "CC-REMINDERS v1.1 — WF-SETUP-CALL-REMINDERS 618G34AR1xQTr3Uf. (1) Timer bounded to 6 AM–7 PM Central at 11:59 AM CT: about 4,700 runs a month, down from 8,640; only the timer step changed. (2) First real send at 12:45:00 PM CT on that version: the 15-minute text and the owner ping, both delivered. (3) v1.1 live at 12:45:49 PM CT: calls booked on the aichauffeur.ai/book widget are a second AI Chauffeur source with the same three texts, quiet hours and never-twice table. Widget consent = GoHighLevel's booking text on record for that booking + not on do-not-disturb. New rule: the 9 AM text needs the booking to exist before 9 AM that day. Proven on the inactive staging copy first (three runs, would-be texts to the ZZ sink only, nobody texted); live differs from the tested build only by live mode, its table and the real text step; 16 of 19 steps untouched. No send is planned in the next 72 hours. The Oct 7 1:00 PM CT booking shows cancelled in Cal.com at 12:47:55 PM CT, after its texts; this run only reads Cal.com."
     }
   ]
 }
