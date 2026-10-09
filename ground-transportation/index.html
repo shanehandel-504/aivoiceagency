@@ -150,6 +150,13 @@
 <script src="/js/bridge.js?v=abf8701" defer></script>
 <link rel="stylesheet" href="/css/demo-pill.css?v=abf8701">
 <!-- /BRIDGE:HEAD -->
+<style>
+  /* PUSH TO CALL (2026-10-08) · the call-me form is gone. One tap dials AVA. */
+  .lcw-line{margin:0 0 16px;font-family:var(--font-display,'Space Grotesk',system-ui,sans-serif);font-size:18px;font-weight:600;line-height:1.3;color:var(--ink,#EEF0F4)}
+  a.lcw-call{display:flex;align-items:center;justify-content:center;box-sizing:border-box;text-decoration:none}
+  .lcw-num{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;font-family:var(--font-display,'Space Grotesk',system-ui,sans-serif);font-size:clamp(28px,7vw,36px);font-weight:600;line-height:1.1;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--ink,#EEF0F4);text-decoration:none}
+  .lcw-num:hover{color:var(--cyan-bright,#00E5FF)}
+</style>
 </head>
 <body>
 
@@ -198,37 +205,10 @@
     <p class="hero-sub">AVA answers ride calls, captures trip details, quotes from your rate rules, checks flight context, captures greeter instructions, and writes clean reservation records into your dispatch stack — <span class="accent">before the caller hangs up.</span></p>
     <div class="hero-founder-line">// 17 years in limo operations · we know what your phones sound like</div>
 
-    <div class="live-call-widget" data-live-call-widget data-role-set="chauffeur" id="live-call">
-      <div class="lcw-header">
-        <div class="lcw-label lcw-label--live"><span class="lcw-live-dot" aria-hidden="true"></span>// LIVE DISPATCH DEMO</div>
-        <div class="lcw-status" data-lcw-status>Pick the desk. Drop your cell. AVA calls like a real reservation agent.</div>
-      </div>
-      <div class="lcw-chips" role="radiogroup" aria-label="Pick the dispatch role">
-        <button type="button" class="lcw-chip active" data-role="Dispatcher" role="radio" aria-checked="true">Dispatcher</button>
-        <button type="button" class="lcw-chip" data-role="Reservation Agent" role="radio" aria-checked="false">Reservation Agent</button>
-        <button type="button" class="lcw-chip" data-role="Quote & Rate Desk" role="radio" aria-checked="false">Quote &amp; Rate Desk</button>
-        <button type="button" class="lcw-chip" data-role="Flight-Status Concierge" role="radio" aria-checked="false">Flight-Status</button>
-        <button type="button" class="lcw-chip" data-role="After-Hours Answering" role="radio" aria-checked="false">After-Hours</button>
-        <button type="button" class="lcw-chip" data-role="Corporate Account Desk" role="radio" aria-checked="false">Corporate Account</button>
-      </div>
-      <div class="lcw-inputs">
-        <input type="text" class="lcw-input" data-lcw-name placeholder="First name" autocomplete="given-name" maxlength="60">
-        <input type="tel" class="lcw-input" data-lcw-cell placeholder="Cell (e.g. +1 414 555 0100)" autocomplete="tel" inputmode="tel" maxlength="20">
-      </div>
-      <label class="ava-consent">
-        <input
-          type="checkbox"
-          id="tcpa_consent"
-          name="tcpa_consent"
-          required
-          value="true"
-          data-lcw-consent>
-        <span>I consent to receive an automated demonstration call and follow-up calls and texts from AI Voice Agency at the number provided. Consent is not a condition of purchase. Message and data rates may apply. Reply STOP at any time.</span>
-      </label>
-      <button type="button" class="lcw-submit cta-primary circulant-ring" data-lcw-submit aria-label="Get a live dispatch demo call">
-        <span class="lcw-submit-text">→ Get a Live Dispatch Call</span>
-      </button>
-      <div class="lcw-meta" data-lcw-meta>// Demo mode — real call wiring lands next push.</div>
+    <div class="live-call-widget" id="live-call">
+      <p class="lcw-line">Hear AVA answer. Call from your phone.</p>
+      <a class="lcw-submit cta-primary circulant-ring lcw-call" href="tel:+14142408930" data-event="tel_tap_ground_transportation">Call AVA</a>
+      <a class="lcw-num" href="tel:+14142408930" data-event="tel_tap_ground_transportation_number" aria-label="Call 414-240-8930">414-240-8930</a>
     </div>
   </div>
   <aside class="hero-meta">
@@ -493,9 +473,9 @@
   <p class="contact-sub">The next ride should be captured before your competitor answers.</p>
   <div class="contact-grid">
     <div class="contact-block">
-      <div class="contact-block-label">// Live dispatch demo</div>
-      <p class="contact-text">Test the reservation agent. AVA calls your phone like a real dispatcher and walks the intake — use a real pickup, airport, vehicle type, and a messy change mid-call. That's the demo.</p>
-      <a href="#live-call" class="contact-cta-btn cta-primary">Run the demo →</a>
+      <div class="contact-block-label">// Live line</div>
+      <p class="contact-text">Hear AVA answer. Call from your phone and talk to AVA like a customer would.</p>
+      <a href="tel:+14142408930" class="contact-cta-btn cta-primary" data-event="tel_tap_ground_transportation_contact">Call AVA →</a>
       <div class="system-status">
         <span class="status-dot" aria-hidden="true"></span>
         <span id="status-badge" class="status-text">// SYSTEM ONLINE — WIDGET LIVE</span>
@@ -628,7 +608,7 @@
 </div>
 <!-- /BRIDGE:CALLBAR -->
 
-<script src="/site.js?v=abf8701" defer></script>
+<script src="/site.js?v=bacf4549" defer></script>
 
 <div class="circulant-pulse" aria-hidden="true"></div>
 

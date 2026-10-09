@@ -1,50 +1,38 @@
 <!DOCTYPE html>
 <!--
   ============================================================================
-  /live  ·  HEAR AVA LIVE  ·  RUN 1 (2026-07-22)
+  /live  ·  HEAR AVA LIVE  ·  push to call (2026-10-08)
   ----------------------------------------------------------------------------
-  The live test-drive page. Visitor enters their business -> n8n LIVE INTAKE v1
-  texts them the READY gate -> they reply READY -> AVA calls them back in
-  seconds, personalized from their own website.
+  Owner's ruling, Oct 8 2026: no public form and no call placed by us. This
+  page used to take a business name and a cell, text a READY gate, and have AVA
+  call back. It is now one tap that dials 414-240-8930 from the visitor's own
+  phone, with the number shown for a visitor at a desk.
 
-  DESIGN: CIRCULANT-X (CLAUDE.md § 2). This is a NEW surface, so it ships the X
-  tokens, not the legacy lander values:
-    void #0A0A0F · panel #12121A · line #23232E · text #EEF0F4 · muted #7E8299
-    accent #00D4FF · Booked-Green #2EE6A8 · Miss-Red #FF3B4E
-  § 3 constraints honored: flat (no shadow / no elevation), border-radius 0,
-  section rhythm 96px desktop / 48px mobile, 4px spacing scale, max 2 accents
-  per section, focus rings intact, Space Grotesk ONLY (no second family).
-
-  TRUTH GATE — every promise on this page is true at ship time:
-    · "your phone rings in seconds"  -> only AFTER they reply READY (gate is
-      stated in the hero sub, the steps, and the success card). Never implied
-      as an unprompted call.
-    · "45 seconds"                   -> describes the form, not a call SLA.
-    · "No signup · No card"          -> true; nothing here takes payment.
-    · "$497/mo to start"             -> CLAUDE.md pricing anchor.
-  No stat appears here without a source. No ranking or outcome is promised.
+  DESIGN: CIRCULANT-X (CLAUDE.md § 2). void #0A0A0F · line #23232E ·
+  text #EEF0F4 · muted #7E8299 · accent #00D4FF. Flat, border-radius 0,
+  Space Grotesk only, focus rings intact. One accent on the page: the button.
 
   CHROME: cache-armor-only (registered in tools/stamp.py VERSION_ONLY). It
   carries its own slim header/footer by design and must NOT receive the shared
-  bridge NAV/FOOTER/CALLBAR blocks -- a conversion page keeps one exit.
+  bridge NAV/FOOTER/CALLBAR blocks.
   ============================================================================
 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear AVA Live — a real AI call, using your real website | AI Voice Agency</title>
-<meta name="description" content="Type your business in. Reply READY to one text and AVA calls your phone in seconds — answering the way it would answer your customers, using your real website. No signup, no card.">
-<meta property="og:title" content="Hear AVA Live — a real AI call, using your real website">
-<meta property="og:description" content="Type your business in. Reply READY to one text and AVA calls your phone in seconds, using your real website.">
+<title>Hear AVA Live: Call 414-240-8930 | AI Voice Agency</title>
+<meta name="description" content="Hear AVA answer. Call 414-240-8930 from your phone and talk to AVA like a customer would.">
+<meta property="og:title" content="Hear AVA Live: Call 414-240-8930">
+<meta property="og:description" content="Hear AVA answer. Call 414-240-8930 from your phone and talk to AVA like a customer would.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://aivoiceagency.ai/live">
 <meta property="og:image" content="https://aivoiceagency.ai/assets/og-home.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Hear AVA Live — a real AI call, using your real website">
-<meta name="twitter:description" content="Type your business in. Reply READY and AVA calls you in seconds.">
+<meta name="twitter:title" content="Hear AVA Live: Call 414-240-8930">
+<meta name="twitter:description" content="Hear AVA answer. Call 414-240-8930 from your phone.">
 <meta name="twitter:image" content="https://aivoiceagency.ai/assets/og-home.png">
 <meta name="theme-color" content="#0A0A0F">
 <link rel="canonical" href="https://aivoiceagency.ai/live">
@@ -52,10 +40,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
-<!-- RUN 3.5 · this page WAS standalone. It now links the global stylesheet so the
-     GLASS-X recipe, the button physics and the self-hosted mono reach it. It loads
-     BEFORE this page's own <style>, so every local token below still wins. -->
-<link rel="stylesheet" href="/assets/circulant.css?v=abf8701">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -92,69 +76,44 @@
       "inLanguage": "en-US"
     },
     {
-      "@type": "Service",
-      "@id": "https://aivoiceagency.ai/live#ava-live-test",
-      "name": "Hear AVA live.",
+      "@type": "WebPage",
+      "@id": "https://aivoiceagency.ai/live#webpage",
+      "name": "Hear AVA live",
       "url": "https://aivoiceagency.ai/live",
-      "description": "Type your business in. Your phone rings in seconds. AVA answers it the way it answers your customers — using your real website.",
-      "provider": {
-        "@id": "https://aivoiceagency.ai/#organization"
+      "description": "Hear AVA answer. Call 414-240-8930 from your phone and talk to AVA like a customer would.",
+      "isPartOf": {
+        "@id": "https://aivoiceagency.ai/#website"
       },
-      "offers": {
-        "@type": "Offer",
-        "price": "497",
-        "priceCurrency": "USD"
+      "about": {
+        "@id": "https://aivoiceagency.ai/#organization"
       }
-    },
-    {
-      "@type": "FAQPage",
-      "@id": "https://aivoiceagency.ai/live#faq",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What does AVA cost?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "$497 a month to start — hear it first."
-          }
-        }
-      ]
     }
   ]
 }
 </script>
-<script src="/js/config.js?v=abf8701"></script>
 <script src="/js/tracking.js?v=7cd8529" async></script>
 <style>
   /* ---------------------------------------------------------- TOKENS ---- */
   :root{
     --void:#0A0A0F;
-    --panel:#12121A;
     --line:#23232E;
     --text:#EEF0F4;
     --muted:#7E8299;
     --cyan:#00D4FF;
-    --green:#2EE6A8;
-    --red:#FF3B4E;
-    /* RUN 3 · FINAL SKIN additions. Declared locally and kept as the source of
-       truth for this page (RUN 3.5 added the circulant.css link above, but these
-       local values load after it and deliberately still win).
-       CYAN inspect · GREEN advance · AMBER cost-of-miss · RED the-miss.
-       Text on any solid red fill = --canvas (#EEF0F4 on red is 3.07:1). */
-    --canvas:#0A0A0F;
-    --amber:#FFB020;     /* 10.80:1 on canvas ✓ */
-    --neutral:#8A93A6;   /*  6.40:1 on canvas ✓ */
-    --body-dim:#B7BFCE;  /* 10.68:1 on canvas ✓ */
-    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
     /* 4px spacing scale — nothing lands off it */
-    --s1:4px;  --s2:8px;  --s3:12px; --s4:16px;
-    --s6:24px; --s8:32px; --s12:48px; --s24:96px;
+    --s2:8px; --s4:16px; --s6:24px; --s8:32px; --s12:48px; --s24:96px;
     --wrap:1280px;
     --col:680px;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  html{-webkit-text-size-adjust:100%;}
+  /* One screen: the header on top, the footer at the bottom, and the call
+     block in the middle of whatever height is left. */
   body{
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
     background:var(--void);
     color:var(--text);
     font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;
@@ -167,39 +126,13 @@
   a{color:var(--cyan);text-decoration:none;}
   a:hover{text-decoration:underline;}
   /* Focus rings are never removed (§ 3). */
-  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
-    outline:2px solid var(--cyan);
-    outline-offset:3px;
-  }
-  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--s6);}
+  a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;}
+  .wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 var(--s6);}
   .col{max-width:var(--col);}
-  .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
-
-  /* RUN 3: de-glyphed. The block-glyph kicker marker encoded nothing — a decoration
-     that read as a rendering artifact on the phones this page is built for. */
-  .kicker{
-    font-family:var(--mono);
-    font-size:12px;
-    font-weight:600;
-    letter-spacing:.22em;
-    text-transform:uppercase;
-    color:var(--muted);
-  }
 
   /* ---------------------------------------------------------- HEADER ---- */
-  .lhead{
-    border-bottom:1px solid var(--line);
-    background:var(--void);
-  }
-  .lhead-in{
-    max-width:var(--wrap);
-    margin:0 auto;
-    padding:var(--s4) var(--s6);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:var(--s4);
-  }
+  .lhead{border-bottom:1px solid var(--line);background:var(--void);}
+  .lhead-in{max-width:var(--wrap);margin:0 auto;padding:var(--s4) var(--s6);display:flex;align-items:center;}
   .lbrand{
     color:var(--text);
     font-weight:700;
@@ -209,430 +142,62 @@
     display:inline-flex;
     align-items:center;
     gap:var(--s2);
+    min-height:44px;
   }
   .lbrand:hover{text-decoration:none;color:var(--cyan);}
-  /* Standalone links carry a 44px tap row (Appendix A · touch). Inline links
-     inside a sentence are exempt and keep their natural line box. */
-  .lbrand{min-height:44px;}
   .ldot{width:8px;height:8px;background:var(--cyan);display:inline-block;}
-  .lhead-tel{
-    font-weight:600;
-    font-size:14px;
-    letter-spacing:.02em;
-    /* 44px min touch target */
-    min-height:44px;
-    display:inline-flex;
-    align-items:center;
-    padding:0 var(--s2);
-  }
 
-  /* ------------------------------------------------------------ HERO ---- */
-  .hero{padding:var(--s12) 0 var(--s12);}
-  .hero h1{
-    font-size:clamp(40px,11vw,76px);
+  /* ------------------------------------------------------------ CALL ---- */
+  main{flex:1;display:flex;align-items:center;}
+  .call{width:100%;padding:var(--s12) 0;}
+  /* Two sentences, two lines, at every width. The break is the markup's. */
+  .call h1{
+    font-size:clamp(28px,7.8vw,68px);
     font-weight:700;
-    letter-spacing:-.035em;
-    line-height:.96;
-    margin:var(--s3) 0 0;
+    letter-spacing:-.03em;
+    line-height:1.04;
   }
-  .hero h1 .live{color:var(--cyan);}
-  .hero p.sub{
-    color:var(--muted);
-    font-size:clamp(16px,2.2vw,18px);
-    margin:var(--s6) 0 var(--s8);
-    max-width:34em;
-  }
-  .hero p.sub b{color:var(--text);font-weight:600;}
-
-  .btn{
+  .call h1 span{display:block;}
+  .call-dial{margin-top:var(--s8);display:flex;flex-direction:column;align-items:flex-start;gap:var(--s6);}
+  /* The one accent on the page. Text on the cyan fill is the void: 11.16:1. */
+  .btn-call{
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    gap:var(--s2);
-    min-height:52px;
-    padding:var(--s4) var(--s6);
+    width:100%;
+    max-width:420px;
+    min-height:60px;
+    padding:var(--s4) var(--s8);
+    background:var(--cyan);
+    color:var(--void);
+    border:1px solid var(--cyan);
+    border-radius:0;
     font-family:inherit;
-    font-size:16px;
+    font-size:20px;
     font-weight:700;
     letter-spacing:.01em;
-    border:1px solid transparent;
-    border-radius:0;
-    cursor:pointer;
-    transition:background .18s ease,border-color .18s ease,color .18s ease;
+    transition:background .18s ease,border-color .18s ease;
   }
-  .btn:hover{text-decoration:none;}
-  /* RUN 3: "Run my live test" is the ONE solid green on this page — it is the
-     only action here that advances the sale. Text on the green fill is
-     --canvas (12.23:1); everything else on the page is quiet or cyan. */
-  .btn-primary{background:var(--green);color:var(--canvas);border-color:var(--green);}
-  .btn-primary:hover{background:#4FF0BC;border-color:#4FF0BC;color:var(--canvas);}
-  .btn-ghost{background:transparent;border-color:var(--line);color:var(--text);}
-  .btn-ghost:hover{border-color:var(--green);color:var(--text);}
-  .btn-block{width:100%;}
-
-  /* ------------------------------------------- LIVING WAVEFORM (idle) ----
-     RUN 3 · commit 2. /live is standalone (no backstage.css), so the idle
-     sine is declared here. It is the open line: 2px cyan, breathing, no
-     player attached. Motion is background-position + opacity only — never
-     width/height — behind the glow gate, and reduced-motion stills it. */
-  .ava-wave{
-    position:relative;
-    height:34px;
-    margin:var(--s6) 0 var(--s4);
-    overflow:hidden;
-  }
-  .ava-wave-idle{
-    position:absolute; inset:0; pointer-events:none;
-    background-repeat:repeat-x; background-position:0 50%; background-size:112px 34px;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='34'%3E%3Cpath d='M0 17 C 14 3, 42 3, 56 17 C 70 31, 98 31, 112 17' fill='none' stroke='%2300D4FF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-    opacity:.5;
-  }
-  body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle,
-  body.glow-ready .ava-wave:not([data-wave-state]) .ava-wave-idle{
-    animation:ava-wave-drift 7s linear infinite, ava-wave-breathe 3.4s ease-in-out infinite;
-  }
-  @keyframes ava-wave-drift{ to{ background-position:112px 50% } }
-  @keyframes ava-wave-breathe{ 0%,100%{ opacity:.34 } 50%{ opacity:.62 } }
-  @media(prefers-reduced-motion:reduce){
-    .ava-wave .ava-wave-idle{ animation:none!important; opacity:.5 }
-  }
-
-  .trust{
-    display:flex;
-    flex-wrap:wrap;
-    gap:var(--s3) var(--s6);
-    margin-top:var(--s8);
-    padding-top:var(--s6);
-    border-top:1px solid var(--line);
-    color:var(--muted);
-    font-size:14px;
-  }
-  .trust span{display:inline-flex;align-items:center;gap:var(--s2);}
-  .trust span::before{
-    content:"";
-    width:6px;height:6px;
-    background:var(--cyan);
-    flex:0 0 auto;
-  }
-
-  /* --------------------------------------------------------- SECTIONS --- */
-  section{padding:var(--s12) 0;}
-  .sec-head h2{
-    font-size:clamp(26px,5vw,40px);
-    font-weight:700;
-    letter-spacing:-.025em;
-    line-height:1.12;
-    margin-top:var(--s3);
-  }
-  .sec-head p{color:var(--muted);margin-top:var(--s4);max-width:36em;}
-  .band{border-top:1px solid var(--line);}
-
-  /* ------------------------------------------------------------ FORM ---- */
-  .form-card{
-    background:var(--panel);
-    border:1px solid var(--line);
-    padding:var(--s8) var(--s6);
-    margin-top:var(--s8);
-  }
-  .field{margin-bottom:var(--s6);}
-  .field:last-of-type{margin-bottom:0;}
-  /* Visible labels always (§ 3 bans placeholder-only labels). */
-  .field label.lab{
-    display:block;
-    font-size:14px;
-    font-weight:600;
-    letter-spacing:.02em;
-    margin-bottom:var(--s2);
-    color:var(--text);
-  }
-  .field .help{
-    display:block;
-    font-size:13px;
-    color:var(--muted);
-    margin-bottom:var(--s2);
-  }
-  .field input[type=text],
-  .field input[type=url],
-  .field input[type=tel],
-  .field textarea{
-    width:100%;
-    background:var(--void);
-    border:1px solid var(--line);
-    border-radius:0;
-    color:var(--text);
-    font-family:inherit;
-    font-size:16px; /* 16px prevents iOS zoom-on-focus */
-    line-height:1.5;
-    padding:var(--s3) var(--s4);
-    min-height:48px;
-    transition:border-color .18s ease;
-  }
-  .field textarea{min-height:96px;resize:vertical;}
-  /* ---- RUN 3 · FIELD STATE LANGUAGE ------------------------------------
-     NEUTRAL at rest -> CYAN on focus (inspect) -> RED on validation error
-     (the miss) -> GREEN on accepted (advance). Each state is carried by the
-     border, so the field never moves and the form never reflows. ---- */
-  .field input:hover,.field textarea:hover{border-color:#3A3A48;}
-  .field input:focus,.field textarea:focus{border-color:var(--cyan);}
-  .field input:disabled{
-    opacity:.45;
-    cursor:not-allowed;
-  }
-  /* Errors sit next to their field, never only at the top (Appendix A). */
-  .err{
-    display:none;
-    color:var(--red);
-    font-size:13px;
-    font-weight:600;
-    margin-top:var(--s2);
-  }
-  .field.bad input,.field.bad textarea{border-color:var(--red);}
-  .field.bad .err{display:block;}
-  /* accepted — a 2px green edge and a green tick. Never a fill: a solid green
-     field would read as a CTA and steal the page's one green. */
-  .field.ok input,.field.ok textarea{border-color:var(--green);}
-  .field.ok{position:relative;}
-  .field.ok label.lab::after{
-    content:"✓";
-    color:var(--green);
-    font-weight:700;
-    margin-left:var(--s2);
-  }
-  /* consent + helper text are neutral micro-labels — no competing badges */
-  .field .help,.check .lab-in{color:var(--neutral);}
-
-  .check{
-    display:flex;
-    align-items:flex-start;
-    gap:var(--s3);
-    cursor:pointer;
-    /* 44px min touch target on the whole row */
+  .btn-call:hover{background:#5CE3FF;border-color:#5CE3FF;text-decoration:none;}
+  /* The number is a link too: on a phone it dials, at a desk it is the thing
+     to read out. Space Grotesk with tabular figures (§ 2 has no second face). */
+  .call-num{
+    display:inline-flex;
+    align-items:center;
     min-height:44px;
-    padding:var(--s1) 0;
-  }
-  .check input[type=checkbox]{
-    appearance:none;-webkit-appearance:none;
-    font-family:inherit; /* UA default is Arial — keep the page single-family */
-    flex:0 0 auto;
-    width:22px;height:22px;
-    margin-top:2px;
-    background:var(--void);
-    border:1px solid var(--line);
-    border-radius:0;
-    cursor:pointer;
-    position:relative;
-    transition:border-color .18s ease,background .18s ease;
-  }
-  .check input[type=checkbox]:hover{border-color:#3A3A48;}
-  .check input[type=checkbox]:checked{background:var(--cyan);border-color:var(--cyan);}
-  .check input[type=checkbox]:checked::after{
-    content:"";
-    position:absolute;
-    left:7px;top:3px;
-    width:5px;height:11px;
-    border:solid #04161C;
-    border-width:0 2px 2px 0;
-    transform:rotate(45deg);
-  }
-  .check .txt{font-size:14px;line-height:1.5;color:var(--muted);}
-  .check .txt b{color:var(--text);font-weight:600;}
-  .consent{
-    margin-top:var(--s6);
-    padding-top:var(--s6);
-    border-top:1px solid var(--line);
-  }
-  .consent.bad .check input[type=checkbox]{border-color:var(--red);}
-  .consent .err{margin-top:var(--s1);}
-
-  /* Honeypot — off-screen, never focusable, invisible to real users. */
-  .hp{position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;}
-
-  .turnstile-slot{margin-top:var(--s6);}
-  .submit-row{margin-top:var(--s8);}
-  .form-foot{
-    margin-top:var(--s4);
-    font-size:13px;
-    color:var(--muted);
-    line-height:1.6;
-  }
-
-  /* ------------------------------------------- TERMINAL THEATER (result) */
-  .result{display:none;}
-  .result.on{display:block;}
-  .form-wrap.off{display:none;}
-
-  .term{
-    background:var(--void);
-    border:1px solid var(--line);
-    padding:var(--s6);
-    font-size:14px;
+    color:var(--text);
+    font-size:clamp(30px,8vw,48px);
     font-weight:600;
-    letter-spacing:.06em;
-    text-transform:uppercase;
-    line-height:2;
+    letter-spacing:.01em;
+    line-height:1.1;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+    user-select:all;
   }
-  .term .row{
-    display:block;
-    color:var(--muted);
-    opacity:0;
-    transition:opacity .2s ease;
-  }
-  .term .row.on{opacity:1;}
-  .term .row.done{color:var(--text);}
-  .term .row.done .car{display:none;}
-  .term .row .car{
-    display:inline-block;
-    width:9px;
-    height:1em;
-    background:var(--cyan);
-    vertical-align:-2px;
-    margin-left:var(--s1);
-    animation:blink 1s step-end infinite;
-  }
-  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
-  .term .row.done::before{content:"";}
-  .term .ok{color:var(--green);}
+  .call-num:hover{color:var(--cyan);text-decoration:none;}
 
-  .card-note{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-left:2px solid var(--green);
-    padding:var(--s6);
-    margin-top:var(--s6);
-  }
-  .card-note.warn{border-left-color:var(--red);}
-
-  /* ---- RUN 3 · PENDING STATE ------------------------------------------
-     After submit the text is out but nothing has happened yet. That is a
-     PENDING state, so it is AMBER — not green (nothing has advanced) and
-     not red (nothing has been missed). The card's left edge turns amber
-     until the visitor does their half of it. ---- */
-  .card-note{border-left-color:var(--amber);}
-  .pending{
-    display:flex; align-items:center; gap:var(--s2);
-    font-family:var(--mono);
-    font-size:12px; letter-spacing:.14em; font-weight:700;
-    color:var(--amber);
-    margin-top:var(--s4);
-  }
-  .pending .dot{
-    width:7px; height:7px; border-radius:50%;
-    background:var(--amber); flex:none;
-    animation:pend 1.8s ease-in-out infinite;
-  }
-  @keyframes pend{0%,100%{opacity:.45}50%{opacity:1}}
-  @media(prefers-reduced-motion:reduce){ .pending .dot{animation:none;opacity:1} }
-
-  /* ---- receipt preview — the EXACT text they are about to look for, in
-     mono, so the phone in their hand matches the screen. ---- */
-  .receipt{
-    margin-top:var(--s4);
-    background:var(--void);
-    border:1px solid var(--line);
-    border-left:2px solid var(--neutral);
-    padding:var(--s4);
-    font-family:var(--mono);
-    font-size:13px;
-    line-height:1.65;
-    color:var(--body-dim);
-  }
-  .receipt .rc-head{
-    display:block;
-    font-size:10.5px; letter-spacing:.16em; font-weight:700;
-    color:var(--neutral);
-    margin-bottom:var(--s2);
-  }
-  .receipt b{color:var(--green);font-weight:700;}
-  .card-note h3{
-    font-size:clamp(20px,4vw,26px);
-    font-weight:700;
-    letter-spacing:-.02em;
-    line-height:1.2;
-  }
-  .card-note p{color:var(--muted);margin-top:var(--s3);}
-  .card-note p b{color:var(--text);font-weight:600;}
-  .card-note .reply{color:var(--green);font-weight:700;}
-  .card-note .row-cta{
-    display:flex;
-    flex-wrap:wrap;
-    gap:var(--s3);
-    margin-top:var(--s6);
-  }
-
-  /* ----------------------------------------------------------- STEPS ---- */
-  .steps{
-    margin-top:var(--s8);
-    border-top:1px solid var(--line);
-  }
-  .step{
-    display:flex;
-    gap:var(--s6);
-    padding:var(--s6) 0;
-    border-bottom:1px solid var(--line);
-    align-items:baseline;
-  }
-  /* Numbered markers are honest here — this IS an ordered sequence. */
-  .step .n{
-    flex:0 0 auto;
-    width:2ch;
-    font-size:14px;
-    font-weight:700;
-    color:var(--cyan);
-    letter-spacing:.06em;
-  }
-  .step .b h3{font-size:18px;font-weight:600;letter-spacing:-.01em;}
-  .step .b p{color:var(--muted);font-size:15px;margin-top:var(--s1);}
-
-  /* ------------------------------------------------------------- FAQ ---- */
-  .faq{margin-top:var(--s8);border-top:1px solid var(--line);}
-  .faq details{border-bottom:1px solid var(--line);}
-  .faq summary{
-    cursor:pointer;
-    list-style:none;
-    padding:var(--s6) var(--s8) var(--s6) 0;
-    font-size:17px;
-    font-weight:600;
-    letter-spacing:-.01em;
-    position:relative;
-    min-height:44px;
-  }
-  .faq summary::-webkit-details-marker{display:none;}
-  .faq summary::after{
-    content:"+";
-    position:absolute;
-    right:0;top:50%;
-    transform:translateY(-50%);
-    color:var(--cyan);
-    font-size:22px;
-    font-weight:400;
-    line-height:1;
-  }
-  .faq details[open] summary::after{content:"–";}
-  .faq .a{color:var(--muted);padding:0 0 var(--s6);max-width:40em;}
-  .faq .a b{color:var(--text);font-weight:600;}
-
-  /* ------------------------------------------------------- FOOTER CTA --- */
-  .endcard{
-    background:var(--panel);
-    border:1px solid var(--line);
-    padding:var(--s12) var(--s6);
-    margin-top:var(--s8);
-  }
-  .endcard h2{
-    font-size:clamp(24px,5vw,36px);
-    font-weight:700;
-    letter-spacing:-.025em;
-    line-height:1.14;
-    max-width:16em;
-  }
-  .endcard p{color:var(--muted);margin-top:var(--s4);max-width:34em;}
-  .endcard .row-cta{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s8);}
-
-  .lfoot{
-    border-top:1px solid var(--line);
-    padding:var(--s8) 0;
-    margin-top:var(--s12);
-  }
+  /* ---------------------------------------------------------- FOOTER ---- */
+  .lfoot{border-top:1px solid var(--line);padding:var(--s8) 0;}
   .lfoot-in{
     max-width:var(--wrap);
     margin:0 auto;
@@ -652,73 +217,13 @@
   /* ------------------------------------------------------- RESPONSIVE --- */
   @media(min-width:768px){
     .wrap,.lhead-in,.lfoot-in{padding-left:var(--s8);padding-right:var(--s8);}
-    .hero{padding:var(--s24) 0;}
-    section{padding:var(--s24) 0;}
-    .form-card,.endcard{padding:var(--s12);}
-    .lfoot{margin-top:var(--s24);}
+    .call{padding:var(--s24) 0;}
+    .call-dial{margin-top:var(--s12);}
   }
-  /* RUN 4.7 · DESKTOP RECLAIM (>=1280px only — mobile and tablet byte-untouched).
-     .col was pinned at 680px with NO auto margin, so on a 1440px screen it sat
-     hard left inside the 1280px wrap and left ~600px of dead canvas to its right.
-     The homepage's post-Run-3.5 answer to the same problem is a capped, CENTRED
-     container (max-width + margin:0 auto), but it is written inline on that
-     component and exposes no reusable token — so /live takes the same SHAPE
-     locally rather than importing a token that does not exist.
-     Widening is measure-safe: every prose block here is already capped in em
-     (.hero p.sub 34 · .sec-head p 36 · .faq .a 40 · .endcard p 34), so the wider
-     column cannot stretch the line length. .step .b p was the one uncapped
-     paragraph and is given a cap here so it cannot run past ~70 characters. */
-  @media(min-width:1280px){
-    :root{--col:960px;}
-    .col{margin-left:auto;margin-right:auto;}
-    .step .b p{max-width:44em;}
-  }
+  /* The block keeps the header's left edge at every width: the mark, the
+     line, the button, the number and the legal line share one axis. */
   @media(prefers-reduced-motion:reduce){
-    html{scroll-behavior:auto;}
-    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}
-  }
-
-  /* ============================================================
-     RUN 3.5 · GLOSS — the C1 recipe reaches /live.
-     Surfaces take GLASS-X; buttons take the physics (lift, inner
-     glow in their own colour, active press). Geometry is NOT
-     touched: this page's buttons are square by design (§ 3) and
-     they stay square — what ports is the physics, not the shape.
-     border-color is set only on the uniformly-bordered surfaces;
-     .card-note and .receipt carry semantic left hairlines
-     (red / amber / neutral) and are left alone.
-     ============================================================ */
-  .form-card,.term,.endcard{border-color:var(--gx-line);}
-  .form-card,.term,.endcard,.receipt,.card-note{
-    background:var(--gx-fill);
-    -webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));
-    box-shadow:var(--gx-edge);
-  }
-  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-    .form-card,.term,.endcard,.receipt,.card-note{background:var(--gx-solid);}
-  }
-  .btn{transition:transform .25s ease,box-shadow .25s ease,background .25s ease,
-       border-color .25s ease,color .25s ease;}
-  .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;}
-  .btn-primary{box-shadow:inset 0 1px 0 rgba(255,255,255,.25);}
-  /* the hover no longer swaps in a SECOND green (#4FF0BC was a second value in
-     the same hue slot) — the fill holds and the light moves inside it */
-  .btn-primary:hover{background:var(--green);border-color:var(--green);color:var(--canvas);
-    transform:translateY(-2px);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 0 26px rgba(216,255,240,.50);}
-  .btn-primary:active{transform:translateY(1px);
-    box-shadow:inset 0 2px 9px rgba(0,44,30,.34),inset 0 1px 0 rgba(255,255,255,.10);}
-  .btn-ghost{background:var(--gx-fill);border-color:rgba(255,255,255,.12);box-shadow:var(--gx-edge);
-    -webkit-backdrop-filter:blur(var(--gx-blur));backdrop-filter:blur(var(--gx-blur));}
-  .btn-ghost:hover{transform:translateY(-2px);border-color:var(--gx-line-hot);color:var(--text);
-    box-shadow:var(--gx-edge),inset 0 0 0 1px rgba(0,212,255,.20),inset 0 0 20px rgba(0,212,255,.10);}
-  .btn-ghost:active{transform:translateY(1px);box-shadow:inset 0 2px 9px rgba(0,0,0,.30);}
-  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-    .btn-ghost{background:var(--gx-solid);}
-  }
-  @media(prefers-reduced-motion:reduce){
-    .btn{transition:none;}
-    .btn:hover,.btn:active{transform:none;}
+    .btn-call{transition:none;}
   }
 </style>
 </head>
@@ -727,233 +232,21 @@
 <header class="lhead">
   <div class="lhead-in">
     <a class="lbrand" href="/"><span class="ldot" aria-hidden="true"></span>AI Voice Agency</a>
-    <a class="lhead-tel" href="tel:+14142408930" data-event="tel_tap_live_nav">414-240-8930</a>
   </div>
 </header>
 
 <main>
-
-  <!-- ============================== HERO ============================== -->
-  <section class="hero">
+  <section class="call">
     <div class="wrap">
       <div class="col">
-        <p class="kicker">The live test drive</p>
-        <h1>Hear AVA <span class="live">live.</span></h1>
-        <p class="sub">Type your business in. Your phone rings in seconds. AVA answers it the way it answers your customers — <b>using your real website.</b></p>
-        <!-- LIVING WAVEFORM · idle. This page has no player, so the sine stays in
-             its idle state: cyan, breathing, 2px — the open line, nothing on it
-             yet. Pure CSS, reduced-motion-safe, height reserved (0 CLS). -->
-        <div class="ava-wave" data-wave aria-hidden="true"><span class="ava-wave-idle"></span></div>
-        <a class="btn btn-primary" href="#live-intake" data-event="run_test_click_hero">&#9654;&nbsp; Run my live test</a>
-        <div class="trust">
-          <span>No signup</span>
-          <span>No card</span>
-          <span>45 seconds</span>
+        <h1><span>Hear AVA answer.</span> <span>Call from your phone.</span></h1>
+        <div class="call-dial">
+          <a class="btn-call" href="tel:+14142408930" data-event="tel_tap_live_hero">Call AVA</a>
+          <a class="call-num" href="tel:+14142408930" data-event="tel_tap_live_number" aria-label="Call 414-240-8930">414-240-8930</a>
         </div>
       </div>
     </div>
   </section>
-
-  <!-- ============================== FORM ============================== -->
-  <section class="band" id="live-intake">
-    <div class="wrap">
-      <div class="col">
-        <div class="sec-head">
-          <p class="kicker">Step one</p>
-          <h2>Tell AVA who you are.</h2>
-          <p>AVA reads your website before it calls, so the voice on the phone already knows your business.</p>
-        </div>
-
-        <!-- ---------- form ---------- -->
-        <div class="form-wrap" id="formWrap">
-          <form class="form-card" id="liveForm" novalidate>
-
-            <div class="field" id="f-name">
-              <label class="lab" for="firstName">First name</label>
-              <input type="text" id="firstName" name="firstName" autocomplete="given-name" maxlength="60" required>
-              <span class="err" id="e-name">Please add your first name.</span>
-            </div>
-
-            <div class="field" id="f-url">
-              <label class="lab" for="website">Your business website</label>
-              <span class="help">Paste the address people find you at — like acmeplumbing.com</span>
-              <input type="url" id="website" name="website" inputmode="url" autocomplete="url" maxlength="200" placeholder="acmeplumbing.com" required>
-              <span class="err" id="e-url">Add your website, or tick the box below.</span>
-            </div>
-
-            <div class="field">
-              <label class="check" for="noSite">
-                <input type="checkbox" id="noSite" name="noSite">
-                <span class="txt">I don't have a website</span>
-              </label>
-            </div>
-
-            <div class="field" id="f-svc" hidden>
-              <label class="lab" for="services">Your top 3 services</label>
-              <span class="help">One per line. This is what AVA will talk about.</span>
-              <textarea id="services" name="services" maxlength="400" placeholder="Drain cleaning&#10;Water heater repair&#10;Emergency burst pipes"></textarea>
-              <span class="err" id="e-svc">Add at least one service so AVA knows what to say.</span>
-            </div>
-
-            <div class="field" id="f-tel">
-              <label class="lab" for="phone">Your mobile number</label>
-              <span class="help">This is the phone AVA calls and texts.</span>
-              <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="414-240-8930" required>
-              <span class="err" id="e-tel">Enter a 10-digit US mobile number.</span>
-            </div>
-
-            <!-- Honeypot: bots fill it, humans never see it. -->
-            <div class="hp" aria-hidden="true">
-              <label for="company_website_2">Leave this field empty</label>
-              <input type="text" id="company_website_2" name="company_website_2" tabindex="-1" autocomplete="off">
-            </div>
-
-            <div class="consent" id="f-consent">
-              <label class="check" for="consent">
-                <input type="checkbox" id="consent" name="consent" required>
-                <span class="txt">I agree to receive a call and texts from AI Voice Agency's AI demo agent at the number above. Msg &amp; data rates may apply. Reply STOP anytime.</span>
-              </label>
-              <span class="err" id="e-consent">Please tick the box so AVA is allowed to call you.</span>
-            </div>
-
-            <!-- Turnstile mounts here when AVA_CONFIG.TURNSTILE_SITE_KEY is set.
-                 While the key is empty the honeypot above is the only bot gate. -->
-            <div class="turnstile-slot" id="turnstileSlot"></div>
-
-            <div class="submit-row">
-              <button class="btn btn-primary btn-block" type="submit" id="submitBtn" data-event="live_test_submit">&#9654;&nbsp; Run my live test</button>
-              <p class="form-foot">You'll get one text right away. AVA only calls after you reply <b>READY</b>.</p>
-            </div>
-          </form>
-        </div>
-
-        <!-- ---------- success / failure theater ---------- -->
-        <div class="result" id="result" role="status" aria-live="polite">
-          <div class="term" id="term">
-            <span class="row" id="r1">Scanning <span id="scanTarget">your site</span><span class="car"></span></span>
-            <span class="row" id="r2">Loading your agent<span class="car"></span></span>
-            <span class="row ok" id="r3">Check your texts</span>
-          </div>
-
-          <div class="card-note" id="okCard" hidden>
-            <h3>One text just landed.</h3>
-            <p>Reply <span class="reply">READY</span> and AVA calls you in 3 seconds — or call AVA right now: <a href="tel:+14142408930" data-event="tel_tap_live_success"><b>414-240-8930</b></a>.</p>
-
-            <!-- PENDING. The text is out; nothing has advanced yet. Amber, not
-                 green (nothing booked) and not red (nothing missed). -->
-            <p class="pending"><span class="dot" aria-hidden="true"></span>WAITING ON YOUR REPLY — TEXT “READY”</p>
-
-            <!-- RECEIPT PREVIEW. This is the message VERBATIM as the deployed
-                 n8n LIVE INTAKE v1 workflow sends it (automation/
-                 live-intake.workflow.json, the GHL SMS node) — so the screen
-                 and the phone in their hand say exactly the same thing. If the
-                 workflow copy changes, this block changes with it. -->
-            <div class="receipt">
-              <span class="rc-head">FROM 350-220-5305 — WHAT YOUR PHONE SAYS</span>
-              This is AVA at AI Voice Agency — your live test from aivoiceagency.ai is loaded.<br><br>
-              Reply <b>READY</b> to accept a call from our AI demo agent in 3 seconds. Or hear AVA right now: 414-240-8930.<br><br>
-              Msg &amp; data rates may apply. Reply STOP to opt out.
-            </div>
-
-            <div class="row-cta">
-              <a class="btn btn-primary" href="tel:+14142408930" data-event="tel_tap_live_card">&#9654;&nbsp; Call AVA now</a>
-              <a class="btn btn-ghost" href="/book" data-event="book_click_live_success">Book the AVA strategy call</a>
-            </div>
-          </div>
-
-          <div class="card-note warn" id="failCard" hidden>
-            <h3>That didn't go through.</h3>
-            <p>Nothing lost — try once more, or just call AVA and hear it right now.</p>
-            <div class="row-cta">
-              <button class="btn btn-primary" type="button" id="retryBtn">Try again</button>
-              <a class="btn btn-ghost" href="tel:+14142408930" data-event="tel_tap_live_fail">Call 414-240-8930</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================= STEPS ============================== -->
-  <section class="band">
-    <div class="wrap">
-      <div class="col">
-        <div class="sec-head">
-          <p class="kicker">How the test works</p>
-          <h2>Three steps. You stay in control.</h2>
-        </div>
-        <div class="steps">
-          <div class="step">
-            <span class="n">01</span>
-            <div class="b">
-              <h3>You text READY</h3>
-              <p>AVA never calls until you send that one word. No reply, no call.</p>
-            </div>
-          </div>
-          <div class="step">
-            <span class="n">02</span>
-            <div class="b">
-              <h3>AVA calls with your business loaded</h3>
-              <p>Your name, your city, your services — read off your own website before the phone rings.</p>
-            </div>
-          </div>
-          <div class="step">
-            <span class="n">03</span>
-            <div class="b">
-              <h3>Your setup link hits your texts</h3>
-              <p>After the call you get a text with the link to set your own line up.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================== FAQ =============================== -->
-  <section class="band">
-    <div class="wrap">
-      <div class="col">
-        <div class="sec-head">
-          <p class="kicker">Straight answers</p>
-          <h2>Before you hand over your number.</h2>
-        </div>
-        <div class="faq">
-          <details>
-            <summary>Is this a real AI on a real call?</summary>
-            <div class="a">Yes. AVA is an AI, and it is a real phone call to the number you type in. Ask AVA if it's an AI and it will tell you straight. Nothing on that call is pre-recorded.</div>
-          </details>
-          <details>
-            <summary>What happens to my info?</summary>
-            <div class="a">We use it to run your test call and to follow up with you. AVA reads the public pages of the website you enter so it knows your business. We do not sell your information. Reply <b>STOP</b> to any text and the messages end. See our <a href="/privacy">privacy policy</a> and <a href="/sms-policy.html">SMS policy</a>.</div>
-          </details>
-          <details>
-            <summary>What does AVA cost?</summary>
-            <div class="a"><b>$497 a month to start</b> — hear it first.</div>
-          </details>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- =========================== FOOTER CTA =========================== -->
-  <section class="band">
-    <div class="wrap">
-      <div class="col">
-        <div class="endcard">
-          <p class="kicker">When you're ready</p>
-          <h2>Heard enough? Set your own line up.</h2>
-          <p>Fifteen minutes, no pitch deck. We walk your calls and tell you what AVA would answer.</p>
-          <div class="row-cta">
-            <!-- RUN 3: quiet. "Run my live test" is this page's only solid green. -->
-            <a class="btn btn-ghost" href="/book" data-event="book_click_live_footer">Book the AVA strategy call</a>
-            <a class="btn btn-ghost" href="tel:+14142408930" data-event="tel_tap_live_footer">Or call 414-240-8930</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
 </main>
 
 <footer class="lfoot">
@@ -967,284 +260,6 @@
     </nav>
   </div>
 </footer>
-
-<script>
-(function () {
-  'use strict';
-
-  var CFG = (window.AVA_CONFIG || {});
-  var ENDPOINT = CFG.N8N_INTAKE_URL || '';
-
-  var form      = document.getElementById('liveForm');
-  var formWrap  = document.getElementById('formWrap');
-  var result    = document.getElementById('result');
-  var okCard    = document.getElementById('okCard');
-  var failCard  = document.getElementById('failCard');
-  var submitBtn = document.getElementById('submitBtn');
-  var retryBtn  = document.getElementById('retryBtn');
-
-  var elName = document.getElementById('firstName');
-  var elUrl  = document.getElementById('website');
-  var elNo   = document.getElementById('noSite');
-  var elSvc  = document.getElementById('services');
-  var elTel  = document.getElementById('phone');
-  var elCon  = document.getElementById('consent');
-  var elHp   = document.getElementById('company_website_2');
-
-  var fUrl = document.getElementById('f-url');
-  var fSvc = document.getElementById('f-svc');
-
-  /* --------------------------------------------------- anchor scroll ---- *
-   * Own handler. This page never loads site.js, which hijacks #anchor
-   * clicks globally and ignores scroll-margin-top. Keep it self-contained.  */
-  document.addEventListener('click', function (e) {
-    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
-    if (!a) return;
-    var id = a.getAttribute('href').slice(1);
-    var t = id && document.getElementById(id);
-    if (!t) return;
-    e.preventDefault();
-    t.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    var first = t.querySelector('input, textarea, button');
-    if (first) { setTimeout(function () { try { first.focus({ preventScroll: true }); } catch (x) {} }, 420); }
-  });
-
-  /* ------------------------------------------------- no-website toggle -- *
-   * Ticking the box disables the URL field and reveals the services box.   */
-  function syncNoSite() {
-    var off = elNo.checked;
-    elUrl.disabled = off;
-    elUrl.required = !off;
-    fUrl.hidden = off;
-    fSvc.hidden = !off;
-    elSvc.required = off;
-    if (off) { clearErr('f-url'); } else { clearErr('f-svc'); }
-  }
-  elNo.addEventListener('change', syncNoSite);
-  syncNoSite();
-
-  /* ------------------------------------------------------- validation --- */
-  /* RUN 3 state language: neutral at rest -> cyan on focus -> RED on error ->
-     GREEN on accepted. setErr/clearErr also clear the accepted flag so a field
-     can never show red and green at the same time. */
-  function setErr(id) { var n = document.getElementById(id); if (n) { n.classList.add('bad'); n.classList.remove('ok'); } }
-  function clearErr(id) { var n = document.getElementById(id); if (n) n.classList.remove('bad'); }
-  function setOk(id, on) {
-    var n = document.getElementById(id);
-    if (n) { n.classList.toggle('ok', !!on); if (on) n.classList.remove('bad'); }
-  }
-
-  function digits(s) { return String(s || '').replace(/\D+/g, ''); }
-
-  /* US mobile: 10 digits, or 11 starting with 1. Area code can't start 0/1. */
-  function validPhone(raw) {
-    var d = digits(raw);
-    if (d.length === 11 && d.charAt(0) === '1') { d = d.slice(1); }
-    if (d.length !== 10) return null;
-    if (d.charAt(0) === '0' || d.charAt(0) === '1') return null;
-    return '+1' + d;
-  }
-
-  /* Accepts "acmeplumbing.com" as readily as a full https:// URL. */
-  function normalizeUrl(raw) {
-    var v = String(raw || '').trim();
-    if (!v) return null;
-    if (!/^https?:\/\//i.test(v)) { v = 'https://' + v; }
-    try {
-      var u = new URL(v);
-      if (!/^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(u.hostname)) return null;
-      return u.href;
-    } catch (e) { return null; }
-  }
-
-  function hostOf(href) {
-    try { return new URL(href).hostname.replace(/^www\./i, ''); } catch (e) { return 'your site'; }
-  }
-
-  /* ---- RUN 3 · live ACCEPTED state ------------------------------------
-     A field turns green the moment it is genuinely valid, on blur and while
-     typing once it has passed. On blur only for the first pass, so nobody is
-     told they are wrong halfway through typing their own phone number. ---- */
-  function gradeName() { setOk('f-name', String(elName.value || '').trim().length >= 2); }
-  function gradeUrl()  { if (!elNo.checked) setOk('f-url', !!normalizeUrl(elUrl.value)); }
-  function gradeSvc()  { if (elNo.checked)  setOk('f-svc', String(elSvc.value || '').trim().length >= 3); }
-  function gradeTel()  { setOk('f-tel', !!validPhone(elTel.value)); }
-
-  [[elName, gradeName], [elUrl, gradeUrl], [elSvc, gradeSvc], [elTel, gradeTel]].forEach(function (pair) {
-    var el = pair[0], grade = pair[1];
-    if (!el) return;
-    el.addEventListener('blur', grade);
-    el.addEventListener('input', function () {
-      var f = el.closest('.field');
-      /* while typing, only ever UPGRADE to green or clear a red — never
-         introduce a new red mid-keystroke */
-      if (f && (f.classList.contains('ok') || f.classList.contains('bad'))) grade();
-    });
-  });
-  if (elCon) elCon.addEventListener('change', function () {
-    var f = document.getElementById('f-consent');
-    if (f && elCon.checked) f.classList.remove('bad');
-  });
-
-  /* ---------------------------------------------------------- theater --- */
-  var TERM_STEP = 900;
-  function reduceMotion() {
-    try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; }
-  }
-
-  function runTheater(target, done) {
-    document.getElementById('scanTarget').textContent = target;
-    var rows = ['r1', 'r2', 'r3'];
-    result.classList.add('on');
-
-    if (reduceMotion()) {
-      rows.forEach(function (id) {
-        var n = document.getElementById(id);
-        n.classList.add('on', 'done');
-      });
-      done();
-      return;
-    }
-    var i = 0;
-    (function next() {
-      if (i > 0) { document.getElementById(rows[i - 1]).classList.add('done'); }
-      if (i >= rows.length) { done(); return; }
-      document.getElementById(rows[i]).classList.add('on');
-      i++;
-      setTimeout(next, TERM_STEP);
-    })();
-  }
-
-  function showOk(target) {
-    formWrap.classList.add('off');
-    okCard.hidden = true;
-    failCard.hidden = true;
-    runTheater(target, function () { okCard.hidden = false; });
-  }
-
-  function showFail() {
-    formWrap.classList.add('off');
-    result.classList.add('on');
-    document.getElementById('term').style.display = 'none';
-    okCard.hidden = true;
-    failCard.hidden = false;
-  }
-
-  retryBtn.addEventListener('click', function () {
-    result.classList.remove('on');
-    document.getElementById('term').style.display = '';
-    ['r1', 'r2', 'r3'].forEach(function (id) {
-      document.getElementById(id).classList.remove('on', 'done');
-    });
-    formWrap.classList.remove('off');
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '&#9654;&nbsp; Run my live test';
-    elName.focus();
-  });
-
-  /* ----------------------------------------------------------- submit --- */
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    ['f-name', 'f-url', 'f-svc', 'f-tel'].forEach(clearErr);
-    document.getElementById('f-consent').classList.remove('bad');
-
-    var ok = true;
-    var firstBad = null;
-
-    var name = String(elName.value || '').trim();
-    if (name.length < 2) { setErr('f-name'); ok = false; firstBad = firstBad || elName; }
-
-    var url = null, svc = '';
-    if (elNo.checked) {
-      svc = String(elSvc.value || '').trim();
-      if (svc.length < 3) { setErr('f-svc'); ok = false; firstBad = firstBad || elSvc; }
-    } else {
-      url = normalizeUrl(elUrl.value);
-      if (!url) { setErr('f-url'); ok = false; firstBad = firstBad || elUrl; }
-    }
-
-    var tel = validPhone(elTel.value);
-    if (!tel) { setErr('f-tel'); ok = false; firstBad = firstBad || elTel; }
-
-    if (!elCon.checked) {
-      document.getElementById('f-consent').classList.add('bad');
-      ok = false; firstBad = firstBad || elCon;
-    }
-
-    if (!ok) { if (firstBad) { try { firstBad.focus(); } catch (x) {} } return; }
-
-    /* Honeypot tripped -> show the normal success theater, send nothing.
-       A bot gets no signal that it was caught. */
-    if (elHp && String(elHp.value || '').trim() !== '') {
-      showOk(url ? hostOf(url) : 'your services');
-      return;
-    }
-
-    var payload = {
-      first_name: name,
-      phone: tel,
-      website_url: url || '',
-      has_website: !elNo.checked,
-      services_text: svc,
-      consent: true,
-      consent_text: "I agree to receive a call and texts from AI Voice Agency's AI demo agent at the number above. Msg & data rates may apply. Reply STOP anytime.",
-      source: 'live_page',
-      page: '/live',
-      referrer: document.referrer || '',
-      user_agent: navigator.userAgent || '',
-      submitted_at: new Date().toISOString()
-    };
-
-    /* Turnstile token rides along when the widget is mounted. */
-    try {
-      var tsField = form.querySelector('[name="cf-turnstile-response"]');
-      if (tsField && tsField.value) { payload.turnstile_token = tsField.value; }
-    } catch (x) {}
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Loading your agent…';
-
-    if (!ENDPOINT) { showFail(); return; }
-
-    var timer = setTimeout(function () { /* network hang guard */ }, 0);
-    fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-      .then(function (r) { return r.ok ? r.json().catch(function () { return { ok: true }; }) : Promise.reject(r.status); })
-      .then(function (d) {
-        clearTimeout(timer);
-        if (d && d.ok === false) { showFail(); return; }
-        showOk(url ? hostOf(url) : 'your services');
-      })
-      .catch(function () { clearTimeout(timer); showFail(); });
-  });
-
-  /* --------------------------------------------------------- turnstile -- *
-   * Mounts only when a site key exists. No key -> honeypot carries the
-   * page and no third-party script is ever requested.                       */
-  (function mountTurnstile() {
-    var key = CFG.TURNSTILE_SITE_KEY;
-    if (!key) return;
-    var slot = document.getElementById('turnstileSlot');
-    var box = document.createElement('div');
-    box.className = 'cf-turnstile';
-    box.setAttribute('data-sitekey', key);
-    box.setAttribute('data-theme', 'dark');
-    slot.appendChild(box);
-    var s = document.createElement('script');
-    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-    s.async = true; s.defer = true;
-    document.head.appendChild(s);
-  })();
-})();
-</script>
-
-<!-- RUN 3 · commit 2 — status rail + living waveform (this page uses the idle
-     waveform only; the module no-ops on components it does not find). -->
-<script src="/js/ava-signal.js?v=abf8701" defer></script>
 
 </body>
 </html>

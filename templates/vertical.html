@@ -68,6 +68,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/circulant.css">
 <link rel="stylesheet" href="/styles.css">
+<style>
+  /* PUSH TO CALL (2026-10-08) · the call-me form is gone. One tap dials AVA. */
+  .lcw-line{margin:0 0 16px;font-family:var(--font-display,'Space Grotesk',system-ui,sans-serif);font-size:18px;font-weight:600;line-height:1.3;color:var(--ink,#EEF0F4)}
+  a.lcw-call{display:flex;align-items:center;justify-content:center;box-sizing:border-box;text-decoration:none}
+  .lcw-num{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;font-family:var(--font-display,'Space Grotesk',system-ui,sans-serif);font-size:clamp(28px,7vw,36px);font-weight:600;line-height:1.1;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--ink,#EEF0F4);text-decoration:none}
+  .lcw-num:hover{color:var(--cyan-bright,#00E5FF)}
+</style>
 </head>
 <body>
 
@@ -95,54 +102,12 @@
     <p class="hero-sub">{{HERO_SUB}}</p>
     <div class="hero-founder-line">// {{FOUNDER_LINE}}</div>
 
-    <!-- LIVE-CALL WIDGET — green live dot + REQUIRED TCPA consent (approved wording).
-         Swap the .lcw-chip roles for this industry; keep all data-* attributes so
-         /site.js wires the demo call. -->
-    <div class="live-call-widget" data-live-call-widget data-role-set="ava" id="live-call">
-      <div class="lcw-header">
-        <div class="lcw-label lcw-label--live"><span class="lcw-live-dot" aria-hidden="true"></span>// LIVE CALL</div>
-        <div class="lcw-status" data-lcw-status>{{WIDGET_PROMPT — e.g. Pick the role. Enter your cell. AVA calls your phone.}}</div>
-      </div>
-      <div class="lcw-chips" role="radiogroup" aria-label="Pick the role">
-        <button type="button" class="lcw-chip active" data-role="{{ROLE_1}}" role="radio" aria-checked="true">{{ROLE_1}}</button>
-        <button type="button" class="lcw-chip" data-role="{{ROLE_2}}" role="radio" aria-checked="false">{{ROLE_2}}</button>
-        <button type="button" class="lcw-chip" data-role="{{ROLE_3}}" role="radio" aria-checked="false">{{ROLE_3}}</button>
-        <button type="button" class="lcw-chip" data-role="{{ROLE_4}}" role="radio" aria-checked="false">{{ROLE_4}}</button>
-        <button type="button" class="lcw-chip" data-role="{{ROLE_5}}" role="radio" aria-checked="false">{{ROLE_5}}</button>
-      </div>
-      <div class="lcw-inputs">
-        <input type="text" class="lcw-input" data-lcw-name placeholder="First name" autocomplete="given-name" maxlength="60">
-        <input type="tel" class="lcw-input" data-lcw-cell placeholder="Cell (e.g. +1 414 555 0100)" autocomplete="tel" inputmode="tel" maxlength="20">
-      </div>
-      <div class="lcw-inputs">
-        <select class="lcw-input lcw-select" data-lcw-biz required aria-label="Business type">
-          <option value="" selected disabled>Business type *</option>
-          <option value="HVAC">HVAC</option>
-          <option value="Plumbing">Plumbing</option>
-          <option value="Electrical">Electrical</option>
-          <option value="Dental">Dental</option>
-          <option value="Restaurant">Restaurant</option>
-          <option value="Salon/Spa">Salon/Spa</option>
-          <option value="Car service/Transportation">Car service/Transportation</option>
-          <option value="Contractor">Contractor</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="email" class="lcw-input" data-lcw-email aria-label="Email" placeholder="Email (for your confirmation)" autocomplete="email" maxlength="120">
-      </div>
-      <label class="ava-consent">
-        <input
-          type="checkbox"
-          id="tcpa_consent"
-          name="tcpa_consent"
-          required
-          value="true"
-          data-lcw-consent>
-        <span>I consent to receive an automated demonstration call and follow-up calls and texts from AI Voice Agency at the number provided. Consent is not a condition of purchase. Message and data rates may apply. Reply STOP at any time.</span>
-      </label>
-      <button type="button" class="lcw-submit cta-primary circulant-ring" data-lcw-submit aria-label="Get a live AVA call">
-        <span class="lcw-submit-text">→ Get a Live AVA Call</span>
-      </button>
-      <div class="lcw-meta" data-lcw-meta>// AVA calls the number you enter. Standard call rates apply.</div>
+    <!-- PUSH TO CALL (2026-10-08) — no form on any page. One tap dials AVA from
+         the visitor's own phone. Give the data-event a name for this page. -->
+    <div class="live-call-widget" id="live-call">
+      <p class="lcw-line">Hear AVA answer. Call from your phone.</p>
+      <a class="lcw-submit cta-primary circulant-ring lcw-call" href="tel:+14142408930" data-event="tel_tap_vertical">Call AVA</a>
+      <a class="lcw-num" href="tel:+14142408930" data-event="tel_tap_vertical_number" aria-label="Call 414-240-8930">414-240-8930</a>
     </div>
     <!-- gold=money: the See-pricing link is gold via .see-pricing-link -->
     <a href="/overview" class="see-pricing-link">See pricing <span class="sp-arrow" aria-hidden="true">&rarr;</span></a>
@@ -257,7 +222,7 @@
   <a href="tel:+14142408930">&rarr; CALL DEMO (414) 240-8930</a>
 </div>
 
-<script src="/site.js" defer></script>
+<script src="/site.js?v=bacf4549" defer></script>
 
 </body>
 </html>

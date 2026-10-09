@@ -1106,3 +1106,11 @@ Ratified by the owner on 2026-09-13. Brief and sources: `docs/superpowers/plans/
 - **No demo pair on any page.** The pair left with the swap. `aic-run11-gate.mjs` plants its own pair for its negative control.
 - **Phones.** Under 768px the hero subhead is hidden: it repeats the four sentences above it, and dropping it puts the player one short scroll under PUSH TO CALL AI. It returns from 768px up. One DOM, one crawlable paragraph.
 - **Two-column hero (1020px and up).** The call and the trip sheet stack, the tabs use their short names (two or three to a row by width), and the trip sheet packs two fields to a row. From 821 to 1019px the hero is one column and the side-by-side stage stays.
+
+### 2026-10-08 · round 4 (push to call)
+
+- **Owner's ruling, Oct 8 2026.** No public form and no browser call on this host. The only control that starts a conversation is a tap that dials (414) 775-0019 from the visitor's own phone.
+- **`/try/` is a call page.** One screen: the mark, the line "Hear it answer. Call from your phone.", the money button "Call AI Chauffeur" (`.btn.btn-primary.btn-go`, label as written, not all caps) and the number in JetBrains Mono, which is a link too. No gate panel, transcript, meter, recording or receipt. It stays noindex and out of the sitemap.
+- **Every Try control dials.** "Live demo" in the nav, drawer and footer, the related "Demo" cards, the inline "hear one" links and the PUSH TO CALL AI buttons are `tel:+14147750019` links. PUSH TO TRY AI is retired as a label. This supersedes the "→ /try/" notes in § 7 and § 8 and the "Demo" and "Money buttons" lines of the Sep 13 list above.
+- **The homepage QR dialog** keeps the code and the number and loses its "No phone handy?" button.
+- **Left as they are by the same ruling:** `/book/` and `/reserve/`.

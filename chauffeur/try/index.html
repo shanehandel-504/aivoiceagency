@@ -4,13 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#070B14">
-  <title>Try AI Chauffeur | AI Chauffeur</title>
-  <meta name="description" content="This is a demo. Act like a customer calling a limo company and answer its questions. About two minutes.">
+  <title>Call AI Chauffeur | (414) 775-0019</title>
+  <meta name="description" content="Hear AI Chauffeur answer. Call (414) 775-0019 from your phone and talk to it like a customer would.">
   <meta name="robots" content="noindex,follow">
 
   <!-- /try is a link we send, not a search page: noindex, left out of
-       sitemap.xml, and no site chrome. The phone-first demo is /demo/, which
-       links here. One screen, one control, one browser call. -->
+       sitemap.xml, and no site chrome. Owner's ruling 2026-10-08: no browser
+       call and no form anywhere. This page is one tap that dials the line from
+       the visitor's own phone, and the number for a visitor at a desk. -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
@@ -19,8 +20,8 @@
   <link rel="canonical" href="https://aichauffeur.ai/try/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="AI Chauffeur">
-  <meta property="og:title" content="Try AI Chauffeur in your browser">
-  <meta property="og:description" content="This is a demo. Act like a customer calling a limo company and answer its questions. About two minutes.">
+  <meta property="og:title" content="Call AI Chauffeur">
+  <meta property="og:description" content="Hear AI Chauffeur answer. Call (414) 775-0019 from your phone and talk to it like a customer would.">
   <meta property="og:url" content="https://aichauffeur.ai/try/">
   <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
   <meta property="og:image:width" content="1200">
@@ -28,225 +29,51 @@
   <meta property="og:image:alt" content="AI Chauffeur - the limo answering service that never puts a caller on hold. (414) 775-0019">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
-  <meta name="twitter:title" content="Try AI Chauffeur in your browser">
-  <meta name="twitter:description" content="This is a demo. Act like a customer calling a limo company and answer its questions. About two minutes.">
+  <meta name="twitter:title" content="Call AI Chauffeur">
+  <meta name="twitter:description" content="Hear AI Chauffeur answer. Call (414) 775-0019 from your phone and talk to it like a customer would.">
 
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
   <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
   <link rel="stylesheet" href="/assets/aic.css?v=3605e089">
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="preconnect" href="https://circulant.app.n8n.cloud" crossorigin>
   <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
   <script defer src="/_vercel/insights/script.js"></script>
 
   <style>
     /* /try · page scope. Every colour is a site token and the control is the
-       site's own .btn-primary; this block only lays out one screen. The status
-       panel follows the callback console: surface, hairline, the hot top line
-       that marks the one panel on the fold that does something. */
+       site's own money button (.btn-go, DESIGN-SYSTEM § 12). This block only
+       lays out one screen: the mark, one line, the button, the number. */
     .try{min-height:100vh;min-height:100dvh;display:flex;margin:0;padding:0}
-    .try [hidden]{display:none}
     .try-wrap{flex:1;width:100%;max-width:1180px;margin:0 auto;
-      padding:1.25rem 1.25rem 3.5rem;display:flex;flex-direction:column;gap:1.5rem}
+      padding:1.25rem 1.25rem 3rem;display:flex;flex-direction:column}
     .try-brand{display:inline-flex;align-self:flex-start;border-radius:4px}
     .try-brand img{display:block;width:135px;height:auto}
-    .try a:focus-visible,.try button:focus-visible{outline:2px solid var(--signal-blue);outline-offset:3px}
-    /* ONE COLUMN AT EVERY WIDTH. At rest the page is the mark, the eyebrow, the
-       headline, one sub-line, the line that says what lands here, the button and
-       the two small lines under it. Everything else waits for the push. */
-    .try-grid{display:flex;flex-direction:column;gap:1.5rem}
-    .try-tell{display:flex;flex-direction:column;gap:.75rem}
-    /* The eyebrow is the site recipe from .kicker minus its 1.75rem bottom
-       margin, which would fight .try-tell's own gap. Mono because § 3 gives
-       eyebrows to the mono face, --sky because that is the eyebrow accent,
-       and .75rem because 12px is the floor. */
-    .try-kicker{font-family:var(--mono);font-size:.75rem;font-weight:500;
-      letter-spacing:.16em;text-transform:uppercase;color:var(--sky)}
-    .try-h{margin:0;max-width:20ch;font-family:var(--sans);font-weight:500;
-      font-size:clamp(1.6875rem,1.15rem + 2.2vw,3.25rem);line-height:1.08;
-      letter-spacing:-.02em;color:var(--ink);text-wrap:balance}
-    .try-sub{margin:0;max-width:40ch;font-family:var(--sans);font-size:1rem;
-      line-height:1.5;color:var(--ink-soft);text-wrap:pretty}
+    .try a:focus-visible{outline:2px solid var(--signal-blue);outline-offset:3px}
 
-    .try-act{display:flex;flex-direction:column;gap:.875rem;width:100%;max-width:30rem}
-
-    /* THE PANEL IS NOT THERE UNTIL YOU PUSH. It unfolds under the button in
-       240ms — opacity and transform only, so nothing below it is animated into
-       place and the button the finger just left does not move. */
-    .try-panel{background:var(--surface);border:1px solid var(--line);
-      border-top:1px solid var(--line-hot);border-radius:8px}
-    .try-panel:not([hidden]){animation:try-unfold .24s ease-out both}
-    @keyframes try-unfold{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-    .try-head{display:flex;align-items:center;gap:.75rem;
-      min-height:52px;padding:0 .25rem 0 1rem;border-bottom:1px solid var(--line)}
-    /* STATE LAW: the dot and the word are one element and the colour never
-       transitions, so the chip cannot read one state while painted another. */
-    .try-tag{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);
-      font-size:.75rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
-      color:var(--neutral);white-space:nowrap;transition:none;margin-right:auto}
-    .try-tag::before{content:'';width:6px;height:6px;border-radius:50%;
-      background:currentColor;flex:none}
-    .try-tag[data-state="connecting"]{color:var(--amber)}
-    .try-tag[data-state="live"]{color:var(--signal-blue)}
-    /* ENDED STAYS NEUTRAL. Green is reserved for a label naming the thing that
-       succeeded — a trip captured — and a call that stopped is
-       not one of those. Painting it green would say the call went well, which
-       this chip has no way of knowing. */
-    .try-tag[data-state="failed"]{color:var(--miss-red)}
-    .try-time{font-family:var(--mono);font-size:.8125rem;letter-spacing:.04em;
-      font-variant-numeric:tabular-nums;color:var(--ink-soft)}
-    .try-mute{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
-      background:none;border:0;border-radius:8px;color:var(--neutral);cursor:pointer;
-      transition:color .16s}
-    .try-mute:hover{color:var(--ink)}
-    .try-mute svg{width:18px;height:18px;display:block}
-    .try-body{padding:1rem;background:var(--surface-2);border-radius:0 0 7px 7px}
-
-    /* THE METER. One bar, and it is labelled with whose voice it is. There is no
-       second bar because this SDK gives a page the agent's audio and keeps the
-       microphone to itself — and a level bar that is not reading a level is a
-       decoration pretending to be an instrument. */
-    .try-lvl{display:flex;align-items:center;gap:.75rem}
-    .try-lvl-tag{font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.14em;
-      color:var(--neutral);white-space:nowrap;width:3.5rem;flex:none}
-    .try-meter{flex:1;display:grid;grid-template-columns:repeat(32,minmax(0,1fr));gap:3px;height:36px}
-    .try-meter i{display:block;height:100%;background:var(--line);
-      transform:scaleY(.08);transform-origin:50% 50%}
-    /* Live, the bars take the PUSH button's green (--success-green, the base of
-       the .btn-go ramp): the meter is the call that button started. Owner's
-       ruling 2026-09-27, DESIGN-SYSTEM § 12. The LIVE chip keeps signal blue. */
-    .try[data-state="live"] .try-meter i{background:var(--success-green)}
-
-    /* THE THREAD. Agent left, you right, a mono stamp from the start of the
-       call. Every line is written with textContent — the words come off the
-       wire and are never treated as markup. */
-    .try-thread{margin-top:.875rem;padding-top:.875rem;border-top:1px solid var(--line)}
-    .try-tl{margin:0 0 .5rem;font-family:var(--mono);font-size:.75rem;font-weight:500;
-      letter-spacing:.14em;color:var(--neutral)}
-    .try-turns{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem;
-      max-height:9.5rem;overflow-y:auto;overscroll-behavior:contain}
-    .try-turns:empty{display:none}
-    .try-turn{display:flex;gap:.5rem;align-items:flex-start;max-width:92%}
-    .try-turn--you{align-self:flex-end;flex-direction:row-reverse}
-    .try-turn-t{flex:none;min-width:3.1rem;padding-top:.15rem;font-family:var(--mono);font-size:.75rem;
-      letter-spacing:.06em;font-variant-numeric:tabular-nums;color:var(--neutral)}
-    .try-turn--you .try-turn-t{text-align:right}
-    .try-turn-s{margin:0;padding:.4rem .6rem;border:1px solid var(--line);border-radius:8px;
-      background:var(--surface);font-family:var(--sans);font-size:.9375rem;line-height:1.45;
-      color:var(--ink);overflow-wrap:anywhere}
-    .try-turn--you .try-turn-s{background:var(--input-bg);border-color:var(--line-hot)}
-    .try-empty{margin:0;font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft)}
-
-    .try-note{margin:.875rem 0 0;min-height:2.4em;font-family:var(--sans);font-size:.9375rem;
-      line-height:1.55;color:var(--ink-soft);text-wrap:pretty}
-    .try-note a,.try-rec a,.try-alt a{color:var(--ink);text-decoration:underline;
-      text-underline-offset:.18em;text-decoration-thickness:1px}
-    .try-rec{margin:0;font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft);text-wrap:balance}
-    /* The separator travels with the word it separates. At 1440 the line broke
-       between them and left "·" starting a line on its own. CSS line-breaking,
-       not a hard space: a non-breaking space survives a copy-paste into a CRM
-       and welds the two at every width to fix one. */
-    .try-nb{white-space:nowrap}
-
-    /* THE PUSH. The control never changes size. Its pulse is light, on filter,
-       so .btn-primary's hover lift and 70ms press drop — the tactile layer on a
-       phone with no vibration API — stay intact. PUSH BUTTON v7 at the end of
-       this block owns the face, the edge and the light. */
-    .try-push{position:relative;display:flex;transform-origin:50% 50%}
-    .try-push .try-btn{width:100%;justify-content:center}
-    .try-btn[aria-disabled="true"]{cursor:progress}
-    /* The iOS haptic door. Safari 17.4+ fires the system tick when a switch
-       toggles inside a user gesture, and there is no vibration API on that
-       platform to ask instead. It is never a hit target and never focusable. */
-    .try-haptic{position:absolute;left:50%;top:50%;width:1px;height:1px;margin:-1px 0 0 -1px;
-      opacity:0;pointer-events:none;appearance:none;-webkit-appearance:none;border:0;padding:0}
-    .try-hint{margin:0;font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft)}
-    .try-alt{margin:0;font-family:var(--sans);font-size:1rem;line-height:1.5;color:var(--ink-soft)}
-
-    /* THE RESULT. Everything the call produced, directly under the control that
-       produced it, because that is where the eye already is when it ends. */
-    .try-result{display:flex;flex-direction:column;gap:.875rem;margin-top:.25rem}
-    .try-card{background:var(--surface);border:1px solid var(--line);
-      border-top:1px solid var(--line-hot);border-radius:8px;padding:1rem}
-    .try-card h2{margin:0 0 .75rem;font-family:var(--sans);font-weight:500;font-size:1.125rem;
-      line-height:1.25;letter-spacing:-.01em;color:var(--ink)}
-    .try-rows{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.5rem .875rem;margin:0}
-    .try-rows dt{font-family:var(--mono);font-size:.75rem;font-weight:500;letter-spacing:.1em;
-      text-transform:uppercase;color:var(--neutral);padding-top:.15rem}
-    .try-rows dd{margin:0;font-family:var(--sans);font-size:1rem;line-height:1.4;color:var(--ink);
-      overflow-wrap:anywhere}
-    .try-rows dd[data-empty="true"]{color:var(--ink-mute)}
-    .try-texted{margin:.875rem 0 0;padding-top:.875rem;border-top:1px solid var(--line);
-      font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft)}
-    /* THE EMAIL FIELD. Under the ticket, one visible label, one field, one control,
-       one line of state. Field recipe from the callback console (§ 3.5): input
-       ground, hairline, a signal-blue focus border and ring, no inset shadow. The
-       state line changes word and colour on the same frame (STATE LAW): green only
-       when the sheet was sent, red only when the address failed. */
-    .try-mail{margin:.875rem 0 0;padding-top:.875rem;border-top:1px solid var(--line)}
-    .try-mail[hidden]{display:none}
-    .try-mail-l{display:block;margin:0 0 .5rem;font-family:var(--sans);font-weight:500;font-size:.9375rem;
-      line-height:1.4;color:var(--ink)}
-    .try-mail-row{display:flex;gap:.5rem;align-items:stretch}
-    .try-mail-in{flex:1;min-width:0;min-height:48px;padding:0 .75rem;background:var(--input-bg);color:var(--ink);
-      border:1px solid var(--line);border-radius:6px;font-family:var(--sans);font-size:1rem}
-    .try-mail-in::placeholder{color:var(--ink-mute)}
-    .try-mail-in:focus{outline:none;border-color:var(--signal-blue);box-shadow:0 0 0 3px rgba(61,123,255,.15)}
-    .try-mail-in:focus-visible{outline:2px solid var(--signal-blue);outline-offset:2px}
-    .try-mail-go{flex:none;min-height:48px;padding:0 1.25rem}
-    .try-mail-go[aria-disabled="true"]{cursor:progress}
-    .try-mail-msg{margin:.5rem 0 0;font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft);transition:none}
-    .try-mail-msg:empty{display:none}
-    .try-mail-msg[data-state="sent"]{color:var(--success-green)}
-    .try-mail-msg[data-state="bad"]{color:var(--miss-red)}
-    .try-hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
-    .try-player audio{display:block;width:100%;margin-top:.75rem;height:40px}
-    .try-rnote{margin:0;font-family:var(--sans);font-size:.9375rem;line-height:1.55;color:var(--ink-soft)}
-    .try-share{width:100%;justify-content:center}
-    .try-copied{margin:0;font-family:var(--sans);font-size:.875rem;line-height:1.5;color:var(--ink-soft)}
-    .try-copied:empty{display:none}
-
-    .try-inapp{background:var(--surface);border:1px solid var(--line);
-      border-left:3px solid var(--amber);border-radius:8px;padding:1rem 1rem 1rem 1.125rem}
-    .try-inapp p{margin:0;font-family:var(--sans);font-size:1rem;line-height:1.5;color:var(--ink)}
-    .try-copy{margin-top:.875rem}
-    .try-url{display:block;width:100%;margin-top:.75rem;min-height:44px;padding:0 .75rem;
-      background:var(--input-bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;
-      font-family:var(--mono);font-size:.8125rem}
-    .try-inapp .try-copied{margin-top:.5rem}
-
-    /* FOCUS MODE. During a call everything that is not the instrument steps
-       back. IT STEPS BACK TO .63 AND NOT TO .35, and the number is measured
-       rather than chosen: ancestor opacity multiplies into rendered contrast,
-       and --ink-soft at .35 lands at 2.17:1 on this ground, and the sub-line,
-       the recording line and the hint are --ink-soft. v4 shipped .62 on a
-       computed 4.51:1; the rendered-pixel probe reads .62 at 4.46:1, under the
-       floor. .63 is the lowest step that clears it: 4.57:1. The panel still
-       separates because it keeps its own surface, its hairline and 100%. */
-    .try-tell,.try-rec,.try-hint,.try-brand{transition:opacity .3s ease}
-    .try[data-focus="true"] .try-tell,
-    .try[data-focus="true"] .try-rec,
-    .try[data-focus="true"] .try-hint,
-    .try[data-focus="true"] .try-brand{opacity:.63}
-
-    @media (prefers-reduced-motion:reduce){
-      .try[data-state="ready"] .try-push{animation:none}
-      .try-panel:not([hidden]){animation:none}
-      .try-tell,.try-rec,.try-hint,.try-brand{transition:none}
+    /* The block sits a little above the middle of the screen: auto margins
+       centre it in the space under the mark, and the bottom padding on the
+       wrap is larger than the top so the eye lands on the button. */
+    .try-call{margin:auto 0;padding:2rem 0 3rem;display:flex;flex-direction:column;
+      align-items:flex-start;gap:2rem;width:100%;max-width:30rem}
+    /* Two sentences, two lines, at every width. The break is the markup's. */
+    .try-h{margin:0;font-family:var(--sans);font-weight:500;
+      font-size:clamp(1.875rem,1.3rem + 2.4vw,3.25rem);line-height:1.08;
+      letter-spacing:-.02em;color:var(--ink)}
+    .try-h span{display:block}
+    .try-dial{display:flex;flex-direction:column;align-items:flex-start;gap:1.5rem;width:100%}
+    .try-btn{width:100%;max-width:26rem;justify-content:center;text-align:center}
+    /* The number is a machine readout, so it takes the mono face (§ 3). It is
+       a link too: on a phone it dials, at a desk it is the thing to read out. */
+    .try-num{display:inline-flex;align-items:center;min-height:44px;
+      font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums;
+      font-size:clamp(1.75rem,1.2rem + 2.6vw,2.75rem);line-height:1.1;
+      letter-spacing:.02em;color:var(--ink);text-decoration:none;white-space:nowrap;
+      border-radius:4px;user-select:all}
+    .try-num:hover{color:var(--sky)}
+    @media (min-width:768px){
+      .try-wrap{padding:2rem 2rem 4rem}
+      .try-call{max-width:34rem;gap:2.5rem}
     }
-
-    /* DESKTOP IS THE SAME PAGE, CENTRED. One column, 720px wide at most. */
-    @media (min-width:1024px){
-      .try-wrap{max-width:720px;padding:3rem 1.5rem;gap:2rem}
-      .try-tell{gap:1rem}
-      .try-turns{max-height:13rem}
-    }
-
-    /* PUSH BUTTON v7 lives in /assets/aic.css as .btn-go since 2026-09-13, so the
-       homepage, both new pages and /try wear one control. Only the wrapper's
-       breathing is switched off here. */
-    .try[data-state="ready"] .try-push{animation:none}
   </style>
 </head>
 <body>
@@ -255,689 +82,24 @@
   <div class="try-wrap">
     <a class="try-brand" href="/"><img src="/assets/brand/lockup-short.svg" alt="AI Chauffeur" width="135" height="23"></a>
 
-    <div class="try-grid">
-      <div class="try-tell">
-        <span class="try-kicker">THE AI CHAUFFEUR DEMO</span>
-        <h1 class="try-h">Try AI Chauffeur.</h1>
-        <p class="try-sub">This is a demo. Act like a customer calling a limo company and answer its questions. About two minutes.</p>
-      </div>
+    <div class="try-call">
+      <h1 class="try-h"><span>Hear it answer.</span> <span>Call from your phone.</span></h1>
 
-      <div class="try-act">
-        <div class="try-inapp" id="try-inapp" hidden>
-          <p>The mic doesn't work inside this app's browser. Tap the ••• menu and choose Open in Safari or Open in Chrome.</p>
-          <button type="button" class="btn btn-ghost try-copy" id="try-copy" data-event="try_copy_link">Copy link</button>
-          <input class="try-url" id="try-url" type="text" readonly hidden aria-label="Link to this page">
-          <p class="try-copied" id="try-copied" aria-live="polite"></p>
-        </div>
-
-        <p class="try-rec">When it ends, your trip sheet, the transcript, and the recording land right here. <span class="try-nb">· <a href="/privacy/">Privacy</a></span></p>
-
-        <div class="try-push">
-          <button type="button" class="btn btn-primary btn-go try-btn" id="try-btn" data-event="try_call_start">PUSH TO TRY AI</button>
-          <input class="try-haptic" id="try-haptic" type="checkbox" switch tabindex="-1" aria-hidden="true">
-        </div>
-        <p class="try-hint">Not a phone call. AI Chauffeur talks to you right here on this page — push once, then talk. Stop any time.</p>
-        <p class="try-hint">Demo only. No car is dispatched.</p>
-
-        <div class="try-panel" id="try-panel" role="group" aria-label="Call status" hidden>
-          <div class="try-head">
-            <span class="try-tag" id="try-tag" data-state="ready">Ready</span>
-            <span class="try-time" id="try-time" aria-hidden="true">00:00</span>
-            <button type="button" class="try-mute" id="try-mute" data-event="try_mute" aria-pressed="false" aria-label="Mute the call sounds">
-              <svg id="try-mute-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>
-            </button>
-          </div>
-          <div class="try-body">
-            <div class="try-lvl">
-              <span class="try-lvl-tag">AGENT</span>
-              <div class="try-meter" id="try-meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-            </div>
-            <div class="try-thread">
-              <p class="try-tl">TRANSCRIPT</p>
-              <ol class="try-turns" id="try-turns" aria-live="polite" aria-label="Transcript"></ol>
-              <p class="try-empty" id="try-empty">Your conversation shows up here.</p>
-            </div>
-            <p class="try-note" id="try-note" aria-live="polite"></p>
-          </div>
-        </div>
-
-
-        <p class="try-alt" id="try-alt" hidden>Or call the line: <a href="tel:+14147750019" data-event="tel_tap_try">(414) 775-0019</a></p>
-
-        <div class="try-result" id="try-result" hidden>
-          <p class="try-rnote" id="try-building" hidden>Putting your trip sheet together…</p>
-
-          <div class="try-card" id="try-ticket" hidden>
-            <h2>Here's what just happened.</h2>
-            <dl class="try-rows" id="try-rows"></dl>
-            <p class="try-texted" id="try-texted" hidden>The same details were texted to the number you gave.</p>
-            <form class="try-mail" id="try-mail" novalidate hidden>
-              <label class="try-mail-l" for="try-mail-in">Email me this trip sheet</label>
-              <div class="try-mail-row">
-                <input class="try-mail-in" id="try-mail-in" name="email" type="email" inputmode="email" autocomplete="email" spellcheck="false" placeholder="you@company.com">
-                <button type="submit" class="btn btn-ghost try-mail-go" id="try-mail-go" data-event="try_email_send">Send</button>
-              </div>
-              <input class="try-hp" id="try-mail-hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
-              <p class="try-mail-msg" id="try-mail-msg" aria-live="polite"></p>
-            </form>
-          </div>
-
-          <div class="try-card try-player" id="try-player" hidden>
-            <h2>Hear it back</h2>
-            <audio id="try-audio" controls preload="none"></audio>
-          </div>
-
-          <p class="try-rnote" id="try-rnote" hidden></p>
-
-          <button type="button" class="btn btn-ghost try-share" id="try-share" data-event="try_share_link">Send this page to your partner</button>
-          <input class="try-url" id="try-share-url" type="text" readonly hidden aria-label="Link to this page">
-          <p class="try-copied" id="try-share-copied" aria-live="polite"></p>
-        </div>
+      <div class="try-dial">
+        <a class="btn btn-primary btn-go try-btn" href="tel:+14147750019" data-event="tel_tap_try">Call AI Chauffeur</a>
+        <a class="try-num" href="tel:+14147750019" data-event="tel_tap_try_number" aria-label="Call (414) 775-0019">(414) 775-0019</a>
       </div>
     </div>
   </div>
 </main>
 
 <script>
-  /* Analytics: each [data-event] click is one Vercel Web Analytics event. Kept
-     apart from the call module below, which this file's owner edits alone. */
+  /* Analytics: each [data-event] click is one Vercel Web Analytics event. */
   document.addEventListener('click', function (e) {
     var el = e.target.closest ? e.target.closest('[data-event]') : null;
     if (el && typeof window.va === 'function') window.va('event', { name: el.getAttribute('data-event') });
   }, { passive: true });
 </script>
-<script type="module">
-  // /try · one browser call to the AI Chauffeur line.
-  // Push: the proof is already solved -> POST to the n8n webhook -> join.
-  // n8n picks the agent, the version and the caps. The page only joins, and the
-  // page holds no secret: the webhook URL below is public by nature.
-  const SDK_URL = 'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@3.0.1/+esm';
-  const WEBHOOK = 'https://circulant.app.n8n.cloud/webhook/7b9e6dee2ce9ce780673725e0448791f';
-  const RECEIPT = 'https://circulant.app.n8n.cloud/webhook/try/receipt';
-  const EMAIL = 'https://circulant.app.n8n.cloud/webhook/try/email';
-  // ?agent=test routes the call to the test desk; anything else, or nothing, sends no key.
-  const AGENT_KEY = new URLSearchParams(location.search).get('agent') === 'test' ? 'test' : '';
-  const LINE = '<a href="tel:+14147750019" data-event="tel_tap_try">(414) 775-0019</a>';
-  const IN_APP = /FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|Twitter|musical_ly|BytedanceWebview|Snapchat/i;
-  const SHARE = 'https://aichauffeur.ai/try';
 
-  const $ = (id) => document.getElementById(id);
-  const root = document.querySelector('.try');
-  const panel = $('try-panel');
-  const tag = $('try-tag'), clock = $('try-time'), note = $('try-note'), btn = $('try-btn'), alt = $('try-alt');
-  const turnsEl = $('try-turns'), emptyEl = $('try-empty');
-  const result = $('try-result'), building = $('try-building'), ticket = $('try-ticket'),
-    rowsEl = $('try-rows'), texted = $('try-texted'), player = $('try-player'),
-    audioEl = $('try-audio'), rnote = $('try-rnote');
-  const mailForm = $('try-mail'), mailIn = $('try-mail-in'), mailGo = $('try-mail-go'),
-    mailHp = $('try-mail-hp'), mailMsg = $('try-mail-msg');
-  const bars = Array.from(document.querySelectorAll('#try-meter i'));
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-
-  const TAG = { ready: 'Ready', connecting: 'Connecting', live: 'Live', ended: 'Ended', failed: 'Not connected' };
-  const LABEL = { ready: 'PUSH TO TRY AI', connecting: 'Connecting', live: 'End demo', ended: 'PUSH TO TRY AI', failed: 'PUSH TO TRY AI' };
-  // The mic hint is said once, at the only moment it is true: while the browser
-  // is asking. At rest the panel does not exist, so there is nothing to say.
-  const NOTE = {
-    ready: '',
-    connecting: 'Your browser will ask to use your mic. Choose Allow.',
-    live: "You're live. Start with: I need a ride to the airport tomorrow. It will ask you the rest.",
-    mic: "We couldn't reach your mic. Call the line instead: " + LINE,
-    failed: "The call didn't start. Call the line instead: " + LINE,
-  };
-
-  let state = 'ready', client = null, t0 = 0, secs = 0, tick = 0, runId = 0, callId = null;
-  const mmss = (s) => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
-  const wait = (ms) => new Promise((f) => setTimeout(f, ms));
-  const within = (p, ms) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error('timeout')), ms))]);
-
-  // STATE LAW: word, colour, note, button label and focus mode change in one
-  // synchronous block, so the chip can never read one state while painted
-  // another. Every string written here is fixed above.
-  function setState(next, html) {
-    state = next;
-    root.dataset.state = next;
-    root.dataset.focus = next === 'connecting' || next === 'live' ? 'true' : 'false';
-    panel.hidden = next === 'ready';
-    tag.dataset.state = next;
-    tag.textContent = TAG[next];
-    note.innerHTML = html;
-    btn.textContent = LABEL[next];
-    btn.setAttribute('aria-disabled', next === 'connecting' ? 'true' : 'false');
-    alt.hidden = next !== 'ended' && next !== 'failed';
-  }
-
-  function startClock() {
-    t0 = Date.now(); secs = 0; clock.textContent = '00:00';
-    tick = setInterval(() => { secs = Math.floor((Date.now() - t0) / 1000); clock.textContent = mmss(secs); }, 250);
-  }
-  function stopClock() { clearInterval(tick); tick = 0; if (t0) secs = Math.floor((Date.now() - t0) / 1000); t0 = 0; }
-  const elapsed = () => (t0 ? Math.floor((Date.now() - t0) / 1000) : secs);
-
-  /* ── SOUND ──────────────────────────────────────────────────────────────
-     Synthesised, never a file: three short events that say pushed, connected
-     and finished. The context is built on the first push because that is a
-     user gesture, which is the only moment iOS will allow it. */
-  let ac = null, muted = false;
-  try { muted = localStorage.getItem('aic.try.sound') === 'off'; } catch (e) { muted = false; }
-  function actx() {
-    if (muted) return null;
-    try {
-      if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
-      if (ac.state === 'suspended') ac.resume().catch(() => {});
-      return ac;
-    } catch (e) { return null; }
-  }
-  function env(a, node, at, dur, peak) {
-    const g = a.createGain();
-    g.gain.setValueAtTime(0.0001, at);
-    g.gain.exponentialRampToValueAtTime(peak, at + 0.008);
-    g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
-    node.connect(g); g.connect(a.destination);
-  }
-  function beep(a, freq, at, dur, peak) {
-    const o = a.createOscillator();
-    o.type = 'sine'; o.frequency.setValueAtTime(freq, at);
-    env(a, o, at, dur, peak); o.start(at); o.stop(at + dur + 0.05);
-  }
-  function sndPush() {
-    const a = actx(); if (!a) return;
-    const t = a.currentTime, n = Math.max(1, Math.floor(a.sampleRate * 0.03));
-    const buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
-    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
-    const src = a.createBufferSource(); src.buffer = buf;
-    const bp = a.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = 0.9;
-    src.connect(bp); env(a, bp, t, 0.03, 0.05); src.start(t);
-    beep(a, 1200, t, 0.02, 0.04);
-  }
-  function sndLive() { const a = actx(); if (!a) return; const t = a.currentTime; beep(a, 587, t, 0.06, 0.05); beep(a, 880, t + 0.06, 0.07, 0.05); }
-  function sndEnd() { const a = actx(); if (!a) return; beep(a, 294, a.currentTime, 0.15, 0.05); }
-
-  const SPK = '<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/>';
-  const OFF = '<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 10l4 4"/><path d="M21 10l-4 4"/>';
-  const mute = $('try-mute'), muteI = $('try-mute-i');
-  function paintMute() {
-    muteI.innerHTML = muted ? OFF : SPK;
-    mute.setAttribute('aria-pressed', muted ? 'true' : 'false');
-    mute.setAttribute('aria-label', muted ? 'Turn the call sounds on' : 'Mute the call sounds');
-  }
-  paintMute();
-  mute.addEventListener('click', () => {
-    muted = !muted;
-    try { localStorage.setItem('aic.try.sound', muted ? 'off' : 'on'); } catch (e) {}
-    paintMute();
-  });
-
-  /* ── HAPTICS ────────────────────────────────────────────────────────────
-     Feature-detected on both platforms and faked on neither. 12ms on the
-     primary, matching the sitewide rule, and nothing at all on a failure: a
-     phone that buzzes when something did not work teaches you to distrust it. */
-  const CAN_BUZZ = ('vibrate' in navigator);
-  const haptic = $('try-haptic');
-  const CAN_SWITCH = (() => { try { return 'switch' in document.createElement('input'); } catch (e) { return false; } })();
-  function buzz() {
-    if (CAN_BUZZ) { try { navigator.vibrate(12); } catch (e) {} return; }
-    // No vibration API here. Safari 17.4+ plays the system tick when a switch
-    // toggles inside the gesture; anywhere else this is an invisible no-op.
-    if (CAN_SWITCH) { try { haptic.checked = !haptic.checked; } catch (e) {} }
-  }
-
-  /* ── THE METER ──────────────────────────────────────────────────────────
-     The SDK hands over snapshots of the audio coming back from the line, once
-     per frame. Each bar is the loudness of one slice. Transform only; under
-     reduced motion it still shows the level, five times a second. */
-  const level = new Float32Array(bars.length);
-  let pending = null, raf = 0, lastPaint = 0;
-  function onAudio(samples) { pending = samples; if (!raf) raf = requestAnimationFrame(paint); }
-  function paint(now) {
-    raf = 0;
-    if (!pending) return;
-    if (reduce.matches && now - lastPaint < 200) { raf = requestAnimationFrame(paint); return; }
-    lastPaint = now;
-    const s = pending; pending = null;
-    const step = Math.max(1, Math.floor(s.length / bars.length));
-    for (let b = 0; b < bars.length; b++) {
-      let sum = 0;
-      for (let i = b * step, end = Math.min(s.length, i + step); i < end; i++) sum += s[i] * s[i];
-      const v = Math.min(1, Math.sqrt(Math.sqrt(sum / step)) * 1.8);
-      level[b] = reduce.matches ? v : Math.max(v, level[b] * 0.82);
-      bars[b].style.transform = 'scaleY(' + Math.max(0.08, level[b]).toFixed(3) + ')';
-    }
-  }
-  function meterIdle() { level.fill(0); pending = null; bars.forEach((el) => { el.style.transform = ''; }); }
-
-  /* ── THE THREAD ─────────────────────────────────────────────────────────
-     retell-client-js-sdk@3.0.1 documents an `update` event carrying the recent
-     transcript as {role, content}. On the gateway transport that v3
-     create-web-call hands these calls, it does not arrive: measured 2026-09-27,
-     a 35-second call on SDK 3.0.1 (the latest) delivered 0 update events while
-     the server recorded 3 turns. The listener stays for a transport that does
-     emit; it redraws from the array and keeps the stamp each turn was first
-     seen at. textContent, never innerHTML: these words come off the wire. */
-  const stamps = [];
-  let sig = '';
-  // The mono slot carries the time a turn arrived when the turn arrived live.
-  // Filled from the receipt there is no per-turn time on the record, so it
-  // carries who spoke instead. Inventing a timestamp would be inventing data.
-  function draw(list, live) {
-    const frag = document.createDocumentFragment();
-    for (let i = 0; i < list.length; i++) {
-      const you = list[i].role === 'user';
-      if (live && stamps[i] == null) stamps[i] = elapsed();
-      const li = document.createElement('li');
-      li.className = 'try-turn try-turn--' + (you ? 'you' : 'agent');
-      const mark = document.createElement('span');
-      mark.className = 'try-turn-t';
-      mark.textContent = live ? mmss(stamps[i]) : (you ? 'YOU' : 'AGENT');
-      const said = document.createElement('p');
-      said.className = 'try-turn-s';
-      said.textContent = String(list[i].content).trim();
-      li.append(mark, said);
-      frag.append(li);
-    }
-    turnsEl.replaceChildren(frag);
-    emptyEl.hidden = list.length > 0;
-    // A running call follows the newest line. A finished transcript is read from
-    // the top — scrolled to the end it opens on a line sliced in half, which
-    // reads as broken rather than as scrolled.
-    turnsEl.scrollTop = live ? turnsEl.scrollHeight : 0;
-  }
-  function onUpdate(u) {
-    if (!u || !Array.isArray(u.transcript)) return;
-    const list = u.transcript.filter((t) => t && typeof t.content === 'string' && t.content.trim());
-    const s = list.map((t) => t.role + '|' + t.content).join('\n');
-    if (s === sig) return;
-    sig = s;
-    draw(list, true);
-  }
-
-  // THE SDK loads after first paint and is awaited on push. A failed load can retry.
-  let sdk = null;
-  const loadSdk = () => sdk || (sdk = import(SDK_URL).catch((e) => { sdk = null; throw e; }));
-
-  /* ── THE PUZZLE ─────────────────────────────────────────────────────────
-     Before n8n will create a call, this device finds a counter where
-     SHA-256("nonce:counter") starts with `bits` zero bits: about a million
-     hashes at 20, a few seconds on a phone. Each nonce is single use and
-     expires in three minutes. It costs a script the same, which is the point.
-
-     SINCE v4 THE SEARCH RUNS WHILE YOU READ, not after you push. A nonce is
-     fetched on load, solved in a worker, and replaced every 150 seconds, so the
-     push spends a proof that is already in hand. */
-  const post = (fields) => fetch(WEBHOOK, {
-    method: 'POST', cache: 'no-store', credentials: 'omit',
-    body: new URLSearchParams(fields),
-  });
-
-  function powSolve(nonce, bits, start, limit) {
-    var K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-      0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-      0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-      0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-      0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-      0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-      0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-      0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2];
-    var W = new Int32Array(64), msg = new Uint8Array(64);
-    var prefix = nonce + ':', plen = prefix.length, shift = 32 - bits;
-    for (var i = 0; i < plen; i++) msg[i] = prefix.charCodeAt(i);
-    for (var n = start; n < start + limit; n++) {
-      var s = String(n), len = plen + s.length, t;
-      for (t = 0; t < s.length; t++) msg[plen + t] = s.charCodeAt(t);
-      for (t = 0; t < 16; t++) W[t] = 0;
-      for (t = 0; t < len; t++) W[t >> 2] |= msg[t] << (24 - ((t & 3) << 3));
-      W[len >> 2] |= 0x80 << (24 - ((len & 3) << 3));
-      W[15] = len << 3;
-      for (t = 16; t < 64; t++) {
-        var x = W[t - 15], y = W[t - 2];
-        var s0 = ((x >>> 7) | (x << 25)) ^ ((x >>> 18) | (x << 14)) ^ (x >>> 3);
-        var s1 = ((y >>> 17) | (y << 15)) ^ ((y >>> 19) | (y << 13)) ^ (y >>> 10);
-        W[t] = (W[t - 16] + s0 + W[t - 7] + s1) | 0;
-      }
-      var a = 0x6a09e667, b = 0xbb67ae85 | 0, c = 0x3c6ef372, d = 0xa54ff53a | 0,
-        e = 0x510e527f, f = 0x9b05688c | 0, g = 0x1f83d9ab, h = 0x5be0cd19;
-      for (t = 0; t < 64; t++) {
-        var S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
-        var ch = (e & f) ^ (~e & g);
-        var t1 = (h + S1 + ch + K[t] + W[t]) | 0;
-        var S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
-        var t2 = (S0 + ((a & b) ^ (a & c) ^ (b & c))) | 0;
-        h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
-      }
-      if ((((a + 0x6a09e667) | 0) >>> shift) === 0) return n;
-    }
-    return -1;
-  }
-
-  // The search runs in a worker built from powSolve's own source, so the page
-  // keeps painting. If workers are blocked it runs here in slices instead.
-  function solve(nonce, bits, ms) {
-    return new Promise((resolve) => {
-      let worker = null, url = null, done = false;
-      const finish = (n) => {
-        if (done) return;
-        done = true;
-        clearTimeout(timer);
-        if (worker) worker.terminate();
-        if (url) URL.revokeObjectURL(url);
-        resolve(n);
-      };
-      const timer = setTimeout(() => finish(-1), ms);
-      const slices = () => {
-        let at = 0;
-        const step = () => {
-          if (done) return;
-          const n = powSolve(nonce, bits, at, 20000);
-          if (n >= 0) return finish(n);
-          at += 20000;
-          setTimeout(step, 0);
-        };
-        step();
-      };
-      try {
-        const src = powSolve.toString() + '\nonmessage = function (e) { postMessage(powSolve(e.data[0], e.data[1], 0, 4294967295)); };';
-        url = URL.createObjectURL(new Blob([src], { type: 'text/javascript' }));
-        worker = new Worker(url);
-        worker.onmessage = (e) => finish(e.data);
-        worker.onerror = () => { worker.terminate(); worker = null; slices(); };
-        worker.postMessage([nonce, bits]);
-      } catch (e) { worker = null; slices(); }
-    });
-  }
-
-  // ARMING. A proof is kept only while its nonce can still be spent.
-  const FRESH = 170000;
-  let armed = null, arming = null, rearm = 0;
-  async function challenge() {
-    const r = await within(post({ step: 'challenge' }), 10000);
-    if (!r.ok) return null;
-    const c = await r.json();
-    if (!/^[0-9a-f]{32}$/.test(String(c.nonce)) || !(c.bits >= 1 && c.bits <= 24)) return null;
-    return c;
-  }
-  function arm() {
-    if (arming) return arming;
-    arming = (async () => {
-      try {
-        const c = await challenge();
-        if (!c) return null;
-        const counter = await solve(c.nonce, c.bits, 30000);
-        if (counter < 0) return null;
-        armed = { nonce: c.nonce, counter: counter, at: Date.now() };
-        return armed;
-      } catch (e) { return null; } finally { arming = null; }
-    })();
-    return arming;
-  }
-  const ready = () => (armed && Date.now() - armed.at < FRESH ? armed : null);
-  function keepArmed() {
-    clearInterval(rearm);
-    rearm = setInterval(() => {
-      if (document.hidden || state === 'connecting' || state === 'live') return;
-      armed = null;
-      arm();
-    }, 150000);
-  }
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && !ready() && state !== 'connecting' && state !== 'live') arm();
-  });
-
-  /* ── THE RECEIPT ────────────────────────────────────────────────────────
-     n8n reads the call record and hands back the trip and nothing else — no
-     name, no number, no email. Polled every five seconds for forty-five, which
-     is the window the call analysis lands in. */
-  // A field with no value prints nothing: no dash, no placeholder, no row.
-  function row(dl, label, value) {
-    if (!value) return;
-    const dt = document.createElement('dt');
-    dt.textContent = label;
-    const dd = document.createElement('dd');
-    dd.textContent = value;
-    dl.append(dt, dd);
-  }
-
-  /* ── THE EMAIL FIELD ────────────────────────────────────────────────────
-     Posts form-encoded (a simple request, no preflight) to the n8n webhook,
-     which checks the call and sends the sheet. The page shows one of three
-     fixed lines and nothing else. The hidden field is a trap for scripts. */
-  const MAIL_OK = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/;
-  let mailBusy = false;
-  function mailSay(kind, masked) {
-    const text = kind === 'sent' ? ('Sent to ' + masked + '.')
-      : kind === 'bad' ? "That email didn't look right."
-      : kind === 'already' ? 'Already sent for this call.' : '';
-    mailMsg.dataset.state = text ? kind : '';
-    mailMsg.textContent = text;
-  }
-  function mailReset(show) {
-    mailForm.hidden = !show;
-    mailIn.value = '';
-    mailHp.value = '';
-    mailSay('');
-    mailGo.setAttribute('aria-disabled', 'false');
-    mailBusy = false;
-  }
-  mailIn.addEventListener('input', () => { if (mailMsg.dataset.state === 'bad') mailSay(''); });
-  mailForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (mailBusy || !callId) return;
-    const v = mailIn.value.trim();
-    if (!MAIL_OK.test(v)) { mailSay('bad'); return; }
-    mailBusy = true;
-    mailGo.setAttribute('aria-disabled', 'true');
-    const mine = runId;
-    let result = '', masked = '';
-    try {
-      const r = await within(fetch(EMAIL, {
-        method: 'POST', cache: 'no-store', credentials: 'omit',
-        body: new URLSearchParams({ call_id: callId, email: v, website: mailHp.value }),
-      }), 20000);
-      const j = await r.json();
-      result = String(j.result || '');
-      masked = String(j.masked || '');
-    } catch (x) { result = ''; }
-    if (mine !== runId) return;
-    mailBusy = false;
-    mailGo.setAttribute('aria-disabled', 'false');
-    if (result === 'sent' && masked) mailSay('sent', masked);
-    else if (result === 'bad_address') mailSay('bad');
-    else if (result === 'already_sent') mailSay('already');
-    else mailSay('');
-  });
-  function showReceipt(r) {
-    const trip = ['pickup', 'dropoff', 'date', 'time', 'vehicle', 'duration'];
-    // passenger_count is excluded from this test on purpose: the analyser
-    // returns 1 by default, so a card keyed on it would open on every call and
-    // say nothing but "Passengers 1".
-    const any = !!r && trip.some((k) => r[k]);
-    building.hidden = true;
-    // THE THREAD. Retell allocates these calls its gateway transport, and that
-    // transport's data channel delivers no transcript events to the page, so
-    // the live `update` listener draws nothing. The words arrive with the
-    // receipt instead, already redacted in n8n. If the live path ever does fire
-    // — a livekit-transport call — it has already drawn and this leaves it be.
-    if (r && Array.isArray(r.transcript) && r.transcript.length && !turnsEl.children.length) {
-      draw(r.transcript.filter((t) => t && typeof t.content === 'string' && t.content.trim()), false);
-    }
-    if (any) {
-      rowsEl.replaceChildren();
-      row(rowsEl, 'Pickup', r.pickup);
-      row(rowsEl, 'Drop-off', r.dropoff);
-      row(rowsEl, 'Date', r.date);
-      row(rowsEl, 'Time', r.time);
-      row(rowsEl, 'Passengers', r.passengers);
-      row(rowsEl, 'Vehicle', r.vehicle);
-      // The desk captures and does not quote, so there is no Quote row. How long
-      // shows only when the caller gave hours or said one way.
-      if (r.duration) row(rowsEl, 'Duration', r.duration);
-      if (r.ticket) row(rowsEl, 'Ticket', r.ticket);
-      // The address arrives masked from n8n (sh•••@gmail.com); the full one never reaches the page.
-      if (r.email) row(rowsEl, 'Email', r.email);
-      texted.hidden = !r.mobile_captured;
-      mailReset(!!r.can_email);
-      ticket.hidden = false;
-    }
-    if (r && r.recording_url) {
-      audioEl.src = r.recording_url;
-      player.hidden = false;
-    }
-    let line = '';
-    if (!any && r && r.mobile_captured) line = 'Check your texts — the trip sheet goes to the number you gave.';
-    else if (!any) line = 'No trip details came through on that call. Push again any time.';
-    else if (!r.recording_url) line = 'The recording is still processing. Push again any time.';
-    rnote.textContent = line;
-    rnote.hidden = !line;
-  }
-  async function collect(callId, mine) {
-    result.hidden = false;
-    building.hidden = false;
-    const until = Date.now() + 45000;
-    let best = null;
-    while (Date.now() < until) {
-      await wait(5000);
-      if (mine !== runId) return;
-      try {
-        const r = await fetch(RECEIPT + '?call_id=' + encodeURIComponent(callId), { cache: 'no-store', credentials: 'omit' });
-        if (r.status === 429 || r.status === 404) break;
-        if (r.ok) {
-          const j = await r.json();
-          best = j;
-          if (j.status === 'ready' && j.recording_url) break;
-        }
-      } catch (e) { /* a dropped poll is not a failure; the next one runs */ }
-    }
-    if (mine !== runId) return;
-    showReceipt(best);
-  }
-
-  function drop() {
-    if (!client) return;
-    const c = client; client = null;
-    try { c.removeAllListeners(); c.stopCall(); } catch (e) {}
-  }
-  function fail(kind) {
-    if (state === 'failed') return;
-    stopClock(); meterIdle(); drop();
-    setState('failed', kind === 'mic' ? NOTE.mic : NOTE.failed);
-    if (!ready()) arm();
-  }
-  function live() {
-    if (state !== 'connecting' || !client) return;
-    setState('live', NOTE.live); startClock(); sndLive();
-  }
-  function ended() {
-    if (state !== 'live' && state !== 'connecting') return;
-    stopClock(); meterIdle(); drop();
-    setState('ended', 'Call ended · ' + Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0'));
-    sndEnd();
-    if (!ready()) arm();
-    if (callId) collect(callId, runId);
-  }
-
-  // A second push clears the first call's record before the next one starts.
-  function resetRun() {
-    runId++;
-    callId = null;
-    result.hidden = true;
-    building.hidden = true;
-    ticket.hidden = true;
-    texted.hidden = true;
-    mailReset(false);
-    player.hidden = true;
-    rnote.hidden = true;
-    rnote.textContent = '';
-    try { audioEl.pause(); audioEl.removeAttribute('src'); audioEl.load(); } catch (e) {}
-    turnsEl.replaceChildren();
-    emptyEl.hidden = false;
-    stamps.length = 0;
-    sig = '';
-    $('try-share-copied').textContent = '';
-    $('try-share-url').hidden = true;
-    clock.textContent = '00:00';
-  }
-
-  async function start() {
-    const mine = runId;
-    setState('connecting', NOTE.connecting);
-    // 1 · the mic first, so a denial is caught before any call exists
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return fail('mic');
-    try {
-      const probe = await navigator.mediaDevices.getUserMedia({ audio: true });
-      probe.getTracks().forEach((t) => t.stop());
-    } catch (e) { return fail('mic'); }
-    try {
-      // 2 · the proof is normally already in hand. If the tap landed while a
-      //     re-solve was in flight, or the worker has not finished on a slow
-      //     phone, fall back to solving now — exactly what v3 always did.
-      const proof = ready() || await (arming || arm());
-      const mod = await within(loadSdk(), 15000);
-      if (!proof) return fail();
-      armed = null; // single use here and single use in n8n
-      // 3 · n8n checks the proof and its limits, then creates the call
-      const fields = { step: 'call', nonce: proof.nonce, counter: String(proof.counter) };
-      if (AGENT_KEY) fields.agent_key = AGENT_KEY;
-      const r = await within(post(fields), 15000);
-      if (!r.ok) { arm(); return fail(); }
-      const d = await r.json();
-      if (state !== 'connecting' || mine !== runId) return;
-      // 4 · join it
-      callId = d.call_id || null;
-      client = new mod.RetellWebClient();
-      client.on('call_started', live);
-      client.on('call_ended', ended);
-      client.on('error', () => fail());
-      client.on('audio', onAudio);
-      client.on('update', onUpdate);
-      await client.startCall({
-        callId: d.call_id, accessToken: d.access_token, transport: d.transport,
-        iceServers: d.ice_servers, url: d.url, emitRawAudioSamples: true,
-      });
-      live();
-    } catch (e) { arm(); fail(); }
-  }
-
-  btn.addEventListener('click', () => {
-    if (state === 'connecting') return;
-    if (state === 'live') {
-      buzz(); sndPush();
-      if (client) { try { client.stopCall(); } catch (e) {} }
-      ended();
-      return;
-    }
-    buzz();
-    sndPush();
-    resetRun();
-    start();
-  });
-
-  // Some browsers hold playback until a tap. Any tap during a call resumes it.
-  document.addEventListener('pointerdown', () => { if (client) client.startAudioPlayback().catch(() => {}); });
-  // Leaving the page hangs up, so an abandoned tab does not keep the line open.
-  addEventListener('pagehide', drop);
-
-  // In-app browsers usually block the mic. Check the feature first, then the app.
-  if (IN_APP.test(navigator.userAgent || '') || !(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-    $('try-inapp').hidden = false;
-  }
-  function copier(button, input, msg, text, okText) {
-    button.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(text);
-        msg.textContent = okText;
-        const was = button.textContent;
-        button.textContent = 'Copied';
-        setTimeout(() => { button.textContent = was; }, 2000);
-      } catch (e) {
-        input.hidden = false; input.value = text; input.focus(); input.select();
-        msg.textContent = 'Press and hold the link above, then choose Copy.';
-      }
-    });
-  }
-  copier($('try-copy'), $('try-url'), $('try-copied'), location.href, 'Link copied. Paste it into Safari or Chrome.');
-  copier($('try-share'), $('try-share-url'), $('try-share-copied'), SHARE, 'Link copied.');
-
-  const idle = (fn) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 2500 }) : setTimeout(fn, 1200));
-  idle(() => { loadSdk().catch(() => {}); arm(); keepArmed(); });
-</script>
 </body>
 </html>
