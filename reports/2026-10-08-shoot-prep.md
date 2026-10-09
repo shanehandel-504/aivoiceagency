@@ -105,6 +105,11 @@ then need one more bump.
 | Removed endpoints | `/api/web-call` (GET and POST), `/retell-token-worker.js`, `/js/config.js`: 404 |
 | Tap test, Oct 9, from one of the owner cells | 11:54 AM CT, `call_48c7d271…`, 31 s, reached AVA `agent_d5ada9f774fe3ae7f034d2c677` v51 on 414-240-8930. 11:55 AM CT, `call_3940030c…`, 38 s, reached AIC-LIVE two-door `agent_9ebb41c9bd8af214649328f107` v13 on 414-775-0019 |
 
+Both tap calls came from an owner cell, so each rail treated them as one of our own numbers. On
+414-775-0019 the owner email and owner text went out and no caller text was sent. On
+414-240-8930 the call was noted on the test contact, the owner text and email went out, and no
+caller text was sent.
+
 Counting code only: zero references in the served tree. Words only, in documents and the ledger:
 `hq/board.json`, `chauffeur/DESIGN-SYSTEM.md`, `AVA_WEBSITE_V2_PROMPT.md`.
 
@@ -184,8 +189,10 @@ happens either.
 - GoHighLevel: contact upsert by phone (source "AVA Inbound Demo Call", tag `ava-demo-hot`) and
   one call-log note.
 - Appointment: only when AVA books on the call, on the GoHighLevel calendar "AVA Demo Call".
-- Owner alert: a text to the owner-alert contact and an email to shane@aivoiceagency.ai, both
-  held back for our own numbers.
+- Owner alert: a text to the owner-alert contact and an email to shane@aivoiceagency.ai. Both
+  still go out for a call from one of our own numbers (the email subject then starts with TEST);
+  they are held back only for a 555 test number or a test-mode call. A call from one of our own
+  numbers gets no caller text and is filed on the test contact.
 - `WF-POSTCALL-AVA · 8930 Call Wrap` is active with no runs on record. Nothing points at it.
 
 ### d. Native Retell–GoHighLevel connection
@@ -297,3 +304,9 @@ Deferred by the owner on Oct 9. What that run needs, and the two picks recorded 
 - The spine is off. That run starts by publishing `82bd9f69-c7b1-4a1c-b828-ed816eae384b` or its
   replacement.
 - The caller text still depends on a captured trip and a spoken yes.
+
+## Filed
+
+- Board: `hq/board.json`, item `push-to-call` and one log entry (commit `ad55962`).
+- Notion, L5 Run Log wrap: https://app.notion.com/p/3f4581219cb28138afd4cdc5344d19e4
+- Notion, RUN REPORTS INBOX: https://app.notion.com/p/3f4581219cb281ed8cfbc021abb20b8b
