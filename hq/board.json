@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-12T19:56:16-05:00",
+  "updated": "2026-10-13T22:33:34-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -171,7 +171,7 @@
       "title": "RETELL API MIGRATION — v3 calls, v2 agents/numbers",
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/CLAUDE.md",
       "status": "live",
-      "label": "11 tools migrated off POST /v2/list-calls, GET /list-agents and GET /list-phone-numbers. The replacements return {items, pagination_key, has_more} instead of bare arrays, /v3/list-calls rejects the old direction and start_timestamp filter shapes with 400, and /v2/list-agents is a POST that returns one row per agent with no version/is_published/webhook_url — so the two audit tools now hydrate via GET /get-agent/{id}. Legacy /list-agents was capped at 100 rows and was hiding an agent. Transcripts read via GET /v2/get-call/{call_id}. Read-only transport keeps its guard via an allowlisted postList(). 10/10 live checks green; v2/v3 call sets identical."
+      "label": "UPDATE 2026-10-13: the nine repo tools from the Aug 17 migration were never committed; they are on main now (CC-RETELL-API-MIGRATION v1). Also moved: the last callers of the retired list routes on the Dell (GET /list-test-case-definitions → GET /v2/list-test-case-definitions, POST /v2/list-calls → POST /v3/list-calls, GET /list-phone-numbers → GET /v2/list-phone-numbers), each reading items and following pagination_key. Proven: test cases on v2 match the earlier legacy read definition for definition; last-24h counts per agent match three ways (unfiltered list grouped by agent, the agent_id filter, the agent filter); every list tool run once. 11 tools migrated off POST /v2/list-calls, GET /list-agents and GET /list-phone-numbers. The replacements return {items, pagination_key, has_more} instead of bare arrays, /v3/list-calls rejects the old direction and start_timestamp filter shapes with 400, and /v2/list-agents is a POST that returns one row per agent with no version/is_published/webhook_url — so the two audit tools now hydrate via GET /get-agent/{id}. Legacy /list-agents was capped at 100 rows and was hiding an agent. Transcripts read via GET /v2/get-call/{call_id}. Read-only transport keeps its guard via an allowlisted postList(). 10/10 live checks green; v2/v3 call sets identical."
     },
     {
       "id": "run-a-truth-layer",
@@ -615,10 +615,10 @@
     },
     {
       "id": "retell-web-call-v3",
-      "title": "Retell Create Web Call: repo moved from v2 to v3; the tuning check call still needs v2 until it is rebuilt before Oct 18 2026 (CC-AEO-GO v1, Part 1 only, 2026-10-07)",
+      "title": "Retell Create Web Call: every caller on v3 before the Oct 18 2026 cutoff; the tuning check call rebuilt on the v3 browser client (CC-RETELL-API-MIGRATION v1, 2026-10-13)",
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-07-retell-web-call-v3.md",
       "status": "live",
-      "label": "UPDATE 2026-10-09: neither site starts a browser call any more. The web-call function and the worker file moved to infra/retired/ and answer 404, and WF-TRY-WEBCALL is off. The tuning check-call harness is unchanged and still has to be rebuilt before Oct 18. Earlier state: LIVE 2026-10-07, 11:27 AM CT (59e34b8); RUN INCOMPLETE on the check-call harness only. Every create-web-call site in the repo now posts to /v3: api/web-call.js, retell-token-worker.js and three test-build tools. Checked on production: POST /api/web-call answers 503, web-call not configured: Vercel is missing the Retell key or the web agent id for it, and no page links to it. n8n read through the API: five create-web-call nodes, all already v3. The Oct 5 11:00 AM CT flag: no web call was created that day; most likely it was the cockpit metrics job on the Dell, which asked Retell for the call list at a retired address every 30 minutes. That job is on v3 now, with the same figures. OPEN, needs Shane: the scripted check call that tuning runs place still needs v2 and stops working Oct 18 unless it is rebuilt for v3 (a few paid test calls). Phone lines and /try are not affected. Parts 2 to 4 of CC-AEO-GO v1 (pricing pages, answers press, IndexNow) were not run."
+      "label": "UPDATE 2026-10-13: the scripted check call that tuning runs place is rebuilt for v3. It now uses RetellClient from retell-client-js-sdk 3.0.2 (pinned), which creates the call on POST /v3/create-web-call; the API key and the write guard stay in node and the browser holds only the call's own token. v3 sends no talk events, so the caller times each agent turn from the agent's audio level, and the transcript is read after the call with GET /v2/get-call. Proven with one web call on live AVA at a pinned version, test mode on, no phone line rung: v3 gateway transport, audio both ways, greeting exact, no talk-over, and the after-call rail ran no contact, text or alert node. The older run copies of the v2 harness on the Dell now stop before any request. n8n (read through the API): every web-call node is v3 and every WF-TRY-WEBCALL copy is off. Neither site loads a Retell browser library, so no site file changed. UPDATE 2026-10-09: neither site starts a browser call any more. The web-call function and the worker file moved to infra/retired/ and answer 404, and WF-TRY-WEBCALL is off. The tuning check-call harness is unchanged and still has to be rebuilt before Oct 18. Earlier state: LIVE 2026-10-07, 11:27 AM CT (59e34b8); RUN INCOMPLETE on the check-call harness only. Every create-web-call site in the repo now posts to /v3: api/web-call.js, retell-token-worker.js and three test-build tools. Checked on production: POST /api/web-call answers 503, web-call not configured: Vercel is missing the Retell key or the web agent id for it, and no page links to it. n8n read through the API: five create-web-call nodes, all already v3. The Oct 5 11:00 AM CT flag: no web call was created that day; most likely it was the cockpit metrics job on the Dell, which asked Retell for the call list at a retired address every 30 minutes. That job is on v3 now, with the same figures. OPEN, needs Shane: the scripted check call that tuning runs place still needs v2 and stops working Oct 18 unless it is rebuilt for v3 (a few paid test calls). Phone lines and /try are not affected. Parts 2 to 4 of CC-AEO-GO v1 (pricing pages, answers press, IndexNow) were not run."
     },
     {
       "id": "push-to-call",
@@ -1212,6 +1212,10 @@
     {
       "ts": "2026-10-12T19:56:16-05:00",
       "entry": "Blender 5.2.2 LTS portable + Higgsfield Blender MCP verified. 3D studio setup on the Dell: portable zip from Blender's official mirror service, SHA256 match, no admin install. fnf-blender-mcp 0.2.2 registered as higgsfield-use-blender in Claude Code and the Claude desktop config. bl_health ok (5.2.2 LTS, background). Smoke test: one cube, one camera, 540x960 render, project saved."
+    },
+    {
+      "ts": "2026-10-13T22:33:34-05:00",
+      "entry": "retell api: migrated to v3 list endpoints and v3 web client before the Oct 18 cutoff"
     }
   ]
 }

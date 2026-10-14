@@ -107,11 +107,15 @@ if (!BEGIN) die('could not locate the OPENING line for begin_message');
 if (!BEGIN.includes('{{company_name}}')) die('begin_message does not carry {{company_name}}');
 
 /* ── resolve target from the phone number ────────────────────────────────── */
-const nums = await req('GET', '/list-phone-numbers');
-if (!nums.ok) die('list-phone-numbers -> ' + nums.status);
-const tgt = nums.body.find(n => n.phone_number === TARGET_NUMBER);
+/* RETELL API RULES — GET /list-phone-numbers is deprecated. v2 returns
+   {items, has_more}; unwrap to the array this resolver already expects so a
+   shape change cannot make a bound number look absent. */
+const nums = await req('GET', '/v2/list-phone-numbers');
+if (!nums.ok) die('v2/list-phone-numbers -> ' + nums.status);
+const numRows = nums.body?.items || [];
+const tgt = numRows.find(n => n.phone_number === TARGET_NUMBER);
 if (!tgt) die(`${TARGET_NUMBER} not found on this account`);
-const fbd = nums.body.find(n => n.phone_number === FORBIDDEN_NUMBER);
+const fbd = numRows.find(n => n.phone_number === FORBIDDEN_NUMBER);
 const forbiddenAgent = (fbd?.inbound_agents || [])[0]?.agent_id || fbd?.inbound_agent_id;
 const AGENT = (tgt.inbound_agents || [])[0]?.agent_id || tgt.inbound_agent_id;
 if (!AGENT) die(`${TARGET_NUMBER} has no inbound agent bound`);

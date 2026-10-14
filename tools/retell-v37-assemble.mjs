@@ -74,6 +74,22 @@ async function call(method, path, body, raw) {
   if (!r.ok) { const e = new Error(`${method} ${path} -> ${r.status}: ${t.slice(0, 500)}`); e.status = r.status; throw e; }
   return j ?? {};
 }
+
+/* RETELL API RULES — GET /list-phone-numbers is deprecated. Current endpoint is
+   GET /v2/list-phone-numbers, which returns {items, has_more} instead of a bare
+   array. This helper pages it and returns the ARRAY callers already expect, so
+   the shape change cannot silently turn a real binding into an empty result. */
+async function listPhoneNumbersV2() {
+  const out = []; let pk;
+  for (let i = 0; i < 20; i++) {
+    const q = pk ? `/v2/list-phone-numbers?pagination_key=${encodeURIComponent(pk)}` : '/v2/list-phone-numbers';
+    const page = await call('GET', q);
+    out.push(...(page.items || []));
+    if (!page.has_more || !page.pagination_key) break;
+    pk = page.pagination_key;
+  }
+  return out;
+}
 const get = p => call('GET', p);
 
 /* ---------- byte-exact sources -------------------------------------------- */
@@ -85,7 +101,7 @@ console.log(`kb source     : ${KB_TEXT.length} chars, ${KB_TEXT.split('\n').leng
 /* ---------- BEFORE snapshot of the live rail ------------------------------ */
 const liveBefore = await get(`/get-agent/${LIVE_AGENT}?version=38`);
 const liveLlmBefore = await get(`/get-retell-llm/${LIVE_LLM}`);
-const numsBefore = await get('/list-phone-numbers');
+const numsBefore = await listPhoneNumbersV2();
 const n8930 = numsBefore.find(n => n.phone_number === '+14142408930');
 writeFileSync(join(OUT, 'live-v38-before.json'), JSON.stringify(liveBefore, null, 2));
 console.log(`\nLIVE v38 before : voice=${liveBefore.voice_id} llm=${liveBefore.response_engine.llm_id}@v${liveBefore.response_engine.version} promptChars=${(liveLlmBefore.general_prompt || '').length}`);
@@ -192,7 +208,7 @@ console.log('\n=== 5 · VERIFY (fresh fetch — write echoes not trusted) ===');
 const a = await get(`/get-agent/${TEST_AGENT}`);
 /* resolve the prompt the AGENT actually serves, via its pinned llm version */
 const servedLlm = await get(`/get-retell-llm/${a.response_engine.llm_id}?version=${a.response_engine.version}`);
-const nums = await get('/list-phone-numbers');
+const nums = await listPhoneNumbersV2();
 const bound = nums.filter(n =>
   (n.inbound_agents || []).some(x => x.agent_id === TEST_AGENT) ||
   (n.outbound_agents || []).some(x => x.agent_id === TEST_AGENT));
@@ -226,7 +242,7 @@ chk('webhook_url omitted', a.webhook_url ?? null, null);
 console.log('\n=== 6 · LIVE 8930 RAIL — UNTOUCHED ===');
 const liveAfter = await get(`/get-agent/${LIVE_AGENT}?version=38`);
 const liveLlmAfter = await get(`/get-retell-llm/${LIVE_LLM}`);
-const n8930After = (await get('/list-phone-numbers')).find(n => n.phone_number === '+14142408930');
+const n8930After = (await listPhoneNumbersV2()).find(n => n.phone_number === '+14142408930');
 chk('live v38 agent byte-identical', JSON.stringify(liveAfter), JSON.stringify(liveBefore));
 chk('live llm prompt unchanged', liveLlmAfter.general_prompt === liveLlmBefore.general_prompt, true);
 chk('live llm version unchanged', liveLlmAfter.version, liveLlmBefore.version);

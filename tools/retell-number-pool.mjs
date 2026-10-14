@@ -53,6 +53,22 @@ async function call(method, path, body) {
   return j;
 }
 
+/* RETELL API RULES — GET /list-phone-numbers is deprecated. Current endpoint is
+   GET /v2/list-phone-numbers, which returns {items, has_more} instead of a bare
+   array. This helper pages it and returns the ARRAY callers already expect, so
+   the shape change cannot silently turn a real binding into an empty result. */
+async function listPhoneNumbersV2() {
+  const out = []; let pk;
+  for (let i = 0; i < 20; i++) {
+    const q = pk ? `/v2/list-phone-numbers?pagination_key=${encodeURIComponent(pk)}` : '/v2/list-phone-numbers';
+    const page = await call('GET', q);
+    out.push(...(page.items || []));
+    if (!page.has_more || !page.pagination_key) break;
+    pk = page.pagination_key;
+  }
+  return out;
+}
+
 /* The API returns agent bindings as weighted ARRAYS (inbound_agents /
    outbound_agents) even though create/update take the singular *_agent_id. */
 const agentsOf = (arr) => (Array.isArray(arr) && arr.length) ? arr.map(a => a.agent_id).join(',') : '-';
@@ -62,7 +78,7 @@ const mode = process.argv[2] || '--list';
 
 /* ------------------------------------------------------------------ list -- */
 if (mode === '--list') {
-  const nums = await call('GET', '/list-phone-numbers');
+  const nums = await listPhoneNumbersV2();
   console.log(`phone numbers on the account: ${nums.length}`);
   for (const n of nums) {
     console.log(`  ${n.phone_number}  nick=${n.nickname || '-'}  in=${agentsOf(n.inbound_agents)}  out=${agentsOf(n.outbound_agents)}`);
@@ -76,7 +92,7 @@ if (mode === '--buy') {
   if (!want || want < 1 || want > 10) { console.error('pass a count 1-10, e.g. --buy 5'); process.exit(1); }
   if (!demoAgent) { console.error('automation/retell-agent-config.json missing — create the agents first.'); process.exit(1); }
 
-  const existing = await call('GET', '/list-phone-numbers');
+  const existing = await listPhoneNumbersV2();
   const already = existing.filter(n => (n.nickname || '').startsWith('DEMO-POOL-'));
   if (already.length) {
     console.log(`DEMO-POOL numbers already exist (${already.length}). Refusing to double-buy.`);
@@ -105,7 +121,7 @@ if (mode === '--buy') {
 
 /* ---------------------------------------------------------------- rewire -- */
 if (mode === '--rewire') {
-  const nums = (await call('GET', '/list-phone-numbers')).filter(n => (n.nickname || '').startsWith('DEMO-POOL-'));
+  const nums = (await listPhoneNumbersV2()).filter(n => (n.nickname || '').startsWith('DEMO-POOL-'));
   for (const n of nums) {
     await call('PATCH', `/update-phone-number/${encodeURIComponent(n.phone_number)}`, {
       inbound_agents: [BIND(INBOUND_AGENT)],

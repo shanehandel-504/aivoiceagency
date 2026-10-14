@@ -63,11 +63,21 @@ console.log(`RUN 6.5 ONE-CALL PROOF — looking back ${SINCE_MIN} min\n`);
 
 /* ---------------------------------------------------------------- 1. Retell */
 console.log('1. RETELL — inbound call on the live line');
-const calls = await retell('/v2/list-calls', {
+/* RETELL API RULES — POST /v2/list-calls is deprecated; use POST /v3/list-calls.
+   v3 returns {items, pagination_key, has_more} and tightened filter_criteria:
+   `direction` is now {type:'enum', op:'in', value:[...]}, NOT a bare array — the
+   old array form returns HTTP 400. v3 also omits transcript/recording_url; read
+   those with GET /v2/get-call/{call_id}. */
+const callsRes = await retell('/v3/list-calls', {
   method: 'POST',
-  body: JSON.stringify({ filter_criteria: { direction: ['inbound'] }, limit: 30, sort_order: 'descending' }),
+  body: JSON.stringify({
+    filter_criteria: { direction: { type: 'enum', op: 'in', value: ['inbound'] } },
+    limit: 30,
+    sort_order: 'descending',
+  }),
 });
-const recent = (Array.isArray(calls) ? calls : []).filter(
+const calls = callsRes?.items || [];
+const recent = calls.filter(
   (c) => c.to_number === LIVE_LINE && (c.start_timestamp || 0) > cutoff
 );
 const call = recent[0];

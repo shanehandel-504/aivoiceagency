@@ -57,6 +57,22 @@ async function call(method, path, body) {
   return json;
 }
 
+/* RETELL API RULES — GET /list-phone-numbers is deprecated. Current endpoint is
+   GET /v2/list-phone-numbers, which returns {items, has_more} instead of a bare
+   array. This helper pages it and returns the ARRAY callers already expect, so
+   the shape change cannot silently turn a real binding into an empty result. */
+async function listPhoneNumbersV2() {
+  const out = []; let pk;
+  for (let i = 0; i < 20; i++) {
+    const q = pk ? `/v2/list-phone-numbers?pagination_key=${encodeURIComponent(pk)}` : '/v2/list-phone-numbers';
+    const page = await call('GET', q);
+    out.push(...(page.items || []));
+    if (!page.has_more || !page.pagination_key) break;
+    pk = page.pagination_key;
+  }
+  return out;
+}
+
 const srcAgent = JSON.parse(readFileSync(join(IN, 'published-v38-agent.json'), 'utf8'));
 const srcLlm = JSON.parse(readFileSync(join(IN, 'published-v38-llm.json'), 'utf8'));
 
@@ -158,7 +174,7 @@ console.log('publish-agent-version -> ok (v' + newAgent.version + ')');
 
 /* ---------- 4 · VERIFY (re-fetch, never trust the write echo) ------------- */
 const check = await call('GET', `/get-agent/${newAgent.agent_id}`);
-const numbers = await call('GET', '/list-phone-numbers');
+const numbers = await listPhoneNumbersV2();
 const bound = numbers.filter(n =>
   (n.inbound_agents || []).some(a => a.agent_id === check.agent_id) ||
   (n.outbound_agents || []).some(a => a.agent_id === check.agent_id) ||

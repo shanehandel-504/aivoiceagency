@@ -86,23 +86,33 @@ def retell_calls():
     lower_ms = int(WINDOW_START.timestamp() * 1000)
     out, pagination_key, pages = [], None, 0
     while pages < 30:
+        # RETELL API RULES — POST /v2/list-calls is deprecated; use POST /v3/list-calls.
+        # v3 returns {items, pagination_key, has_more} instead of a bare array, and
+        # start_timestamp is now {'type':'number','op':'ge','value':ms} — the old
+        # {'lower_threshold': ms} form returns HTTP 400. v3 omits transcript and
+        # recording_url; read those with GET /v2/get-call/{call_id}.
         body = {
-            'filter_criteria': {'start_timestamp': {'lower_threshold': lower_ms}},
+            'filter_criteria': {
+                'start_timestamp': {'type': 'number', 'op': 'ge', 'value': lower_ms}
+            },
             'limit': 1000,
             'sort_order': 'descending',
         }
         if pagination_key:
             body['pagination_key'] = pagination_key
-        d = req(RETELL + '/v2/list-calls', 'POST', body,
+        d = req(RETELL + '/v3/list-calls', 'POST', body,
                 {'Authorization': 'Bearer ' + key})
         if isinstance(d, dict) and ('__http_error__' in d or '__error__' in d):
             print('RETELL ERROR:', json.dumps(d)[:300]); return out, d
-        if not isinstance(d, list) or not d:
+        if not isinstance(d, dict):
             break
-        out.extend(d)
-        if len(d) < 1000:
+        items = d.get('items') or []
+        if not items:
             break
-        pagination_key = d[-1].get('call_id')
+        out.extend(items)
+        if not d.get('has_more') or not d.get('pagination_key'):
+            break
+        pagination_key = d['pagination_key']
         pages += 1
     return out, None
 
@@ -207,7 +217,7 @@ def write_report(rows, ghl, err):
     now_ct = datetime.now(timezone.utc).astimezone(CDT).strftime('%Y-%m-%d %H:%M CDT')
 
     A('# OUTAGE RECOVERY — calls that may have fallen through\n')
-    A('**Generated:** %s · **Run:** 1.5 · **Source:** Retell `/v2/list-calls` + GHL lookup\n' % now_ct)
+    A('**Generated:** %s · **Run:** 1.5 · **Source:** Retell `/v3/list-calls` + GHL lookup\n' % now_ct)
     A('**Window:** %s → now (the n8n dead zone)\n'
       % WINDOW_START.astimezone(CDT).strftime('%Y-%m-%d %H:%M CDT'))
     A('')

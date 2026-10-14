@@ -246,10 +246,22 @@ async function fix2() {
 
   /* -- Retell agent-level hooks -- */
   say('\n  -- Retell agent-level webhook_url --');
-  const agents = await retell('/list-agents');
+  /* RETELL API RULES — GET /list-agents is deprecated. The replacement,
+     POST /v2/list-agents, is NOT the same list: the legacy endpoint returned one
+     row PER AGENT VERSION (and capped at 100 rows, which silently hid agents on
+     this account), while v2 returns one row per agent and carries NO `version`,
+     `is_published` or `webhook_url`. A path-only swap would leave webhook_url
+     undefined on every agent and print a confident empty rail. Enumerate with v2,
+     then hydrate each agent with GET /get-agent/{id}, which still returns the
+     highest (draft) version — the same record the old max-version scan selected. */
+  const agentList = await retell('/v2/list-agents', {
+    method: 'POST',
+    body: JSON.stringify({ limit: 1000 }),
+  });
   const latest = {};
-  for (const a of (agents.body || [])) {
-    if (!latest[a.agent_id] || (a.version ?? 0) > (latest[a.agent_id].version ?? 0)) latest[a.agent_id] = a;
+  for (const row of (agentList.body?.items || [])) {
+    const full = await retell(`/get-agent/${row.agent_id}`);
+    if (full.ok && full.body) latest[row.agent_id] = full.body;
   }
   for (const a of Object.values(latest)) {
     if (!a.webhook_url) continue;

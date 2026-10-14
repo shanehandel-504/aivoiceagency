@@ -9,7 +9,7 @@
    per-call row set to the scratchpad for analysis.
 
    This tool NEVER writes to Retell. No PATCH, no POST except the read-only
-   /v2/list-calls query endpoint.
+   /v3/list-calls query endpoint.
 
    USAGE:
      doppler run --project ava-prod --config prd -- \
@@ -48,8 +48,48 @@ async function call(method, path, body) {
   return json;
 }
 
+/* RETELL API RULES — GET /list-phone-numbers is deprecated. The current endpoint
+   is GET /v2/list-phone-numbers, which returns {items, has_more} rather than a
+   bare array. This helper pages it and hands back the ARRAY the callers below
+   already expect, so the shape change cannot silently turn a real binding into
+   an empty result. */
+async function listPhoneNumbersV2() {
+  const out = [];
+  let pk;
+  for (let i = 0; i < 20; i++) {
+    const q = pk ? `/v2/list-phone-numbers?pagination_key=${encodeURIComponent(pk)}` : '/v2/list-phone-numbers';
+    const page = await call('GET', q);
+    out.push(...(page.items || []));
+    if (!page.has_more || !page.pagination_key) break;
+    pk = page.pagination_key;
+  }
+  return out;
+}
+
+/* RETELL API RULES — POST /v2/list-calls is deprecated. The current endpoint is
+   POST /v3/list-calls: it returns {items, pagination_key, has_more} and DELIBERATELY
+   OMITS transcript, transcript_object, transcript_with_tool_calls and recording_url.
+   Read those with GET /v2/get-call/{call_id} (this script already does, below).
+   v3 also tightened filter_criteria: `direction` is now
+   {type:'enum', op:'in', value:[...]} and `start_timestamp` is
+   {type:'number', op:'ge'|'le'|..., value:ms} or {type:'range', op:'bt', value:[lo,hi]}.
+   A bare agent_id array is still accepted. */
+async function listCallsV3(filter_criteria, limit) {
+  const out = [];
+  let pk;
+  for (let i = 0; i < 30 && out.length < limit; i++) {
+    const body = { filter_criteria, sort_order: 'descending', limit: Math.min(1000, limit - out.length) };
+    if (pk) body.pagination_key = pk;
+    const page = await call('POST', '/v3/list-calls', body);
+    out.push(...(page.items || []));
+    if (!page.has_more || !page.pagination_key) break;
+    pk = page.pagination_key;
+  }
+  return out.slice(0, limit);
+}
+
 /* ---------- 1 · resolve the agent actually bound to the number ------------ */
-const numbers = await call('GET', '/list-phone-numbers');
+const numbers = await listPhoneNumbersV2();
 writeFileSync(join(OUT, 'phone-numbers.json'), JSON.stringify(numbers, null, 2));
 
 const row = (Array.isArray(numbers) ? numbers : []).find(n => n.phone_number === TARGET);
@@ -100,11 +140,7 @@ if (eng.type === 'retell-llm' && eng.llm_id) {
 }
 
 /* ---------- 3 · last N calls on that agent -------------------------------- */
-const calls = await call('POST', '/v2/list-calls', {
-  filter_criteria: { agent_id: [AGENT] },
-  sort_order: 'descending',
-  limit: LIMIT
-});
+const calls = await listCallsV3({ agent_id: [AGENT] }, LIMIT);
 writeFileSync(join(OUT, 'calls-raw.json'), JSON.stringify(calls, null, 2));
 console.log(`\n=== CALLS === pulled ${Array.isArray(calls) ? calls.length : 0}`);
 if (Array.isArray(calls) && calls.length) {
