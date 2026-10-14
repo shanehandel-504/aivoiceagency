@@ -113,3 +113,64 @@ an open slot, match its Central clock time against the call's own `slot_1_iso` /
    (a flow read printed tool headers before the mask was fixed) and the owner cell (a mask missed its dashed format).
 9. Commit 330416c ("email signature wordmarks") landed on main from another session during this single-writer run.
 10. CLAUDE.md still spells the …6562 line in full in § PHONE (public repo). Step 7c's fix did not run with the rest of step 7.
+
+## SHANE READBACK
+
+```text
+===== SHANE READBACK — COPY ALL =====
+RUN INCOMPLETE — WHAT: DISCOVERY WORDS NOT PROMOTED · WHY: SIMULATION GATE FAILED, 10 OF 30 RUNS MATCHED THEIR LINE · NEXT: GROK PATCH FOR 8 DEFECTS + 1 BOOKING FIX, THEN RE-RUN STEPS 5–10
+
+PLAIN ENGLISH
+Nothing your callers hear changed today. 414-240-8930 and the four pool lines still answer with AVA v51, and 414-775-0019
+still answers with AI Chauffeur v13. The old booking systems are still on.
+Everything for the switch is built and parked: the new AVA words on the test agent, the new AI Chauffeur words as a
+draft, the new calendar engine (reads your work and personal calendars, books on the work calendar and in GHL), the live
+transfer to your line through a new briefing agent, and the two hold messages.
+Before anything goes live, the run tests the words with 30 simulated calls. Only 10 behaved exactly as written, so the
+run stopped there, as the paste says. The misses are in the words (for example, a vendor got offered a call with the team,
+and the full "Whenever you're ready…" line rarely comes out). They go back to Grok. One miss is mine to fix: when AVA
+already has the two times in hand, it invents the booking code for the time and books the wrong thing.
+
+DONE TABLE
+| Step | Result | Proof |
+| 0 Precheck | DONE | Google Calendar credential exists (YRVTiGmoYhU2J5cc); all ids read from the APIs |
+| 0 Sources | DONE | v53.1 cut by script: 2,989 tokens (the paste's number), SHA-256 f7de1e32…74ead64; 5/5 sections = v50e |
+| 1 AVA TEST | DONE | v13 published 20:36Z (words, 21 start values, fast tier on), then v14 with the new tools |
+| 2 AIC v14 | DRAFT ONLY | texts A–H placed; d2 changed on 8 named lines only; greetings unchanged; 3 edges changed |
+| 3 Calendar engine | ACTIVE | WF-SHANE-SLOTS xB0ifGzDozl2NwBz; times answered in ~0.8 s, booking in ~1.1 s; tests passed |
+| 3 ZZ test | PASS | test bookings made on both brands, then deleted (3 calendar events, 3 GHL appointments) |
+| 3d 8930 lookup | DRAFT, PARKED | fold-in + Grok's v3.1 openers tested; parked as version e3ed6c6b (you said sync) |
+| 4 Transfer + hold | DONE (test agent) | AVA-TRANSFER-brief agent_30f791226d75acd36ffff2a31a; hold audio asset_9c134610bc2a / asset_2566bb462b44 |
+| 5 Simulations | FAIL 10/30 | batches test_batch_89e559dd5cb8 + test_batch_af88632b79c0 |
+| 6 Calls + speed | NOT RUN | gated by step 5 |
+| 7 One name, one path | NOT RUN | also must wait for step 9 (retiring the old rails early breaks live booking) |
+| 8 Snapshots | DONE | commit ca78ad8 |
+| 9 Promote | NOT RUN | gated by step 5 |
+| 10 Close | DONE | commit 827de92 pushed; board live; this page |
+
+IDS / ROLLBACK
+- Nothing live moved, so nothing to roll back. Line ending 8042 was the test line and is back on AVA v51 (23:04Z).
+- At the future promote: AVA → re-pin 8930 + the four pool lines to v51 and remove the pool lines' webhook; AIC → re-pin
+  0019 to v13; rails → reactivate WF-AVA-SALES-CAL / WF-AIC-SALES-CAL, deactivate WF-SHANE-SLOTS, publish WF-ANI-AVA 804b5b4c.
+- Report: reports/2026-10-14-discovery-words-run.md (defect table D1–D8 + I1 inside).
+
+WHAT'S NEXT
+1. Grok patch brief from defects D1–D8: vendor gets the team offer; TEAM NOW skipped when the team is free; no connecting line
+   before the transfer; name question skipped; full soft ask rarely said; soft ask too early once; a "ride" caller got the
+   AI Chauffeur offer; AI Chauffeur price answer drops the above-base sentence ("the soft ask from C" points nowhere).
+2. Claude Code: BOOK matches the requested time against the call's own slot_1_iso / slot_2_iso.
+3. New words paste → re-run steps 5–10 (test line …8042 again, the parked WF-ANI-AVA version, then promote).
+
+GOTCHAS
+1. Saving WF-ANI-AVA through n8n's REST API published it on the spot; its cold path failed on 3 of my own test calls for
+   about 30 seconds (22:49Z). Rolled back at once; no real caller hit it. Live workflow edits now go draft → test → publish.
+2. Line ending 8976 (the test agent's probe line) follows the test agent and now answers with the new words and tools; it has
+   no lookup webhook, so it never transfers. It books real times on your calendar if someone books there.
+3. When this goes live, an AVA caller gets two booking texts: GHL's own and the new "AVA Team" one. The AI Chauffeur text is
+   signed "AVA Team" too, as the paste says.
+4. The reminder workflow does not yet see AI Chauffeur bookings made by the new engine; that wiring rides with step 7.
+5. Another session pushed a commit (email signature wordmarks) during this single-writer run.
+6. Twice in this session's own terminal output, never in a file, commit, board or Notion: the sales-calendar header value
+   and your cell number (a mask missed the dashed format).
+7. CLAUDE.md still spells the line ending 6562 in full in the PHONE section (public repo); that fix sits in the step 7 that did not run.
+```
