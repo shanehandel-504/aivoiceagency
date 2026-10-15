@@ -349,7 +349,7 @@ It self-tags as internal (`NOTRACK`) on webdriver / `ava_internal` / `?notrack=1
 - **414-240-8930** — the public AVA line. The ONLY voice number in marketing copy, schema, and footer.
 - Private numbers (personal cells, internal/routing lines) NEVER in the repo or in commits.
 - SMS: 350-220-5305 is the published text-us line (footer only).
-- 305-315-6562 retired — do not surface.
+- Owner direct line (…6562): private; never in the repo, the board or public copy
 
 ## PUSH DISCIPLINE
 
@@ -442,7 +442,7 @@ Ratified RUN 7-CODE.
 - **Every outbound message does ONE job.** One ask, one outcome. If it needs two, it is two messages.
 - **Owner alerts open status-led.** First line is the outcome — `BOOKED` / `MISSED` / `VOICEMAIL` /
   `FOLLOW-UP` — details after. The status is readable from a lock screen without opening anything.
-- **One canonical name on every surface: "AVA strategy call."** **15 minutes, never 30.** Not
+- **One canonical name on every surface: "AVA setup call."** **15 minutes, never 30.** Not
   "demo," not "intro call," not "30-minute call." The GHL `AVA Demo Call` calendar
   (`aCIv7rUnCGrysobt6Mlg`) is set to a 15-minute slot to match — copy and booking system agree.
 - **Booking receipts include:** `Hear AVA anytime: 414-240-8930.`
@@ -492,6 +492,8 @@ throwaway session script:
 | `POST /v2/list-calls` | `POST /v3/list-calls` |
 | `GET /list-agents` | `POST /v2/list-agents` |
 | `GET /list-phone-numbers` | `GET /v2/list-phone-numbers` |
+| `POST /v2/create-web-call` | `POST /v3/create-web-call` |
+| `GET /list-test-case-definitions` | `GET /v2/list-test-case-definitions` |
 
 **Read a transcript in two steps.** `/v3/list-calls` deliberately omits `transcript`,
 `transcript_object`, `transcript_with_tool_calls` and `recording_url`. Take the `call_id` from the
