@@ -30,7 +30,7 @@ const AGENTS = [
 ];
 
 /* BOARD LAW — two suffixes never appear in output, in any format. Strip the
-   separators before testing, or "(305) 315-6562" walks straight past a
+   separators before testing, or the owner direct line (…6562), written with parentheses and a dash, walks straight past a
    naive endsWith on the formatted string. */
 const FORBIDDEN_SUFFIX = ['6562', '9511'];
 const redact = (s) => {

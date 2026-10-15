@@ -22,7 +22,7 @@ Two files were staged; both showed up mid-run (they weren't in Downloads when th
 | 5 | "3AM. Google was listening" → /lsa in FROM THE WIRE + footer Insights | ✅ | prod homepage carries **3** `/lsa` links (strip + wire + footer) |
 | 5+ | `tools/stamp.py` FOOTER updated to match | ✅ | footer link survives future re-stamps; propagates site-wide on the next stamp run |
 | 6 | `sitemap.xml` + `https://aivoiceagency.ai/lsa/` (lastmod 2026-07-17) | ✅ | added next to `/watch` |
-| 7 | LAWS-CHECK | ✅ PASS | only 414-240-8930 (no 305-315-6562 / 480-800-9511 / 786-937-1218); no new price outside LSA; no she/her; my homepage additions are in-family colors |
+| 7 | LAWS-CHECK | ✅ PASS | only 414-240-8930 (no Owner direct line (…6562) / 480-800-9511 / 786-937-1218); no new price outside LSA; no she/her; my homepage additions are in-family colors |
 | 8 | Commit + push | ✅ | `cfa66d4` → main (5 files, no junk staged) |
 | 9 | Live verify | ✅ | all 200s above |
 

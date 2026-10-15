@@ -66,11 +66,26 @@ def host_of(relpath):
 # ---------------------------------------------------------------- banned
 
 BANNED_NUMBERS = [
-    "305-315-6562", "3053156562",
+    # Owner direct line (…6562): private; never in the repo, the board or public copy. Caught by its last four (BANNED_SUFFIXES).
     "480-800-9511", "4808009511",
     "786-937-1218", "7869371218",
     "350-220-5305", "3502205305",
 ]
+
+# Owner direct line (…6562): private; never in the repo, the board or public copy. It is matched by its last four on any
+# phone-shaped run of 10 or 11 digits (any separators), so the full number never has to be written in this file.
+BANNED_SUFFIXES = ("6562",)
+PHONE_RUN = re.compile(r"\+?\(?\d[\d\s().-]{8,}\d")
+
+
+def banned_suffix_hits(text):
+    hits = []
+    for m in PHONE_RUN.finditer(text):
+        d = re.sub(r"\D", "", m.group(0))
+        if len(d) in (10, 11) and d[-4:] in BANNED_SUFFIXES:
+            hits.append("…" + d[-4:])
+    return hits
+
 
 # A per-minute RATE — a number bound to a minute — is what the brief bans.
 # The bare phrase "per-minute" is not a rate: this site's own copy says
@@ -289,6 +304,9 @@ def audit_page(relpath):
                     if digits(bad) and digits(bad)[-10:] == d:
                         rec["defects"].append(
                             ("BANNED-PHONE", "schema carries %s" % val))
+                if len(d) >= 10 and d[-4:] in BANNED_SUFFIXES:
+                    rec["defects"].append(
+                        ("BANNED-PHONE", "schema carries the owner direct line (…%s)" % d[-4:]))
                 if d and d not in digits(vis):
                     rec["notes"].append(
                         ("IDENTITY-FIELD",
@@ -339,6 +357,8 @@ def audit_page(relpath):
     for bad in BANNED_NUMBERS:
         if bad in head:
             rec["defects"].append(("BANNED-PHONE", "%s in <head>" % bad))
+    for hit in banned_suffix_hits(head):
+        rec["defects"].append(("BANNED-PHONE", "owner direct line (%s) in <head>" % hit))
     pm = PER_MINUTE.search(head)
     if pm:
         rec["defects"].append(("PER-MINUTE-RATE", pm.group(0)))

@@ -42,4 +42,11 @@ Context, not gating (same scripted lines, same method):
 |---|---|---|---|---|---|
 | AIC v14.3 before speed lever 1 (responsiveness 0.7) | 5 | 2503 | 2503 | 3298 | 5521 |
 | AIC v14.3 after lever 1 (responsiveness 0.8) — the gated set above | 5 | 2515 | 2515 | 2876 | 5380 |
-| AIC live v13 (what 414-775-0019 answers with today) | 5 | 2217 | 2217 | 4993 | 5742 |
+| AIC live v13 (what 414-775-0019 answered with before the promote) | 5 | 2217 | 2217 | 4993 | 5742 |
+
+## Owner ruling, 2026-10-15
+
+Shane ruled the AI Chauffeur gate is "no slower than today's live v13" (the gate above, "not slower than the AVA after-number", failed;
+a faster AI Chauffeur flow is a later rebuild). On the answer gap he cited: v14.3 median p50 2876 ms / p90 5380 ms against
+live v13 4993 ms / 5742 ms → **PASS**. For the record, Retell's e2e (one turn per AIC call): v14.3 2515 ms,
+v13 2217 ms from the 2 v13 calls that carry it.

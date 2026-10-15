@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-15T12:29:51-05:00",
+  "updated": "2026-10-15T13:10:09-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -629,10 +629,10 @@
     },
     {
       "id": "discovery-words",
-      "title": "Discovery words — AVA v53.3 + AI Chauffeur v14.3 + slot engine + live transfer (PASTE-CC-DISCOVERY-WORDS-RUN v1.3, 2026-10-15)",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-15-discovery-words-run-v1-3.md",
-      "status": "pending",
-      "label": "RUN INCOMPLETE (v1.3) — the simulations passed (both must-pass cases 3 of 3) and AVA passed the speed check (1.07 s against 1.34 s), but the AI Chauffeur speed check failed: it answers in about 2.9 s and the bar is \"no slower than AVA\" (today's live v13 answers in about 5.0 s on the same lines). Nothing was promoted: 414-240-8930 and the four pool lines still serve AVA v51; 414-775-0019 still serves v13. Ready for the promote: AVA TEST v17 (v53.3 words, hold message that starts \"Connecting you with the team now.\"), AI Chauffeur draft v14.3 (the price is one fixed line). Done: one booking text per phone booking, reminders for phone bookings on both calendars, the CLAUDE.md fixes, the ChatDash webhook link removed from public files. Next: the owner's ruling on the AI Chauffeur speed bar, then the promote."
+      "title": "Discovery words — LIVE: AVA v53 (Grok v53.3) on five lines, AI Chauffeur v14.3 on 0019, slot engine + live transfer (2026-10-15)",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-15-discovery-words-live.md",
+      "status": "live",
+      "label": "LIVE since 12:57 PM Central, Oct 15. 414-240-8930 and the four pool lines answer with AVA v53: the \"This call is recorded\" opener, the Grok v53.3 discovery words, two open times from the calendar at the start of every call, booking by \"the first one / the second one\", and a live hand-off to the team that plays \"Connecting you with the team now\" on hold. 414-775-0019 answers with AI Chauffeur v14.3 (the price is one fixed line) on the same calendar engine. One booking text per booking; reminders cover phone bookings on both calendars; the GHL calendars are \"AVA setup call\" and \"AI Chauffeur setup call\"; the old AVA booking workflow is retired. Open item: the old AI Chauffeur booking workflow stays on because AI Chauffeur's team alert and the Capture Desk agent (…5008) still call it."
     }
   ],
   "log": [
@@ -1239,6 +1239,10 @@
     {
       "ts": "2026-10-15T12:29:51-05:00",
       "entry": "Discovery words run v1.3 (PASTE-CC-DISCOVERY-WORDS-RUN v1.3) — RUN INCOMPLETE at the speed gate. Simulations PASS: S7 3/3 on AVA TEST v17 (hold audio asset_2364a4ddc00c opens with the connecting line, checked by faster-whisper), S10 3/3 on AI Chauffeur draft v14.3 (fixed five-sentence price line); batches test_batch_1e0773b28527 + test_batch_6e3f2189d0b2; gate v1.3 frozen 0c1ccde9. Speed: AVA median e2e p50 1,067 / p90 1,880 ms PASS (bar 1,344 / 2,273); AI Chauffeur median e2e p50 2,515 ms after lever 1 (responsiveness 0.7 -> 0.8 on the draft), answer gap 2.9 s vs AVA 1.4 s, FAIL (live v13 on the same lines: 5.0 s). No phone line moved. Published: WF-SHANE-SLOTS 37590140 (toNotify false, AIC text signed AI Chauffeur Team), WF-SETUP-CALL-REMINDERS e0855328 (engine bookings on both calendars). CLAUDE.md fixes; ChatDash webhook URL redacted in 12 public files. Report: reports/2026-10-15-discovery-words-run-v1-3.md."
+    },
+    {
+      "ts": "2026-10-15T13:10:09-05:00",
+      "entry": "discovery words live: AVA v53 on five numbers (…8930 in + out, …1886, …6486, …6409, …8042), AIC v14 (v14.3) on …0019, slot engine + transfer live; webhooks on all six (WF-ANI-AVA 910e8194 on the AVA lines and the …8976 probe line, WF-SHANE-SLOTS GET-SLOTS on …0019). Speed gate: AVA median e2e p50/p90 1,344/2,273 → 1,067/1,880 ms; AI Chauffeur answer gap 5.0 s (v13) → 2.9 s (v14.3), passed under the owner ruling \"no slower than live v13\". Step 7: GHL calendars renamed (AVA notice 0), WF-AVA-SALES-CAL retired (ZZ-RETIRED); WF-AIC-SALES-CAL kept on (AIC team alert + Capture Desk …5008) — the one open item. Full …6562 removed from four files (truth_audit keeps a last-four check; output identical). Report: reports/2026-10-15-discovery-words-live.md."
     }
   ]
 }
