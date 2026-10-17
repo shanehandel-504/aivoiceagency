@@ -89,6 +89,25 @@
     }
   } catch (e) { /* never break the page */ }
 
+  /* ----------------------------------------------- VERCEL WEB ANALYTICS -- */
+  /* SEO-RECOVERY v1 · Oct 17 2026 — the page counter. Web Analytics was ON
+   * for the aivoiceagency project the whole time, but no aivoiceagency.ai
+   * page ever loaded its script, so Vercel counted 1 pageview in 31 days
+   * (and that one was a /chauffeur page). Same queue shim + same first-party
+   * script the aichauffeur.ai pages carry in their <head>; it rides here
+   * because this is the ONE tracking file. No ID: the project serves it.   */
+  try {
+    if (!NOTRACK) {
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+      if (!document.querySelector('script[src^="/_vercel/insights/script.js"]')) {
+        var vs = document.createElement('script');
+        vs.defer = true;
+        vs.src = '/_vercel/insights/script.js';
+        document.head.appendChild(vs);
+      }
+    }
+  } catch (e) { /* never break the page */ }
+
   /* ------------------------------------------------------ SAFE WRAPPERS -- */
   function fb(event, params) {
     if (NOTRACK) return;
