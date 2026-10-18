@@ -98,6 +98,16 @@ function norm(s) {
     .trim();
 }
 
+// The page's <title> and meta description are served on the host too: search
+// and answer engines quote them. A segment found ONLY there still passes, but
+// is printed as "live (meta)" so nobody mistakes it for on-screen copy.
+function metaText(html) {
+  const head = (html.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i) || [, ''])[1];
+  const title = (head.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [, ''])[1];
+  const desc = (head.match(/<meta\s+name="description"\s+content="([^"]*)"/i) || [, ''])[1];
+  return norm(decode(title + ' \u0001 ' + desc));
+}
+
 function visibleText(html) {
   const body = (html.match(/<body\b[^>]*>([\s\S]*)<\/body>/i) || [, html])[1];
   return norm(decode(body
@@ -218,15 +228,19 @@ async function verifyHost({ host, file }) {
     try { const u = new URL(url); if (u.hostname === host && !/\.(mp3|wav|m4a|ogg|png|jpe?g|svg|webp|pdf|txt|xml)$/i.test(u.pathname)) pages.add(u.origin + u.pathname); } catch {}
   });
   const fetched = await pool([...pages], 6, async (u) => ({ u, r: await fetchPage(u) }));
-  const corpus = fetched.filter((x) => x.r.status === 200 && /html/.test(x.r.type)).map((x) => ({ u: x.u, t: visibleText(x.r.body) }));
+  const corpus = fetched.filter((x) => x.r.status === 200 && /html/.test(x.r.type)).map((x) => ({ u: x.u, t: visibleText(x.r.body), m: metaText(x.r.body) }));
   console.log(`corpus  ${corpus.length} ${LOCAL ? 'LOCAL (pre-deploy preview)' : 'live'} pages (sitemap ${sm.status})`);
 
-  const misses = segments.filter((seg) => !corpus.some((p) => p.t.includes(norm(seg.text))));
+  const onPage = (seg) => corpus.some((p) => p.t.includes(norm(seg.text)));
+  const inMeta = (seg) => corpus.find((p) => p.m.includes(norm(seg.text)));
+  const metaOnly = segments.filter((seg) => !onPage(seg) && inMeta(seg));
+  const misses = segments.filter((seg) => !onPage(seg) && !inMeta(seg));
   const uniqueLinks = [...new Map(links.map((l) => [l.url, l])).values()];
   const linkRes = await pool(uniqueLinks, 6, async (l) => ({ ...l, r: await fetchPage(l.url) }));
   const dead = linkRes.filter((l) => l.r.status !== 200);
 
-  console.log(`segments ${segments.length - misses.length}/${segments.length} verbatim on ${host}`);
+  console.log(`segments ${segments.length - misses.length}/${segments.length} verbatim on ${host}${metaOnly.length ? ` (${metaOnly.length} in <title>/meta description only)` : ''}`);
+  metaOnly.forEach((m) => console.log(`  live (meta) line ${m.line}: ${m.text}  <- ${inMeta(m).u}`));
   misses.forEach((m) => console.log(`  NOT LIVE  line ${m.line}: ${m.text}`));
   console.log(`links    ${linkRes.length - dead.length}/${linkRes.length} answer 200`);
   dead.forEach((d) => console.log(`  DEAD      line ${d.line}: ${d.url} -> ${d.r.status || d.r.error}`));

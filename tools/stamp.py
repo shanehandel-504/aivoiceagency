@@ -78,7 +78,7 @@ NAV = '''<!-- BRIDGE:NAV -->
       </div>
     </div>
     <a class="bnav-top" href="/live" data-event="hear_ava_live_nav">Hear AVA Live</a>
-    <a class="bnav-top" href="/#pricing">Pricing</a>
+    <a class="bnav-top" href="/pricing">Pricing</a>
     <a class="bnav-top" href="/roi">ROI</a>
     <a class="bnav-cta" href="/book" data-event="book_click_nav">Book the AVA strategy call</a>
     <a class="bnav-tel" href="tel:+14142408930" data-event="tel_tap_nav">414-240-8930</a>
@@ -160,6 +160,7 @@ FOOTER = '''<!-- BRIDGE:FOOTER -->
         <summary>Company</summary>
         <div class="bfoot-items">
           <a href="/overview">Overview</a>
+          <a href="/pricing">Pricing</a>
           <a href="/deck">Interactive deck</a>
           <a href="/roi">ROI Calculator</a>
           <a href="/methodology.html">Methodology</a>
@@ -233,6 +234,9 @@ PAGES = [
     dict(f='privacy/index.html',                           kind='legal',     trail=[('Privacy', None)], jsonld=True),
     dict(f='terms.html',                                   kind='legal',     trail=[('Terms', None)], jsonld=True),
     dict(f='sms-policy.html',                              kind='legal',     trail=[('SMS Policy', None)], jsonld=True),
+    # SEO-RECOVERY v1 (2026-10-17) — the pricing page the engines can quote. Born
+    # with every BRIDGE marker in place, so `kind` only names its family.
+    dict(f='pricing/index.html',                           kind='circulant', trail=[('Pricing', None)], jsonld=True),
 ]
 for city, hub in [('milwaukee', '/milwaukee'), ('madison', '/madison'), ('west-bend', '/west-bend'),
                   ('green-bay', '/green-bay'), ('waukesha', '/waukesha')]:
@@ -299,6 +303,9 @@ VERSION_ONLY = [
     # different brand's host.
     'chauffeur/rates/index.html',
     'chauffeur/reserve/index.html',
+    # SEO-RECOVERY v1 (2026-10-17) — the chauffeur pricing page, registered at
+    # creation for the same reason as the two above.
+    'chauffeur/pricing/index.html',
 ]
 
 
