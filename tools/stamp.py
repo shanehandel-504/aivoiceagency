@@ -309,6 +309,30 @@ VERSION_ONLY = [
 ]
 
 
+# SEO-RECOVERY v1 (2026-10-17) — answer pages built by scripts/brick.mjs register
+# themselves: answers/index.html and every answers/<slug>/index.html join PAGES on
+# aivoiceagency.ai, and everything under chauffeur/answers/ joins VERSION_ONLY, the
+# moment the file exists. An answer can never ship with a cache token that cannot
+# expire. The crumb label is the page's own <h1>, exactly as brick.mjs wrote it, so
+# a stamp run leaves the press's BRIDGE:CRUMB untouched.
+def _register_answer_pages():
+    import glob
+    h1 = re.compile(r'<h1[^>]*>([\s\S]*?)</h1>')
+    ava = os.path.join(ROOT, 'answers')
+    if os.path.exists(os.path.join(ava, 'index.html')):
+        PAGES.append(dict(f='answers/index.html', kind='circulant', trail=[('Answers', None)]))
+    for f in sorted(glob.glob(os.path.join(ava, '*', 'index.html'))):
+        with io.open(f, 'r', encoding='utf-8') as fh:
+            m = h1.search(fh.read())
+        PAGES.append(dict(f=os.path.relpath(f, ROOT).replace(os.sep, '/'), kind='circulant',
+                          trail=[('Answers', '/answers/'), (m.group(1).strip() if m else 'Answer', None)]))
+    for f in sorted(glob.glob(os.path.join(ROOT, 'chauffeur', 'answers', '**', 'index.html'), recursive=True)):
+        VERSION_ONLY.append(os.path.relpath(f, ROOT).replace(os.sep, '/'))
+
+
+_register_answer_pages()
+
+
 def crumb_html(trail):
     parts = ['<a href="/">Home</a>']
     for i, (label, href) in enumerate(trail):
