@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-17T19:45:00-05:00",
+  "updated": "2026-10-17T20:40:00-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -660,11 +660,11 @@
     },
     {
       "id": "answers-press",
-      "status": "pending",
-      "updated": "2026-10-17T19:45:00-05:00",
+      "status": "live",
+      "updated": "2026-10-17T20:40:00-05:00",
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-17-seo-recovery-v1.md",
       "title": "Answer press — scripts/brick.mjs built, nothing published (2026-10-17)",
-      "label": "WAITING ON SHANE. The press is built and dry-run tested (183cb9b): one brick file -> one answer page on the site's pricing shell, schema checked verbatim, validate_jsonld 0 errors or nothing is written, sitemap + llms.txt + answers index + IndexNow, idempotent. Shane's 16 Friday bricks were not on disk and were not built; their words are being corrected to the canon first. Next: save each corrected brick as bricks/inbox/<aic|ava>/<slug>.txt and run node scripts/brick.mjs --all --dry."
+      "label": "LIVE. The press published the 16 canon bricks on 2026-10-17 (5816115): see answers-canon-16. Built bricks sit in bricks/built/aic and bricks/built/ava; the next brick goes in bricks/inbox/<aic|ava>/<slug>.txt and runs through node scripts/brick.mjs --all --dry, then --all."
     },
     {
       "id": "indexnow-auto",
@@ -673,6 +673,30 @@
       "url": "https://circulant.app.n8n.cloud/workflow/gdFqOxFFVe13CfvX",
       "title": "IndexNow every day + on every production deploy — n8n SEO — IndexNow daily (2026-10-17)",
       "label": "LIVE (gdFqOxFFVe13CfvX, version 2738ef57). 7:00 AM Chicago daily + Vercel webhook account_hook_D3CX9I1nt4NXFPIY76iLje47 on every production deploy of both projects. First live run: aivoiceagency.ai 200 (61 URLs), aichauffeur.ai 200 (20 URLs); both deploy deliveries also 200/200. Error Sentry attached. Waiting on Shane: the Slack header-auth credential on node \"Alert #social\" (until then a failed ping pages the owner through the Error Sentry instead of #social)."
+    },
+    {
+      "id": "answers-canon-16",
+      "status": "live",
+      "updated": "2026-10-17T20:40:00-05:00",
+      "url": "https://aichauffeur.ai/answers/",
+      "title": "Sixteen canon answer pages — 10 on aichauffeur.ai/answers/, 6 on aivoiceagency.ai/answers/ (SEO-RECOVERY v1.1, 2026-10-17)",
+      "label": "LIVE (5816115). scripts/brick.mjs pressed the 16 bricks word for word: all 16 URLs 200 with the H1 (the question) and the META sentence, both /answers/ indexes 200 (10 and 6 answers), both sitemaps list them, both llms.txt carry the \"## Answers\" lines and llms-verify --live is GREEN on both hosts. validate_jsonld 0 errors on all 18 served pages. IndexNow 200/200 on the deploy hook."
+    },
+    {
+      "id": "rate-quoting-one-story",
+      "status": "pending",
+      "updated": "2026-10-17T20:40:00-05:00",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-17-seo-recovery-v1.1.md",
+      "title": "Rate quoting is one story on both sites — sweep for \"higher tier\" / \"capture only\" / \"custom\" quoting (2026-10-17)",
+      "label": "WAITING ON SHANE (words). aichauffeur.ai: 0 hits; the only matches are the canon demo line, kept. checkpoint grep 0 on chauffeur HTML and both llms.txt. aivoiceagency.ai: no sentence could take the line cleanly, so nothing changed and no commit was made. Three sentences list quoting with other work as \"custom\" or a tier and are in the report under NEEDS WORDS: /chatgpt-example (noindex), /legacy/index-funnel-v2-2026-07-14.html, and the /ground-transportation tier box."
+    },
+    {
+      "id": "ava-cta-call-first",
+      "status": "live",
+      "updated": "2026-10-17T20:40:00-05:00",
+      "url": "https://aivoiceagency.ai/",
+      "title": "AVA homepage — CALL AVA LIVE is the primary button, HEAR A SAMPLE CALL is secondary (2026-10-17)",
+      "label": "LIVE (f655925). Classes and DOM order only, no words or CSS changed: the call button comes first with the filled cyan .cx-btn--go, the sample button takes the plain .cx-btn. At 390x844 the whole call button is above the fold (bottom 409 of 844); label contrast 11.16:1 dark, 4.88:1 light; focus rings on both; tel:+14142408930 not intercepted; the sample still plays. Waiting on Shane: Booked-Green on the call button (the existing green classes are rounded and shadowed), the call button is narrower than the sample (157 vs 234 px), and the hero sub-line and micro row still invite the sample."
     }
   ],
   "log": [
@@ -1287,6 +1311,10 @@
     {
       "ts": "2026-10-17T19:45:00-05:00",
       "entry": "SEO-RECOVERY v1 — AVA counter · AIC canon facts + llms.txt · pricing both sites · answers press (dry) · IndexNow daily + deploy hook · 2026-10-17"
+    },
+    {
+      "ts": "2026-10-17T20:40:00-05:00",
+      "entry": "SEO-RECOVERY v1.1 — 16 canon answer pages · rate quoting one story on both sites · AVA live call first · IndexNow · 2026-10-17. Commits 5816115 (answers) + f655925 (CTA flip); rate quoting changed 0 sentences (aichauffeur.ai 0 hits, aivoiceagency.ai 3 NEEDS WORDS). IndexNow deploy hook exec 14963: aivoiceagency.ai 200 (68 URLs), aichauffeur.ai 200 (31 URLs). Report: reports/2026-10-17-seo-recovery-v1.1.md."
     }
   ]
 }
