@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-15T13:10:09-05:00",
+  "updated": "2026-10-17T19:45:00-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -633,6 +633,46 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-15-discovery-words-live.md",
       "status": "live",
       "label": "LIVE since 12:57 PM Central, Oct 15. 414-240-8930 and the four pool lines answer with AVA v53: the \"This call is recorded\" opener, the Grok v53.3 discovery words, two open times from the calendar at the start of every call, booking by \"the first one / the second one\", and a live hand-off to the team that plays \"Connecting you with the team now\" on hold. 414-775-0019 answers with AI Chauffeur v14.3 (the price is one fixed line) on the same calendar engine. One booking text per booking; reminders cover phone bookings on both calendars; the GHL calendars are \"AVA setup call\" and \"AI Chauffeur setup call\"; the old AVA booking workflow is retired. Open item: the old AI Chauffeur booking workflow stays on because AI Chauffeur's team alert and the Capture Desk agent (…5008) still call it."
+    },
+    {
+      "id": "ava-page-counter",
+      "status": "live",
+      "updated": "2026-10-17T19:45:00-05:00",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-17-seo-recovery-v1.md",
+      "title": "AVA page counter — Vercel Web Analytics now counts aivoiceagency.ai (SEO-RECOVERY v1, 2026-10-17)",
+      "label": "LIVE (435bd58). Web Analytics was on for the project all along, but no AVA page ever loaded its script: 1 pageview in 31 days, and that one was a /chauffeur page. js/tracking.js (the one tracking file) now loads the same script the aichauffeur.ai pages carry, behind the NOTRACK self-tag. Proof: a browser load of / and /book sends POST /_vercel/insights/view and gets 200. Headless Chrome is ignored by the script, so gates must use a normal Chrome user agent."
+    },
+    {
+      "id": "aic-canon-facts",
+      "status": "live",
+      "updated": "2026-10-17T19:45:00-05:00",
+      "url": "https://aichauffeur.ai/",
+      "title": "AI Chauffeur canon facts — homepage + llms.txt: \"Answers the call. Quotes your rates. Books the trip.\" (2026-10-17)",
+      "label": "LIVE (aed5436). Title, meta, H1, hero, the \"Built for the day\" bullet, the stat line and two FAQ answers carry the canon lines; \"one call or a thousand\" and \"1 or 1,000\" are off the homepage (0 on the wire); 17 years -> 14 years on four pages; llms.txt has the new top block + a Pricing section, verifier GREEN on the served file. Open: the caller email footer lives in n8n TkETvvnABhUPd7ME (not editable this run)."
+    },
+    {
+      "id": "pricing-pages",
+      "status": "live",
+      "updated": "2026-10-17T19:45:00-05:00",
+      "url": "https://aichauffeur.ai/pricing/",
+      "title": "Pricing pages on both sites — aichauffeur.ai/pricing/ ($997 + $997 setup) and aivoiceagency.ai/pricing ($497) (2026-10-17)",
+      "label": "LIVE (3c930b9). Both 200 with the H1 and the price digits, in both sitemaps, linked from every nav. aichauffeur.ai/pricing/: Product nav, drawer and footer on 19 pages. aivoiceagency.ai/pricing: the nav Pricing link and the footer Company list on every stamped page (stamp.py templates). validate_jsonld 0 errors; truth_audit clean on both. Open: /how-setup-works/ still says \"There is no price list\" (needs words)."
+    },
+    {
+      "id": "answers-press",
+      "status": "pending",
+      "updated": "2026-10-17T19:45:00-05:00",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-17-seo-recovery-v1.md",
+      "title": "Answer press — scripts/brick.mjs built, nothing published (2026-10-17)",
+      "label": "WAITING ON SHANE. The press is built and dry-run tested (183cb9b): one brick file -> one answer page on the site's pricing shell, schema checked verbatim, validate_jsonld 0 errors or nothing is written, sitemap + llms.txt + answers index + IndexNow, idempotent. Shane's 16 Friday bricks were not on disk and were not built; their words are being corrected to the canon first. Next: save each corrected brick as bricks/inbox/<aic|ava>/<slug>.txt and run node scripts/brick.mjs --all --dry."
+    },
+    {
+      "id": "indexnow-auto",
+      "status": "live",
+      "updated": "2026-10-17T19:45:00-05:00",
+      "url": "https://circulant.app.n8n.cloud/workflow/gdFqOxFFVe13CfvX",
+      "title": "IndexNow every day + on every production deploy — n8n SEO — IndexNow daily (2026-10-17)",
+      "label": "LIVE (gdFqOxFFVe13CfvX, version 2738ef57). 7:00 AM Chicago daily + Vercel webhook account_hook_D3CX9I1nt4NXFPIY76iLje47 on every production deploy of both projects. First live run: aivoiceagency.ai 200 (61 URLs), aichauffeur.ai 200 (20 URLs); both deploy deliveries also 200/200. Error Sentry attached. Waiting on Shane: the Slack header-auth credential on node \"Alert #social\" (until then a failed ping pages the owner through the Error Sentry instead of #social)."
     }
   ],
   "log": [
@@ -1243,6 +1283,10 @@
     {
       "ts": "2026-10-15T13:10:09-05:00",
       "entry": "discovery words live: AVA v53 on five numbers (…8930 in + out, …1886, …6486, …6409, …8042), AIC v14 (v14.3) on …0019, slot engine + transfer live; webhooks on all six (WF-ANI-AVA 910e8194 on the AVA lines and the …8976 probe line, WF-SHANE-SLOTS GET-SLOTS on …0019). Speed gate: AVA median e2e p50/p90 1,344/2,273 → 1,067/1,880 ms; AI Chauffeur answer gap 5.0 s (v13) → 2.9 s (v14.3), passed under the owner ruling \"no slower than live v13\". Step 7: GHL calendars renamed (AVA notice 0), WF-AVA-SALES-CAL retired (ZZ-RETIRED); WF-AIC-SALES-CAL kept on (AIC team alert + Capture Desk …5008) — the one open item. Full …6562 removed from four files (truth_audit keeps a last-four check; output identical). Report: reports/2026-10-15-discovery-words-live.md."
+    },
+    {
+      "ts": "2026-10-17T19:45:00-05:00",
+      "entry": "SEO-RECOVERY v1 — AVA counter · AIC canon facts + llms.txt · pricing both sites · answers press (dry) · IndexNow daily + deploy hook · 2026-10-17"
     }
   ]
 }
