@@ -2,8 +2,8 @@
   "id": "gdFqOxFFVe13CfvX",
   "name": "SEO — IndexNow daily",
   "active": true,
-  "versionId": "71a6873d-05e7-4c60-b481-0294078ad336",
-  "activeVersionId": "71a6873d-05e7-4c60-b481-0294078ad336",
+  "versionId": "2738ef57-3f6c-4d85-99de-209d1701eedc",
+  "activeVersionId": "2738ef57-3f6c-4d85-99de-209d1701eedc",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -197,7 +197,7 @@
         "path": "indexnow-deploy",
         "responseMode": "onReceived",
         "options": {
-          "onlyRunIf": "={{ $json.body?.type === \"deployment.succeeded\" && ($json.body?.payload?.target ?? \"production\") === \"production\" }}"
+          "onlyRunIf": "={{ $json.body?.type === \"deployment.succeeded\" && $json.body?.payload?.target === \"production\" }}"
         }
       },
       "webhookId": "1f709534-a06c-48d2-a100-bf7d887d932c"
@@ -285,6 +285,6 @@
   },
   "pinData": {},
   "tags": [],
-  "exportedAt": "2026-10-18T00:33:23.293Z",
+  "exportedAt": "2026-10-18T00:34:34.002Z",
   "exportNote": "SEO-RECOVERY v1 · published version. No credential values in this file (the Alert #social header-auth credential is not set yet). The IndexNow key is public by design."
 }
