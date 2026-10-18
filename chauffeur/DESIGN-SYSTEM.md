@@ -609,7 +609,7 @@ faded it at the edges. That is exactly backwards.
 
 - Voice is **"the AI Chauffeur team" / AI Chauffeur / operators**. Never an individual.
 - **The agent is AI Chauffeur on this host** (ruling 2026-09-13). The AVA name does not appear in visible text on aichauffeur.ai; code hooks such as `id="ava-callback"` and the n8n paths stay.
-- Authority rail: **BUILT BY OPERATORS · 17 YEARS IN CHAUFFEURED TRANSPORTATION ·
+- Authority rail: **BUILT BY OPERATORS · 14 YEARS IN CHAUFFEURED TRANSPORTATION ·
   SETUP DONE FOR YOU.** No personal timelines.
 - The operator section is titled **"Built by operators."**
 - Contact email is **dispatch@aichauffeur.ai**.
