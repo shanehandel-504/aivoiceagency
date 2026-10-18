@@ -1,0 +1,290 @@
+{
+  "id": "gdFqOxFFVe13CfvX",
+  "name": "SEO — IndexNow daily",
+  "active": true,
+  "versionId": "71a6873d-05e7-4c60-b481-0294078ad336",
+  "activeVersionId": "71a6873d-05e7-4c60-b481-0294078ad336",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "errorWorkflow": "SlnAeMrVRORsF0w7",
+    "timezone": "America/Chicago",
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "nodes": [
+    {
+      "id": "ad6dfd7b-cf2c-4a7e-b266-532b16b8a93c",
+      "name": "Daily 7:00 AM Chicago",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 7,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "e84a0599-4768-482c-84a6-485c822bf3b1",
+      "name": "IndexNow Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        110
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// SEO-RECOVERY v1 · Oct 17 2026. The IndexNow key lives here, once, as this\n// workflow's variable. It is public by design (served at https://<host>/<key>.txt)\n// and it travels in the POST body, never in a node URL.\n// STAGE: 'sink-fail' | 'sink-ok' | 'live'. Only 'live' talks to IndexNow and Slack.\nconst STAGE = 'live';\nconst KEY = '69c6723b4b145a13877f1c954bdb0e09';\nconst SINK = 'https://circulant.app.n8n.cloud/webhook/zz-sink-retell-test';\nconst endpoint = STAGE === 'live' ? 'https://api.indexnow.org/indexnow'\n  : STAGE === 'sink-ok' ? SINK : SINK + '/indexnow-fail-probe';\nconst alertUrl = STAGE === 'live' ? 'https://slack.com/api/chat.postMessage' : SINK;\nreturn ['aivoiceagency.ai', 'aichauffeur.ai'].map((host) => ({ json: {\n  stage: STAGE, host, key: KEY, endpoint, alertUrl,\n  sitemap: 'https://' + host + '/sitemap.xml',\n  keyLocation: 'https://' + host + '/' + KEY + '.txt',\n} }));"
+      }
+    },
+    {
+      "id": "fb24f571-5ceb-4d51-b5bc-1489312ea51f",
+      "name": "Fetch Sitemap",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        110
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.sitemap }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "xml"
+            }
+          },
+          "timeout": 20000
+        }
+      }
+    },
+    {
+      "id": "114a069d-1114-4840-b27f-4a29ebedd56d",
+      "name": "Build Submission",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        110
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "language": "javaScript",
+        "jsCode": "// One IndexNow body per host: every <loc> in that host's sitemap that belongs\n// to the host (IndexNow answers 422 to a foreign URL) and is not a private\n// path. No URL global in this sandbox, so hosts are read with a regex.\nconst cfg = $('IndexNow Config').item.json;\nconst xml = String($json.xml || '');\nconst locs = [...xml.matchAll(/<loc>\\s*([^<\\s]+)\\s*<\\/loc>/g)].map((m) => m[1].replace(/&amp;/g, '&'));\nconst own = locs.filter((u) => {\n  const m = u.match(/^https:\\/\\/([^\\/?#]+)(\\/[^?#]*)?/);\n  return m && m[1] === cfg.host && !/^\\/(trip|hq|reports)(\\/|$)/i.test(m[2] || '/');\n});\nif (!own.length) throw new Error('IndexNow ' + cfg.host + ': the sitemap gave no URLs for this host');\nreturn { json: { host: cfg.host, key: cfg.key, keyLocation: cfg.keyLocation, endpoint: cfg.endpoint, alertUrl: cfg.alertUrl, stage: cfg.stage, urlList: own, count: own.length } };"
+      }
+    },
+    {
+      "id": "5736fca7-01d5-49d0-be62-39902aa66490",
+      "name": "Submit to IndexNow",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        110
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.endpoint }}",
+        "sendHeaders": true,
+        "specifyHeaders": "keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ host: $json.host, key: $json.key, keyLocation: $json.keyLocation, urlList: $json.urlList }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "b190acc5-599d-473c-adec-2ac7b335b19e",
+      "name": "Accepted (200 or 202)?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1200,
+        110
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ [200, 202].includes(Number($json.statusCode)) }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "ae1b1b64-59c9-462a-bce6-665a19028815",
+      "name": "Alert #social",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1440,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Build Submission').item.json.alertUrl }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ channel: 'C0ALKB5NDM4', text: 'IndexNow ' + $('Build Submission').item.json.host + ' failed: ' + ($json.statusCode ?? $json.error?.code ?? $json.error?.message ?? 'no response') }) }}",
+        "options": {
+          "timeout": 15000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      }
+    },
+    {
+      "id": "875eba2d-d512-4a23-ad91-ca7f0a1832f0",
+      "name": "Vercel Deploy Succeeded",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        220
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "indexnow-deploy",
+        "responseMode": "onReceived",
+        "options": {
+          "onlyRunIf": "={{ $json.body?.type === \"deployment.succeeded\" && ($json.body?.payload?.target ?? \"production\") === \"production\" }}"
+        }
+      },
+      "webhookId": "1f709534-a06c-48d2-a100-bf7d887d932c"
+    }
+  ],
+  "connections": {
+    "Daily 7:00 AM Chicago": {
+      "main": [
+        [
+          {
+            "node": "IndexNow Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IndexNow Config": {
+      "main": [
+        [
+          {
+            "node": "Fetch Sitemap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Sitemap": {
+      "main": [
+        [
+          {
+            "node": "Build Submission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Submission": {
+      "main": [
+        [
+          {
+            "node": "Submit to IndexNow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit to IndexNow": {
+      "main": [
+        [
+          {
+            "node": "Accepted (200 or 202)?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Accepted (200 or 202)?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Alert #social",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vercel Deploy Succeeded": {
+      "main": [
+        [
+          {
+            "node": "IndexNow Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "tags": [],
+  "exportedAt": "2026-10-18T00:33:23.293Z",
+  "exportNote": "SEO-RECOVERY v1 · published version. No credential values in this file (the Alert #social header-auth credential is not set yet). The IndexNow key is public by design."
+}
