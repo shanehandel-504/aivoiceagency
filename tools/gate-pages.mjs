@@ -30,9 +30,11 @@
 const CITIES = ['milwaukee', 'madison', 'west-bend', 'green-bay', 'waukesha'];
 const TRADES = ['hvac', 'plumbing', 'electrical', 'dental', 'roofing'];
 
-/* 25 city x trade money pages — the 100/100 sweep.
+/* 23 city x trade money pages — the 92/92 sweep (25 until AEO phase 2 merged two away, 2026-10-19).
    Derived from the same two arrays stamp.py loops over, so the two cannot drift. */
-export const PAGES_CITY = CITIES.flatMap((c) => TRADES.map((t) => `/${c}-${t}/index.html`));
+export const PAGES_CITY = CITIES.flatMap((c) => TRADES.map((t) => `/${c}-${t}/index.html`))
+  // AEO phase 2 (2026-10-19): merged with a 301, files moved to infra/backups/ (same MERGED list as stamp.py).
+  .filter((p) => !['/milwaukee-hvac/index.html', '/milwaukee-electrical/index.html'].includes(p));
 
 /* 22 surfaces — the 88/88 sweep. Landers + hubs + the four named extras.
    /index, /live, /book, /lsa are deliberately NOT here: they are the canonical
@@ -111,11 +113,11 @@ export const expectedChecks = (pages) => pages.length * CHECKS_PER_PAGE;
    edits a list without updating the run docs, this throws at import time
    rather than shipping a gate that quietly measures the wrong thing. */
 const ASSERT = [
-  ['PAGES_CITY', PAGES_CITY, 25, 100],
+  ['PAGES_CITY', PAGES_CITY, 23, 92],
   ['PAGES_LANDERS', PAGES_LANDERS, 22, 88],
   ['PAGES_FIVE', PAGES_FIVE, 5, 20],
   ['PAGES_REST', PAGES_REST, 10, 40],
-  ['SETS.all', SETS.all, 61, 244],
+  ['SETS.all', SETS.all, 59, 236],
 ];
 for (const [name, list, pages, checks] of ASSERT) {
   if (list.length !== pages) throw new Error(`gate-pages: ${name} has ${list.length} pages, expected ${pages}`);
