@@ -70,9 +70,9 @@ def main():
         orig = s
         for rel, tok in tokens.items():
             # match /rel with or without an existing ?v=..., inside href/src
-            # any existing token, not just hex: a hand-written ?v=s1003a slipped past the hex-only
+            # any existing token up to the closing quote (hex, letters, - _ .), not just hex: a hand-written ?v=s1003a slipped past the hex-only
             # pattern on 15 pages and kept their stylesheet URL frozen through the Oct 20 2026 recolour.
-            pat = re.compile(r'(["\'])(/%s)(\?v=[0-9A-Za-z]+)?\1' % re.escape(rel))
+            pat = re.compile(r'(["\'])(/%s)(\?v=[^"\'\s]*)?\1' % re.escape(rel))
             s = pat.sub(lambda m: '%s%s?v=%s%s' % (m.group(1), m.group(2), tok, m.group(1)), s)
         if s != orig:
             stale += 1
