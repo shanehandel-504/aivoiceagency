@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070B14">
+  <title>Book the Setup Call — AI Chauffeur | Limo Answering Service</title>
+  <meta name="description" content="Book the setup call — 20 minutes with the AI Chauffeur team. We map your rate rules, service area, vehicle classes and dispatch process, then scope your build.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-180.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="canonical" href="https://aichauffeur.ai/book/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AI Chauffeur">
+  <meta property="og:title" content="Book the Setup Call — AI Chauffeur">
+  <meta property="og:description" content="20 minutes with the AI Chauffeur team. We map your rate rules, service area, vehicle classes and dispatch process — then scope your build.">
+  <meta property="og:url" content="https://aichauffeur.ai/book/">
+  <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AI Chauffeur - the limo answering service that never puts a caller on hold. (414) 775-0019">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
+  <meta name="twitter:title" content="Book the Setup Call — AI Chauffeur">
+  <meta name="twitter:description" content="20 minutes with the AI Chauffeur team. We map your rate rules, service area, vehicle classes and dispatch process — then scope your build.">
+
+  <!-- The booking widget is a third-party origin and it is the point of the
+       page. Warming the connection here means the TLS handshake is not on the
+       critical path the moment the iframe is allowed to fetch. -->
+  <link rel="preconnect" href="https://api.leadconnectorhq.com">
+
+  <!-- RUN 8 · FONT LOCK — self-hosted. The @font-face lives in the stylesheet,
+       so without a preload the browser cannot discover either file until the CSS
+       has parsed and matched a rule against it. The href must be the SAME STRING
+       as the src, and crossorigin is required even same-origin because fonts are
+       always fetched in CORS mode — miss either and the file is fetched twice. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
+  <link rel="stylesheet" href="/assets/aic.css?v=3605e089">
+  <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <style>
+  /* ==========================================================================
+     AIC RUN 5 · /book/ — page-scoped only.
+     Everything structural (nav, footer, CTA stack, section type) comes from
+     aic.css. What lives here is the calendar shell and nothing else, so this
+     page cannot drift from its ten siblings.
+     ========================================================================== */
+
+  /* The head is tighter than .phead's 140px: on a booking page the calendar is
+     the content, and pushing it a full screen down is the one mistake that
+     costs conversions. Section rhythm below the embed stays on the host's
+     96/56 value — this is a fold decision, not a rhythm change. */
+  .phead.book-head{padding:120px 0 28px}
+  @media(max-width:600px){.phead.book-head{padding:96px 0 22px}}
+  .book-head .page-h{max-width:14ch}
+  .book-head .page-sub{margin-bottom:0}
+
+  .cal-sec{padding:0 0 56px}
+  @media(min-width:601px){.cal-sec{padding:0 0 96px}}
+
+  /* The shell owns the height so the skeleton and the widget occupy exactly the
+     same box — the swap is a repaint, never a jump. form_embed.js grows the
+     iframe past these minimums once the widget reports its real height, which
+     is what keeps the calendar off an inner scrollbar at 390px. */
+  /* RUN 11 § 6 · 16 -> 10, the container cap. This rule lives in this page's
+     own <style>, which is loaded AFTER aic.css and therefore beats the shared
+     RUN 11 block at equal specificity — so the cap has to be applied HERE. It
+     is the only container over 12px anywhere outside the two shared homes, and
+     a sweep that only read those two would have missed it. The iframe loader,
+     its noscript fallback and the minimum heights below are untouched. */
+  .cal-shell{position:relative;border:1px solid var(--line-hot);border-radius:10px;
+    overflow:hidden;background:var(--void-2);min-height:760px}
+  .cal-shell iframe{display:block;width:100%;border:0;min-height:760px;background:#FFFFFF}
+  @media(min-width:768px){.cal-shell,.cal-shell iframe{min-height:900px}}
+
+  /* Branded skeleton shaped like the calendar it replaces — header, month grid,
+     slot list. Deliberately --neutral and never cyan: nothing has happened yet,
+     and a pulsing accent on a loading state reads as activity that is not
+     occurring. aria-hidden, so a screen reader is never read a fake calendar. */
+  .cal-skel{position:absolute;inset:0;z-index:2;background:var(--void-2);
+    transition:opacity .3s ease}
+  .cal-skel.gone{opacity:0;visibility:hidden;pointer-events:none}
+  .sk-head{height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+    gap:12px;padding:0 20px}
+  .sk-bar{background:var(--neutral);opacity:.14;border-radius:3px}
+  .sk-head .sk-bar:first-child{width:132px;height:13px}
+  .sk-head .sk-bar:last-child{width:76px;height:11px}
+  .sk-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;padding:22px 20px}
+  .sk-cell{height:38px;border-radius:6px;background:var(--neutral);opacity:.09}
+  .sk-slots{display:grid;gap:10px;padding:4px 20px 24px}
+  .sk-slot{height:44px;border-radius:8px;background:var(--neutral);opacity:.12}
+  /* .75rem, not .68rem. RUN 10 set a 12px type floor in aic.css and listed the
+     eleven rules that were under it; this rule was written into THIS page's
+     <style> afterwards, so a shared list it was never added to could not cover
+     it. RUN 14's render walk found it at 10.88px — the only text under 12px on
+     eighteen pages, at either viewport, and it is the line a reader stares at
+     while the calendar loads. */
+  .sk-note{font-family:var(--mono);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--neutral);text-align:center;padding:0 20px}
+  @media(prefers-reduced-motion:no-preference){
+    .sk-bar,.sk-cell,.sk-slot{animation:sk-settle 1.9s ease-in-out infinite}
+    @keyframes sk-settle{0%,100%{opacity:.09}50%{opacity:.17}}
+  }
+
+  /* The full-screen escape hatch. It sits directly under the embed because that
+     is where somebody looks when the frame is blank — not in a footer. */
+  .cal-fallback{font-size:.92rem;color:var(--ink-mute);margin-top:1rem;line-height:1.6}
+  .cal-fallback a{color:var(--cyan-bright);text-decoration:underline;text-underline-offset:.18em;
+    text-decoration-thickness:1px;display:inline-flex;align-items:center;min-height:44px}
+  .cal-fallback a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+  </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aichauffeur.ai/#organization",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "telephone": "+1-414-775-0019",
+      "email": "dispatch@aichauffeur.ai",
+      "logo": "https://aichauffeur.ai/assets/brand/lockup-short.svg",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressRegion": "WI"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aichauffeur.ai/#website",
+      "name": "AI Chauffeur",
+      "url": "https://aichauffeur.ai/",
+      "publisher": {
+        "@id": "https://aichauffeur.ai/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1,
+          "item": "https://aichauffeur.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "name": "Book the setup call",
+          "position": 2,
+          "item": "https://aichauffeur.ai/book/"
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="top">
+  <a href="/" class="brand" aria-label="AI Chauffeur home">
+    <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    <img class="brand-compact" src="/assets/brand/mark-compact.svg" alt="" width="26" height="26" decoding="async">
+  </a>
+
+  <ul class="nav-main">
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-product">Product<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-product">
+        <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Live demo</a></li>
+        <li><a href="/what-it-does/">What it does</a></li>
+        <li><a href="/what-it-can-do/">What it can do</a></li>
+        <li><a href="/how-setup-works/">How setup works</a></li>
+        <li><a href="/pricing/">Pricing</a></li>
+        <li><a href="/works-with-your-software/">Works with your software</a></li>
+        <li><a href="/integrations/">Integrations</a></li>
+      </ul>
+    </li>
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-solutions">Solutions<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-solutions">
+        <li><a href="/limo-answering-service/">Limo answering service</a></li>
+        <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+        <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+        <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+      </ul>
+    </li>
+    <li class="nav-group" data-nav-group>
+      <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-locations">Locations<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <ul class="nav-panel" id="nav-locations">
+        <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+        <li><a href="/madison-limo-answering-service/">Madison</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="tel:+14147750019" class="nav-cta" data-event="nav_call" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="nav-cta-verb">Call </span>(414) 775-0019</a>
+    <a href="/book/" class="nav-book" aria-current="page" data-event="nav_book">Book the setup call</a>
+    <button type="button" class="nav-burger" data-drawer-open aria-expanded="false" aria-controls="nav-drawer" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span class="nav-burger-t">Menu</span></button>
+  </div>
+</nav>
+
+<main id="main">
+
+<section class="phead book-head" data-lit="bright" data-rail-after>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li aria-current="page">Book the setup call</li>
+      </ol>
+    </nav>
+    <span class="kicker">Setup call · 20 minutes</span>
+    <h1 class="page-h">Book the <em>setup call.</em></h1>
+    <p class="page-sub">20 minutes with the AI Chauffeur team. We map your rate rules, service area, vehicle classes, and dispatch process — then scope your build. No deck, no fake automation claims.</p>
+  </div>
+</section>
+
+<!-- ══ THE CALENDAR ══════════════════════════════════════════════════════ -->
+<section class="cal-sec" aria-label="Booking calendar">
+  <div class="wrap">
+    <!-- RUN 10 · TASK H. The panel only. The iframe, its JS loader, the
+         noscript fallback and the routing below are untouched by order. -->
+    <div class="book-inset">
+      <b>20-minute dispatch setup</b>
+      <span>Your rates &middot; routes &middot; vehicles &middot; call flow</span>
+    </div>
+    <div class="cal-shell" data-rail-hide>
+      <div class="cal-skel" data-cal-skel aria-hidden="true">
+        <div class="sk-head"><span class="sk-bar"></span><span class="sk-bar"></span></div>
+        <div class="sk-grid">
+          <span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span>
+          <span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span>
+          <span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span><span class="sk-cell"></span>
+        </div>
+        <div class="sk-slots"><span class="sk-slot"></span><span class="sk-slot"></span><span class="sk-slot"></span></div>
+        <p class="sk-note">Loading open times</p>
+      </div>
+      <!-- MEASURED DEFECT, do not "simplify" this back to a plain src +
+           loading="lazy". GHL's form_embed.js parks the booking iframe at
+           position:absolute; left:-9999px; visibility:hidden until the widget
+           posts its ready message. A native lazy iframe that is off-screen is
+           never fetched, so it never loads, so it never posts, so it is never
+           revealed — a permanent deadlock, verified here: iframeFetched=false
+           and the calendar stayed blank forever. The src is therefore attached
+           from JS below, which is genuinely lazy (nothing is requested until
+           the shell nears the viewport) AND immune to the deadlock. -->
+      <iframe data-cal-frame
+              data-src="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7"
+              id="UaxV0ENx2cEUYs6qeWZ7_booking"
+              title="AI Chauffeur setup call scheduling calendar"
+              scrolling="no"></iframe>
+
+      <!-- JS off: the loader never runs, so ship the frame directly and drop the
+           skeleton that would otherwise sit on top of it forever. -->
+      <noscript>
+        <style>.cal-skel{display:none}.cal-shell iframe[data-cal-frame]{display:none}</style>
+        <iframe src="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7"
+                title="AI Chauffeur setup call scheduling calendar"></iframe>
+      </noscript>
+    </div>
+
+    <p class="cal-fallback">Calendar not loading?
+      <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener" data-event="book_fullscreen">Open it full screen →</a></p>
+  </div>
+</section>
+
+<!-- ══ CTA ALTERNATIVES — the same rail every chauffeur page carries ══════ -->
+<section id="talk" data-lit="bright">
+  <div class="wrap">
+    <div class="sec-kicker">Rather not wait for a slot</div>
+    <h2 class="sec-h">Call the line first. <em>It answers.</em></h2>
+    <p class="sec-sub">You do not have to book anything to hear this. Dial the number and give AI Chauffeur a trip — an airport run, an hourly charter, whatever you get most. Nothing to install, no menu to sit through. Then book the setup call knowing what you heard.</p>
+
+    <div class="cta-stack">
+      <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_cta">
+        <span class="tel-main">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call (414) 775-0019
+        </span>
+        <span class="tel-sub">AI Chauffeur answers. Hear it yourself.</span>
+      </a>
+
+    </div>
+
+    <p class="cta-note">The setup call is a conversation, not a pitch. Nothing is scoped or quoted until we have seen how your operation actually runs.</p>
+  </div>
+</section>
+
+<!-- ══ INTERNAL LINKS ════════════════════════════════════════════════════ -->
+<section id="more" data-lit="flat">
+  <div class="wrap">
+    <div class="sec-kicker">Before you book</div>
+    <div class="related">
+      <a class="rel" href="/how-setup-works/">
+        <div class="rel-k">Setup</div>
+        <div class="rel-t">What the build actually involves</div>
+      </a>
+      <a class="rel" href="/works-with-your-software/">
+        <div class="rel-k">Your stack</div>
+        <div class="rel-t">How it sits beside your dispatch software</div>
+      </a>
+      <a class="rel" href="tel:+14147750019" data-event="tel_tap_related">
+        <div class="rel-k">Demo</div>
+        <div class="rel-t">Play the customer and request a trip.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ § G · FAT FOOTER ══════════════════════════════════════════════════
+     Four columns plus the NAP block, identical on all twelve pages. This is
+     the only surface where every indexable page is reachable from every
+     other one, and it is what closed the orphan gap: before this run
+     /airport-transfer-booking/ and /madison-limo-answering-service/ each had
+     ZERO incoming internal links from anywhere on the site.
+
+     data-rail-hide: the sticky rail suppresses itself once the footer is on
+     screen. The footer carries the number and the setup CTA already, so a bar
+     restating them would be noise — and body.rail-on comes off with it, which
+     is what removes the reserved 72px and leaves the document ending on the
+     last line of content instead of on dead scroll. -->
+<footer data-rail-hide>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="foot-mark">AI <em>Chauffeur</em></div>
+        <p class="foot-nap">
+          AI CHAUFFEUR · Wisconsin-built<br>
+          <a href="tel:+14147750019" data-event="tel_tap_footer">(414) 775-0019</a><br>
+          Serving operators nationwide
+        </p>
+      </div>
+      <div class="foot-col">
+        <h2>Product</h2>
+        <ul>
+          <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Live demo</a></li>
+          <li><a href="/what-it-does/">What it does</a></li>
+          <li><a href="/what-it-can-do/">What it can do</a></li>
+          <li><a href="/how-setup-works/">How setup works</a></li>
+          <li><a href="/pricing/">Pricing</a></li>
+          <li><a href="/works-with-your-software/">Works with your software</a></li>
+          <li><a href="/integrations/">Integrations</a></li>
+          <li><a href="/book/" aria-current="page">Book the setup call</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Solutions</h2>
+        <ul>
+          <li><a href="/limo-answering-service/">Limo answering service</a></li>
+          <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+          <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+          <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Locations</h2>
+        <ul>
+          <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+          <li><a href="/madison-limo-answering-service/">Madison</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2>Company</h2>
+        <ul>
+          <li><a href="tel:+14147750019" data-event="tel_tap_footer_company">Call (414) 775-0019</a></li>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/terms/">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 AI Chauffeur</span>
+    </div>
+  </div>
+</footer>
+
+<!-- GHL's embed helper. It listens for the widget's postMessage and grows the
+     iframe to the real content height, which is what keeps the calendar off an
+     inner scrollbar on a phone. Deferred: it has nothing to do until the frame
+     has loaded, and it must not block the first paint. -->
+<script src="https://link.msgsndr.com/js/form_embed.js" defer></script>
+<!-- § G · MOBILE DRAWER — every indexable page, real hrefs, no injection. -->
+<div class="nav-drawer" id="nav-drawer" data-drawer>
+  <div class="dw-top">
+    <a href="/" class="brand" aria-label="AI Chauffeur home">
+      <img class="brand-lockup" src="/assets/brand/lockup-short.svg" alt="" width="176" height="30" decoding="async">
+    </a>
+    <button type="button" class="dw-close" data-drawer-close aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Close</span></button>
+  </div>
+  <div class="dw-body">
+    <nav class="dw-group" aria-label="Product">
+      <h2>Product</h2>
+      <ul>
+        <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Live demo</a></li>
+        <li><a href="/what-it-does/">What it does</a></li>
+        <li><a href="/what-it-can-do/">What it can do</a></li>
+        <li><a href="/how-setup-works/">How setup works</a></li>
+        <li><a href="/pricing/">Pricing</a></li>
+        <li><a href="/works-with-your-software/">Works with your software</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Solutions">
+      <h2>Solutions</h2>
+      <ul>
+        <li><a href="/limo-answering-service/">Limo answering service</a></li>
+        <li><a href="/after-hours-limo-dispatch/">After-hours limo dispatch</a></li>
+        <li><a href="/airport-transfer-booking/">Airport transfer booking</a></li>
+        <li><a href="/limo-dispatch-automation/">Limo dispatch automation</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Integrations">
+      <h2>Integrations</h2>
+      <ul>
+        <li><a href="/integrations/">Integrations overview</a></li>
+        <li><a href="/integrations/limo-anywhere/">Limo Anywhere</a></li>
+        <li><a href="/integrations/fasttrak/">FASTTRAK</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Locations">
+      <h2>Locations</h2>
+      <ul>
+        <li><a href="/milwaukee-limo-answering-service/">Milwaukee</a></li>
+        <li><a href="/madison-limo-answering-service/">Madison</a></li>
+      </ul>
+    </nav>
+    <nav class="dw-group" aria-label="Company">
+      <h2>Company</h2>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+      </ul>
+    </nav>
+    <div class="dw-actions">
+      <a href="/book/" class="nav-book" aria-current="page" data-event="book_click_drawer">Book the setup call</a>
+      <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call (414) 775-0019</a>
+    </div>
+  </div>
+</div>
+
+<!-- RUN 7 · TASK A — mobile sticky action rail -->
+<div class="rail rail--solo" data-rail>
+  <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="rail-label"><span class="rail-verb">Call </span>(414) 775-0019</span></a>
+</div>
+
+<script src="/assets/aic.js?v=f56b90bd"></script>
+
+<!-- Calendar loader. Deferred fetch, one-way, and it always fires: the calendar
+     IS the page, so "lazy" must never mean "sometimes absent". -->
+<script>
+(function(){
+  'use strict';
+  var frame = document.querySelector('[data-cal-frame]');
+  if (!frame) return;
+  var shell = frame.parentNode;
+  var skel  = shell.querySelector('[data-cal-skel]');
+  var fired = false;
+
+  function load(){
+    if (fired) return;
+    fired = true;
+    frame.addEventListener('load', function(){ if (skel) skel.classList.add('gone'); });
+    frame.src = frame.getAttribute('data-src');
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) { io.disconnect(); load(); return; }
+      }
+    }, { rootMargin: '600px 0px' });
+    io.observe(shell);
+  }
+  /* Floor, not a race: if the observer never fires — unsupported, or the
+     visitor never scrolls far enough — the frame still loads once the page is
+     idle, so nobody is ever left looking at a skeleton. */
+  if (document.readyState === 'complete') load();
+  else addEventListener('load', load);
+})();
+</script>
+
+</body>
+</html>

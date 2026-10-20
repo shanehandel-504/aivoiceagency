@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#070B14">
-  <title>AI Chauffeur — Answers the call. Quotes your rates. Books the trip.</title>
-  <meta name="description" content="AI Chauffeur answers the phone for limousine and black car companies. Answers the call. Quotes your rates. Books the trip. The trip sheet lands in your CRM, your texts and your inbox.">
+  <title>AI Chauffeur — Answers every call. Quotes your rates. Books the trip.</title>
+  <meta name="description" content="AI Chauffeur answers the phone for limousine and black car companies. Answers every call. Quotes your rates. Books the trip. Right after the call, your dispatcher has the trip sheet, the recording and the transcript.">
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
@@ -16,7 +16,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="AI Chauffeur">
   <meta property="og:title" content="Limo Answering Service — Takes the Whole Trip">
-  <meta property="og:description" content="AI Chauffeur answers the phone for limousine and black car companies. Answers the call. Quotes your rates. Books the trip. The trip sheet lands in your CRM, your texts and your inbox.">
+  <meta property="og:description" content="AI Chauffeur answers the phone for limousine and black car companies. Answers every call. Quotes your rates. Books the trip. Right after the call, your dispatcher has the trip sheet, the recording and the transcript.">
   <meta property="og:url" content="https://aichauffeur.ai/">
   <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
   <meta property="og:image:width" content="1200">
@@ -25,12 +25,12 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
   <meta name="twitter:title" content="Limo Answering Service — Takes the Whole Trip">
-  <meta name="twitter:description" content="AI Chauffeur answers the phone for limousine and black car companies. Answers the call. Quotes your rates. Books the trip. The trip sheet lands in your CRM, your texts and your inbox.">
+  <meta name="twitter:description" content="AI Chauffeur answers the phone for limousine and black car companies. Answers every call. Quotes your rates. Books the trip. Right after the call, your dispatcher has the trip sheet, the recording and the transcript.">
 
   <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono.woff2" crossorigin>
 
-  <link rel="stylesheet" href="/assets/circulant.css?v=36b63f90">
+  <link rel="stylesheet" href="/assets/circulant.css?v=4075e6d5">
   <link rel="stylesheet" href="/assets/aic.css?v=s1003a">
   <style>
   .qr-dialog{background:#12121A;color:#EEF0F4;border:1px solid rgba(255,255,255,.06);padding:2rem;max-width:22rem;width:calc(100% - 2rem);text-align:center;font-family:'Space Grotesk',sans-serif;margin:auto}
@@ -76,11 +76,28 @@
     {
       "@type": "Service",
       "@id": "https://aichauffeur.ai/#service",
-      "name": "Answers the call. Quotes your rates. Books the trip.",
-      "description": "Set up for your company, it answers in your company name, takes the whole reservation and quotes from your rate sheet. It works beside Limo Anywhere, FASTTRAK and the dispatch software you already run. The trip sheet lands in your CRM, your texts and your inbox.",
+      "name": "Answers every call. Quotes your rates. Books the trip.",
+      "description": "AI Chauffeur answers every call in your company name, takes the whole reservation, quotes from your rate sheet in your service area, reads the trip back and books it. Right after the call, your dispatcher has the trip sheet, the recording and the transcript. It works with Limo Anywhere, FASTTRAK, Moovs, Livery Coach, GNet, Hudson, SantaCruz (GroundWidgets), LimoExpress, A to Z Dispatch and RideBits.",
       "provider": {
         "@id": "https://aichauffeur.ai/#organization"
-      }
+      },
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "AI Chauffeur",
+          "price": "997",
+          "priceCurrency": "USD",
+          "description": "$997 a month plus a $997 one-time setup. Month to month."
+        },
+        {
+          "@type": "Offer",
+          "name": "AI Chauffeur with your CRM",
+          "price": "1697",
+          "priceCurrency": "USD",
+          "description": "$1,697 a month plus a $1,697 one-time setup. Writes the trip straight into your reservation software."
+        }
+      ],
+      "areaServed": "US"
     },
     {
       "@type": "SoftwareApplication",
@@ -88,7 +105,7 @@
       "name": "AI Chauffeur",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Cloud, telephone",
-      "description": "Set up for your company, it answers in your company name, takes the whole reservation and quotes from your rate sheet. It works beside Limo Anywhere, FASTTRAK and the dispatch software you already run. The trip sheet lands in your CRM, your texts and your inbox.",
+      "description": "AI Chauffeur answers every call in your company name, takes the whole reservation, quotes from your rate sheet in your service area, reads the trip back and books it. Right after the call, your dispatcher has the trip sheet, the recording and the transcript. It works with Limo Anywhere, FASTTRAK, Moovs, Livery Coach, GNet, Hudson, SantaCruz (GroundWidgets), LimoExpress, A to Z Dispatch and RideBits.",
       "provider": {
         "@id": "https://aichauffeur.ai/#organization"
       },
@@ -96,7 +113,7 @@
         "Answers every call.",
         "The whole trip, like a dispatcher.",
         "Your rates, quoted live.",
-        "Booked. In your CRM.",
+        "Booked on the call.",
         "Trip sheet on your phone.",
         "Every call recorded."
       ]
@@ -110,7 +127,7 @@
           "name": "Is this just basic call coverage?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. AI Chauffeur answers your phones and books the trips. It takes the whole trip, quotes your rates, and puts it in your CRM."
+            "text": "No. AI Chauffeur answers your phones and books the trips. It takes the whole trip, quotes your rates, and sends the trip sheet to your dispatcher."
           }
         },
         {
@@ -126,7 +143,7 @@
           "name": "What still requires dispatcher approval?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Assigning the car and the driver. AI Chauffeur books the trip on the call and puts it in your CRM, and anything missing is flagged for review, so nothing slips."
+            "text": "Assigning the car and the chauffeur. AI Chauffeur books the trip on the call and sends the trip sheet to your dispatcher. Anything missing is flagged for dispatch, so nothing slips."
           }
         },
         {
@@ -134,7 +151,7 @@
           "name": "How does AI Chauffeur handle multiple calls at once?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It answers every call at the same time, so no caller waits on hold. Each call gets its own trip: pickup, drop-off, time, vehicle, passengers, bags, and flight. Every one lands as its own trip sheet."
+            "text": "It answers every call at the same time, so no caller waits on hold. Each call gets its own trip sheet."
           }
         },
         {
@@ -142,7 +159,7 @@
           "name": "Can it quote rides?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. It quotes your rates on the call and gives one clean number, service fee included. The demo runs a sample trip ticket. Yours runs your rates."
+            "text": "Yes. It quotes from your rate sheet, by vehicle and time of day, in your service area, and gives one clean number. A trip your rates don't cover goes to your dispatcher to quote. The sample calls on this page use sample rates. Yours runs your rates."
           }
         },
         {
@@ -150,7 +167,7 @@
           "name": "Does it work with my CRM or dispatch software?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. It puts the trip in your CRM, and it can be connected to the dispatch software you already run. Where each platform stands is on the integrations page."
+            "text": "Yes. It works with Limo Anywhere, FASTTRAK, Moovs, Livery Coach, GNet, Hudson, SantaCruz (GroundWidgets), LimoExpress, A to Z Dispatch and RideBits. With your CRM, the trip is written straight into your software. Where each platform stands is on the integrations page."
           }
         },
         {
@@ -158,7 +175,7 @@
           "name": "How fast can it go live?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Setup is done for you by our team. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented."
+            "text": "Our team sets it up for you. Typical timeline is one to two weeks once we have your rates, your service area and who gets the trip sheet."
           }
         },
         {
@@ -166,7 +183,31 @@
           "name": "What about pricing?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AI Chauffeur is $997 a month plus a $997 one-time setup. Connected and custom work is priced after the setup call. The whole price is on the pricing page."
+            "text": "AI Chauffeur is $997 a month plus a $997 one-time setup. With your CRM, it's $1,697 a month plus a $1,697 one-time setup. The whole price is on the pricing page."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if you can't connect my software?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If we can't connect your software within 30 days, you get a full refund within 10 days."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it track flights?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, as an add-on. It takes the flight number on the call, and flight tracking watches the flight for your dispatcher. Priced on a quote."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this a cheap bot with our name on it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. We build it for your company: your fleet, your rates, your service area, your name on the line. It's not a $99 bot with your name typed in."
           }
         },
         {
@@ -197,11 +238,12 @@
     <li class="nav-group" data-nav-group>
       <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-product">Product<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       <ul class="nav-panel" id="nav-product">
-        <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Live demo</a></li>
+        <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Talk to AI</a></li>
         <li><a href="/what-it-does/">What it does</a></li>
         <li><a href="/what-it-can-do/">What it can do</a></li>
         <li><a href="/how-setup-works/">How setup works</a></li>
         <li><a href="/pricing/">Pricing</a></li>
+        <li><a href="/compare/">Compare</a></li>
         <li><a href="/works-with-your-software/">Works with your software</a></li>
         <li><a href="/integrations/">Integrations</a></li>
       </ul>
@@ -225,8 +267,8 @@
   </ul>
 
   <div class="nav-right">
-    <a href="tel:+14147750019" class="nav-cta" data-event="nav_call" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="nav-cta-verb">Call </span>(414) 775-0019</a>
-    <a href="/book/" class="nav-book" data-event="nav_book">Book the setup call</a>
+    <a href="tel:+14147750019" class="nav-cta" data-event="nav_call" aria-label="Talk to AI, (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="nav-cta-verb">Talk to AI · </span>(414) 775-0019</a>
+    <a href="/book/" class="nav-book" data-event="nav_book">Talk to a Human</a>
     <button type="button" class="nav-burger" data-drawer-open aria-expanded="false" aria-controls="nav-drawer" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span class="nav-burger-t">Menu</span></button>
   </div>
 </nav>
@@ -239,16 +281,16 @@
     <div class="hero-left">
     <span class="kicker">FOR LIMOUSINE AND BLACK CAR COMPANIES</span>
 
-    <h1 class="hero-h"><span class="h-line">Answers the call.</span> <span class="h-line">Quotes your rates.</span> <em class="h-line">Books the trip.</em></h1>
+    <h1 class="hero-h"><span class="h-line">Answers every call.</span> <span class="h-line">Quotes your rates.</span> <em class="h-line">Books the trip.</em></h1>
 
-    <p class="hero-big"><span class="hb">Set up for your company, it answers in your company name, takes the whole reservation and quotes from your rate sheet.</span> <span class="hb">It works beside Limo Anywhere, FASTTRAK and the dispatch software you already run.</span> <span class="hb">The trip sheet lands in your CRM, your texts and your inbox.</span></p>
-    <p class="hero-sub">It takes the whole trip like your best dispatcher — flight number, meet and greet, passengers, bags, child seats, gate codes. It quotes your rates. It books it. It puts it in your CRM.</p>
+    <p class="hero-big"><span class="hb">Set up for your company: your name on the line, your rates, your service area, your fleet.</span> <span class="hb">Right after the call, your dispatcher has the trip sheet, the recording and the transcript.</span></p>
+    <p class="hero-sub">It takes the whole trip like your best dispatcher — flight number, meet and greet, passengers, bags, child seats, gate codes. It quotes your rates. It reads the trip back and books it.</p>
     <p class="hero-pos">Your people run the cars. <span class="nw">AI Chauffeur</span> runs the phones.</p>
 
     <div class="cta-stack" data-rail-after>
 
       <div class="go-stack">
-        <a href="tel:+14147750019" class="btn btn-primary btn-go" data-event="tel_tap_hero">PUSH TO CALL AI</a>
+        <a href="tel:+14147750019" class="btn btn-primary btn-go" data-event="tel_tap_hero">TALK TO AI</a>
         <p class="go-note" id="hero-go-note">Push it and your phone calls AI Chauffeur. Talk to it like a customer would. About two minutes.</p>
       </div>
 
@@ -259,7 +301,7 @@
          The scripted dispatch console that stood here is gone: the recorded call
          and its trip sheet are the real version of what it acted out. #demo moved
          with the player, so /#demo, ?call= and the #demo-scoped rules all land here.
-         The play control is an outline on purpose: PUSH TO CALL AI is the one
+         The play control is an outline on purpose: TALK TO AI is the one
          filled control in this fold. Behaviour: /assets/aic-calls.js, unchanged.
          The HTML ships the finished first call, so a reader with no JS gets the story. -->
     <div class="hero-calls" id="demo" role="region" aria-label="Six sample calls" data-rail-hide>
@@ -337,7 +379,7 @@
             </div>
             <div class="sc-after" data-after hidden>
               <p class="sc-ahead">Want AI Chauffeur answering your phone?</p>
-              <a class="demo-call-btn" href="/book/" data-event="book_click_aftercall">Book the setup call</a>
+              <a class="demo-call-btn" href="/book/" data-event="book_click_aftercall">Talk to a Human</a>
               <button class="demo-call-btn" type="button" data-next data-event="sample_next_demo"><span>Next: the <span data-nextname>corporate account</span> call &rarr;</span></button>
             </div>
           </aside>
@@ -352,7 +394,7 @@
   <div class="wrap">
     <div class="sec-kicker">The dispatch flow</div>
 
-    <h2 class="sec-h">From phone call to trip ticket — <em>captured, quoted, and handed over.</em></h2>
+    <h2 class="sec-h">From the phone call to the trip sheet: <em>taken, quoted, booked.</em></h2>
     <p class="sec-sub">A caller speaks naturally. AI Chauffeur takes the trip, quotes your rate sheet, handles mid-call changes, and books it. The fastest way to judge that is to <a href="tel:+14147750019" data-event="tel_tap_inline">call AI Chauffeur</a> yourself.</p>
 
     <!-- every word of the six calls the hero plays (RUN S1) -->
@@ -463,11 +505,11 @@
 
     <div class="sec-kicker">No rip-out</div>
     <h2 class="sec-h">Works with <em>what you already run.</em></h2>
-    <p class="sec-sub">AI Chauffeur takes the call, books the trip, and puts it in your CRM; your dispatcher runs it. It can also be connected to the dispatch software you already run. No switch, no rip-out — here is exactly how it <a href="/works-with-your-software/">sits beside the dispatch software you already run</a>.</p>
+    <p class="sec-sub">AI Chauffeur takes the call, books the trip and sends the trip sheet to your dispatcher. With your CRM, it writes the trip straight into your reservation software. No switch, no rip-out. Here is how it <a href="/works-with-your-software/">sits beside the dispatch software you already run</a>.</p>
 
-    <p class="int-muted">Scoped to your setup on the setup call.</p>
-    <p class="int-mini">Where each platform stands, in one table — <a href="/integrations/">the integration status of all ten</a>.</p>
-    <p class="int-mini">Booked solid? The ticket still gets written, so you can farm it out to an affiliate instead of losing the call. Your dispatcher makes that call, not AI Chauffeur.</p>
+    <p class="int-muted">Every connection is set up for your company on the setup call.</p>
+    <p class="int-mini">Where each platform stands, in one table — <a href="/integrations/">all ten platforms, one line each</a>.</p>
+    <p class="int-mini">Booked solid? The trip sheet still gets written, so you can farm it out to an affiliate instead of losing the call. Your dispatcher makes that call, not AI Chauffeur.</p>
   </div>
 </section>
 
@@ -483,23 +525,23 @@
         <p class="step-p">Answers every call. Every call is written up as a trip sheet before it goes cold.</p>
       </div>
       <div class="step is-done">
-        <div class="step-num">02 · Capture</div>
+        <div class="step-num">02 · Take the trip</div>
         <h3 class="step-h">Get the full trip</h3>
-        <p class="step-p">Pickup, dropoff, time, vehicle class, passenger count, bags, flight info, special notes. The caller talks naturally. The fields fill themselves.</p>
+        <p class="step-p">Pickup, dropoff, time, vehicle class, passenger count, bags, flight info, special notes. The caller just talks. AI Chauffeur writes the trip sheet.</p>
       </div>
       <div class="step is-done">
         <div class="step-num">03 · Quote</div>
-        <h3 class="step-h">Quote from your rules</h3>
-        <p class="step-p">One all-in quote from your rate sheet, service area, time of day, and vehicle class. Not a generic guess.</p>
+        <h3 class="step-h">Quotes your rates</h3>
+        <p class="step-p">One all-in price from your rate sheet, by vehicle and time of day, in your service area. A trip your rates don't cover goes to your dispatcher to quote.</p>
       </div>
       <div class="step is-done">
-        <div class="step-num">04 · Route</div>
-        <h3 class="step-h">Hand off to your team</h3>
-        <p class="step-p">Your dispatcher picks up a finished trip ticket instead of a voicemail. Confirm it and move — nothing gets rebuilt from scratch.</p>
+        <div class="step-num">04 · Book</div>
+        <h3 class="step-h">Your dispatcher takes it from here</h3>
+        <p class="step-p">It reads the trip back and books it. Your dispatcher gets a trip sheet instead of a voicemail, and assigns the car and the chauffeur.</p>
       </div>
     </div>
 
-    <p class="sec-sub">Every stage above is configured to your operation before the line goes live. <a href="/how-setup-works/">How setup works</a>, step by step, is written out in full.</p>
+    <p class="sec-sub">All of it is set up for your company before the line goes live. <a href="/how-setup-works/">How setup works</a>, step by step, is written out in full.</p>
   </div>
 </section>
 
@@ -508,7 +550,7 @@
     <div class="sec-kicker">Why this matters</div>
     <h2 class="sec-h">Every missed call is a ride going to <em>someone else.</em></h2>
 
-    <p class="sec-sub">Voicemail, the same five questions every call, three calls hitting at once. AI Chauffeur picks up all of them and takes the whole trip down, so your dispatcher gets a finished trip instead of building one from scratch. That is the job a <a href="/limo-answering-service/">limo answering service built for dispatch</a> is supposed to do, and it matters most for <a href="/after-hours-limo-dispatch/">the calls your office can't get to</a>.</p>
+    <p class="sec-sub">Voicemail, the same five questions every call, three calls hitting at once. AI Chauffeur picks up all of them and takes the whole trip down, so your dispatcher gets a finished trip sheet. A $99 bot takes a message. AI Chauffeur takes the reservation. That is the job a <a href="/limo-answering-service/">limo answering service built for dispatch</a> is supposed to do, and it matters most for <a href="/after-hours-limo-dispatch/">the calls your office can't get to</a>.</p>
   </div>
 </section>
 
@@ -521,26 +563,28 @@
       <li><strong>Answers every call.</strong> In your company name.</li>
       <li><strong>The whole trip, like a dispatcher.</strong> Pickup, drop, date, time, <a href="/airport-transfer-booking/">flight number</a>, curbside or meet and greet, passengers, bags, child seats, extra stops, gate codes, notes for the chauffeur.</li>
 
-      <li><strong>Your rates, quoted live.</strong> It knows your rate sheet. Eighteen kinds of vehicles, sedan to <span class="nw">56-passenger</span> coach, anywhere in the U.S. One clean number, service fee included.</li>
-      <li><strong>Booked. In your CRM.</strong> The trip is written where your dispatcher works.</li>
-      <li><strong>Trip sheet on your phone.</strong> Text to you, text to the customer, the recording and every word of the call attached.</li>
+      <li><strong>Your rates, quoted live.</strong> It knows your rate sheet. Every vehicle you run, sedan to <span class="nw">56-passenger</span> coach, at your rates, in your service area. One clean number, service fee included.</li>
+      <li><strong>Booked on the call.</strong> It reads the trip back and books it. Your dispatcher assigns the car and the chauffeur.</li>
+      <li><strong>Trip sheet on your phone.</strong> Right after the call, with the recording and the transcript. Your passenger is booked.</li>
       <li><strong>Every call recorded.</strong> The recording and every word of the call come back with the trip sheet.</li>
     </ul>
 
     <ul class="proof-row">
       <li class="proof-text">Answers every call</li>
-      <li><span class="proof-n">18</span> vehicles quoted, anywhere in the U.S.</li>
-      <li class="proof-text">Every call recorded, every trip sheet texted</li>
+      <li class="proof-text">Every vehicle in your fleet, quoted</li>
+      <li class="proof-text">Every call recorded. Every trip on a trip sheet.</li>
     </ul>
 
-    <h3 class="sec-kicker built-close">Included · Connected and custom</h3>
+    <h3 class="sec-kicker built-close">What it costs</h3>
     <ul class="built-list">
-      <li><strong>INCLUDED</strong>answers every call in your company name · takes the whole reservation · quotes from your rate sheet · reads the trip back and books it · the trip sheet lands in your CRM, your texts and your inbox, with the recording and the transcript</li>
-      <li><strong>CONNECTED AND CUSTOM</strong>writing into your reservation software · website talk button · multi-language (50+ languages) · knowledge answers · priced after the setup call</li>
+      <li><strong>AI CHAUFFEUR · $997 A MONTH + $997 ONE-TIME SETUP</strong>answers every call in your company name · takes the whole reservation · quotes from your rate sheet, in your service area · reads the trip back and books it · right after the call, your dispatcher has the trip sheet, the recording and the transcript · live transfer to your team · month to month, no contract</li>
+      <li><strong>WITH YOUR CRM · $1,697 A MONTH + $1,697 ONE-TIME SETUP</strong>everything above, plus: writes the trip straight into your reservation software · remembers your regular customers · a card link when there's no card on file</li>
+      <li><strong>ADD-ONS · PRICED ON A QUOTE</strong>more than 50 languages · flight tracking · reminder texts · a talk button for your website</li>
     </ul>
 
+    <p class="sec-sub built-close">Built for one company: yours. Your name on the line, your fleet, your rates, your service area. Not a $99 bot with your name typed in. <a href="/pricing/">The whole price</a> is one page.</p>
     <p class="sec-sub built-close">Put it on every reservation call, or only the calls your office can't get to. Call AI Chauffeur and hear it work.</p>
-    <a href="tel:+14147750019" class="btn btn-primary btn-go" data-event="close_push_to_book">PUSH TO CALL AI</a>
+    <a href="tel:+14147750019" class="btn btn-primary btn-go" data-event="close_push_to_book">TALK TO AI</a>
     <p class="built-links"><a href="/what-it-does/">See everything it does</a> · <a href="/what-it-can-do/">See what it can do for your company</a></p>
   </div>
 </section>
@@ -553,7 +597,7 @@
       <p class="crush-now" id="crush-now" hidden></p>
       <h2 class="crush-h">When three calls hit at once and the next ride goes to <em>whoever answers first.</em></h2>
 
-      <p class="crush-p">The Crush is what limo and black car operators call those moments — Friday airport rush, prom night, the concert that ends at 11 PM. AI Chauffeur is built to absorb those windows and never lets a call sit on hold. The everyday value is a cleaner trip sheet: the whole trip taken down the first time, so your dispatcher is confirming instead of chasing. The Crush is when it earns the keep.</p>
+      <p class="crush-p">The Crush is what limo and black car operators call those moments — Friday airport rush, prom night, the concert that ends at 11 PM. AI Chauffeur is built to absorb those windows and never lets a call sit on hold. The everyday value is a cleaner trip sheet: the whole trip taken down the first time, so your dispatcher is assigning cars instead of chasing details. The Crush is when it earns the keep.</p>
 
       <div class="ledger" data-ledger>
         <div class="lg-head"><span>Dispatch ledger</span><span class="lg-note">Illustrative</span></div>
@@ -581,7 +625,7 @@
       </div>
 
       <a href="/book/" class="btn btn-ghost" data-event="book_click_crush">
-        Book the setup call
+        Talk to a Human
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
 
@@ -593,11 +637,11 @@
 <section id="lead-protection" data-lit="flat">
   <div class="wrap">
     <div class="sec-kicker">GOOGLE LEAD PROTECTION</div>
-    <h2 class="sec-h">Google found the rider. AI Chauffeur finishes the handoff.</h2>
-    <p class="sec-sub">Search and ads can make the phone ring. They can't make your dispatch line answer. AI Chauffeur picks up every call and takes down the route, flight, vehicle, passengers, bags, and callback number — before the rider dials the next operator on the map. Every trip you capture is a booked ride, a relationship, and a review your competitor never gets.</p>
+    <h2 class="sec-h">Google found the rider. AI Chauffeur books the ride.</h2>
+    <p class="sec-sub">Search and ads can make the phone ring. They can't make your dispatch line answer. AI Chauffeur picks up every call and takes down the route, flight, vehicle, passengers, bags, and callback number — before the rider dials the next operator on the map. Every trip it takes is a booked ride, a relationship, and a review your competitor never gets.</p>
 
     <a href="/book/" class="btn btn-ghost" data-event="book_click_glp">
-      Book the setup call
+      Talk to a Human
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
     </a>
     <p class="glp-fine">AI Chauffeur is not affiliated with or endorsed by Google.</p>
@@ -610,13 +654,13 @@
       <div>
         <div class="sec-kicker">Setup, done for you</div>
         <h3 class="setup-h">Setup, <em>done for you.</em></h3>
-        <p class="setup-p">First operators get setup done for them — your rate rules, service area, vehicle types, and dispatch process documented and configured by our team. A few slots open at a time.</p>
+        <p class="setup-p">Set up by our team: your rates, your service area, your fleet, and who gets the trip sheet. A few slots open at a time.</p>
 
-        <p class="setup-p" style="margin-top:1rem;color:var(--ink-mute)">Setup builds it for your company: your company name, your service area, your fleet, your rate sheet and who gets the trip sheets.</p>
+        <p class="setup-p" style="margin-top:1rem;color:var(--ink-mute)">If we can't connect your software within 30 days, you get a full refund within 10 days.</p>
       </div>
       <div class="setup-cta">
         <a href="/book/" class="btn btn-primary" data-event="book_click_setup">
-          Book the setup call
+          Talk to a Human
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
         <span class="setup-note">Schedules the 20-minute setup call.</span>
@@ -650,7 +694,7 @@
 
     <details>
       <summary>Is this just basic call coverage?</summary>
-      <div>No. AI Chauffeur answers your phones and books the trips. It takes the whole trip, quotes your rates, and puts it in your CRM.</div>
+      <div>No. AI Chauffeur answers your phones and books the trips. It takes the whole trip, quotes your rates, and sends the trip sheet to your dispatcher.</div>
     </details>
     <details>
       <summary>Does it replace my dispatcher?</summary>
@@ -658,28 +702,39 @@
     </details>
     <details>
       <summary>What still requires dispatcher approval?</summary>
-      <div>Assigning the car and the driver. AI Chauffeur books the trip on the call and puts it in your CRM, and anything missing is flagged for review, so nothing slips.</div>
+      <div>Assigning the car and the chauffeur. AI Chauffeur books the trip on the call and sends the trip sheet to your dispatcher. Anything missing is flagged for dispatch, so nothing slips.</div>
     </details>
     <details>
       <summary>How does AI Chauffeur handle multiple calls at once?</summary>
-      <div>It answers every call at the same time, so no caller waits on hold. Each call gets its own trip: pickup, drop-off, time, vehicle, passengers, bags, and flight. Every one lands as its own trip sheet.</div>
+      <div>It answers every call at the same time, so no caller waits on hold. Each call gets its own trip sheet.</div>
     </details>
     <details>
       <summary>Can it quote rides?</summary>
-      <div>Yes. It quotes your rates on the call and gives one clean number, service fee included. The demo runs a sample trip ticket. Yours runs your rates.</div>
+      <div>Yes. It quotes from your rate sheet, by vehicle and time of day, in your service area, and gives one clean number. A trip your rates don't cover goes to your dispatcher to quote. The sample calls on this page use sample rates. Yours runs your rates.</div>
     </details>
     <details>
       <summary>Does it work with my CRM or dispatch software?</summary>
-      <div>Yes. It puts the trip in your CRM, and it can be connected to the dispatch software you already run. Where each platform stands is on the <a href="/integrations/">integrations page</a>.</div>
+      <div>Yes. It works with Limo Anywhere, FASTTRAK, Moovs, Livery Coach, GNet, Hudson, SantaCruz (GroundWidgets), LimoExpress, A to Z Dispatch and RideBits. With your CRM, the trip is written straight into your software. Where each platform stands is on the <a href="/integrations/">integrations page</a>.</div>
     </details>
     <details>
       <summary>How fast can it go live?</summary>
-      <div>Setup is done for you by our team. Typical timeline is one to two weeks once your rate rules, service area, and dispatch process are documented.</div>
+      <div>Our team sets it up for you. Typical timeline is one to two weeks once we have your rates, your service area and who gets the trip sheet.</div>
     </details>
-
     <details>
       <summary>What about pricing?</summary>
-      <div>AI Chauffeur is $997 a month plus a $997 one-time setup. Connected and custom work is priced after the setup call. The whole price is on the <a href="/pricing/">pricing page</a>.</div>
+      <div>AI Chauffeur is $997 a month plus a $997 one-time setup. With your CRM, it's $1,697 a month plus a $1,697 one-time setup. The whole price is on the <a href="/pricing/">pricing page</a>.</div>
+    </details>
+    <details>
+      <summary>What if you can't connect my software?</summary>
+      <div>If we can't connect your software within 30 days, you get a full refund within 10 days.</div>
+    </details>
+    <details>
+      <summary>Does it track flights?</summary>
+      <div>Yes, as an add-on. It takes the flight number on the call, and flight tracking watches the flight for your dispatcher. Priced on a quote.</div>
+    </details>
+    <details>
+      <summary>Is this a cheap bot with our name on it?</summary>
+      <div>No. We build it for your company: your fleet, your rates, your service area, your name on the line. It's not a $99 bot with your name typed in.</div>
     </details>
     <details>
       <summary>Can I just hear it first?</summary>
@@ -704,14 +759,15 @@
       <div class="foot-col">
         <h2>Product</h2>
         <ul>
-          <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Live demo</a></li>
+          <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Talk to AI</a></li>
           <li><a href="/what-it-does/">What it does</a></li>
           <li><a href="/what-it-can-do/">What it can do</a></li>
           <li><a href="/how-setup-works/">How setup works</a></li>
           <li><a href="/pricing/">Pricing</a></li>
+          <li><a href="/compare/">Compare</a></li>
           <li><a href="/works-with-your-software/">Works with your software</a></li>
           <li><a href="/integrations/">Integrations</a></li>
-          <li><a href="/book/">Book the setup call</a></li>
+          <li><a href="/book/">Talk to a Human</a></li>
         </ul>
       </div>
       <div class="foot-col">
@@ -733,7 +789,7 @@
       <div class="foot-col">
         <h2>Company</h2>
         <ul>
-          <li><a href="tel:+14147750019" data-event="tel_tap_footer_company">Call (414) 775-0019</a></li>
+          <li><a href="tel:+14147750019" data-event="tel_tap_footer_company">Talk to AI · (414) 775-0019</a></li>
           <li><a href="/privacy/">Privacy</a></li>
           <li><a href="/terms/">Terms</a></li>
         </ul>
@@ -849,7 +905,7 @@
     ['is-queued',   'Queued'],
     ['is-ringing',  'Ringing'],
     ['is-oncall',   'On call'],
-    ['is-captured', 'Trip captured'],
+    ['is-captured', 'Trip taken'],
     ['is-done',     'Ready for dispatch']
   ];
   const CLASSES = STATES.map(function (s) { return s[0]; });
@@ -925,11 +981,12 @@
     <nav class="dw-group" aria-label="Product">
       <h2>Product</h2>
       <ul>
-        <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Live demo</a></li>
+        <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Talk to AI</a></li>
         <li><a href="/what-it-does/">What it does</a></li>
         <li><a href="/what-it-can-do/">What it can do</a></li>
         <li><a href="/how-setup-works/">How setup works</a></li>
         <li><a href="/pricing/">Pricing</a></li>
+        <li><a href="/compare/">Compare</a></li>
         <li><a href="/works-with-your-software/">Works with your software</a></li>
       </ul>
     </nav>
@@ -966,15 +1023,15 @@
       </ul>
     </nav>
     <div class="dw-actions">
-      <a href="/book/" class="nav-book" data-event="book_click_drawer">Book the setup call</a>
-      <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call (414) 775-0019</a>
+      <a href="/book/" class="nav-book" data-event="book_click_drawer">Talk to a Human</a>
+      <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Talk to AI · (414) 775-0019</a>
     </div>
   </div>
 </div>
 
 <div class="rail" data-rail>
-  <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="rail-label"><span class="rail-verb">Call </span>(414) 775-0019</span></a>
-  <a class="rail-book" href="/book/" data-event="book_click_rail">Book the setup call</a>
+  <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail" aria-label="Talk to AI, (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="rail-label"><span class="rail-verb">Talk to AI · </span>(414) 775-0019</span></a>
+  <a class="rail-book" href="/book/" data-event="book_click_rail">Talk to a Human</a>
 </div>
 
 <script src="/assets/aic.js?v=f56b90bd"></script>
