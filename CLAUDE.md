@@ -339,10 +339,16 @@ It self-tags as internal (`NOTRACK`) on webdriver / `ava_internal` / `?notrack=1
 
 ## PRICING (surface only when asked)
 
-- Starter — $497/mo + $497 setup
-- Growth — $997/mo + $1,500 setup
-- Operations — From $1,997/mo (custom, scoped setup)
-- White Glove — by application
+Source: claude/FACT-SHEET-v3.1-2026-10-20.md (project doc). Updated 2026-10-20, AIC words run v1.1.
+
+- AVA — $497/mo + $497 one-time setup
+- AVA with your CRM — $997/mo + $997 one-time setup
+- AI Chauffeur — $997/mo + $997 one-time setup
+- AI Chauffeur with your CRM — $1,697/mo + $1,697 one-time setup
+- Add-ons (more than 50 languages, flight tracking, reminder texts, a website talk button) — priced on a quote
+- Talk time (65¢ a minute) appears ONLY in a pricing FAQ and in llms-full.txt, never on a card or hero
+- AI Chauffeur names limo software only (the ten in chauffeur/llms.txt). Never HubSpot or HighLevel on that host.
+- Refund: if we can't connect the software within 30 days, a full refund within 10 days.
 
 ## PHONE — 414-240-8930 only
 

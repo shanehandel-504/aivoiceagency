@@ -2,6 +2,7 @@
 
 **Signal v1.5** · ratified RUN 13 "STICKY + TIDY", 2026-08-07.
 **Signal v1.6** · 2026-09-13 — the words v2 rulings, gathered in § 12 and written into the sections they change. Where older text disagrees, § 12 wins.
+**Signal v1.7** · 2026-10-20 — the AIC words run v1.1 (§ 12 round 5): amber retired from this host, ringing is `--sky`, the CTA pair is Talk to AI / Talk to a Human.
 v1.5 changes two things and closes the build phase: the sticky rail is
 **Call + Book** (§ 3), and **there are two CSS homes, not three** (§ 1) — the
 homepage's embedded stylesheet is gone and with it the drift class that has cost
@@ -127,7 +128,7 @@ does not ship.
   It is a **fill** colour and never sets type.
 - **`--sky`** — secondary highlight and eyebrow accent.
 - **`--success-green`** — see STATE LAW below. Since 2026-09-13 it also paints the money buttons (§ 12).
-- **`--amber`** — ringing · pending · the cost of the miss.
+- **`--amber`** — RETIRED 2026-10-20 (owner). Defined, never rendered. Ringing = `--sky`; the cost of the miss = `--miss-red`.
 - **`--miss-red`** — failure only. Never "attention".
 - **`--neutral`** — inactive · not-yet · n/a.
 
@@ -567,7 +568,7 @@ order.** The whole of RUN 12's copy work was making sixteen pages say one thing.
 
 1. the **hero console** — an inset blue edge that breathes, paused offscreen by
    the same IntersectionObserver that drives its timeline;
-2. **The Crush** — an amber wash with hairline top and bottom.
+2. **The Crush** — a midnight-blue wash with `--line-hot` hairlines top and bottom (amber retired 2026-10-20).
 
 One active pulse at a time. Offscreen animation paused.
 
@@ -1114,3 +1115,11 @@ Ratified by the owner on 2026-09-13. Brief and sources: `docs/superpowers/plans/
 - **Every Try control dials.** "Live demo" in the nav, drawer and footer, the related "Demo" cards, the inline "hear one" links and the PUSH TO CALL AI buttons are `tel:+14147750019` links. PUSH TO TRY AI is retired as a label. This supersedes the "→ /try/" notes in § 7 and § 8 and the "Demo" and "Money buttons" lines of the Sep 13 list above.
 - **The homepage QR dialog** keeps the code and the number and loses its "No phone handy?" button.
 - **Left as they are by the same ruling:** `/book/` and `/reserve/`.
+
+### 2026-10-20 · round 5 (AIC words run v1.1)
+
+- **Owner's ruling, Oct 20 2026: no amber on this host.** `--amber` stays defined in `aic.css` and `circulant.css` with a "retired" comment and is used nowhere. `--state-ringing` is `var(--sky)`. The Crush keeps its change of light in midnight blue with `--line-hot` hairlines. `.crush-now` is `--neutral` text with a `--signal-blue` dot. `.crush-calc-link a` is `--sky` with a `--line-hot` underline and a `--signal-blue` focus ring. `.calc-v` (the cost-of-the-miss numbers) is `--miss-red`. `.badge-amber` renders as the blue badge. `--lit-warm` is transparent. The trip page and the owner email (n8n) map `#FFB020` to `#9BA6B8`. Gate: no element on any page computes `rgb(255, 176, 32)`.
+- **CTA strings.** Every `tel:` control reads **Talk to AI**. Every booking control reads **Talk to a Human** and goes to `/book/`, whose H1 is "Pick a time for your discovery call." This supersedes "Book the setup call." in § 7 and the PUSH TO CALL AI label in round 4. Money-button colours are unchanged.
+- **Words.** The six lines in `claude/AIC-ONE-PAGE-v1-2026-10-20.md` are the product. Banned on this host: trip ticket, capture, intake, configured, scoped, write-back, verification, hand off, "lands in your texts", one call or a thousand, 18 vehicles, anywhere in the U.S., Spanish (use "more than 50 languages", an add-on), HubSpot, HighLevel, GoHighLevel.
+- **Prices.** AI Chauffeur $997 a month plus a $997 one-time setup · With your CRM $1,697 a month plus a $1,697 one-time setup · add-ons priced on a quote. Talk time appears only in the pricing FAQ and `llms-full.txt`. The refund line ("If we can't connect your software within 30 days, you get a full refund within 10 days.") sits near the bottom, never in a headline.
+- **New page.** `/compare/` (AI Chauffeur vs a limo answering service vs voicemail). On a phone the table stacks into cards from `data-label`.
