@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#070B14">
-  <title>Airport Transfer Intake — Captured With the Flight | AI Chauffeur</title>
-  <meta name="description" content="AI Chauffeur answers every airport call and takes the flight number, airline and terminal on the call. Your dispatcher confirms the pickup.">
+  <title>Airport Transfer Booking — Flight Number Taken on the Call | AI Chauffeur</title>
+  <meta name="description" content="Airport transfer booking on the call. AI Chauffeur takes the flight number, airline and terminal, meet and greet or curbside, and books the trip. Your dispatcher assigns the car.">
 
   <!-- Favicon set derived from mark-compact.svg with a dark ground baked in:
        the bars are near-white and would disappear against a light-mode tab
@@ -27,16 +27,16 @@
   <link rel="canonical" href="https://aichauffeur.ai/airport-transfer-booking/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="AI Chauffeur">
-  <meta property="og:title" content="Airport Transfer Intake — Captured With the Flight">
-  <meta property="og:description" content="Flight number, airline, terminal and departure time, all taken while the caller is on the line. The ticket goes to your dispatcher to confirm.">
+  <meta property="og:title" content="Airport Transfer Booking — Flight Number Taken on the Call">
+  <meta property="og:description" content="Flight number, airline, terminal and departure time, all taken while the caller is on the line. The trip is booked, and your dispatcher has the trip sheet right after the call.">
   <meta property="og:url" content="https://aichauffeur.ai/airport-transfer-booking/">
   <meta property="og:image" content="https://aichauffeur.ai/assets/og-card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="AI Chauffeur — the limo answering service that never puts a caller on hold. (414) 775-0019">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Airport Transfer Intake — Captured With the Flight">
-  <meta name="twitter:description" content="Flight number, airline, terminal and departure time, all taken while the caller is on the line. The ticket goes to your dispatcher to confirm.">
+  <meta name="twitter:title" content="Airport Transfer Booking — Flight Number Taken on the Call">
+  <meta name="twitter:description" content="Flight number, airline, terminal and departure time, all taken while the caller is on the line. The trip is booked, and your dispatcher has the trip sheet right after the call.">
   <meta name="twitter:image" content="https://aichauffeur.ai/assets/og-card.png">
 
   <!-- RUN 8 · FONT LOCK — self-hosted. The @font-face lives in the stylesheet,
@@ -81,8 +81,8 @@
     },
     {
       "@type": "Service",
-      "name": "Airport runs, captured with the flight.",
-      "description": "The flight details come in on the call, not in a callback. AI Chauffeur takes the flight number, the airline and the terminal while the caller is still on the line, and your dispatcher confirms the pickup.",
+      "name": "Airport transfer booking, flight number and all.",
+      "description": "Airport transfer booking happens on the first call, not in a callback. AI Chauffeur takes the flight number, the airline and the terminal, and meet and greet or curbside, while the caller is still on the line. It reads the trip back and books it. Your dispatcher assigns the car and the chauffeur.",
       "provider": {
         "@id": "https://aichauffeur.ai/#organization"
       }
@@ -95,7 +95,7 @@
           "name": "Does it get the flight number?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. On an airport run AI Chauffeur asks for it, then asks for the airline and the terminal, and reads all three back to the caller. They land in their own fields on the trip ticket instead of buried in a note at the bottom."
+            "text": "Yes. On an airport run AI Chauffeur asks for it, then asks for the airline and the terminal, and reads all three back to the caller. They go in their own fields on the trip sheet instead of buried in a note at the bottom."
           }
         },
         {
@@ -103,7 +103,7 @@
           "name": "What happens if the flight is delayed?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AI Chauffeur captures what the caller reports. If the caller says the flight is running late, that goes on the ticket and your dispatcher sees it. AI Chauffeur does not watch live flight data today, so a delay nobody calls about is not something it can know. The pickup time stays your dispatcher's call either way."
+            "text": "AI Chauffeur takes down what the caller tells it. If the caller says the flight is running late, that goes on the trip sheet and your dispatcher sees it. Flight tracking is an add-on, priced on a quote. It watches the flight for your dispatcher. Without it, a delay nobody calls about is not something AI Chauffeur can know. Any change to the pickup time stays with your team."
           }
         },
         {
@@ -111,15 +111,15 @@
           "name": "Does it know which terminal?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It asks. The caller says the terminal, and the airline sits next to it on the ticket. A dispatcher who knows that airport can check the two against each other. AI Chauffeur captures the terminal. It does not decide it."
+            "text": "It asks. The caller says the terminal, and the airline sits next to it on the trip sheet. A dispatcher who knows that airport can check the two against each other. AI Chauffeur writes down the terminal. It does not decide it."
           }
         },
         {
           "@type": "Question",
-          "name": "Who confirms the pickup time?",
+          "name": "Who sets the pickup time?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Your dispatcher. Every trip, without exception. AI Chauffeur writes down the time the caller wants, notes the flight it is measured against, and marks the buffer for review. Nothing reaches a run sheet and no car moves until a human on your side confirms it."
+            "text": "The caller asks for it. AI Chauffeur writes it down next to the flight, reads it back and books it. If the gap looks tight, it is flagged for dispatch. Your dispatcher assigns the car and the chauffeur, and any change to the time stays with your team."
           }
         }
       ]
@@ -159,11 +159,12 @@
     <li class="nav-group" data-nav-group>
       <button type="button" class="nav-trigger" aria-expanded="false" aria-controls="nav-product">Product<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       <ul class="nav-panel" id="nav-product">
-        <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Live demo</a></li>
+        <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Talk to AI</a></li>
         <li><a href="/what-it-does/">What it does</a></li>
         <li><a href="/what-it-can-do/">What it can do</a></li>
         <li><a href="/how-setup-works/">How setup works</a></li>
         <li><a href="/pricing/">Pricing</a></li>
+        <li><a href="/compare/">Compare</a></li>
         <li><a href="/works-with-your-software/">Works with your software</a></li>
         <li><a href="/integrations/">Integrations</a></li>
       </ul>
@@ -187,8 +188,8 @@
   </ul>
 
   <div class="nav-right">
-    <a href="tel:+14147750019" class="nav-cta" data-event="nav_call" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="nav-cta-verb">Call </span>(414) 775-0019</a>
-    <a href="/book/" class="nav-book" data-event="nav_book">Book the setup call</a>
+    <a href="tel:+14147750019" class="nav-cta" data-event="nav_call" aria-label="Talk to AI, (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="nav-cta-verb">Talk to AI · </span>(414) 775-0019</a>
+    <a href="/book/" class="nav-book" data-event="nav_book">Talk to a Human</a>
     <button type="button" class="nav-burger" data-drawer-open aria-expanded="false" aria-controls="nav-drawer" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span class="nav-burger-t">Menu</span></button>
   </div>
 </nav>
@@ -204,8 +205,8 @@
       </ol>
     </nav>
     <span class="kicker">Airport runs · flight details on the call</span>
-    <h1 class="page-h">Airport runs, captured with the flight.</h1>
-    <p class="page-sub">The flight details come in on the call, not in a callback. AI Chauffeur takes the flight number, the airline and the terminal while the caller is still on the line, and your dispatcher confirms the pickup.</p>
+    <h1 class="page-h">Airport transfer booking, flight number and all.</h1>
+    <p class="page-sub">Airport transfer booking happens on the first call, not in a callback. AI Chauffeur takes the flight number, the airline and the terminal, and meet and greet or curbside, while the caller is still on the line. It reads the trip back and books it. Your dispatcher assigns the car and the chauffeur.</p>
   </div>
 </section>
 
@@ -214,7 +215,7 @@
   <div class="wrap">
     <div class="sec-kicker">On the call</div>
     <h2 class="sec-h">Four details that decide <em>the whole run.</em></h2>
-    <p class="sec-sub">An airport run turns on facts a caller rattles off in about ten seconds. AI Chauffeur asks for every one of them while the caller is still on the phone, and they come back in the same fields on every ticket. Your dispatcher never opens two tickets that are laid out differently. Here is what each field does on a run sheet.</p>
+    <p class="sec-sub">An airport run turns on facts a caller rattles off in about ten seconds. AI Chauffeur asks for every one of them while the caller is still on the phone, and they go in the same fields on every trip sheet. Your dispatcher never opens two trip sheets that are laid out differently. Here is what each field does on a run sheet.</p>
 
     <div class="cards">
       <div class="card">
@@ -227,7 +228,7 @@
       </div>
       <div class="card">
         <h3 class="card-h">Terminal</h3>
-        <p class="card-p">Where the car actually stops. On a departure that is a curb. On an arrival it is a door, a garage level, or a meet point inside. AI Chauffeur asks the caller which one, and it lands in its own field instead of a note nobody reads.</p>
+        <p class="card-p">Where the car actually stops. On a departure that is a curb. On an arrival it is a door, a garage level, or a meet point inside. AI Chauffeur asks the caller which one, and it goes in its own field instead of a note nobody reads.</p>
       </div>
       <div class="card">
         <h3 class="card-h">Departure time</h3>
@@ -241,31 +242,31 @@
 <section id="buffer" data-lit="flat">
   <div class="wrap">
     <div class="sec-kicker">The buffer</div>
-    <h2 class="sec-h">The buffer gets written down. <em>Your desk signs it off.</em></h2>
+    <h2 class="sec-h">Both times go on the trip sheet. <em>Your rule stays yours.</em></h2>
     <p class="sec-sub">Every operator has a rule about how early a car shows up for a flight. Some shops want two hours on a domestic departure, more on an international one, more again when the weather turns. That rule is yours. You built it out of your service area, your drivers and your own Monday mornings. It does not belong to an answering service.</p>
-    <p class="sec-sub">So AI Chauffeur does not do the arithmetic. It asks what time the flight goes and what time the caller wants the car. Both numbers go on the ticket in their own fields, and the buffer is marked for review. If the gap looks tight, the ticket carries a flag. A flag is not a correction.</p>
-    <p class="sec-sub">Your dispatcher reads the two numbers, applies your rule, and sets the time. That is the only place the pickup time is ever decided. Your rule is written down during <a href="/how-setup-works/">setup</a>, before the line goes live.</p>
+    <p class="sec-sub">So AI Chauffeur does not do the math. It asks what time the flight goes and what time the caller wants the car. Both times go on the trip sheet in their own fields. If the gap looks tight, the trip sheet carries a flag for your dispatcher. A flag is not a correction.</p>
+    <p class="sec-sub">It reads the pickup back to the caller and books it. Right after the call, your dispatcher sees both times. If your rule wants the car there earlier, your dispatcher makes the change. Changes stay with your team. We go over your rule on the <a href="/how-setup-works/">setup</a> call, before the line goes live.</p>
 
     <div class="vs">
       <div class="vs-row">
         <div class="vs-a">Caller gives both</div>
-        <div class="vs-b">"Flight's at 7:40, come get me at 5:15." Both numbers land on the ticket, in their own fields. <strong>Nothing is rounded or reinterpreted.</strong></div>
+        <div class="vs-b">"Flight's at 7:40, come get me at 5:15." Both times go on the trip sheet, in their own fields. <strong>Nothing is rounded or changed.</strong></div>
       </div>
       <div class="vs-row">
         <div class="vs-a">Caller is vague</div>
-        <div class="vs-b">"Whenever you'd normally come." The ticket says exactly that, and the buffer field is marked for review. <strong>The gap is visible, not guessed at.</strong></div>
+        <div class="vs-b">"Whenever you'd normally come." The trip sheet says exactly that, and the pickup time is flagged for dispatch. <strong>The gap is visible, not guessed at.</strong></div>
       </div>
       <div class="vs-row">
         <div class="vs-a">The window looks tight</div>
-        <div class="vs-b">The ticket carries a flag beside the pickup time. <strong>Your dispatcher decides whether it is tight.</strong></div>
+        <div class="vs-b">The trip sheet carries a flag beside the pickup time. <strong>Your dispatcher decides whether to move it.</strong></div>
       </div>
       <div class="vs-row">
         <div class="vs-a">International departure</div>
-        <div class="vs-b">The ticket says international, so the desk knows which of your rules is in play. <strong>AI Chauffeur captures the fact, never the policy.</strong></div>
+        <div class="vs-b">The trip sheet says international, so your dispatcher knows which buffer rule applies. <strong>AI Chauffeur takes down the fact, never the policy.</strong></div>
       </div>
       <div class="vs-row">
-        <div class="vs-a">Who sets the final time</div>
-        <div class="vs-b"><strong>Your dispatcher. Every trip, no exceptions.</strong> The car moves on a human's number, not on one AI Chauffeur worked out.</div>
+        <div class="vs-a">Who changes the time</div>
+        <div class="vs-b"><strong>Your dispatcher. Changes stay with your team.</strong> AI Chauffeur books the time the caller asked for. It never works one out on its own.</div>
       </div>
     </div>
   </div>
@@ -276,27 +277,27 @@
   <div class="wrap">
     <div class="sec-kicker">The hubs</div>
     <h2 class="sec-h">MKE, MSN, ORD, MDW <em>and whatever yours is.</em></h2>
-    <p class="sec-sub">Most Wisconsin work funnels through four fields: the two at home, and the two in Chicago that operators drive down for. AI Chauffeur takes all of them the same way. Run somewhere else and it takes yours the same way too, because the airport is a value on the ticket, not a special case in the build.</p>
+    <p class="sec-sub">Most Wisconsin work funnels through four fields: the two at home, and the two in Chicago that operators drive down for. AI Chauffeur takes all of them the same way. Run somewhere else and it takes yours the same way too, because the airport is just a field on the trip sheet, not a special case in the setup.</p>
     <p class="sec-sub">Before the airport matters, though, two things separate an airport run from every other trip on the board. AI Chauffeur asks about both of them on the call.</p>
-    <p class="sec-sub">The first is where the car sits. A departure is a curb: the driver pulls to the airline's door and the bags go in. An arrival is a choice. Curbside means the passenger walks out and the car is rolling in a minute. Baggage claim means the driver parks, walks in, and stands there with a sign until the bags come around. Those are two different jobs and two very different amounts of driver time, and the caller is the only person who knows which one they want.</p>
-    <p class="sec-sub">The second is domestic against international. A domestic arrival walks off and out. An international one clears customs first, and the meet happens on the far side of it, in a hall the driver has to already be standing in. AI Chauffeur puts the arrival type on the ticket so your dispatcher is not guessing how long that driver is committed for.</p>
+    <p class="sec-sub">The first is where the car sits. A departure is a curb: the driver pulls to the airline's door and the bags go in. An arrival is a choice. Curbside means the passenger walks out and the car is rolling in a minute. Meet and greet means the driver parks, walks in to baggage claim, and stands there with a sign until the bags come around. Those are two different jobs and two very different amounts of driver time, and the caller is the only person who knows which one they want.</p>
+    <p class="sec-sub">The second is domestic against international. A domestic arrival walks off and out. An international one clears customs first, and the meet happens on the far side of it, in a hall the driver has to already be standing in. AI Chauffeur puts the arrival type on the trip sheet so your dispatcher is not guessing how long that driver is committed for.</p>
 
     <div class="cards">
       <div class="card">
         <h3 class="card-h">MKE · Milwaukee</h3>
-        <p class="card-p">General Mitchell International. The home field for most Milwaukee black car work. AI Chauffeur takes the airline and the terminal on the way in, so the ticket already says which side of the building the car goes to. More on the <a href="/milwaukee-limo-answering-service/">Milwaukee limo answering service</a>.</p>
+        <p class="card-p">General Mitchell International. The home field for most Milwaukee black car work. AI Chauffeur takes the airline and the terminal on the way in, so the trip sheet already says which side of the building the car goes to. More on the <a href="/milwaukee-limo-answering-service/">Milwaukee limo answering service</a>.</p>
       </div>
       <div class="card">
         <h3 class="card-h">MSN · Madison</h3>
-        <p class="card-p">Dane County Regional. A smaller field, an identical ticket. A Madison run and a Milwaukee run come back in the same shape and the same order, so nobody at the desk is reading two formats before sunrise. More on the <a href="/madison-limo-answering-service/">Madison limo answering service</a>.</p>
+        <p class="card-p">Dane County Regional. A smaller field, the same trip sheet. A Madison run and a Milwaukee run come back in the same shape and the same order, so nobody at the desk is reading two formats before sunrise. More on the <a href="/madison-limo-answering-service/">Madison limo answering service</a>.</p>
       </div>
       <div class="card">
         <h3 class="card-h">ORD · Chicago</h3>
-        <p class="card-p">O'Hare. Carriers sit across separate terminals here, so the airline and the terminal do real work on this ticket. International arrivals also meet somewhere different than domestic ones, and the ticket says which kind it is.</p>
+        <p class="card-p">O'Hare. Carriers sit across separate terminals here, so the airline and the terminal do real work on this trip sheet. International arrivals also meet somewhere different than domestic ones, and the trip sheet says which kind it is.</p>
       </div>
       <div class="card">
         <h3 class="card-h">MDW · Chicago</h3>
-        <p class="card-p">Midway. One terminal, so the airline carries more of the load than the terminal does. Same fields, same ticket, and the same buffer question left open for your desk to answer.</p>
+        <p class="card-p">Midway. One terminal, so the airline carries more of the load than the terminal does. Same fields, same trip sheet, and the same flag for your desk when the gap looks tight.</p>
       </div>
     </div>
   </div>
@@ -309,12 +310,12 @@
     <h2 class="sec-h">Nobody is at the desk <em>when the 5 AM run calls.</em></h2>
     <p class="sec-sub">The earliest departure bank rolls before most offices unlock. So the call that sets one up lands with nobody near the phone. Late the night before, or at four in the morning, when a passenger wakes up and realizes there is no car coming.</p>
     <p class="sec-sub">That caller is not leaving a message. A flight is a deadline, and a deadline does not wait for a callback. They hang up and dial the next name on the map, and you never find out the trip existed.</p>
-    <p class="sec-sub">AI Chauffeur is on the line at 4 AM the same as at 2 PM. Every call answered at once, first ring, no hold and no queue. The caller gives the flight, the terminal, the pickup they want, and AI Chauffeur reads it back before the call ends. By the time your dispatcher sits down, the run is already written out and waiting on a human.</p>
+    <p class="sec-sub">AI Chauffeur is on the line at 4 AM the same as at 2 PM. Every call answered at once, first ring, no hold and no queue. The caller gives the flight, the terminal, the pickup they want, and AI Chauffeur reads it back and books it. Your passenger is booked. By the time your dispatcher sits down, the trip sheet, the recording and the transcript are waiting, and the only job left is to assign the car and the chauffeur.</p>
 
     <div class="ticket-card">
       <div class="ticket-bar">
-        <span>Sample trip ticket · 4:52 AM inbound</span>
-        <span class="ticket-live">Captured</span>
+        <span>Sample trip sheet · 4:52 AM inbound</span>
+        <span class="ticket-live">Taken</span>
       </div>
       <div class="ticket-grid">
         <div class="tk">
@@ -345,7 +346,7 @@
         <div class="tk">
           <div class="tk-label">Pickup time</div>
           <div class="tk-val">5:15 AM</div>
-          <div class="tk-sub">Caller's ask · buffer to confirm</div>
+          <div class="tk-sub">Caller's ask · read back</div>
         </div>
         <div class="tk">
           <div class="tk-label">Vehicle</div>
@@ -354,14 +355,14 @@
         </div>
         <div class="tk">
           <div class="tk-label">Status</div>
-          <div class="tk-val">Routed to dispatch</div>
-          <div class="tk-sub">Dispatcher confirms</div>
+          <div class="tk-val">Booked</div>
+          <div class="tk-sub">Dispatcher assigns the car</div>
         </div>
       </div>
-      <div class="ticket-foot">Sample ticket · every value on it was captured on the call · the pickup time is set by your dispatcher</div>
+      <div class="ticket-foot">Sample trip sheet · every value on it was taken on the call · any change to the pickup time stays with your dispatcher</div>
     </div>
 
-    <p class="sec-sub">That is the whole job. The office was dark, the phone rang once, and the ride was captured. <a href="tel:+14147750019" data-event="tel_tap_inline">Call AI Chauffeur and hear one →</a></p>
+    <p class="sec-sub">That is the whole job. The office was dark, the phone rang once, and the ride was booked. <a href="tel:+14147750019" data-event="tel_tap_inline">Talk to AI →</a></p>
   </div>
 </section>
 
@@ -370,19 +371,19 @@
   <div class="wrap">
     <div class="sec-kicker">Hear it first</div>
     <h2 class="sec-h">Give AI Chauffeur a flight. <em>Hear what it asks next.</em></h2>
-    <p class="sec-sub">The only honest way to judge an intake line is to be the caller. Dial the number and give AI Chauffeur an airport run: a flight number, a terminal, a pickup you would actually take. Then listen to the questions. Nothing to install, no menu to sit through.</p>
+    <p class="sec-sub">The best way to judge it is to be the caller. Dial the number and give AI Chauffeur an airport run: a flight number, a terminal, a pickup you would actually take. Then listen to the questions. Nothing to install, no menu to sit through.</p>
 
     <div class="cta-stack">
       <a href="tel:+14147750019" class="tel-btn" data-event="tel_tap_cta">
         <span class="tel-main">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call (414) 775-0019
+          Talk to AI · (414) 775-0019
         </span>
         <span class="tel-sub">AI Chauffeur answers. Hear it yourself.</span>
       </a>
 
       <div class="cta-tertiary">
-        <a href="/book/" data-event="book_click_cta">Book the setup call →</a>
+        <a href="/book/" data-event="book_click_cta">Talk to a Human →</a>
         <span class="cta-note">Schedules the 20-minute setup call.</span>
       </div>
     </div>
@@ -396,19 +397,19 @@
     <h2 class="sec-h">Questions operators <em>actually ask.</em></h2>
     <details>
       <summary>Does it get the flight number?</summary>
-      <div>Yes. On an airport run AI Chauffeur asks for it, then asks for the airline and the terminal, and reads all three back to the caller. They land in their own fields on the trip ticket instead of buried in a note at the bottom.</div>
+      <div>Yes. On an airport run AI Chauffeur asks for it, then asks for the airline and the terminal, and reads all three back to the caller. They go in their own fields on the trip sheet instead of buried in a note at the bottom.</div>
     </details>
     <details>
       <summary>What happens if the flight is delayed?</summary>
-      <div>AI Chauffeur captures what the caller reports. If the caller says the flight is running late, that goes on the ticket and your dispatcher sees it. AI Chauffeur does not watch live flight data today, so a delay nobody calls about is not something it can know. The pickup time stays your dispatcher's call either way.</div>
+      <div>AI Chauffeur takes down what the caller tells it. If the caller says the flight is running late, that goes on the trip sheet and your dispatcher sees it. Flight tracking is an add-on, priced on a quote. It watches the flight for your dispatcher. Without it, a delay nobody calls about is not something AI Chauffeur can know. Any change to the pickup time stays with your team.</div>
     </details>
     <details>
       <summary>Does it know which terminal?</summary>
-      <div>It asks. The caller says the terminal, and the airline sits next to it on the ticket. A dispatcher who knows that airport can check the two against each other. AI Chauffeur captures the terminal. It does not decide it.</div>
+      <div>It asks. The caller says the terminal, and the airline sits next to it on the trip sheet. A dispatcher who knows that airport can check the two against each other. AI Chauffeur writes down the terminal. It does not decide it.</div>
     </details>
     <details>
-      <summary>Who confirms the pickup time?</summary>
-      <div>Your dispatcher. Every trip, without exception. AI Chauffeur writes down the time the caller wants, notes the flight it is measured against, and marks the buffer for review. Nothing reaches a run sheet and no car moves until a human on your side confirms it.</div>
+      <summary>Who sets the pickup time?</summary>
+      <div>The caller asks for it. AI Chauffeur writes it down next to the flight, reads it back and books it. If the gap looks tight, it is flagged for dispatch. Your dispatcher assigns the car and the chauffeur, and any change to the time stays with your team.</div>
     </details>
   </div>
 </section>
@@ -462,14 +463,15 @@
       <div class="foot-col">
         <h2>Product</h2>
         <ul>
-          <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Live demo</a></li>
+          <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Talk to AI</a></li>
           <li><a href="/what-it-does/">What it does</a></li>
           <li><a href="/what-it-can-do/">What it can do</a></li>
           <li><a href="/how-setup-works/">How setup works</a></li>
           <li><a href="/pricing/">Pricing</a></li>
+          <li><a href="/compare/">Compare</a></li>
           <li><a href="/works-with-your-software/">Works with your software</a></li>
           <li><a href="/integrations/">Integrations</a></li>
-          <li><a href="/book/">Book the setup call</a></li>
+          <li><a href="/book/">Talk to a Human</a></li>
         </ul>
       </div>
       <div class="foot-col">
@@ -491,7 +493,7 @@
       <div class="foot-col">
         <h2>Company</h2>
         <ul>
-          <li><a href="tel:+14147750019" data-event="tel_tap_footer_company">Call (414) 775-0019</a></li>
+          <li><a href="tel:+14147750019" data-event="tel_tap_footer_company">Talk to AI · (414) 775-0019</a></li>
           <li><a href="/privacy/">Privacy</a></li>
           <li><a href="/terms/">Terms</a></li>
         </ul>
@@ -515,11 +517,12 @@
     <nav class="dw-group" aria-label="Product">
       <h2>Product</h2>
       <ul>
-        <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Live demo</a></li>
+        <li><a href="tel:+14147750019" data-event="tel_tap_live_demo">Talk to AI</a></li>
         <li><a href="/what-it-does/">What it does</a></li>
         <li><a href="/what-it-can-do/">What it can do</a></li>
         <li><a href="/how-setup-works/">How setup works</a></li>
         <li><a href="/pricing/">Pricing</a></li>
+        <li><a href="/compare/">Compare</a></li>
         <li><a href="/works-with-your-software/">Works with your software</a></li>
       </ul>
     </nav>
@@ -556,16 +559,16 @@
       </ul>
     </nav>
     <div class="dw-actions">
-      <a href="/book/" class="nav-book" data-event="book_click_drawer">Book the setup call</a>
-      <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call (414) 775-0019</a>
+      <a href="/book/" class="nav-book" data-event="book_click_drawer">Talk to a Human</a>
+      <a href="tel:+14147750019" class="nav-cta" data-event="tel_tap_drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Talk to AI · (414) 775-0019</a>
     </div>
   </div>
 </div>
 
 <!-- RUN 7 · TASK A — mobile sticky action rail -->
 <div class="rail" data-rail>
-  <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail" aria-label="Call (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="rail-label"><span class="rail-verb">Call </span>(414) 775-0019</span></a>
-  <a class="rail-book" href="/book/" data-event="book_click_rail">Book the setup call</a>
+  <a class="rail-call" href="tel:+14147750019" data-event="tel_tap_rail" aria-label="Talk to AI, (414) 775-0019"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="rail-label"><span class="rail-verb">Talk to AI · </span>(414) 775-0019</span></a>
+  <a class="rail-book" href="/book/" data-event="book_click_rail">Talk to a Human</a>
 </div>
 
 <script src="/assets/aic.js?v=f56b90bd"></script>
