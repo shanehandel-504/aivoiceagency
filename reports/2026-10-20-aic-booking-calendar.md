@@ -126,3 +126,63 @@ What can stop a transfer working the way Shane wants:
 | Step 5 | (a) no, GHL can't; phone path already does it · (b) see § 5 |
 | Board | aic-booking-calendar live (weekdays), weekend gap in the label |
 | Report | reports/2026-10-20-aic-booking-calendar.md |
+| Commit · deploy | 08438a8 · aichauffeur `dpl_6Y54UFxrXeX4eTbr3mjoQ4ABUu5W` READY (live /book serves the new iframe title) |
+
+## 9 · SHANE READBACK (mirror)
+
+```
+===== SHANE READBACK — COPY ALL =====
+RUN INCOMPLETE — WHAT: WEEKENDS STILL SHOW NO TIMES. WHY: A GHL SETTING ON YOUR OWN USER (NOT THE CALENDAR) HIDES SAT/SUN, AND THE API CAN'T REACH IT. NEXT: YOU FIX IT BY HAND IN GHL (STEP 1 BELOW).
+
+WHAT WAS WRONG
+The AI Chauffeur booking calendar had no open hours saved. With no hours, GoHighLevel had nothing to offer, so
+aichauffeur.ai/book/ said "No slot available" in every month. Your Google calendar was not the problem.
+
+WHAT CHANGED (approved by you in chat, about 8:53 PM CT)
+- Calendar renamed "Discovery Call".
+- Open every day 11:00 AM to 7:20 PM Central, so the last 20-minute call starts at 7:00 PM.
+- People can book 3 hours ahead (same day is fine) and up to 30 days out.
+- The /book page's two hidden calendar labels now say "discovery call". The rest of the page already did.
+- Nothing else touched: form, confirmation messages, workflows, phone agents, other calendars.
+
+PROOF
+- Next 7 days: 125 open times, first 11:00 AM, last 7:00 PM, Wed–Fri and Mon–Tue.
+- Saturday and Sunday: 0 (the open item).
+- On a phone-size screen the live page shows "Discovery Call · 20 min" and the times.
+
+LIVE TRANSFER — DOES IT WORK THE WAY YOU WANT?
+- 414-775-0019 (AI Chauffeur): mostly yes. It calls your direct line and tells you the caller's name, company and
+  what they asked about. No answer or decline: back to the caller with the earliest times, same day first.
+  But it offers to book a call first, before it tries you.
+- 414-240-8930 (AVA): partly. Same flow, but the "who is calling" brief only fills in if AVA runs a note step,
+  and the tests skipped it. You might hear a blank brief.
+- Both: it only tries you if your Google calendar is free right then (8 AM–7 PM). You must say "connect" or
+  press 1; "yes" counts as no after one retry. No real transfer has happened yet.
+
+DONE
+| Item | Result | Live | Proof |
+| Calendar fix | Discovery Call, 11–7, 3 h notice, 30 days | yes (weekdays) | 125 times next 7 days |
+| Widget | page link answers 200, header "Discovery Call" | yes | audits/aic-booking-calendar/*.png |
+| Page words | iframe titles say discovery call | yes | commit 08438a8 |
+| Board + report | aic-booking-calendar live + LOG | yes | reports/2026-10-20-aic-booking-calendar.md |
+| Deploy | aichauffeur dpl_6Y54UFxrXeX4eTbr3mjoQ4ABUu5W | READY | live /book shows new title |
+
+ROLLBACK
+- Calendar: one PUT from the backup C:\ava-backups\2026-10-20-ghl-calendar-UaxV0ENx2cEUYs6qeWZ7.json (on the Dell, not in the repo).
+- Page: git revert 08438a8.
+
+WHAT YOU DO NEXT
+1. Book a test time at aichauffeur.ai/book/ from your phone and watch for the confirmation.
+2. Weekends: GHL → Calendars → Calendar Settings → "Discovery Call" → ⋯ → Troubleshoot Calendar → pick Sat Oct 24.
+   If it says the user is unavailable: Settings → My Profile → your availability → add Saturday and Sunday, 11:00 AM–7:20 PM.
+3. Give the words for a real text-message consent line on the booking form (today it's GHL's generic line, not required).
+
+GOTCHAS
+- aivoiceagency.ai/book has the SAME problem: the "AVA setup call" calendar has no hours, 0 times in the next 30 days.
+- Phone booking uses its own hours (8:00 AM start, 2 hours' notice, 3 days out), not the new web hours.
+- Your 3-hour rule after a Google event already works on the phone path; GHL can't do it on the web calendar.
+- The reminder texts run 6 AM–6:55 PM, so a 7:00 PM call's day-before text can miss; same-day web bookings may get none.
+- 12 other aichauffeur.ai pages still say "setup call".
+- 34 aichauffeur.ai pages point at an older copy of the stylesheet after today's merges (returning visitors, up to a day).
+- The old Cal.com workflow (WF-AIC-SALES-CAL) still runs the 0019 team alert and the Capture Desk line; don't retire it yet.
+```
