@@ -123,9 +123,9 @@ FOOTER = '''<!-- BRIDGE:FOOTER -->
           <a href="/electrician-answering-service">Electrician answering service</a>
           <a href="/24-hour-answering-service">24-hour answering service</a>
           <span class="bfoot-sub">Milwaukee</span>
-          <a href="/hvac-answering-service">HVAC answering</a>
+          <a href="/milwaukee-hvac">HVAC answering</a>
           <a href="/milwaukee-plumbing">Plumbing answering</a>
-          <a href="/electrician-answering-service">Electrical answering</a>
+          <a href="/milwaukee-electrical">Electrical answering</a>
           <a href="/milwaukee-dental">Dental answering</a>
           <a href="/milwaukee-roofing">Roofing answering</a>
           <span class="bfoot-sub">Madison</span>
@@ -245,10 +245,6 @@ for city, hub in [('milwaukee', '/milwaukee'), ('madison', '/madison'), ('west-b
         tname = 'HVAC' if trade == 'hvac' else trade.title()
         PAGES.append(dict(f='%s-%s/index.html' % (city, trade), kind='circulant',
                           trail=W + [(cname, hub), (tname, None)]))
-# AEO phase 2 (2026-10-19, table D15): these two 301 to /hvac-answering-service and
-# /electrician-answering-service (vercel.json). Their files moved to infra/backups/2026-10-19/.
-MERGED = ('milwaukee-hvac/index.html', 'milwaukee-electrical/index.html')
-PAGES = [p for p in PAGES if p['f'] not in MERGED]
 
 # CACHE-ARMOR-ONLY pages (RUN 2). These carry their own hand-authored slim chrome
 # by design (landers / conversion page — "no full nav"), so they must NOT receive the
