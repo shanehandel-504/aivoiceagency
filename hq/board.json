@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-20T21:10:00-05:00",
+  "updated": "2026-10-21T18:35:00-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -737,6 +737,14 @@
       "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-20-aic-booking-calendar.md",
       "title": "AI Chauffeur booking calendar — /book had no open times; GHL calendar renamed Discovery Call, open 11:00 AM–7:00 PM starts, 3 hours notice, 30 days (2026-10-20)",
       "label": "LIVE on weekdays since about 8:53 PM CT Oct 20: GHL calendar UaxV0… had no open hours saved (0 times in 30 days). One PUT: name Discovery Call, all seven days 11:00 AM–7:20 PM, notice 3 hours, window 30 days. Verify: 125 times next 7 days, first 11:00 AM, last 7:00 PM, widget header Discovery Call at 390×844. RUN INCOMPLETE on weekends: GHL still drops Sat/Sun for the assigned user (user-level availability, not this calendar) — Shane runs Troubleshoot Calendar on a Saturday and adds Sat + Sun to his availability. Also found: the AVA setup call calendar (aivoiceagency.ai/book) has the same empty hours, 0 times in 30 days. Rollback: one PUT from the backup JSON kept off-repo on the Dell."
+    },
+    {
+      "id": "ava-restore-14-pages",
+      "status": "live",
+      "updated": "2026-10-21T18:35:00-05:00",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-10-21-ava-restore-14-pages.md",
+      "title": "AVA restore 14 pages (2026-10-21): the 12 noindexed city pages and /milwaukee-hvac + /milwaukee-electrical are back in Google's view, sitemap 55 to 69",
+      "label": "LIVE (6d3384d, dpl_J3f1nCa9oDHEpgeZGDU1H2tVVEmY). Undoes 4b7fb59 + 1e48002 on Shane's ruling (keep every page): 12 city pages lose the noindex tag; /milwaukee-hvac and /milwaukee-electrical restored byte for byte from infra/backups/2026-10-19/ (backups kept), their 8 vercel.json 301s removed; stamp.py PAGES + gate-pages.mjs list them again; footer + card links that pointed away point back (hrefs only, no words changed). Live: 14/14 = 200, no redirect, no noindex, in sitemap; sitemap 69 URLs; Playwright 390 + 1440 28/28 clean. IndexNow 200 for the 14 (a submission, not indexing). /chauffeur/ untouched. Rollback: git revert 6d3384d. Report: reports/2026-10-21-ava-restore-14-pages.md."
     }
   ],
   "log": [
@@ -1375,6 +1383,10 @@
     {
       "ts": "2026-10-20T21:10:00-05:00",
       "entry": "AIC booking calendar — UaxV0… had no open hours (0 times in 30 days) · one PUT: Discovery Call, 7 days 11:00 AM–7:20 PM, 3-hour notice, 30 days · free-slots next 7 days 125, 11:00 AM–7:00 PM, weekend 0 (user-level, Shane by hand) · widget 200 + header Discovery Call at 390×844 · /book iframe titles say discovery call · AVA setup call calendar found with the same empty hours · 2026-10-20"
+    },
+    {
+      "ts": "2026-10-21T18:35:00-05:00",
+      "entry": "AVA restore 14 pages — 6d3384d undoes 4b7fb59 (12 noindex) + 1e48002 (2 Milwaukee 301s + link retargets) · live 14/14 = 200, no noindex, in sitemap · sitemap 55 -> 69 · IndexNow 200 for 14 · no words changed · /chauffeur/ untouched · 2026-10-21"
     }
   ]
 }
