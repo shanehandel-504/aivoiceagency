@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-21T19:14:14-05:00",
+  "updated": "2026-10-21T21:43:59-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -753,6 +753,22 @@
       "url": "https://aichauffeur.ai/",
       "title": "AIC words A (2026-10-21): AI reservation desk kicker + entity block, CRM → reservation software on 17 pages, one $99 line per page, flight tracking reads as an add-on, robots meta on 33 pages",
       "label": "LIVE on aichauffeur.ai (98f9d02, dpl_3YLVXeU2QsEH3HohBK1LBwcGSybq). Kicker + hero-sub entity block on /; CRM → reservation software on 17 pages + llms files + the sample-call card; $99 bot down to one per page; Four steps / One complete trip sheet; flight tracking add-on on the trip-sheet card; How much does AI Chauffeur cost?; index,follow robots on 33 pages (/try/ keeps noindex). Rollback: git revert 98f9d02, or promote dpl_A3e68LJVWz4t8dpj8RRe7ZjBT6kN."
+    },
+    {
+      "id": "aic-words-b",
+      "status": "live",
+      "updated": "2026-10-21T21:43:59-05:00",
+      "url": "https://aichauffeur.ai/",
+      "title": "AIC words B (2026-10-21): Call the demo / Pick a time with the team on 34 pages, hero line takes the calls you choose, phone entity line, homepage call bar, transcripts under the players, /book/ calendar never traps a step",
+      "label": "LIVE on aichauffeur.ai (b749205, dpl_AwdniYzjhcwokCqDUBpoRRKExuVj READY 9:34 PM CT). Old labels 326 + 167 → 0; title Limo Answering Service & AI Reservation Desk; hero line no longer says runs the phones; .hero-sub-m entity line under 768px; (the $1,697 plan) on the write-in sentences; doubled reservation-software sentences 14 → 0 on 10 pages; FAQ Is it set up for my company?; #calls section off, six transcripts folded under the players (words identical); homepage call bar after the hero button scrolls up; /book/ iframe scrolling auto + 1100px phone floor (GHL resize sometimes misses and the steps were trapped at 760px). Gates: run14 PASS prod, llms-verify GREEN 124/124 served. Rollback: git revert b749205, or promote dpl_EmyUfVqBZZPMSnm4B7xr2BU4Dfmp (aichauffeur) + dpl_22JA7g1CxRh2ZRpLCp3MK6mrDUHP (aivoiceagency). Report: reports/2026-10-21-aic-words-b.md."
+    },
+    {
+      "id": "ava-calendar-fix",
+      "status": "live",
+      "updated": "2026-10-21T19:11:15-05:00",
+      "url": "https://aivoiceagency.ai/book",
+      "title": "AVA booking calendar (2026-10-21): GHL calendar aCIv7rUnCGrysobt6Mlg had no open hours (0 times); now Discovery Call, all 7 days 11:00 AM–7:20 PM, 3 hours notice, 30 days; /book iframe title reads AVA discovery call calendar",
+      "label": "LIVE since one GHL PUT at 7:11:15 PM CT Oct 21 (HTTP 200, owner-approved in chat). Free times next 7 days 0 → 165 (Thu 22, Fri 23, Mon 26–Wed 28; 33 a day, 11:00 AM–7:00 PM); next 30 days 0 → 693 on 21 weekdays. Widget at 390×844: Discovery Call · 15 min, 0 console errors, nothing booked. Kept as read: 15-min slots, buffers 15/30, 3 per slot and per day. Weekends still closed by the assigned user's own availability (a GHL user setting, by hand). Page label fixed in b749205 (dpl_8CnCDtQLKhK8F25X9B9JnnSRcUS1 READY). Backup + one-PUT rollback script off-repo in C:\\ava-backups (2026-10-21-ghl-ava-calendar-put.mjs --rollback)."
     }
   ],
   "log": [
@@ -1399,6 +1415,14 @@
     {
       "ts": "2026-10-21T19:14:14-05:00",
       "entry": "AIC words A · 98f9d02 · dpl_3YLVXeU2QsEH3HohBK1LBwcGSybq READY · kicker THE AI RESERVATION DESK FOR LIMOUSINE AND BLACK CAR COMPANIES (2 lines at 390) · hero-sub entity block · CRM 143 → 0 on 17 pages + 2 llms files (terms/privacy untouched) · $99 bot 1 per page · flight tracking add-on · FAQ JSON-LD regenerated (14 pages) · robots meta 33 · sitemap 33 · 2026-10-21"
+    },
+    {
+      "ts": "2026-10-21T21:43:59-05:00",
+      "entry": "AIC words B · b749205 · dpl_AwdniYzjhcwokCqDUBpoRRKExuVj READY · Call the demo / Pick a time with the team on 34 pages (old labels 0) · title + meta · hero line takes the calls you choose · phone entity line · (the $1,697 plan) on write-in sentences · doubled phrase 14 → 0 on 10 pages · FAQ Is it set up for my company? · transcripts under the players · homepage call bar · /book/ scrolling auto + 1100px floor · run14 PASS · llms GREEN 124/124 · 2026-10-21"
+    },
+    {
+      "ts": "2026-10-21T21:43:59-05:00",
+      "entry": "AVA calendar fix · GHL aCIv7rUnCGrysobt6Mlg PUT 7:11:15 PM CT (HTTP 200) · Discovery Call, 7 days 11:00 AM–7:20 PM, 3 h notice, 30 days · free times 7 days 0 → 165, 30 days 0 → 693 · weekends still closed (user availability) · /book iframe title AVA discovery call calendar in b749205 (dpl_8CnCDtQLKhK8F25X9B9JnnSRcUS1 READY) · 2026-10-21"
     }
   ]
 }
