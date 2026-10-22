@@ -67,12 +67,7 @@ const HOSTS = [
     root: '.',
     excludes: PARENT_EXCLUDES,
   },
-  {
-    host: 'aichauffeur.ai',
-    sitemapFile: 'chauffeur/sitemap.xml',
-    root: 'chauffeur',
-    excludes: CHAUFFEUR_EXCLUDES,
-  },
+  // aichauffeur.ai moved to shanehandel-504/aichauffeur on 2026-10-22 (its own scripts/sitemap-hygiene.mjs).
 ];
 
 // ---------------------------------------------------------------------------

@@ -41,7 +41,7 @@ export const PAGES_LANDERS = [
   // landers (stamp.py VERSION_ONLY, minus /lsa + /live which the five already cover)
   '/watch/index.html',
   '/booked/index.html',
-  '/chauffeur/index.html',
+  // '/chauffeur/index.html' removed: aichauffeur.ai moved to shanehandel-504/aichauffeur on 2026-10-22
   // vertical hubs
   '/home-services/index.html',
   '/medical-practices/index.html',

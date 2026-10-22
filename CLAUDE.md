@@ -39,7 +39,7 @@ routing, name the scoped one you mean; for chauffeur work the correct skill is
 | Task | Load — in this order | Notes |
 |---|---|---|
 | Any page, HTML, CSS, component, re-skin, visual change **on the AVA parent** (aivoiceagency.ai) | `frontend-design` + `ui-ux-pro-max` + `taste` + `circulant-landing` | Then run § 1 ENGINE PIPELINE steps 3→5. |
-| Any **AI Chauffeur** surface (aichauffeur.ai, limo / black-car / NEMT / charter, "the blue brand") | `chauffeur-design` + `frontend-design` + `ui-ux-pro-max` + `taste` — **NOT `circulant-landing`** | Separate brand, separate Vercel project rooted at `/chauffeur/`. Never cross tokens or phone numbers between the two brands. |
+| Any **AI Chauffeur** surface (aichauffeur.ai) | **Not this repo.** Since Oct 22 2026 aichauffeur.ai lives in `shanehandel-504/aichauffeur` (C:\Users\offic\Desktop\aichauffeur), with its own CLAUDE.md, tools and gates. Start that session there. | |
 | Any new build, feature, or ambiguous request | `grilling` **FIRST** — cross-examine until intent is unambiguous — then the Superpowers set: `brainstorming` → `writing-plans` → `subagent-driven-development` / `dispatching-parallel-agents` | No code before shared understanding. |
 | Social post, caption, reel, thumbnail, ad creative | `social-post` (+ `ava-factory` when the reel is actually being rendered) | |
 | Before ANY commit | `verification-before-completion` + the self-review loop below | Non-negotiable. |
@@ -275,7 +275,7 @@ Anchor drift is a real failure mode: this table was wrong for a week before RUN 
 
 ## § 8 · BRAND B — AI CHAUFFEUR
 
-**aichauffeur.ai law lives in `chauffeur/DESIGN-SYSTEM.md`** — Signal v1.6 and its § 12 rulings (Sep 13 2026: AI Chauffeur is the agent's only name on that host, green marks its money buttons, the demo is the button at /try). Where this section disagrees, that file wins.
+**Moved Oct 22 2026: aichauffeur.ai is its own repo, `shanehandel-504/aichauffeur`; its law lives in that repo's `DESIGN-SYSTEM.md`** — Signal v1.6 and its § 12 rulings (Sep 13 2026: AI Chauffeur is the agent's only name on that host, green marks its money buttons, the demo is the button at /try). Where this section disagrees, that file wins.
 
 **Direction for future builds** (not yet on the wire):
 leather-black base · crisp white lettering · deep muted amber indicators · a 3D bow-tie mark that
@@ -349,7 +349,7 @@ Source: claude/FACT-SHEET-v3.1-2026-10-20.md (project doc). Updated 2026-10-20, 
 - AI Chauffeur with your reservation software — $1,697/mo + $1,697 one-time setup
 - Add-ons (more than 50 languages, flight tracking, a website talk button) — priced on a quote
 - Talk time (65¢ a minute) appears ONLY in a pricing FAQ and in llms-full.txt, never on a card or hero
-- AI Chauffeur names limo software only (the ten in chauffeur/llms.txt). Never HubSpot or HighLevel on that host.
+- AI Chauffeur names limo software only (the ten in the aichauffeur repo's llms.txt). Never HubSpot or HighLevel on that host.
 - Refund: if we can't connect the software within 30 days, a full refund within 10 days.
 
 ## PHONE — 414-240-8930 only

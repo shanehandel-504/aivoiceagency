@@ -55,7 +55,7 @@ const UA = 'aivoiceagency-llms-verify/1.0';
 
 const HOSTS = [
   { host: 'aivoiceagency.ai', file: path.join(ROOT, 'llms.txt'), dir: ROOT },
-  { host: 'aichauffeur.ai', file: path.join(ROOT, 'chauffeur', 'llms.txt'), dir: path.join(ROOT, 'chauffeur') },
+  // aichauffeur.ai moved to shanehandel-504/aichauffeur on 2026-10-22; its links are now checked live like any other host.
 ];
 
 const argv = process.argv.slice(2);

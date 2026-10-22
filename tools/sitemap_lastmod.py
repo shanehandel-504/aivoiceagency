@@ -30,7 +30,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SITEMAPS = [
     ("sitemap.xml", "https://aivoiceagency.ai", ""),
-    ("chauffeur/sitemap.xml", "https://aichauffeur.ai", "chauffeur/"),
+    # aichauffeur.ai moved to shanehandel-504/aichauffeur on 2026-10-22
 ]
 
 

@@ -5,7 +5,7 @@
 // Every <lastmod> in both sitemaps comes from git:
 //
 //   sitemap.xml            aivoiceagency.ai  (Vercel project rooted at /)
-//   chauffeur/sitemap.xml  aichauffeur.ai    (Vercel project rooted at /chauffeur/)
+//   (aichauffeur.ai moved to shanehandel-504/aichauffeur on 2026-10-22)
 //
 // For each <url>, the <loc> is mapped to the file Vercel serves for it, and the
 // lastmod becomes, verbatim:
@@ -38,7 +38,7 @@
 // endings and unstaged edits are left alone. The hook does nothing unless the
 // commit stages a sitemap page, a sitemap, or a vercel.json.
 // Known edge: a pathspec commit (`git commit -- page.html`) stamps its temporary
-// index only; run `git add sitemap.xml chauffeur/sitemap.xml` after it.
+// index only; run `git add sitemap.xml` after it.
 //
 // EXIT CODES  0 = done / in sync · 1 = drift (--check), or a <loc> with no
 //             committed source file. A sitemap URL that cannot be dated is a URL
@@ -54,7 +54,7 @@ const execFileP = promisify(execFile);
 // root = the directory that host's Vercel project serves from.
 const SITES = [
   { host: 'aivoiceagency.ai', sitemap: 'sitemap.xml', root: '', vercel: 'vercel.json' },
-  { host: 'aichauffeur.ai', sitemap: 'chauffeur/sitemap.xml', root: 'chauffeur/', vercel: 'chauffeur/vercel.json' },
+  // aichauffeur.ai left this repo on 2026-10-22 (shanehandel-504/aichauffeur, its own hook and sitemap).
 ];
 
 const argv = process.argv.slice(2);
