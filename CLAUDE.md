@@ -45,6 +45,8 @@ routing, name the scoped one you mean; for chauffeur work the correct skill is
 | Before ANY commit | `verification-before-completion` + the self-review loop below | Non-negotiable. |
 | Voice agent / Retell prompt work | **STOP.** See PROMPT AUTHORITY LOCK below. | Claude Code does not author agent dialogue. |
 
+- PASTE files for Claude Code live at C:\Users\offic\Desktop\PASTE\ on the Dell. A claude.ai project doc path is never readable here; ask for the file.
+
 ### TWO NAMES THAT DO NOT RESOLVE — read this before routing
 
 Both were verified against the filesystem on 2026-08-06. Routing to the wrong one is a
