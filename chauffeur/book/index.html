@@ -115,6 +115,16 @@
   .cal-fallback a{color:var(--cyan-bright);text-decoration:underline;text-underline-offset:.18em;
     text-decoration-thickness:1px;display:inline-flex;align-items:center;min-height:44px}
   .cal-fallback a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+  /* Oct 22 2026 · under 768px the embed gives way to one button. The widget
+     rendered blank on an iPhone on Oct 22, so a phone opens the calendar in
+     its own tab instead, and the loader below never requests the frame.
+     Desktop keeps the embed. */
+  .cal-phone{display:none}
+  @media(max-width:767.98px){
+    .cal-phone{display:flex;width:100%;justify-content:center;text-align:center;text-wrap:balance}
+    .cal-shell,.cal-fallback{display:none}
+  }
   </style>
 <script type="application/ld+json">
 {
@@ -239,6 +249,9 @@
       <b>20-minute discovery call</b>
       <span>Your rates &middot; service area &middot; fleet &middot; trip sheet</span>
     </div>
+    <a href="https://api.leadconnectorhq.com/widget/booking/UaxV0ENx2cEUYs6qeWZ7" target="_blank" rel="noopener"
+       class="btn btn-primary btn-go cal-phone" data-event="book_click_phone"
+       aria-label="Pick a time with the team (opens in a new tab)">Pick a time with the team</a>
     <div class="cal-shell" data-rail-hide>
       <div class="cal-skel" data-cal-skel aria-hidden="true">
         <div class="sk-head"><span class="sk-bar"></span><span class="sk-bar"></span></div>
@@ -478,19 +491,33 @@
     frame.src = frame.getAttribute('data-src');
   }
 
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function(entries){
-      for (var i = 0; i < entries.length; i++) {
-        if (entries[i].isIntersecting) { io.disconnect(); load(); return; }
-      }
-    }, { rootMargin: '600px 0px' });
-    io.observe(shell);
+  function start(){
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) { io.disconnect(); load(); return; }
+        }
+      }, { rootMargin: '600px 0px' });
+      io.observe(shell);
+    }
+    /* Floor, not a race: if the observer never fires — unsupported, or the
+       visitor never scrolls far enough — the frame still loads once the page is
+       idle, so nobody is ever left looking at a skeleton. */
+    if (document.readyState === 'complete') load();
+    else addEventListener('load', load);
   }
-  /* Floor, not a race: if the observer never fires — unsupported, or the
-     visitor never scrolls far enough — the frame still loads once the page is
-     idle, so nobody is ever left looking at a skeleton. */
-  if (document.readyState === 'complete') load();
-  else addEventListener('load', load);
+
+  /* Oct 22 2026 · under 768px the shell is hidden and the button opens the
+     calendar in a new tab, so the frame is never requested on a phone. A
+     window that widens past 768 later starts the loader then. */
+  var phone = window.matchMedia ? window.matchMedia('(max-width:767.98px)') : null;
+  if (!phone || !phone.matches) { start(); return; }
+  function widen(e){
+    if (e.matches) return;
+    if (phone.removeEventListener) phone.removeEventListener('change', widen); else phone.removeListener(widen);
+    start();
+  }
+  if (phone.addEventListener) phone.addEventListener('change', widen); else phone.addListener(widen);
 })();
 </script>
 
