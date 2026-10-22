@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-22T12:50:00-05:00",
+  "updated": "2026-10-22T13:25:42-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -785,6 +785,14 @@
       "url": "https://aichauffeur.ai/book/",
       "title": "AIC fixes (2026-10-22): AVA number off the AI Chauffeur booking screen, reminder texts out, Reservation Desk card names, plan-list spaces, A to Z parked line, dispatcher FAQ, /book/ phone button",
       "label": "LIVE on aichauffeur.ai (769c9ce, dpl_HB5xqX38zL7MLk8snQ44pqS6JCi6 READY 12:38 PM CT). GHL calendar UaxV0ENx2cEUYs6qeWZ7: thank-you + description PUT 200 12:42 PM CT (owner-approved in chat), read back, 2 keys changed of 55. Site: reminder texts out (homepage + CLAUDE.md), /pricing/ cards + Offer JSON-LD Reservation Desk / With Your Reservation Software, plan-list spaces, A to Z red-light line out + demo H2 'Try it between runs, when you're parked.', dispatcher FAQ replaced (page, JSON-LD, llms-full.txt), /book/ under 768px one full-width button to the calendar in a new tab (frame never requested). Gates: JSON-LD 0 errors, llms GREEN 146/146, run14 + 12 pages PASS (older /try/ skip-link finding), greps 0 on 46 served URLs. Rollback: git revert 769c9ce or promote dpl_GnU12KHfTY7L4otvo9irMPTGGGYv; calendar --rollback. Report: reports/2026-10-22-aic-fixes.md."
+    },
+    {
+      "id": "repo-split",
+      "status": "live",
+      "updated": "2026-10-22T13:25:42-05:00",
+      "url": "https://github.com/shanehandel-504/aichauffeur",
+      "title": "Repo split (2026-10-22): AI Chauffeur moved to its own repo shanehandel-504/aichauffeur; this repo is AVA (+ ai100x) only",
+      "label": "LIVE. aichauffeur.ai builds from shanehandel-504/aichauffeur (repo root; 110 chauffeur/ commits kept by git subtree split): first prod dpl_9LLRe7E571y7nzS8CW35HG4N6VnU READY, 58/58 URLs byte-identical to the old build. Here: chauffeur/ -> README (3a1e5e6), 33 AIC-only tools out, pre-commit hook + 4 shared tools drop the moved host, CLAUDE.md router points at the new repo. Ignored build step: ai100x builds only when ai100x/ changes; aivoiceagency skips ai100x-only pushes. Rollback: promote dpl_8J4cwnck5yCq2mxNNo2KsMH4Kk6Z on aichauffeur, relink it to shanehandel-504/aivoiceagency with root directory chauffeur, git revert 3a1e5e6. Report: reports/2026-10-22-repo-split.md."
     }
   ],
   "log": [
@@ -1447,6 +1455,10 @@
     {
       "ts": "2026-10-22T12:50:00-05:00",
       "entry": "AIC fixes live: 769c9ce -> dpl_HB5xqX38zL7MLk8snQ44pqS6JCi6 READY 12:38 PM CT · GHL AIC calendar thank-you + description PUT 200 (owner-approved) · reminder texts out · Reservation Desk card names · plan-list spaces · A to Z parked line · dispatcher FAQ · /book/ phone button · greps 0 on 46 URLs"
+    },
+    {
+      "ts": "2026-10-22T13:25:42-05:00",
+      "entry": "Repo split live: aichauffeur.ai builds from shanehandel-504/aichauffeur (repo root) · first prod dpl_9LLRe7E571y7nzS8CW35HG4N6VnU, 58/58 URLs byte-identical · aivoiceagency chauffeur/ -> README (3a1e5e6) · ignored build steps on ai100x + aivoiceagency · this commit is the board-only proof push"
     }
   ]
 }
