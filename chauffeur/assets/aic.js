@@ -229,13 +229,17 @@
        the bar without anyone remembering to write an attribute, which is the
        failure mode a hand-maintained list actually has.
 
-       `summary` joins them so the bar is never sitting on an FAQ control while
-       a reader is opening and closing rows. querySelectorAll de-duplicates, so
-       a .demo-play-btn inside a [data-rail-hide] bar is observed once; and the
-       counter is symmetric either way, incrementing on enter and decrementing
-       on exit. ──────────────────────────────────────────────────────────── */
+       2026-10-21 · SOFTWARE PAGES · the FAQ rows and the sample player no
+       longer hide the bar. `summary` and `.demo-play-btn` used to sit in this
+       set, so the call action was gone across a whole FAQ and the whole sample
+       section, where nothing else on screen offered it. What still hides it:
+       an inline call or booking control already on screen (.btn-primary,
+       .tel-btn), and the [data-rail-hide] regions, which are now only the
+       places the bar would sit on a form, a calendar or the footer. The
+       counter is symmetric, incrementing on enter and decrementing on exit.
+       ──────────────────────────────────────────────────────────────────── */
     var suppressors = document.querySelectorAll(
-      '[data-rail-hide],.btn-primary,.tel-btn,.demo-play-btn,summary');
+      '[data-rail-hide],.btn-primary,.tel-btn');
     var armed = false;
     var visible = 0;
     var on = false;

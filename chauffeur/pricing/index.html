@@ -66,6 +66,23 @@
   #close .tel-btn{margin-top:1.75rem;max-width:520px}
   #close .page-go{margin-top:1rem}
   @media(max-width:600px){.price-block{padding:1.5rem 1.15rem}}
+  /* Oct 21 2026 · the plan table (#plans). Plan headers read in the sans, not the
+     mono column caps, because each carries a full sentence. Under 768px the
+     row labels stay pinned on the left while the two plan columns scroll. */
+  #plans .tbl thead th.pt{white-space:normal;text-transform:none;letter-spacing:0;min-width:13rem}
+  .pt-name{display:block;font-family:var(--sans);font-size:1.0625rem;font-weight:600;line-height:1.3;color:var(--ink)}
+  .pt-desc{display:block;margin-top:.5rem;font-family:var(--sans);font-size:.9375rem;font-weight:400;line-height:1.5;color:var(--ink-soft)}
+  #plans .tbl tbody th{white-space:normal;max-width:24rem}
+  #plans .tbl td{text-align:center;vertical-align:middle;font-size:1.25rem;line-height:1;color:var(--ink)}
+  #plans .tbl td.no{color:var(--neutral)}
+  #plans .plan-adds{margin-top:2rem}
+  #plans .plan-soft{margin-top:1.5rem}
+  @media(min-width:768px){#plans .tbl thead th:first-child{width:32%}}
+  @media(max-width:767.98px){
+    #plans .tbl thead th:first-child,#plans .tbl tbody th{position:sticky;left:0;z-index:1;width:9.5rem;min-width:9.5rem}
+    #plans .tbl thead th:first-child{background:var(--surface-2)}
+    #plans .tbl tbody th{background:var(--surface);font-size:.9375rem}
+  }
   /* the desktop call-to-QR dialog, copied as-is from the homepage head */
   .qr-dialog{background:#12121A;color:#EEF0F4;border:1px solid rgba(255,255,255,.06);padding:2rem;max-width:22rem;width:calc(100% - 2rem);text-align:center;font-family:'Space Grotesk',sans-serif;margin:auto}
   .qr-dialog::backdrop{background:rgba(10,10,15,.8)}
@@ -221,7 +238,7 @@
           "name": "What add-ons can I get?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "More than 50 languages, flight tracking, reminder texts, and a talk button for your website. Each one is priced on a quote."
+            "text": "More than 50 languages, flight tracking, and a talk button for your website. Each one is priced on a quote."
           }
         },
         {
@@ -335,6 +352,53 @@
   </div>
 </section>
 
+<!-- ══ THE PLAN TABLE · Oct 21 2026 (software-pages run) ══════════════════
+     The one visible table on this page. Both plans carry the same first eight
+     rows on purpose, so the base plan never reads as the small one. Row 8 names
+     only "Client dashboard": the ChatDash read for this run could not confirm
+     call counts, recordings or transcripts in the client view, so none is named.
+     The ticks carry role="img" + aria-label because this host has no
+     visually-hidden class; a screen reader hears "Yes" / "No". -->
+<section id="plans" data-lit="technical">
+  <div class="wrap">
+    <div class="tbl-wrap" tabindex="0" role="region" aria-label="The two plans side by side. Scrollable table">
+      <table class="tbl">
+        <caption class="tbl-cap">What each plan includes</caption>
+        <thead>
+          <tr>
+            <th scope="col">What you get</th>
+            <th scope="col" class="pt"><span class="pt-name">Reservation Desk — $997 a month + $997 setup</span><span class="pt-desc">Quotes your rates, books the reservation and sends your team the trip sheet, recording and transcript. Your team enters the booking in your reservation software. Your client dashboard is included with both plans. Every trip sheet also comes with the call recording.</span></th>
+            <th scope="col" class="pt"><span class="pt-name">With Your Reservation Software — $1,697 a month + $1,697 setup</span><span class="pt-desc">Everything in Reservation Desk — it quotes your rates and books the reservation — plus new bookings entered straight into your connected reservation software. Your client dashboard is included with both plans. Every trip sheet also comes with the call recording.</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Answers every call in your company's name</th><td><span role="img" aria-label="Yes">✓</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+          <tr><th scope="row">Quotes prices from your own rate sheet, in your service area</th><td><span role="img" aria-label="Yes">✓</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+          <tr><th scope="row">Books the reservation</th><td><span role="img" aria-label="Yes">✓</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+          <tr><th scope="row">Live transfer to your team when a caller asks for a person</th><td><span role="img" aria-label="Yes">✓</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+          <tr><th scope="row">Trip sheet, recording and transcript to your dispatcher by email and text</th><td><span role="img" aria-label="Yes">✓</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+          <tr><th scope="row">A trip log in a Google Sheet or spreadsheet, if you want one</th><td><span role="img" aria-label="Yes">✓</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+          <tr><th scope="row">24/7, after hours only, or only the calls you miss</th><td><span role="img" aria-label="Yes">✓</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+          <tr><th scope="row">Client dashboard</th><td><span role="img" aria-label="Yes">✓</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+          <tr><th scope="row">Writes the new reservation straight into your reservation software</th><td class="no"><span role="img" aria-label="No">—</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+          <tr><th scope="row">Remembers your regular customers</th><td class="no"><span role="img" aria-label="No">—</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+          <tr><th scope="row">A card link when there's no card on file</th><td class="no"><span role="img" aria-label="No">—</span></td><td><span role="img" aria-label="Yes">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tbl-hint">Scroll the table sideways for the second plan.</p>
+
+    <ul class="claim-list plan-adds">
+      <li>More than 50 languages — optional add-on on either plan. Ask our team about the languages you need and pricing.</li>
+      <li>Flight tracking — optional add-on. Ask our team about pricing.</li>
+      <li>A talk button for your website — optional add-on, by quote.</li>
+      <li>Custom set-ups for customers on a plan: speed-to-lead and outbound calling campaigns. Built for your company after a conversation with our team; not sold on their own.</li>
+      <li>Your dispatcher confirms the car and the chauffeur. Requests to change or cancel a trip go to your team to review.</li>
+    </ul>
+    <p class="sec-sub plan-soft"><a href="/integrations/">Your reservation software</a>: Limo Anywhere, FASTTRAK, Moovs, Livery Coach, GNet, Hudson, SantaCruz (GroundWidgets), LimoExpress, A to Z Dispatch, RideBits, or any reservation software with an API. If we can't connect yours within 30 days, you get a full refund within 10 days.</p>
+  </div>
+</section>
+
 <!-- ══ THE PRICE · two plans (Oct 20 2026) ═══════════════════════════════ -->
 <section id="price" data-lit="flat">
   <div class="wrap">
@@ -377,10 +441,9 @@
 <section id="included" data-lit="connected">
   <div class="wrap">
     <h2 class="sec-h">Works with <em>your software.</em></h2>
-    <p class="sec-sub">Works with Limo Anywhere, FASTTRAK, Moovs, Livery Coach, GNet, Hudson, SantaCruz (GroundWidgets), LimoExpress, A to Z Dispatch and RideBits. Every connection is set up for your company. <a href="/integrations/">Where each platform stands</a>.</p>
+    <p class="sec-sub">Works with Limo Anywhere, FASTTRAK, Moovs, Livery Coach, GNet, Hudson, SantaCruz (GroundWidgets), LimoExpress, A to Z Dispatch and RideBits. Every connection is set up for your company. <a href="/integrations/">Where each one stands</a>.</p>
     <ul class="claim-list">
       <li>Answers 24/7, only after hours, or only the calls your office misses. You pick.</li>
-      <li>Add-ons, priced on a quote: more than 50 languages, flight tracking, reminder texts, a talk button for your website.</li>
       <li>Built for one company: yours. Your name on the line, your fleet, your rates, your service area. Not a $99 bot with your name typed in.</li>
     </ul>
   </div>
@@ -436,7 +499,7 @@
     </details>
     <details>
       <summary>What add-ons can I get?</summary>
-      <div>More than 50 languages, flight tracking, reminder texts, and a talk button for your website. Each one is priced on a quote.</div>
+      <div>More than 50 languages, flight tracking, and a talk button for your website. Each one is priced on a quote.</div>
     </details>
     <details>
       <summary>Can it answer only after hours, or only the calls we miss?</summary>
@@ -593,7 +656,7 @@
   <a class="rail-book" href="/book/" data-event="book_click_rail">Pick a time with the team</a>
 </div>
 
-<script src="/assets/aic.js?v=4fd514a7"></script>
+<script src="/assets/aic.js?v=7cca170d"></script>
 
 <dialog id="call-qr" class="qr-dialog" aria-labelledby="qr-title">
   <button type="button" class="qr-close" aria-label="Close">×</button>
