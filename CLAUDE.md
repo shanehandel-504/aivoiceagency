@@ -346,7 +346,7 @@ Source: claude/FACT-SHEET-v3.1-2026-10-20.md (project doc). Updated 2026-10-20, 
 - AVA — $497/mo + $497 one-time setup
 - AVA with your CRM — $997/mo + $997 one-time setup
 - AI Chauffeur — $997/mo + $997 one-time setup
-- AI Chauffeur with your CRM — $1,697/mo + $1,697 one-time setup
+- AI Chauffeur with your reservation software — $1,697/mo + $1,697 one-time setup
 - Add-ons (more than 50 languages, flight tracking, reminder texts, a website talk button) — priced on a quote
 - Talk time (65¢ a minute) appears ONLY in a pricing FAQ and in llms-full.txt, never on a card or hero
 - AI Chauffeur names limo software only (the ten in chauffeur/llms.txt). Never HubSpot or HighLevel on that host.

@@ -43,7 +43,7 @@
     /* The filled primaries only. .nav-cta / .nav-book / .nav-burger and every
        drawer link are excluded by omission, and the two closest() guards keep
        them excluded if one of these classes is ever used inside the chrome. */
-    var PRIMARY = '.tel-btn,.btn-primary,.demo-play-btn,.rail-call';
+    var PRIMARY = '.tel-btn,.btn-primary,.demo-play-btn,.rail-call,.callbar-call';
     document.addEventListener('click', function (e) {
       var t = (e.target && e.target.closest) ? e.target.closest(PRIMARY) : null;
       if (!t) return;
@@ -209,7 +209,10 @@
      is exactly flush with the fold from flickering the rail on and off.
      ──────────────────────────────────────────────────────────────────────── */
   (function stickyRail() {
-    var rail = document.querySelector('[data-rail]');
+    /* [data-callbar] is the homepage's call bar (callBar, below). It carries
+       data-rail too, only so the sample-call player's guided scroll keeps the
+       trip sheet above it; it is not this rail and none of this applies. */
+    var rail = document.querySelector('[data-rail]:not([data-callbar])');
     if (!rail || !('IntersectionObserver' in window)) return;
 
     var trigger = document.querySelector('[data-rail-after]');
@@ -286,6 +289,42 @@
     }
 
     sync();
+  })();
+
+  /* ── 2026-10-21 · AIC WORDS B — THE PHONE CALL BAR ─────────────────────────
+     Homepage only, phones only (CSS shows it under 768px). One condition, one
+     IntersectionObserver, on the hero's call button [data-callbar-after]: the
+     bar comes up once that button has scrolled UP out of view, and goes when
+     the button is back on screen. Nothing suppresses it in between.
+
+     While it is up, body pays back the bar's own measured height, safe area
+     included (--callbar-h), so the last line of the footer is never under it.
+     /book/ and /try/ carry no [data-callbar]; the path guard keeps it off both
+     even if the markup is ever copied there. ──────────────────────────────── */
+  (function callBar() {
+    var bar = document.querySelector('[data-callbar]');
+    if (!bar) return;
+    if (/^\/(book|try)(\/|$)/.test(location.pathname)) { bar.parentNode.removeChild(bar); return; }
+    var hero = document.querySelector('[data-callbar-after]');
+    if (!hero || !('IntersectionObserver' in window)) return;
+    var on = false;
+
+    function set(next) {
+      if (next === on) return;
+      on = next;
+      if (on) document.body.style.setProperty('--callbar-h', bar.offsetHeight + 'px');
+      bar.classList.toggle('is-on', on);
+      document.body.classList.toggle('callbar-on', on);
+    }
+
+    /* The root reaches far below the screen, so the button counts as out of
+       view only once it is above the top edge. A fling or an anchor jump that
+       carries it from below the fold to above it in one frame still crosses
+       that edge, so it still fires; with the plain viewport as the root it
+       stayed "not intersecting" on both sides and the bar never came up. */
+    new IntersectionObserver(function (entries) {
+      set(!entries[entries.length - 1].isIntersecting);
+    }, { rootMargin: '0px 0px 1000000px 0px', threshold: 0 }).observe(hero);
   })();
 
   /* ── MISSED-NIGHT CALCULATOR ─────────────────────────────────────────────
