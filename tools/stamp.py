@@ -184,6 +184,7 @@ CALLBAR = '''<!-- BRIDGE:CALLBAR -->
   <a class="bcall ava-pulse" href="tel:+14142408930" data-event="tel_tap_callbar">&#9654; HEAR AVA LIVE</a>
   <a class="bbook" href="/book" data-event="book_click_callbar">BOOK A CALL</a>
 </div>
+<script src="/js/desktop-call.js" defer></script>
 <!-- /BRIDGE:CALLBAR -->'''
 
 
