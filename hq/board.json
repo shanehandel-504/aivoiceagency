@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-28T21:41:00-05:00",
+  "updated": "2026-10-28T22:31:23-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -809,6 +809,14 @@
       "url": "https://aivoiceagency.ai/",
       "title": "DESKTOP-CALL v1 (2026-10-28): on a desktop the call buttons start a browser call in place on both sites; phones still dial; QR pop-up off the aichauffeur.ai homepage",
       "label": "LIVE on both hosts. aivoiceagency 5ffa61d -> dpl_8zSP26cGKk6DQNUU1hTeroksKh7p (rollback dpl_7gpGNiCWqitqWuWYraYKC46NcwHr): js/desktop-call.js on 69 pages. aichauffeur 742522d -> dpl_5FnthMdzrvAdo5BxYov8R4YDLj11 (rollback dpl_DhN7FTsTSXzi3Zf6NGvewYNJtXxU): assets/desktop-call.js on 62 pages, homepage QR out. n8n: AVA web call-start VDiBEwZ8FB28ME8b (Doppler AVA_WEBCALL_URL) + WF-TRY-WEBCALL 9nKn8i2dRuALikuv republished; both read the line's agent at call time. Live calls call_f33edfad895a9ee8da271048091 (AVA rail 17462) and call_be90bff036c6c4e79ff4263e5e9 (demo rail 17468). Cost guard: 5 minutes a call, 3 a day per browser, 40 a day per site. Kill switch: unpublish either workflow. Report reports/2026-10-28-desktop-call.md."
+    },
+    {
+      "id": "AIC-AGENT-PHASE0-MEASURE",
+      "status": "measured",
+      "updated": "2026-10-28T22:31:23-05:00",
+      "url": "https://aivoiceagency.ai/hq",
+      "title": "AIC agent · Phase 0 measure",
+      "label": "measured — report in reports/2026-10-28-agent-measure-v1.md. READ ONLY, nothing changed on Retell/n8n/GHL/Twilio. 0019 (agent_9ebb… v15) answers in 4.03 s p50 / 6.01 s p95; turns answering the 27 nodes set to responsiveness 0.3 wait 4.19 s p50 before the flow moves (0.8 nodes: 1.56 s). 8930 (agent_d5ada… v53) 1.24 s p50 / 3.30 s p95. Denver call call_d3c7…48d4: 5.62 / 2.94 / 5.60 s, nothing in the flow catches a trip question. Reads in ops/tuning/*-read-2026-10-28.json + ops/tuning/calls/2026-10-28/."
     }
   ],
   "log": [
@@ -1491,6 +1499,10 @@
     {
       "ts": "2026-10-28T21:41:00-05:00",
       "entry": "DESKTOP-CALL v1 live on both sites: a desktop press starts the call in the browser (AVA 5ffa61d, AI Chauffeur 742522d), phones still dial, the aichauffeur.ai homepage QR pop-up is gone; one live browser call to each agent logged by its post-call rail."
+    },
+    {
+      "ts": "2026-10-28T22:31:23-05:00",
+      "entry": "AIC agent Phase 0 measure: both phone agents read and timed (READ ONLY). 0019 gap p50 4.03 s / p95 6.01 s, 8930 gap p50 1.24 s / p95 3.30 s; the 0019 wait sits on 27 nodes set to responsiveness 0.3. Report reports/2026-10-28-agent-measure-v1.md."
     }
   ]
 }
