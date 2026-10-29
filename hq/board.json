@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-27T11:52:13-05:00",
+  "updated": "2026-10-28T19:51:22-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -793,6 +793,14 @@
       "url": "https://github.com/shanehandel-504/aichauffeur",
       "title": "Repo split (2026-10-22): AI Chauffeur moved to its own repo shanehandel-504/aichauffeur; this repo is AVA (+ ai100x) only",
       "label": "LIVE. aichauffeur.ai builds from shanehandel-504/aichauffeur (repo root; 110 chauffeur/ commits kept by git subtree split): first prod dpl_9LLRe7E571y7nzS8CW35HG4N6VnU READY, 58/58 URLs byte-identical to the old build. Here: chauffeur/ -> README (3a1e5e6), 33 AIC-only tools out, pre-commit hook + 4 shared tools drop the moved host, CLAUDE.md router points at the new repo. Ignored build step: ai100x builds only when ai100x/ changes; aivoiceagency skips ai100x-only pushes. Rollback: promote dpl_8J4cwnck5yCq2mxNNo2KsMH4Kk6Z on aichauffeur, relink it to shanehandel-504/aivoiceagency with root directory chauffeur, git revert 3a1e5e6. Report: reports/2026-10-22-repo-split.md."
+    },
+    {
+      "id": "RECOVERY",
+      "status": "live",
+      "updated": "2026-10-28T19:51:22-05:00",
+      "url": "https://aivoiceagency.ai/llms-full.txt",
+      "title": "RECOVERY v1 (2026-10-28): one entity on both sites, retired ring line out, AVA llms-full restored, IndexNow sends only changed URLs, copy freeze to Nov 27",
+      "label": "LIVE on both hosts. aivoiceagency 7b0f855 -> dpl_DdLXL2FzKNeZYw694Dd6wVbJLJDE (rollback dpl_9PgtqJvLJoLyaijE1buPUDVEzhTP): Organization = the entity on all 72 sitemap pages, llms.txt entity block, llms-full.txt 200 (47 KB). aichauffeur fdc0e73 -> dpl_DhN7FTsTSXzi3Zf6NGvewYNJtXxU (rollback dpl_4KCk2g7oaou7J2oB1L4KyUa4XoXr): entity + parentOrganization on all 46 sitemap pages, llms.txt carries 414-775-0019. n8n gdFqOxFFVe13CfvX serving 73791846 (rollback: publish 2738ef57): per-URL lastmod in static data, runs 17416 (72 + 46, 200/200), 17417 (0, no POST), 17419 deploy (AIC 46, 200). Titles and metas unchanged; freeze record hq/copy-freeze-2026-10-28.json (7 AVA + 4 AIC pages) until 2026-11-27."
     }
   ],
   "log": [
@@ -1463,6 +1471,10 @@
     {
       "ts": "2026-10-27T11:52:13-05:00",
       "entry": "bricks 2026-10-27: 3 answer pages live (does-ava-know-my-rates, how-do-i-get-the-recording-of-an-ava-call, can-ava-take-more-than-one-call-at-a-time)"
+    },
+    {
+      "ts": "2026-10-28T19:51:22-05:00",
+      "entry": "RECOVERY v1 live on both sites: aivoiceagency 7b0f855 + aichauffeur fdc0e73. One Organization entity on every sitemap page (72 + 46), parent/sub link both ways, retired ring line off every served page except two AVA meta descriptions held by the no-meta-change law, AVA llms-full.txt restored, IndexNow submits only changed URLs, copy freeze recorded to 2026-11-27."
     }
   ]
 }

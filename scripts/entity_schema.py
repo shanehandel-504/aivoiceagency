@@ -77,7 +77,7 @@ AIC = {
     "@id": "https://aichauffeur.ai/#organization",
     "name": "AI Chauffeur",
     "url": "https://aichauffeur.ai",
-    "logo": None,  # filled from the site's own og:image at run time (see LOGO)
+    "logo": None,  # filled from LOGO below at run time
     "description": (
         "AI Chauffeur is the AI reservation desk for limousine and black car companies. It "
         "answers calls in your company's name, quotes from your rate sheet in your service "
@@ -109,7 +109,7 @@ AIC = {
 }
 
 ENTITIES = {"aivoiceagency.ai": AVA, "aichauffeur.ai": AIC}
-LOGO = {"aichauffeur.ai": "https://aichauffeur.ai/assets/og-card.png"}
+LOGO = {"aichauffeur.ai": "https://aichauffeur.ai/assets/brand/lockup-short.svg"}  # the logo the site already names
 
 LD_RE = re.compile(
     r'(<script\b[^>]*type\s*=\s*["\']application/ld\+json["\'][^>]*>)(.*?)(</script>)',
