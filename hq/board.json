@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-28T22:31:23-05:00",
+  "updated": "2026-10-29T17:47:59-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -817,6 +817,14 @@
       "url": "https://aivoiceagency.ai/hq",
       "title": "AIC agent · Phase 0 measure",
       "label": "measured — report in reports/2026-10-28-agent-measure-v1.md. READ ONLY, nothing changed on Retell/n8n/GHL/Twilio. 0019 (agent_9ebb… v15) answers in 4.03 s p50 / 6.01 s p95; turns answering the 27 nodes set to responsiveness 0.3 wait 4.19 s p50 before the flow moves (0.8 nodes: 1.56 s). 8930 (agent_d5ada… v53) 1.24 s p50 / 3.30 s p95. Denver call call_d3c7…48d4: 5.62 / 2.94 / 5.60 s, nothing in the flow catches a trip question. Reads in ops/tuning/*-read-2026-10-28.json + ops/tuning/calls/2026-10-28/."
+    },
+    {
+      "id": "OWNER-ALERT",
+      "status": "live",
+      "updated": "2026-10-29T17:47:59-05:00",
+      "url": "https://aivoiceagency.ai/hq",
+      "title": "OWNER-ALERT v1 (2026-10-29): every analyzed call on 8930 and 0019 texts the owner's cell one line and posts it to Slack",
+      "label": "LIVE. n8n OWNER-ALERT v1 zv4tViyB5EVW8Uhy: header key, test numbers and test_mode skipped, 10-minute dedupe by call id, Error Sentry attached, a failed text fails the run so the Sentry fires. Kill switch: deactivate it. One added node '→ OWNER-ALERT' (continue on error) on AVA post-call 6r8YHuMEJbxeDyT5 serving b9c39d5a (rollback: publish e0454827) and demo post-call TkETvvnABhUPd7ME serving 3d53d0ec (rollback: publish 830898d5). Hardcoded owner values off two rails: 9FoLm4slBmM5nIus serving fc62f5ab (rollback 33184ac3), RH6POCJWU5CUdTyd serving 37ba1ff8 (rollback a6158fce), its owner upsert disabled. Proof: browser calls call_1cc1401a826b28c92d53914eb08 (AVA) and call_6fe123da3d45dfbd3a808b08420 (AIC) -> alert runs 17592 / 17599, exactly two texts delivered and two lines in #bots. Owner record per Shane's ruling: CLAUDE.md § 9 amendment. CALENDAR-ONE still to run; it must re-read TkETvvnABhUPd7ME before editing. Report reports/2026-10-29-owner-alert.md."
     }
   ],
   "log": [
@@ -1503,6 +1511,10 @@
     {
       "ts": "2026-10-28T22:31:23-05:00",
       "entry": "AIC agent Phase 0 measure: both phone agents read and timed (READ ONLY). 0019 gap p50 4.03 s / p95 6.01 s, 8930 gap p50 1.24 s / p95 3.30 s; the 0019 wait sits on 27 nodes set to responsiveness 0.3. Report reports/2026-10-28-agent-measure-v1.md."
+    },
+    {
+      "ts": "2026-10-29T17:47:59-05:00",
+      "entry": "OWNER-ALERT v1 live: every analyzed call on the AVA and AI Chauffeur post-call rails texts the owner's cell one line and posts it to Slack #bots; two browser proof calls gave exactly two texts and two lines. Owner record ruling recorded as the CLAUDE.md § 9 amendment. Report reports/2026-10-29-owner-alert.md."
     }
   ]
 }

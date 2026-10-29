@@ -270,6 +270,16 @@ Anchor drift is a real failure mode: this table was wrong for a week before RUN 
   (`SlnAeMrVRORsF0w7`) is attached to all of them and **must stay ACTIVE** — an inactive
   error workflow is silently never invoked, which is the exact failure mode it exists to
   prevent. Alerts dedupe to one per workflow per 6h.
+- **Amendment 2026-10-29 (NIGHT RUN B, Shane's ruling): the owner record.** GHL keys
+  contacts by phone, so a second record holding the owner's cell would collide. The one
+  GHL record that holds the owner's cell **is** the owner record, and
+  `OWNER_ALERT_CONTACT_ID` points at it. It carries only `owner-alert` / `zz-internal` /
+  `do-not-drip` (the live tag is `owner-alert`, singular) and the note
+  "OWNER — not a lead". DND is on for every channel except SMS: GHL has no marketing-only
+  DND, and SMS DND would silence the alerts. It is enrolled in no GHL workflow or campaign,
+  no drip, booking or reminder workflow may fire on it, and it is never an upsert target.
+  Call alerts reach it through `OWNER-ALERT v1` (`zv4tViyB5EVW8Uhy`). Two more variable keys
+  are in use: `OWNER_ALERT_URL` · `OWNER_TEST_NUMBERS`.
 
 ---
 
