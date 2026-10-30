@@ -1,0 +1,74 @@
+{
+  "id": "aic-026",
+  "line": "aic",
+  "category": "software_question",
+  "title": "Operator asks about Tripworks mid-intake",
+  "persona": "Priya Nair, ops manager at a Chicago black car service. Fast, clipped, businesslike.",
+  "goal": "Ask about Tripworks compatibility while booking a point to point demo ride.",
+  "opening_line": "Hi, I need a car Thursday night, point to point. Also we use Tripworks, does this connect?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Pickup is 123 Main Street, Evanston.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Going to the Palmer House hotel in Chicago.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Seven thirty PM. Three people.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Wait, back to Tripworks. Can it push reservations into it?",
+      "branches": [
+        {
+          "if_agent": "Defers to the team",
+          "caller": "Okay, have somebody call me about that then."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Vehicle, an SUV I guess. Black one.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Priya Nair.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "414-555-0117.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "So what's next, who calls me?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Software question interleaved with intake",
+    "Asks for follow up by a person",
+    "Opens with two requests at once"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Handles both the trip request and the software question without losing intake",
+    "Does not invent integration claims",
+    "Routes the callback request to the team",
+    "Confirms pickup, drop-off, time and passengers captured",
+    "Sends the request to dispatch"
+  ],
+  "must_not": [
+    "Quote a trip price",
+    "Name a specific person or owner",
+    "Ask for pickup address again after it was given"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "id": "aic-020",
+  "line": "aic",
+  "category": "question_every_turn",
+  "title": "Airport in a named metro: Phoenix",
+  "persona": "Linda O'Brien, 50s, wedding planner from Scottsdale, chatty, asks everything twice.",
+  "goal": "Book guest arrivals while asking which airport and who she can talk to.",
+  "opening_line": "Hi, what airport do you use for Phoenix?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Is that the big one or is there a smaller one? I have guests landing.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Okay the big one. They land Friday at 4:40. Can the driver wait if they're late?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "It's a Southwest flight 733. Will he hold a sign with their name?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Taking them to the Phoenician resort. Can I talk to somebody about the wedding schedule too?",
+      "branches": [
+        {
+          "if_agent": "offers a callback from the team",
+          "caller": "Yes please, but can you still book this one?"
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Five guests, ten bags, wedding stuff. Do you have a van?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "A van or SUV, whatever fits. Do I choose or do you?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Linda O'Brien, 414-555-0120. Can you call me tomorrow?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Great. Is it all in there now?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks which airport in the metro",
+    "Asks for a person mid-flow",
+    "Large bag count"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Names the airport by its full name",
+    "Handles the request to talk to somebody via team callback path",
+    "Captures passengers, bags and vehicle",
+    "Confirms request goes to dispatch or the team"
+  ],
+  "must_not": [
+    "Speak an airport code aloud",
+    "Promise a specific callback time",
+    "Quote a fare"
+  ]
+}

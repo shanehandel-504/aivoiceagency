@@ -1,0 +1,74 @@
+{
+  "id": "aic-018",
+  "line": "aic",
+  "category": "question_every_turn",
+  "title": "What does it cost",
+  "persona": "Gary Thompson, 60s, retired, from Denver, blunt, price focused, plain speech.",
+  "goal": "Get a price; keeps asking cost while booking an airport pickup.",
+  "opening_line": "What's this going to cost me?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Well, roughly. Ballpark. What's it cost to the airport?",
+      "branches": [
+        {
+          "if_agent": "declines to quote a fare",
+          "caller": "Why can't you tell me? What kind of service is that?"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Fine. I'm flying out of Denver on Monday. Is there a cheaper time?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Pickup at 7 in the morning, 123 Main Street. Is there an extra fee for early?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "United flight, I don't have the number. Is that a problem?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Me and my wife, two bags. What's cheaper, a sedan or an SUV?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Sedan then. Do I pay you or the driver?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Gary Thompson, 414-555-0188. Is the price locked in once I book?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "So who tells me the price then?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Repeated price pressure",
+    "Missing flight number",
+    "Asks whether sedan or SUV is cheaper"
+  ],
+  "hesitation_rules": "Grumbles 'hmm' before giving flight details.",
+  "expected": [
+    "Does not quote any fare or rate",
+    "Says dispatch or the team handles pricing and follow up",
+    "Names the airport by full name",
+    "Accepts missing flight number and moves on",
+    "Captures name and cell"
+  ],
+  "must_not": [
+    "Give a dollar amount or estimate",
+    "Say an airport code aloud",
+    "Name an owner"
+  ]
+}

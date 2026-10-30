@@ -1,0 +1,78 @@
+{
+  "id": "aic-004",
+  "line": "aic",
+  "category": "airport_question_metro",
+  "title": "Houston landing, hotel drop",
+  "persona": "Gerald Okafor, older gentleman, polite, slow and deliberate speech.",
+  "goal": "Arrange pickup for his sister landing in Houston and learn which airport she should be at.",
+  "opening_line": "Good afternoon. I'd like to book a car for my sister, she's arriving in Houston.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "She lands the evening of March ninth, about seven thirty.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Now which airport is that, for Houston? She said Houston but I'm not sure which one.",
+      "branches": [
+        {
+          "if_agent": "names two airports",
+          "caller": "She's coming from Atlanta on Delta. Which would Delta use?"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Alright, I'll tell her. Her flight is Delta 1120.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Take her to the Four Seasons hotel downtown.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Just her. One suitcase.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Her name is Ruth Okafor.",
+      "branches": [
+        {
+          "if_agent": "asks for cell number",
+          "caller": "Use mine. 414-555-0163."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "Can the driver hold a sign with her name?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Thank you, that's all.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Passenger name differs from caller",
+    "Asks about a sign for the driver",
+    "Airport question depends on airline"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Names Houston airport(s) by full name",
+    "Uses the passenger name and the caller's cell correctly",
+    "Handles meet and greet sign request without inventing a price",
+    "Says details go to dispatch or the team"
+  ],
+  "must_not": [
+    "Speaks an airport code",
+    "Quotes a price",
+    "Mentions an owner"
+  ]
+}

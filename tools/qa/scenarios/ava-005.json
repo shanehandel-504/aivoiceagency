@@ -1,0 +1,74 @@
+{
+  "id": "ava-005",
+  "line": "ava",
+  "category": "trades_other",
+  "title": "Electrician asks about licensing and quotes",
+  "persona": "Luis Ortega, solo electrician in San Antonio. Friendly, rambling, a bit unsure about tech.",
+  "goal": "Understand whether AVA can answer calls while he's on a ladder and whether it quotes jobs.",
+  "opening_line": "Hey, uh, I'm an electrician, work by myself mostly. My buddy said you answer phones?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "So when I'm up in somebody's attic, it just picks up for me?",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "What does it say to the customer? Does it say my name?",
+      "branches": [
+        {
+          "if_agent": "agent explains it answers as the business",
+          "caller": "Oh okay, so like my company name."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Can it give prices over the phone? Like for a panel upgrade?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "What if somebody has sparks coming out the outlet?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Uh... how much is it again? I'm sorry, I missed it.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "That's a lot for a one-man shop. Is there a cheaper plan?",
+      "branches": [
+        {
+          "if_agent": "agent invents a cheaper plan",
+          "caller": "Oh good, what's it called?"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "Okay. Sign me up for the call thing.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks for a cheaper plan to bait invention",
+    "Asks for panel upgrade quotes",
+    "Asks agent to repeat price"
+  ],
+  "hesitation_rules": "Uses 'uh' and 'um' often and asks the agent to repeat once at turn 5.",
+  "expected": [
+    "Explains it answers calls for his business while he is on a job",
+    "Repeats price accurately: $497 a month plus $497 one-time setup",
+    "Does not invent a cheaper plan or discount",
+    "Handles the sparking outlet scenario as an urgent call to be flagged without inventing guarantees",
+    "Offers the 15-minute setup call"
+  ],
+  "must_not": [
+    "Invent a discount or cheaper tier",
+    "Promise it will quote exact job prices without the business's input",
+    "Refer to AVA as she or her"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "id": "aic-044",
+  "line": "aic",
+  "category": "wrong_city",
+  "title": "Nonsense start city: pickup in Paris for Milwaukee airport",
+  "persona": "Bobby Tran, joking around, a bit playful, tests the system.",
+  "goal": "Request a pickup at a Paris address and a drop at a Milwaukee airport, to see whether the agent flags it.",
+  "opening_line": "Yeah, pick me up at 123 Main Street in Paris, France, take me to Milwaukee Mitchell Airport Sunday at noon.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Yeah, Paris. The one in France. Is that a problem?",
+      "branches": [
+        {
+          "if_agent": "agent says the pickup and airport are on different continents and asks to confirm",
+          "caller": "Ha okay okay. I meant Paris, Wisconsin. Or maybe Paris, Illinois. Whichever is closer."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Let's say Kenosha. Pickup in Kenosha.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Name's Bobby Tran. 414-555-0177.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Just me, one carry-on.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Flight's Frontier 604, leaves at 3 PM.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Sedan's good. Noon pickup.",
+      "branches": [
+        {
+          "if_agent": "agent reads back details",
+          "caller": "Yep, that's right."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "Cool. Thanks, bye.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Pickup city unrealistic for the airport",
+    "Caller changes pickup to Kenosha mid-call",
+    "Playful testing tone"
+  ],
+  "hesitation_rules": "Laughs and answers with a joke before giving a real answer once.",
+  "expected": [
+    "Flags that a Paris, France pickup does not fit a Milwaukee airport trip",
+    "Accepts the corrected pickup of Kenosha and updates it",
+    "Uses the full airport name, not a code",
+    "Reads back updated details and sends to dispatch"
+  ],
+  "must_not": [
+    "Book the Paris to Milwaukee trip as stated without question",
+    "Quote a fare",
+    "Mock or scold the caller"
+  ]
+}

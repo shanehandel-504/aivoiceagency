@@ -1,0 +1,84 @@
+{
+  "id": "aic-045",
+  "line": "aic",
+  "category": "hourly_wedding",
+  "title": "Bride's father booking wedding car, 5 hours",
+  "persona": "Frank Morrison, nervous father of the bride, speaks slowly and warmly.",
+  "goal": "Book a chauffeured car by the hour for his daughter's wedding day.",
+  "opening_line": "Hi, I need a car for my daughter's wedding. By the hour. Five hours, I think.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "It's Saturday, September 6th. Starting at 1 PM.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Pick up at 123 Main Street, Brookfield. That's the house.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "First stop the church, then photos at a park, then the reception at the Pfister Hotel in Milwaukee.",
+      "branches": [
+        {
+          "if_agent": "agent asks for the church address",
+          "caller": "Uh, St. Mary's on Oak Street. I'd have to look up the number."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Six people. The bride, me, my wife, and three bridesmaids.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Something big and nice. Stretch limo, maybe?",
+      "branches": [
+        {
+          "if_agent": "agent asks about vehicle options",
+          "caller": "Stretch limo or a nice SUV. Whichever fits six."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Frank Morrison. 414-555-0188.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Can we add an hour if the photos run long?",
+      "branches": [
+        {
+          "if_agent": "agent says dispatch will handle extra time",
+          "caller": "Good, okay. And you can't tell me the price, right?"
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "caller": "Okay. Thank you, you've been so helpful.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Multiple stops with a missing address",
+    "Possible extension of hours",
+    "Price question"
+  ],
+  "hesitation_rules": "Pauses with 'um' and 'let me think' before giving the church and passenger count.",
+  "expected": [
+    "Captures hours, date, start time, stops, passenger count and occasion",
+    "Accepts an incomplete church address and notes it for dispatch",
+    "Notes possible extra hour for dispatch without quoting fees",
+    "Sends to dispatch",
+    "Does not quote a price"
+  ],
+  "must_not": [
+    "Quote an hourly rate",
+    "Insist on an exact church street number before moving on",
+    "Refer to an owner or named person"
+  ]
+}

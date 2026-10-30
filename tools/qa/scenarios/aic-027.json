@@ -1,0 +1,79 @@
+{
+  "id": "aic-027",
+  "line": "aic",
+  "category": "software_question",
+  "title": "Asks about Limo Anywhere vs Royal Dispatch",
+  "persona": "Marcus Bell, new operator in Atlanta, curious and chatty, rambles a bit.",
+  "goal": "Learn whether AI Chauffeur works with Royal Dispatch software, then do a flying-out trip.",
+  "opening_line": "Hey, so I just started a limo company, and I'm on Royal Dispatch. Can this plug into that?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Like what does it actually do, it just answers calls?",
+      "branches": [
+        {
+          "if_agent": "Explains it takes reservations and sends to dispatch",
+          "caller": "Huh okay, neat. Let me try one."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "I need a ride to the airport Monday morning. Hartsfield one.",
+      "branches": [
+        {
+          "if_agent": "Asks which airport",
+          "caller": "Atlanta. The big Atlanta airport."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Pickup at 123 Main Street, Decatur. Six AM.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Delta flight, I think 884.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Just me and one bag.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Black car, sedan.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Marcus Bell, 414-555-0163.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "And Royal Dispatch, you sure you can't say if it works?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Airport named informally as 'Hartsfield'",
+    "Product question about what it does",
+    "Repeats the software question at the end"
+  ],
+  "hesitation_rules": "Trails off with 'um, I think' on the flight number.",
+  "expected": [
+    "Uses the airport's full name when confirming",
+    "Answers or defers the product question honestly",
+    "Captures flight, time, pickup, passenger and bag count",
+    "Does not overclaim Royal Dispatch integration",
+    "Ends with dispatch or the team following up"
+  ],
+  "must_not": [
+    "Speak an airport code",
+    "Quote a price",
+    "Make up integration capability"
+  ]
+}

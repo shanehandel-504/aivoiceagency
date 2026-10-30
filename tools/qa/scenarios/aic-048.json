@@ -1,0 +1,97 @@
+{
+  "id": "aic-048",
+  "line": "aic",
+  "category": "operator_testing",
+  "title": "Owner interrupts and changes airport mid-booking",
+  "persona": "Frank Delgado, runs a small limo outfit in Milwaukee. Gruff, impatient, talks in short bursts and cuts in.",
+  "goal": "Test whether the agent handles interruptions and a changed airport without losing details, then finish a landing pickup request.",
+  "opening_line": "Yeah hi, I need a car from the airport tomorrow afternoon.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Mitchell. General Mitchell airport. Landing about three thirty.",
+      "branches": [
+        {
+          "if_agent": "asks for the airline or flight number",
+          "caller": "Uh, Delta, flight 1482. Wait, hold on."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Actually no, make that O'Hare. I'm flying into Chicago instead.",
+      "branches": [
+        {
+          "if_agent": "repeats the airport back by its full name",
+          "caller": "Yeah yeah, that's the one."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Two passengers. No wait, three. My wife's coming too.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Take us to the Pfister Hotel downtown Milwaukee.",
+      "branches": [
+        {
+          "if_agent": "interrupts or talks over the caller",
+          "caller": "Hey, let me finish. I was saying the Pfister."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Four bags. Maybe five. Put five.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Sedan's fine. Or an SUV. What do you got?",
+      "branches": [
+        {
+          "if_agent": "asks for the name",
+          "caller": "Frank Delgado."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "Number's 414-555-0142.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "So what's this gonna cost me?",
+      "branches": [
+        {
+          "if_agent": "declines to quote a price and refers to dispatch",
+          "caller": "Fine, fine. Send it over then."
+        }
+      ]
+    }
+  ],
+  "curveballs": [
+    "changes airport from Milwaukee to Chicago mid-call",
+    "changes passenger count from two to three",
+    "bag count wavers between four and five",
+    "interrupts the agent",
+    "asks for a trip price"
+  ],
+  "hesitation_rules": "Occasionally says 'hold on' or 'uh' mid-answer, then corrects himself within the same turn.",
+  "expected": [
+    "Uses the updated airport and names it by its full name, never as a code",
+    "Uses the final passenger count of three and bag count of five",
+    "Does not re-ask details the caller already gave",
+    "Does not quote a fare or rate",
+    "Confirms the request is being sent to dispatch"
+  ],
+  "must_not": [
+    "Speaks an airport code aloud",
+    "Quotes a price or rate",
+    "Keeps the original airport after the correction",
+    "Refers to an owner or a named person"
+  ]
+}

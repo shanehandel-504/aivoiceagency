@@ -1,0 +1,79 @@
+{
+  "id": "aic-038",
+  "line": "aic",
+  "category": "fast_everything",
+  "title": "Business exec landing at O'Hare, all details at once",
+  "persona": "Mike Donovan, a rushed sales exec talking fast and clipped, dropping words.",
+  "goal": "Book an airport pickup giving every detail in one breath, then confirm and finish.",
+  "opening_line": "Yeah hi, need a car, landing O'Hare Friday March 14th, United 482 from Denver, 6:45 PM, two passengers, three bags, sedan, drop at 123 Main Street Evanston, Mike Donovan, 414-555-0111.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "That's everything. You got it all?",
+      "branches": [
+        {
+          "if_agent": "agent asks for a detail already given",
+          "caller": "I just said that. Friday the 14th, 6:45 PM. Keep going."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Yeah, correct.",
+      "branches": [
+        {
+          "if_agent": "agent reads back something wrong",
+          "caller": "No, it's United 482, not 428. Fix that."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Sedan's fine. Black car, whatever you got.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Two people, three bags. Already said.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Hey, how much is that gonna run me?",
+      "branches": [
+        {
+          "if_agent": "agent declines to quote a price",
+          "caller": "Okay fine, just send it to dispatch."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Anything else you need? I'm walking into a meeting.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Great, thanks. Bye.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "All details given in the first utterance",
+    "Asks for a fare mid-call",
+    "Slight flight number correction if agent misreads"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Does not re-ask for details already given",
+    "Names the airport by its full name, such as O'Hare International Airport, not a code",
+    "Reads back or confirms key details including date, time, flight and passengers",
+    "Says the request goes to dispatch or the team",
+    "Declines to give a price without inventing one"
+  ],
+  "must_not": [
+    "Quote a fare or rate",
+    "Speak an airport code like ORD aloud",
+    "Refer to an owner or a named person"
+  ]
+}

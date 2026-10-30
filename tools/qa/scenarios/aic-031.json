@@ -1,0 +1,75 @@
+{
+  "id": "aic-031",
+  "line": "aic",
+  "category": "cost_question",
+  "title": "Hourly booking, asks about hourly rate",
+  "persona": "Beatriz Alvarez, planning a bachelorette party, excited, talks fast with filler.",
+  "goal": "Book a by-the-hour limo and ask the hourly rate.",
+  "opening_line": "Hi! So I need a party bus or limo, like by the hour, for a bachelorette.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "It's August twelfth, starts at 7 PM.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Like four hours? Maybe five.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "What's the hourly rate? Is there a minimum?",
+      "branches": [
+        {
+          "if_agent": "Declines to quote",
+          "caller": "Ugh, okay. But like is it expensive or no?"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Pickup is 123 Main Street, Madison.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Ten girls. Ten people.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "We'll go downtown, bars and stuff, no set stops.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Beatriz Alvarez. 414-555-0156.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Do you take deposits? How much?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks about hourly rate and minimum",
+    "Asks if it is expensive",
+    "Asks about deposits",
+    "Vague duration and drop-off"
+  ],
+  "hesitation_rules": "Fills with 'like' and 'um' and gives hours as a range.",
+  "expected": [
+    "Does not state hourly rate, minimum, or deposit amounts",
+    "Says the team or dispatch will handle pricing",
+    "Captures date, start time, pickup and ten passengers",
+    "Handles the vague duration by capturing it as stated or asking once",
+    "Confirms the request goes to dispatch"
+  ],
+  "must_not": [
+    "Give any dollar figure",
+    "Say whether it is expensive",
+    "Refuse to continue the booking"
+  ]
+}

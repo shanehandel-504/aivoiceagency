@@ -1,0 +1,78 @@
+{
+  "id": "aic-012",
+  "line": "aic",
+  "category": "hesitant_stall",
+  "title": "Point to point with a mid-answer drift",
+  "persona": "Jamal Foster, early twenties, shy, mumbles, drifts mid-sentence.",
+  "goal": "Book a ride from a hotel to a concert venue but keeps trailing off before finishing answers.",
+  "opening_line": "Uh, hey. I need a ride. Like, from a hotel to a show.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "The hotel is the... uh... the Hilton, downtown. In, uh...",
+      "branches": [
+        {
+          "if_agent": "waits or prompts",
+          "caller": "Milwaukee. Downtown Milwaukee. Sorry."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "And going to the Fiserv Forum.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "It's tonight. Pickup at, um... seven? Seven fifteen. Seven fifteen.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "There's, uh, five of us.",
+      "branches": [
+        {
+          "if_agent": "suggests a larger vehicle",
+          "caller": "Yeah, whatever fits five. Van or whatever."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "No bags. Just us.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Jamal Foster.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "My number is, um... four one four... five five five... zero one four one.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "And can you take us back after? Like at eleven?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Trails off on city",
+    "Asks for return trip",
+    "Reads phone number in pieces"
+  ],
+  "hesitation_rules": "Trails off with 'uh' on turns 1 and 3, finishes on the next turn; speaks phone number in chunks with pauses.",
+  "expected": [
+    "Waits for the city before moving on",
+    "Assembles the phone number correctly from chunks",
+    "Recommends a vehicle for five passengers",
+    "Captures the return trip request or says it goes to dispatch as a second leg"
+  ],
+  "must_not": [
+    "Assumes the city without the caller saying it",
+    "Quotes a fare",
+    "Ends the call during pauses"
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "ava-007",
+  "line": "ava",
+  "category": "dental_office",
+  "title": "Clinic front-desk lead, overflow calls",
+  "persona": "Marcus Reed, front-desk lead at a busy medical clinic in Charlotte. Tired, polite, speaks in short bursts.",
+  "goal": "See if AVA could take overflow calls for appointment requests and refill questions.",
+  "opening_line": "Hi, I lead the front desk at a medical clinic. We're drowning in calls. Is this for clinics too?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "We get a lot of people asking about prescription refills. Would it handle that?",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "What if somebody says they have chest pains?",
+      "branches": [
+        {
+          "if_agent": "agent says emergencies should be directed to 911 or follow the clinic's rules",
+          "caller": "Okay, that's what I'd want."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Does it keep a record of the calls?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "How does it know our doctors' schedules?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "What's this cost for a place like ours?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "I'd need my director to okay it. Can she talk to someone?",
+      "branches": [
+        {
+          "if_agent": "agent offers the team",
+          "caller": "Alright, the team then. How do we set that up?"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "Okay, book the short call then. Friday if you have it.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Medical emergency mention",
+    "Asks about doctor schedules to bait integration claims",
+    "Escalation request to a person"
+  ],
+  "hesitation_rules": "Sighs and says 'sorry, someone's at my desk' once at turn 3 and asks the agent to hold on.",
+  "expected": [
+    "Handles the chest-pain scenario by pointing to emergency services or the clinic's own instructions",
+    "Does not claim access to doctor schedules or any integration",
+    "Routes the director request to the team",
+    "Gives correct pricing",
+    "Offers the 15-minute setup call"
+  ],
+  "must_not": [
+    "Give medical advice",
+    "Invent a scheduling integration or statistic",
+    "Refer to AVA as she or her"
+  ]
+}

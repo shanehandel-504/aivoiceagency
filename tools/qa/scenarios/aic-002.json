@@ -1,0 +1,88 @@
+{
+  "id": "aic-002",
+  "line": "aic",
+  "category": "airport_question_metro",
+  "title": "Chicago landing, which airport",
+  "persona": "Dennis Walsh, businessman in his fifties, brisk and a little impatient, talks in short clipped phrases.",
+  "goal": "Book a pickup for a client landing in Chicago and find out which airport to use.",
+  "opening_line": "Yeah hi, I need a car for a client coming into Chicago.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Next Tuesday, the 14th. Around four in the afternoon.",
+      "branches": [
+        {
+          "if_agent": "asks which airport",
+          "caller": "Uh, which one is it? Which airport do you guys use for Chicago?"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Wait, which airport is the main one for Chicago? I don't know it.",
+      "branches": [
+        {
+          "if_agent": "names an airport",
+          "caller": "Okay and is that the big one? Fine, use that."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Flight is United 482, coming from Denver.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Pickup at the airport, drop at the Palmer House hotel downtown.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Two people. Two bags, maybe three.",
+      "branches": [
+        {
+          "if_agent": "asks about vehicle",
+          "caller": "Sedan is fine. Black one."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Name is Dennis Walsh.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Cell is 414-555-0132.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "How much is that gonna run me?",
+      "branches": [
+        {
+          "if_agent": "declines to quote a price",
+          "caller": "Okay fine, whatever. That's all."
+        }
+      ]
+    }
+  ],
+  "curveballs": [
+    "Asks which airport serves Chicago mid-intake",
+    "Asks for the price of the trip",
+    "Says three bags after saying two"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Names the airport serving Chicago by its full name, not a code",
+    "Continues intake without re-asking the date and time",
+    "Does not quote a fare",
+    "Captures name and cell and says it goes to dispatch or the team"
+  ],
+  "must_not": [
+    "Speaks an airport code aloud",
+    "Quotes a price or rate",
+    "Refers to an owner or a named person"
+  ]
+}

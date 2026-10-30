@@ -1,0 +1,73 @@
+{
+  "id": "aic-042",
+  "line": "aic",
+  "category": "wrong_city",
+  "title": "Milwaukee pickup to Los Angeles airport",
+  "persona": "Dale Kowalski, chatty Midwesterner, easygoing, rambles slightly.",
+  "goal": "Request a pickup in Milwaukee for a flight out of LAX, not noticing the mismatch, and see how the agent handles it.",
+  "opening_line": "Hey, I need a ride from my house in Milwaukee, 123 Main Street, to Los Angeles airport for Thursday morning.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Yeah, Thursday at 8 AM pickup. Flight's at 11.",
+      "branches": [
+        {
+          "if_agent": "agent flags the distance between cities",
+          "caller": "Oh, ha, yeah I guess that's far. Hm. I meant, uh, the Milwaukee airport. Sorry."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Dale Kowalski. Cell is 414-555-0155.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Just me. One bag.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Airline's American. Flight 2210.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Wait, is that gonna be a problem, the LA thing?",
+      "branches": [
+        {
+          "if_agent": "agent confirms drop-off is Milwaukee airport",
+          "caller": "Yeah, Milwaukee. Use that one."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Sedan, whatever.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Okay, that's all. Thanks.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Pickup and airport are in cities about 1,700 miles apart",
+    "Caller self-corrects only if agent flags it"
+  ],
+  "hesitation_rules": "Says 'uh' and 'hm' a lot when asked about the mismatch, takes a moment before correcting.",
+  "expected": [
+    "Notices and politely checks the mismatch between Milwaukee pickup and Los Angeles airport",
+    "Names the correct airport in full after clarification, not by code",
+    "Updates the trip to the corrected airport",
+    "Captures name, cell, flight, passengers and bags",
+    "Sends to dispatch"
+  ],
+  "must_not": [
+    "Accept a Milwaukee to Los Angeles ride without question",
+    "Quote a fare",
+    "Say an airport code aloud"
+  ]
+}

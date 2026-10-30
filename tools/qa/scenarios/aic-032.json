@@ -1,0 +1,74 @@
+{
+  "id": "aic-032",
+  "line": "aic",
+  "category": "cost_question",
+  "title": "Flat rate question for airport run",
+  "persona": "Walter Briggs, retired, 70s, polite, speaks slowly and repeats himself.",
+  "goal": "Know the fare to the airport before committing.",
+  "opening_line": "Hello, I'd like a car to take me to the airport. Is this where I do that?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Yes. I'm flying Thursday out of Chicago O'Hare.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Before we go on, what's the flat rate? From Kenosha?",
+      "branches": [
+        {
+          "if_agent": "Says dispatch handles pricing",
+          "caller": "I see. I just don't want a surprise. Can't you tell me roughly?"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Pickup is 123 Main Street, Kenosha. At nine in the morning.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Flight is United 1175, at noon.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Just me. Two suitcases.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "A regular black car is fine.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Walter Briggs. 414-555-0109.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "And that price, someone will tell me? Before the ride?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Cost asked before pickup is given",
+    "Asks for rough number twice",
+    "Airport named with common name O'Hare"
+  ],
+  "hesitation_rules": "Repeats the last answer back once ('Nine in the morning, yes, nine').",
+  "expected": [
+    "Names the airport by its full name, not a code",
+    "Does not give a flat rate or estimate",
+    "Tells the caller dispatch or the team handles pricing",
+    "Captures pickup, time, flight, passenger, bags, name and cell",
+    "Reassures that the request is sent to dispatch"
+  ],
+  "must_not": [
+    "Quote a fare or estimate",
+    "Speak an airport code",
+    "Promise a specific price before the ride"
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "aic-001",
+  "line": "aic",
+  "category": "airport_question_metro",
+  "title": "T1 DENVER (the gate call), verbatim from PASTE-CC-AIC-AGENT-BUILD-v1.1",
+  "persona": "A caller trying the demo with short answers; asks which airport serves Denver instead of naming it.",
+  "goal": "Book an airport departure from Denver.",
+  "opening_line": "Airport.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Flying out.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "What's the airport in Denver?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "123 Main Street in Denver.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Tomorrow at 6 AM.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "United 1234 at 8:15.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Two passengers, three bags.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "SUV is fine.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "John Smith.",
+      "branches": []
+    },
+    {
+      "n": 9,
+      "caller": "That number is fine.",
+      "branches": [
+        {
+          "if_agent": "asks for a phone number",
+          "caller": "414-555-0100"
+        }
+      ]
+    }
+  ],
+  "curveballs": [
+    "asks 'What's the airport in Denver?' in place of answering the airport ask"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "answers the Denver airport question with the airport's full name (Denver International) before the next ask",
+    "does not ask again for any field already given",
+    "captures every trip field the caller gives",
+    "never speaks an airport code"
+  ],
+  "must_not": [
+    "skip the caller's airport question",
+    "quote a fare",
+    "say owner"
+  ],
+  "verbatim_script": true
+}

@@ -1,0 +1,74 @@
+{
+  "id": "aic-017",
+  "line": "aic",
+  "category": "question_every_turn",
+  "title": "Does this work with my software",
+  "persona": "Priya Shah, 30s, operations manager at a small limo company in Atlanta, businesslike, fires questions.",
+  "goal": "Find out whether the product works with her dispatch software while trying a sample airport trip.",
+  "opening_line": "Does this work with my dispatch software?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "We use a different system for bookings. Can this plug into that?",
+      "branches": [
+        {
+          "if_agent": "offers to take a sample trip",
+          "caller": "Sure, I'll try one. Is that going to mess with my system?"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Okay, I land in Atlanta Thursday. Which airport is that for you guys?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Landing at 2:15 in the afternoon. Does it track delays?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Flight is American 2210. Does it text the driver if it's late?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Going to the Hilton downtown. Does it know the hotel addresses?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Just me, one bag. Do customers pick the vehicle?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Priya Shah, 414-555-0133. How long does setup take for a company like mine?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Okay, who do I talk to about that?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Product questions mixed into trip capture",
+    "Asks about flight delay tracking",
+    "Asks who to talk to about setup"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Handles software and setup questions via the questions path without inventing integration details",
+    "Names the airport by full name",
+    "Continues capturing the trip when she wants to",
+    "Offers the team for follow up",
+    "Does not claim specifics it cannot know"
+  ],
+  "must_not": [
+    "Quote a price for AI Chauffeur or trips",
+    "Say an airport code aloud",
+    "Name an owner or person"
+  ]
+}

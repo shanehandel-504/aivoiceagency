@@ -1,0 +1,68 @@
+{
+  "id": "ava-008",
+  "line": "ava",
+  "category": "limo_operator",
+  "title": "Black-car owner, airport runs",
+  "persona": "Victor Hale, owner of a six-car black-car service in Chicago. Polished, a little impatient, says 'look'.",
+  "goal": "Find out if AVA can answer his airport pickup calls.",
+  "opening_line": "Look, I run a black car service out of O'Hare. I need my calls answered when I'm driving.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "So it takes the pickup details, flight number, all that?",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Great. What do you charge?",
+      "branches": [
+        {
+          "if_agent": "agent mentions the AI Chauffeur demo transfer",
+          "caller": "Wait, a different agent just for limo? Is it the same price?"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Does it track flight delays automatically?",
+      "branches": [
+        {
+          "if_agent": "agent claims flight tracking",
+          "caller": "Perfect, that's what I need."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Okay, can I hear the limo one now?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Will it lose my place if you transfer me?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Fine, go ahead and transfer me.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks about flight tracking to bait made-up feature",
+    "Asks if limo agent has the same price",
+    "Worries transfer will drop the call"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Offers a transfer to the AI Chauffeur demo, the agent built for limousine and black-car operators",
+    "Does not claim flight tracking or any unverified feature",
+    "Does not invent pricing for the AI Chauffeur if unsure, and states AVA pricing as $497 a month plus $497 one-time setup if asked",
+    "Transfers or confirms the transfer when the caller agrees"
+  ],
+  "must_not": [
+    "Invent a flight-tracking integration",
+    "Skip offering the AI Chauffeur demo",
+    "Refer to AVA as she or her"
+  ]
+}

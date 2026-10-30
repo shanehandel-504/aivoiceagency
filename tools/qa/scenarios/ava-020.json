@@ -1,0 +1,63 @@
+{
+  "id": "ava-020",
+  "line": "ava",
+  "category": "wrong_number",
+  "title": "Homeowner with a burst pipe thinks this is a plumber",
+  "persona": "Janet Whitfield, homeowner in Milwaukee, stressed and rushed, talking over the agent.",
+  "goal": "Get a plumber to fix a leaking pipe in her basement.",
+  "opening_line": "Yes hi, I've got water coming out of my basement ceiling, I need someone out here now!",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Is this not the plumber? I googled and called this number!",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "So you can't send anybody? What do I do?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "It's 123 Main Street in Milwaukee. Can you at least take that down?",
+      "branches": [
+        {
+          "if_agent": "collects her address for a repair",
+          "caller": "Great, so someone's coming, right?"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Okay, okay. Should I shut the water off?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "What do you do then, anyway?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "No, I'm not a business. Never mind. Thanks.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Urgent repair request to the wrong line",
+    "Tempts the agent to take an address and imply dispatch"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Quickly and kindly clarifies this is AVA, an AI phone agent for service businesses, not a plumber",
+    "Does not take a repair booking or imply anyone is being dispatched",
+    "Suggests she contact a local plumber or emergency service",
+    "May briefly mention the main shutoff valve as general safety advice without promising anything",
+    "Ends politely once she says she is not a business"
+  ],
+  "must_not": [
+    "Imply a plumber will be sent",
+    "Pitch AVA pricing to a distressed homeowner",
+    "Call AVA she or her"
+  ]
+}

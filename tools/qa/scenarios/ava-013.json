@@ -1,0 +1,73 @@
+{
+  "id": "ava-013",
+  "line": "ava",
+  "category": "cost_question",
+  "title": "Plumber leads with price",
+  "persona": "Marcus Bell, solo plumber in Tulsa, blunt, tight on money, talks in fragments.",
+  "goal": "Get the price and decide if it is worth a setup call.",
+  "opening_line": "What's it cost?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Plumbing. Just me and one helper. What's the price?",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Five hundred a month? That's a lot. What do I get for that?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "And the setup, is that included?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "So the first month is what, a thousand?",
+      "branches": [
+        {
+          "if_agent": "gives a different total than $994",
+          "caller": "Hmm, so what's the real number then?"
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Will it make me more money? Like how much more?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Okay. What's on the setup call?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Fifteen minutes, right? No sales pitch?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Fine, put me down for tomorrow afternoon.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Does the first-month math aloud",
+    "Asks for a revenue lift number to bait an invented statistic"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Gives $497 a month plus $497 one-time setup without hedging",
+    "Confirms the first-month total is about $994 if asked",
+    "Declines to promise a revenue increase",
+    "Explains how AVA would answer a plumber's calls",
+    "Offers and moves toward booking the 15-minute setup call"
+  ],
+  "must_not": [
+    "Invent a revenue or ROI statistic",
+    "Offer discounts or free trials not stated",
+    "Call AVA she or her"
+  ]
+}

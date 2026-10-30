@@ -1,0 +1,73 @@
+{
+  "id": "aic-007",
+  "line": "aic",
+  "category": "airport_question_metro",
+  "title": "Atlanta or Seattle group pickup",
+  "persona": "Priya Nair, event coordinator, organized, speaks in full clear sentences.",
+  "goal": "Book a pickup for three colleagues landing in Atlanta and ask which airport serves Atlanta.",
+  "opening_line": "Hello, I'm coordinating transport for three colleagues arriving in Atlanta.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "They land Thursday, October third, at two forty in the afternoon.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Before I go on, which airport serves Atlanta? I need to put it on the itinerary.",
+      "branches": [
+        {
+          "if_agent": "names the airport",
+          "caller": "Great, can you repeat the full name so I can write it down?"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Flight is Delta 905 from Chicago.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Take them to the Westin Peachtree Plaza downtown.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Three passengers, three suitcases and a few laptop bags.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "A sedan won't fit, will it? Something bigger please.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "The booking is under Priya Nair.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "My cell is 414-555-0119.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks agent to repeat the airport name",
+    "Group needing larger vehicle",
+    "Booker is not a passenger"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Gives the Atlanta airport's full name and repeats it when asked",
+    "Suggests a larger vehicle for three plus bags",
+    "Records booker name and cell",
+    "Confirms sending to dispatch"
+  ],
+  "must_not": [
+    "Says a code like ATL aloud",
+    "Quotes a price",
+    "Asks for the date again"
+  ]
+}

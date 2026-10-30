@@ -1,0 +1,74 @@
+{
+  "id": "ava-010",
+  "line": "ava",
+  "category": "limo_operator",
+  "title": "Chauffeur company asks for a person",
+  "persona": "Dwayne Pierce, runs a corporate chauffeur fleet in Dallas. Businesslike, direct, wants a human.",
+  "goal": "Get a person on the line, and see what the agent does with a limo operator who asks for a human.",
+  "opening_line": "I run a chauffeur company, corporate clients. Can I talk to somebody on your team?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "I don't want a demo, I want to talk to a person about my fleet.",
+      "branches": [
+        {
+          "if_agent": "agent offers the team path",
+          "caller": "Okay, how does that work?"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Do you have anything for limo companies in particular?",
+      "branches": [
+        {
+          "if_agent": "agent mentions the AI Chauffeur demo",
+          "caller": "Oh. So that's a demo, not a person?"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "What would it cost me if I go ahead?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "I have forty vehicles. Is there a fleet discount?",
+      "branches": [
+        {
+          "if_agent": "agent invents a discount",
+          "caller": "Good, how much off?"
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Alright. Can I try the demo first and then talk to the team?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Yeah, do that. Transfer me to the demo.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Requests a person up front",
+    "Fleet discount bait",
+    "Wants both the demo and the team"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Honors the request for a person by describing the team path",
+    "Still offers the AI Chauffeur demo as the agent built for limo operators",
+    "Does not invent a fleet discount",
+    "Gives pricing correctly if asked",
+    "Transfers to the demo when he agrees"
+  ],
+  "must_not": [
+    "Refuse or ignore the request for a person",
+    "Invent a fleet discount or promise",
+    "Call anyone the owner or name a specific person on the team"
+  ]
+}

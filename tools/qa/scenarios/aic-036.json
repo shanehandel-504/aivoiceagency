@@ -1,0 +1,69 @@
+{
+  "id": "aic-036",
+  "line": "aic",
+  "category": "correction",
+  "title": "Changes pickup address after giving it",
+  "persona": "Aisha Rahman, nurse coming off a shift, tired, soft-spoken, short answers.",
+  "goal": "Book a ride to the airport and fix the pickup address.",
+  "opening_line": "Hi, I need a ride to the airport Friday early.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Detroit Metro. Delta flight 1560.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Pickup is 123 Main Street, Ann Arbor. Four AM.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "No wait, I'm at my sister's. It's 456 Oak Avenue, Ann Arbor.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Yeah, the Oak Avenue one. Not Main.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Flight leaves 7 AM. Just me, one bag.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Sedan's fine. Aisha Rahman.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "414-555-0147.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Where's the car coming to again?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Pickup address replaced",
+    "Asks agent to repeat the pickup address",
+    "Airport given by short name"
+  ],
+  "hesitation_rules": "Long pauses, says 'um' before the address correction.",
+  "expected": [
+    "Uses 456 Oak Avenue as the pickup",
+    "Names Detroit Metropolitan Wayne County Airport in full",
+    "Repeats the corrected address when asked",
+    "Captures flight, time, passenger and bag",
+    "Sends to dispatch"
+  ],
+  "must_not": [
+    "Read back 123 Main Street as the pickup",
+    "Speak an airport code",
+    "Quote a fare"
+  ]
+}

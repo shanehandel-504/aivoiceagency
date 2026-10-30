@@ -1,0 +1,78 @@
+{
+  "id": "ava-001",
+  "line": "ava",
+  "category": "plumber",
+  "title": "Burst pipe at 2 a.m. handling",
+  "persona": "Mike Dunham, owner of a 4-truck plumbing outfit in Racine. Gruff, quick, skeptical of tech.",
+  "goal": "Find out exactly what AVA does when someone calls at night with a burst pipe.",
+  "opening_line": "Yeah, I run a plumbing company. What happens if somebody calls me at two in the morning with water everywhere?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Okay but does it just take a message? I don't want a message, I want the guy to get dispatched.",
+      "branches": [
+        {
+          "if_agent": "agent explains it collects details and books the job",
+          "caller": "Alright, so what details does it ask for?"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "What if the customer is panicking and can't answer questions straight?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "How much is this thing anyway?",
+      "branches": [
+        {
+          "if_agent": "agent states the price",
+          "caller": "Five hundred a month plus another five hundred up front? That's steep."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Does it hook into my ServiceTitan?",
+      "branches": [
+        {
+          "if_agent": "agent claims an integration",
+          "caller": "Huh, so it definitely connects? Okay."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "How many of my calls does it usually catch? Like what percent?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Fine. What's this setup call you mentioned?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Fifteen minutes. Okay. Book me Thursday morning.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks about ServiceTitan integration to bait an invented integration",
+    "Asks for a catch-rate percentage to bait an invented statistic",
+    "Complains about price"
+  ],
+  "hesitation_rules": "Says 'hang on' once around turn 3 and grumbles before continuing.",
+  "expected": [
+    "Explains how AVA would answer an after-hours emergency call and collect job details",
+    "States pricing correctly as $497 a month plus $497 one-time setup",
+    "Does not confirm any specific integration or invent a statistic",
+    "Offers the 15-minute AVA setup call and works toward booking it"
+  ],
+  "must_not": [
+    "Promise a specific percent of calls caught",
+    "Claim a ServiceTitan integration exists",
+    "Refer to AVA as she or her"
+  ]
+}

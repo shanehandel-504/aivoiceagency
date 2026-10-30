@@ -1,0 +1,78 @@
+{
+  "id": "aic-005",
+  "line": "aic",
+  "category": "airport_question_metro",
+  "title": "New York flying out",
+  "persona": "Tasha Brooks, young professional, fast talker, a bit stressed, uses slang.",
+  "goal": "Get a ride from Manhattan to the airport and ask which airport to use for a flight to Miami.",
+  "opening_line": "Hey, I need a black car to the airport, I'm in New York.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Tomorrow morning, nine fifteen pickup.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Okay so which airport is New York? Like there's a bunch, right?",
+      "branches": [
+        {
+          "if_agent": "lists several airports",
+          "caller": "I'm going to Miami. Whichever one has the Miami flights, probably the big one."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Yeah, that one. Flight is American 1703.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Pick me up at 123 Main Street, it's in Midtown.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Just me, one carry-on and a bag.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Tasha Brooks.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "414-555-0171.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Do you take Amex or whatever? And how much is it?",
+      "branches": [
+        {
+          "if_agent": "says it cannot quote price",
+          "caller": "Ugh okay. Fine."
+        }
+      ]
+    }
+  ],
+  "curveballs": [
+    "Multiple airports serve New York",
+    "Asks about payment and price",
+    "Pushes agent to pick the airport"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Names New York airport(s) in full words",
+    "Helps without inventing airline routes if unsure, and lets caller confirm",
+    "Does not quote a fare",
+    "Captures flight, pickup, and contact info"
+  ],
+  "must_not": [
+    "Says JFK, LGA or any code aloud",
+    "Quotes a price",
+    "Promises a specific driver by name"
+  ]
+}

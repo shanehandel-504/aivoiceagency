@@ -1,0 +1,74 @@
+{
+  "id": "aic-037",
+  "line": "aic",
+  "category": "correction",
+  "title": "Switches from landing to flying out",
+  "persona": "Jerome Washington, business traveler, confident, speaks in short bursts.",
+  "goal": "Correct trip type, date, and name spelling.",
+  "opening_line": "Need a pickup at Orlando airport, I'm landing Wednesday.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Jet Blue 412, arrives 2 PM.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Hold on. Scratch that. I'm flying out of Orlando, not landing.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Flight leaves 2 PM Wednesday. Need to be picked up at noon.",
+      "branches": [
+        {
+          "if_agent": "Asks for pickup address",
+          "caller": "123 Main Street, Winter Park."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Two passengers. Three bags.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Name is Jerome Washington. Jerome, with a J.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Cell 414-555-0166.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Wait, change it to Thursday. Same times.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Okay, so Thursday, noon pickup, flying out. Right?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Trip type reversal mid-call",
+    "Date corrected again later",
+    "Flight time reinterpreted as departure"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Treats the trip as a departure from Orlando International Airport",
+    "Final date is Thursday",
+    "Pickup time is noon at the given address",
+    "Confirms all corrected details when asked",
+    "Sends to dispatch"
+  ],
+  "must_not": [
+    "Keep Wednesday or landing as the final details",
+    "Speak an airport code",
+    "Name an owner"
+  ]
+}

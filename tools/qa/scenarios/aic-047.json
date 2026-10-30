@@ -1,0 +1,79 @@
+{
+  "id": "aic-047",
+  "line": "aic",
+  "category": "hourly_wedding",
+  "title": "Mother of groom, undecided hours, hesitant",
+  "persona": "Linda Park, polite and unsure, second guesses herself, speaks in soft run-on sentences.",
+  "goal": "Book hourly wedding transportation but is unsure of the hours and changes her mind.",
+  "opening_line": "Hi, um, I'm looking for a car for my son's wedding, I'm not sure how many hours, maybe three?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "The wedding is Sunday the 20th of July, ceremony's at 4.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Actually maybe four hours. Start at 3 so we're not late.",
+      "branches": [
+        {
+          "if_agent": "agent asks to confirm four hours",
+          "caller": "Yes, four. No wait, five, in case of photos. Let's say five."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Pickup at 123 Main Street, Waukesha. Then the chapel, then the reception at Discovery World.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "It's me, my husband, and my mother. Three of us.",
+      "branches": [
+        {
+          "if_agent": "agent asks whether a sedan suits",
+          "caller": "Sedan's good. Something comfortable for my mother."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Linda Park. 414-555-0101.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Sorry, so it's five hours total, right?",
+      "branches": [
+        {
+          "if_agent": "agent confirms five hours",
+          "caller": "Okay good. Thank you for being patient."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "That's all I think. Thanks so much.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Changes hours three times",
+    "Hesitant unsure tone",
+    "Asks agent to re-confirm the final hours"
+  ],
+  "hesitation_rules": "Starts answers with 'um' and 'sorry', revises the hours before settling, and needs a moment on each answer.",
+  "expected": [
+    "Settles on the final five hours and confirms them",
+    "Captures date, start time, stops, passengers, vehicle, name and cell",
+    "Stays patient and does not rush the caller",
+    "Sends to dispatch",
+    "Does not quote a price"
+  ],
+  "must_not": [
+    "Keep the earlier three or four hour figure in the final request",
+    "Quote a rate",
+    "Pressure the caller to decide faster"
+  ]
+}

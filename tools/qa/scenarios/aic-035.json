@@ -1,0 +1,74 @@
+{
+  "id": "aic-035",
+  "line": "aic",
+  "category": "correction",
+  "title": "Passenger count goes from 2 to 5",
+  "persona": "Frank Dugan, uncle booking for family, easygoing, jokes around.",
+  "goal": "Change passenger count and vehicle after initial booking.",
+  "opening_line": "Hi, need a ride from the airport Saturday. Flying into Nashville.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Southwest 3318, gets in at 6:05 PM.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Two of us. Me and the wife.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Oh wait, the kids are coming too. Make it five people.",
+      "branches": [
+        {
+          "if_agent": "Asks about vehicle size",
+          "caller": "Yeah, bigger. SUV or a van."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Bags, uh, maybe six now.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Drop off is the Gaylord Opryland Resort.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Frank Dugan.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "414-555-0190.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "So five people, six bags, right?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Passenger count increases mid-call",
+    "Vehicle must change as a result",
+    "Bags change too"
+  ],
+  "hesitation_rules": "Laughs and says 'hold on' while counting the kids.",
+  "expected": [
+    "Updates passengers to five",
+    "Updates bags to six and vehicle to larger option",
+    "Names Nashville International Airport in full",
+    "Confirms five people and six bags at the end",
+    "Sends to dispatch"
+  ],
+  "must_not": [
+    "Keep two passengers on the request",
+    "Speak an airport code",
+    "Quote a fare"
+  ]
+}

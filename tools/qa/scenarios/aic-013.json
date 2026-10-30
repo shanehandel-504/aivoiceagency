@@ -1,0 +1,73 @@
+{
+  "id": "aic-013",
+  "line": "aic",
+  "category": "hesitant_stall",
+  "title": "Unsure what to say, asks to start over",
+  "persona": "Sophie Tran, thirties, anxious, second-guesses herself, laughs nervously.",
+  "goal": "Book a ride for her boss's arrival, stalls and backtracks on time and name.",
+  "opening_line": "Hi, sorry, I'm kind of new at this. I need a car for my boss. At the airport.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "He's landing... hold on, let me check my email.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Okay. Wednesday the sixth, landing at, um, four forty. Wait, no, four fifty.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Milwaukee airport. Mitchell? Is that right?",
+      "branches": [
+        {
+          "if_agent": "confirms airport by full name",
+          "caller": "Okay good, yes."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "He's going to, uh... ugh, what's the address... the Westin, downtown.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "His name is, um... Mr. Daniel Reed.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "One bag. Oh wait, he might have two.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Use my number. 414-555-0178. I'm Sophie Tran.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Sorry, can you read it back to me? I got nervous.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Corrects landing time mid-turn",
+    "Changes bag count",
+    "Asks for a read-back"
+  ],
+  "hesitation_rules": "Stalls with 'hold on' and 'um' on turns 1 and 4, apologizes repeatedly, and finishes the thought on the following turn.",
+  "expected": [
+    "Uses the corrected time of four fifty and two bags",
+    "Names the airport in full",
+    "Reads back the details accurately when asked",
+    "Distinguishes passenger name from booker name and cell"
+  ],
+  "must_not": [
+    "Uses the superseded time",
+    "Speaks an airport code aloud",
+    "Quotes a price"
+  ]
+}

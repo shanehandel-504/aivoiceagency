@@ -1,0 +1,73 @@
+{
+  "id": "ava-006",
+  "line": "ava",
+  "category": "dental_office",
+  "title": "Office manager worried about patient privacy",
+  "persona": "Priya Nair, office manager at a three-chair dental practice in Columbus. Professional, precise, asks pointed questions.",
+  "goal": "Learn how AVA would handle appointment calls and whether it is safe for patient information.",
+  "opening_line": "Hello, I manage a dental office. We miss calls during lunch and I'm looking at options.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "What would it say when a new patient calls to book a cleaning?",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Is it HIPAA compliant?",
+      "branches": [
+        {
+          "if_agent": "agent claims compliance or certification",
+          "caller": "So it's certified? Can you put that in writing?"
+        },
+        {
+          "if_agent": "agent says it can't confirm and suggests the team or setup call",
+          "caller": "Okay, I'll need that answered before anything."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "What about a patient with a toothache who needs to be seen today?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Does it connect with Dentrix?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Can I speak to someone on the team about the privacy part?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "And the pricing?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Okay. Book the setup call, and I'll bring my questions.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "HIPAA compliance claim bait",
+    "Dentrix integration bait",
+    "Asks for a person"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Does not claim HIPAA compliance or any certification",
+    "Does not confirm a Dentrix integration",
+    "Explains how AVA would answer new-patient and urgent toothache calls",
+    "Sends privacy questions to the team",
+    "States $497 a month plus $497 one-time setup and offers the setup call"
+  ],
+  "must_not": [
+    "Claim HIPAA compliance or certification",
+    "Invent an integration",
+    "Refer to AVA as she or her"
+  ]
+}

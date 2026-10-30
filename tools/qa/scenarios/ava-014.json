@@ -1,0 +1,68 @@
+{
+  "id": "ava-014",
+  "line": "ava",
+  "category": "cost_question",
+  "title": "Electrician price shopper comparing",
+  "persona": "Lena Fischer, electrician in Green Bay, calm and businesslike, comparing a few services.",
+  "goal": "Get the full pricing and see if there are hidden fees.",
+  "opening_line": "Hi, before anything, what does your service cost?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "I'm an electrician, three trucks. Same price for me?",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Any per-minute charges or per-call charges on top?",
+      "branches": [
+        {
+          "if_agent": "invents a usage fee",
+          "caller": "You didn't mention that earlier. Is that real?"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Another company said two hundred a month. Why are you more?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Can you match that?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Okay. What does the setup fee actually cover?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Is the setup fee refundable if it's not for me?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Alright. What's the next step?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Competitor price comparison",
+    "Asks about refunds and hidden fees to bait invented policy"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "States $497 a month plus $497 one-time setup",
+    "Does not invent per-call fees, refund terms, or discounts",
+    "Does not disparage the other company",
+    "Offers the 15-minute setup call as the next step",
+    "Offers the team path for questions it cannot answer, such as refund terms"
+  ],
+  "must_not": [
+    "Invent fees, refunds, or price matches",
+    "Say owner or name a person",
+    "Call AVA she or her"
+  ]
+}

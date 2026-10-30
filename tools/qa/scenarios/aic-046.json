@@ -1,0 +1,84 @@
+{
+  "id": "aic-046",
+  "line": "aic",
+  "category": "hourly_wedding",
+  "title": "Groom's best man, party bus for 12",
+  "persona": "Jamal Brooks, loud and fun best man, fast joking talker.",
+  "goal": "Book an hourly vehicle for a wedding party with a large group and several stops.",
+  "opening_line": "Yo, I'm the best man, need a bus or something for twelve people, wedding next Friday, by the hour.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Six hours. Starting at 3 in the afternoon.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Pickup at the Hilton Milwaukee City Center. All of us are there.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Then a church, then a brewery for pictures, then a venue, the Milwaukee Art Museum.",
+      "branches": [
+        {
+          "if_agent": "agent asks whether the stops are in order",
+          "caller": "Yeah in that order. Church, brewery, museum."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Twelve people. Tuxes, so no real bags. Maybe a cooler.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Can we have drinks on the bus?",
+      "branches": [
+        {
+          "if_agent": "agent says it will note it for dispatch",
+          "caller": "Cool. Note it. Not my call anyway."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Jamal Brooks. 414-555-0199.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Wait, can I talk to a real person about the bus?",
+      "branches": [
+        {
+          "if_agent": "agent offers that the team can call back",
+          "caller": "Yeah, have the team call me. Same number."
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "caller": "Cool. That's it, thanks.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Twelve passengers may exceed a sedan or SUV",
+    "Alcohol question",
+    "Asks for a person mid-call"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Captures six hours, start time, stops in order, passenger count and occasion",
+    "Notes drinks request for dispatch without promising",
+    "Handles the request for a person by offering the team callback",
+    "Uses 'the team' or 'dispatch' only",
+    "Does not quote a price"
+  ],
+  "must_not": [
+    "Promise that alcohol is allowed",
+    "Name a person or owner",
+    "Quote a fare"
+  ]
+}

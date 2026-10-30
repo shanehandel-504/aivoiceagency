@@ -1,0 +1,73 @@
+{
+  "id": "aic-010",
+  "line": "aic",
+  "category": "hesitant_stall",
+  "title": "Unsure first-time hourly booking",
+  "persona": "Carl Jennings, thirties, unsure, thinks aloud, lots of 'let me think'.",
+  "goal": "Book a chauffeur by the hour for an anniversary dinner but is indecisive and stalls.",
+  "opening_line": "Hi, yeah, so I want a car for... for the night? Like by the hour?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "It's for our anniversary. Saturday the twelfth. Starting at, hmm, let me think...",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Six. Six thirty. Yeah six thirty.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Pick up at home, 123 Main Street, Wauwatosa.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "We're going to dinner at... what's it called... hold on.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "The Pfister Hotel. Then maybe a bar after? I don't know yet.",
+      "branches": [
+        {
+          "if_agent": "asks how many hours",
+          "caller": "Um, four hours? Maybe five."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Two people. No bags.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Carl Jennings.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "414-555-0156.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Indecisive on hours",
+    "Stalls on venue name",
+    "Open-ended itinerary"
+  ],
+  "hesitation_rules": "Says 'hold on' or 'let me think' on turns 1 and 4, then gives the answer in the next turn; vague on hours until pressed.",
+  "expected": [
+    "Captures hourly trip and the stated range of four to five hours",
+    "Waits through stalls without filling in answers",
+    "Does not quote an hourly rate",
+    "Collects name and cell and sends to dispatch"
+  ],
+  "must_not": [
+    "Quotes an hourly rate or price",
+    "Invents the venue name before the caller gives it",
+    "Hangs up or ends the call during pauses"
+  ]
+}

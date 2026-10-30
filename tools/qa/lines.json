@@ -1,0 +1,40 @@
+{
+  "_note": "Per-line config for tools/qa. Greetings are the stored texts the first agent turn is compared to, byte for byte (whitespace between split utterances collapsed). AIC: the static text of nodes n01_p / n01_b in conversation_flow_9cf4ddd5b734 v15 (live on 414-775-0019, read 2026-10-29). AVA: begin_message is {{opening_line}}, handed in per call by the call-start rail, so the call's own opening_line variable is the expected greeting; the defaults below are used only when a call carries none. Session A's AIC-TEST intake-v2 agents map to the AIC line.",
+  "aic": {
+    "name": "AI Chauffeur demo line (414-775-0019)",
+    "agent_ids": [
+      "agent_9ebb41c9bd8af214649328f107",
+      "agent_0fa59b66c74f6366b0af8035dc",
+      "agent_9bafa6f2c2805183ebc456aeaa",
+      "agent_57fc611111e33bcfebe80ae78f",
+      "agent_12beab314c4f8dc556340a3a30"
+    ],
+    "greetings": {
+      "phone": "AI Chauffeur, the premium reservation system for limousine, black car and chauffeured transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try — airport, point to point, or by the hour.",
+      "browser": "AI Chauffeur, the premium reservation system for limousine, black car and chauffeured transportation. This is the AI Chauffeur demo. Play the customer and request a trip. Which trip would you like to try — airport, point to point, or by the hour."
+    },
+    "greeting_source": "conversation_flow_9cf4ddd5b734 v15 · n01_p (phone) / n01_b (browser)",
+    "greeting_variable": null,
+    "recorded_notice_required": true,
+    "recorded_notice_greetings": [
+      "phone"
+    ]
+  },
+  "ava": {
+    "name": "AVA line (414-240-8930)",
+    "agent_ids": [
+      "agent_d5ada9f774fe3ae7f034d2c677"
+    ],
+    "greetings": {
+      "cold": "Hi, this is AI Voice Agency. This call is recorded. I can answer your calls, give your prices, give information about your company and book appointments. What kind of questions do you have for me?",
+      "returning_template": "AI Voice Agency, AVA again. Good to hear from you, {{caller_first_name}}. This call is recorded. I can answer calls, give prices, give information and book appointments. What kind of questions do you have for me?"
+    },
+    "greeting_source": "retell llm v53 begin_message {{opening_line}} · default_dynamic_variables.opening_line (cold) · returning-caller line as handed in on call …c98c785",
+    "greeting_variable": "opening_line",
+    "recorded_notice_required": true,
+    "recorded_notice_greetings": [
+      "cold",
+      "returning_template"
+    ]
+  }
+}

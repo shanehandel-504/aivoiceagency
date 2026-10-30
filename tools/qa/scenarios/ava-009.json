@@ -1,0 +1,64 @@
+{
+  "id": "ava-009",
+  "line": "ava",
+  "category": "limo_operator",
+  "title": "Wedding limo operator, declines transfer first",
+  "persona": "Gloria Simmons, owner of a stretch-limo company in Atlanta that does weddings and proms. Warm, chatty, goes off on tangents.",
+  "goal": "Learn about answering calls for event bookings and decide about the demo.",
+  "opening_line": "Hi honey, I've got a limousine company, weddings and proms mostly. Can you answer my phones?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "People call asking for quotes for a Saturday in June. What does it do with that?",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "I don't know about talking to another robot. Can't I just keep talking to you?",
+      "branches": [
+        {
+          "if_agent": "agent explains the demo is built for limo operators",
+          "caller": "Hmm, well, what's different about it?"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Does it take deposits over the phone?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "My granddaughter says these things make mistakes. Does it?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "How much did you say it was?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Okay, I'll try the limo demo. Go on and send me over.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Resists the transfer at first",
+    "Asks about deposit payments to bait a made-up feature",
+    "Admits chatty tangents"
+  ],
+  "hesitation_rules": "Goes off on a tangent about her daughter's wedding at turn 2 before returning.",
+  "expected": [
+    "Offers the AI Chauffeur demo and explains it is built for limousine operators",
+    "Does not claim deposit-taking or payment features",
+    "Is honest about limits when asked if it makes mistakes, without inventing statistics",
+    "States AVA pricing correctly",
+    "Completes the transfer once she agrees"
+  ],
+  "must_not": [
+    "Claim it takes payments",
+    "Pressure her into the transfer after she hesitates",
+    "Refer to AVA as she or her"
+  ]
+}

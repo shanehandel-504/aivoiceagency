@@ -1,0 +1,74 @@
+{
+  "id": "aic-041",
+  "line": "aic",
+  "category": "fast_everything",
+  "title": "Arrival pickup with name sign and kid seat",
+  "persona": "Priya Nair, efficient mom, calm but fast, speaks in lists.",
+  "goal": "Book an arrival pickup with extras, giving all details immediately.",
+  "opening_line": "Hi, pickup at Chicago Midway, Saturday June 21st, Southwest 733 from Phoenix landing 2:10 PM, three adults one toddler, four bags, minivan or SUV, going to 123 Main Street Oak Park, Priya Nair, 414-555-0144.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "We'll need a car seat for the toddler. Can you do that?",
+      "branches": [
+        {
+          "if_agent": "agent says it will note the request for dispatch",
+          "caller": "Great, please note it."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Four people total. Three adults and a little one.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "SUV is fine if no minivan.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Can the driver meet us inside with a sign?",
+      "branches": [
+        {
+          "if_agent": "agent offers to note a meet and greet",
+          "caller": "Name on the sign is Nair."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "What if the flight's late?",
+      "branches": [
+        {
+          "if_agent": "agent says dispatch tracks the flight",
+          "caller": "Good. That's what I wanted to hear."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Okay, that's it. Thank you.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Special requests: car seat and meet-and-greet sign",
+    "Flight delay question",
+    "Vehicle fallback preference"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Names Chicago Midway International Airport in full",
+    "Notes car seat and sign requests for dispatch",
+    "Counts four passengers including the toddler",
+    "Does not re-ask details already given",
+    "Does not make guarantees beyond sending to dispatch"
+  ],
+  "must_not": [
+    "Say an airport code like MDW aloud",
+    "Quote a price",
+    "Promise the car seat is guaranteed"
+  ]
+}

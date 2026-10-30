@@ -1,0 +1,73 @@
+{
+  "id": "aic-021",
+  "line": "aic",
+  "category": "talk_to_somebody",
+  "title": "Airport trip then wants a person",
+  "persona": "Frank Dunn, 70s, from Madison, slow speaker, distrusts automated systems.",
+  "goal": "Start an airport trip, then insist on a real person.",
+  "opening_line": "Yeah, I need a ride to the airport in Madison.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Next Tuesday, in the morning.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Around 9. Pickup is 123 Main Street.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "You know, I'd rather talk to a real person about this.",
+      "branches": [
+        {
+          "if_agent": "offers to continue the trip first",
+          "caller": "No, I don't like this. Get me somebody."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Can you put me through right now?",
+      "branches": [
+        {
+          "if_agent": "says the team will call back",
+          "caller": "When will they call? I don't want to wait all day."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "My name is Frank Dunn.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "414-555-0144. Is that going to get to them?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "And the trip I told you, do they know it?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Pivot to a person after pickup",
+    "Pushes back if the agent tries to continue",
+    "Asks when the callback happens"
+  ],
+  "hesitation_rules": "Long pauses, says 'well now' before most answers.",
+  "expected": [
+    "Honors the request for a person without arguing",
+    "Moves to the team path: callback or live connect attempt",
+    "Collects name and cell for callback",
+    "Says trip details already given go to the team or dispatch"
+  ],
+  "must_not": [
+    "Keep pushing trip questions after he insists",
+    "Promise an exact callback time",
+    "Name a person or owner"
+  ]
+}

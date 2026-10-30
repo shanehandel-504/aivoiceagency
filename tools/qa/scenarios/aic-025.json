@@ -1,0 +1,79 @@
+{
+  "id": "aic-025",
+  "line": "aic",
+  "category": "software_question",
+  "title": "Operator asks about Limo Anywhere before trip",
+  "persona": "Dale Hutchins, runs a six-car limo company in Tulsa. Slow, drawling, direct.",
+  "goal": "Find out if AI Chauffeur works with Limo Anywhere, then place a demo airport trip.",
+  "opening_line": "Yeah hi, I run a limo outfit and I use Limo Anywhere. Does this thing work with that?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Okay so how does it get the trips in there, like automatically?",
+      "branches": [
+        {
+          "if_agent": "Says it cannot confirm integration details and offers the team",
+          "caller": "Fine, the team can tell me. But let me try a trip real quick."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Alright, I need a pickup at Tulsa International Airport. I'm landing Friday.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Flight is American 1432. Gets in around 4:15 in the afternoon.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Two passengers. And three bags, maybe four.",
+      "branches": [
+        {
+          "if_agent": "Asks to confirm bag count",
+          "caller": "Say four. Four bags."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Taking us to the Hyatt Regency downtown.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Sedan is fine. Name's Dale Hutchins.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Cell is 414-555-0142.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Does it also work with the drivers' app part, or just the booking?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks about a named dispatch product mid-intake",
+    "Gives bag count as a range",
+    "Returns to software question after intake"
+  ],
+  "hesitation_rules": "Says 'uh, hang on' before giving the flight number and again before the cell number.",
+  "expected": [
+    "Does not claim confirmed integration with Limo Anywhere unless the product info supports it",
+    "Offers to move to questions or the team for software details",
+    "Names Tulsa International Airport in full, never a code",
+    "Continues capturing the trip details without re-asking given ones",
+    "Says the request goes to dispatch or the team"
+  ],
+  "must_not": [
+    "Quote a fare or rate for the trip",
+    "Refer to an owner or a named person",
+    "Speak an airport code aloud"
+  ]
+}

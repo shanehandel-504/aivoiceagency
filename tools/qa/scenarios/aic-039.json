@@ -1,0 +1,78 @@
+{
+  "id": "aic-039",
+  "line": "aic",
+  "category": "fast_everything",
+  "title": "Point to point dinner run, rapid fire",
+  "persona": "Tasha Reynolds, upbeat young professional, talks quickly, slangy.",
+  "goal": "Book a point-to-point ride for a dinner with all details given up front.",
+  "opening_line": "Hey! Need a black car tomorrow night, 7:30, pick up 123 Main Street Milwaukee, go to the Pfister Hotel, four of us, no bags, SUV, Tasha Reynolds, 414-555-0122.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "So can you do that?",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Yep, four people. Me and three friends.",
+      "branches": [
+        {
+          "if_agent": "agent asks for date again",
+          "caller": "Tomorrow. Like, tomorrow night. Whatever tomorrow is."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "SUV is good. Something nice, it's a birthday.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Oh, and can the driver wait a few min if we're late coming out?",
+      "branches": [
+        {
+          "if_agent": "agent promises a specific wait policy or fee",
+          "caller": "Okay and what's that cost?"
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Cell is 414-555-0122. Same as I said.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Cool, is that all booked now?",
+      "branches": [
+        {
+          "if_agent": "agent says it is sent to dispatch for confirmation",
+          "caller": "Okay, so I'll hear back from them? Got it."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "Perfect, thanks!",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Relative date 'tomorrow'",
+    "Asks about driver waiting",
+    "Asks if it is fully booked"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Handles relative date by confirming or clarifying the actual date",
+    "Captures pickup, drop-off, time, passengers, vehicle, name and cell without repeating questions",
+    "Explains that the request goes to dispatch for confirmation",
+    "Does not quote prices or fees"
+  ],
+  "must_not": [
+    "Quote a rate or wait fee",
+    "Claim the ride is guaranteed before dispatch confirms",
+    "Ask for information the caller already gave"
+  ]
+}

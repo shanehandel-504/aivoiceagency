@@ -1,0 +1,73 @@
+{
+  "id": "aic-019",
+  "line": "aic",
+  "category": "question_every_turn",
+  "title": "What is this and how does it work",
+  "persona": "Tyrell Jackson, 20s, curious tech student in Detroit, casual, lots of 'wait' and 'so'.",
+  "goal": "Understand the product while doing a by-the-hour booking.",
+  "opening_line": "Wait, so what exactly is this?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "So like how does it work? Do I just say where I'm going?",
+      "branches": [
+        {
+          "if_agent": "explains briefly and offers a trip",
+          "caller": "Cool, let's try one. Can I do by the hour?"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "I want a car for four hours Saturday night. Is there a minimum?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Starting at 7. Pick up at 123 Main Street in Detroit. Can it do multiple stops?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Probably a few bars downtown. Do you need those now?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Six of us. Is there a limo that fits six?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Stretch limo sounds fun. Is that a thing you have?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Tyrell Jackson. Do you save my info for next time?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "414-555-0156. Is anyone gonna text me?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Product questions at the start",
+    "Hourly minimum question",
+    "Asks about saved info"
+  ],
+  "hesitation_rules": "Says 'um, wait' before giving stops.",
+  "expected": [
+    "Briefly explains it is an AI reservation system for chauffeured transportation",
+    "Captures hourly trip details: date, time, pickup, duration, passengers, vehicle",
+    "Does not invent a minimum or data policy",
+    "Says the request goes to dispatch"
+  ],
+  "must_not": [
+    "State an hourly rate or minimum price",
+    "Make up policies about data storage",
+    "Name a person as owner"
+  ]
+}

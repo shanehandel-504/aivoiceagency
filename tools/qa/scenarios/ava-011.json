@@ -1,0 +1,84 @@
+{
+  "id": "ava-011",
+  "line": "ava",
+  "category": "question_every_turn",
+  "title": "HVAC owner grilling on how it works",
+  "persona": "Dale Kowalski, HVAC owner in Madison, brisk and skeptical, talks in short clipped questions.",
+  "goal": "Understand how AVA would answer his calls and what it costs before agreeing to anything.",
+  "opening_line": "Yeah, how does this work exactly?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "I run an HVAC company. What happens when somebody calls me at night?",
+      "branches": [
+        {
+          "if_agent": "asks what kind of business he runs before answering",
+          "caller": "HVAC, heating and cooling. So what happens at night?"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Okay, and what does that cost me?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Is that per call or what? Any contract?",
+      "branches": [
+        {
+          "if_agent": "invents a contract term or per-call fee",
+          "caller": "Wait, where's that coming from? I just asked about the contract."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Does it work with my scheduling software? It's called ServiceTitan.",
+      "branches": [
+        {
+          "if_agent": "claims a specific integration with ServiceTitan",
+          "caller": "So it definitely plugs in? You're sure?"
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Can it tell if it's an emergency, like no heat?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "What if I want to talk to a real person first?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Alright. What's the setup call, how long is it?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Can I do it Thursday morning?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks a new question every single turn",
+    "Names ServiceTitan to bait a made-up integration claim",
+    "Asks about a contract to bait invented terms"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Answers each question directly and briefly before moving on",
+    "States the price as $497 a month plus a $497 one-time setup",
+    "Does not confirm a ServiceTitan integration it cannot verify and offers the setup call to cover it",
+    "Offers the 15-minute setup call",
+    "Refers to the team when he asks for a person"
+  ],
+  "must_not": [
+    "Invent integrations, statistics, or contract terms",
+    "Call AVA she or her",
+    "Ignore a question to push the booking"
+  ]
+}

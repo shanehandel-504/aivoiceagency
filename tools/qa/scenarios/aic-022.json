@@ -1,0 +1,73 @@
+{
+  "id": "aic-022",
+  "line": "aic",
+  "category": "talk_to_somebody",
+  "title": "Point to point then a human",
+  "persona": "Keisha Brown, 30s, event coordinator from Minneapolis, quick and direct.",
+  "goal": "Book a point to point ride, then ask for a human to handle a special request.",
+  "opening_line": "Hi, I need a car from the Mall of America to the Radisson downtown.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Tomorrow at 3 in the afternoon.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Three people, a few shopping bags.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Actually, I have a special request, can I talk to somebody?",
+      "branches": [
+        {
+          "if_agent": "asks what the request is",
+          "caller": "It's complicated, I need a person."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Is anybody available right now?",
+      "branches": [
+        {
+          "if_agent": "says a live connect is being tried",
+          "caller": "Okay, I'll hold."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "If they can't pick up, can they call me?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Keisha Brown, 414-555-0165.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "And my ride, it's still saved right?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Special request too complex for the agent",
+    "Asks for live availability",
+    "Checks the trip is still saved"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Moves to the team path when asked for a person",
+    "May try live connect or offers callback",
+    "Collects name and cell",
+    "Confirms the trip details go to dispatch"
+  ],
+  "must_not": [
+    "Refuse to involve the team",
+    "Claim someone is definitely available if unsure",
+    "Quote a fare"
+  ]
+}

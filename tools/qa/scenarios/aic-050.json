@@ -1,0 +1,92 @@
+{
+  "id": "aic-050",
+  "line": "aic",
+  "category": "operator_testing",
+  "title": "Owner reverses date, time and vehicle",
+  "persona": "Raymond Okafor, owner of a black car service in Green Bay. Calm but deliberately tricky, speaks slowly and reverses himself.",
+  "goal": "Test whether the agent tracks repeated changes to date, time and vehicle on a point to point trip.",
+  "opening_line": "Morning. Need a black car, point to point, this Friday.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Pick up at 123 Main Street, Green Bay. Going to Lambeau Field.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Nine in the morning. Actually, make it ten.",
+      "branches": [
+        {
+          "if_agent": "confirms the time back",
+          "caller": "No, I said nine. Go back to nine."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Actually, forget Friday, do Saturday.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Two passengers. No bags.",
+      "branches": [
+        {
+          "if_agent": "asks about vehicle",
+          "caller": "Sedan. Hmm, no, SUV. Yeah, SUV."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Wait, can you read back everything so far?",
+      "branches": [
+        {
+          "if_agent": "reads back wrong details",
+          "caller": "That's not right. Fix it."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Do you take tips for the driver on this? And what's the rate for Lambeau?",
+      "branches": [
+        {
+          "if_agent": "declines to quote rate",
+          "caller": "Huh, okay. Dispatch will tell me then."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "Name's Raymond Okafor. Cell 414-555-0123.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Okay, that's all. Send it.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "time flips nine to ten and back to nine",
+    "date changes from Friday to Saturday",
+    "vehicle changes from sedan to SUV",
+    "asks for read-back of the trip",
+    "asks for a rate"
+  ],
+  "hesitation_rules": "Long pauses with 'hmm' before changing his answers; never changes more than one detail per turn.",
+  "expected": [
+    "Final trip is Saturday at nine in the morning, SUV, two passengers, no bags",
+    "Read-back reflects the latest corrections",
+    "Does not quote a rate or fare",
+    "Captures name and cell and sends the request to dispatch",
+    "Says dispatch or the team will follow up"
+  ],
+  "must_not": [
+    "Quotes a price or rate",
+    "Keeps Friday or ten o'clock after corrections",
+    "Asks again for the pickup address already given",
+    "Refers to an owner by name"
+  ]
+}

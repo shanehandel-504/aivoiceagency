@@ -1,0 +1,78 @@
+{
+  "id": "aic-003",
+  "line": "aic",
+  "category": "airport_question_metro",
+  "title": "Dallas flying out, which airport",
+  "persona": "Marisol Reyes, mom in her thirties, friendly, chatty, kids noisy in the background.",
+  "goal": "Book a ride to the airport in Dallas for a family and ask which airport is best for her airline.",
+  "opening_line": "Hi, um, we need a ride to the airport, we're in Dallas.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "It's for Saturday the 22nd, we need to leave at like six in the morning.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Which airport is it for Dallas? Is there more than one? I always get confused.",
+      "branches": [
+        {
+          "if_agent": "names more than one airport",
+          "caller": "We're flying Southwest, so which one is that?"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Okay yeah that one then.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Pickup is 123 Main Street, Plano.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Four of us. Two adults two kids.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "We got like five bags and a stroller.",
+      "branches": [
+        {
+          "if_agent": "suggests a larger vehicle",
+          "caller": "Yes, an SUV, that works."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "Marisol Reyes.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "414-555-0148.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks which airport serves Dallas",
+    "Mentions airline to push for a specific airport",
+    "Large luggage count and stroller"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Names the Dallas airport by full name when asked",
+    "Addresses vehicle size given four passengers and many bags",
+    "Captures pickup address and time",
+    "Confirms request sent to dispatch"
+  ],
+  "must_not": [
+    "Says an airport code aloud",
+    "Quotes a fare",
+    "Asks for the pickup time again after it was given"
+  ]
+}

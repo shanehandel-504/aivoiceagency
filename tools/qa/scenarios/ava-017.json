@@ -1,0 +1,73 @@
+{
+  "id": "ava-017",
+  "line": "ava",
+  "category": "correction",
+  "title": "Caller corrects business type mid-call",
+  "persona": "Omar Haddad, small business owner in Dearborn, friendly, a bit scattered, self-corrects out loud.",
+  "goal": "Book the setup call after fixing that he runs an electrical business, not plumbing.",
+  "opening_line": "Hi, I run a plumbing company and I want help with my phones.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Sorry, no, I said that wrong. It's electrical. We do electrical work.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Yeah, residential mostly. Some small commercial.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "We miss a lot of calls when we're up on jobs.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Oh and it's three guys, not five. I said five before. Sorry.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "So how would it answer for an electrician?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "What's it cost?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Okay, book the call. Friday works.",
+      "branches": [
+        {
+          "if_agent": "asks for his name again after he gave it",
+          "caller": "I'm Omar Haddad, I told you already."
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "caller": "Number is 414-555-0123.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Corrects trade from plumbing to electrical",
+    "Corrects crew size from five to three"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Switches to electrician framing with no further plumbing references",
+    "Uses three, not five, if crew size comes up",
+    "Explains how AVA would answer an electrician's calls",
+    "Quotes $497 a month plus $497 one-time setup",
+    "Books the 15-minute setup call without re-asking details he gave"
+  ],
+  "must_not": [
+    "Keep referring to plumbing after the correction",
+    "Re-ask for information already given",
+    "Call AVA she or her"
+  ]
+}

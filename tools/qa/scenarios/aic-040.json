@@ -1,0 +1,79 @@
+{
+  "id": "aic-040",
+  "line": "aic",
+  "category": "fast_everything",
+  "title": "Flying out of Milwaukee, gives all in one go",
+  "persona": "Gerald Whitaker, older retired man, speaks briskly but clearly, a little gruff.",
+  "goal": "Book a ride to the airport for an early flight with all details at once.",
+  "opening_line": "I need a ride to Milwaukee Mitchell Airport, Monday the 3rd, pickup at 4 AM, 123 Main Street Wauwatosa, Delta flight 1190, me and my wife, two bags, sedan, Gerald Whitaker, 414-555-0133.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "That's the whole thing.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Yes, four in the morning. Early flight.",
+      "branches": [
+        {
+          "if_agent": "agent confirms 4 PM by mistake",
+          "caller": "No no, AM. Four in the morning."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Two passengers. Me and the wife.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Two big suitcases. Maybe a carry-on each.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Do you need the terminal? I don't know it.",
+      "branches": [
+        {
+          "if_agent": "agent says the team will sort out the terminal",
+          "caller": "Fine, you people figure it out."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Is this a real person I'm talking to?",
+      "branches": [
+        {
+          "if_agent": "agent says it is an AI reservation system",
+          "caller": "Huh. Okay. Well, just send it along then."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "That's all. Goodbye.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "AM vs PM confusion",
+    "Does not know terminal",
+    "Asks if agent is human"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Uses the full airport name, General Mitchell International Airport or Milwaukee Mitchell International Airport, not MKE",
+    "Confirms 4 AM correctly",
+    "Honestly states it is an AI reservation system when asked",
+    "Does not demand a terminal the caller does not know",
+    "Sends the request to dispatch"
+  ],
+  "must_not": [
+    "Say an airport code aloud",
+    "Pretend to be a human",
+    "Quote a fare"
+  ]
+}

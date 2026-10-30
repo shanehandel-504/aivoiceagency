@@ -1,0 +1,79 @@
+{
+  "id": "ava-004",
+  "line": "ava",
+  "category": "trades_other",
+  "title": "HVAC owner worried about summer rush",
+  "persona": "Karen Whitfield, HVAC company owner in Tulsa. Busy, talks fast, clipped sentences.",
+  "goal": "Figure out if AVA can cover a heat-wave call surge.",
+  "opening_line": "I've got an HVAC company. July's coming and the phones go crazy. Can you handle that?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Like twenty calls at once. Does it pick up all of them?",
+      "branches": [
+        {
+          "if_agent": "agent makes a numeric capacity claim",
+          "caller": "Really, that exact number? Okay."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "What does it ask when someone says their AC is out?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Can it tell an old-person-with-no-AC emergency from a regular tune-up?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Does it book straight on my calendar?",
+      "branches": [
+        {
+          "if_agent": "agent says details are covered on the setup call",
+          "caller": "Fine, I'll ask then."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "What do you charge?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Setup fee too? Ugh. Okay.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Can I talk to somebody there instead of a machine?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Alright, or just book the short call. Tomorrow afternoon?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Bait for capacity statistic",
+    "Calendar integration bait",
+    "Switches to asking for a person"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Explains how AVA would answer an HVAC no-cooling call and gather details",
+    "Does not invent a capacity number or calendar integration",
+    "Gives pricing of $497 a month plus $497 one-time setup",
+    "Routes to the team when a person is requested",
+    "Offers the 15-minute setup call"
+  ],
+  "must_not": [
+    "State a made-up concurrent call limit",
+    "Say the owner or a named person will call back",
+    "Refer to AVA as she or her"
+  ]
+}

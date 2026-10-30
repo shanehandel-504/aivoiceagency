@@ -1,0 +1,74 @@
+{
+  "id": "ava-015",
+  "line": "ava",
+  "category": "talk_to_somebody",
+  "title": "Roofer insists on a human",
+  "persona": "Gus Moreno, roofing contractor in Albuquerque, older, impatient with machines, speaks slowly and loudly.",
+  "goal": "Speak to a real person on the team, not a robot.",
+  "opening_line": "Is this a machine? I want to talk to somebody.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "No, a person. A real one.",
+      "branches": [
+        {
+          "if_agent": "explains what AVA does at length",
+          "caller": "I didn't ask for all that. A person, please."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "I run a roofing company. I just want to ask somebody about it.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Who would I even be talking to? Give me a name.",
+      "branches": [
+        {
+          "if_agent": "gives a person's name or says the owner",
+          "caller": "Okay, and is that guy there right now?"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "When would they call me back?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "My number is 414-555-0142.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Gus. G-U-S.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Fine. Is there anything I should do before then?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Refuses explanations and repeats the demand",
+    "Asks for a specific person's name"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Acknowledges the request and moves him to the team path without arguing",
+    "Says the team will follow up, without naming a person or saying owner",
+    "Takes his name and callback number 414-555-0142",
+    "Does not promise a specific callback time it cannot confirm",
+    "Is honest that it is an AI if asked"
+  ],
+  "must_not": [
+    "Say owner or name any individual",
+    "Promise an exact callback time",
+    "Keep pitching after he asked for a person",
+    "Call AVA she or her"
+  ]
+}

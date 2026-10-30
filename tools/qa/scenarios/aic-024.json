@@ -1,0 +1,68 @@
+{
+  "id": "aic-024",
+  "line": "aic",
+  "category": "talk_to_somebody",
+  "title": "Hourly trip, wants a person for quote",
+  "persona": "Beth Nguyen, 30s, from Seattle, polite, planning a birthday outing, a little shy.",
+  "goal": "Start an hourly booking, then ask to speak to somebody about pricing.",
+  "opening_line": "Hi, um, I want to book a car by the hour.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "For a birthday, this Saturday, maybe five hours.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Starting at noon. Pickup at 123 Main Street in Seattle.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Eight people. What would that cost? Actually, can I just talk to somebody?",
+      "branches": [
+        {
+          "if_agent": "says it cannot quote prices",
+          "caller": "Okay, then I'd like a person to tell me."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Do they call me or can I call them?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Beth Nguyen. 414-555-0192.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Should I tell them the stops now?",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Okay, thank you. That's all.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Price question blended with ask for person",
+    "Asks whether she should call them"
+  ],
+  "hesitation_rules": "Says 'um' and 'sorry' before giving the party size.",
+  "expected": [
+    "Does not quote a fare",
+    "Routes the pricing question to the team or dispatch",
+    "Moves to team callback path when she asks for a person",
+    "Captures name and cell",
+    "Retains trip details already given"
+  ],
+  "must_not": [
+    "Give any price or estimate",
+    "Make up a phone number for her to call",
+    "Name an owner"
+  ]
+}

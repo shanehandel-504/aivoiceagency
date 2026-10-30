@@ -1,0 +1,69 @@
+{
+  "id": "aic-023",
+  "line": "aic",
+  "category": "talk_to_somebody",
+  "title": "Landing trip, flustered, asks for person",
+  "persona": "Omar Haddad, 40s, from Dallas, hurried and stressed, interrupts himself.",
+  "goal": "Book an airport pickup, then ask for a person because his flight changed.",
+  "opening_line": "Yeah hi, I'm landing in Dallas tonight and need a driver.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Tonight at 9:30. Delta flight 1190.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Going to the Omni hotel downtown.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Wait, my flight might change. Can I talk to a real person?",
+      "branches": [
+        {
+          "if_agent": "asks to confirm the current flight anyway",
+          "caller": "No no, just get me a person."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Somebody who can change it if the flight moves.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Omar Haddad. 414-555-0177.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Two people, one bag, whatever. Just tell them.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Is that gonna reach them tonight, or tomorrow?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Flight change uncertainty",
+    "Urgency",
+    "Agent may try to finish the trip first"
+  ],
+  "hesitation_rules": "Cuts himself off with 'wait, no, sorry' once.",
+  "expected": [
+    "Prioritizes the request for a person",
+    "Names the Dallas airport by full name if it mentions it",
+    "Collects name and cell",
+    "Passes along the trip details and flight uncertainty to the team",
+    "Does not overpromise timing"
+  ],
+  "must_not": [
+    "Say an airport code aloud",
+    "Promise the team will call by a certain time",
+    "Name an owner or person"
+  ]
+}

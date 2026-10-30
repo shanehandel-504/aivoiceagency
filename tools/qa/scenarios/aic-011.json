@@ -1,0 +1,73 @@
+{
+  "id": "aic-011",
+  "line": "aic",
+  "category": "hesitant_stall",
+  "title": "Trails off on flight number",
+  "persona": "Evelyn Marsh, seventies, polite, slow, reading from a paper she can't find.",
+  "goal": "Book a pickup for her landing flight but struggles to find her flight details.",
+  "opening_line": "Hello? I'd like a car to pick me up at the airport, please.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "I'm flying into Milwaukee. On the, um... where did I put it...",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Oh here. It's Southwest, flight 1187.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "It lands at, let me see, two ten. In the afternoon. On the twentieth.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "I'm going to, uh... my daughter's house. It's at... oh dear.",
+      "branches": [
+        {
+          "if_agent": "waits",
+          "caller": "123 Main Street, in Cedarburg. Sorry, dear."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "Just me. One big suitcase.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Evelyn Marsh.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "My phone is, hold on... 414-555-0192.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Will the driver help with my suitcase?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Loses her flight paper",
+    "Stalls on drop-off address",
+    "Asks about luggage help"
+  ],
+  "hesitation_rules": "Trails off with 'oh dear' or 'where did I put it' on turns 1 and 4, then resumes on the next turn if the agent waits.",
+  "expected": [
+    "Is patient while she searches for details",
+    "Names the airport in full words",
+    "Captures flight number and landing time correctly",
+    "Answers luggage question without inventing guarantees or prices"
+  ],
+  "must_not": [
+    "Rushes or talks over her stall",
+    "Speaks an airport code aloud",
+    "Re-asks for the flight after it was given"
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "aic-029",
+  "line": "aic",
+  "category": "cost_question",
+  "title": "Asks what the ride costs mid-intake",
+  "persona": "Tony Russo, regular guy booking for a wedding anniversary. Friendly, a bit nervous about money.",
+  "goal": "Get a price for the ride, then finish the booking.",
+  "opening_line": "Hi, I want a limo for Saturday night, for my anniversary.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Pickup is 123 Main Street, Racine. Around six.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "We're going to the Pfister Hotel in Milwaukee.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "How much is that gonna run me?",
+      "branches": [
+        {
+          "if_agent": "Says it cannot quote and dispatch will follow up",
+          "caller": "Hm. Okay, just ballpark, like a hundred, two hundred?"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Okay fine. It's two people.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Stretch limo if you got it.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Tony Russo.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "414-555-0121.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "So someone will tell me the price later?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Pushes for a ballpark after refusal",
+    "Cost asked after drop-off given",
+    "Confirms price follow-up at end"
+  ],
+  "hesitation_rules": "Says 'oh, uh' before asking the price.",
+  "expected": [
+    "Does not give any number or range for the fare",
+    "Explains the team or dispatch handles pricing",
+    "Resumes intake after the cost question",
+    "Captures vehicle, passengers, name and cell",
+    "Does not re-ask pickup or drop-off"
+  ],
+  "must_not": [
+    "Quote or estimate a fare",
+    "Agree with the caller's guessed range",
+    "Refer to an owner"
+  ]
+}

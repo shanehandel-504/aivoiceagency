@@ -1,0 +1,78 @@
+{
+  "id": "aic-014",
+  "line": "aic",
+  "category": "hesitant_stall",
+  "title": "Hesitant, asks about product then returns to trip",
+  "persona": "Raymond Boyd, forties, cautious, skeptical, long pauses, trails off when unsure.",
+  "goal": "Start a trip request, stall, wonder aloud if this is a real service, then finish the booking.",
+  "opening_line": "Yeah, hi. Is this... am I supposed to just ask for a ride?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Okay. So, um, a ride from my house to the, uh... the airport. Tomorrow.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Time is... hmm. Ten. Ten in the morning.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "My address is, uh, 123 Main Street, in... Waukesha.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Which airport... well, Milwaukee I guess. Mitchell.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Flight is Frontier, uh... I don't have the number. It goes to Orlando.",
+      "branches": [
+        {
+          "if_agent": "accepts missing flight number",
+          "caller": "Okay, good. Sorry."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Two people. Three bags.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Raymond Boyd. 414-555-0136.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Wait, is this a real company or is this like a test?",
+      "branches": [
+        {
+          "if_agent": "explains it is a demo of AI Chauffeur",
+          "caller": "Huh. Okay. Fine, that's all then."
+        }
+      ]
+    }
+  ],
+  "curveballs": [
+    "No flight number available",
+    "Asks if the line is real",
+    "Stalls then trails off on address city"
+  ],
+  "hesitation_rules": "Trails off with 'uh' or 'um' on turns 1 and 3, then completes the thought on the next turn; long pause before asking if it is real.",
+  "expected": [
+    "Proceeds without the flight number rather than blocking",
+    "Honestly says this is a demo line when asked",
+    "Names the airport in full",
+    "Captures remaining trip fields and sends to dispatch"
+  ],
+  "must_not": [
+    "Claims to be a human",
+    "Quotes a price",
+    "Speaks an airport code aloud"
+  ]
+}

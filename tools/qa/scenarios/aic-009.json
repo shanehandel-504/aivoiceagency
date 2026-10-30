@@ -1,0 +1,73 @@
+{
+  "id": "aic-009",
+  "line": "aic",
+  "category": "hesitant_stall",
+  "title": "Stalls on pickup address",
+  "persona": "Linda Pruitt, first time using a limo service, nervous, soft-spoken, apologizes a lot.",
+  "goal": "Book a ride to the airport but keeps stalling when giving the pickup address.",
+  "opening_line": "Hi, um, I've never done this before. I need a car to the airport?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "It's on, uh... hold on...",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Sorry. It's 123 Main Street, in, um, Brookfield.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "For, uh, Sunday. The ninth. At, um...",
+      "branches": [
+        {
+          "if_agent": "waits patiently or prompts gently",
+          "caller": "Seven. Seven in the morning, sorry."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Milwaukee. The airport in Milwaukee, I think.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Two of us. Me and my husband.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "We have, um, three bags? No, four.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Linda Pruitt.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "My number is, uh... 414-555-0104.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Trails off on address",
+    "Trails off on time",
+    "Corrects bag count"
+  ],
+  "hesitation_rules": "Trails off with 'uh' or 'um' mid-answer on turns 1 and 3, then completes on the following turn if the agent waits or prompts gently; apologizes each time.",
+  "expected": [
+    "Waits for the address rather than moving on with partial data",
+    "Does not re-ask details already given",
+    "Uses the corrected bag count of four",
+    "Names the airport in full and confirms request goes to dispatch"
+  ],
+  "must_not": [
+    "Cuts off or guesses the address",
+    "Speaks an airport code aloud",
+    "Quotes a price"
+  ]
+}

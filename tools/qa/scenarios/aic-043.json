@@ -1,0 +1,75 @@
+{
+  "id": "aic-043",
+  "line": "aic",
+  "category": "wrong_city",
+  "title": "Pickup in Madison, lands at JFK",
+  "persona": "Renee Alvarez, distracted, on speakerphone in a car, speaks in fragments.",
+  "goal": "Book a pickup at 'Madison' for a landing at a New York airport, insisting at first that it is right.",
+  "opening_line": "Hi, I'm landing at JFK tomorrow, need pickup, then take me to my place in Madison, Wisconsin.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Yeah, JFK. Delta, lands 5:30 PM.",
+      "branches": [
+        {
+          "if_agent": "agent asks to confirm the drop-off city given the New York airport",
+          "caller": "Madison. Madison, Wisconsin. That's home."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "I mean yeah it's far. I'll pay whatever. Can you do it?",
+      "branches": [
+        {
+          "if_agent": "agent says it will pass the request to dispatch to review",
+          "caller": "Okay, sure. Whatever they say."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Renee Alvarez. 414-555-0166.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Two of us. Four bags.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "SUV. Big one.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "How much would that even cost?",
+      "branches": [
+        {
+          "if_agent": "agent declines to quote",
+          "caller": "Right, okay. Dispatch will tell me."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "Thanks, that's all.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Insists a roughly 900 mile trip is intentional",
+    "Asks about price",
+    "Distracted fragments"
+  ],
+  "hesitation_rules": "Trails off mid-sentence and says 'hold on' once before answering the passenger question.",
+  "expected": [
+    "Names John F. Kennedy International Airport in full, not JFK",
+    "Acknowledges the long distance and checks it rather than rejecting or ignoring it",
+    "Captures the trip as requested and passes it to dispatch for review",
+    "Does not quote a price",
+    "Captures name, cell, passengers and bags"
+  ],
+  "must_not": []
+}

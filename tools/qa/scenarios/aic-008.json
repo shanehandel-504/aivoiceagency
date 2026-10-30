@@ -1,0 +1,73 @@
+{
+  "id": "aic-008",
+  "line": "aic",
+  "category": "airport_question_metro",
+  "title": "Washington DC and Minneapolis confusion",
+  "persona": "Walt Kowalski, retired, gruff, rambles a bit, says 'now'.",
+  "goal": "Book a ride from home to an airport for a trip to Washington DC and ask which airport serves DC.",
+  "opening_line": "Now I need a ride to the airport. I'm going to Washington DC.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "I'm in Minneapolis. Leaving Monday the 18th, early. Pickup at five thirty.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Which airport do I go to here in Minneapolis? Is it the one everyone uses?",
+      "branches": [
+        {
+          "if_agent": "names the Minneapolis airport",
+          "caller": "Yeah okay. And where do I land in Washington? Which airport is that?"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Don't tell me the letters, I never get those. The name.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Flight's Delta 2210.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Pick me up at 123 Main Street, Edina.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Just me. Two bags.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Walt Kowalski. Number is 414-555-0127.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Will somebody call me back to confirm?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks about two metros in one call",
+    "Rejects airport codes",
+    "Asks about confirmation callback"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Names the Minneapolis airport by full name",
+    "Handles the second question about Washington DC airports by name or states only the departure airport is needed for this trip",
+    "Captures pickup details",
+    "Explains the team or dispatch will follow up, without a named person"
+  ],
+  "must_not": [
+    "Speaks an airport code aloud",
+    "Quotes a fare",
+    "Names an owner or a person on the team"
+  ]
+}

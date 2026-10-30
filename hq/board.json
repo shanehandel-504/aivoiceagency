@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-29T17:47:59-05:00",
+  "updated": "2026-10-29T19:50:19-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -825,6 +825,14 @@
       "url": "https://aivoiceagency.ai/hq",
       "title": "OWNER-ALERT v1 (2026-10-29): every analyzed call on 8930 and 0019 texts the owner's cell one line and posts it to Slack",
       "label": "LIVE. n8n OWNER-ALERT v1 zv4tViyB5EVW8Uhy: header key, test numbers and test_mode skipped, 10-minute dedupe by call id, Error Sentry attached, a failed text fails the run so the Sentry fires. Kill switch: deactivate it. One added node '→ OWNER-ALERT' (continue on error) on AVA post-call 6r8YHuMEJbxeDyT5 serving b9c39d5a (rollback: publish e0454827) and demo post-call TkETvvnABhUPd7ME serving 3d53d0ec (rollback: publish 830898d5). Hardcoded owner values off two rails: 9FoLm4slBmM5nIus serving fc62f5ab (rollback 33184ac3), RH6POCJWU5CUdTyd serving 37ba1ff8 (rollback a6158fce), its owner upsert disabled. Proof: browser calls call_1cc1401a826b28c92d53914eb08 (AVA) and call_6fe123da3d45dfbd3a808b08420 (AIC) -> alert runs 17592 / 17599, exactly two texts delivered and two lines in #bots. Owner record per Shane's ruling: CLAUDE.md § 9 amendment. CALENDAR-ONE still to run; it must re-read TkETvvnABhUPd7ME before editing. Report reports/2026-10-29-owner-alert.md."
+    },
+    {
+      "id": "QA-CALLER",
+      "status": "built",
+      "updated": "2026-10-29T19:50:19-05:00",
+      "url": "https://aivoiceagency.ai/hq",
+      "title": "QA caller + grader (2026-10-29): grades any call on either line against the house rules; a text caller plays scripted operators against an agent for pennies",
+      "label": "built; 41 calls graded; text caller works via Retell's stateless agent-playground-completion (every tool mocked, nothing persisted, no number, no audio). tools/qa/: grade_call.py (Phase 0 timing in code + Haiku 5.5 verdict + a narrow second pass; rules in rubric.md), text_caller.py (Sonnet 5.5 plays the caller), 70 scenarios (aic-001 = Denver verbatim). Proof: Denver = question skipped, 5.60 s; per-call timing equal to Phase 0 on 41/41; repeat run agrees 40/41. Live 0019 v15 in text: 29 of 41 caller questions skipped across 10 scenarios. Session A: 40 calls graded, every T1 answers the Denver question. Claude spend $0.70 of the $10 cap. QA-NIGHTLY-v1 designed, not built. Read only on every line and rail; rollback none. Report reports/2026-10-29-qa-caller-v1.md."
     }
   ],
   "log": [
@@ -1515,6 +1523,10 @@
     {
       "ts": "2026-10-29T17:47:59-05:00",
       "entry": "OWNER-ALERT v1 live: every analyzed call on the AVA and AI Chauffeur post-call rails texts the owner's cell one line and posts it to Slack #bots; two browser proof calls gave exactly two texts and two lines. Owner record ruling recorded as the CLAUDE.md § 9 amendment. Report reports/2026-10-29-owner-alert.md."
+    },
+    {
+      "ts": "2026-10-29T19:50:19-05:00",
+      "entry": "QA caller + grader built (Session D): grader proven on the 41 Phase 0 calls (Denver = question skipped, 5.60 s; timing equal to Phase 0 on 41/41); text caller works on live 0019 v15 through Retell's stateless playground with every tool mocked: 10 scenarios, 29 of 41 caller questions skipped; Session A's 40 calls graded. Read only on every line and rail. Claude spend $0.70. Report reports/2026-10-29-qa-caller-v1.md."
     }
   ]
 }

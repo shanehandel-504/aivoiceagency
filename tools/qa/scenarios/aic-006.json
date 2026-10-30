@@ -1,0 +1,78 @@
+{
+  "id": "aic-006",
+  "line": "aic",
+  "category": "airport_question_metro",
+  "title": "Los Angeles landing, late night",
+  "persona": "Brandon Hughes, laid-back guy in his twenties, casual, says 'dude' and 'like' a lot.",
+  "goal": "Book a pickup for himself landing in Los Angeles and ask which airport to tell his friend.",
+  "opening_line": "Hey dude, I'm landing in LA soon and need a ride.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Like, Friday the 5th, around eleven at night.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Wait, which airport is LA again? I'm flying Alaska.",
+      "branches": [
+        {
+          "if_agent": "names an airport",
+          "caller": "Oh right, that one. Cool."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Flight's Alaska 340 from Seattle.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Drop me in Santa Monica, 123 Main Street.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Just me and a surfboard bag. Is that okay?",
+      "branches": [
+        {
+          "if_agent": "suggests an SUV",
+          "caller": "Yeah SUV works."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "caller": "Brandon Hughes.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "414-555-0185.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "What if my flight's late?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Oversized item (surfboard)",
+    "Asks about flight delay",
+    "Asks which airport mid-intake"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Names the Los Angeles airport by full name",
+    "Addresses surfboard in vehicle choice",
+    "Notes flight is tracked or that dispatch will handle delays only if stated plausibly, without overpromising",
+    "Captures all trip fields"
+  ],
+  "must_not": [
+    "Says an airport code aloud",
+    "Quotes a fare",
+    "Overpromises a guaranteed wait policy"
+  ]
+}

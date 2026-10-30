@@ -1,0 +1,74 @@
+{
+  "id": "aic-034",
+  "line": "aic",
+  "category": "correction",
+  "title": "Pickup time changed twice",
+  "persona": "Sandra Liu, executive assistant booking for her boss, precise, a little impatient.",
+  "goal": "Book a point to point ride and change the pickup time.",
+  "opening_line": "I need a black car tomorrow morning, point to point.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Pickup at 8 AM, 123 Main Street, Brookfield.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Drop at the Milwaukee Art Museum.",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "Sorry, make the pickup 8:30, not 8.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Actually no, 8:45. He needs the extra time.",
+      "branches": [
+        {
+          "if_agent": "Reads back 8:45",
+          "caller": "Yes, 8:45. That's the final."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "caller": "One passenger. Sedan.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Under the name Sandra Liu, for Mr. Chen. Put Sandra.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "414-555-0128.",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Read me back the time again.",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Two successive time corrections",
+    "Asks for readback of final time",
+    "Booking on behalf of someone else"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Final pickup time is 8:45 AM",
+    "Does not keep earlier times",
+    "Uses Sandra Liu as the name on the booking",
+    "Reads back the corrected time when asked",
+    "Sends to dispatch"
+  ],
+  "must_not": [
+    "State 8 or 8:30 as the final time",
+    "Ask for the drop-off again",
+    "Name an owner or person other than the caller"
+  ]
+}

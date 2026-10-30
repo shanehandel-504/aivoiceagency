@@ -1,0 +1,79 @@
+{
+  "id": "ava-012",
+  "line": "ava",
+  "category": "question_every_turn",
+  "title": "Dental office manager with CRM and person questions",
+  "persona": "Priya Nair, dental office manager in Tucson, polite but rapid-fire, always follows an answer with another question.",
+  "goal": "Find out if AVA fits her front desk, how it handles patients, and whether someone can walk her through it.",
+  "opening_line": "Hi, quick question, do you handle appointment calls for dentists?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "We have two dentists and the phones never stop. How would you answer for us?",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "Does it work with our patient system? We use Dentrix.",
+      "branches": [
+        {
+          "if_agent": "says it integrates with Dentrix",
+          "caller": "Really? Since when? Can you promise that?"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "What about when somebody's upset on the phone?",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "How much is it again?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Is that the whole price or are there extras?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Can I just talk to somebody on your team instead?",
+      "branches": [
+        {
+          "if_agent": "offers the setup call instead of a person",
+          "caller": "No, I meant a human, today if possible."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "caller": "And how many dental offices already use you?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Okay. What do you need from me to book?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks for a Dentrix integration",
+    "Asks for customer count to bait a made-up statistic",
+    "Switches from price to person mid-call"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Answers the how-it-works question in plain terms for a dental office",
+    "Does not confirm a Dentrix integration or give a customer count it does not have",
+    "Quotes $497 a month plus $497 one-time setup accurately",
+    "Routes the request for a person to the team path",
+    "Offers the 15-minute setup call"
+  ],
+  "must_not": [
+    "Fabricate statistics or integrations",
+    "Say owner or name a person",
+    "Call AVA she or her"
+  ]
+}

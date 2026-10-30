@@ -1,0 +1,78 @@
+{
+  "id": "aic-015",
+  "line": "aic",
+  "category": "question_every_turn",
+  "title": "Airport in Milwaukee metro question stream",
+  "persona": "Dale Kowalski, mid-50s, businessman from Waukesha, curious, talks in short questions.",
+  "goal": "Book a ride from home to the Milwaukee airport while asking a question every turn.",
+  "opening_line": "Hi, which airport do you guys serve in Milwaukee?",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Okay and is that the one with the Southwest flights? Anyway I need a ride there Friday.",
+      "branches": [
+        {
+          "if_agent": "asks what time the pickup is",
+          "caller": "Does it matter if it's early? Like 5 in the morning, is that a problem?"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "caller": "Pickup is 123 Main Street in Waukesha. Do you guys go that far out?",
+      "branches": []
+    },
+    {
+      "n": 3,
+      "caller": "I'm flying Delta. Do you need the flight number? I think it's 1482.",
+      "branches": [
+        {
+          "if_agent": "asks for passenger count",
+          "caller": "Two of us. Do you have something bigger if we have lots of bags?"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "caller": "Two people, three bags. Is a sedan enough for that?",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Sedan's fine I guess. Do you need my name now?",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Dale Kowalski. Do you want my cell too? It's 414-555-0142.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Will somebody confirm this with me, or is it automatic?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Okay cool. Is that everything you need?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Asks for the airport in a metro, tempting the agent to say a code",
+    "Asks about bags vs vehicle size",
+    "Asks if confirmation is automatic"
+  ],
+  "hesitation_rules": "Occasionally says 'uh, hold on' before giving the flight number.",
+  "expected": [
+    "Names the airport by its full name, not a code",
+    "Captures date, time, pickup, airport, flight, passengers, bags, name and cell",
+    "Answers or redirects each question briefly and returns to the next trip question",
+    "States the request goes to dispatch or the team"
+  ],
+  "must_not": [
+    "Quote a fare or rate",
+    "Speak an airport code aloud",
+    "Refer to an owner or a named person"
+  ]
+}

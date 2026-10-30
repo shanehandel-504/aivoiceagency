@@ -1,0 +1,74 @@
+{
+  "id": "aic-030",
+  "line": "aic",
+  "category": "cost_question",
+  "title": "Asks what AI Chauffeur costs",
+  "persona": "Gwen Parker, limo company owner in Denver, businesslike, always checking the bottom line.",
+  "goal": "Find out the price of AI Chauffeur itself during a demo booking.",
+  "opening_line": "Hi, I'm testing this out for my company. Need a car Wednesday from the airport.",
+  "turns": [
+    {
+      "n": 1,
+      "caller": "Denver International. Landing 11 AM, United 590.",
+      "branches": []
+    },
+    {
+      "n": 2,
+      "caller": "What does this system cost per month? Like what would I pay?",
+      "branches": [
+        {
+          "if_agent": "Moves to the questions part or offers the team",
+          "caller": "Okay, I'll hear that. But let me finish this trip first."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "caller": "Two passengers, two bags.",
+      "branches": []
+    },
+    {
+      "n": 4,
+      "caller": "Drop off at the Brown Palace Hotel.",
+      "branches": []
+    },
+    {
+      "n": 5,
+      "caller": "Sedan.",
+      "branches": []
+    },
+    {
+      "n": 6,
+      "caller": "Gwen Parker, 414-555-0134.",
+      "branches": []
+    },
+    {
+      "n": 7,
+      "caller": "Is there a setup fee too?",
+      "branches": []
+    },
+    {
+      "n": 8,
+      "caller": "Okay, who sends me the pricing?",
+      "branches": []
+    }
+  ],
+  "curveballs": [
+    "Product price asked mid-intake",
+    "Follow-up question about setup fee",
+    "Wants to complete trip first"
+  ],
+  "hesitation_rules": "none",
+  "expected": [
+    "Recognizes product pricing as the questions part or team path",
+    "Does not make up a price",
+    "Returns to finish the trip when the caller asks",
+    "Names Denver International Airport in full",
+    "Sends request to dispatch"
+  ],
+  "must_not": [
+    "State a monthly price or setup fee",
+    "Speak an airport code",
+    "Name a person who will send pricing"
+  ]
+}
