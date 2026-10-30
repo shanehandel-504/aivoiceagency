@@ -235,3 +235,113 @@ BEFORE → AFTER
 | Flow tokens (reachable) | 29,195 | 17,900 |
 | Model | GPT 4.1 fast | GPT 6.1 Terra fast |
 ```
+
+## BUNDLE + BREAK-OUT v1.2 (PASTE-CC-AIC-BUNDLE-v1.2, Oct 29 2026, 9:50 PM CT)
+
+> Window "AIC intake v2 build for 0019", same writers and laws as AGENT-BUILD-v1. Built on test agent A (agent_0fa59b66…, ZZ sink) from the live v16 flow, gated, promoted as **agent_9ebb v17**. Law Zero held: behavior rules, facts, schema, one routing edge, one global-node condition and removals; no new spoken line (`b1-build.mjs` refuses any quoted sentence that is not already a quoted line in v16). Spend cap $6, enforced in the harness.
+
+**AIC v17 LIVE — T1 asks 6 (was 11) · readback at 91 s (was 133) · T6 pull-backs 0 · offers 0 · gaps p50 1.83 / p95 2.56 · rollback repin 16 · READY FOR SHANE'S ONE CALL**
+
+| | v16 (live until 10:15 PM CT) | v17 |
+|---|---|---|
+| Denver script: agent asks before the readback | 11 (PASTE) · 10 on this run's counter (v16 confirmation T1 ×3 and its live proof) | **6** (test pass 2 and the live proof call) |
+| Denver script: readback starts at | 133 s (PASTE) · 116.6–121.7 s measured | **91–92 s** |
+| By-the-hour fast caller: asks | 6 (v16 confirmation T3 ×3; caller answered one item per line) | **1** (caller gives everything left on the first ask) |
+| "Can I talk to somebody?" | "How can I help you?" (QA grader, 4 of 4 calls) | "I can help you reach the team. What's your name, company, and the best number to reach you?" |
+| Skeptic (4 questions, then silence): pull-backs / offers / Limo Anywhere | not tested | **0 / 0 / "Yes, it connects to Limo Anywhere."** (2 of 2 calls) |
+| Correction after the readback ("Actually, make that Tuesday.") | — | "Got it. Updated to Tuesday." + the readback again with Tuesday November third |
+| Intake gap, test pass 2 (6 calls, 16 intake turns) | p50 1.79 / p95 2.46 (15 calls) | **p50 1.83 / p95 2.56 / max 2.65** |
+
+### Rule text, before → after
+
+**INTAKE, before (v16):**
+
+```text
+You are taking a trip request on the AI Chauffeur demo line. The caller is playing a customer; many callers are limousine and black-car operators testing you. Collect these fields in this order, skipping any the caller already gave: trip type (airport, point to point, or by the hour); for airport trips, landing or flying out; pickup address; pickup date and time; the airport — when the city has one commercial airport, state it by its full name and move on; when the city has several, name them by full name and ask which; when you are not sure, ask which airport; airline and flight number; number of passengers and number of bags; vehicle (sedan, SUV, van, or Sprinter — suggest one from the passenger and bag counts); for by-the-hour trips, the number of hours and any stops; the passenger's name; the best callback number (when a caller number is present, confirm it is the best one instead of asking for it). Ask one thing per turn. Ask two things in one turn only when the caller just gave two or more fields unprompted. Never ask again for a field you already have. Say airports by their full names, never by codes. When the caller asks any question, answer it in one short sentence first, then ask the pending question in the same turn. When you have the airline and flight number, say the flight line exactly as written: "We'll be tracking your flight." and nothing more about the flight. Never quote a rate, never offer a card link, never say the trip is booked or confirmed: this line takes the request and dispatch confirms it. Wait for the whole answer: a pause, an "uh", or a half-finished address or time is not the end of the caller's turn. Keep each turn under twenty words unless you are answering a question. When every field above is collected, move on.
+```
+
+**INTAKE, after (v17):**
+
+```text
+You are taking a trip request on the AI Chauffeur demo line. The caller is playing a customer; many callers are limousine and black-car operators testing you. Ask for the trip in groups, one group per turn, in this order, and ask only for what is still missing: (1) trip type (airport, point to point, or by the hour), if not given; (2) for airport trips, landing or flying out, together with the travel date; (3) flying out: the pickup address and the pickup time; point to point: the pickup address, the pickup date and time, and the drop-off address; landing: the drop-off address (the pickup is the airport, and the time comes from the flight); by the hour: the pickup address, the date and start time, the number of hours and any stops; (4) the airport — when the city has one commercial airport, do not ask and do not restate it: say its full name once, only when the caller asks; when the city has several, name them by full name and ask which; when you are not sure, ask which airport; (5) airline and flight number, plus the landing time when landing; (6) number of passengers and number of bags; (7) the passenger's name and the best callback number, together with whether it is okay to text the trip sheet to that number. On a flying-out trip, a time the caller gives with the travel date is the pickup time: do not ask for the pickup time again. Suggest the vehicle from the passenger and bag counts (sedan, SUV, van, or Sprinter; sedan or SUV when the bags are tight for a sedan) in the same turn as the next group. Accept answers in any order. When the caller gives several items at once, take them all and ask only for the rest. Never ask again for a field you already have. Say airports by their full names, never by codes. When a caller number is present, confirm it is the best one without reading its digits aloud. A question asked in character, the way a passenger would ask it (the airport's name, vehicle types, how early to leave, a return trip), gets a one-sentence answer, then the pending group in the same turn. A question out of character (about the product, the company, the caller's own business, price, software, what this is, how it works, or a request for a person) ends the demo: it goes to the questions part and the trip is not picked back up. When you have the airline and flight number, say the flight line exactly as written: "We'll be tracking your flight." and nothing more about the flight. Never quote a rate, never offer a card link, never say the trip is booked or confirmed: this line takes the request and dispatch confirms it. Wait for the whole answer: a pause, an "uh", or a half-finished address or time is not the end of the caller's turn. Keep each turn under twenty-five words unless you are answering a question. When every field above is collected, move on.
+```
+
+The sentence "On a flying-out trip, a time the caller gives with the travel date is the pickup time: do not ask for the pickup time again." is **the one printed fix** (see TESTS). The flight line is the existing one.
+
+**INTAKE edges:** (1) → questions door: "The caller asks what AI Chauffeur is, what it does, what it costs, how it works, or says "what is this" — not a trip question." → "The caller asks an out-of-character question: about AI Chauffeur, the product, the company, the caller's own business, price, software, what this is, or how it works — not a question a passenger would ask about the trip." · (2) team: unchanged · (3) → INTAKE-DONE: the required list now reads "(trip type; for airport trips the direction, the date, the airport — known from the city when it has one commercial airport — and the airline and flight; the pickup address and time for flying out, point to point and by the hour; the drop-off address for point to point and landing; the hours for by the hour; passengers; bags; name; callback number; and the answer about texting the trip sheet)".
+
+**Schema (EXTRACT-ONCE):** `dropoff_location` was already in the N03 schema (no change) · `+ sms_consent` (boolean), copied byte-exact from the retired N05-P reader ("True if the caller agreed to have the trip sheet texted to the number they are calling from; false if they said no to the text.") · `airport` tail: "If the caller did not name it but you stated the airport for the caller's city and the caller did not correct it, write that airport. Leave empty if no airport was said." → "If the caller did not name it: write the airport you stated for the caller's city, or, when the trip's city has only one commercial airport, that airport by its full name. Leave empty if neither applies."
+
+**Routing:** N05 CONTACT route gets a new first edge, `sms_consent == true && has_caller_number == true` → Contact captured. A phone caller who said yes in the name + number turn skips N05-CONSENT (the rail still gets its yes; it is no longer its own turn).
+
+**The nudge:** N09-SILENCE1 (global) speaks "Whenever you're ready, we can continue with the trip." — the demo's line, but its condition had no part check, so it could fire inside discovery as a pull-back. Words unchanged; condition "The caller has gone silent and has not answered the last question." → "Current part of the call: {{door_now}}. Only when the current part is demo: the caller has gone silent and has not answered the last question." (the same form every other global node uses). In the questions part the silence reminder follows the global prompt's existing line, "Take your time. I'll be right here."
+
+**Questions door (d2):** added after its first paragraph:
+
+```text
+## DISCOVERY PACE (Shane's rulings, Oct 11, Oct 13 and Oct 29; these override every timing rule below)
+- The caller drives. Answer every question in one or two sentences. Ask why they called and what problem they are trying to solve, and keep digging into that problem.
+- No booking ask and no team offer while the caller keeps asking questions. After about two minutes of their questions, make one soft offer (the booking ask below, or more information from the team), then keep answering for as long as they keep asking. One more offer only at the natural end of the call. Never a third.
+- Never offer the demo and never steer back to the trip. The demo picks back up only when the caller asks to try it.
+- A caller who arrived asking for the team or a person skips the two openers: acknowledge in one line that you are getting the team, ask for their name, their company and the best number in that same turn (this overrides the one-question rule), then what they want to talk to the team about.
+```
+
+Removed or re-pointed in d2 (no spoken line touched; the booking ask line, the price line and the openers stay word for word):
+- ANSWERING QUESTIONS bullet 3 and THE DISCOVERY CALL bullet 2 (the same sentences in both): "No booking ask until the caller's questions are answered, about a minute of real answers first." → removed · "The ask comes the first time after the caller has asked at least one real question and received its answer, and never before the agent's third turn in the questions part. At most twice in a call, never twice in a row." → "The ask comes only when DISCOVERY PACE allows it."
+- "…say: "The team can answer that on the Discovery Call." Then offer to book it. Never guess…" → "Then offer to book it." removed.
+- **Pull-back** — CURVEBALLS: "…gets one of three moves, never a stall and never a dead end: answer it from the facts sheet, treat it as a question for the team, or offer the demo." → "…gets one of two moves, never a stall and never a dead end: answer it from the facts sheet, or treat it as a question for the team."
+- **Pull-back** — CLOSING: "A good ending is a booked Discovery Call, a connection or a callback from the team, or a demo trip." → "A good ending is a booked Discovery Call, or a connection or a callback from the team."
+- Team opener (step 3): "How can I help you?" came from the authored entry rule ("On entry the agent's first words are one of these two openers, word for word…"), which has no team-entry exception. The words are not changed; the DISCOVERY PACE team bullet scopes them, and an authored team-entry line is a Grok item.
+
+**Global prompt:** "One question per turn." → "One group of related questions per turn." · appended (the fact list had none of them; the facts sheet names neither Limo Anywhere nor the tier): "FACTS FOR THE WHOLE CALL. AI Chauffeur connects to the company's reservation software and CRM through its API, Limo Anywhere included (the $1,697 tier). AI Chauffeur starts at $997 a month plus setup. The live version is configured for the company's rates, rules and software."
+
+Tokens (o200k_base, reachable): v16 17,900 → v17 18,450; INTAKE 491 → 783 (limit 2,000).
+
+### TESTS (test agent A, web calls, two lanes, 120 s cap for T1/T6/T7, 90 s for T2/T3/T4)
+
+Harness = the v16 caller (`b8-call.mjs`) with four additions: a grouped ask gets every scripted line that answers it in one breath, the by-the-hour caller gives everything left on the first ask, T6 goes silent after its fourth question, T7 corrects at the readback. T1 needs 120 s to reach a readback, so it ran under the 120-s cap, not 90.
+
+| Test | Pass 1 (A v5) | Pass 2 (A v6, the fix) | Live proof (v17) |
+|---|---|---|---|
+| T1 Denver | ✗ 8 asks, no readback by the 120-s cap, pickup time re-asked — call_786b772d8c190e860b6fdb10a50 | ✓ 6 asks · readback at 92.2 s · Denver International answered · all fields + text consent · no re-ask · intake 1.78 / 2.45 — call_353d6a4e3089d6f9133df60c750 | ✓ 6 asks · readback at 91 s · 1.79 / 2.33 — call_2488d8540cef5e9efbef3bc308e |
+| T2 person | ✓ "I'll get the team involved. What's your name, your company, and the best number to reach you?" — call_ec480fd13c630b98ded94209e32 | ✓ "I can help you reach the team. What's your name, company, and the best number to reach you?" — call_3c6a95ce616c6a15f5b483fb71c | |
+| T3 fast caller | ✓ 1 ask · readback 54.8 s · first turn 3.01 s — call_22ab21d8815bad3530a42a0aa29 | ✓ 1 ask · readback 54.7 s · 2.53 s — call_4eb061f12722f3cbd83a519f4b5 | |
+| T4 slow talker | ✓ not cut off · nothing re-asked — call_ee20144d2087334a8d78aaf4475 | ✓ not cut off · nothing re-asked · 1.80 / 2.29 — call_e06509e625c19a1298945e77ff9 | |
+| T6 skeptic | ✓ 0 pull-backs · 0 offers · Limo Anywhere yes · no number above the base — call_3c666481c523e38e55f23cbdf91 | ✓ same; Limo Anywhere: "Yes, it connects to Limo Anywhere. That integration is above the base. Anything above the base is sized to the company, with one price after the Discovery Call. What are you hoping to improve with your current setup?" — call_d147e5a0b03d05129a4ceb8ee07 | |
+| T7 correction | ✓ 1 ask · readback repeats with Tuesday · first turn 3.89 s — call_69cb52f41ace8f2894f6d71749b | ✓ 1 ask · "Got it. Updated to Tuesday." + readback Tuesday November third · 2.49 s — call_162bea840c9b1c1ec11561dd9c9 | |
+| Pooled intake gap | p50 1.87 · p95 3.14 · max 3.89 (18 turns) — p95 miss | **p50 1.83 · p95 2.56 · max 2.65 (16 turns) — pass** | |
+| Checks | 16/20 | **20/20** | 5/5 |
+
+**The one printed fix.** Pass 1, T1: asked "Are you landing or flying out, and what's your travel date?", the caller answered "Flying out. Tomorrow at six AM."; INTAKE could not tell a pickup time from a flight time and asked "What time would you like to be picked up?" four times. Fix = the INTAKE sentence above; all six tests then re-ran once on that version (it touches INTAKE for every test). Pass 1's p95 miss came from the single first INTAKE turn after the one-breath by-the-hour line (3.01 s, 3.89 s: the greeting's own edge check took 2.18 / 2.35 s and one model reply 1.31 s); pass 2 measured 2.53 and 2.49 s on the same turn. Harness fixes between passes (not agent changes): T1's caller repeats "Tomorrow at 6 AM" if asked the time again; the re-ask checker stopped reading the split readback and "drop-off address" as asks.
+
+### PROMOTE
+
+| Step | Result |
+|---|---|
+| Fork | `create-agent-version` agent_9ebb {base_version 16} → v17 (flow conversation_flow_9cf4ddd5b734 forked to v17) |
+| Flow | v17 = test flow conversation_flow_3f502a51d013 v6 on all 10 content keys |
+| Diff v16 → v17 | flow: nodes INTAKE, EXTRACT-ONCE, N05 CONTACT route, N09-SILENCE1, D2 QUESTIONS + the global prompt; 228 nodes both. Agent: `response_engine` only (v16 → v17); webhook = the production rail, as v16 |
+| Greeting | N01-P 6d9d1162bb841a01… · N01-B 7bbd8f185e2bfd9a… — equal before, after the build, after the promote |
+| Publish / re-pin | v17 published 2026-10-30T03:15:57Z · 0019 and …8976 inbound 16 → 17 at 03:15:59Z (10:15 PM CT) |
+| Rollback | `doppler run --project ava-prod --config prd -- node b5-promote.mjs repin 16` (in the AIC working set) |
+| Proof | call_2488d8540cef5e9efbef3bc308e: Airport 2.49 · flying out + date 1.79 · Denver question 1.80 ("Denver International Airport. What's your pickup address?") · address 1.74 · flight 1.88 · passengers 1.71 · name + number + yes → readback 3.25 s. Rail exec 18027 success: trip sheet AIC-F3BC308E, sheet row, owner email + owner SMS; `sms_ok` true and the analysis' `sms_consent` true, but the caller text was skipped by the rail's DND gate (see GOTCHAS). § 9: the lead upsert went to the 414-555-0100 test contact, not the owner record or zz-test |
+
+Spend: $3.48 in web calls (13 calls: pass 1 $1.61, pass 2 $1.58, live proof $0.29) + 4 text playground runs. Cap $6.
+
+### GROK ITEMS (words this run did not write)
+
+1. **Team-entry line.** The questions door's authored openers ("How can I help you?" / "What questions do you have?") have no team-entry exception. v17 scopes them with a rule and the model now composes the acknowledgment. If Shane wants a fixed line there, Grok writes it.
+2. **Limo Anywhere answer length.** Grok's above-base rule makes it three sentences ("Yes, it connects… That integration is above the base. Anything above the base is sized to the company, with one price after the Discovery Call."). Ruling wanted: "yes, via API, nothing more", or keep the above-base sentence.
+3. **$1,697 vs "never say any number above the base".** The new fact names the tier price; Grok's price rule forbids saying it. The model kept the rule in all 4 skeptic answers. Shane rules whether the number is ever spoken; Grok aligns the price line.
+4. **"Other ground transportation" override** still ends its first answer with the Discovery Call offer, against DISCOVERY PACE's "no offer while the caller keeps asking".
+
+### GOTCHAS
+
+- **The test caller number is now DND in GHL.** The v16 proof's caller text to 414-555-0100 failed at Twilio (21614, not a mobile number), so GHL set permanent SMS DND on that contact (SI4O…iZ9g). The v17 proof's text was correctly skipped. Future proofs need another reserved number to prove the caller text.
+- **Fewer, grouped turns:** 16 intake turns across six calls, so p95 is basically the slowest single turn. The first answer after a long one-breath caller line is the slow one (2.5–3.9 s).
+- **Web calls without caller ID** (desktop button) still go through the browser contact path. INTAKE asks name + number + consent, then the old path reads the number back and asks consent again (two extra turns). Phone calls skip it.
+- **T6's 120-s cap ends before "about two minutes of questions"**, so the one soft offer never had room to appear (0 offers in 2 calls). The silence after the fourth question drew no pull-back.
+- After T7's corrected readback the caller went silent, and the demo nudge fired in the demo part ("Whenever you're ready, we can continue with the…"). That is allowed there.
+- Bash heredocs ate a regex backslash in the promote script's title guard (the build stopped after the flow patch; the title was set in a separate call). Scripts with `\\?` go through the editor.
+
+LESSON: Read the rulings file before writing a spec; one-question-per-turn and answer-then-resume-on-everything both contradicted standing rulings.
