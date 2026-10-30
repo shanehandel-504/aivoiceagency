@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-29T22:23:21-05:00",
+  "updated": "2026-10-30T11:01:00-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -849,6 +849,14 @@
       "url": "https://aivoiceagency.ai/hq",
       "title": "AVA 8930 · three fixes",
       "label": "v54 live since 2026-10-29 22:20 CT: no email ask, transfer fires on first yes, sonic-3.6, handoff → AIC v17. 8930 (in + out) and the four pool lines re-pinned 53 → 54; verify 11/11. The handoff tool now speaks the bridge line itself (\"Let me transfer you to the AI Chauffeur demo now.\", static, byte-exact) and its prompt sentence is reduced to \"call handoff_to_desk.\"; no new spoken line. Email: nothing to remove — no tool, prompt line or booking-workflow field asked for one, and 0 of 71 calls since Sep 1 contain the word. Tests on TEST v18: S1–S4 PASS first run; live proof S1 call_872b375e… PASS (tool on the first \"Yes.\", greeting +0.30 s, gaps 1.43 / 1.00 s). Spend 82¢ (5 calls). Rollback: s6-promote.mjs pin 53. Report reports/2026-10-29-ava-agent-fix-v1.md (incl. the read-only GHL handoff report: a handed-off caller is filed as an AVA hot lead today, against Shane's ruling; not fixed)."
+    },
+    {
+      "id": "N8N-POLLERS",
+      "status": "live",
+      "updated": "2026-10-30T11:01:00-05:00",
+      "url": "https://aivoiceagency.ai/hq",
+      "title": "n8n pollers",
+      "label": "every 15 min, 6 AM–10 PM live 10:47 AM CT Oct 30, projected 64 runs/day (was 168; the 288 assumed a 24-hour clock). WF-SETUP-CALL-REMINDERS v3 (618G…, version 0a02d6c4): the same 52 reminders as v2.1 in a tick-by-tick sweep over 11 made-up bookings, 0 double sends; ZZ copy staging 11/11 reminders sent once, 3 no-double checks, the 48 h check stops a run when neither GHL calendar holds a live booking. CALL IN 15 now lands 10 / 15 / 20 min before on AI Chauffeur :40 / :00 / :20 starts (exactly 15 on the AVA calendar and phone bookings); a failure on that one tick emails the owner. Other pollers untouched: drip + booking receipt hourly (proposed 3 and 15 a day). Event-driven gate: a GHL workflow (Customer Booked Appointment + Appointment Status → Webhook) once the next run builds the n8n webhook. Rollback: publish_workflow 618G versionId 6695b8f8. Report reports/2026-10-30-poller-v1.md."
     }
   ],
   "log": [
@@ -1555,6 +1563,10 @@
     {
       "ts": "2026-10-29T22:23:21-05:00",
       "entry": "AVA 8930 three fixes live: 8930 + four pool lines on agent_d5ada v54 since 22:20 CT (was v53). Transfer fires on the first yes with the bridge line spoken by the handoff tool, voice pinned sonic-3.6, handoff pinned to AIC v17 (waited for 0019 to move past v16, landed 22:19 CT). No email ask existed to remove. TEST v18 S1–S4 + live proof PASS, spend 82¢. Rollback re-pin v53. GHL report: both post-call rails fire on a handoff and the AVA rail tags the caller ava-demo-hot (report only). Report reports/2026-10-29-ava-agent-fix-v1.md."
+    },
+    {
+      "ts": "2026-10-30T11:01:00-05:00",
+      "entry": "n8n pollers: WF-SETUP-CALL-REMINDERS v3 live 10:47 AM CT — every 15 min, 6 AM–10 PM CT, projected 64 runs/day (was 168 at every 5 min, 6 AM–7:55 PM). Reminders tested 11/11 on the ZZ copy, no double sends, 48 h skip check added. Drip + booking receipt pollers unchanged (proposals in the report). Rollback publish 6695b8f8. Report reports/2026-10-30-poller-v1.md."
     }
   ]
 }
