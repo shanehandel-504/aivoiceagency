@@ -163,3 +163,75 @@ Files: `ops/tuning/aic-0019-v15-{agent,flow}-rollback-2026-10-29.json` (masked r
 12. The Retell playground (`agent-playground-completion`) ran the whole flow as text with tools mocked. It caught the wiring before any call was paid for.
 
 LESSON: the flow was slow because it never let the model speak; the last second came from a setting (dynamic responsiveness) that only showed itself when the same caller lines were timed side by side.
+
+## SHANE READBACK
+
+```text
+===== SHANE READBACK — COPY ALL =====
+AIC INTAKE v2 LIVE — 0019 v16 · model GPT 6.1 Terra · first word p50 1.8 s / p95 2.5 s · questions answered 9/9 · rollback re-pin v15
+
+WHAT HAPPENED (plain English)
+The AI Chauffeur demo line (414-775-0019) used to read a script, one fixed line per step, and it waited about 4 seconds after
+every answer. It now runs one smart "take the trip" step. It asks one thing at a time, answers any question in one line, then
+goes back to the trip. It names a one-airport city's airport itself ("Denver International Airport"), and it reads the trip
+fields once at the end. The greeting is word for word the same. Four AI models were tested on the same five scripted calls.
+GPT 6.1 Terra was fastest and cheapest once two problems were fixed: the name, and a Retell setting that slowed every call
+after a pause. It passed 15 confirmation calls at about 1.8 seconds to the first word (was 4.0). It is live on 0019 and the
+Google tracking line since 7:47 PM CT. Your three check calls never came in during the 30-minute watch.
+
+DONE
+| Step | Result | Evidence |
+| 0 Preflight | 0019 + …8976 on agent_9ebb v15; rollback saved; greeting hashed; models + harness found | PASTE\rollback\aic-0019-v15-{agent,flow}-2026-10-29.json · N01-P 6d9d1162… N01-B 7bbd8f18… |
+| 1 Build | INTAKE + EXTRACT-ONCE (+ INTAKE-ENTER/DONE, barge-in notice reader); 52 nodes retired; 2 prompt edits; 27 overrides off; reminder 6 s; 17,900 tokens, INTAKE 491 | report BUILD · ops/tuning/aic-intake-v2-*.json |
+| 1f Test agents | A Terra · B Sol · C Claude 5.5 Sonnet (standard tier only) · D GPT 4.1 fast · E Grok Voice 3.0; all on the ZZ sink | agent_0fa59b66 / 9bafa6f2 / 57fc6111 / 12beab31 / 0ba2c0ef |
+| 2 Clips | 25 SAPI caller clips + the T4 slow line (2.0 s pause) | tests.mjs, mkclips.ps1 |
+| 3 Bake-off | 20 calls. Sol only all-pass but slowest; you picked Terra + 2 fixes | report MODELS table |
+| 4 Confirm | round 1 12/15 (airport miss) → one fix (airport description) → 15 calls: p50 1.79 s, p95 2.46 s, max 2.91 s, 0 talk-overs; 15/15 (T4 time question counted as a pass, flagged) | 15 call ids in report CONFIRMATION |
+| 5 S2S | Grok Voice 3.0: p50 1.58 s, tools + extraction ran, static lines never spoken → not usable | call_4df14734507559f6d2497cad3f9 |
+| 6 Promote | v16 published 00:46:46Z; 0019 + …8976 re-pinned 00:47:02Z; diff = 3 fields; hashes equal 3×; proof call 1.78 / 2.19 s, 4/4; rail ran | call_5a79933695d439db813b68468d2 · rail exec 17961 |
+| 7 Check calls | asked; watched 30 min; none arrived | p11-watch.mjs |
+| 8 Close | report + PASTE copy + board + 56 masked calls; pushed; /hq shows the item | 83da043 + this readback commit |
+
+IDS / ROLLBACK
+Live: agent_9ebb41c9bd8af214649328f107 v16 · flow conversation_flow_9cf4ddd5b734 v16 (= test flow conversation_flow_3f502a51d013 v4)
+Rollback (one line, both numbers back to v15): doppler run --project ava-prod --config prd -- node p10-promote.mjs repin 15
+  (run in C:\Users\offic\aic-tuning\agent-build-2026-10-29\; v15 is untouched)
+Spend: $15.77 in Retell web calls (56 calls, 95 min) + 4 text playground runs (not itemized). Cap $25.
+
+WHAT'S NEXT
+1. Your three check calls from your cell. Ask me and I'll run the watcher again (it re-pins v15 by itself on a slow turn or a talk-over).
+2. Session B: re-pin the 8930 handoff_to_desk from AIC v14 to v16. Session A is done, so B's held v54 promote can go.
+3. Grok patch brief (words, not mine): INTAKE has no drop-off field; INTAKE reads the caller ID aloud against the "never say a
+   number" rule; a greeting edge for "what is this" would protect the questions door on other models.
+4. Next speed step, if wanted: agent responsiveness above 0.8, with the slow-talker call as the guard.
+
+GOTCHAS
+- Dynamic responsiveness was the hidden second: on, it slowed every turn after a pause by ~1 s. Off, the gap is a flat ~1.8 s.
+- Claude Code's memory reaper stopped two background runs (the Dell's RAM, not its disk). The call loops survived and kept dialing until I stopped them.
+- Claude 5.5 Sonnet's extraction hung 2 of 3 times. Grok Voice 3.0 never speaks the fixed lines.
+- Text consent is still its own question: the rail texts the trip sheet only on a yes. The turns leaving the trip are the slow ones (~2.5–3.0 s).
+- The proof call sent you an owner email + owner text (OWNER-ALERT is live now) and queued a caller text to the fake 414-555-0100.
+- The flight-tracking line was in no retired node. The only one in v15 is the readback's "We'll be tracking your flight."
+- The /try call-start can only reach 0019's own agent (3 calls an hour), so test calls went straight to Retell.
+
+DONE (again)
+| Step | Result | Evidence |
+| 0 Preflight | 0019 + …8976 on agent_9ebb v15; rollback saved; greeting hashed; models + harness found | PASTE\rollback\aic-0019-v15-{agent,flow}-2026-10-29.json |
+| 1 Build | INTAKE + EXTRACT-ONCE; 52 retired; 2 prompt edits; 27 overrides off; reminder 6 s; INTAKE 491 tokens | report BUILD |
+| 1f Test agents | A Terra · B Sol · C Sonnet · D GPT 4.1 · E Grok Voice 3.0, ZZ sink | ops/tuning/aic-intake-v2-*.json |
+| 2 Clips | 25 SAPI clips + T4 slow line | tests.mjs |
+| 3 Bake-off | 20 calls; Terra + 2 fixes (your pick) | report MODELS |
+| 4 Confirm | 15 calls: p50 1.79 s, p95 2.46 s, max 2.91 s, 15/15 | report CONFIRMATION |
+| 5 S2S | Grok Voice 3.0 not usable on this flow | call_4df14734507559f6d2497cad3f9 |
+| 6 Promote | v16 live on 0019 + …8976 since 00:47:02Z (7:47 PM CT); proof 1.78 / 2.19 s | call_5a79933695d439db813b68468d2 |
+| 7 Check calls | none arrived in 30 min | p11-watch.mjs |
+| 8 Close | report, board, masked calls pushed; /hq live | 83da043 |
+
+BEFORE → AFTER
+| | Phase 0 (v15) | v16 |
+| First word, intake turns p50 / p95 | 4.03 s / 6.01 s | 1.79 s / 2.46 s |
+| Questions answered in one line, then back to the trip | 0% | 9/9 (100%) |
+| "What's the airport in Denver?" | ignored → "How many passengers and how many bags?" | "Denver's commercial airport is Denver International Airport. What is your pickup address?" |
+| Flow tokens (reachable) | 29,195 | 17,900 |
+| Model | GPT 4.1 fast | GPT 6.1 Terra fast |
+```
