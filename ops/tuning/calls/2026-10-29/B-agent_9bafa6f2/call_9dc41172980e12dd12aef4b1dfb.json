@@ -1,0 +1,2422 @@
+{
+ "_note": "READ ONLY · masked · AIC-AGENT-BUILD-v1 · B T1 bake · SPOILED by a harness bug (short agent turn not detected), re-run",
+ "agentKey": "B",
+ "test": "T1",
+ "label": "bake",
+ "harness_events": [
+  "[20.3s] agent turn done (idle) — 12.2 s audio · heard \"AI chauffeur, the premium reservation system for limousine, black car, and chauffeur transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try? Airport, point to point, or by the hour?\" · asks [triptype]",
+  "[20.6s] caller: airport (1.4 s) — next scripted line",
+  "[28.3s] agent turn done (idle) — 1.5 s audio · heard \"Are you landing or flying out?\" · asks [direction]",
+  "[28.6s] caller: flyingout (1.6 s) — next scripted line",
+  "[45.9s] agent turn done (idle) — 3.0 s audio · heard \"What's your pickup address? Whenever you're ready, we can continue with the trip.\" · asks [pickup]",
+  "[46.2s] caller: qdenver (2.3 s) — scripted question",
+  "[57.7s] agent turn done (idle) — 3.6 s audio · heard \"Denver's main airport is Denver International Airport. What's your pick up address?\" · asks [pickup]",
+  "[58.0s] caller: main (3.2 s) — next scripted line",
+  "[79.4s] agent turn done (idle) — 3.2 s audio · heard \"What date would you like to be picked up? We can continue with the trip.\" · asks [datetime]",
+  "[79.8s] caller: tomorrow6 (2.3 s) — next scripted line",
+  "[89.4s] agent turn done (idle) — 2.6 s audio · heard \"Denver International Airport, which airline are you flying with?\" · asks [flight]",
+  "[89.7s] caller: united (3.2 s) — next scripted line",
+  "[101.1s] agent turn done (idle) — 2.6 s audio · heard \"We'll be tracking your flight. How many passengers and bags will you have?\" · asks [paxbags]",
+  "[101.4s] caller: pax2bags3 (3.0 s) — next scripted line",
+  "[113.1s] agent turn done (idle) — 4.2 s audio · heard \"I'd suggest requesting an SUV for two passengers and three bags. Would you prefer that?\" · asks [paxbags,vehicle]",
+  "[113.4s] caller: suv (2.0 s) — next scripted line",
+  "[156.7s] agent turn done (ended) — 1.0 s audio · heard \"What's the passenger's name? You\" · asks [name]"
+ ],
+ "harness_heard": [
+  {
+   "at": "20.3",
+   "heard": "AI chauffeur, the premium reservation system for limousine, black car, and chauffeur transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try? Airport, point to point, or by the hour?",
+   "asked": [
+    "triptype"
+   ]
+  },
+  {
+   "at": "28.3",
+   "heard": "Are you landing or flying out?",
+   "asked": [
+    "direction"
+   ]
+  },
+  {
+   "at": "45.9",
+   "heard": "What's your pickup address? Whenever you're ready, we can continue with the trip.",
+   "asked": [
+    "pickup"
+   ]
+  },
+  {
+   "at": "57.7",
+   "heard": "Denver's main airport is Denver International Airport. What's your pick up address?",
+   "asked": [
+    "pickup"
+   ]
+  },
+  {
+   "at": "79.4",
+   "heard": "What date would you like to be picked up? We can continue with the trip.",
+   "asked": [
+    "datetime"
+   ]
+  },
+  {
+   "at": "89.4",
+   "heard": "Denver International Airport, which airline are you flying with?",
+   "asked": [
+    "flight"
+   ]
+  },
+  {
+   "at": "101.1",
+   "heard": "We'll be tracking your flight. How many passengers and bags will you have?",
+   "asked": [
+    "paxbags"
+   ]
+  },
+  {
+   "at": "113.1",
+   "heard": "I'd suggest requesting an SUV for two passengers and three bags. Would you prefer that?",
+   "asked": [
+    "paxbags",
+    "vehicle"
+   ]
+  },
+  {
+   "at": "156.7",
+   "heard": "What's the passenger's name? You",
+   "asked": [
+    "name"
+   ]
+  }
+ ],
+ "call": {
+  "call_id": "call_9dc41172980e12dd12aef4b1dfb",
+  "call_type": "web_call",
+  "agent_id": "agent_9bafa6f2c2805183ebc456aeaa",
+  "agent_version": 1,
+  "agent_name": "AIC-TEST intake-v2 B",
+  "retell_llm_dynamic_variables": {
+   "channel": "phone",
+   "is_demo": "true",
+   "slot_1": "tomorrow at 8 AM Central",
+   "slot_1_iso": "2026-10-30T08:00:00-05:00",
+   "slot_2": "tomorrow at 8:30 AM Central",
+   "slot_2_iso": "2026-10-30T08:30:00-05:00",
+   "team_free_now": "false",
+   "user_number": "…0100",
+   "zz_sim_phone": "false"
+  },
+  "collected_dynamic_variables": {
+   "after_plain": "resume",
+   "alert_sent": "false",
+   "answer_unfinished": "false",
+   "appointment_booked": "false",
+   "appointment_time": "",
+   "asked_asks": "intake",
+   "asked_gate": "none",
+   "book_return": "d1",
+   "booking_state": "not booked",
+   "callback_when": "during business hours",
+   "caller_phone": "…0100",
+   "channel": "phone",
+   "co_passes": "0",
+   "compose_peek": "false",
+   "contact_done": "false",
+   "current_node": "INTAKE (prompt-driven trip intake)",
+   "d2_entry": "none",
+   "d2_mode": "full",
+   "d2_quick_count": "0",
+   "door_now": "demo",
+   "greeting_cut": "false",
+   "has_caller_number": "true",
+   "hau_asked": "false",
+   "hau_ret": "sales",
+   "heard_about_us": "",
+   "hold_count": "0",
+   "is_demo": "true",
+   "n06_passes": "0",
+   "no_text": "false",
+   "notice_done": "false",
+   "nudge_count": "0",
+   "offer_passes": "0",
+   "pending_name": "",
+   "pending_node": "",
+   "piece_ask": "",
+   "piece_ret": "n03",
+   "piece_wait": "false",
+   "previous_node": "INTAKE-ENTER (trip in progress, for the questions door)",
+   "readback_passes": "0",
+   "requery_count": "0",
+   "sales_intent": "none",
+   "sms_consent": "",
+   "text_pitch_done": "false",
+   "transfer_open": "false",
+   "transfer_state": "not tried",
+   "trip_started": "false",
+   "wants_connect": "false"
+  },
+  "call_status": "ended",
+  "start_timestamp": 1793314403954,
+  "end_timestamp": 1793314555579,
+  "duration_ms": 151625,
+  "transcript": "Agent: AI Chauffeur, the premium reservation system for limousine, black car and chauffeured transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try — airport, point to point, or by the hour.\nUser: Airport. \nAgent: Are you landing or flying out?\nUser: Flying out. \nAgent: What’s your pickup address?\nAgent: Whenever you're ready, we can continue with the trip.\nUser: What's the airport in Denver? \nAgent: Denver’s main airport is Denver International Airport. What’s your pickup address?\nUser: One twenty three Main Street in Denver. \nAgent: What date would you like to be picked up?\nAgent: Whenever you're ready, we can continue with the trip.\nUser: Tomorrow at six AM. \nAgent: Denver International Airport. Which airline are you flying with?\nUser: United one two three four at eight fifteen. \nAgent: We'll be tracking your flight. How many passengers and bags will you have?\nUser: Two passengers, three bags. \nAgent: I’d suggest requesting an SUV for two passengers and three bags. Would you prefer that?\nUser: SUV is fine. \nAgent: What’s the passenger’s name?\n",
+  "transcript_object": [
+   {
+    "role": "agent",
+    "content": "AI Chauffeur, the premium reservation system for limousine, black car and chauffeured transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try — airport, point to point, or by the hour.",
+    "words": [
+     {
+      "word": "AI ",
+      "start": 0.20648876953125,
+      "end": 0.454
+     },
+     {
+      "word": "Chauffeur, ",
+      "start": 0.4540068359375,
+      "end": 1.174
+     },
+     {
+      "word": "the ",
+      "start": 1.404477294921875,
+      "end": 1.494
+     },
+     {
+      "word": "premium ",
+      "start": 1.494,
+      "end": 1.894
+     },
+     {
+      "word": "reservation ",
+      "start": 1.974,
+      "end": 2.454
+     },
+     {
+      "word": "system ",
+      "start": 2.454,
+      "end": 2.854
+     },
+     {
+      "word": "for ",
+      "start": 2.934000244140625,
+      "end": 3.014
+     },
+     {
+      "word": "limousine, ",
+      "start": 3.014,
+      "end": 3.654
+     },
+     {
+      "word": "black ",
+      "start": 3.81370458984375,
+      "end": 4.134
+     },
+     {
+      "word": "car ",
+      "start": 4.214,
+      "end": 4.534
+     },
+     {
+      "word": "and ",
+      "start": 4.5643525390625,
+      "end": 4.774
+     },
+     {
+      "word": "chauffeured ",
+      "start": 4.854,
+      "end": 5.254
+     },
+     {
+      "word": "transportation. ",
+      "start": 5.254,
+      "end": 6.054
+     },
+     {
+      "word": "This ",
+      "start": 6.186301513671875,
+      "end": 6.454
+     },
+     {
+      "word": "is ",
+      "start": 6.534,
+      "end": 6.534
+     },
+     {
+      "word": "the ",
+      "start": 6.614,
+      "end": 6.614
+     },
+     {
+      "word": "demo ",
+      "start": 6.614,
+      "end": 6.854
+     },
+     {
+      "word": "line. ",
+      "start": 6.854,
+      "end": 7.174
+     },
+     {
+      "word": "Play ",
+      "start": 7.388523193359375,
+      "end": 7.574
+     },
+     {
+      "word": "the ",
+      "start": 7.654,
+      "end": 7.654
+     },
+     {
+      "word": "customer ",
+      "start": 7.654,
+      "end": 8.294
+     },
+     {
+      "word": "and ",
+      "start": 8.294,
+      "end": 8.454
+     },
+     {
+      "word": "request ",
+      "start": 8.534,
+      "end": 8.774
+     },
+     {
+      "word": "a ",
+      "start": 8.854,
+      "end": 8.854
+     },
+     {
+      "word": "trip. ",
+      "start": 8.854,
+      "end": 9.174
+     },
+     {
+      "word": "Calls ",
+      "start": 9.374259033203124,
+      "end": 9.734
+     },
+     {
+      "word": "are ",
+      "start": 9.814,
+      "end": 9.814
+     },
+     {
+      "word": "recorded ",
+      "start": 9.814,
+      "end": 10.374
+     },
+     {
+      "word": "and ",
+      "start": 10.454,
+      "end": 10.534
+     },
+     {
+      "word": "transcribed. ",
+      "start": 10.534,
+      "end": 11.254
+     },
+     {
+      "word": "Which ",
+      "start": 11.39718896484375,
+      "end": 11.574
+     },
+     {
+      "word": "trip ",
+      "start": 11.654,
+      "end": 11.814
+     },
+     {
+      "word": "would ",
+      "start": 11.894,
+      "end": 11.974
+     },
+     {
+      "word": "you ",
+      "start": 12.054,
+      "end": 12.054
+     },
+     {
+      "word": "like ",
+      "start": 12.054,
+      "end": 12.214
+     },
+     {
+      "word": "to ",
+      "start": 12.294,
+      "end": 12.294
+     },
+     {
+      "word": "try ",
+      "start": 12.294,
+      "end": 12.494
+     },
+     {
+      "word": "— ",
+      "start": 12.494,
+      "end": 12.694
+     },
+     {
+      "word": "airport, ",
+      "start": 12.8900810546875,
+      "end": 13.494
+     },
+     {
+      "word": "point ",
+      "start": 13.653906005859374,
+      "end": 13.894
+     },
+     {
+      "word": "to ",
+      "start": 13.974,
+      "end": 13.974
+     },
+     {
+      "word": "point, ",
+      "start": 14.054,
+      "end": 14.374
+     },
+     {
+      "word": "or ",
+      "start": 14.508091064453126,
+      "end": 14.614
+     },
+     {
+      "word": "by ",
+      "start": 14.694,
+      "end": 14.774
+     },
+     {
+      "word": "the ",
+      "start": 14.854,
+      "end": 14.934
+     },
+     {
+      "word": "hour.",
+      "start": 14.934,
+      "end": 15.254
+     }
+    ],
+    "metadata": {
+     "response_id": 1
+    }
+   },
+   {
+    "role": "user",
+    "content": "Airport. ",
+    "words": [
+     {
+      "word": "Airport. ",
+      "start": 19.499001,
+      "end": 19.979000999999997
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Are you landing or flying out?",
+    "words": [
+     {
+      "word": "Are ",
+      "start": 22.774602294921873,
+      "end": 22.866
+     },
+     {
+      "word": "you ",
+      "start": 22.946,
+      "end": 23.026
+     },
+     {
+      "word": "landing ",
+      "start": 23.106,
+      "end": 23.506
+     },
+     {
+      "word": "or ",
+      "start": 23.506020263671875,
+      "end": 23.666
+     },
+     {
+      "word": "flying ",
+      "start": 23.746,
+      "end": 23.986
+     },
+     {
+      "word": "out?",
+      "start": 24.066000244140625,
+      "end": 24.306
+     }
+    ],
+    "metadata": {
+     "response_id": 3
+    }
+   },
+   {
+    "role": "user",
+    "content": "Flying out. ",
+    "words": [
+     {
+      "word": "Flying ",
+      "start": 27.349002,
+      "end": 27.909001
+     },
+     {
+      "word": "out. ",
+      "start": 27.909001,
+      "end": 28.149001
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "What’s your pickup address?",
+    "words": [
+     {
+      "word": "What’s ",
+      "start": 29.930064208984376,
+      "end": 30.18
+     },
+     {
+      "word": "your ",
+      "start": 30.26,
+      "end": 30.26
+     },
+     {
+      "word": "pickup ",
+      "start": 30.34,
+      "end": 30.58
+     },
+     {
+      "word": "address?",
+      "start": 30.58,
+      "end": 31.14
+     }
+    ],
+    "metadata": {
+     "response_id": 4
+    }
+   },
+   {
+    "role": "agent",
+    "content": "Whenever you're ready, we can continue with the trip.",
+    "words": [
+     {
+      "word": "Whenever ",
+      "start": 38.644638671875,
+      "end": 39.046
+     },
+     {
+      "word": "you're ",
+      "start": 39.126,
+      "end": 39.206
+     },
+     {
+      "word": "ready, ",
+      "start": 39.206,
+      "end": 39.606
+     },
+     {
+      "word": "we ",
+      "start": 39.77212280273437,
+      "end": 40.006
+     },
+     {
+      "word": "can ",
+      "start": 40.086,
+      "end": 40.166
+     },
+     {
+      "word": "continue ",
+      "start": 40.166,
+      "end": 40.566
+     },
+     {
+      "word": "with ",
+      "start": 40.646,
+      "end": 40.646
+     },
+     {
+      "word": "the ",
+      "start": 40.726,
+      "end": 40.726
+     },
+     {
+      "word": "trip.",
+      "start": 40.806,
+      "end": 41.046
+     }
+    ],
+    "metadata": {
+     "response_id": 5
+    }
+   },
+   {
+    "role": "user",
+    "content": "What's the airport in Denver? ",
+    "words": [
+     {
+      "word": "What's ",
+      "start": 45.068999999999996,
+      "end": 45.549
+     },
+     {
+      "word": "the ",
+      "start": 45.549,
+      "end": 45.709002
+     },
+     {
+      "word": "airport ",
+      "start": 45.709002,
+      "end": 46.029002
+     },
+     {
+      "word": "in ",
+      "start": 46.029002,
+      "end": 46.269
+     },
+     {
+      "word": "Denver? ",
+      "start": 46.269,
+      "end": 46.589
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Denver’s main airport is Denver International Airport. What’s your pickup address?",
+    "words": [
+     {
+      "word": "Denver’s ",
+      "start": 48.37603515625,
+      "end": 48.861
+     },
+     {
+      "word": "main ",
+      "start": 48.861,
+      "end": 49.021
+     },
+     {
+      "word": "airport ",
+      "start": 49.10100024414062,
+      "end": 49.581
+     },
+     {
+      "word": "is ",
+      "start": 49.58110327148437,
+      "end": 49.901
+     },
+     {
+      "word": "Denver ",
+      "start": 49.98100439453125,
+      "end": 50.301
+     },
+     {
+      "word": "International ",
+      "start": 50.301000244140624,
+      "end": 50.861
+     },
+     {
+      "word": "Airport.",
+      "start": 50.861,
+      "end": 51.341
+     },
+     {
+      "word": " What’s ",
+      "start": 51.53310473632813,
+      "end": 51.821
+     },
+     {
+      "word": "your ",
+      "start": 51.901,
+      "end": 51.901
+     },
+     {
+      "word": "pickup ",
+      "start": 51.981,
+      "end": 52.141
+     },
+     {
+      "word": "address?",
+      "start": 52.141,
+      "end": 52.781
+     }
+    ],
+    "metadata": {
+     "response_id": 6
+    }
+   },
+   {
+    "role": "user",
+    "content": "One twenty three Main Street in Denver. ",
+    "words": [
+     {
+      "word": "One ",
+      "start": 56.848998,
+      "end": 57.248999999999995
+     },
+     {
+      "word": "twenty ",
+      "start": 57.248999999999995,
+      "end": 57.648997
+     },
+     {
+      "word": "three ",
+      "start": 57.648997,
+      "end": 58.049
+     },
+     {
+      "word": "Main ",
+      "start": 58.049,
+      "end": 58.369
+     },
+     {
+      "word": "Street ",
+      "start": 58.369,
+      "end": 58.689
+     },
+     {
+      "word": "in ",
+      "start": 58.689,
+      "end": 58.848998
+     },
+     {
+      "word": "Denver. ",
+      "start": 58.848998,
+      "end": 59.168997999999995
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "What date would you like to be picked up?",
+    "words": [
+     {
+      "word": "What ",
+      "start": 61.369263427734374,
+      "end": 61.721
+     },
+     {
+      "word": "date ",
+      "start": 61.801,
+      "end": 61.881
+     },
+     {
+      "word": "would ",
+      "start": 61.961,
+      "end": 62.041
+     },
+     {
+      "word": "you ",
+      "start": 62.121,
+      "end": 62.121
+     },
+     {
+      "word": "like ",
+      "start": 62.121,
+      "end": 62.281
+     },
+     {
+      "word": "to ",
+      "start": 62.361,
+      "end": 62.361
+     },
+     {
+      "word": "be ",
+      "start": 62.441,
+      "end": 62.521
+     },
+     {
+      "word": "picked ",
+      "start": 62.601,
+      "end": 62.761
+     },
+     {
+      "word": "up?",
+      "start": 62.761,
+      "end": 63.081
+     }
+    ],
+    "metadata": {
+     "response_id": 7
+    }
+   },
+   {
+    "role": "agent",
+    "content": "Whenever you're ready, we can continue with the trip.",
+    "words": [
+     {
+      "word": "Whenever ",
+      "start": 70.3596826171875,
+      "end": 70.685
+     },
+     {
+      "word": "you're ",
+      "start": 70.765,
+      "end": 70.845
+     },
+     {
+      "word": "ready, ",
+      "start": 70.845,
+      "end": 71.405
+     },
+     {
+      "word": "we ",
+      "start": 71.49172509765626,
+      "end": 71.725
+     },
+     {
+      "word": "can ",
+      "start": 71.805,
+      "end": 71.885
+     },
+     {
+      "word": "continue ",
+      "start": 71.885,
+      "end": 72.285
+     },
+     {
+      "word": "with ",
+      "start": 72.365,
+      "end": 72.445
+     },
+     {
+      "word": "the ",
+      "start": 72.525,
+      "end": 72.525
+     },
+     {
+      "word": "trip.",
+      "start": 72.525,
+      "end": 72.845
+     }
+    ],
+    "metadata": {
+     "response_id": 8
+    }
+   },
+   {
+    "role": "user",
+    "content": "Tomorrow at six AM. ",
+    "words": [
+     {
+      "word": "Tomorrow ",
+      "start": 78.729,
+      "end": 79.129
+     },
+     {
+      "word": "at ",
+      "start": 79.129,
+      "end": 79.44900000000001
+     },
+     {
+      "word": "six ",
+      "start": 79.44900000000001,
+      "end": 79.609004
+     },
+     {
+      "word": "AM. ",
+      "start": 79.609004,
+      "end": 80.009005
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Denver International Airport. Which airline are you flying with?",
+    "words": [
+     {
+      "word": "Denver ",
+      "start": 81.28056689453125,
+      "end": 81.779
+     },
+     {
+      "word": "International ",
+      "start": 81.77900024414062,
+      "end": 82.419
+     },
+     {
+      "word": "Airport.",
+      "start": 82.41900024414062,
+      "end": 83.139
+     },
+     {
+      "word": " Which ",
+      "start": 83.26478149414062,
+      "end": 83.459
+     },
+     {
+      "word": "airline ",
+      "start": 83.53900463867187,
+      "end": 83.779
+     },
+     {
+      "word": "are ",
+      "start": 83.859,
+      "end": 83.859
+     },
+     {
+      "word": "you ",
+      "start": 83.859,
+      "end": 83.939
+     },
+     {
+      "word": "flying ",
+      "start": 84.019,
+      "end": 84.259
+     },
+     {
+      "word": "with?",
+      "start": 84.339,
+      "end": 84.659
+     }
+    ],
+    "metadata": {
+     "response_id": 9
+    }
+   },
+   {
+    "role": "user",
+    "content": "United one two three four at eight fifteen. ",
+    "words": [
+     {
+      "word": "United ",
+      "start": 88.739,
+      "end": 89.21900000000001
+     },
+     {
+      "word": "one ",
+      "start": 89.21900000000001,
+      "end": 89.459
+     },
+     {
+      "word": "two ",
+      "start": 89.459,
+      "end": 89.69900000000001
+     },
+     {
+      "word": "three ",
+      "start": 89.69900000000001,
+      "end": 89.93900000000001
+     },
+     {
+      "word": "four ",
+      "start": 89.93900000000001,
+      "end": 90.17899600000001
+     },
+     {
+      "word": "at ",
+      "start": 90.17899600000001,
+      "end": 90.41900000000001
+     },
+     {
+      "word": "eight ",
+      "start": 90.41900000000001,
+      "end": 90.659
+     },
+     {
+      "word": "fifteen. ",
+      "start": 90.659,
+      "end": 90.979
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "We'll be tracking your flight. How many passengers and bags will you have?",
+    "words": [
+     {
+      "word": "We'll ",
+      "start": 92.74023486328124,
+      "end": 92.919
+     },
+     {
+      "word": "be ",
+      "start": 92.999,
+      "end": 92.999
+     },
+     {
+      "word": "tracking ",
+      "start": 93.079,
+      "end": 93.399
+     },
+     {
+      "word": "your ",
+      "start": 93.399,
+      "end": 93.479
+     },
+     {
+      "word": "flight.",
+      "start": 93.559,
+      "end": 93.879
+     },
+     {
+      "word": " How ",
+      "start": 94.2144697265625,
+      "end": 94.359
+     },
+     {
+      "word": "many ",
+      "start": 94.359,
+      "end": 94.599
+     },
+     {
+      "word": "passengers ",
+      "start": 94.599,
+      "end": 95.159
+     },
+     {
+      "word": "and ",
+      "start": 95.239,
+      "end": 95.239
+     },
+     {
+      "word": "bags ",
+      "start": 95.319,
+      "end": 95.639
+     },
+     {
+      "word": "will ",
+      "start": 95.639,
+      "end": 95.719
+     },
+     {
+      "word": "you ",
+      "start": 95.799,
+      "end": 95.879
+     },
+     {
+      "word": "have?",
+      "start": 95.959,
+      "end": 96.119
+     }
+    ],
+    "metadata": {
+     "response_id": 10
+    }
+   },
+   {
+    "role": "user",
+    "content": "Two passengers, three bags. ",
+    "words": [
+     {
+      "word": "Two ",
+      "start": 100.319,
+      "end": 100.55900000000001
+     },
+     {
+      "word": "passengers, ",
+      "start": 100.55900000000001,
+      "end": 101.119
+     },
+     {
+      "word": "three ",
+      "start": 101.629,
+      "end": 101.94900000000001
+     },
+     {
+      "word": "bags. ",
+      "start": 101.94900000000001,
+      "end": 102.269
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "I’d suggest requesting an SUV for two passengers and three bags. Would you prefer that?",
+    "words": [
+     {
+      "word": "I’d ",
+      "start": 103.98040771484375,
+      "end": 104.143
+     },
+     {
+      "word": "suggest ",
+      "start": 104.223,
+      "end": 104.623
+     },
+     {
+      "word": "requesting ",
+      "start": 104.623,
+      "end": 105.023
+     },
+     {
+      "word": "an ",
+      "start": 105.103,
+      "end": 105.183
+     },
+     {
+      "word": "SUV ",
+      "start": 105.18300048828125,
+      "end": 105.743
+     },
+     {
+      "word": "for ",
+      "start": 105.82300024414063,
+      "end": 105.903
+     },
+     {
+      "word": "two ",
+      "start": 105.983,
+      "end": 106.143
+     },
+     {
+      "word": "passengers ",
+      "start": 106.143,
+      "end": 106.863
+     },
+     {
+      "word": "and ",
+      "start": 106.863,
+      "end": 107.103
+     },
+     {
+      "word": "three ",
+      "start": 107.103,
+      "end": 107.343
+     },
+     {
+      "word": "bags.",
+      "start": 107.423,
+      "end": 107.983
+     },
+     {
+      "word": " Would ",
+      "start": 108.10269506835938,
+      "end": 108.303
+     },
+     {
+      "word": "you ",
+      "start": 108.383,
+      "end": 108.383
+     },
+     {
+      "word": "prefer ",
+      "start": 108.383,
+      "end": 108.623
+     },
+     {
+      "word": "that?",
+      "start": 108.703,
+      "end": 108.943
+     }
+    ],
+    "metadata": {
+     "response_id": 11
+    }
+   },
+   {
+    "role": "user",
+    "content": "SUV is fine. ",
+    "words": [
+     {
+      "word": "SUV ",
+      "start": 112.349,
+      "end": 112.909
+     },
+     {
+      "word": "is ",
+      "start": 112.909,
+      "end": 113.229
+     },
+     {
+      "word": "fine. ",
+      "start": 113.229,
+      "end": 113.46900500000001
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "What’s the passenger’s name?",
+    "words": [
+     {
+      "word": "What’s ",
+      "start": 114.984576171875,
+      "end": 115.246
+     },
+     {
+      "word": "the ",
+      "start": 115.326,
+      "end": 115.326
+     },
+     {
+      "word": "passenger’s ",
+      "start": 115.326,
+      "end": 115.886
+     },
+     {
+      "word": "name?",
+      "start": 115.966,
+      "end": 116.126
+     }
+    ],
+    "metadata": {
+     "response_id": 12
+    }
+   }
+  ],
+  "transcript_with_tool_calls": [
+   {
+    "role": "node_transition",
+    "former_node_id": "begin",
+    "former_node_name": "begin",
+    "new_node_id": "ch_split",
+    "new_node_name": "CH-SPLIT",
+    "time_sec": 0,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_invocation",
+    "tool_call_id": "tool_call_1352b2",
+    "name": "CH-SPLIT",
+    "arguments": "{}",
+    "time_sec": 0,
+    "type": "code"
+   },
+   {
+    "role": "tool_call_result",
+    "tool_call_id": "tool_call_1352b2",
+    "successful": true,
+    "content": "{\"channel\":\"phone\",\"is_demo\":\"true\",\"sales_intent\":\"none\",\"appointment_booked\":\"false\",\"has_caller_number\":\"true\",\"caller_phone\":\"…0100\",\"contact_done\":\"false\",\"nudge_count\":\"0\",\"n06_passes\":\"0\",\"readback_passes\":\"0\",\"offer_passes\":\"0\",\"requery_count\":\"0\",\"asked_asks\":\"none\",\"asked_gate\":\"none\",\"door_now\":\"demo\",\"d2_entry\":\"none\",\"d2_mode\":\"full\",\"d2_quick_count\":\"0\",\"pending_node\":\"\",\"pending_name\":\"\",\"trip_started\":\"false\",\"transfer_open\":\"false\",\"transfer_state\":\"not tried\",\"callback_when\":\"during business hours\",\"booking_state\":\"not booked\",\"appointment_time\":\"\",\"book_return\":\"d1\",\"wants_connect\":\"false\",\"alert_sent\":\"false\",\"hau_asked\":\"false\",\"hau_ret\":\"sales\",\"heard_about_us\":\"\",\"piece_wait\":\"false\",\"hold_count\":\"0\",\"answer_unfinished\":\"false\",\"piece_ask\":\"\",\"piece_ret\":\"n03\",\"notice_done\":\"false\",\"greeting_cut\":\"false\",\"text_pitch_done\":\"false\",\"no_text\":\"false\",\"sms_consent\":\"\",\"co_passes\":\"0\",\"compose_peek\":\"false\",\"after_plain\":\"resume\"}",
+    "time_sec": 0.024
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "ch_split",
+    "former_node_name": "CH-SPLIT",
+    "new_node_id": "n01_p",
+    "new_node_name": "N01-P Greeting (phone)",
+    "time_sec": 0.026,
+    "transition_type": "normal"
+   },
+   {
+    "role": "agent",
+    "content": "AI Chauffeur, the premium reservation system for limousine, black car and chauffeured transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try — airport, point to point, or by the hour.",
+    "words": [
+     {
+      "word": "AI ",
+      "start": 0.20648876953125,
+      "end": 0.454
+     },
+     {
+      "word": "Chauffeur, ",
+      "start": 0.4540068359375,
+      "end": 1.174
+     },
+     {
+      "word": "the ",
+      "start": 1.404477294921875,
+      "end": 1.494
+     },
+     {
+      "word": "premium ",
+      "start": 1.494,
+      "end": 1.894
+     },
+     {
+      "word": "reservation ",
+      "start": 1.974,
+      "end": 2.454
+     },
+     {
+      "word": "system ",
+      "start": 2.454,
+      "end": 2.854
+     },
+     {
+      "word": "for ",
+      "start": 2.934000244140625,
+      "end": 3.014
+     },
+     {
+      "word": "limousine, ",
+      "start": 3.014,
+      "end": 3.654
+     },
+     {
+      "word": "black ",
+      "start": 3.81370458984375,
+      "end": 4.134
+     },
+     {
+      "word": "car ",
+      "start": 4.214,
+      "end": 4.534
+     },
+     {
+      "word": "and ",
+      "start": 4.5643525390625,
+      "end": 4.774
+     },
+     {
+      "word": "chauffeured ",
+      "start": 4.854,
+      "end": 5.254
+     },
+     {
+      "word": "transportation. ",
+      "start": 5.254,
+      "end": 6.054
+     },
+     {
+      "word": "This ",
+      "start": 6.186301513671875,
+      "end": 6.454
+     },
+     {
+      "word": "is ",
+      "start": 6.534,
+      "end": 6.534
+     },
+     {
+      "word": "the ",
+      "start": 6.614,
+      "end": 6.614
+     },
+     {
+      "word": "demo ",
+      "start": 6.614,
+      "end": 6.854
+     },
+     {
+      "word": "line. ",
+      "start": 6.854,
+      "end": 7.174
+     },
+     {
+      "word": "Play ",
+      "start": 7.388523193359375,
+      "end": 7.574
+     },
+     {
+      "word": "the ",
+      "start": 7.654,
+      "end": 7.654
+     },
+     {
+      "word": "customer ",
+      "start": 7.654,
+      "end": 8.294
+     },
+     {
+      "word": "and ",
+      "start": 8.294,
+      "end": 8.454
+     },
+     {
+      "word": "request ",
+      "start": 8.534,
+      "end": 8.774
+     },
+     {
+      "word": "a ",
+      "start": 8.854,
+      "end": 8.854
+     },
+     {
+      "word": "trip. ",
+      "start": 8.854,
+      "end": 9.174
+     },
+     {
+      "word": "Calls ",
+      "start": 9.374259033203124,
+      "end": 9.734
+     },
+     {
+      "word": "are ",
+      "start": 9.814,
+      "end": 9.814
+     },
+     {
+      "word": "recorded ",
+      "start": 9.814,
+      "end": 10.374
+     },
+     {
+      "word": "and ",
+      "start": 10.454,
+      "end": 10.534
+     },
+     {
+      "word": "transcribed. ",
+      "start": 10.534,
+      "end": 11.254
+     },
+     {
+      "word": "Which ",
+      "start": 11.39718896484375,
+      "end": 11.574
+     },
+     {
+      "word": "trip ",
+      "start": 11.654,
+      "end": 11.814
+     },
+     {
+      "word": "would ",
+      "start": 11.894,
+      "end": 11.974
+     },
+     {
+      "word": "you ",
+      "start": 12.054,
+      "end": 12.054
+     },
+     {
+      "word": "like ",
+      "start": 12.054,
+      "end": 12.214
+     },
+     {
+      "word": "to ",
+      "start": 12.294,
+      "end": 12.294
+     },
+     {
+      "word": "try ",
+      "start": 12.294,
+      "end": 12.494
+     },
+     {
+      "word": "— ",
+      "start": 12.494,
+      "end": 12.694
+     },
+     {
+      "word": "airport, ",
+      "start": 12.8900810546875,
+      "end": 13.494
+     },
+     {
+      "word": "point ",
+      "start": 13.653906005859374,
+      "end": 13.894
+     },
+     {
+      "word": "to ",
+      "start": 13.974,
+      "end": 13.974
+     },
+     {
+      "word": "point, ",
+      "start": 14.054,
+      "end": 14.374
+     },
+     {
+      "word": "or ",
+      "start": 14.508091064453126,
+      "end": 14.614
+     },
+     {
+      "word": "by ",
+      "start": 14.694,
+      "end": 14.774
+     },
+     {
+      "word": "the ",
+      "start": 14.854,
+      "end": 14.934
+     },
+     {
+      "word": "hour.",
+      "start": 14.934,
+      "end": 15.254
+     }
+    ],
+    "metadata": {
+     "response_id": 1
+    }
+   },
+   {
+    "role": "user",
+    "content": "Airport. ",
+    "words": [
+     {
+      "word": "Airport. ",
+      "start": 19.499001,
+      "end": 19.979000999999997
+     }
+    ]
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "n01_p",
+    "former_node_name": "N01-P Greeting (phone)",
+    "new_node_id": "intake_enter",
+    "new_node_name": "INTAKE-ENTER (trip in progress, for the questions door)",
+    "time_sec": 21.641,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_invocation",
+    "tool_call_id": "tool_call_057ce9",
+    "name": "INTAKE-ENTER (trip in progress, for the questions door)",
+    "arguments": "{}",
+    "time_sec": 21.641,
+    "type": "code"
+   },
+   {
+    "role": "tool_call_result",
+    "tool_call_id": "tool_call_057ce9",
+    "successful": true,
+    "content": "{\"asked_asks\":\"intake\"}",
+    "time_sec": 21.662
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "intake_enter",
+    "former_node_name": "INTAKE-ENTER (trip in progress, for the questions door)",
+    "new_node_id": "intake",
+    "new_node_name": "INTAKE (prompt-driven trip intake)",
+    "time_sec": 21.663,
+    "transition_type": "normal"
+   },
+   {
+    "role": "agent",
+    "content": "Are you landing or flying out?",
+    "words": [
+     {
+      "word": "Are ",
+      "start": 22.774602294921873,
+      "end": 22.866
+     },
+     {
+      "word": "you ",
+      "start": 22.946,
+      "end": 23.026
+     },
+     {
+      "word": "landing ",
+      "start": 23.106,
+      "end": 23.506
+     },
+     {
+      "word": "or ",
+      "start": 23.506020263671875,
+      "end": 23.666
+     },
+     {
+      "word": "flying ",
+      "start": 23.746,
+      "end": 23.986
+     },
+     {
+      "word": "out?",
+      "start": 24.066000244140625,
+      "end": 24.306
+     }
+    ],
+    "metadata": {
+     "response_id": 3
+    }
+   },
+   {
+    "role": "user",
+    "content": "Flying out. ",
+    "words": [
+     {
+      "word": "Flying ",
+      "start": 27.349002,
+      "end": 27.909001
+     },
+     {
+      "word": "out. ",
+      "start": 27.909001,
+      "end": 28.149001
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "What’s your pickup address?",
+    "words": [
+     {
+      "word": "What’s ",
+      "start": 29.930064208984376,
+      "end": 30.18
+     },
+     {
+      "word": "your ",
+      "start": 30.26,
+      "end": 30.26
+     },
+     {
+      "word": "pickup ",
+      "start": 30.34,
+      "end": 30.58
+     },
+     {
+      "word": "address?",
+      "start": 30.58,
+      "end": 31.14
+     }
+    ],
+    "metadata": {
+     "response_id": 4
+    }
+   },
+   {
+    "role": "agent",
+    "content": "Whenever you're ready, we can continue with the trip.",
+    "words": [
+     {
+      "word": "Whenever ",
+      "start": 38.644638671875,
+      "end": 39.046
+     },
+     {
+      "word": "you're ",
+      "start": 39.126,
+      "end": 39.206
+     },
+     {
+      "word": "ready, ",
+      "start": 39.206,
+      "end": 39.606
+     },
+     {
+      "word": "we ",
+      "start": 39.77212280273437,
+      "end": 40.006
+     },
+     {
+      "word": "can ",
+      "start": 40.086,
+      "end": 40.166
+     },
+     {
+      "word": "continue ",
+      "start": 40.166,
+      "end": 40.566
+     },
+     {
+      "word": "with ",
+      "start": 40.646,
+      "end": 40.646
+     },
+     {
+      "word": "the ",
+      "start": 40.726,
+      "end": 40.726
+     },
+     {
+      "word": "trip.",
+      "start": 40.806,
+      "end": 41.046
+     }
+    ],
+    "metadata": {
+     "response_id": 5
+    }
+   },
+   {
+    "role": "user",
+    "content": "What's the airport in Denver? ",
+    "words": [
+     {
+      "word": "What's ",
+      "start": 45.068999999999996,
+      "end": 45.549
+     },
+     {
+      "word": "the ",
+      "start": 45.549,
+      "end": 45.709002
+     },
+     {
+      "word": "airport ",
+      "start": 45.709002,
+      "end": 46.029002
+     },
+     {
+      "word": "in ",
+      "start": 46.029002,
+      "end": 46.269
+     },
+     {
+      "word": "Denver? ",
+      "start": 46.269,
+      "end": 46.589
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Denver’s main airport is Denver International Airport. What’s your pickup address?",
+    "words": [
+     {
+      "word": "Denver’s ",
+      "start": 48.37603515625,
+      "end": 48.861
+     },
+     {
+      "word": "main ",
+      "start": 48.861,
+      "end": 49.021
+     },
+     {
+      "word": "airport ",
+      "start": 49.10100024414062,
+      "end": 49.581
+     },
+     {
+      "word": "is ",
+      "start": 49.58110327148437,
+      "end": 49.901
+     },
+     {
+      "word": "Denver ",
+      "start": 49.98100439453125,
+      "end": 50.301
+     },
+     {
+      "word": "International ",
+      "start": 50.301000244140624,
+      "end": 50.861
+     },
+     {
+      "word": "Airport.",
+      "start": 50.861,
+      "end": 51.341
+     },
+     {
+      "word": " What’s ",
+      "start": 51.53310473632813,
+      "end": 51.821
+     },
+     {
+      "word": "your ",
+      "start": 51.901,
+      "end": 51.901
+     },
+     {
+      "word": "pickup ",
+      "start": 51.981,
+      "end": 52.141
+     },
+     {
+      "word": "address?",
+      "start": 52.141,
+      "end": 52.781
+     }
+    ],
+    "metadata": {
+     "response_id": 6
+    }
+   },
+   {
+    "role": "user",
+    "content": "One twenty three Main Street in Denver. ",
+    "words": [
+     {
+      "word": "One ",
+      "start": 56.848998,
+      "end": 57.248999999999995
+     },
+     {
+      "word": "twenty ",
+      "start": 57.248999999999995,
+      "end": 57.648997
+     },
+     {
+      "word": "three ",
+      "start": 57.648997,
+      "end": 58.049
+     },
+     {
+      "word": "Main ",
+      "start": 58.049,
+      "end": 58.369
+     },
+     {
+      "word": "Street ",
+      "start": 58.369,
+      "end": 58.689
+     },
+     {
+      "word": "in ",
+      "start": 58.689,
+      "end": 58.848998
+     },
+     {
+      "word": "Denver. ",
+      "start": 58.848998,
+      "end": 59.168997999999995
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "What date would you like to be picked up?",
+    "words": [
+     {
+      "word": "What ",
+      "start": 61.369263427734374,
+      "end": 61.721
+     },
+     {
+      "word": "date ",
+      "start": 61.801,
+      "end": 61.881
+     },
+     {
+      "word": "would ",
+      "start": 61.961,
+      "end": 62.041
+     },
+     {
+      "word": "you ",
+      "start": 62.121,
+      "end": 62.121
+     },
+     {
+      "word": "like ",
+      "start": 62.121,
+      "end": 62.281
+     },
+     {
+      "word": "to ",
+      "start": 62.361,
+      "end": 62.361
+     },
+     {
+      "word": "be ",
+      "start": 62.441,
+      "end": 62.521
+     },
+     {
+      "word": "picked ",
+      "start": 62.601,
+      "end": 62.761
+     },
+     {
+      "word": "up?",
+      "start": 62.761,
+      "end": 63.081
+     }
+    ],
+    "metadata": {
+     "response_id": 7
+    }
+   },
+   {
+    "role": "agent",
+    "content": "Whenever you're ready, we can continue with the trip.",
+    "words": [
+     {
+      "word": "Whenever ",
+      "start": 70.3596826171875,
+      "end": 70.685
+     },
+     {
+      "word": "you're ",
+      "start": 70.765,
+      "end": 70.845
+     },
+     {
+      "word": "ready, ",
+      "start": 70.845,
+      "end": 71.405
+     },
+     {
+      "word": "we ",
+      "start": 71.49172509765626,
+      "end": 71.725
+     },
+     {
+      "word": "can ",
+      "start": 71.805,
+      "end": 71.885
+     },
+     {
+      "word": "continue ",
+      "start": 71.885,
+      "end": 72.285
+     },
+     {
+      "word": "with ",
+      "start": 72.365,
+      "end": 72.445
+     },
+     {
+      "word": "the ",
+      "start": 72.525,
+      "end": 72.525
+     },
+     {
+      "word": "trip.",
+      "start": 72.525,
+      "end": 72.845
+     }
+    ],
+    "metadata": {
+     "response_id": 8
+    }
+   },
+   {
+    "role": "user",
+    "content": "Tomorrow at six AM. ",
+    "words": [
+     {
+      "word": "Tomorrow ",
+      "start": 78.729,
+      "end": 79.129
+     },
+     {
+      "word": "at ",
+      "start": 79.129,
+      "end": 79.44900000000001
+     },
+     {
+      "word": "six ",
+      "start": 79.44900000000001,
+      "end": 79.609004
+     },
+     {
+      "word": "AM. ",
+      "start": 79.609004,
+      "end": 80.009005
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Denver International Airport. Which airline are you flying with?",
+    "words": [
+     {
+      "word": "Denver ",
+      "start": 81.28056689453125,
+      "end": 81.779
+     },
+     {
+      "word": "International ",
+      "start": 81.77900024414062,
+      "end": 82.419
+     },
+     {
+      "word": "Airport.",
+      "start": 82.41900024414062,
+      "end": 83.139
+     },
+     {
+      "word": " Which ",
+      "start": 83.26478149414062,
+      "end": 83.459
+     },
+     {
+      "word": "airline ",
+      "start": 83.53900463867187,
+      "end": 83.779
+     },
+     {
+      "word": "are ",
+      "start": 83.859,
+      "end": 83.859
+     },
+     {
+      "word": "you ",
+      "start": 83.859,
+      "end": 83.939
+     },
+     {
+      "word": "flying ",
+      "start": 84.019,
+      "end": 84.259
+     },
+     {
+      "word": "with?",
+      "start": 84.339,
+      "end": 84.659
+     }
+    ],
+    "metadata": {
+     "response_id": 9
+    }
+   },
+   {
+    "role": "user",
+    "content": "United one two three four at eight fifteen. ",
+    "words": [
+     {
+      "word": "United ",
+      "start": 88.739,
+      "end": 89.21900000000001
+     },
+     {
+      "word": "one ",
+      "start": 89.21900000000001,
+      "end": 89.459
+     },
+     {
+      "word": "two ",
+      "start": 89.459,
+      "end": 89.69900000000001
+     },
+     {
+      "word": "three ",
+      "start": 89.69900000000001,
+      "end": 89.93900000000001
+     },
+     {
+      "word": "four ",
+      "start": 89.93900000000001,
+      "end": 90.17899600000001
+     },
+     {
+      "word": "at ",
+      "start": 90.17899600000001,
+      "end": 90.41900000000001
+     },
+     {
+      "word": "eight ",
+      "start": 90.41900000000001,
+      "end": 90.659
+     },
+     {
+      "word": "fifteen. ",
+      "start": 90.659,
+      "end": 90.979
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "We'll be tracking your flight. How many passengers and bags will you have?",
+    "words": [
+     {
+      "word": "We'll ",
+      "start": 92.74023486328124,
+      "end": 92.919
+     },
+     {
+      "word": "be ",
+      "start": 92.999,
+      "end": 92.999
+     },
+     {
+      "word": "tracking ",
+      "start": 93.079,
+      "end": 93.399
+     },
+     {
+      "word": "your ",
+      "start": 93.399,
+      "end": 93.479
+     },
+     {
+      "word": "flight.",
+      "start": 93.559,
+      "end": 93.879
+     },
+     {
+      "word": " How ",
+      "start": 94.2144697265625,
+      "end": 94.359
+     },
+     {
+      "word": "many ",
+      "start": 94.359,
+      "end": 94.599
+     },
+     {
+      "word": "passengers ",
+      "start": 94.599,
+      "end": 95.159
+     },
+     {
+      "word": "and ",
+      "start": 95.239,
+      "end": 95.239
+     },
+     {
+      "word": "bags ",
+      "start": 95.319,
+      "end": 95.639
+     },
+     {
+      "word": "will ",
+      "start": 95.639,
+      "end": 95.719
+     },
+     {
+      "word": "you ",
+      "start": 95.799,
+      "end": 95.879
+     },
+     {
+      "word": "have?",
+      "start": 95.959,
+      "end": 96.119
+     }
+    ],
+    "metadata": {
+     "response_id": 10
+    }
+   },
+   {
+    "role": "user",
+    "content": "Two passengers, three bags. ",
+    "words": [
+     {
+      "word": "Two ",
+      "start": 100.319,
+      "end": 100.55900000000001
+     },
+     {
+      "word": "passengers, ",
+      "start": 100.55900000000001,
+      "end": 101.119
+     },
+     {
+      "word": "three ",
+      "start": 101.629,
+      "end": 101.94900000000001
+     },
+     {
+      "word": "bags. ",
+      "start": 101.94900000000001,
+      "end": 102.269
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "I’d suggest requesting an SUV for two passengers and three bags. Would you prefer that?",
+    "words": [
+     {
+      "word": "I’d ",
+      "start": 103.98040771484375,
+      "end": 104.143
+     },
+     {
+      "word": "suggest ",
+      "start": 104.223,
+      "end": 104.623
+     },
+     {
+      "word": "requesting ",
+      "start": 104.623,
+      "end": 105.023
+     },
+     {
+      "word": "an ",
+      "start": 105.103,
+      "end": 105.183
+     },
+     {
+      "word": "SUV ",
+      "start": 105.18300048828125,
+      "end": 105.743
+     },
+     {
+      "word": "for ",
+      "start": 105.82300024414063,
+      "end": 105.903
+     },
+     {
+      "word": "two ",
+      "start": 105.983,
+      "end": 106.143
+     },
+     {
+      "word": "passengers ",
+      "start": 106.143,
+      "end": 106.863
+     },
+     {
+      "word": "and ",
+      "start": 106.863,
+      "end": 107.103
+     },
+     {
+      "word": "three ",
+      "start": 107.103,
+      "end": 107.343
+     },
+     {
+      "word": "bags.",
+      "start": 107.423,
+      "end": 107.983
+     },
+     {
+      "word": " Would ",
+      "start": 108.10269506835938,
+      "end": 108.303
+     },
+     {
+      "word": "you ",
+      "start": 108.383,
+      "end": 108.383
+     },
+     {
+      "word": "prefer ",
+      "start": 108.383,
+      "end": 108.623
+     },
+     {
+      "word": "that?",
+      "start": 108.703,
+      "end": 108.943
+     }
+    ],
+    "metadata": {
+     "response_id": 11
+    }
+   },
+   {
+    "role": "user",
+    "content": "SUV is fine. ",
+    "words": [
+     {
+      "word": "SUV ",
+      "start": 112.349,
+      "end": 112.909
+     },
+     {
+      "word": "is ",
+      "start": 112.909,
+      "end": 113.229
+     },
+     {
+      "word": "fine. ",
+      "start": 113.229,
+      "end": 113.46900500000001
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "What’s the passenger’s name?",
+    "words": [
+     {
+      "word": "What’s ",
+      "start": 114.984576171875,
+      "end": 115.246
+     },
+     {
+      "word": "the ",
+      "start": 115.326,
+      "end": 115.326
+     },
+     {
+      "word": "passenger’s ",
+      "start": 115.326,
+      "end": 115.886
+     },
+     {
+      "word": "name?",
+      "start": 115.966,
+      "end": 116.126
+     }
+    ],
+    "metadata": {
+     "response_id": 12
+    }
+   }
+  ],
+  "recording_url": "dxc03zgurdly9.cloudfront.net/[path]",
+  "recording_multi_channel_url": "dxc03zgurdly9.cloudfront.net/[path]",
+  "public_log_url": "dxc03zgurdly9.cloudfront.net/[path]",
+  "disconnection_reason": "inactivity",
+  "latency": {
+   "llm": {
+    "max": 1439,
+    "min": 1,
+    "num": 11,
+    "p50": 1020,
+    "p90": 1259,
+    "p95": 1349,
+    "p99": 1421,
+    "sum": 10570,
+    "values": [
+     1,
+     948,
+     923,
+     1113,
+     1020,
+     1439,
+     767,
+     816,
+     1227,
+     1259,
+     1057
+    ]
+   },
+   "e2e": {
+    "max": 2112.001953125,
+    "min": 1169.9951171875,
+    "num": 7,
+    "p50": 1660,
+    "p90": 1848.0007812500003,
+    "p95": 1980.0013671874997,
+    "p99": 2085.6018359375,
+    "sum": 11295.9912109375,
+    "values": [
+     1670.9990234375,
+     1672,
+     2112.001953125,
+     1169.9951171875,
+     1660,
+     1594,
+     1416.9951171875
+    ]
+   },
+   "tts": {
+    "max": 71,
+    "min": 55,
+    "num": 11,
+    "p50": 62,
+    "p90": 68,
+    "p95": 69.5,
+    "p99": 70.7,
+    "sum": 688,
+    "values": [
+     67,
+     55,
+     62,
+     61,
+     55,
+     65,
+     63,
+     68,
+     61,
+     71,
+     60
+    ]
+   },
+   "asr": {
+    "max": 318,
+    "min": 140,
+    "num": 8,
+    "p50": 180,
+    "p90": 288.59999999999997,
+    "p95": 303.29999999999995,
+    "p99": 315.06,
+    "sum": 1648,
+    "values": [
+     149,
+     181,
+     163,
+     318,
+     179,
+     276,
+     140,
+     242
+    ]
+   }
+  },
+  "metadata": {
+   "label": "B-T1-bake",
+   "source": "aic-agent-build-v1",
+   "test_mode": true
+  },
+  "call_cost": {
+   "combined_cost": 51.66,
+   "product_costs": [
+    {
+     "cost": 13.9333384,
+     "product": "retell_voice_engine",
+     "unit_price": 0.0916667
+    },
+    {
+     "cost": 3.8,
+     "product": "cartesia_tts_new",
+     "unit_price": 0.025
+    },
+    {
+     "cost": 32.4266616,
+     "product": "gpt_6_1_sol_high_priority",
+     "unit_price": 0.2133333
+    },
+    {
+     "cost": 1.5,
+     "product": "gpt_4_1_text_testing",
+     "unit_price": 1.5
+    }
+   ],
+   "total_duration_seconds": 152,
+   "total_duration_unit_price": 0.33
+  },
+  "call_analysis": {
+   "call_successful": true,
+   "call_summary": "The caller participated in a demo call, requesting a departure trip from 123 Main Street in Denver to Denver International Airport for two passengers with three bags, departing tomorrow at 6 AM on United flight 1234 at 8:15. The caller agreed to an SUV as the vehicle class.",
+   "custom_analysis_data": {
+    "airline_flight": "United one two three four at eight fifteen",
+    "airport": "Denver International Airport",
+    "appointment_booked": false,
+    "bag_count": "3",
+    "callback_requested": false,
+    "caller_cell": "…0100",
+    "caller_mobile": "",
+    "caller_name": "",
+    "caller_role": "operator",
+    "company_name": "",
+    "demo_feedback": "",
+    "door": "demo",
+    "dropoff_address": "Denver International Airport",
+    "heard_about_us": "",
+    "hours": "",
+    "interest_level": "",
+    "is_charter": false,
+    "meet_style": "not_stated",
+    "no_text": false,
+    "one_way": true,
+    "outcome": "info_only",
+    "passenger_count": 2,
+    "pickup_address": "One twenty three Main Street in Denver",
+    "pickup_date": "2026-10-30",
+    "pickup_time": "6 AM",
+    "price_asked": false,
+    "questions_asked": "What's the airport in Denver?",
+    "review_needed": false,
+    "setup_call_booked": false,
+    "sign_text": "",
+    "sms_consent": false,
+    "spam": false,
+    "special_notes": "",
+    "transfer_result": "not_attempted",
+    "trip_type": "departure",
+    "vehicle_class": "SUV"
+   },
+   "in_voicemail": false,
+   "user_sentiment": "Neutral"
+  },
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "llm_token_usage": {
+   "values": [
+    3243,
+    4100,
+    3680,
+    4141,
+    4175,
+    3759,
+    4219,
+    4250,
+    4282,
+    4315,
+    3896,
+    3896
+   ],
+   "average": 3996.3333333333335,
+   "num_requests": 12
+  },
+  "tool_calls": [
+   {
+    "latency_ms": 24,
+    "name": "CH-SPLIT",
+    "start_time_sec": 0,
+    "success": true,
+    "tool_call_id": "tool_call_1352b2",
+    "type": "code"
+   },
+   {
+    "latency_ms": 21.000000000000796,
+    "name": "INTAKE-ENTER (trip in progress, for the questions door)",
+    "start_time_sec": 21.641,
+    "success": true,
+    "tool_call_id": "tool_call_057ce9",
+    "type": "code"
+   }
+  ]
+ }
+}

@@ -1,0 +1,313 @@
+{
+ "_note": "READ ONLY · masked · live AI Chauffeur agent_9ebb v16 as published by AIC-AGENT-BUILD-v1 (2026-10-29)",
+ "agent": {
+  "agent_id": "agent_9ebb41c9bd8af214649328f107",
+  "channel": "voice",
+  "last_modification_timestamp": 1793321205664,
+  "agent_name": "AIC-LIVE two-door",
+  "response_engine": {
+   "conversation_flow_id": "conversation_flow_9cf4ddd5b734",
+   "type": "conversation-flow",
+   "version": 16
+  },
+  "webhook_url": "circulant.app.n8n.cloud/[path]",
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "contact_memory_config": {
+   "enable_read": false,
+   "enable_update": false
+  },
+  "opt_in_signed_url": false,
+  "end_call_after_silence_ms": 20000,
+  "version": 16,
+  "base_version": 15,
+  "assigned_tags": [],
+  "is_published": true,
+  "version_title": "v15 + INTAKE v2 (AIC-AGENT-BUILD-v1, 2026-10-29): prompt-driven intake, extract once, GPT 6.1 Terra, dynamic responsiveness off",
+  "post_call_analysis_model": "gpt-4.1",
+  "pii_config": {
+   "categories": [],
+   "mode": "post_call"
+  },
+  "handbook_config": {
+   "ai_disclosure": true,
+   "conversational_personality": false,
+   "default_personality": false,
+   "echo_verification": false,
+   "high_empathy": false,
+   "nato_phonetic_alphabet": false,
+   "natural_filler_words": false,
+   "scope_boundaries": true,
+   "smart_matching": true,
+   "speech_normalization": true
+  },
+  "timezone": "America/Chicago",
+  "post_call_analysis_data": [
+   {
+    "choices": [
+     "arrival",
+     "departure",
+     "point_to_point",
+     "hourly"
+    ],
+    "description": "Copy the flow's own trip type, never re-derive it from the conversation: the flow recorded '{{trip_type}}' (arrival = arrival, departure = departure, p2p = point_to_point, hourly = hourly).",
+    "name": "trip_type",
+    "type": "enum"
+   },
+   {
+    "description": "Copy the flow's value '{{is_charter}}': true only when it is true (the caller described a charter, bus, coach, motorcoach, wait-and-return, as-directed trip or a group event).",
+    "name": "is_charter",
+    "type": "boolean"
+   },
+   {
+    "description": "The trip date as an absolute calendar date (YYYY-MM-DD), resolved against the date this call took place, from what the caller said ('{{pickup_date}}'). Never use a stale or training-data year. Leave empty if no date was given.",
+    "name": "pickup_date",
+    "type": "string"
+   },
+   {
+    "description": "The pickup time as captured ('{{pickup_time}}'), e.g. '7 PM'. Leave empty if none was given.",
+    "name": "pickup_time",
+    "type": "string"
+   },
+   {
+    "description": "The full pickup as captured, venue, street and city, copied word for word from '{{pickup_location}}'. Leave empty if none was given.",
+    "name": "pickup_address",
+    "type": "string"
+   },
+   {
+    "description": "The full drop-off as captured, venue, street and city, copied word for word from '{{dropoff_location}}'. Leave empty if none was given.",
+    "name": "dropoff_address",
+    "type": "string"
+   },
+   {
+    "description": "The airport for an airport trip ('{{airport}}'). Leave empty otherwise.",
+    "name": "airport",
+    "type": "string"
+   },
+   {
+    "description": "Airline and flight number for an airport trip ('{{airline_flight}}'). Leave empty otherwise.",
+    "name": "airline_flight",
+    "type": "string"
+   },
+   {
+    "choices": [
+     "curbside",
+     "inside",
+     "not_stated"
+    ],
+    "description": "For an airport arrival, copy '{{meet_style}}': curbside, inside (at baggage claim with a sign) or not_stated.",
+    "name": "meet_style",
+    "type": "enum"
+   },
+   {
+    "description": "The name for the meet-and-greet sign, if given ('{{sign_name}}'). Leave empty otherwise.",
+    "name": "sign_text",
+    "type": "string"
+   },
+   {
+    "description": "Number of passengers as captured ('{{passenger_count}}').",
+    "name": "passenger_count",
+    "type": "number"
+   },
+   {
+    "description": "Number of bags ONLY if the caller stated it ('{{bag_count}}'). Leave EMPTY if the caller never gave a bag count. Never write 0 unless the caller said zero or no bags.",
+    "name": "bag_count",
+    "type": "string"
+   },
+   {
+    "description": "For a charter or hourly trip, the number of hours if the caller gave it ('{{hours}}'). Leave empty otherwise.",
+    "name": "hours",
+    "type": "string"
+   },
+   {
+    "description": "Copy the flow's value '{{one_way}}': true only when the caller said one way or just the transfer.",
+    "name": "one_way",
+    "type": "boolean"
+   },
+   {
+    "description": "Copy the flow's vehicle label exactly ('{{vehicle_class_label}}'). Leave empty if it is blank.",
+    "name": "vehicle_class",
+    "type": "string"
+   },
+   {
+    "description": "The caller's own name as given on the call (the reservation contact on a demo trip, or the person the team should ask for).",
+    "name": "caller_name",
+    "type": "string"
+   },
+   {
+    "description": "The mobile number given for the reservation contact, or the number the caller agreed the trip sheet should go to.",
+    "name": "caller_mobile",
+    "type": "string"
+   },
+   {
+    "description": "Whether the caller agreed to receive a text: the trip sheet, or the setup-call confirmation. The flow's own record is '{{sms_consent}}'. False when the caller said no to texts or said not to text them.",
+    "name": "sms_consent",
+    "type": "boolean"
+   },
+   {
+    "description": "The name of the caller's company or organization, written the way the caller confirmed or spelled it (the flow has '{{company}}'). Leave empty if none was given.",
+    "name": "company_name",
+    "type": "string"
+   },
+   {
+    "description": "True only if a follow-up call with the team was booked during this call (the calendar tool returned BOOKED).",
+    "name": "appointment_booked",
+    "type": "boolean"
+   },
+   {
+    "description": "The caller's level of interest in setting up AI Chauffeur for their company, in a few words.",
+    "name": "interest_level",
+    "type": "string"
+   },
+   {
+    "description": "The caller's verbatim answer describing what they thought of the demo, if they gave one.",
+    "name": "demo_feedback",
+    "type": "string"
+   },
+   {
+    "description": "Anything the caller asked dispatch or the driver to know ('{{notes}}'), in a few words.",
+    "name": "special_notes",
+    "type": "string"
+   },
+   {
+    "description": "Copy the flow's value '{{review_needed}}': true when the group is over 56 passengers, needs a wheelchair lift or an oversized item.",
+    "name": "review_needed",
+    "type": "boolean"
+   },
+   {
+    "choices": [
+     "demo",
+     "questions",
+     "both"
+    ],
+    "description": "Which part of the call the caller used: demo = they only did the demo trip (played the customer and requested a trip); questions = they only asked about AI Chauffeur, asked for the team, or were not there for the demo; both = they did some of each.",
+    "name": "door",
+    "type": "enum"
+   },
+   {
+    "description": "The number the team can reach the caller on: a number the caller said on the call (the latest one if they corrected it), otherwise the number the flow has on file ('{{caller_phone}}'). Digits with country code. Leave empty if there is none.",
+    "name": "caller_cell",
+    "type": "string"
+   },
+   {
+    "choices": [
+     "operator",
+     "agency",
+     "passenger",
+     "vendor",
+     "unknown"
+    ],
+    "description": "Who the caller is: operator = runs or works at a transportation or logistics company (limo, black car, charter, shuttle, trucking, courier) or says they would use this for their company; agency = a marketing agency, reseller or consultant who wants this for clients; passenger = someone who wants a real ride or has a problem with a booked trip; vendor = selling a product or service to us, or a recorded sales message; unknown = not clear.",
+    "name": "caller_role",
+    "type": "enum"
+   },
+   {
+    "description": "A short list of the questions the caller asked about AI Chauffeur, in a few words each, separated by semicolons. Leave empty if they asked none.",
+    "name": "questions_asked",
+    "type": "string"
+   },
+   {
+    "description": "True if the caller asked what AI Chauffeur costs (not the fare for a trip). False otherwise.",
+    "name": "price_asked",
+    "type": "boolean"
+   },
+   {
+    "description": "True only if a setup call was booked on this call: the calendar tool returned BOOKED (the flow has '{{appointment_booked}}'). A calendar failure, a timeout or a callback is not a booking.",
+    "name": "setup_call_booked",
+    "type": "boolean"
+   },
+   {
+    "description": "True if the caller asked for, or accepted, a callback from the team. False otherwise.",
+    "name": "callback_requested",
+    "type": "boolean"
+   },
+   {
+    "choices": [
+     "connected",
+     "declined",
+     "no_answer",
+     "not_attempted"
+    ],
+    "description": "Result of the live connection to the team. The flow recorded: '{{transfer_state}}'. connected = the transfer tool succeeded and the call ended bridged to the team; declined = a transfer was tried and the transcript shows the team turned the call down; no_answer = a transfer was tried and did not connect for any other reason (no answer, voicemail, timeout); not_attempted = no transfer was tried.",
+    "name": "transfer_result",
+    "type": "enum"
+   },
+   {
+    "description": "How the caller said they heard about AI Chauffeur, in their own words (the flow has '{{heard_about_us}}'). Leave empty if they were not asked or did not answer.",
+    "name": "heard_about_us",
+    "type": "string"
+   },
+   {
+    "choices": [
+     "setup_call_booked",
+     "connected",
+     "callback",
+     "demo_taken",
+     "info_only",
+     "wrong_line",
+     "spam"
+    ],
+    "description": "The single best description of how the call ended, taking the first that applies in this order: spam = a vendor or sales call, a recorded or automated message, or dead air (the caller never said anything); wrong_line = a passenger who wanted a real ride or had a problem with a booked trip; connected = the caller was bridged live to the team; setup_call_booked = a setup call was booked (calendar tool returned BOOKED); callback = the team is to call the caller back; demo_taken = the agent read the whole trip back on this call (a sentence ending \"Anything need changing?\" was spoken); info_only = everything else, including a caller who got answers and declined the rest, or who left before the trip was read back.",
+    "name": "outcome",
+    "type": "enum"
+   },
+   {
+    "description": "True if the caller said not to text them (the flow has '{{no_text}}'). False otherwise.",
+    "name": "no_text",
+    "type": "boolean"
+   },
+   {
+    "description": "True if any of these: the caller never said anything at all (dead air); the caller was a recorded or automated message; the caller confirmed they were selling a product or service. False for every real caller, including a caller who was only asked whether they were selling.",
+    "name": "spam",
+    "type": "boolean"
+   }
+  ],
+  "voice_id": "cartesia-Kate",
+  "voice_model": "sonic-3.6",
+  "voice_temperature": 0.72,
+  "voice_speed": 1,
+  "enable_dynamic_voice_speed": true,
+  "volume": 1,
+  "enable_backchannel": true,
+  "backchannel_frequency": 0.1,
+  "reminder_trigger_ms": 6000,
+  "reminder_max_count": 2,
+  "max_call_duration_ms": 720000,
+  "interruption_sensitivity": 0.9,
+  "boosted_keywords": [
+   "Kewaskum",
+   "West Bend",
+   "Hartford",
+   "Slinger",
+   "Jackson",
+   "Germantown",
+   "Menomonee Falls",
+   "Milwaukee",
+   "Madison",
+   "Green Bay",
+   "O'Hare",
+   "Midway",
+   "Mitchell",
+   "FBO",
+   "Signature Flight Support",
+   "Atlantic Aviation"
+  ],
+  "responsiveness": 0.8,
+  "enable_dynamic_responsiveness": false,
+  "pronunciation_dictionary": [
+   {
+    "alphabet": "ipa",
+    "phoneme": "ˈeɪvə",
+    "word": "AVA"
+   }
+  ],
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {},
+  "denoising_mode": "noise-cancellation",
+  "webhook_events": [
+   "call_started",
+   "call_ended",
+   "call_analyzed"
+  ]
+ }
+}

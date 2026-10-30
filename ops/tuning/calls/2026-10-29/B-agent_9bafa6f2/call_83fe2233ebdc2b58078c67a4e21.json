@@ -1,0 +1,2521 @@
+{
+ "_note": "READ ONLY · masked · AIC-AGENT-BUILD-v1 · B T3 bake",
+ "agentKey": "B",
+ "test": "T3",
+ "label": "bake",
+ "harness_events": [
+  "[19.9s] agent turn done (idle) — 12.2 s audio · heard \"AI chauffeur, the premium reservation system for limousine, black car, and chauffeur transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try? Airport, point to point, or by the hour?\" · asks [triptype]",
+  "[20.2s] caller: hourly (8.8 s) — next scripted line",
+  "[35.0s] agent turn done (idle) — 1.1 s audio · heard \"How many bags will you have?\" · asks [bags]",
+  "[35.3s] caller: bags2 (1.6 s) — next scripted line",
+  "[46.4s] agent turn done (idle) — 3.9 s audio · heard \"For six passengers and two bags, I suggest a sprinter. Would you prefer that?\" · asks [paxbags,vehicle]",
+  "[46.7s] caller: suv (2.0 s) — next scripted line",
+  "[55.4s] agent turn done (idle) — 2.1 s audio · heard \"Are there any plans stopped during the four hours?\" · asks []",
+  "[55.7s] caller: john (1.6 s) — next scripted line (ask not recognised)",
+  "[67.2s] agent turn done (idle) — 2.3 s audio · heard \"Thank you. Will you be making any stops along the way?\" · asks [stops]",
+  "[67.5s] caller: nostops (1.6 s) — fallback answer",
+  "[76.7s] agent turn done (idle) — 2.6 s audio · heard \"Is the number you're calling from the best callback number?\" · asks [number_confirm]",
+  "[77.0s] caller: numfine (2.0 s) — next scripted line",
+  "[88.6s] agent turn done (idle) — 2.0 s audio · heard \"Okay, to text the trip sheet to that number...\" · asks [consent,number_confirm]",
+  "[88.9s] caller: yes (1.3 s) — next scripted line",
+  "[107.4s] agent turn done (idle) — 8.8 s audio · heard \"Saturday, October 31 at 7 PM Central from Fister Hotel in Milwaukee. Four hours, six passengers, written for an executive SUV. Anything need changing?\" · asks [readback]",
+  "[107.4s] read-back reached — caller hangs up"
+ ],
+ "harness_heard": [
+  {
+   "at": "19.9",
+   "heard": "AI chauffeur, the premium reservation system for limousine, black car, and chauffeur transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try? Airport, point to point, or by the hour?",
+   "asked": [
+    "triptype"
+   ]
+  },
+  {
+   "at": "35.0",
+   "heard": "How many bags will you have?",
+   "asked": [
+    "bags"
+   ]
+  },
+  {
+   "at": "46.4",
+   "heard": "For six passengers and two bags, I suggest a sprinter. Would you prefer that?",
+   "asked": [
+    "paxbags",
+    "vehicle"
+   ]
+  },
+  {
+   "at": "55.4",
+   "heard": "Are there any plans stopped during the four hours?",
+   "asked": []
+  },
+  {
+   "at": "67.2",
+   "heard": "Thank you. Will you be making any stops along the way?",
+   "asked": [
+    "stops"
+   ]
+  },
+  {
+   "at": "76.7",
+   "heard": "Is the number you're calling from the best callback number?",
+   "asked": [
+    "number_confirm"
+   ]
+  },
+  {
+   "at": "88.6",
+   "heard": "Okay, to text the trip sheet to that number...",
+   "asked": [
+    "consent",
+    "number_confirm"
+   ]
+  },
+  {
+   "at": "107.4",
+   "heard": "Saturday, October 31 at 7 PM Central from Fister Hotel in Milwaukee. Four hours, six passengers, written for an executive SUV. Anything need changing?",
+   "asked": [
+    "readback"
+   ]
+  }
+ ],
+ "call": {
+  "call_id": "call_83fe2233ebdc2b58078c67a4e21",
+  "call_type": "web_call",
+  "agent_id": "agent_9bafa6f2c2805183ebc456aeaa",
+  "agent_version": 1,
+  "agent_name": "AIC-TEST intake-v2 B",
+  "retell_llm_dynamic_variables": {
+   "channel": "phone",
+   "is_demo": "true",
+   "slot_1": "tomorrow at 8 AM Central",
+   "slot_1_iso": "2026-10-30T08:00:00-05:00",
+   "slot_2": "tomorrow at 8:30 AM Central",
+   "slot_2_iso": "2026-10-30T08:30:00-05:00",
+   "team_free_now": "false",
+   "user_number": "…0100",
+   "zz_sim_phone": "false"
+  },
+  "collected_dynamic_variables": {
+   "after_plain": "resume",
+   "airport_spoken": "",
+   "alert_sent": "false",
+   "answer_unfinished": "false",
+   "appointment_booked": "false",
+   "appointment_time": "",
+   "asked_asks": "intake",
+   "asked_gate": "none",
+   "bag_count": "2",
+   "book_return": "d1",
+   "booking_state": "not booked",
+   "callback_when": "during business hours",
+   "caller_name": "John Smith",
+   "caller_phone": "…0100",
+   "channel": "phone",
+   "co_passes": "0",
+   "compose_peek": "false",
+   "contact_done": "true",
+   "current_node": "N06 SPEAK (composer output of N06-ARR / N06-DEP / N06-P2P / N06-HRLY)",
+   "d2_entry": "none",
+   "d2_mode": "full",
+   "d2_quick_count": "0",
+   "date_spoken": "Saturday October thirty-first",
+   "door_now": "demo",
+   "greeting_cut": "false",
+   "has_caller_number": "true",
+   "hau_asked": "false",
+   "hau_ret": "sales",
+   "heard_about_us": "",
+   "hold_count": "0",
+   "hours": "4",
+   "is_charter": "false",
+   "is_demo": "true",
+   "meet_style": "not_stated",
+   "n06_passes": "1",
+   "no_text": "false",
+   "notice_done": "false",
+   "nudge_count": "0",
+   "offer_passes": "0",
+   "one_way": "false",
+   "oversized": "false",
+   "oversized_item_needed": "false",
+   "passenger_count": "6",
+   "pending_name": "",
+   "pending_node": "",
+   "pickup_date": "Saturday",
+   "pickup_location": "Pfister Hotel in Milwaukee",
+   "pickup_time": "seven PM",
+   "pickup_time_zone": "Central",
+   "piece_ask": "",
+   "piece_ret": "n03",
+   "piece_wait": "false",
+   "previous_node": "N06 COMPOSER",
+   "readback_passes": "0",
+   "requery_count": "0",
+   "review_needed": "false",
+   "sales_intent": "none",
+   "sign_name": "",
+   "sms_consent": "true",
+   "summary_has": "true",
+   "summary_plain": "Saturday October thirty-first at seven PM Central from Pfister Hotel in Milwaukee, 4 hours, 6 passengers, written for an Executive SUV.",
+   "summary_text": "Saturday October thirty-first at seven PM Central from Pfister Hotel in Milwaukee, 4 hours, 6 passengers, written for an Executive SUV. Anything need changing?",
+   "text_pitch_done": "false",
+   "time_spoken": "seven PM",
+   "time_zone_spoken": "Central",
+   "transfer_open": "false",
+   "transfer_state": "not tried",
+   "trip_started": "true",
+   "trip_type": "hourly",
+   "vehicle_ask": "false",
+   "vehicle_asked": "true",
+   "vehicle_choice": "suv",
+   "vehicle_class": "suv",
+   "vehicle_class_label": "Executive SUV",
+   "vehicle_return": "n05",
+   "vehicle_root": "suv",
+   "wants_connect": "false",
+   "wheelchair_lift_needed": "false"
+  },
+  "call_status": "ended",
+  "start_timestamp": 1793315253324,
+  "end_timestamp": 1793315359726,
+  "duration_ms": 106402,
+  "transcript": "Agent: AI Chauffeur, the premium reservation system for limousine, black car and chauffeured transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try — airport, point to point, or by the hour.\nUser: By the hour, Pick up at the Pfister Hotel in Milwaukee Saturday at seven PM, four hours, six passengers. \nAgent: How many bags will you have?\nUser: Tube bags. \nAgent: For six passengers and two bags, I suggest a Sprinter. Would you prefer that?\nUser: SUV is fine. \nAgent: Are there any planned stops during the four hours?\nUser: John Smith, \nAgent: Thank you. Will you be making any stops along the way?\nUser: No stops. \nAgent: Is the number you’re calling from the best callback number?\nUser: That number is fine. \nAgent: Okay to text the trip sheet to that number?\nUser: Yes. \nAgent: Saturday October thirty-first at seven PM Central from Pfister Hotel in Milwaukee, 4 hours, 6 passengers, written for an Executive SUV. Anything need changing?\n",
+  "transcript_object": [
+   {
+    "role": "agent",
+    "content": "AI Chauffeur, the premium reservation system for limousine, black car and chauffeured transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try — airport, point to point, or by the hour.",
+    "words": [
+     {
+      "word": "AI ",
+      "start": 0.214324462890625,
+      "end": 0.537
+     },
+     {
+      "word": "Chauffeur, ",
+      "start": 0.537000244140625,
+      "end": 1.177
+     },
+     {
+      "word": "the ",
+      "start": 1.4159599609375,
+      "end": 1.497
+     },
+     {
+      "word": "premium ",
+      "start": 1.497,
+      "end": 1.977
+     },
+     {
+      "word": "reservation ",
+      "start": 2.057,
+      "end": 2.537
+     },
+     {
+      "word": "system ",
+      "start": 2.537,
+      "end": 2.937
+     },
+     {
+      "word": "for ",
+      "start": 3.017,
+      "end": 3.177
+     },
+     {
+      "word": "limousine, ",
+      "start": 3.177,
+      "end": 3.817
+     },
+     {
+      "word": "black ",
+      "start": 3.963522705078125,
+      "end": 4.297
+     },
+     {
+      "word": "car ",
+      "start": 4.297,
+      "end": 4.857
+     },
+     {
+      "word": "and ",
+      "start": 4.938447509765625,
+      "end": 5.017
+     },
+     {
+      "word": "chauffeured ",
+      "start": 5.017,
+      "end": 5.497
+     },
+     {
+      "word": "transportation. ",
+      "start": 5.49700048828125,
+      "end": 6.377
+     },
+     {
+      "word": "This ",
+      "start": 6.537255615234375,
+      "end": 6.697
+     },
+     {
+      "word": "is ",
+      "start": 6.777,
+      "end": 6.857
+     },
+     {
+      "word": "the ",
+      "start": 6.937,
+      "end": 6.937
+     },
+     {
+      "word": "demo ",
+      "start": 6.937,
+      "end": 7.177
+     },
+     {
+      "word": "line. ",
+      "start": 7.257,
+      "end": 7.577
+     },
+     {
+      "word": "Play ",
+      "start": 7.711980712890625,
+      "end": 7.897
+     },
+     {
+      "word": "the ",
+      "start": 7.977,
+      "end": 7.977
+     },
+     {
+      "word": "customer ",
+      "start": 7.977,
+      "end": 8.537
+     },
+     {
+      "word": "and ",
+      "start": 8.5370380859375,
+      "end": 8.697
+     },
+     {
+      "word": "request ",
+      "start": 8.777,
+      "end": 9.017
+     },
+     {
+      "word": "a ",
+      "start": 9.097,
+      "end": 9.097
+     },
+     {
+      "word": "trip. ",
+      "start": 9.097,
+      "end": 9.497
+     },
+     {
+      "word": "Calls ",
+      "start": 9.6211259765625,
+      "end": 9.977
+     },
+     {
+      "word": "are ",
+      "start": 10.057,
+      "end": 10.057
+     },
+     {
+      "word": "recorded ",
+      "start": 10.057,
+      "end": 10.617
+     },
+     {
+      "word": "and ",
+      "start": 10.697001953125,
+      "end": 10.777
+     },
+     {
+      "word": "transcribed. ",
+      "start": 10.777,
+      "end": 11.577
+     },
+     {
+      "word": "Which ",
+      "start": 11.704673095703125,
+      "end": 11.977
+     },
+     {
+      "word": "trip ",
+      "start": 12.057,
+      "end": 12.217
+     },
+     {
+      "word": "would ",
+      "start": 12.217,
+      "end": 12.297
+     },
+     {
+      "word": "you ",
+      "start": 12.377,
+      "end": 12.377
+     },
+     {
+      "word": "like ",
+      "start": 12.457,
+      "end": 12.537
+     },
+     {
+      "word": "to ",
+      "start": 12.617,
+      "end": 12.617
+     },
+     {
+      "word": "try ",
+      "start": 12.617,
+      "end": 12.857
+     },
+     {
+      "word": "— ",
+      "start": 12.857,
+      "end": 13.097
+     },
+     {
+      "word": "airport, ",
+      "start": 13.24164697265625,
+      "end": 13.817
+     },
+     {
+      "word": "point ",
+      "start": 14.03275390625,
+      "end": 14.217
+     },
+     {
+      "word": "to ",
+      "start": 14.217,
+      "end": 14.297
+     },
+     {
+      "word": "point, ",
+      "start": 14.377,
+      "end": 14.697
+     },
+     {
+      "word": "or ",
+      "start": 14.900219970703125,
+      "end": 14.937
+     },
+     {
+      "word": "by ",
+      "start": 14.937,
+      "end": 15.097
+     },
+     {
+      "word": "the ",
+      "start": 15.177,
+      "end": 15.177
+     },
+     {
+      "word": "hour.",
+      "start": 15.177,
+      "end": 15.657
+     }
+    ],
+    "metadata": {
+     "response_id": 1
+    }
+   },
+   {
+    "role": "user",
+    "content": "By the hour, Pick up at the Pfister Hotel in Milwaukee Saturday at seven PM, four hours, six passengers. ",
+    "words": [
+     {
+      "word": "By ",
+      "start": 19.119,
+      "end": 19.439
+     },
+     {
+      "word": "the ",
+      "start": 19.439,
+      "end": 19.598999999999997
+     },
+     {
+      "word": "hour, ",
+      "start": 19.598999999999997,
+      "end": 19.839
+     },
+     {
+      "word": "Pick ",
+      "start": 20.738999999999997,
+      "end": 21.058999999999997
+     },
+     {
+      "word": "up ",
+      "start": 21.058999999999997,
+      "end": 21.218999999999998
+     },
+     {
+      "word": "at ",
+      "start": 21.218999999999998,
+      "end": 21.459
+     },
+     {
+      "word": "the ",
+      "start": 21.459,
+      "end": 21.538999999999998
+     },
+     {
+      "word": "Pfister ",
+      "start": 21.538999999999998,
+      "end": 21.939
+     },
+     {
+      "word": "Hotel ",
+      "start": 21.939,
+      "end": 22.258999999999997
+     },
+     {
+      "word": "in ",
+      "start": 22.258999999999997,
+      "end": 22.499
+     },
+     {
+      "word": "Milwaukee ",
+      "start": 22.499,
+      "end": 22.979
+     },
+     {
+      "word": "Saturday ",
+      "start": 22.979,
+      "end": 23.459
+     },
+     {
+      "word": "at ",
+      "start": 23.459,
+      "end": 23.779
+     },
+     {
+      "word": "seven ",
+      "start": 23.779,
+      "end": 24.019
+     },
+     {
+      "word": "PM, ",
+      "start": 24.019,
+      "end": 24.499
+     },
+     {
+      "word": "four ",
+      "start": 25.058999,
+      "end": 25.378998999999997
+     },
+     {
+      "word": "hours, ",
+      "start": 25.378998999999997,
+      "end": 25.618997999999998
+     },
+     {
+      "word": "six ",
+      "start": 26.069,
+      "end": 26.548999
+     },
+     {
+      "word": "passengers. ",
+      "start": 26.548999,
+      "end": 27.029
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "How many bags will you have?",
+    "words": [
+     {
+      "word": "How ",
+      "start": 29.855892822265623,
+      "end": 30.025
+     },
+     {
+      "word": "many ",
+      "start": 30.105,
+      "end": 30.185
+     },
+     {
+      "word": "bags ",
+      "start": 30.265,
+      "end": 30.585
+     },
+     {
+      "word": "will ",
+      "start": 30.585,
+      "end": 30.665
+     },
+     {
+      "word": "you ",
+      "start": 30.745,
+      "end": 30.825
+     },
+     {
+      "word": "have?",
+      "start": 30.905,
+      "end": 31.305
+     }
+    ],
+    "metadata": {
+     "response_id": 5
+    }
+   },
+   {
+    "role": "user",
+    "content": "Tube bags. ",
+    "words": [
+     {
+      "word": "Tube ",
+      "start": 34.278999999999996,
+      "end": 34.599
+     },
+     {
+      "word": "bags. ",
+      "start": 34.599,
+      "end": 34.839
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "For six passengers and two bags, I suggest a Sprinter. Would you prefer that?",
+    "words": [
+     {
+      "word": "For ",
+      "start": 37.12574560546875,
+      "end": 37.289
+     },
+     {
+      "word": "six ",
+      "start": 37.289,
+      "end": 37.609
+     },
+     {
+      "word": "passengers ",
+      "start": 37.609,
+      "end": 38.329
+     },
+     {
+      "word": "and ",
+      "start": 38.409,
+      "end": 38.489
+     },
+     {
+      "word": "two ",
+      "start": 38.569,
+      "end": 38.729
+     },
+     {
+      "word": "bags, ",
+      "start": 38.729,
+      "end": 39.369
+     },
+     {
+      "word": "I ",
+      "start": 39.529897216796876,
+      "end": 39.609
+     },
+     {
+      "word": "suggest ",
+      "start": 39.609,
+      "end": 40.009
+     },
+     {
+      "word": "a ",
+      "start": 40.089,
+      "end": 40.089
+     },
+     {
+      "word": "Sprinter.",
+      "start": 40.089,
+      "end": 40.729
+     },
+     {
+      "word": " Would ",
+      "start": 40.85785009765625,
+      "end": 41.049
+     },
+     {
+      "word": "you ",
+      "start": 41.129,
+      "end": 41.129
+     },
+     {
+      "word": "prefer ",
+      "start": 41.209,
+      "end": 41.369
+     },
+     {
+      "word": "that?",
+      "start": 41.369,
+      "end": 41.689
+     }
+    ],
+    "metadata": {
+     "response_id": 6
+    }
+   },
+   {
+    "role": "user",
+    "content": "SUV is fine. ",
+    "words": [
+     {
+      "word": "SUV ",
+      "start": 45.638999999999996,
+      "end": 46.199
+     },
+     {
+      "word": "is ",
+      "start": 46.199,
+      "end": 46.519
+     },
+     {
+      "word": "fine. ",
+      "start": 46.519,
+      "end": 46.759
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Are there any planned stops during the four hours?",
+    "words": [
+     {
+      "word": "Are ",
+      "start": 49.07866259765625,
+      "end": 49.2
+     },
+     {
+      "word": "there ",
+      "start": 49.28,
+      "end": 49.36
+     },
+     {
+      "word": "any ",
+      "start": 49.44,
+      "end": 49.52
+     },
+     {
+      "word": "planned ",
+      "start": 49.520000244140626,
+      "end": 49.92
+     },
+     {
+      "word": "stops ",
+      "start": 50,
+      "end": 50.4
+     },
+     {
+      "word": "during ",
+      "start": 50.48,
+      "end": 50.64
+     },
+     {
+      "word": "the ",
+      "start": 50.64,
+      "end": 50.72
+     },
+     {
+      "word": "four ",
+      "start": 50.72,
+      "end": 50.96
+     },
+     {
+      "word": "hours?",
+      "start": 51.04,
+      "end": 51.52
+     }
+    ],
+    "metadata": {
+     "response_id": 7
+    }
+   },
+   {
+    "role": "user",
+    "content": "John Smith, ",
+    "words": [
+     {
+      "word": "John ",
+      "start": 54.648997,
+      "end": 54.968997
+     },
+     {
+      "word": "Smith, ",
+      "start": 54.968997,
+      "end": 55.289
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Thank you. Will you be making any stops along the way?",
+    "words": [
+     {
+      "word": "Thank ",
+      "start": 60.64659887695313,
+      "end": 60.966
+     },
+     {
+      "word": "you.",
+      "start": 61.046,
+      "end": 61.286
+     },
+     {
+      "word": " Will ",
+      "start": 61.4464140625,
+      "end": 61.606
+     },
+     {
+      "word": "you ",
+      "start": 61.686,
+      "end": 61.766
+     },
+     {
+      "word": "be ",
+      "start": 61.846,
+      "end": 61.846
+     },
+     {
+      "word": "making ",
+      "start": 61.926,
+      "end": 62.086
+     },
+     {
+      "word": "any ",
+      "start": 62.086,
+      "end": 62.246
+     },
+     {
+      "word": "stops ",
+      "start": 62.326,
+      "end": 62.646
+     },
+     {
+      "word": "along ",
+      "start": 62.646,
+      "end": 62.886
+     },
+     {
+      "word": "the ",
+      "start": 62.966,
+      "end": 62.966
+     },
+     {
+      "word": "way?",
+      "start": 62.966,
+      "end": 63.286
+     }
+    ],
+    "metadata": {
+     "response_id": 8
+    }
+   },
+   {
+    "role": "user",
+    "content": "No stops. ",
+    "words": [
+     {
+      "word": "No ",
+      "start": 66.339,
+      "end": 66.739
+     },
+     {
+      "word": "stops. ",
+      "start": 66.739,
+      "end": 67.05900000000001
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Is the number you’re calling from the best callback number?",
+    "words": [
+     {
+      "word": "Is ",
+      "start": 69.50615063476563,
+      "end": 69.714
+     },
+     {
+      "word": "the ",
+      "start": 69.794,
+      "end": 69.794
+     },
+     {
+      "word": "number ",
+      "start": 69.874,
+      "end": 70.114
+     },
+     {
+      "word": "you’re ",
+      "start": 70.194,
+      "end": 70.274
+     },
+     {
+      "word": "calling ",
+      "start": 70.274,
+      "end": 70.594
+     },
+     {
+      "word": "from ",
+      "start": 70.674,
+      "end": 70.994
+     },
+     {
+      "word": "the ",
+      "start": 71.074,
+      "end": 71.074
+     },
+     {
+      "word": "best ",
+      "start": 71.074,
+      "end": 71.474
+     },
+     {
+      "word": "callback ",
+      "start": 71.474,
+      "end": 71.954
+     },
+     {
+      "word": "number?",
+      "start": 72.034,
+      "end": 72.354
+     }
+    ],
+    "metadata": {
+     "response_id": 9
+    }
+   },
+   {
+    "role": "user",
+    "content": "That number is fine. ",
+    "words": [
+     {
+      "word": "That ",
+      "start": 76.009,
+      "end": 76.32900000000001
+     },
+     {
+      "word": "number ",
+      "start": 76.32900000000001,
+      "end": 76.569
+     },
+     {
+      "word": "is ",
+      "start": 76.569,
+      "end": 76.80900000000001
+     },
+     {
+      "word": "fine. ",
+      "start": 76.80900000000001,
+      "end": 77.049
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Okay to text the trip sheet to that number?",
+    "words": [
+     {
+      "word": "Okay ",
+      "start": 82.29739575195312,
+      "end": 82.777
+     },
+     {
+      "word": "to ",
+      "start": 82.85840283203125,
+      "end": 83.017
+     },
+     {
+      "word": "text ",
+      "start": 83.097,
+      "end": 83.337
+     },
+     {
+      "word": "the ",
+      "start": 83.337,
+      "end": 83.497
+     },
+     {
+      "word": "trip ",
+      "start": 83.577,
+      "end": 83.737
+     },
+     {
+      "word": "sheet ",
+      "start": 83.817,
+      "end": 83.977
+     },
+     {
+      "word": "to ",
+      "start": 83.977,
+      "end": 84.057
+     },
+     {
+      "word": "that ",
+      "start": 84.057,
+      "end": 84.297
+     },
+     {
+      "word": "number?",
+      "start": 84.377,
+      "end": 84.777
+     }
+    ],
+    "metadata": {
+     "response_id": 12
+    }
+   },
+   {
+    "role": "user",
+    "content": "Yes. ",
+    "words": [
+     {
+      "word": "Yes. ",
+      "start": 87.82900500000001,
+      "end": 88.149005
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Saturday October thirty-first at seven PM Central from Pfister Hotel in Milwaukee, 4 hours, 6 passengers, written for an Executive SUV. Anything need changing?",
+    "words": [
+     {
+      "word": "Saturday ",
+      "start": 92.25511376953125,
+      "end": 92.816
+     },
+     {
+      "word": "October ",
+      "start": 92.81600390625,
+      "end": 93.296
+     },
+     {
+      "word": "thirty-first ",
+      "start": 93.29600073242187,
+      "end": 94.096
+     },
+     {
+      "word": "at ",
+      "start": 94.096,
+      "end": 94.176
+     },
+     {
+      "word": "seven ",
+      "start": 94.256,
+      "end": 94.576
+     },
+     {
+      "word": "PM ",
+      "start": 94.576,
+      "end": 94.896
+     },
+     {
+      "word": "Central ",
+      "start": 94.976,
+      "end": 95.376
+     },
+     {
+      "word": "from ",
+      "start": 95.45600024414063,
+      "end": 95.616
+     },
+     {
+      "word": "Pfister ",
+      "start": 95.61600122070313,
+      "end": 96.016
+     },
+     {
+      "word": "Hotel ",
+      "start": 96.096,
+      "end": 96.496
+     },
+     {
+      "word": "in ",
+      "start": 96.576,
+      "end": 96.576
+     },
+     {
+      "word": "Milwaukee, ",
+      "start": 96.576,
+      "end": 97.216
+     },
+     {
+      "word": "4 ",
+      "start": 97.45542700195313,
+      "end": 97.856
+     },
+     {
+      "word": "hours, ",
+      "start": 97.856,
+      "end": 98.416
+     },
+     {
+      "word": "6 ",
+      "start": 98.49609350585938,
+      "end": 98.816
+     },
+     {
+      "word": "passengers, ",
+      "start": 98.816,
+      "end": 99.616
+     },
+     {
+      "word": "written ",
+      "start": 99.77970068359375,
+      "end": 100.096
+     },
+     {
+      "word": "for ",
+      "start": 100.176,
+      "end": 100.256
+     },
+     {
+      "word": "an ",
+      "start": 100.256,
+      "end": 100.416
+     },
+     {
+      "word": "Executive ",
+      "start": 100.4960009765625,
+      "end": 100.896
+     },
+     {
+      "word": "SUV. ",
+      "start": 100.896,
+      "end": 101.536
+     },
+     {
+      "word": "Anything ",
+      "start": 101.76630053710937,
+      "end": 102.096
+     },
+     {
+      "word": "need ",
+      "start": 102.176,
+      "end": 102.256
+     },
+     {
+      "word": "changing?",
+      "start": 102.256,
+      "end": 102.736
+     }
+    ],
+    "metadata": {
+     "response_id": 16
+    }
+   }
+  ],
+  "transcript_with_tool_calls": [
+   {
+    "role": "node_transition",
+    "former_node_id": "begin",
+    "former_node_name": "begin",
+    "new_node_id": "ch_split",
+    "new_node_name": "CH-SPLIT",
+    "time_sec": 0.001,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_invocation",
+    "tool_call_id": "tool_call_254cf3",
+    "name": "CH-SPLIT",
+    "arguments": "{}",
+    "time_sec": 0.001,
+    "type": "code"
+   },
+   {
+    "role": "tool_call_result",
+    "tool_call_id": "tool_call_254cf3",
+    "successful": true,
+    "content": "{\"channel\":\"phone\",\"is_demo\":\"true\",\"sales_intent\":\"none\",\"appointment_booked\":\"false\",\"has_caller_number\":\"true\",\"caller_phone\":\"…0100\",\"contact_done\":\"false\",\"nudge_count\":\"0\",\"n06_passes\":\"0\",\"readback_passes\":\"0\",\"offer_passes\":\"0\",\"requery_count\":\"0\",\"asked_asks\":\"none\",\"asked_gate\":\"none\",\"door_now\":\"demo\",\"d2_entry\":\"none\",\"d2_mode\":\"full\",\"d2_quick_count\":\"0\",\"pending_node\":\"\",\"pending_name\":\"\",\"trip_started\":\"false\",\"transfer_open\":\"false\",\"transfer_state\":\"not tried\",\"callback_when\":\"during business hours\",\"booking_state\":\"not booked\",\"appointment_time\":\"\",\"book_return\":\"d1\",\"wants_connect\":\"false\",\"alert_sent\":\"false\",\"hau_asked\":\"false\",\"hau_ret\":\"sales\",\"heard_about_us\":\"\",\"piece_wait\":\"false\",\"hold_count\":\"0\",\"answer_unfinished\":\"false\",\"piece_ask\":\"\",\"piece_ret\":\"n03\",\"notice_done\":\"false\",\"greeting_cut\":\"false\",\"text_pitch_done\":\"false\",\"no_text\":\"false\",\"sms_consent\":\"\",\"co_passes\":\"0\",\"compose_peek\":\"false\",\"after_plain\":\"resume\"}",
+    "time_sec": 0.026
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "ch_split",
+    "former_node_name": "CH-SPLIT",
+    "new_node_id": "n01_p",
+    "new_node_name": "N01-P Greeting (phone)",
+    "time_sec": 0.028,
+    "transition_type": "normal"
+   },
+   {
+    "role": "agent",
+    "content": "AI Chauffeur, the premium reservation system for limousine, black car and chauffeured transportation. This is the demo line. Play the customer and request a trip. Calls are recorded and transcribed. Which trip would you like to try — airport, point to point, or by the hour.",
+    "words": [
+     {
+      "word": "AI ",
+      "start": 0.214324462890625,
+      "end": 0.537
+     },
+     {
+      "word": "Chauffeur, ",
+      "start": 0.537000244140625,
+      "end": 1.177
+     },
+     {
+      "word": "the ",
+      "start": 1.4159599609375,
+      "end": 1.497
+     },
+     {
+      "word": "premium ",
+      "start": 1.497,
+      "end": 1.977
+     },
+     {
+      "word": "reservation ",
+      "start": 2.057,
+      "end": 2.537
+     },
+     {
+      "word": "system ",
+      "start": 2.537,
+      "end": 2.937
+     },
+     {
+      "word": "for ",
+      "start": 3.017,
+      "end": 3.177
+     },
+     {
+      "word": "limousine, ",
+      "start": 3.177,
+      "end": 3.817
+     },
+     {
+      "word": "black ",
+      "start": 3.963522705078125,
+      "end": 4.297
+     },
+     {
+      "word": "car ",
+      "start": 4.297,
+      "end": 4.857
+     },
+     {
+      "word": "and ",
+      "start": 4.938447509765625,
+      "end": 5.017
+     },
+     {
+      "word": "chauffeured ",
+      "start": 5.017,
+      "end": 5.497
+     },
+     {
+      "word": "transportation. ",
+      "start": 5.49700048828125,
+      "end": 6.377
+     },
+     {
+      "word": "This ",
+      "start": 6.537255615234375,
+      "end": 6.697
+     },
+     {
+      "word": "is ",
+      "start": 6.777,
+      "end": 6.857
+     },
+     {
+      "word": "the ",
+      "start": 6.937,
+      "end": 6.937
+     },
+     {
+      "word": "demo ",
+      "start": 6.937,
+      "end": 7.177
+     },
+     {
+      "word": "line. ",
+      "start": 7.257,
+      "end": 7.577
+     },
+     {
+      "word": "Play ",
+      "start": 7.711980712890625,
+      "end": 7.897
+     },
+     {
+      "word": "the ",
+      "start": 7.977,
+      "end": 7.977
+     },
+     {
+      "word": "customer ",
+      "start": 7.977,
+      "end": 8.537
+     },
+     {
+      "word": "and ",
+      "start": 8.5370380859375,
+      "end": 8.697
+     },
+     {
+      "word": "request ",
+      "start": 8.777,
+      "end": 9.017
+     },
+     {
+      "word": "a ",
+      "start": 9.097,
+      "end": 9.097
+     },
+     {
+      "word": "trip. ",
+      "start": 9.097,
+      "end": 9.497
+     },
+     {
+      "word": "Calls ",
+      "start": 9.6211259765625,
+      "end": 9.977
+     },
+     {
+      "word": "are ",
+      "start": 10.057,
+      "end": 10.057
+     },
+     {
+      "word": "recorded ",
+      "start": 10.057,
+      "end": 10.617
+     },
+     {
+      "word": "and ",
+      "start": 10.697001953125,
+      "end": 10.777
+     },
+     {
+      "word": "transcribed. ",
+      "start": 10.777,
+      "end": 11.577
+     },
+     {
+      "word": "Which ",
+      "start": 11.704673095703125,
+      "end": 11.977
+     },
+     {
+      "word": "trip ",
+      "start": 12.057,
+      "end": 12.217
+     },
+     {
+      "word": "would ",
+      "start": 12.217,
+      "end": 12.297
+     },
+     {
+      "word": "you ",
+      "start": 12.377,
+      "end": 12.377
+     },
+     {
+      "word": "like ",
+      "start": 12.457,
+      "end": 12.537
+     },
+     {
+      "word": "to ",
+      "start": 12.617,
+      "end": 12.617
+     },
+     {
+      "word": "try ",
+      "start": 12.617,
+      "end": 12.857
+     },
+     {
+      "word": "— ",
+      "start": 12.857,
+      "end": 13.097
+     },
+     {
+      "word": "airport, ",
+      "start": 13.24164697265625,
+      "end": 13.817
+     },
+     {
+      "word": "point ",
+      "start": 14.03275390625,
+      "end": 14.217
+     },
+     {
+      "word": "to ",
+      "start": 14.217,
+      "end": 14.297
+     },
+     {
+      "word": "point, ",
+      "start": 14.377,
+      "end": 14.697
+     },
+     {
+      "word": "or ",
+      "start": 14.900219970703125,
+      "end": 14.937
+     },
+     {
+      "word": "by ",
+      "start": 14.937,
+      "end": 15.097
+     },
+     {
+      "word": "the ",
+      "start": 15.177,
+      "end": 15.177
+     },
+     {
+      "word": "hour.",
+      "start": 15.177,
+      "end": 15.657
+     }
+    ],
+    "metadata": {
+     "response_id": 1
+    }
+   },
+   {
+    "role": "user",
+    "content": "By the hour, Pick up at the Pfister Hotel in Milwaukee Saturday at seven PM, four hours, six passengers. ",
+    "words": [
+     {
+      "word": "By ",
+      "start": 19.119,
+      "end": 19.439
+     },
+     {
+      "word": "the ",
+      "start": 19.439,
+      "end": 19.598999999999997
+     },
+     {
+      "word": "hour, ",
+      "start": 19.598999999999997,
+      "end": 19.839
+     },
+     {
+      "word": "Pick ",
+      "start": 20.738999999999997,
+      "end": 21.058999999999997
+     },
+     {
+      "word": "up ",
+      "start": 21.058999999999997,
+      "end": 21.218999999999998
+     },
+     {
+      "word": "at ",
+      "start": 21.218999999999998,
+      "end": 21.459
+     },
+     {
+      "word": "the ",
+      "start": 21.459,
+      "end": 21.538999999999998
+     },
+     {
+      "word": "Pfister ",
+      "start": 21.538999999999998,
+      "end": 21.939
+     },
+     {
+      "word": "Hotel ",
+      "start": 21.939,
+      "end": 22.258999999999997
+     },
+     {
+      "word": "in ",
+      "start": 22.258999999999997,
+      "end": 22.499
+     },
+     {
+      "word": "Milwaukee ",
+      "start": 22.499,
+      "end": 22.979
+     },
+     {
+      "word": "Saturday ",
+      "start": 22.979,
+      "end": 23.459
+     },
+     {
+      "word": "at ",
+      "start": 23.459,
+      "end": 23.779
+     },
+     {
+      "word": "seven ",
+      "start": 23.779,
+      "end": 24.019
+     },
+     {
+      "word": "PM, ",
+      "start": 24.019,
+      "end": 24.499
+     },
+     {
+      "word": "four ",
+      "start": 25.058999,
+      "end": 25.378998999999997
+     },
+     {
+      "word": "hours, ",
+      "start": 25.378998999999997,
+      "end": 25.618997999999998
+     },
+     {
+      "word": "six ",
+      "start": 26.069,
+      "end": 26.548999
+     },
+     {
+      "word": "passengers. ",
+      "start": 26.548999,
+      "end": 27.029
+     }
+    ]
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "n01_p",
+    "former_node_name": "N01-P Greeting (phone)",
+    "new_node_id": "intake_enter",
+    "new_node_name": "INTAKE-ENTER (trip in progress, for the questions door)",
+    "time_sec": 28.696,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_invocation",
+    "tool_call_id": "tool_call_71ab7f",
+    "name": "INTAKE-ENTER (trip in progress, for the questions door)",
+    "arguments": "{}",
+    "time_sec": 28.696,
+    "type": "code"
+   },
+   {
+    "role": "tool_call_result",
+    "tool_call_id": "tool_call_71ab7f",
+    "successful": true,
+    "content": "{\"asked_asks\":\"intake\"}",
+    "time_sec": 28.718
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "intake_enter",
+    "former_node_name": "INTAKE-ENTER (trip in progress, for the questions door)",
+    "new_node_id": "intake",
+    "new_node_name": "INTAKE (prompt-driven trip intake)",
+    "time_sec": 28.719,
+    "transition_type": "normal"
+   },
+   {
+    "role": "agent",
+    "content": "How many bags will you have?",
+    "words": [
+     {
+      "word": "How ",
+      "start": 29.855892822265623,
+      "end": 30.025
+     },
+     {
+      "word": "many ",
+      "start": 30.105,
+      "end": 30.185
+     },
+     {
+      "word": "bags ",
+      "start": 30.265,
+      "end": 30.585
+     },
+     {
+      "word": "will ",
+      "start": 30.585,
+      "end": 30.665
+     },
+     {
+      "word": "you ",
+      "start": 30.745,
+      "end": 30.825
+     },
+     {
+      "word": "have?",
+      "start": 30.905,
+      "end": 31.305
+     }
+    ],
+    "metadata": {
+     "response_id": 5
+    }
+   },
+   {
+    "role": "user",
+    "content": "Tube bags. ",
+    "words": [
+     {
+      "word": "Tube ",
+      "start": 34.278999999999996,
+      "end": 34.599
+     },
+     {
+      "word": "bags. ",
+      "start": 34.599,
+      "end": 34.839
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "For six passengers and two bags, I suggest a Sprinter. Would you prefer that?",
+    "words": [
+     {
+      "word": "For ",
+      "start": 37.12574560546875,
+      "end": 37.289
+     },
+     {
+      "word": "six ",
+      "start": 37.289,
+      "end": 37.609
+     },
+     {
+      "word": "passengers ",
+      "start": 37.609,
+      "end": 38.329
+     },
+     {
+      "word": "and ",
+      "start": 38.409,
+      "end": 38.489
+     },
+     {
+      "word": "two ",
+      "start": 38.569,
+      "end": 38.729
+     },
+     {
+      "word": "bags, ",
+      "start": 38.729,
+      "end": 39.369
+     },
+     {
+      "word": "I ",
+      "start": 39.529897216796876,
+      "end": 39.609
+     },
+     {
+      "word": "suggest ",
+      "start": 39.609,
+      "end": 40.009
+     },
+     {
+      "word": "a ",
+      "start": 40.089,
+      "end": 40.089
+     },
+     {
+      "word": "Sprinter.",
+      "start": 40.089,
+      "end": 40.729
+     },
+     {
+      "word": " Would ",
+      "start": 40.85785009765625,
+      "end": 41.049
+     },
+     {
+      "word": "you ",
+      "start": 41.129,
+      "end": 41.129
+     },
+     {
+      "word": "prefer ",
+      "start": 41.209,
+      "end": 41.369
+     },
+     {
+      "word": "that?",
+      "start": 41.369,
+      "end": 41.689
+     }
+    ],
+    "metadata": {
+     "response_id": 6
+    }
+   },
+   {
+    "role": "user",
+    "content": "SUV is fine. ",
+    "words": [
+     {
+      "word": "SUV ",
+      "start": 45.638999999999996,
+      "end": 46.199
+     },
+     {
+      "word": "is ",
+      "start": 46.199,
+      "end": 46.519
+     },
+     {
+      "word": "fine. ",
+      "start": 46.519,
+      "end": 46.759
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Are there any planned stops during the four hours?",
+    "words": [
+     {
+      "word": "Are ",
+      "start": 49.07866259765625,
+      "end": 49.2
+     },
+     {
+      "word": "there ",
+      "start": 49.28,
+      "end": 49.36
+     },
+     {
+      "word": "any ",
+      "start": 49.44,
+      "end": 49.52
+     },
+     {
+      "word": "planned ",
+      "start": 49.520000244140626,
+      "end": 49.92
+     },
+     {
+      "word": "stops ",
+      "start": 50,
+      "end": 50.4
+     },
+     {
+      "word": "during ",
+      "start": 50.48,
+      "end": 50.64
+     },
+     {
+      "word": "the ",
+      "start": 50.64,
+      "end": 50.72
+     },
+     {
+      "word": "four ",
+      "start": 50.72,
+      "end": 50.96
+     },
+     {
+      "word": "hours?",
+      "start": 51.04,
+      "end": 51.52
+     }
+    ],
+    "metadata": {
+     "response_id": 7
+    }
+   },
+   {
+    "role": "user",
+    "content": "John Smith, ",
+    "words": [
+     {
+      "word": "John ",
+      "start": 54.648997,
+      "end": 54.968997
+     },
+     {
+      "word": "Smith, ",
+      "start": 54.968997,
+      "end": 55.289
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Thank you. Will you be making any stops along the way?",
+    "words": [
+     {
+      "word": "Thank ",
+      "start": 60.64659887695313,
+      "end": 60.966
+     },
+     {
+      "word": "you.",
+      "start": 61.046,
+      "end": 61.286
+     },
+     {
+      "word": " Will ",
+      "start": 61.4464140625,
+      "end": 61.606
+     },
+     {
+      "word": "you ",
+      "start": 61.686,
+      "end": 61.766
+     },
+     {
+      "word": "be ",
+      "start": 61.846,
+      "end": 61.846
+     },
+     {
+      "word": "making ",
+      "start": 61.926,
+      "end": 62.086
+     },
+     {
+      "word": "any ",
+      "start": 62.086,
+      "end": 62.246
+     },
+     {
+      "word": "stops ",
+      "start": 62.326,
+      "end": 62.646
+     },
+     {
+      "word": "along ",
+      "start": 62.646,
+      "end": 62.886
+     },
+     {
+      "word": "the ",
+      "start": 62.966,
+      "end": 62.966
+     },
+     {
+      "word": "way?",
+      "start": 62.966,
+      "end": 63.286
+     }
+    ],
+    "metadata": {
+     "response_id": 8
+    }
+   },
+   {
+    "role": "user",
+    "content": "No stops. ",
+    "words": [
+     {
+      "word": "No ",
+      "start": 66.339,
+      "end": 66.739
+     },
+     {
+      "word": "stops. ",
+      "start": 66.739,
+      "end": 67.05900000000001
+     }
+    ]
+   },
+   {
+    "role": "agent",
+    "content": "Is the number you’re calling from the best callback number?",
+    "words": [
+     {
+      "word": "Is ",
+      "start": 69.50615063476563,
+      "end": 69.714
+     },
+     {
+      "word": "the ",
+      "start": 69.794,
+      "end": 69.794
+     },
+     {
+      "word": "number ",
+      "start": 69.874,
+      "end": 70.114
+     },
+     {
+      "word": "you’re ",
+      "start": 70.194,
+      "end": 70.274
+     },
+     {
+      "word": "calling ",
+      "start": 70.274,
+      "end": 70.594
+     },
+     {
+      "word": "from ",
+      "start": 70.674,
+      "end": 70.994
+     },
+     {
+      "word": "the ",
+      "start": 71.074,
+      "end": 71.074
+     },
+     {
+      "word": "best ",
+      "start": 71.074,
+      "end": 71.474
+     },
+     {
+      "word": "callback ",
+      "start": 71.474,
+      "end": 71.954
+     },
+     {
+      "word": "number?",
+      "start": 72.034,
+      "end": 72.354
+     }
+    ],
+    "metadata": {
+     "response_id": 9
+    }
+   },
+   {
+    "role": "user",
+    "content": "That number is fine. ",
+    "words": [
+     {
+      "word": "That ",
+      "start": 76.009,
+      "end": 76.32900000000001
+     },
+     {
+      "word": "number ",
+      "start": 76.32900000000001,
+      "end": 76.569
+     },
+     {
+      "word": "is ",
+      "start": 76.569,
+      "end": 76.80900000000001
+     },
+     {
+      "word": "fine. ",
+      "start": 76.80900000000001,
+      "end": 77.049
+     }
+    ]
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "intake",
+    "former_node_name": "INTAKE (prompt-driven trip intake)",
+    "new_node_id": "intake_done",
+    "new_node_name": "INTAKE-DONE (set once)",
+    "time_sec": 79.231,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_invocation",
+    "tool_call_id": "tool_call_822027",
+    "name": "INTAKE-DONE (set once)",
+    "arguments": "{}",
+    "time_sec": 79.231,
+    "type": "code"
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "intake_done",
+    "former_node_name": "INTAKE-DONE (set once)",
+    "new_node_id": "extract_once",
+    "new_node_name": "EXTRACT-ONCE read trip fields",
+    "time_sec": 79.249,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_invocation",
+    "tool_call_id": "extract_dynamic_variables_8a3a4b",
+    "name": "EXTRACT-ONCE read trip fields",
+    "arguments": "",
+    "time_sec": 79.249,
+    "type": "extract_dynamic_variable"
+   },
+   {
+    "role": "tool_call_result",
+    "tool_call_id": "tool_call_822027",
+    "successful": true,
+    "content": "{\"vehicle_asked\":\"true\",\"trip_started\":\"true\"}",
+    "time_sec": 79.249
+   },
+   {
+    "role": "tool_call_result",
+    "tool_call_id": "extract_dynamic_variables_8a3a4b",
+    "successful": true,
+    "content": "{\"trip_type\":\"hourly\",\"pickup_date\":\"Saturday\",\"pickup_time\":\"seven PM\",\"pickup_location\":\"Pfister Hotel in Milwaukee\",\"dropoff_location\":null,\"airport\":null,\"airline_flight\":null,\"meet_style\":\"not_stated\",\"sign_name\":null,\"passenger_count\":6,\"bag_count\":2,\"hours\":4,\"occasion\":null,\"notes\":null,\"is_charter\":false,\"one_way\":false,\"stops\":null,\"return_leg\":null,\"pickup_time_zone\":\"Central\",\"wheelchair_lift_needed\":false,\"oversized_item_needed\":false,\"answer_unfinished\":false,\"caller_name\":\"John Smith\",\"vehicle_choice\":\"suv\"}",
+    "time_sec": 82.161
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "extract_once",
+    "former_node_name": "EXTRACT-ONCE read trip fields",
+    "new_node_id": "n05_capacity",
+    "new_node_name": "N05 CAPACITY (capture-only, round 2)",
+    "time_sec": 82.162,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_invocation",
+    "tool_call_id": "tool_call_c5ca5f",
+    "name": "N05 CAPACITY (capture-only, round 2)",
+    "arguments": "{}",
+    "time_sec": 82.162,
+    "type": "code"
+   },
+   {
+    "role": "tool_call_result",
+    "tool_call_id": "tool_call_c5ca5f",
+    "successful": true,
+    "content": "{\"vehicle_class\":\"suv\",\"vehicle_class_label\":\"Executive SUV\",\"vehicle_root\":\"suv\",\"oversized\":false,\"oversized_reason\":null,\"larger_class_name\":null,\"review_needed\":false,\"vehicle_ask\":\"false\",\"vehicle_asked\":\"true\",\"vehicle_return\":\"n05\"}",
+    "time_sec": 82.192
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "n05_capacity",
+    "former_node_name": "N05 CAPACITY (capture-only, round 2)",
+    "new_node_id": "n05_route",
+    "new_node_name": "N05 CONTACT route",
+    "time_sec": 82.194,
+    "transition_type": "normal"
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "n05_route",
+    "former_node_name": "N05 CONTACT route",
+    "new_node_id": "n05_consent",
+    "new_node_name": "N05-CONSENT Consent",
+    "time_sec": 82.195,
+    "transition_type": "normal"
+   },
+   {
+    "role": "agent",
+    "content": "Okay to text the trip sheet to that number?",
+    "words": [
+     {
+      "word": "Okay ",
+      "start": 82.29739575195312,
+      "end": 82.777
+     },
+     {
+      "word": "to ",
+      "start": 82.85840283203125,
+      "end": 83.017
+     },
+     {
+      "word": "text ",
+      "start": 83.097,
+      "end": 83.337
+     },
+     {
+      "word": "the ",
+      "start": 83.337,
+      "end": 83.497
+     },
+     {
+      "word": "trip ",
+      "start": 83.577,
+      "end": 83.737
+     },
+     {
+      "word": "sheet ",
+      "start": 83.817,
+      "end": 83.977
+     },
+     {
+      "word": "to ",
+      "start": 83.977,
+      "end": 84.057
+     },
+     {
+      "word": "that ",
+      "start": 84.057,
+      "end": 84.297
+     },
+     {
+      "word": "number?",
+      "start": 84.377,
+      "end": 84.777
+     }
+    ],
+    "metadata": {
+     "response_id": 12
+    }
+   },
+   {
+    "role": "user",
+    "content": "Yes. ",
+    "words": [
+     {
+      "word": "Yes. ",
+      "start": 87.82900500000001,
+      "end": 88.149005
+     }
+    ]
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "n05_consent",
+    "former_node_name": "N05-CONSENT Consent",
+    "new_node_id": "n05c_extract",
+    "new_node_name": "N05 read consent",
+    "time_sec": 90.92,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_invocation",
+    "tool_call_id": "extract_dynamic_variables_1efc81",
+    "name": "N05 read consent",
+    "arguments": "",
+    "time_sec": 90.92,
+    "type": "extract_dynamic_variable"
+   },
+   {
+    "role": "tool_call_result",
+    "tool_call_id": "extract_dynamic_variables_1efc81",
+    "successful": true,
+    "content": "{\"sms_consent\":true}",
+    "time_sec": 91.973
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "n05c_route",
+    "former_node_name": "N05 consent?",
+    "new_node_id": "contact_done_set",
+    "new_node_name": "Contact captured",
+    "time_sec": 91.974,
+    "transition_type": "normal"
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "n05c_extract",
+    "former_node_name": "N05 read consent",
+    "new_node_id": "n05c_route",
+    "new_node_name": "N05 consent?",
+    "time_sec": 91.974,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_invocation",
+    "tool_call_id": "tool_call_bd76af",
+    "name": "Contact captured",
+    "arguments": "{}",
+    "time_sec": 91.975,
+    "type": "code"
+   },
+   {
+    "role": "tool_call_result",
+    "tool_call_id": "tool_call_bd76af",
+    "successful": true,
+    "content": "{\"contact_done\":\"true\"}",
+    "time_sec": 91.994
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "contact_done_set",
+    "former_node_name": "Contact captured",
+    "new_node_id": "n06_compose",
+    "new_node_name": "N06 COMPOSER",
+    "time_sec": 91.995,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_invocation",
+    "tool_call_id": "tool_call_ca0578",
+    "name": "N06 COMPOSER",
+    "arguments": "{}",
+    "time_sec": 91.995,
+    "type": "code"
+   },
+   {
+    "role": "node_transition",
+    "former_node_id": "n06_compose",
+    "former_node_name": "N06 COMPOSER",
+    "new_node_id": "n06_speak",
+    "new_node_name": "N06 SPEAK (composer output of N06-ARR / N06-DEP / N06-P2P / N06-HRLY)",
+    "time_sec": 92.022,
+    "transition_type": "normal"
+   },
+   {
+    "role": "tool_call_result",
+    "tool_call_id": "tool_call_ca0578",
+    "successful": true,
+    "content": "{\"summary_text\":\"Saturday October thirty-first at seven PM Central from Pfister Hotel in Milwaukee, 4 hours, 6 passengers, written for an Executive SUV. Anything need changing?\",\"summary_plain\":\"Saturday October thirty-first at seven PM Central from Pfister Hotel in Milwaukee, 4 hours, 6 passengers, written for an Executive SUV.\",\"summary_has\":\"true\",\"n06_passes\":\"1\",\"compose_peek\":\"false\",\"date_spoken\":\"Saturday October thirty-first\",\"time_spoken\":\"seven PM\",\"time_zone_spoken\":\"Central\",\"airport_spoken\":\"\",\"sign_name\":\"\"}",
+    "time_sec": 92.022
+   },
+   {
+    "role": "agent",
+    "content": "Saturday October thirty-first at seven PM Central from Pfister Hotel in Milwaukee, 4 hours, 6 passengers, written for an Executive SUV. Anything need changing?",
+    "words": [
+     {
+      "word": "Saturday ",
+      "start": 92.25511376953125,
+      "end": 92.816
+     },
+     {
+      "word": "October ",
+      "start": 92.81600390625,
+      "end": 93.296
+     },
+     {
+      "word": "thirty-first ",
+      "start": 93.29600073242187,
+      "end": 94.096
+     },
+     {
+      "word": "at ",
+      "start": 94.096,
+      "end": 94.176
+     },
+     {
+      "word": "seven ",
+      "start": 94.256,
+      "end": 94.576
+     },
+     {
+      "word": "PM ",
+      "start": 94.576,
+      "end": 94.896
+     },
+     {
+      "word": "Central ",
+      "start": 94.976,
+      "end": 95.376
+     },
+     {
+      "word": "from ",
+      "start": 95.45600024414063,
+      "end": 95.616
+     },
+     {
+      "word": "Pfister ",
+      "start": 95.61600122070313,
+      "end": 96.016
+     },
+     {
+      "word": "Hotel ",
+      "start": 96.096,
+      "end": 96.496
+     },
+     {
+      "word": "in ",
+      "start": 96.576,
+      "end": 96.576
+     },
+     {
+      "word": "Milwaukee, ",
+      "start": 96.576,
+      "end": 97.216
+     },
+     {
+      "word": "4 ",
+      "start": 97.45542700195313,
+      "end": 97.856
+     },
+     {
+      "word": "hours, ",
+      "start": 97.856,
+      "end": 98.416
+     },
+     {
+      "word": "6 ",
+      "start": 98.49609350585938,
+      "end": 98.816
+     },
+     {
+      "word": "passengers, ",
+      "start": 98.816,
+      "end": 99.616
+     },
+     {
+      "word": "written ",
+      "start": 99.77970068359375,
+      "end": 100.096
+     },
+     {
+      "word": "for ",
+      "start": 100.176,
+      "end": 100.256
+     },
+     {
+      "word": "an ",
+      "start": 100.256,
+      "end": 100.416
+     },
+     {
+      "word": "Executive ",
+      "start": 100.4960009765625,
+      "end": 100.896
+     },
+     {
+      "word": "SUV. ",
+      "start": 100.896,
+      "end": 101.536
+     },
+     {
+      "word": "Anything ",
+      "start": 101.76630053710937,
+      "end": 102.096
+     },
+     {
+      "word": "need ",
+      "start": 102.176,
+      "end": 102.256
+     },
+     {
+      "word": "changing?",
+      "start": 102.256,
+      "end": 102.736
+     }
+    ],
+    "metadata": {
+     "response_id": 16
+    }
+   }
+  ],
+  "recording_url": "dxc03zgurdly9.cloudfront.net/[path]",
+  "recording_multi_channel_url": "dxc03zgurdly9.cloudfront.net/[path]",
+  "public_log_url": "dxc03zgurdly9.cloudfront.net/[path]",
+  "disconnection_reason": "user_hangup",
+  "latency": {
+   "llm": {
+    "max": 2086,
+    "min": 0,
+    "num": 8,
+    "p50": 856.5,
+    "p90": 1378.9999999999998,
+    "p95": 1732.4999999999995,
+    "p99": 2015.2999999999997,
+    "sum": 5836,
+    "values": [
+     0,
+     958,
+     1076,
+     961,
+     2086,
+     755,
+     0,
+     0
+    ]
+   },
+   "e2e": {
+    "max": 5251,
+    "min": 2109,
+    "num": 4,
+    "p50": 2205.5,
+    "p90": 4348,
+    "p95": 4799.499999999999,
+    "p99": 5160.699999999999,
+    "sum": 11771,
+    "values": [
+     2170,
+     2241,
+     5251,
+     2109
+    ]
+   },
+   "tts": {
+    "max": 112,
+    "min": 59,
+    "num": 8,
+    "p50": 61.5,
+    "p90": 81.89999999999999,
+    "p95": 96.94999999999997,
+    "p99": 108.98999999999998,
+    "sum": 553,
+    "values": [
+     69,
+     68,
+     62,
+     61,
+     61,
+     59,
+     61,
+     112
+    ]
+   },
+   "asr": {
+    "max": 321,
+    "min": 0,
+    "num": 9,
+    "p50": 171,
+    "p90": 273.79999999999995,
+    "p95": 297.4,
+    "p99": 316.28,
+    "sum": 1550,
+    "values": [
+     238,
+     163,
+     157,
+     171,
+     238,
+     0,
+     0,
+     321,
+     262
+    ]
+   }
+  },
+  "metadata": {
+   "label": "B-T3-bake",
+   "source": "aic-agent-build-v1",
+   "test_mode": true
+  },
+  "call_cost": {
+   "combined_cost": 36.81,
+   "product_costs": [
+    {
+     "cost": 9.8083369,
+     "product": "retell_voice_engine",
+     "unit_price": 0.0916667
+    },
+    {
+     "cost": 2.675,
+     "product": "cartesia_tts_new",
+     "unit_price": 0.025
+    },
+    {
+     "cost": 22.8266631,
+     "product": "gpt_6_1_sol_high_priority",
+     "unit_price": 0.2133333
+    },
+    {
+     "cost": 1.5,
+     "product": "gpt_4_1_text_testing",
+     "unit_price": 1.5
+    }
+   ],
+   "total_duration_seconds": 107,
+   "total_duration_unit_price": 0.33
+  },
+  "call_analysis": {
+   "call_successful": true,
+   "call_summary": "The caller requested an hourly trip demo, specifying pickup at the Pfister Hotel in Milwaukee on Saturday, October 31st at 7 PM for four hours with six passengers and two bags. The caller chose an Executive SUV, confirmed no stops, provided their name and callback number, and consented to receive the trip sheet via text. The agent read back the trip details for confirmation.",
+   "custom_analysis_data": {
+    "airline_flight": "",
+    "airport": "",
+    "appointment_booked": false,
+    "bag_count": "2",
+    "callback_requested": false,
+    "caller_cell": "…0100",
+    "caller_mobile": "…0100",
+    "caller_name": "John Smith",
+    "caller_role": "operator",
+    "company_name": "",
+    "demo_feedback": "",
+    "door": "demo",
+    "dropoff_address": "",
+    "heard_about_us": "",
+    "hours": "4",
+    "interest_level": "",
+    "is_charter": false,
+    "meet_style": "not_stated",
+    "no_text": false,
+    "one_way": false,
+    "outcome": "demo_taken",
+    "passenger_count": 6,
+    "pickup_address": "Pfister Hotel in Milwaukee",
+    "pickup_date": "2026-10-31",
+    "pickup_time": "seven PM",
+    "price_asked": false,
+    "questions_asked": "",
+    "review_needed": false,
+    "setup_call_booked": false,
+    "sign_text": "",
+    "sms_consent": true,
+    "spam": false,
+    "special_notes": "",
+    "transfer_result": "not_attempted",
+    "trip_type": "hourly",
+    "vehicle_class": "Executive SUV"
+   },
+   "in_voicemail": false,
+   "user_sentiment": "Positive"
+  },
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "llm_token_usage": {
+   "values": [
+    3265,
+    4122,
+    4155,
+    4179,
+    4206
+   ],
+   "average": 3985.4,
+   "num_requests": 5
+  },
+  "tool_calls": [
+   {
+    "latency_ms": 24.999999999999996,
+    "name": "CH-SPLIT",
+    "start_time_sec": 0.001,
+    "success": true,
+    "tool_call_id": "tool_call_254cf3",
+    "type": "code"
+   },
+   {
+    "latency_ms": 21.999999999998465,
+    "name": "INTAKE-ENTER (trip in progress, for the questions door)",
+    "start_time_sec": 28.696,
+    "success": true,
+    "tool_call_id": "tool_call_71ab7f",
+    "type": "code"
+   },
+   {
+    "latency_ms": 18.000000000000682,
+    "name": "INTAKE-DONE (set once)",
+    "start_time_sec": 79.231,
+    "success": true,
+    "tool_call_id": "tool_call_822027",
+    "type": "code"
+   },
+   {
+    "latency_ms": 2912.0000000000064,
+    "name": "EXTRACT-ONCE read trip fields",
+    "start_time_sec": 79.249,
+    "success": true,
+    "tool_call_id": "extract_dynamic_variables_8a3a4b",
+    "type": "extract_dynamic_variable"
+   },
+   {
+    "latency_ms": 29.999999999986926,
+    "name": "N05 CAPACITY (capture-only, round 2)",
+    "start_time_sec": 82.162,
+    "success": true,
+    "tool_call_id": "tool_call_c5ca5f",
+    "type": "code"
+   },
+   {
+    "latency_ms": 1052.9999999999973,
+    "name": "N05 read consent",
+    "start_time_sec": 90.92,
+    "success": true,
+    "tool_call_id": "extract_dynamic_variables_1efc81",
+    "type": "extract_dynamic_variable"
+   },
+   {
+    "latency_ms": 19.000000000005457,
+    "name": "Contact captured",
+    "start_time_sec": 91.975,
+    "success": true,
+    "tool_call_id": "tool_call_bd76af",
+    "type": "code"
+   },
+   {
+    "latency_ms": 27.000000000001023,
+    "name": "N06 COMPOSER",
+    "start_time_sec": 91.995,
+    "success": true,
+    "tool_call_id": "tool_call_ca0578",
+    "type": "code"
+   }
+  ]
+ }
+}
