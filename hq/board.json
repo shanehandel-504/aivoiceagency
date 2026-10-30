@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-29T22:31:00-05:00",
+  "updated": "2026-10-29T22:23:21-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -841,6 +841,14 @@
       "url": "https://aivoiceagency.ai/hq",
       "title": "AIC agent · intake v2",
       "label": "v17 grouped asks + discovery live 2026-10-29 22:15 CT: Denver script 6 asks (was 11), readback at 91 s (was 133), skeptic call 0 pull-backs / 0 offers, Limo Anywhere answered yes, \"can I talk to somebody\" gets the team interview, readback corrections repeat; gap p50 1.83 s / p95 2.56 s. Rollback: b5-promote.mjs repin 16. Ready for Shane's one call. — v16 live on 0019 since 2026-10-29 19:47 CT: GPT 6.1 Terra (fast tier), gap p50 1.8 s (p95 2.5 s; Phase 0 was 4.0 / 6.0). agent_9ebb v16 = one prompt-driven INTAKE node + extract once (52 intake nodes retired, greeting byte-identical), dynamic responsiveness off, reminder 6 s. 15-call confirmation: intake p50 1.79 s / p95 2.46 s / max 2.91 s, questions answered 9/9. 0019 + the …8976 Google line re-pinned 15 -> 16. Rollback: p10-promote.mjs repin 15. Open: Shane's three check calls; Session B re-pins the 8930 handoff (still AIC v14). Report reports/2026-10-29-aic-agent-build-v1.md."
+    },
+    {
+      "id": "AVA-8930-THREE-FIXES",
+      "status": "live",
+      "updated": "2026-10-29T22:23:21-05:00",
+      "url": "https://aivoiceagency.ai/hq",
+      "title": "AVA 8930 · three fixes",
+      "label": "v54 live since 2026-10-29 22:20 CT: no email ask, transfer fires on first yes, sonic-3.6, handoff → AIC v17. 8930 (in + out) and the four pool lines re-pinned 53 → 54; verify 11/11. The handoff tool now speaks the bridge line itself (\"Let me transfer you to the AI Chauffeur demo now.\", static, byte-exact) and its prompt sentence is reduced to \"call handoff_to_desk.\"; no new spoken line. Email: nothing to remove — no tool, prompt line or booking-workflow field asked for one, and 0 of 71 calls since Sep 1 contain the word. Tests on TEST v18: S1–S4 PASS first run; live proof S1 call_872b375e… PASS (tool on the first \"Yes.\", greeting +0.30 s, gaps 1.43 / 1.00 s). Spend 82¢ (5 calls). Rollback: s6-promote.mjs pin 53. Report reports/2026-10-29-ava-agent-fix-v1.md (incl. the read-only GHL handoff report: a handed-off caller is filed as an AVA hot lead today, against Shane's ruling; not fixed)."
     }
   ],
   "log": [
@@ -1543,6 +1551,10 @@
     {
       "ts": "2026-10-29T22:31:00-05:00",
       "entry": "AIC v17 live on 0019 + …8976 (22:15 CT): BUNDLE v1.2 grouped asks + break-out to discovery. Denver script 6 asks, readback 91 s; skeptic 0 pull-backs, 0 offers; 20/20 checks, gap p50 1.83 s / p95 2.56 s. Rollback repin 16. Report reports/2026-10-29-aic-agent-build-v1.md (BUNDLE section)."
+    },
+    {
+      "ts": "2026-10-29T22:23:21-05:00",
+      "entry": "AVA 8930 three fixes live: 8930 + four pool lines on agent_d5ada v54 since 22:20 CT (was v53). Transfer fires on the first yes with the bridge line spoken by the handoff tool, voice pinned sonic-3.6, handoff pinned to AIC v17 (waited for 0019 to move past v16, landed 22:19 CT). No email ask existed to remove. TEST v18 S1–S4 + live proof PASS, spend 82¢. Rollback re-pin v53. GHL report: both post-call rails fire on a handoff and the AVA rail tags the caller ava-demo-hot (report only). Report reports/2026-10-29-ava-agent-fix-v1.md."
     }
   ]
 }
