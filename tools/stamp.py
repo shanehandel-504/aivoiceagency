@@ -167,6 +167,7 @@ FOOTER = '''<!-- BRIDGE:FOOTER -->
           <a href="/privacy">Privacy</a>
           <a href="/terms.html">Terms</a>
           <a href="/sms-policy.html">SMS Policy</a>
+          <a href="https://aichauffeur.ai/">AI Chauffeur · limo and black car</a>
         </div>
       </details>
     </div>

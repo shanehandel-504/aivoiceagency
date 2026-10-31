@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-31T11:49:18-05:00",
+  "updated": "2026-10-31T12:09:30-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -865,6 +865,14 @@
       "url": "https://aivoiceagency.ai/",
       "title": "SEARCH MERGE v1 (2026-10-31): founder Person + AI Chauffeur as subOrganization, markup only",
       "label": "scripts/entity_schema.py now gives the AI Voice Agency Organization a founder (Person https://aivoiceagency.ai/#founder, Shane Handel) and moves AI Chauffeur out of sameAs into subOrganization with its own @id https://aichauffeur.ai/#organization, so engines read two related companies, not one. Generator blob 716f9823 (the shared file, same edits as the aichauffeur run). 72 sitemap pages rewritten, --check 0 to touch; every staged page identical to HEAD outside ld+json (zero visible bytes). validate_jsonld 75 pages 0 errors; llms-verify shows the same 8 llms.txt header lines red before and after. Rollback: git revert the commit, push."
+    },
+    {
+      "id": "RUN2-CROSSLINK-ANSWERS",
+      "status": "live",
+      "updated": "2026-10-31T12:09:30-05:00",
+      "url": "https://aivoiceagency.ai/",
+      "title": "RUN 2 CROSS-LINK + ANSWERS (2026-10-31): AI Chauffeur in the AVA footer sitewide + 2 answer pages",
+      "label": "Part A: the footer Company column now ends with \"AI Chauffeur · limo and black car\" -> https://aichauffeur.ai/ on all 68 stamped AVA pages (tools/stamp.py FOOTER, re-stamped; 4 version-only pages took the cache token only). Shane asked for it in the ops chat 11:48 AM CT Oct 31; it is his un-freeze for this one link. Diff guard: every page differs from HEAD only by that line and the ?v= tokens; pages linking to aichauffeur.ai 41 -> 104, none lost; the homepage line \"Limousine and black car companies run on AI Chauffeur, from $997 a month.\" unchanged. Render 390x844 and 1440, dark and light: contrast 6.40 / 5.67, one left edge per column, no overflow at 390, no console errors. Part B: 2 answer pages from PASTE-BRICKS-AVA-2026-10-29 (its own log line). Rollback: git revert the footer commit."
     }
   ],
   "log": [
@@ -1579,6 +1587,10 @@
     {
       "ts": "2026-10-31T11:49:18-05:00",
       "entry": "SEARCH MERGE v1: founder Person (#founder) on the Organization and AI Chauffeur moved from sameAs to subOrganization (#organization id) via scripts/entity_schema.py. 72 pages, markup only, 0 visible bytes changed. IndexNow ping after the deploy is READY."
+    },
+    {
+      "ts": "2026-10-31T12:09:30-05:00",
+      "entry": "RUN 2 CROSS-LINK Part A: \"AI Chauffeur · limo and black car\" added to the footer Company column on 68 AVA pages via tools/stamp.py (Shane, Oct 31). No page cut, unlinked or redirected; pages linking to aichauffeur.ai 41 -> 104."
     }
   ]
 }
