@@ -452,7 +452,7 @@ never the word "custom".
 
 ---
 
-## MESSAGE FORMAT LAW (Jul 28 2026)
+## MESSAGE FORMAT LAW (Jul 28 2026 · v1.1 Oct 31 2026)
 
 Governs every outbound message — SMS, email, owner alert, booking receipt, post-call summary.
 Ratified RUN 7-CODE.
@@ -470,6 +470,7 @@ Ratified RUN 7-CODE.
 - **Never fabricate stats, dollar amounts, or testimonials.** Never "100 free minutes." Never
   "locked in." **Caller-facing copy never says "Shane"** — the owner is named only in owner-facing
   messages.
+- Exception: SHANE-ASSISTANT (Shane's own 305 line) names Shane out loud. Approved by Shane Oct 27 2026. Every AVA and AI Chauffeur line keeps the rule.
 
 Nav and footer CTAs are stamp.py-owned. Change the string in `tools/stamp.py`, then re-stamp —
 an inline edit is reverted on the next stamp run.
