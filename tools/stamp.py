@@ -195,7 +195,8 @@ def P(trade, result, when, anchor):
     return dict(trade=trade, result=result, when=when, anchor=anchor)
 
 
-# (label, href-or-None). Last item is always the current page (rendered unlinked).
+# (label, href-or-None). Last item is the current page, rendered unlinked — unless it
+# carries an href: the city-trade pages' trade crumb links up to its national page.
 V = [('Verticals', None)]
 W = [('Wisconsin', None)]
 PAGES = [
@@ -240,13 +241,17 @@ PAGES = [
     # with every BRIDGE marker in place, so `kind` only names its family.
     dict(f='pricing/index.html',                           kind='circulant', trail=[('Pricing', None)], jsonld=True),
 ]
+# RUN 3 TRADE PAGES (Oct 31): a city-trade page whose trade has a national page links its
+# trade crumb up to it. Dental and roofing have no national page and stay unlinked.
+NATIONAL = {'hvac': '/hvac-answering-service', 'plumbing': '/plumber-answering-service',
+            'electrical': '/electrician-answering-service'}
 for city, hub in [('milwaukee', '/milwaukee'), ('madison', '/madison'), ('west-bend', '/west-bend'),
                   ('green-bay', '/green-bay'), ('waukesha', '/waukesha')]:
     cname = city.replace('-', ' ').title()
     for trade in ['hvac', 'plumbing', 'electrical', 'dental', 'roofing']:
         tname = 'HVAC' if trade == 'hvac' else trade.title()
         PAGES.append(dict(f='%s-%s/index.html' % (city, trade), kind='circulant',
-                          trail=W + [(cname, hub), (tname, None)]))
+                          trail=W + [(cname, hub), (tname, NATIONAL.get(trade))]))
 
 # CACHE-ARMOR-ONLY pages (RUN 2). These carry their own hand-authored slim chrome
 # by design (landers / conversion page — "no full nav"), so they must NOT receive the
@@ -340,7 +345,9 @@ def crumb_html(trail):
     for i, (label, href) in enumerate(trail):
         parts.append('<span class="bc-sep">/</span>')
         last = i == len(trail) - 1
-        if last:
+        if last and href:
+            parts.append('<a href="%s">%s</a>' % (href, label))
+        elif last:
             parts.append('<span class="bc-here">%s</span>' % label)
         elif href:
             parts.append('<a href="%s">%s</a>' % (href, label))
@@ -362,7 +369,8 @@ def crumb_jsonld(path, trail):
     for i, (label, href) in enumerate(trail):
         last = i == len(trail) - 1
         if last:
-            items.append('{"@type":"ListItem","position":%d,"name":"%s","item":"%s"}' % (pos, label, url))
+            items.append('{"@type":"ListItem","position":%d,"name":"%s","item":"%s"}'
+                         % (pos, label, 'https://aivoiceagency.ai' + href if href else url))
             pos += 1
         elif href:
             items.append('{"@type":"ListItem","position":%d,"name":"%s","item":"https://aivoiceagency.ai%s"}' % (pos, label, href))

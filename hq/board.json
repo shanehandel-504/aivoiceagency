@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-10-31T12:11:33-05:00",
+  "updated": "2026-10-31T12:44:05-05:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -873,6 +873,14 @@
       "url": "https://aivoiceagency.ai/",
       "title": "RUN 2 CROSS-LINK + ANSWERS (2026-10-31): AI Chauffeur in the AVA footer sitewide + 2 answer pages",
       "label": "Part A: the footer Company column now ends with \"AI Chauffeur · limo and black car\" -> https://aichauffeur.ai/ on all 68 stamped AVA pages (tools/stamp.py FOOTER, re-stamped; 4 version-only pages took the cache token only). Shane asked for it in the ops chat 11:48 AM CT Oct 31; it is his un-freeze for this one link. Diff guard: every page differs from HEAD only by that line and the ?v= tokens; pages linking to aichauffeur.ai 41 -> 104, none lost; the homepage line \"Limousine and black car companies run on AI Chauffeur, from $997 a month.\" unchanged. Render 390x844 and 1440, dark and light: contrast 6.40 / 5.67, one left edge per column, no overflow at 390, no console errors. Part B: 2 answer pages from PASTE-BRICKS-AVA-2026-10-29 (its own log line). Rollback: git revert the footer commit."
+    },
+    {
+      "id": "RUN3-TRADE-PAGES",
+      "status": "live",
+      "updated": "2026-10-31T12:44:05-05:00",
+      "url": "https://aivoiceagency.ai/plumber-answering-service",
+      "title": "RUN 3 TRADE PAGES TO PAGE ONE (2026-10-31): search-term titles and descriptions, term in the H1, sample calls on plumbing + HVAC, city crumbs link up, copy freeze lifted",
+      "label": "Why: Search Console Oct 1-28, 9,278 impressions, 7 clicks, average position 19; the four national trade pages carried the biggest 0-click terms. Shipped: plumber page title \"Plumbing Answering Service That Books the Job | AVA\"; new descriptions on all four (no \"Wisconsin\", no phone number, \"From $497 a month\"); each H1 now opens with its term (the hero label moved inside the H1, \"// \" drawn by CSS, same box, CSS and line positions, pixel diff limited to one glyph's antialiasing); the homepage's sample-call player with one call on /plumber-answering-service (plumbing) and /hvac-answering-service (heating), each with its AudioObject; 15 city pages (hvac, plumbing, electrical x 5 cities) link their trade crumb and BreadcrumbList item up to the national page. js/calls.js rev d: data-call keeps one call (homepage unchanged, 5 tabs verified). hq/copy-freeze-2026-10-28.json: lifted 2026-10-31 by Shane. Rollback: git revert."
     }
   ],
   "log": [
@@ -1595,6 +1603,10 @@
     {
       "ts": "2026-10-31T12:11:33-05:00",
       "entry": "bricks 2026-10-29: 2 answer pages live (what-if-the-caller-asks-something-ava-cant-answer, can-ava-answer-calls-in-more-than-one-language)"
+    },
+    {
+      "ts": "2026-10-31T12:44:05-05:00",
+      "entry": "RUN 3 TRADE PAGES: search-term titles/descriptions on the 4 national trade pages, term first in each H1, sample calls on plumbing + HVAC (homepage player, data-call), 15 city crumbs link up to their national page; copy freeze lifted (no time lock, Shane Oct 31 12:07 CT)."
     }
   ]
 }

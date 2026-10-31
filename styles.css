@@ -74,6 +74,19 @@ nav.main-nav .menu-toggle { display: none; background: none; border: none; color
 .hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(56px, 9vw, 110px); line-height: 0.92; letter-spacing: -0.04em; text-transform: uppercase; color: var(--ink); margin: 24px 0 32px; }
 .hero h1.hero-h1-3line { font-size: clamp(40px, 6.6vw, 84px); line-height: 1.06; letter-spacing: -0.03em; margin: 24px 0 24px; }
 .hero h1 .accent { color: var(--cyan); }
+/* RUN 3 TRADE PAGES (Oct 31) · the four national trade pages carry their hero label INSIDE the h1, so the h1's
+   text starts with the search term. It must look exactly like the .section-label that sat above the h1: its own
+   font, size, spacing, colour and margins (nothing from the h1 leaks in), the "// " drawn here instead of typed,
+   and the h1's top margin dropped because the label now opens it. The rise delays move one child down so the
+   hero lines still arrive at 0 / 80 / 160 / 240 ms. */
+.hero h1:has(> .section-label) { margin-top: 0; }
+.hero h1 > .section-label { display: block; font-family: var(--font-mono); font-size: 11px; font-weight: 500; font-style: normal; line-height: 1.65; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); margin: 0 0 32px; }
+@media (max-width: 820px) { .hero h1 > .section-label { line-height: 1.6; } } /* the body line-height bridge.css gives the label it replaces */
+.hero h1 > .section-label::before { content: "// "; content: "// " / ""; }
+body.hero-animate .hero h1 > .section-label ~ .hero-line:nth-child(2) { animation-delay: 0ms; }
+body.hero-animate .hero h1 > .section-label ~ .hero-line:nth-child(3) { animation-delay: 80ms; }
+body.hero-animate .hero h1 > .section-label ~ .hero-line:nth-child(4) { animation-delay: 160ms; }
+body.hero-animate .hero h1 > .section-label ~ .hero-line:nth-child(5) { animation-delay: 240ms; }
 .hero-sub { font-family: var(--font-body); font-size: 18px; line-height: 1.55; color: var(--ink-mute); max-width: 540px; margin-bottom: 32px; }
 .hero-sub .accent { color: var(--cyan); font-weight: 600; }
 
