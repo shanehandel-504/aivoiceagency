@@ -33,6 +33,21 @@ import re
 import subprocess
 import sys
 
+# Founder: one Person, one @id, shared by both sites (FOUNDER-ENTITY v1, 2026-10-31).
+# Markup only: adding it changes no visible words on either site.
+FOUNDER = {
+    "@type": "Person",
+    "@id": "https://aivoiceagency.ai/#founder",
+    "name": "Shane Handel",
+    "jobTitle": "Founder",
+    "description": "Founder of AI Voice Agency and AI Chauffeur. 30 years operating, 14 in corporate ground transportation.",
+    "sameAs": [
+        "https://www.linkedin.com/in/shane-handel",
+        "https://www.facebook.com/shanehandel",
+        "https://x.com/HandelShane",
+    ],
+}
+
 AVA = {
     "@type": "Organization",
     "@id": "https://aivoiceagency.ai/#organization",
@@ -62,10 +77,11 @@ AVA = {
         "https://www.youtube.com/@aivoiceagency",
         "https://www.linkedin.com/company/aivoiceagency",
         "https://x.com/AIVoiceAgency",
-        "https://aichauffeur.ai",
     ],
+    "founder": FOUNDER,
     "subOrganization": {
         "@type": "Organization",
+        "@id": "https://aichauffeur.ai/#organization",
         "name": "AI Chauffeur",
         "url": "https://aichauffeur.ai",
     },
@@ -98,11 +114,11 @@ AIC = {
         "https://www.youtube.com/@aichauffeur",
         "https://www.facebook.com/profile.php?id=61595146328236",
         "https://www.tiktok.com/@shanehandel",
-        "https://www.linkedin.com/in/shane-handel",
-        "https://aivoiceagency.ai",
     ],
+    "founder": FOUNDER,
     "parentOrganization": {
         "@type": "Organization",
+        "@id": "https://aivoiceagency.ai/#organization",
         "name": "AI Voice Agency",
         "url": "https://aivoiceagency.ai",
     },
