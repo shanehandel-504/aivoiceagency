@@ -46,7 +46,9 @@ input[type=range]{height:6px;border-radius:3px;accent-color:var(--bz-cyan)}
 .bs-theme:focus-visible{outline:2px solid var(--bz-cyan);outline-offset:3px}
 /* group the toggle with the burger on the right (theme's auto pushes the pair;
    drop the burger's own auto so they don't both grab free space = mid-bar float) */
-@media(max-width:820px){.bs-theme{margin-left:auto}.bnav-burger{margin-left:8px}}
+/* ONE RUN v1 (2026-11-02): the nav row needs ~1076px, so 821-1100 clipped the phone number (trade pages) or
+   scrolled the page sideways (homepage). The nav goes to the burger at 1100; footer, call bar and type stay at 820. */
+@media(max-width:1100px){.bs-theme{margin-left:auto}.bnav-burger{margin-left:8px}}
 
 html[data-theme="light"]{
   /* CIRCULANT tokens (token-driven pages flip with these) */
@@ -105,7 +107,7 @@ html[data-theme="light"] .btn-primary:hover{color:#FFFFFF}
 html[data-theme="light"] .btn-primary:hover{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 0 26px rgba(3,54,35,.55)}
 @supports not (backdrop-filter:blur(12px)){html[data-theme="light"] .bnav{background:rgba(255,255,255,.97)}}
-@media(max-width:820px){html[data-theme="light"] .bnav,html[data-theme="light"] .bnav-menu{background:rgba(244,246,250,.98)}}
+@media(max-width:1100px){html[data-theme="light"] .bnav,html[data-theme="light"] .bnav-menu{background:rgba(244,246,250,.98)}}
 input[type=range]::-webkit-slider-thumb{width:32px!important;height:32px!important;border-radius:50%;
   background:var(--bz-cyan);border:2px solid var(--bz-void);-webkit-appearance:none;appearance:none;cursor:pointer}
 input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;border-radius:50%;
@@ -152,7 +154,7 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
   flex-direction:column;padding:8px;background:rgba(14,15,22,.97);
   border:1px solid var(--bz-line);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
 .bnav-group.open>.bnav-drop{display:flex}
-@media(min-width:821px){.bnav-group:focus-within>.bnav-drop{display:flex}}
+@media(min-width:1101px){.bnav-group:focus-within>.bnav-drop{display:flex}}
 .bnav-drop a{display:flex;align-items:center;min-height:var(--tap);padding:0 14px;border-radius:9px;
   color:var(--bz-ink);font-size:14.5px;font-weight:500}
 .bnav-drop a:hover{background:rgba(0,212,255,.1);color:var(--bz-cyan)}
@@ -173,13 +175,13 @@ input[type=range]::-moz-range-thumb{width:32px!important;height:32px!important;b
    needs ~1170px. At the old breakpoint, 1121-1170 pushed the phone number off
    the right edge. Measured, not guessed. */
 @media(max-width:1200px){.bnav-top{padding:0 10px;font-size:14px}.bnav-cta{padding:0 13px;font-size:13.5px}}
-@media(max-width:820px){
+@media(max-width:1100px){
   /* B1 ROOT FIX: backdrop-filter on .bnav made it the containing block for its
      fixed child menu, trapping the overlay inside the 60px nav bar (so it never
      covered the screen and outside-taps hit the page/iframe behind it). Drop the
      filter on mobile so the fixed menu resolves against the viewport = full height. */
   .bnav{min-height:60px;-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(10,10,15,.96)}
-  .bnav-burger{display:inline-flex;align-items:center;justify-content:center}
+  .bnav-burger{display:inline-flex;align-items:center;justify-content:center;margin-left:8px}  /* ONE RUN v1: the base rule's margin-left:auto came later and won, floating the theme toggle mid-bar */
   .bnav-menu{display:none;position:fixed;inset:60px 0 0 0;z-index:899;margin:0;
     flex-direction:column;align-items:stretch;gap:2px;padding:18px 20px 40px;overflow-y:auto;
     background:rgba(10,10,15,.98)}

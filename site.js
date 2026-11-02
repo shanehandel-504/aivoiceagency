@@ -52,7 +52,10 @@ window.addEventListener('load', function() { window.scrollTo(0, 0); });
   }, false);
 
   // Hero line rise + cyan flicker — once per session, motion-safe
-  if (!sessionStorage.getItem('avaHeroAnimated')) {
+  // ONE RUN v1 (2026-11-02): reduced motion never gets hero-animate. With it, styles.css held every .hero-line at
+  // opacity 0 while its reduced-motion rule killed the rise, so the first page of a session showed no headline.
+  if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+      && !sessionStorage.getItem('avaHeroAnimated')) {
     document.body.classList.add('hero-animate');
     setTimeout(function() {
       var cyan = document.querySelector('.hero-line-cyan');

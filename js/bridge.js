@@ -5,6 +5,8 @@
   'use strict';
 
   var mqMobile = window.matchMedia('(max-width: 820px)');
+  /* ONE RUN v1: the nav turns into the burger at 1100px (bridge.css); footer and call bar stay on mqMobile */
+  var mqNav = window.matchMedia('(max-width: 1100px)');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ============================================================
@@ -102,9 +104,9 @@
       if (e.target.closest('a')) closeMenu();
     });
     /* B1: crossing to desktop must never leave the body scroll-locked */
-    function onMq() { if (!mqMobile.matches) closeMenu(); }
-    if (mqMobile.addEventListener) mqMobile.addEventListener('change', onMq);
-    else if (mqMobile.addListener) mqMobile.addListener(onMq);
+    function onMq() { if (!mqNav.matches) closeMenu(); }
+    if (mqNav.addEventListener) mqNav.addEventListener('change', onMq);
+    else if (mqNav.addListener) mqNav.addListener(onMq);
   }
 
   /* ---------- footer: columns are accordions on mobile, open on desktop ---------- */
