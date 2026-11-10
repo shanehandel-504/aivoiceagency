@@ -1,4 +1,19 @@
-# 2026-11-10 · W3 "sales agent v3" · AIC round 7 overnight (discovery ladder) · RUN INCOMPLETE, v19 stays live
+# 2026-11-10 · W3 "sales agent v3" · AIC round 7 overnight (discovery ladder) · RUN INCOMPLETE overnight, then LIVE ON v20 at 12:12 PM on Shane's "promote v15"
+
+## Update 12:18 PM CT · LIVE ON v20 · READY FOR SHANE'S ONE CALL
+
+- At 12:11 PM Shane typed "promote v15", waiving the missed gate and the 6:15 AM fence.
+- Rollback first: a fresh v19 export, and the p7_rollback.mjs dry run passed.
+- agent_9ebb **v20** (= tested candidate v15, book_slot real, the 480 transfer, today's post-call webhook) is published.
+- 0019 + DEMO-POOL-05 were re-pinned together; the pins read back OK and the third greeting hash is byte-identical.
+- Smoke on live v20 (test_mode, times declined): SMOKE-01 `call_d8a9343a66e4d333d11b4520769`, VOLUNTEER-01 `call_51b1d2d1805f24c746b18610f9b`.
+  - Blind audit: 0 criticals, both PASS.
+  - grade_call.py's two flags come from stale reference data in tools/qa: the v15-era greeting in lines.json, and old AIC LINE FACTS that call L27's $1,697 invented.
+  - Nothing was sent.
+- Rollback: `doppler run --project ava-prod --config prd -- node p7_rollback.mjs --go` (both lines back to v19).
+- Next: Shane's live check call (stay quiet 8 s at step 3).
+
+The overnight readback below is kept as written.
 
 ```
 ===== SHANE READBACK — COPY ALL =====
