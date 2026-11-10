@@ -68,6 +68,20 @@ must ("This call is recorded").
 
 **R11 — Greeting byte-exact** (computed in code). The first agent words match the line's stored greeting.
 
+**R12 — AIC discovery ladder (added Nov 10 2026, round 7).** Applies to the AIC questions part (the caller asks
+about the product, not a sample trip). Findings of kind `ladder`:
+- CRITICAL: the same discovery question or topic asked twice (fleet, name/company, software, phones, rates…).
+- CRITICAL: a coverage, phones, overflow, after-hours, nights/weekends or missed-calls question after one such
+  question was already asked, or after the caller already said how their calls are covered.
+- CRITICAL: a coverage, phones or missed-calls question as the first discovery question.
+- CRITICAL: a made-up fact about software (a named software "connects", "is connected" or "is confirmed"), rate
+  sheets (how many prices it holds), corporate accounts (verified, an account rate) or departments. "It connects at
+  setup the way your software allows" and "The team checks it on the Discovery Call" are approved, never findings.
+- FAIL: a questions-part agent turn that ends with no question while the caller hasn't ended (except after six
+  discovery questions); name and company not asked by the third discovery turn; two separate questions in one
+  turn; more than six discovery questions in one call.
+Put `"critical": true` on the critical ones in `outcome_note`.
+
 ## Outcome — pick one
 
 - `trip_captured` — the caller gave a trip and the agent took it through to the end of the intake (a read-back,
