@@ -1,4 +1,96 @@
-# 2026-11-10 · W3 "sales agent v3" · AIC round 8 FINAL v2 (the last tuning run) · RUN INCOMPLETE: the build missed its gate twice, v20 stays live
+# 2026-11-10 · W3 "sales agent v3" · AIC round 8 FINAL v2 · RUN INCOMPLETE at 8:16 PM, then LIVE ON v21 at 9:00 PM on Shane's "promote round 8" (round 8 promote paste v1)
+
+## Update 9:08 PM CT · LIVE ON v21 · READY FOR SHANE'S ONE CALL
+
+Shane's "promote round 8" (and his yes to XS-1 at 7:52 PM) put the tested gate-2 build live with XS-1 and the five rails together. The round 8 run's own readback (RUN INCOMPLETE) is kept below as written.
+
+```
+===== SHANE READBACK — COPY ALL =====
+LIVE ON v21 · READY FOR SHANE'S ONE CALL
+
+IN PLAIN ENGLISH
+The round 8 build has been live since 9:00 PM: 414-775-0019, DEMO-POOL-05 and the website button now answer on agent_9ebb v21.
+The five rails went live in the same step: the post-call text and page, the email reply, the booking texts, the website-booking confirmation and the rate engine.
+An extra stop now gets the line you approved (XS-1). One live proof call in test mode got through with no critical: it said XS-1, kept the stop on the trip sheet, and composed the text and the page without sending anything.
+Both the agent and the rails have one-command rollbacks.
+
+WHAT IS LIVE NOW
+| What | Version | Proof |
+| AI Chauffeur agent | agent_9ebb v21 (flow conversation_flow_9cf4ddd5b734 v21) = the tested gate-2 build + XS-1, nothing else | p8_promote checks green; greeting + notice byte-identical before, after and a third time |
+| Pins | 0019 + DEMO-POOL-05 -> v21 together, read back OK, inbound webhooks unchanged; the website button follows the latest published version (v21) | 9:00 PM |
+| WF-RATE (rate engine) | ZcRx5MhR8KSbeqmg cdf38695 (was 8c02f219): AS_DIRECTED + town/ZIP routing | rails_all promote, read back byte-equal |
+| WF-POSTCALL v3 (text, page, email) | wVZg0OxSKFBcgINB 7cce9bb9 (was f7c67538) | same |
+| WF-AIC-TEXT-REPLY (email by reply) | 41Xu5hfIfJPn3IF1 03187426 (was 68c88c1a) | same |
+| WF-SLOTS v2 (BOOKED text) | kCKZLeu2VuiN8dWF 7c8db832 (was 1024ad74) | same |
+| WF-AIC-CONFIRM (website bookings) | pYUrb9tB9qtvxYU3 8ab59020 (was 35214481) | same; Error Sentry on all five |
+
+WHAT AN EXTRA STOP SAYS: XS-1 (your yes, 7:52 PM), filled from the rate engine. L4B-X stays in the code only as a fallback.
+- Sedan: "That's hourly as directed, three hour minimum. Sample rates are $480 for the Cadillac executive sedan, with gratuity and fuel included. The team gives the final price."
+- Escalade: "That's hourly as directed, three hour minimum. Sample rates are $576 for the Cadillac Escalade Platinum, with gratuity and fuel included. The team gives the final price."
+- Sprinter: "That's hourly as directed, vehicle minimum. Sample rates are $749 for the Mercedes-Benz executive Sprinter, with gratuity and fuel included. The team gives the final price."
+- REAL-04 x3 in text: XS-1 came out word for word, once, in the turn the quote ran, every time.
+
+THE THREE CALLS
+1. Test copy v21, questions call that goes quiet once (call_07ca3e3f79d03bd469c268fdcaa):
+   - One nudge, about 5.5 s later, with the next question.
+   - Every turn ended on a question, then "What else can I answer for you?", then L39 alone.
+   - Blind audit: 0 criticals, 1 fail (no L17A after the voicemail answer; the answer arrived in pieces).
+2. Test copy v21, sample pickup with an extra stop and SantaCruz (call_822f7babba77015786da6c056a6):
+   - The caller paused half a second before the stop, and the quote ran on the part before it: the mileage price, $384 (round 8's own miss 2).
+   - The re-quote without the stop ran, SantaCruz got W-2, and L34 came the turn after 200 cars.
+   - Blind audit: 1 critical (that price). It is miss 2, so by L5 it is logged, not a stop.
+   - Median gap across calls 1 and 2: 2.44 s; worst turn 5.50 s.
+3. LIVE v21, test mode, the same trip in one breath with the test cell …0142 (call_38fcc120f2555828e2fb2a5bdf4):
+   - XS-1 at $576, the stop on the read-back, the close L40 + L39. Median gap 1.01 s.
+   - Blind audit: 0 criticals, 3 fails: the landing time never asked; SantaCruz asked during the sample trip got "The team would need to confirm what Santa Cruz allows" (no connection claim) instead of W-2; "Milwaukee Airport" instead of the full name.
+   - Live rails composed (dry, test lane, nothing sent): "AI Chauffeur: Here's the trip sheet, recording and every word from your SAMPLE TRIP. Booked trips go into your CRM. / https://aichauffeur.ai/trip/AIC3T-B2A5BDF4-…0142 / Book an appointment: aichauffeur.ai/book/ / Reply STOP to opt out." The email line is left off because the page went by email (dry, to the test inbox, subject "Your AI Chauffeur trip sheet: SAMPLE TRIP | Tue, Nov 10").
+   - The stored page shows "Extra stop: one twenty two West Main Street in West Bend" and "Sample total: Hourly as directed".
+- Test appointments made by this run: none.
+
+SPEND: Retell $213.28 of $220 · Claude API $93.07 of $150 · nothing bought.
+
+ROLLBACK (one command each)
+- Agent back to v20 (both lines + the website button): doppler run --project ava-prod --config prd -- node p8_rollback.mjs --go   (C:\Users\offic\aic-tuning\sales-v3-2026-11-08\)
+- All five rails back: doppler run --project ava-prod --config prd -- node rails_all.mjs rollback --go   (C:\Users\offic\aic-tuning\round8-2026-11-10\rails\)
+- One rail: node rollback.mjs <rate|slots|confirm|reply|postcall> --go
+- Rollback order: run both together; the rails alone back would leave v21 with the old page and texts.
+
+GAPS STILL OPEN (accepted for this promote; don't grade the one call on them)
+1. A price question about the trip after the sample trip is done ("what would it be without the stop?") can get "The team checks it" instead of a re-quote.
+2. A trip given in two pieces (a pause mid-sentence) can quote on the first piece: before the passenger count, or before the extra stop (then it's the mileage price).
+3. One turn now and then ends on a fact with no question (W-5 seen once).
+4. A caller silent through two nudges hears silence (the third-nudge fix is written, not live).
+5. Speed: median about 2.3 to 2.4 s on web calls (bar 2.3).
+Seen on tonight's live proof call (same family):
+- The landing time may not get asked; the quote runs without it.
+- SantaCruz asked during the sample trip gets a plain "the team confirms" line, not W-2. Asked after the trip, it gets W-2.
+
+SHANE'S ONE CALL
+From your cell to 414-775-0019:
+1. Say "airport". Give the trip in one go: the airport, the address, how many passengers, and an extra stop. Leave out the landing time.
+2. Give the time when it asks. Hear a price.
+3. Ask "does it connect to SantaCruz?"
+4. Answer two questions, then stay quiet for eight seconds.
+5. Say no to the call with the team, ask one more question, then say "that's all".
+6. Check the text, the page and the email.
+What to expect:
+- Step 1: say the extra stop without a pause, or the quote can run before it (gap 2).
+- Step 2: it may quote without asking the time.
+- Step 4: one nudge about 5 seconds after it stops talking, then a second; after that, silence (gap 4).
+- After the call: one text with the page link. The email comes only if your record has one on file; otherwise reply to the text with an address. Your own cell gets it like any caller.
+
+GOTCHAS
+- The rails are live for every caller now: any caller with a cell who says two things and stays 20 seconds gets the text. That includes calls you make yourself.
+- The two P2 test calls and the live proof call ran as web calls. The phone-path numbers are still unbought (NEEDS-SHANE).
+- XS-1's {minimum} reads the rate engine's own label ("three hour minimum", "vehicle minimum"), as P1 named.
+- While wiring XS-1 I found the generated quote code's {slot} fill had lost its backslashes (it would never have filled XS-1). Fixed and proven on all three vehicles before the build.
+- The third-nudge fix (F4) stays out of the live build, as the paste said. It's in the build folder as *.F4.bak.
+- B7 and the staging deactivation follow below this readback in STATUS-W3.
+- LESSON: an approved line with {slots} needs its fill tested on the real generated code before it's built. The test copy only proved it because P1 printed the three sentences first.
+```
+
+## The round 8 run (as written at 8:18 PM)
+
 
 - Shane's paste PASTE-CC-AIC-ROUND8-FINAL-v2 + "plus 40" (Retell ceiling $220). Window "sales agent v3".
 - Built on the test copy (agent_ae31796e) and the test lane: sections A (agent), B (rails, via a forked writer) and C (grader). Live agent_9ebb v20 and the five live n8n rails were not changed.
