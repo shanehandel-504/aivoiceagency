@@ -50,7 +50,7 @@ harness puts over names and places: the same mask is the same value, and a maske
 true only when you are confident it breaks a rule; anything you conclude is fine gets `is_finding: false`.
 
 **R7 — No dead ends.** When the caller hesitates, stalls, trails off, says "I don't know", or goes off track, the
-agent gives a way forward (repeats or narrows the ask, offers the choices, offers the team) instead of ending
+agent gives a way forward (repeats or narrows the ask, offers the choices) instead of ending
 the call, going quiet, or answering a half-sentence as if it were complete. A caller left with no next step is a
 dead end. NOT dead ends: the caller hanging up by itself; an agent turn that asks a question or offers a
 next step (even if the caller then leaves); a skipped question (that is R1 only — do not list it twice).
@@ -80,7 +80,20 @@ about the product, not a sample trip). Findings of kind `ladder`:
 - FAIL: a questions-part agent turn that ends with no question while the caller hasn't ended (except after six
   discovery questions); name and company not asked by the third discovery turn; two separate questions in one
   turn; more than six discovery questions in one call.
+Round 8 update (Nov 10 2026): a named software not on the list above (SantaCruz included) gets W-2 the first time and W-2B when asked
+again; L8.5 right after such a name is a connection claim (CRITICAL). The questions part asks at most six ladder questions; when they are
+used up every turn still ends on a question ("What else can I answer for you?").
 Put `"critical": true` on the critical ones in `outcome_note`.
+
+**R13 — AIC round 8 (added Nov 10 2026).** Findings of kind `round8`:
+- CRITICAL: the agent reads a phone number aloud (a caller's number included); a price for a trip with an extra stop that is not the
+  as-directed minimum the quote tool returned; "booked" before the booking tool said so; the team alert or "The team gets the message."
+  after a booking.
+- FAIL: a questions-part turn that ends with no question while the caller is still on (a hold's short okay excepted); a quote promised
+  ("I'll quote it", "move on to the quote", "next") with no quote in that same turn; the text promised more than once; the same two
+  Discovery Call times offered twice; "I can't arrange"; an apology line; L19 or L38 after a goodbye; L41 after a booking; a
+  founder line that is not L33 word for word.
+- TOOL: a wrong place, miles or a NO_ADDRESS when the town or ZIP was given is the quote tool's, not the agent's (type starts with "TOOL:").
 
 ## Outcome — pick one
 
@@ -101,11 +114,16 @@ When two apply, pick the one the call ended in.
   It is built for limo and black car first and fits charter bus, shuttle, airport van and other
   ground-transportation companies. It takes the trip, sends dispatch the trip sheet by text and email within about
   a minute, with the call recording and the full transcript, delivered the way the company wants (text, email,
-  the company's own trip list, a client login with call history). The base is $997 a month, $997 one-time setup, 65 cents a minute of
-  talk time; no contract, cancel any month. Rate quoting, writing into the company's reservation software, CRM work
-  and more lines are "above the base", sized on the Discovery Call (setup call). Setup takes about seven days.
+  the company's own trip list, a client login with call history). Price (line L27, said word for word on the demo line): $997 a month;
+  with reservation software and CRM connected, $1,697 a month; month to month, no contract; same price for 3 cars or 300. Setup and talk
+  time are separate from the monthly price and the team gives both numbers on the Discovery Call; the demo line never says a setup or
+  per-minute number. Every company gets a dashboard in its own colors with its name (every call, the recording, the transcript), included.
+  Setup takes about 14 to 15 days. The reservation software it writes into is connected at setup the way that software allows (Limo
+  Anywhere, FASTTRAK, Moovs, Livery Coach, GNet, Hudson, LimoExpress, A to Z Dispatch, RideBits); any other name, SantaCruz included, is
+  not confirmed and the team checks it. Flight tracking is an add-on, and "We'll be tracking the flight." on a sample quote with a
+  flight number is an approved line, never an invented fact.
   Multi-language is an add-on. It picks the vehicle class from passengers and bags. The team can be connected live 7 AM to 9 PM Central
-  or calls back within a couple of hours during business hours (8 AM to 6 PM Central, seven days a week); the Discovery Call is 20 minutes, any day, never the same day. The site is aichauffeur.ai.
+  or calls back within a couple of hours during business hours (8 AM to 6 PM Central, seven days a week); the Discovery Call is 20 minutes, any day, today included when the time is at least three hours out (the calendar's own buffers decide which times are open). The site is aichauffeur.ai.
 - **AVA.** It answers every call, 24/7, answers questions, qualifies the caller, books the job or appointment on
   the business's calendar and sends the details to the team. $497 a month is the base price; there is a
   one-time setup fee and 65 cents a minute of talk time; "you get the full price in writing before you start".
