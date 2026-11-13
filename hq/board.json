@@ -1,6 +1,6 @@
 {
   "board": "AVA HQ",
-  "updated": "2026-11-13T16:47:00-06:00",
+  "updated": "2026-11-13T17:44:00-06:00",
   "note": "Status ledger for the Work Deck family. The /work hub and /hq board read this live. Flip status + append a log entry on every run.",
   "lanes": [
     {
@@ -948,11 +948,11 @@
     },
     {
       "id": "AIC-AGENT-ROUND10",
-      "status": "pending",
-      "updated": "2026-11-13T16:47:00-06:00",
-      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-11-13-aic-round10.md",
-      "title": "AIC agent round 10 (2026-11-13): RUN INCOMPLETE, live stays v24; candidate copy v42 waits on Shane's PROMOTE=GO or HOLD",
-      "label": "Stage 1 data PASS (rail-down line uses the rate engine's vehicle and floor). Stage 2 logic missed twice by the clean-run rule (R10-DEPART read-back 1 of 3, PX-43), zero of the five criticals in 75 runs. New scenarios: v24 1 of 12, candidate 10 of 12 clean. Rollback n/a (live untouched)."
+      "status": "live",
+      "updated": "2026-11-13T17:44:00-06:00",
+      "url": "https://github.com/shanehandel-504/aivoiceagency/blob/main/reports/2026-11-13-aic-round10-finish.md",
+      "title": "AIC agent round 10 (2026-11-13): LIVE on v25 (tested copy v42) on 0019, DEMO-POOL-05 and the button; after-call words A1-A7 live",
+      "label": "Promoted 5:13 PM: agent_9ebb v25 = tested copy v42, both lines + button, HASH 3 = HASH 1. Proof call on live kept it (no miss v24 does not make on the same script; the shared misheard-airport price logged). After-call words A1-A7 live (WF-POSTCALL 98ca8dae -> bebc4798, sample seen 0). Hotel by name not run. Live timing intake median 2.62 s / 95th 3.79 s (v24 3.00 / 3.96). Rollback: fin_repin.mjs 24 --go; words: publish 98ca8dae."
     }
   ],
   "log": [
@@ -1715,6 +1715,10 @@
     {
       "ts": "2026-11-13T16:47:00-06:00",
       "entry": "AIC round 10: RUN INCOMPLETE, live v24 untouched; candidate copy v42 (ride to the airport gets G1, after-price exits, talk-over greeting) waits on PROMOTE=GO/HOLD"
+    },
+    {
+      "ts": "2026-11-13T17:44:00-06:00",
+      "entry": "AIC round 10 finish: LIVE on v25 (tested copy v42) on 0019, DEMO-POOL-05 and the button; after-call words A1-A7 live; hotel by name not run; rollback fin_repin.mjs 24 --go"
     }
   ]
 }
