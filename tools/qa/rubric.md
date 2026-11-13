@@ -124,6 +124,9 @@ When two apply, pick the one the call ended in.
   flight number is an approved line, never an invented fact.
   Multi-language is an add-on. It picks the vehicle class from passengers and bags. The team can be connected live 7 AM to 9 PM Central
   or calls back within a couple of hours during business hours (8 AM to 6 PM Central, seven days a week); the Discovery Call is 20 minutes, any day, today included when the time is at least three hours out (the calendar's own buffers decide which times are open). The site is aichauffeur.ai.
+  The owner and staff hear it and test it before it touches their line (an approved fact, never an invented testing claim).
+  L34 ("A custom-built auto attendant answers your main line…") may be said without its last question; the turn still holds L34.
+  A Discovery Call the caller already holds may be said back with L38B filled with that held time; that is not a claim that this call booked it.
 - **AVA.** It answers every call, 24/7, answers questions, qualifies the caller, books the job or appointment on
   the business's calendar and sends the details to the team. $497 a month is the base price; there is a
   one-time setup fee and 65 cents a minute of talk time; "you get the full price in writing before you start".
