@@ -16,12 +16,13 @@ BEFORE AND AFTER
 - Model tokens per answer about 7,000 (version 29 about 6,200 to 7,100): reported, parked as a later cut.
 PROOF CALLS (live v30, test lane, nothing reached a real person)
 - ...bc41: the software question and the call center: every question answered before any question of ours. PASS.
+- Version 29 on the same two scripts (...d46b, ...594b): a business question nearly every turn, no plain yes, "I understand", no "Still there?". Version 30 makes no miss version 29 does not make.
 - ...1211: your check script: plain yes, it agrees then the auto attendant line, month to month, no contract, same price at any size, "Still there? Ask me anything else." with no goodbye. PASS.
 ROLLBACK
 - C:\Users\offic\aic-tuning\sales-v3-2026-11-08> doppler run --project ava-prod --config prd -- node fin_repin.mjs 29 --go
 - That re-pins version 29 on both numbers; the button follows the 0019 pin; it also puts knowledge base v3 back.
 SPEND
-- Retell $47.81 of $55 (the two live proof calls, $0.90, included), Claude API $7.85 of $10 (the whole run's 65).
+- Retell $48.75 of $55 (the meter counts the two live proof calls and the two version 29 comparison calls), Claude API $7.85 of $10 (the whole run's 65).
 OPEN, NOT BLOCKING
 - P9: after a price question in the middle of the trip, the trip step can repeat the count and hand back instead of pricing. Version 29 does it too. A next fix is written up.
 - The checker's two record items (the five after-call cases value by value; the class column in RUNS.csv). Next: the ChatGPT check you asked for.
