@@ -391,7 +391,8 @@ Source: claude/FACT-SHEET-v3.1-2026-10-20.md (project doc). Updated 2026-10-20, 
 - No fake proof, ROI, or testimonials until verified
 - No keys in code or commits — keys live in the Drive AICHAUFFEUR KEYS doc
 - Never `git add -A` — untracked backups (`voice-stack/**`) are a secret risk. Use `git add -u` or an explicit path list.
-- Don't pitch Billy at Jet Limousines or Chris at Chauffeur Driven until Wisconsin operators validate AVA on real calls
+- Never a prospect or client business name in a tracked file. The list lives on the Dell only, outside every repo and outside OneDrive: `C:\Users\offic\private-names\names-never-publish.txt`. A tool that needs it reads it there and stops if the file is missing or empty.
+- Don't pitch the two operators on that list until Wisconsin operators validate AVA on real calls
 - Demo language: captured / routed / dispatcher will confirm
 
 ## AUTOMATION
@@ -404,8 +405,7 @@ Source: claude/FACT-SHEET-v3.1-2026-10-20.md (project doc). Updated 2026-10-20, 
 
 - First vertical: corporate transportation (limo, NEMT, charter, black car)
 - Validation gate: Wisconsin operators must validate before broader pitches
-- Voice samples: Maxim Limousine + Acme Plumbing (real, recorded)
-- Riverside Medical sample shows a placeholder — fix or delete
+- Voice samples: two (real, recorded). A third sample shows a placeholder — fix or delete. Sample-call names are public on purpose (served pages, recordings); that list holds them only so the scans can find them
 
 ## OUTPUT FORMAT
 
