@@ -91,17 +91,10 @@ Each tab shows an industry-specific headline plus 3 bullet points about how AVA 
 
 ### Section 5: PRICING (4 glass-morphism cards)
 
-Starter — $497/mo
+$497/mo
 - Tagline: "Never miss the call."
 - Best for: Small businesses that need reliable 24/7 call coverage.
 - CTA: "Start Your AVA Setup" links to tel:4142408930
-
-Pro — $997/mo (MOST POPULAR)
-- Tagline: "Turn calls into bookings."
-- Best for: Growing businesses that want automated booking and lead qualification.
-- CTA: "Start Your AVA Setup" links to tel:4142408930
-- Badge: "Most Popular" at top of card
-- Desktop: transform scale(1.05) to visually pop
 
 Enterprise — $1,997/mo
 - Tagline: "Full revenue engine."

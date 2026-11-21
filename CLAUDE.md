@@ -351,14 +351,15 @@ It self-tags as internal (`NOTRACK`) on webdriver / `ava_internal` / `?notrack=1
 
 ## PRICING (surface only when asked)
 
-Source: claude/FACT-SHEET-v3.1-2026-10-20.md (project doc). Updated 2026-10-20, AIC words run v1.1.
+Source: claude/FACT-SHEET-v3.6-2026-11-20.md (project doc; a copy in OneDrive\Desktop\AVA PROJECT FILES on the Dell). Updated 2026-11-20 by AVA MAIN's run ava-price-containment.
 
-- AVA — $497/mo + $497 one-time setup
-- AVA with your CRM — $997/mo + $997 one-time setup
+- AVA — $497/mo. It includes putting every job in your CRM. No setup fee is shown or said anywhere (Shane, Nov 20 2026, 4:27 PM).
+- RETIRED Nov 20 2026, never printed or said again: "AVA with your CRM, $997 a month plus $997 setup" and "AVA $497 setup". AVA has no Starter or Growth tier.
+- AVA extras (the auto attendant and the add-ons) and bigger builds are priced on the AVA Discovery Call.
 - AI Chauffeur — $997/mo + $997 one-time setup
-- AI Chauffeur with your reservation software — $1,697/mo + $1,697 one-time setup
+- AI Chauffeur with your CRM & reservation software — $1,697/mo + $1,697 one-time setup
 - Add-ons (more than 50 languages, flight tracking, a website talk button) — priced on a quote
-- Talk time (65¢ a minute) appears ONLY in a pricing FAQ and in llms-full.txt, never on a card or hero
+- Talk time is 49 cents a minute from the first minute, every plan, both brands. It appears ONLY in one pricing FAQ answer per pricing page and in llms-full.txt, never on a card, a hero or the homepage. "65 cents" appears nowhere.
 - AI Chauffeur names limo software only (the ten in the aichauffeur repo's llms.txt). Never HubSpot or HighLevel on that host.
 - Refund: if we can't connect the software within 30 days, a full refund within 10 days.
 
@@ -460,9 +461,7 @@ Ratified RUN 7-CODE.
 - **Every outbound message does ONE job.** One ask, one outcome. If it needs two, it is two messages.
 - **Owner alerts open status-led.** First line is the outcome — `BOOKED` / `MISSED` / `VOICEMAIL` /
   `FOLLOW-UP` — details after. The status is readable from a lock screen without opening anything.
-- **One canonical name on every surface: "AVA setup call."** **15 minutes, never 30.** Not
-  "demo," not "intro call," not "30-minute call." The GHL `AVA Demo Call` calendar
-  (`aCIv7rUnCGrysobt6Mlg`) is set to a 15-minute slot to match — copy and booking system agree.
+- **One canonical name on every surface: "AVA Discovery Call."** Never "setup call," "demo," "intro call" or "strategy call." It becomes 20 minutes when the new AVA phone agent goes live (FACT-SHEET v3.6: the booking rail moves AVA from 15 to 20 minutes then); until then the GHL `AVA Demo Call` calendar (`aCIv7rUnCGrysobt6Mlg`) keeps its 15-minute slot. Site words about the call change only in a words run with Shane's words ok.
 - **Booking receipts include:** `Hear AVA anytime: 414-240-8930.`
 - **SMS:** `Reply STOP to opt out` on **first touch only** — never on every message in a sequence.
 - **CTA phrasing varies across any sequence.** No two messages in the same sequence share an
