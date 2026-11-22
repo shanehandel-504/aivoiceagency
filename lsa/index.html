@@ -25,7 +25,7 @@
      GLASS-X recipe and the button physics reach it. It loads BEFORE this page's
      own <style>, so every local token below (including --mono: Space Mono, which
      is this lander's authored voice) still wins. Copy and layout are untouched. -->
-<link rel="stylesheet" href="/assets/circulant.css?v=42f3d1c">
+<link rel="stylesheet" href="/assets/circulant.css?v=be7d3f3">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -102,7 +102,7 @@
   ]
 }
 </script>
-<script src="/js/tracking.js?v=42f3d1c" async></script>
+<script src="/js/tracking.js?v=be7d3f3" async></script>
 <style>
   :root{
     --void:#0A0A0F;
@@ -120,7 +120,8 @@
        this page (RUN 3.5 added the circulant.css link above, but these local
        values load after it and deliberately still win). Measured on the #0A0A0F void:
        CYAN inspect · GREEN advance · AMBER the cost of the miss · RED the miss. */
-    --green:#2EE6A8;     /* 12.23:1 ✓ — the one solid CTA               */
+    --green:#00D4FF;     /* 11.16:1 ✓ — the one cyan accent             */
+    --status-booked:#2EE6A8; /* 12.23:1 ✓ — BOOKED outcome only         */
     --amber:#FFB020;     /* 10.80:1 ✓ — $28,458, the cost of the miss   */
     --neutral:#8A93A6;   /*  6.40:1 ✓ — sources, inactive               */
     --body-dim:#B7BFCE;  /* 10.68:1 ✓ — body copy                       */
@@ -288,11 +289,11 @@
      and the green CTA lives downstream of both — red is never adjacent to it.
      Red is an edge and a label here, never a background wash. ---- */
   .t-miss{border-left:2px solid var(--red);}
-  .t-book{border-left:2px solid var(--green);}
+  .t-book{border-left:2px solid var(--status-booked);}
   .t-miss .bar .dot{color:var(--red);}
-  .t-book .bar .dot{color:var(--green);}
+  .t-book .bar .dot{color:var(--status-booked);}
   .t-miss .bar span:first-child{color:var(--red);}
-  .t-book .bar span:first-child{color:var(--green);}
+  .t-book .bar span:first-child{color:var(--status-booked);}
   .grade{
     display:inline-block;
     margin-top:14px;
@@ -311,7 +312,7 @@
   /* labels, not fills — a solid red block would be a background wash, and light
      text on solid red measures 3.07:1. Tinted background + coloured label. */
   .grade-miss{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,59,78,.5);}
-  .grade-book{background:rgba(46,230,168,.10);color:var(--green);border:1px solid rgba(46,230,168,.5);}
+  .grade-book{background:color-mix(in srgb,var(--status-booked) 10%,transparent);color:var(--status-booked);border:1px solid color-mix(in srgb,var(--status-booked) 50%,transparent);}
   .t-note{
     font-family:var(--mono);
     font-size:11.5px;
@@ -635,7 +636,7 @@
   }
   /* the transcript cards keep their semantic left hairline (miss = red,
      booked = green) — re-stated because the shorthand above resets it */
-  .t-book{border-left:2px solid var(--green);}
+  .t-book{border-left:2px solid var(--status-booked);}
   .btn{transition:transform .25s ease,box-shadow .25s ease,background .25s ease,border-color .25s ease;}
   .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;}
   .btn-green{box-shadow:inset 0 1px 0 rgba(255,255,255,.25);}
@@ -812,7 +813,7 @@
         <span class="big" id="loss">$28,458</span>
         <span class="per">walking out the door / month</span>
       </div>
-      <div class="vs">AVA catches those calls for <b>$497/mo</b>. No bundles. Starter is month-to-month.</div>
+      <div class="vs">AVA catches those calls for <b>$497/mo</b>. No bundles. No contract. Cancel anytime.</div>
     </div>
   </div>
 </section>

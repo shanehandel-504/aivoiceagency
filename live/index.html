@@ -114,7 +114,7 @@
   ]
 }
 </script>
-<script src="/js/tracking.js?v=42f3d1c" async></script>
+<script src="/js/tracking.js?v=be7d3f3" async></script>
 <style>
   /* ---------------------------------------------------------- TOKENS ---- */
   :root{
@@ -168,7 +168,12 @@
     min-height:44px;
   }
   .lbrand:hover{text-decoration:none;color:var(--cyan);}
-  .ldot{width:8px;height:8px;background:var(--cyan);display:inline-block;}
+  .ldot{position:relative;width:8px;height:8px;border-radius:50%;background:var(--cyan);display:inline-block;}
+  .ldot::before{content:"";position:absolute;inset:-7px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,color-mix(in srgb,var(--cyan) 48%,transparent),transparent 68%);
+    opacity:.42;animation:ldot-breathe 2s ease-in-out infinite;}
+  @keyframes ldot-breathe{0%,100%{opacity:.26;transform:scale(.9)}50%{opacity:.66;transform:scale(1.06)}}
+  @media(prefers-reduced-motion:reduce){.ldot::before{animation:none;opacity:.42;transform:none}}
 
   /* ------------------------------------------------------------ CALL ---- */
   main{flex:1;display:flex;align-items:center;}
@@ -284,6 +289,6 @@
   </div>
 </footer>
 
-<script src="/js/desktop-call.js?v=42f3d1c" defer></script>
+<script src="/js/desktop-call.js?v=be7d3f3" defer></script>
 </body>
 </html>

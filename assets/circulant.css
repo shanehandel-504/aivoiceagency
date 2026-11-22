@@ -65,7 +65,8 @@
   --neutral:    #8A93A6;   /* inactive · not-yet · n/a  6.40:1 ✓          */
 
   --cyan:       #00D4FF;   /* inspect the system      11.16:1 ✓           */
-  --green:      #2EE6A8;   /* advance the sale        12.23:1 ✓           */
+  --green:      #00D4FF;   /* general actions use the one cyan accent      */
+  --status-booked:#2EE6A8; /* BOOKED outcome only      12.23:1 ✓           */
   --amber:      #FFB020;   /* the cost of the miss    10.80:1 ✓           */
   --red:        #FF3B4E;   /* the miss itself          5.63:1 ✓           */
 
@@ -93,8 +94,8 @@
   --cyan-bright:  #00E5FF;  /* hover / active                           */
   --cyan-active:  #00E5FF;  /* alias                                    */
 
-  --live-green:        #22C55E;  /* LIVE status ONLY                    */
-  --live-green-bright: #4ADE80;
+  --live-green:        #00D4FF;  /* non-BOOKED status uses cyan         */
+  --live-green-bright: #00E5FF;
 
   --gold:        #FFB800;   /* MONEY — pricing links & figures ONLY     */
   --gold-bright: #FFC94D;
@@ -154,7 +155,7 @@
   --glow-cyan:   0 0 32px rgba(0,212,255,0.40);
   --glow-violet: 0 0 40px rgba(139,92,246,0.35);
   --glow-gold:   0 0 30px rgba(255,184,0,0.30);
-  --glow-green:  0 0 14px rgba(34,197,94,0.55);
+  --glow-green:  0 0 14px rgba(0,212,255,0.55);
 
   /* ============================================================
      RUN 3.5 · GLASS-X — the ONE glass recipe for new surfaces.
@@ -235,7 +236,7 @@ html[data-theme="light"]{
 /* ---- Readable prose measure ------------------------------------------- */
 .prose { max-width: var(--measure); }
 
-/* ---- LIVE status dot — green, pulsing, reduced-motion safe ------------ */
+/* ---- LIVE status dot — cyan, pulsing, reduced-motion safe ------------- */
 .circ-live-dot {
   display: inline-block;
   width: 7px; height: 7px;
@@ -246,8 +247,8 @@ html[data-theme="light"]{
   animation: circLivePulse 2s ease-in-out infinite;
 }
 @keyframes circLivePulse {
-  0%, 100% { box-shadow: 0 0 6px  rgba(34,197,94,0.5);  opacity: 0.85; }
-  50%      { box-shadow: 0 0 14px rgba(34,197,94,0.95); opacity: 1;    }
+  0%, 100% { box-shadow: 0 0 6px color-mix(in srgb,var(--live-green) 50%,transparent); opacity: 0.85; }
+  50%      { box-shadow: 0 0 14px color-mix(in srgb,var(--live-green) 95%,transparent); opacity: 1; }
 }
 
 /* ---- Featured badge — violet (FLAGSHIP / MOST POPULAR) ---------------- */

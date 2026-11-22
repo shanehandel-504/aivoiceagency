@@ -53,7 +53,7 @@ body.backstage::before{content:"";position:fixed;inset:0;pointer-events:none;z-i
   transition:transform .18s var(--quiet-settle),border-color .18s var(--quiet-settle)}
 .bs-cta:active{transform:scale(.98)}
 .bs-cta-cyan,.bs-cta-line{background:rgba(18,18,26,.72);color:var(--ink);border-color:rgba(255,255,255,.14);box-shadow:none}
-.bs-cta-cyan:hover,.bs-cta-line:hover{border-color:rgba(46,230,168,.5);color:var(--ink);transform:translateY(-2px)}
+.bs-cta-cyan:hover,.bs-cta-line:hover{border-color:color-mix(in srgb,var(--cyan) 50%,transparent);color:var(--ink);transform:translateY(-2px)}
 html[data-theme="light"] .bs-cta-cyan,
 html[data-theme="light"] .bs-cta-line{background:#FFFFFF;color:var(--ink);border-color:rgba(16,19,26,.20)}
 html[data-theme="light"] .bs-cta-cyan:hover,
@@ -164,7 +164,7 @@ body.glow-ready .bs-wavethumb rect{animation:wavethumb 1.6s ease-in-out infinite
   font-family:var(--g-mono);font-size:12px;letter-spacing:.05em;color:var(--ink);
   background:var(--e2);box-shadow:var(--e2-sh);border:1px solid var(--line);
   transform:scale(0);animation:orb-check .38s var(--receipt-pop) forwards}
-.bs-chip.ok{border-color:color-mix(in srgb,var(--live-green) 45%,transparent);color:var(--live-green)}
+.bs-chip.ok{border-color:color-mix(in srgb,var(--status-booked) 45%,transparent);color:var(--status-booked)}
 
 /* ---- persistent bottom callbar (e3, every viewport) ---- */
 .bs-callbar{position:fixed;left:0;right:0;bottom:0;z-index:940;display:flex;gap:10px;
@@ -176,7 +176,7 @@ body.glow-ready .bs-wavethumb rect{animation:wavethumb 1.6s ease-in-out infinite
 .bs-callbar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;
   border-radius:999px;font-weight:700;font-size:14px;letter-spacing:.04em;text-decoration:none;padding:0 18px;
   border:1px solid rgba(255,255,255,.14);transition:border-color .18s var(--quiet-settle)}
-.bs-callbar a:hover{border-color:rgba(46,230,168,.5)}
+.bs-callbar a:hover{border-color:color-mix(in srgb,var(--cyan) 50%,transparent)}
 .bs-callbar .bs-cb-tel{background:rgba(18,18,26,.72);color:var(--ink);flex:1;max-width:420px}
 .bs-callbar .bs-cb-book{background:rgba(18,18,26,.72);color:var(--ink)}
 html[data-theme="light"] .bs-callbar a{background:#FFFFFF;color:var(--ink);border-color:rgba(16,19,26,.20)}
@@ -397,7 +397,7 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
    centred on a line by itself directly under the hero's one proof element. */
 .bs-result-line{font-family:var(--g-mono);font-size:13px;letter-spacing:.06em;color:var(--ink-mute);
   text-wrap:balance}
-.bs-result-line b{color:var(--live-green);font-weight:700}
+.bs-result-line b{color:var(--status-booked);font-weight:700}
 .bs-chipsrow{list-style:none;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
   padding:0;margin:18px 0 0}
 /* RUN 3.5 · hero chips are glass, and their label moves --ink-mute -> --neutral:
@@ -466,9 +466,9 @@ body.glow-ready .ava-wave[data-wave-state="idle"] .ava-wave-idle{
    "One call. Sixteen agents." is a protected anchor), but the
    weighting now maps onto CONSEQUENCE:
      intake / triage / tools  = the work, quieted
-     output                   = the consequence, full weight
+     output                   = the consequence, full weight in cyan
    Temporal, not simultaneous: a card only lights when the call
-   actually reaches it, and only the OUTPUT lane resolves green.
+   actually reaches it. Only the final BOOKED receipt resolves green.
    ============================================================ */
 .bs-lane[data-lane="output"] .bs-card{--card-ink:var(--ink)}
 .bs-lane:not([data-lane="output"]) .bs-card{opacity:.82}
@@ -507,15 +507,15 @@ html[data-theme="light"] .bs-card{--card-ink:#5A6272}
 .bs-cchip{flex:none;font-family:var(--g-mono);font-size:10.5px;letter-spacing:.04em;color:var(--ink);
   background:var(--e2);box-shadow:var(--e2-sh);border:1px solid var(--line);border-radius:999px;
   padding:5px 10px;transform:scale(0);opacity:0;transition:none}
-.bs-cchip.ok{border-color:color-mix(in srgb,var(--live-green) 45%,transparent);color:var(--live-green)}
+.bs-cchip.ok{border-color:color-mix(in srgb,var(--status-booked) 45%,transparent);color:var(--status-booked)}
 .bs-cchip[data-filled]{opacity:1;animation:orb-check .38s var(--receipt-pop) forwards}
 /* ignited card */
 .bs-card.on{animation:card-dock .32s var(--hard-dock);cursor:pointer}
 .bs-card.on .bs-cname{color:var(--lane-c)}
 .bs-card.on .bs-cpay{color:var(--g-read)}
 .bs-card.on:hover{border-color:var(--g-line-cyan)}
-.bs-card.final{border-left-color:var(--live-green)}
-.bs-card.final .bs-cname,.bs-card.final .bs-cpay{color:var(--live-green)}
+.bs-card.final{border-left-color:var(--status-booked)}
+.bs-card.final .bs-cname,.bs-card.final .bs-cpay{color:var(--status-booked)}
 @keyframes card-dock{from{opacity:.5;transform:translateY(14px)}to{opacity:1;transform:none}}
 
 /* wires overlay + THE LIVE WIRE dot (card-to-card mobile · lane-to-lane desktop) */
@@ -538,8 +538,8 @@ html[data-theme="light"] .bs-stage.is-running .bs-wires path{stroke:rgba(0,116,1
   border:1px solid var(--g-line-cyan)}
 .bs-strip[hidden]{display:none}
 .bs-strip-r{font-family:var(--g-mono);font-size:13px;color:var(--ink);display:inline-flex;align-items:center;gap:8px}
-.bs-strip-r b{color:var(--live-green);font-weight:700}
-.bs-strip-check{color:var(--live-green);font-weight:800}
+.bs-strip-r b{color:var(--status-booked);font-weight:700}
+.bs-strip-check{color:var(--status-booked);font-weight:800}
 .bs-strip-t{font-family:var(--g-mono);font-size:11.5px;color:var(--ink-mute);font-variant-numeric:tabular-nums}
 .bs-strip-book{margin-left:auto;font-weight:700;font-size:13px;color:var(--cyan);text-decoration:none;
   border:1px solid var(--g-line-cyan);border-radius:9px;padding:8px 14px;min-height:40px;display:inline-flex;align-items:center}
@@ -576,7 +576,7 @@ html[data-theme="light"] .bs-stage.is-running .bs-wires path{stroke:rgba(0,116,1
 .bs-payoff.in{transform:translate(-50%,-50%);opacity:1;pointer-events:auto;visibility:visible;
   transition:transform .48s var(--quiet-settle),opacity .48s var(--quiet-settle)}
 .bs-stage.is-reviewed .bs-payoff{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s var(--glide),visibility 0s .3s}
-.bs-pr{font-size:clamp(26px,5vw,34px);font-weight:700;letter-spacing:.02em;color:var(--live-green);margin:0}
+.bs-pr{font-size:clamp(26px,5vw,34px);font-weight:700;letter-spacing:.02em;color:var(--status-booked);margin:0}
 .bs-pw{font-family:var(--g-mono);font-size:15px;letter-spacing:.1em;color:var(--body-dim);margin:8px 0 0}  /* RUN 3: gold retired */
 .bs-ps{font-family:var(--g-mono);font-size:12.5px;letter-spacing:.14em;color:var(--ink-mute);margin:6px 0 0;
   font-variant-numeric:tabular-nums}
@@ -772,15 +772,15 @@ html[data-theme="light"] .bs-tier[data-tier="growth"] .t-flag{color:var(--neutra
    onto the selected card's CTA by .is-picked (see PRICING SELECTION below). */
 .bs-tier .bs-cta{margin-top:auto;width:100%;border-radius:999px;
   background:rgba(18,18,26,.72);color:var(--text);border:1px solid rgba(255,255,255,.14);box-shadow:none}
-.bs-tier .bs-cta:hover{border-color:rgba(46,230,168,.5);background:rgba(18,18,26,.72)}
+.bs-tier .bs-cta:hover{border-color:color-mix(in srgb,var(--cyan) 50%,transparent);background:rgba(18,18,26,.72)}
 /* THE TRANSFER — the solid green lives on whichever card is selected, and only
    on that one. Selecting a different card moves it. There is exactly one green
    on this screen at every moment, including mid-transition. */
 .bs-tier.is-picked .bs-cta{
   background:var(--green);color:var(--canvas);border-color:rgba(255,255,255,.16);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 24px rgba(46,230,168,.18)}
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 24px color-mix(in srgb,var(--cyan) 18%,transparent)}
 .bs-tier.is-picked .bs-cta:hover{background:var(--green);color:var(--canvas);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 14px 38px rgba(46,230,168,.27)}
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 14px 38px color-mix(in srgb,var(--cyan) 27%,transparent)}
 html[data-theme="light"] .bs-tier.is-picked .bs-cta,
 html[data-theme="light"] .bs-tier.is-picked .bs-cta:hover{
   background:var(--green);color:#FFFFFF;border-color:transparent}
@@ -863,18 +863,15 @@ html[data-theme="light"] .bs-clip-scrub{background:rgba(16,19,26,.28)}
 .bs-footband h3{font-family:var(--g-mono);font-size:11px;letter-spacing:.18em;color:var(--ink-mute);margin:0 0 12px}
 .bs-social{display:flex;flex-wrap:wrap;gap:8px}
 .bs-social a{font-family:var(--g-mono);font-size:12.5px;letter-spacing:.05em;color:var(--ink);
-  text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:9px 15px;min-height:40px;
-  display:inline-flex;align-items:center}
-.bs-social a:hover{border-color:var(--cyan);color:var(--cyan)}
-/* P1: social pills wear the quiet slow-halo pulse (cyan-only, staggered) */
-.bs-social a{position:relative;isolation:isolate}
-.bs-social a::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
-  animation:ava-halo-soft 6.6s ease-in-out infinite}
-.bs-social a:nth-of-type(2)::before{animation-delay:-1.1s}
-.bs-social a:nth-of-type(3)::before{animation-delay:-2.2s}
-.bs-social a:nth-of-type(4)::before{animation-delay:-3.3s}
-.bs-social a:nth-of-type(5)::before{animation-delay:-4.4s}
-.bs-social a:nth-of-type(6)::before{animation-delay:-5.5s}
+  text-decoration:none;border:1px solid var(--line);border-radius:2px;padding:9px 15px;min-height:44px;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:border-color .18s ease,color .18s ease,background-color .18s ease,transform .18s ease}
+.bs-social a:hover{border-color:var(--cyan);color:var(--cyan);
+  background:color-mix(in srgb,var(--cyan) 6%,transparent);transform:translateY(-1px)}
+@media(max-width:360px){
+  .bs-social a{flex:1 1 calc(50% - 4px);min-width:0;padding-inline:10px;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){.bs-social a{transition:none}.bs-social a:hover{transform:none}}
 /* RUN 4.5 · D12 — five stacked navigational links measured 23.2px tall on an
    8px grid gap: a 31px rhythm where the law is 44 + 8. These are not inline
    links inside a sentence, so the inline exception does not apply. Each link

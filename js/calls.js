@@ -145,7 +145,9 @@
     var rows = el.fields.children, on = 0;
     for (i = 0; i < tl.F.length; i++) { var hit = t >= tl.F[i].t; rows[i].classList.toggle('on', hit); if (hit) on++; }
     var done = t >= tl.bookedT, ready = t === 0 && !playing;
-    el.booked.classList.toggle('on', done);
+    var isBooked = /booked/i.test(c.booked.label);
+    el.booked.classList.toggle('resolved', done);
+    el.booked.classList.toggle('on', done && isBooked);
     el.blab.textContent = done ? c.booked.label : ready ? 'Waiting for the call' : t < PICKUP ? 'Ringing' : 'AVA is on the call';
     el.status.textContent = done ? 'complete' : ready ? 'fills in as AVA talks' : on + ' of ' + tl.F.length + ' lines';
     el.clock.textContent = fmt(Math.min(t, tl.total)) + ' / ' + fmt(tl.total);
@@ -216,7 +218,10 @@
     });
     el.bbig.textContent = c.booked.big; el.bsmall.textContent = c.booked.small;
     [[PICKUP, 'Answered'], [tl.detailsT, 'Details taken'], [tl.bookedT, c.booked.label]].forEach(function (m, k) {
-      var d = document.createElement('div'); d.className = 'cx-chap' + (k > 0 ? ' r' : ''); d.style.left = (m[0] / tl.total * 100) + '%'; d.textContent = m[1]; el.chapters.appendChild(d);
+      var d = document.createElement('div');
+      var bookedMark = k === 2 && /booked/i.test(m[1]);
+      d.className = 'cx-chap' + (k > 0 ? ' r' : '') + (bookedMark ? ' booked' : '');
+      d.style.left = (m[0] / tl.total * 100) + '%'; d.textContent = m[1]; el.chapters.appendChild(d);
     });
     if (el.nextName) el.nextName.textContent = CALLS[(i + 1) % CALLS.length].tab.toLowerCase();
     el.wave.setAttribute('aria-valuemax', Math.round(tl.total));

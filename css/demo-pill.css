@@ -21,22 +21,22 @@
 @media(hover:hover){.dp-pill:hover{border-color:#00D4FF;transform:translateY(-2px);
   box-shadow:0 16px 46px rgba(0,0,0,.5),0 0 28px rgba(0,212,255,.16),inset 0 1px 0 rgba(255,255,255,.06)}}
 .dp-pill:focus-visible{outline:2px solid #00D4FF;outline-offset:3px}
-/* orbs — the pipeline in miniature: three cyan working orbs → one green "booked".
-   Static (perf-safe, reduced-motion safe). Two accents only (cyan + green). */
+/* orbs — the pipeline in miniature. Green is reserved for BOOKED outcomes. */
 .dp-orbs{flex:none;display:flex;align-items:center;gap:6px}
 .dp-orbs i{width:9px;height:9px;border-radius:50%;display:block;background:#00D4FF}
 .dp-orbs i:nth-child(1){opacity:.5}
 .dp-orbs i:nth-child(2){opacity:.7}
 .dp-orbs i:nth-child(3){opacity:.9;box-shadow:0 0 7px rgba(0,212,255,.55)}
-/* RUN 3: Booked-Green, not the legacy #00E676 — one green sitewide */
-.dp-orbs i:nth-child(4){background:#2EE6A8;box-shadow:0 0 8px rgba(46,230,168,.6)}
+.dp-orbs i:nth-child(4){background:var(--cyan);box-shadow:0 0 8px color-mix(in srgb,var(--cyan) 60%,transparent)}
+.dp-pill--booked .dp-orbs i:nth-child(4){background:var(--status-booked);box-shadow:0 0 8px color-mix(in srgb,var(--status-booked) 60%,transparent)}
 .dp-copy{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .dp-kicker{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.14em;
   text-transform:uppercase;color:#9AA1AD}
 .dp-kicker b{color:#00D4FF;font-weight:700}
 .dp-result{font-size:13.5px;font-weight:500;color:#EEF0F4;line-height:1.3;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dp-result b{color:#2EE6A8;font-weight:700}   /* Booked-Green — captured/success */
+.dp-result b{color:var(--cyan);font-weight:700}
+.dp-result--booked b{color:var(--status-booked)}
 .dp-go{flex:none;font-size:12px;font-weight:700;letter-spacing:.03em;color:#00D4FF;
   white-space:nowrap;text-transform:uppercase}
 /* narrow (<=520px): stack the CTA under the copy so nothing overflows @390 */
@@ -54,7 +54,8 @@ html[data-theme="light"] .dp-result{color:#10131A}
    three failed on white: green #0a9d57 = 3.52:1, cyan #0090b8 = 3.70:1, and the
    kicker's <b> was never overridden at all so it stayed #00D4FF = 1.77:1.
    Measured replacements: green 5.37:1 ✓ · cyan 6.22:1 ✓. */
-html[data-theme="light"] .dp-result b{color:#077A50}   /* 5.37:1 ✓ */
+html[data-theme="light"] .dp-result b{color:var(--cyan)}
+html[data-theme="light"] .dp-result--booked b{color:var(--status-booked)}
 html[data-theme="light"] .dp-kicker{color:#5A6473}
 html[data-theme="light"] .dp-kicker b{color:#00688F}   /* 6.22:1 ✓ */
 html[data-theme="light"] .dp-go{color:#00688F}         /* 6.22:1 ✓ */

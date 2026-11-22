@@ -262,6 +262,18 @@ VERSION_ONLY = [
     'booked/index.html',   # post-booking conversion page (noindex) — slim, dead-end
     'lsa/index.html',      # LSA campaign lander (RUN 5.5) — Shane-authored chrome, carries tracking.js
     'live/index.html',     # HEAR AVA LIVE test-drive page (RUN 1) — conversion surface, one exit by design
+    'staging/xray.html',
+    'deck/index.html',
+    # AVA SITE CLEANUP v1: these directly served AVA utility/template/legacy
+    # surfaces keep hand-authored chrome, but they consume shared first-party
+    # assets and therefore must participate in cache armor.
+    'ai100x/cockpit/index.html',
+    'chatgpt-example/index.html',
+    'cockpit/index.html',
+    'legacy/index-funnel-v2-2026-07-14.html',
+    'legacy/index-legacy-2026-07-07.html',
+    'templates/city.html',
+    'templates/vertical.html',
     # RUN 3.5: /chauffeur was in NEITHER list, so its first-party assets never
     # busted on a deploy. It carries its own nav by design -> VERSION_ONLY.
     'chauffeur/index.html',
@@ -400,19 +412,22 @@ PILL_ANCHORS = {
 
 
 def pill_html(pill):
+    is_booked = 'BOOKED' in pill['result'].upper()
+    pill_class = ' dp-pill--booked' if is_booked else ''
+    result_class = ' dp-result--booked' if is_booked else ''
     return ('<!-- BRIDGE:PILL -->\n'
             '<div class="dp-wrap">\n'
-            '  <a class="dp-pill ava-pulse" href="/?trade=%s#stage" data-event="demo_pill_tap" '
+            '  <a class="dp-pill ava-pulse%s" href="/?trade=%s#stage" data-event="demo_pill_tap" '
             'data-trade="%s" aria-label="Hear AVA book it &mdash; one-minute sample call">\n'
             '    <span class="dp-orbs" aria-hidden="true"><i></i><i></i><i></i><i></i></span>\n'
             '    <span class="dp-copy">\n'
             '      <span class="dp-kicker"><b>1-MIN</b> SAMPLE CALL</span>\n'
-            '      <span class="dp-result">CALL RESULT &rarr; <b>%s</b> &middot; %s</span>\n'
+            '      <span class="dp-result%s">CALL RESULT &rarr; <b>%s</b> &middot; %s</span>\n'
             '    </span>\n'
             '    <span class="dp-go">HEAR THE FULL CALL <span aria-hidden="true">&rarr;</span></span>\n'
             '  </a>\n'
             '</div>\n'
-            '<!-- /BRIDGE:PILL -->') % (pill['trade'], pill['trade'], pill['result'], pill['when'])
+            '<!-- /BRIDGE:PILL -->') % (pill_class, pill['trade'], pill['trade'], result_class, pill['result'], pill['when'])
 
 
 def inject_pill(c, page):

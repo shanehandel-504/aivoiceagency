@@ -12,7 +12,7 @@
    summary artifacts hide, which buys back ~200px for the roster; the roster
    itself is capped and scrolls so the total can never drift past the law.
 
-   COLOUR LAW: --green is the BOOKED OUTCOME and nothing else on this component.
+   COLOUR LAW: --status-booked is the BOOKED OUTCOME and nothing else on this component.
    It paints the result chip, the locked OUTPUT phase and the outcome strip.
    It never paints a button here — the primary CTA is cyan by design, so the
    page's one green CTA (the hero's CALL AVA LIVE) stays the only green CTA.
@@ -77,18 +77,18 @@
   flex: none;
   font-family: var(--g-mono); font-size: 10.5px; font-weight: 700;
   letter-spacing: .12em; text-transform: uppercase;
-  color: var(--green);
-  border: 1px solid color-mix(in srgb, var(--green) 45%, transparent);
+  color: var(--status-booked);
+  border: 1px solid color-mix(in srgb, var(--status-booked) 45%, transparent);
   border-radius: 999px; padding: 6px 12px;
-  background: color-mix(in srgb, var(--green) 9%, transparent);
+  background: color-mix(in srgb, var(--status-booked) 9%, transparent);
   transition: opacity .25s ease;
 }
 /* pulses exactly ONCE, at booking lock */
 .fd-chip.is-lock { animation: fdChipPulse .62s cubic-bezier(.2,.8,.2,1) 1; }
 @keyframes fdChipPulse {
-  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 42%, transparent); }
-  60%  { box-shadow: 0 0 0 9px color-mix(in srgb, var(--green) 0%, transparent); }
-  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 0%, transparent); }
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--status-booked) 42%, transparent); }
+  60%  { box-shadow: 0 0 0 9px color-mix(in srgb, var(--status-booked) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--status-booked) 0%, transparent); }
 }
 
 /* RUN 4.5 · D3. `balance` instead of a hard &nbsp;: the words are untouched, so
@@ -156,13 +156,13 @@
 .fd-phase.is-in { opacity: 1; transform: none; }
 .fd-phase.is-done { border-left-color: color-mix(in srgb, var(--cyan) 55%, transparent); }
 /* only the OUTPUT phase resolves green — it is the one that is the outcome */
-.fd-phase[data-phase="output"].is-done { border-left-color: var(--green); }
+.fd-phase[data-phase="output"].is-done { border-left-color: var(--status-booked); }
 .fd-ph-eyebrow {
   font-family: var(--g-mono); font-size: 9.5px; font-weight: 700; letter-spacing: .14em;
   text-transform: uppercase; color: var(--neutral); grid-row: 1 / span 2;
 }
 .fd-phase.is-done .fd-ph-eyebrow { color: var(--cyan); }
-.fd-phase[data-phase="output"].is-done .fd-ph-eyebrow { color: var(--green); }
+.fd-phase[data-phase="output"].is-done .fd-ph-eyebrow { color: var(--status-booked); }
 .fd-ph-line   { font-size: 14.5px; line-height: 1.3; color: var(--text); font-weight: 600; }
 .fd-ph-detail { font-family: var(--g-mono); font-size: 11px; letter-spacing: .03em;
                 color: var(--neutral); line-height: 1.4; }
@@ -171,8 +171,8 @@
 .fd-strip {
   display: none;
   font-family: var(--g-mono); font-size: 11px; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--green);
-  border-left: 2px solid var(--green); padding: 8px 0 8px 12px; margin: 0 0 12px;
+  text-transform: uppercase; color: var(--status-booked);
+  border-left: 2px solid var(--status-booked); padding: 8px 0 8px 12px; margin: 0 0 12px;
 }
 
 /* ---- outcome strip — permanent ------------------------------------------- */
@@ -184,7 +184,7 @@
   border-top: 1px solid var(--gx-line);
   padding-top: 10px; margin: 0 0 8px;
 }
-.fd-outcome b { color: var(--green); font-weight: 700; }
+.fd-outcome b { color: var(--status-booked); font-weight: 700; }
 
 /* ---- AUDIO ZONE. Exists only in audio mode. ------------------------------
    Hidden with [hidden] in every summary state, so there is physically no
