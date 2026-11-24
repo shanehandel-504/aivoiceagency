@@ -40,8 +40,9 @@ BANNED = [r'sounds?\s+human', r'\bam\s+i\s+real\b', r'\bthe\s+only\s+ai\s+built\
           r'\bscope\s+my\s+setup\b', r'\bscop(?:e|ed|es|ing)\b', r'\bshe\b', r'\bher\b', '\u2014', '\u2013', r'talk\s+time', r'per[-\s]minute',
           r'\bcents?\b', r'setup\s+fee', r'\$997', r'guarantee', r'\bconfirmed\b', r'strategy\s+call', r'\bretell\b', r'\btwilio\b', r'\bdispatcher\b']
 MUST = ['$497 a month', 'month to month with no contract', 'includes putting every job in your crm', 'priced on the ava discovery call',
-        '20-minute', '414-240-8930', 'aivoiceagency.ai/book', 'shane@aivoiceagency.ai', 'every job lands in your crm, your texts and your inbox',
-        'claude partner network. we use claude to build and run every setup we make.']
+        '20-minute', '414-240-8930', 'aivoiceagency.ai/book', 'shane@aivoiceagency.ai', 'every job lands in your crm, your texts and your inbox']
+# FIX-2 (re-entry 2): the partner line is a status claim a Registered firm may not make; it must not print.
+BANNED += [r'partner\s+network', r'anthropic']
 ok = True
 with sync_playwright() as p:
     b = p.chromium.launch()
