@@ -235,6 +235,9 @@
 </footer>
 
 <script>
+  /* iPhone Safari applies :active (the press scale and the chevron move) on a
+     tap only when the page listens for touchstart. This empty listener is it. */
+  document.addEventListener('touchstart', function () {}, { passive: true });
   /* Glow gate (CLAUDE.md): the call ring starts only after window load, and
      its scale comes from the bar's own size so the ring is even on every side. */
   addEventListener('load', function () {
