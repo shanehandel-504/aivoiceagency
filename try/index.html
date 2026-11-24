@@ -10,11 +10,13 @@
   DESIGN: CIRCULANT-X (CLAUDE.md § 2). void #0A0A0F · panel #12121A ·
   line #23232E · text #EEF0F4 · muted #7E8299 · accent #00D4FF. No shadows,
   border-radius 0, Space Grotesk only (self-hosted), focus rings intact.
-  One accent on the page: cyan, on the two money boxes.
+  One accent on the page: cyan.
 
-  BOXES: Call the sample line · Book a Discovery Call · See the dashboard
-  (opens the PDF's sample dashboard page) · Get the PDF · Visit the website ·
-  Email us. Nothing else above the footer.
+  BOXES: Call the sample line (the filled bar, with the demo note under it) ·
+  Book a Discovery Call · See the dashboard (opens the PDF's sample dashboard
+  page) · Get the PDF · Visit the website · Email us. Nothing else above the
+  footer. Run ava-try-buttons (Nov 24) gave them the AI Chauffeur /try box
+  system: icon tile, one style for the five secondary boxes, chevron, press.
 
   CHROME: cache-armor-only (registered in tools/stamp.py VERSION_ONLY), the
   same slim header and footer as /live. It must NOT receive the shared bridge
@@ -104,36 +106,60 @@
     text-wrap:pretty;
   }
 
-  /* The boxes. The two money steps are big and carry the one accent; the
-     rest are quiet panels. Every box is one tap target, never under 56px. */
-  .boxes{margin-top:var(--s8);display:grid;gap:var(--s2);}
-  .money,.more{display:grid;gap:var(--s2);}
+  /* The boxes (run ava-try-buttons, Nov 24): the AI Chauffeur /try box system
+     in CIRCULANT cyan. One filled call bar with a phone tile and a slow ring,
+     the demo note under it, then five secondary boxes in ONE style: an icon
+     tile on the left, the label, a chevron on the right, a press feel. Every
+     box is one tap target, never under 56px. */
+  .boxes{margin-top:var(--s8);display:grid;gap:var(--s6);}
+  .lead{display:grid;gap:var(--s3);}
+  .more{display:grid;gap:var(--s2);}
   .box{
+    position:relative;
     display:flex;
-    flex-direction:column;
-    justify-content:center;
-    gap:2px;
-    min-height:56px;
-    padding:var(--s3) var(--s4);
+    align-items:center;
+    gap:var(--s3);
+    min-height:60px;
+    padding:var(--s2) var(--s4) var(--s2) var(--s2);
     background:var(--panel);
-    border:1px solid var(--line);
+    border:1px solid rgba(0,212,255,.24);
     border-radius:0;
     color:var(--text);
-    transition:transform .2s ease,border-color .2s ease,background-color .2s ease;
+    -webkit-tap-highlight-color:transparent;
+    transition:transform .15s ease,border-color .2s ease,background-color .2s ease;
   }
   .box[hidden]{display:none;}
-  .box .lab{font-size:19px;font-weight:600;line-height:1.2;letter-spacing:-.005em;}
+  .box .ico{flex:none;width:40px;height:40px;display:grid;place-items:center;background:var(--void);border:1px solid rgba(0,212,255,.28);color:var(--cyan);transition:border-color .2s ease;}
+  .box .ico svg{width:20px;height:20px;display:block;}
+  .box .txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+  .box .lab{font-size:17px;font-weight:600;line-height:1.25;letter-spacing:-.005em;}
   .box .small{font-size:14px;line-height:1.3;color:var(--muted);font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
-  .box:hover{border-color:var(--cyan);transform:translateY(-2px);}
-  .money .box{min-height:72px;padding:var(--s4) var(--s6);}
-  .money .box .lab{font-size:22px;font-weight:700;}
-  /* Call: the filled box. Text on the cyan fill is the void, 11.16:1. */
-  .box-call{background:var(--cyan);border-color:var(--cyan);color:var(--void);}
+  .box .chev{flex:none;width:16px;height:16px;display:block;color:var(--muted);transition:transform .2s ease,color .2s ease;}
+  .box:hover{border-color:rgba(0,212,255,.6);}
+  .box:hover .ico{border-color:rgba(0,212,255,.6);}
+  .box:hover .chev,.box:active .chev{transform:translateX(4px);color:var(--cyan);}
+  .box:active{transform:scale(.98);}
+  /* Call: the filled bar, the hero of the page. Text on the cyan fill is the
+     void, 11.16:1. The phone sits in a void tile on the left. */
+  .box-call{min-height:80px;padding:var(--s3) var(--s4) var(--s3) var(--s3);gap:var(--s4);background:var(--cyan);border-color:var(--cyan);color:var(--void);}
+  .box-call .ico{width:48px;height:48px;border-color:var(--void);}
+  .box-call .ico svg{width:22px;height:22px;}
+  .box-call .lab{font-size:22px;font-weight:700;}
   .box-call .small{color:var(--void);font-size:16px;font-weight:600;}
   .box-call:hover{background:#5CE3FF;border-color:#5CE3FF;}
+  .box-call:hover .ico{border-color:var(--void);}
   .box-call:focus-visible{outline-color:var(--text);}
-  /* Book: the cyan outline. */
-  .box-book{border-color:var(--cyan);}
+  /* The ring: 2px cyan, grows about 8px past the bar and fades, every 2.8s.
+     Transform and opacity only, behind the glow gate, never with reduced
+     motion. --rx and --ry are set on load from the bar's own size so the ring
+     sits the same distance out on every side. */
+  .box-call::after{content:"";position:absolute;inset:-1px;border:2px solid var(--cyan);opacity:0;pointer-events:none;}
+  @media(prefers-reduced-motion:no-preference){
+    body.glow-ready .box-call::after{animation:try-ring 2.8s ease-out infinite;}
+  }
+  @keyframes try-ring{0%{opacity:.7;transform:scale(1);}70%,100%{opacity:0;transform:scale(var(--rx,1.02),var(--ry,1.16));}}
+  /* The demo note: small, right under the bar. #EEF0F4 at .72 on the void. */
+  .note{font-size:15px;line-height:1.5;color:rgba(238,240,244,.72);max-width:52ch;text-wrap:pretty;}
   /* ---------------------------------------------------------- FOOTER ---- */
   .lfoot{border-top:1px solid var(--line);padding:var(--s8) 0;}
   .lfoot-in{max-width:var(--wrap);margin:0 auto;padding:0 var(--s6);display:flex;flex-wrap:wrap;gap:var(--s4) var(--s6);align-items:center;justify-content:space-between;}
@@ -148,17 +174,18 @@
     .wrap,.thead-in,.lfoot-in{padding-left:var(--s8);padding-right:var(--s8);}
     .try{padding:var(--s24) 0;}
     .try .sub{font-size:20px;}
-    .boxes{margin-top:var(--s12);gap:var(--s3);}
-    .money{grid-template-columns:1fr 1fr;gap:var(--s3);}
-    .more{grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:var(--s3);}
-    .money .box{min-height:128px;padding:var(--s6);justify-content:flex-end;}
-    .money .box .lab{font-size:28px;}
-    .money .box .small{font-size:16px;}
-    .more .box{min-height:96px;padding:var(--s4) var(--s6);justify-content:flex-end;}
+    /* The step column is the headline's width; the call bar spans all of it. */
+    .boxes{margin-top:var(--s12);max-width:640px;gap:var(--s8);}
+    .lead{gap:var(--s4);}
+    /* Book a Discovery Call takes the full row, the other four sit 2 by 2. */
+    .more{grid-template-columns:1fr 1fr;gap:var(--s3);}
+    .more .box-book{grid-column:1/-1;}
+    .box{min-height:64px;}
+    .box-call{min-height:88px;}
+    .box-call .lab{font-size:24px;}
   }
   @media(prefers-reduced-motion:reduce){
-    .box{transition:none;}
-    .box:hover{transform:none;}
+    .box,.box .ico,.box .chev{transition:none;}
   }
 </style>
 </head>
@@ -177,16 +204,17 @@
         <h1>AVA answers your phone. Every call. Books the job.</h1>
         <p class="sub">Every job lands in your CRM, your texts and your inbox.</p>
         <nav class="boxes" aria-label="Next steps">
-          <div class="money">
-            <a class="box box-call" href="tel:+14142408930" data-event="tel_tap_try"><span class="lab">Call the sample line</span><span class="small">414-240-8930</span></a>
-            <a class="box box-book" href="/book/" data-event="book_click_try"><span class="lab">Book a Discovery Call</span><span class="small">20 minutes</span></a>
+          <div class="lead">
+            <a class="box box-call" href="tel:+14142408930" data-event="tel_tap_try"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><span class="txt"><span class="lab">Call the sample line</span><span class="small">414-240-8930</span></span></a>
+            <p class="note">Ask it what it could do for your business. It's a sample, so the custom pieces we build aren't in it.</p>
           </div>
           <div class="more">
+            <a class="box box-book" href="/book/" data-event="book_click_try"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15.5"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h2M14 14h2M8 17h2"/></svg></span><span class="txt"><span class="lab">Book a Discovery Call</span><span class="small">20 minutes</span></span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M6 3.5 10.5 8 6 12.5"/></svg></a>
             <!-- D1a (re-entry 1, Nov 24): no AVA dashboard demo page exists, so this box opens the PDF's sample dashboard page (Night PDF, page 6). -->
-            <a class="box" href="/pdf/ai-voice-agency-overview-night.pdf#page=6" data-event="dashboard_click_try"><span class="lab">See the dashboard</span></a>
-            <a class="box" href="/pdf/ai-voice-agency-overview-night.pdf" data-event="pdf_click_try"><span class="lab">Get the PDF</span><span class="small">See AVA in 8 pages</span></a>
-            <a class="box" href="/" data-event="site_click_try"><span class="lab">Visit the website</span><span class="small">aivoiceagency.ai</span></a>
-            <a class="box" href="mailto:shane@aivoiceagency.ai" data-event="email_click_try"><span class="lab">Email us</span><span class="small">shane@aivoiceagency.ai</span></a>
+            <a class="box" href="/pdf/ai-voice-agency-overview-night.pdf#page=6" data-event="dashboard_click_try"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16"/><path d="M7 16v-3M11 16V9M15 16v-5M19 16v-1"/></svg></span><span class="txt"><span class="lab">See the dashboard</span></span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M6 3.5 10.5 8 6 12.5"/></svg></a>
+            <a class="box" href="/pdf/ai-voice-agency-overview-night.pdf" data-event="pdf_click_try"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M12 10v7M9 14l3 3 3-3"/></svg></span><span class="txt"><span class="lab">Get the PDF</span><span class="small">See AVA in 8 pages</span></span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M6 3.5 10.5 8 6 12.5"/></svg></a>
+            <a class="box" href="/" data-event="site_click_try"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M3.5 11 12 4l8.5 7"/><path d="M6 9.5V20h12V9.5M10 20v-5h4v5"/></svg></span><span class="txt"><span class="lab">Visit the website</span><span class="small">aivoiceagency.ai</span></span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M6 3.5 10.5 8 6 12.5"/></svg></a>
+            <a class="box" href="mailto:shane@aivoiceagency.ai" data-event="email_click_try"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true" focusable="false"><rect x="3" y="5.5" width="18" height="13"/><path d="M3 6.5 12 13l9-6.5"/></svg></span><span class="txt"><span class="lab">Email us</span><span class="small">shane@aivoiceagency.ai</span></span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true" focusable="false"><path d="M6 3.5 10.5 8 6 12.5"/></svg></a>
           </div>
         </nav>
       </div>
@@ -206,5 +234,20 @@
   </div>
 </footer>
 
+<script>
+  /* Glow gate (CLAUDE.md): the call ring starts only after window load, and
+     its scale comes from the bar's own size so the ring is even on every side. */
+  addEventListener('load', function () {
+    var b = document.querySelector('.box-call');
+    if (!b) return;
+    function size() {
+      b.style.setProperty('--rx', (1 + 16 / b.offsetWidth).toFixed(4));
+      b.style.setProperty('--ry', (1 + 16 / b.offsetHeight).toFixed(4));
+    }
+    size();
+    addEventListener('resize', size, { passive: true });
+    document.body.classList.add('glow-ready');
+  });
+</script>
 </body>
 </html>
