@@ -326,8 +326,7 @@ def p8():
       <p class="ck">{t('PDF.8.who')}</p>
       <div class="yrs">{yrs}</div>
       <p class="one">{t('PDF.8.one')}</p>
-    </div>
-    <p class="opt">{t('PARTNER')}</p>'''
+    </div>'''
     foot = f'''<div class="cta2">
       <a href="{TEL}"><p class="lab">{t('PDF.8.cta.lab')}</p><p class="big">414-240-8930</p>{('<p class="note">' + t('PDF.8.cta.note') + '</p>') if 'PDF.8.cta.note' in W else ''}</a>
       <ul class="links">
