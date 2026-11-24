@@ -329,7 +329,7 @@ def p8():
     </div>
     <p class="opt">{t('PARTNER')}</p>'''
     foot = f'''<div class="cta2">
-      <a href="{TEL}"><p class="lab">{t('PDF.8.cta.lab')}</p><p class="big">414-240-8930</p><p class="note">{t('PDF.8.cta.note')}</p></a>
+      <a href="{TEL}"><p class="lab">{t('PDF.8.cta.lab')}</p><p class="big">414-240-8930</p>{('<p class="note">' + t('PDF.8.cta.note') + '</p>') if 'PDF.8.cta.note' in W else ''}</a>
       <ul class="links">
         <li><a href="{BOOK}"><span class="lab">{t('PDF.8.l1')}</span><span class="url">aivoiceagency.ai/book</span></a></li>
         <li><a href="{SITE}"><span class="lab">{t('PDF.8.l2')}</span><span class="url">aivoiceagency.ai</span></a></li>
