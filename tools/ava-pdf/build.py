@@ -326,7 +326,8 @@ def p8():
       <p class="ck">{t('PDF.8.who')}</p>
       <div class="yrs">{yrs}</div>
       <p class="one">{t('PDF.8.one')}</p>
-    </div>'''
+    </div>
+    <p class="opt">{t('PARTNER')}</p>'''
     foot = f'''<div class="cta2">
       <a href="{TEL}"><p class="lab">{t('PDF.8.cta.lab')}</p><p class="big">414-240-8930</p><p class="note">{t('PDF.8.cta.note')}</p></a>
       <ul class="links">
