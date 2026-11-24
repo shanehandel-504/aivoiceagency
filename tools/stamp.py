@@ -262,6 +262,7 @@ VERSION_ONLY = [
     'booked/index.html',   # post-booking conversion page (noindex) — slim, dead-end
     'lsa/index.html',      # LSA campaign lander (RUN 5.5) — Shane-authored chrome, carries tracking.js
     'live/index.html',     # HEAR AVA LIVE test-drive page (RUN 1) — conversion surface, one exit by design
+    'try/index.html',      # /try email landing (ava-try-pdf-polish, Nov 24 2026) — noindex, slim chrome, the six next-step boxes
     'staging/xray.html',
     'deck/index.html',
     # AVA SITE CLEANUP v1: these directly served AVA utility/template/legacy
