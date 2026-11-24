@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  /try  ·  NEXT STEPS WITH AVA  ·  the email landing page (2026-11-24)
+  ----------------------------------------------------------------------------
+  Run ava-try-pdf-polish. The page our emails link to. One job: the next
+  money step, in big boxes. Noindex on purpose and kept out of sitemap.xml
+  (FACT-SHEET v3.6 § 8).
+
+  DESIGN: CIRCULANT-X (CLAUDE.md § 2). void #0A0A0F · panel #12121A ·
+  line #23232E · text #EEF0F4 · muted #7E8299 · accent #00D4FF. No shadows,
+  border-radius 0, Space Grotesk only (self-hosted), focus rings intact.
+  One accent on the page: cyan, on the two money boxes.
+
+  BOXES: Call the sample line · Book a Discovery Call · See the dashboard
+  (opens the PDF's sample dashboard page) · Get the PDF · Visit the website ·
+  Email us. Under them, one partner line (re-entry 1). Then the footer.
+
+  CHROME: cache-armor-only (registered in tools/stamp.py VERSION_ONLY), the
+  same slim header and footer as /live. It must NOT receive the shared bridge
+  NAV/FOOTER/CALLBAR blocks.
+  ============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your next steps with AVA | AI Voice Agency</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="AVA answers your phone, books the job and puts it in your CRM. Call the sample line, book a Discovery Call or get the PDF.">
+<meta property="og:title" content="Your next steps with AVA | AI Voice Agency">
+<meta property="og:description" content="AVA answers your phone, books the job and puts it in your CRM. Call the sample line, book a Discovery Call or get the PDF.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aivoiceagency.ai/try/">
+<meta property="og:image" content="https://aivoiceagency.ai/assets/og-home.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0A0A0F">
+<link rel="canonical" href="https://aivoiceagency.ai/try/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/js/tracking.js?v=be7d3f3" async></script>
+<style>
+  @font-face{font-family:'Space Grotesk';src:url('/fonts/space-grotesk.woff2') format('woff2');font-weight:300 700;font-style:normal;font-display:swap;}
+
+  /* ---------------------------------------------------------- TOKENS ---- */
+  :root{
+    --void:#0A0A0F;
+    --panel:#12121A;
+    --line:#23232E;
+    --text:#EEF0F4;
+    --muted:#7E8299;
+    --cyan:#00D4FF;
+    /* 4px spacing scale, nothing lands off it */
+    --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px; --s12:48px; --s24:96px;
+    --wrap:1280px;
+    --col:880px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    background:var(--void);
+    color:var(--text);
+    font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;
+    font-weight:400;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:var(--cyan);text-decoration:none;}
+  /* Focus rings are never removed (§ 3). */
+  a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;}
+  .wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 var(--s6);}
+  .col{max-width:var(--col);}
+
+  /* ---------------------------------------------------------- HEADER ---- */
+  .thead{border-bottom:1px solid var(--line);}
+  .thead-in{max-width:var(--wrap);margin:0 auto;padding:var(--s4) var(--s6);display:flex;align-items:center;min-height:76px;}
+  .tbrand{color:var(--text);font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;}
+
+  /* ------------------------------------------------------------- TRY ---- */
+  main{flex:1;}
+  .try{padding:var(--s12) 0;}
+  .try h1{
+    font-size:clamp(30px,8.2vw,60px);
+    font-weight:700;
+    letter-spacing:-.03em;
+    line-height:1.05;
+    max-width:17ch;
+    text-wrap:balance;
+  }
+  .try .sub{
+    margin-top:var(--s4);
+    font-size:18px;
+    line-height:1.45;
+    color:var(--text);
+    max-width:34ch;
+    text-wrap:pretty;
+  }
+
+  /* The boxes. The two money steps are big and carry the one accent; the
+     rest are quiet panels. Every box is one tap target, never under 56px. */
+  .boxes{margin-top:var(--s8);display:grid;gap:var(--s2);}
+  .money,.more{display:grid;gap:var(--s2);}
+  .box{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:2px;
+    min-height:56px;
+    padding:var(--s3) var(--s4);
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:0;
+    color:var(--text);
+    transition:transform .2s ease,border-color .2s ease,background-color .2s ease;
+  }
+  .box[hidden]{display:none;}
+  .box .lab{font-size:19px;font-weight:600;line-height:1.2;letter-spacing:-.005em;}
+  .box .small{font-size:14px;line-height:1.3;color:var(--muted);font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
+  .box:hover{border-color:var(--cyan);transform:translateY(-2px);}
+  .money .box{min-height:72px;padding:var(--s4) var(--s6);}
+  .money .box .lab{font-size:22px;font-weight:700;}
+  /* Call: the filled box. Text on the cyan fill is the void, 11.16:1. */
+  .box-call{background:var(--cyan);border-color:var(--cyan);color:var(--void);}
+  .box-call .small{color:var(--void);font-size:16px;font-weight:600;}
+  .box-call:hover{background:#5CE3FF;border-color:#5CE3FF;}
+  .box-call:focus-visible{outline-color:var(--text);}
+  /* Book: the cyan outline. */
+  .box-book{border-color:var(--cyan);}
+  /* The partner line: one quiet line under the boxes. Muted on the void, 5.21:1. */
+  .try .partner{margin-top:var(--s6);font-size:14px;line-height:1.5;color:var(--muted);max-width:52ch;text-wrap:pretty;}
+
+  /* ---------------------------------------------------------- FOOTER ---- */
+  .lfoot{border-top:1px solid var(--line);padding:var(--s8) 0;}
+  .lfoot-in{max-width:var(--wrap);margin:0 auto;padding:0 var(--s6);display:flex;flex-wrap:wrap;gap:var(--s4) var(--s6);align-items:center;justify-content:space-between;}
+  .lfoot a{color:var(--muted);font-size:14px;}
+  .lfoot a:hover{color:var(--cyan);}
+  .lfoot-links{display:flex;flex-wrap:wrap;gap:var(--s4);}
+  .lfoot-links a{display:inline-flex;align-items:center;min-height:44px;}
+  .lfoot .legal{color:var(--muted);font-size:13px;max-width:46em;line-height:1.6;}
+
+  /* ------------------------------------------------------- RESPONSIVE --- */
+  @media(min-width:768px){
+    .wrap,.thead-in,.lfoot-in{padding-left:var(--s8);padding-right:var(--s8);}
+    .try{padding:var(--s24) 0;}
+    .try .sub{font-size:20px;}
+    .boxes{margin-top:var(--s12);gap:var(--s3);}
+    .money{grid-template-columns:1fr 1fr;gap:var(--s3);}
+    .more{grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:var(--s3);}
+    .money .box{min-height:128px;padding:var(--s6);justify-content:flex-end;}
+    .money .box .lab{font-size:28px;}
+    .money .box .small{font-size:16px;}
+    .more .box{min-height:96px;padding:var(--s4) var(--s6);justify-content:flex-end;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .box{transition:none;}
+    .box:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="thead">
+  <div class="thead-in">
+    <span class="tbrand">AI Voice Agency</span>
+  </div>
+</header>
+
+<main>
+  <section class="try">
+    <div class="wrap">
+      <div class="col">
+        <h1>AVA answers your phone. Every call. Books the job.</h1>
+        <p class="sub">Every job lands in your CRM, your texts and your inbox.</p>
+        <nav class="boxes" aria-label="Next steps">
+          <div class="money">
+            <a class="box box-call" href="tel:+14142408930" data-event="tel_tap_try"><span class="lab">Call the sample line</span><span class="small">414-240-8930</span></a>
+            <a class="box box-book" href="/book/" data-event="book_click_try"><span class="lab">Book a Discovery Call</span><span class="small">20 minutes</span></a>
+          </div>
+          <div class="more">
+            <!-- D1a (re-entry 1, Nov 24): no AVA dashboard demo page exists, so this box opens the PDF's sample dashboard page (Night PDF, page 6). -->
+            <a class="box" href="/pdf/ai-voice-agency-overview-night.pdf#page=6" data-event="dashboard_click_try"><span class="lab">See the dashboard</span></a>
+            <a class="box" href="/pdf/ai-voice-agency-overview-night.pdf" data-event="pdf_click_try"><span class="lab">Get the PDF</span><span class="small">See AVA in 8 pages</span></a>
+            <a class="box" href="/" data-event="site_click_try"><span class="lab">Visit the website</span><span class="small">aivoiceagency.ai</span></a>
+            <a class="box" href="mailto:shane@aivoiceagency.ai" data-event="email_click_try"><span class="lab">Email us</span><span class="small">shane@aivoiceagency.ai</span></a>
+          </div>
+        </nav>
+        <p class="partner">We’re a member of Anthropic’s Claude Partner Network. We use Claude to build and run every setup we make.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="lfoot">
+  <div class="lfoot-in">
+    <p class="legal">AVA is an AI assistant. Standard message and data rates may apply. Reply STOP to any text to opt out. &copy; 2026 AI Voice Agency.</p>
+    <nav class="lfoot-links" aria-label="Footer">
+      <a href="/">Home</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/sms-policy.html">SMS Policy</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
